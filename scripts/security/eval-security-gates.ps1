@@ -19,6 +19,15 @@ Gate 'pre-push' (Test-Path (Join-Path $root '.githooks\pre-push')) 'file'
 Gate 'gitleaks.toml' (Test-Path (Join-Path $root 'scripts\security\gitleaks.toml')) 'file'
 Gate 'ci-workflow' (Test-Path (Join-Path $root '.github\workflows\secret-scan.yml')) 'file'
 
+$checker = Join-Path $root 'scripts\security\check-prompt-security.mjs'
+Gate 'prompt-checker-file' (Test-Path $checker) 'file'
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+  Gate 'prompt-markers' $false 'node missing'
+} else {
+  & node $checker | Out-Host
+  Gate 'prompt-markers' ($LASTEXITCODE -eq 0) "rc=$LASTEXITCODE"
+}
+
 $cfg = Join-Path $root 'scripts\security\gitleaks.toml'
 gitleaks git $root --no-banner --redact=100 -c $cfg | Out-Host
 Gate 'gitleaks' ($LASTEXITCODE -eq 0) "rc=$LASTEXITCODE"
