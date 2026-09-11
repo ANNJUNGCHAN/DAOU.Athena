@@ -13,6 +13,12 @@ else
   gitleaks git "$ROOT" --redact=100 --no-banner
 fi
 
+if ! command -v node >/dev/null 2>&1; then
+  echo "pre-push: node is required for prompt-security markers" >&2
+  exit 1
+fi
+node "$ROOT/scripts/security/check-prompt-security.mjs"
+
 # Public remotes are intended. Refuse only if GitHub push protection is off.
 if command -v gh >/dev/null 2>&1; then
   SCAN="$(gh api repos/:owner/:repo --jq '.security_and_analysis.secret_scanning_push_protection.status' 2>/dev/null || echo "")"
