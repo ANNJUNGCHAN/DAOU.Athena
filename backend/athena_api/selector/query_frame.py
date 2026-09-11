@@ -7,6 +7,7 @@ import json
 import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from functools import lru_cache
 from enum import StrEnum
 from pathlib import Path
 from typing import TypeVar
@@ -1088,6 +1089,7 @@ def _has_opaque_instrument_value(question: str) -> bool:
     return False
 
 
+@lru_cache(maxsize=256)
 def extract_query_frame(
     question: str,
     *,

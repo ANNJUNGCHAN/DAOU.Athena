@@ -252,6 +252,11 @@ async function runSelectorFastPath({
   if (FALLTHROUGH_STATUSES.has(String(body && body.status || '').toLowerCase())) {
     const status = String(body.status).toLowerCase();
     if (status === 'needs_inference' && !Object.hasOwn(body, 'plan_token') && Array.isArray(body.candidates)) {
+      const boundArguments = body.bound_arguments && typeof body.bound_arguments === 'object'
+        && !Array.isArray(body.bound_arguments)
+        ? Object.fromEntries(Object.entries(body.bound_arguments)
+          .filter(([key, value]) => key !== 'plan_token' && value != null && String(value).trim() !== ''))
+        : null;
       return {
         handled: false,
         reason: status,
@@ -260,6 +265,7 @@ async function runSelectorFastPath({
           catalog_version: body.catalog_version || null,
           suggested_intent: body.suggested_intent || null,
           candidates: body.candidates.slice(0, 3),
+          ...(boundArguments && Object.keys(boundArguments).length ? { bound_arguments: boundArguments } : {}),
         },
       };
     }

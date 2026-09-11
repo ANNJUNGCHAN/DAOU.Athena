@@ -1571,52 +1571,78 @@ def _selector_preflight(
             )
         )
 
-    candidate_refs: list[str] = []
     candidate_intent = search.suggested_intent or payload.intent
+    candidate_refs: list[str] = []
+    seen_refs: set[str] = set()
     for hit in candidate_search.results:
         candidate_ref = hit.suggested_operation_ref or hit.operation_ref
-        description = selector.describe(
-            DescribeRequest(operation_ref=candidate_ref, intent=candidate_intent)
+        if candidate_ref in seen_refs:
+            continue
+        document = selector.catalog.find_exact(candidate_ref)
+        if document is None:
+            continue
+        seen_refs.add(candidate_ref)
+        details = (
+            selector.catalog.details_for(document.tr_id)
+            if document.group_id is None
+            else ()
         )
-        if description.execution_policy == "selector_detail_required":
-            candidate_refs.extend(group.operation_ref for group in description.detail_groups)
+        if details and not document.generic_callable:
+            for detail in details:
+                if detail.operation_ref not in seen_refs:
+                    candidate_refs.append(detail.operation_ref)
+                    seen_refs.add(detail.operation_ref)
         else:
             candidate_refs.append(candidate_ref)
 
     candidates: list[dict[str, Any]] = []
-    seen: set[str] = set()
+    required_aliases: set[str] = set()
     for operation_ref in candidate_refs:
-        if operation_ref in seen or len(candidates) == 3:
-            continue
+        if len(candidates) == 3:
+            break
         document = selector.catalog.find_exact(operation_ref)
         if document is None:
             continue
         description = selector.describe(
             DescribeRequest(operation_ref=operation_ref, intent=candidate_intent)
         )
-        seen.add(operation_ref)
+        required_arguments = [
+            {
+                "alias": field.alias,
+                "description": field.description,
+                "json_schema": {
+                    key: value
+                    for key, value in field.json_schema.items()
+                    if key not in {"title", "description"}
+                },
+            }
+            for field in description.required_arguments
+        ]
+        required_aliases.update(
+            str(argument["alias"]) for argument in required_arguments if argument.get("alias")
+        )
         candidates.append(
             {
                 "operation_ref": description.operation_ref,
                 "kind": description.kind,
                 "name": description.name,
-                "required_arguments": [
-                    {
-                        "alias": field.alias,
-                        "description": field.description,
-                        "json_schema": {
-                            key: value
-                            for key, value in field.json_schema.items()
-                            if key not in {"title", "description"}
-                        },
-                    }
-                    for field in description.required_arguments
-                ],
+                "required_arguments": required_arguments,
             }
         )
 
     if not candidates:
         return None
+    bound_arguments: dict[str, Any] = {}
+    _, trusted_code = selector._resolved_identity(payload.question)
+    if trusted_code and "stk_cd" in required_aliases:
+        bound_arguments["stk_cd"] = trusted_code
+    payload_arguments = payload.arguments if isinstance(payload.arguments, dict) else {}
+    for key, value in payload_arguments.items():
+        if key == "plan_token" or key not in required_aliases:
+            continue
+        if value is None or (isinstance(value, str) and not value.strip()):
+            continue
+        bound_arguments[key] = value
     content: dict[str, Any] = {
         "status": "needs_inference",
         "code": getattr(error, "code", "SELECTOR_ERROR"),
@@ -1625,6 +1651,8 @@ def _selector_preflight(
     }
     if search.suggested_intent is not None:
         content["suggested_intent"] = search.suggested_intent
+    if bound_arguments:
+        content["bound_arguments"] = bound_arguments
     return JSONResponse(content=content)
 
 

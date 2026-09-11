@@ -40,7 +40,7 @@ from .errors import (
 from .instrument_identity import InstrumentIdentityIndex, TargetResolution
 from .plans import PlanSigner, VerifiedPlan
 from .primitive_evidence import TargetResolver
-from .ranking import search_catalog
+from .ranking import mark_seen_family, search_catalog
 from .schemas import (
     CallRequest,
     CallResponse,
@@ -847,6 +847,8 @@ class SelectorService:
             next_key=request.continuation.next_key,
             account=account,
         )
+        if document.kind == "query":
+            mark_seen_family(document.family_ref)
         return ResolveResponse(
             catalog_version=self.catalog.version,
             operation_ref=document.operation_ref,

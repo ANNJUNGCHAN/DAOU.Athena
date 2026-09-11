@@ -72,6 +72,99 @@ function compactCandidate(candidate) {
   };
 }
 
+const DEFAULT_DECISION_TTL_MS = 60_000;
+const DEFAULT_DECISION_MAX_ENTRIES = 128;
+
+function normalizeDecisionQuestion(question) {
+  return String(question || '')
+    .normalize('NFKC')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/[?!.…~\s]+$/g, '')
+    .toLocaleLowerCase('ko-KR');
+}
+
+function compactBoundArguments(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value) || Object.hasOwn(value, 'plan_token')) {
+    return {};
+  }
+  return Object.fromEntries(Object.entries(value)
+    .filter(([key, entry]) => key !== 'plan_token' && entry != null && String(entry).trim() !== ''));
+}
+
+function createDecisionCache({
+  ttlMs = DEFAULT_DECISION_TTL_MS,
+  maxEntries = DEFAULT_DECISION_MAX_ENTRIES,
+  clock = Date.now,
+} = {}) {
+  const map = new Map();
+
+  function fingerprint(question, preflight) {
+    const refs = (Array.isArray(preflight && preflight.candidates) ? preflight.candidates : [])
+      .slice(0, 3)
+      .map((candidate) => String(candidate.operation_ref || candidate.ref || '').trim())
+      .filter(Boolean)
+      .join(',');
+    const bound = compactBoundArguments(preflight && preflight.bound_arguments);
+    const boundKey = JSON.stringify(bound, Object.keys(bound).sort());
+    return `${normalizeDecisionQuestion(question)}\x1f${String((preflight && preflight.catalog_version) || '')}\x1f${refs}\x1f${boundKey}`;
+  }
+
+  return {
+    get(question, preflight) {
+      const key = fingerprint(question, preflight);
+      const entry = map.get(key);
+      if (!entry) return null;
+      if (clock() - entry.storedAt > ttlMs) {
+        map.delete(key);
+        return null;
+      }
+      return entry.proposal;
+    },
+    set(question, preflight, proposal) {
+      if (!proposal || typeof proposal !== 'object' || Object.hasOwn(proposal, 'plan_token')) return;
+      const key = fingerprint(question, preflight);
+      if (map.has(key)) map.delete(key);
+      map.set(key, { storedAt: clock(), proposal });
+      while (map.size > maxEntries) {
+        map.delete(map.keys().next().value);
+      }
+    },
+    size: () => map.size,
+    clear: () => map.clear(),
+  };
+}
+
+function schemaGatedProposal(preflight) {
+  const candidates = Array.isArray(preflight && preflight.candidates) ? preflight.candidates.slice(0, 3) : [];
+  if (candidates.length !== 1) return null;
+  const candidate = candidates[0];
+  const kind = candidateKind(candidate);
+  if (kind !== 'query' && kind !== 'detail') return null;
+  const bound = compactBoundArguments(preflight && preflight.bound_arguments);
+  const { required, specs } = collectArgumentContract(candidate);
+  const args = {};
+  for (const name of required) {
+    if (!Object.prototype.hasOwnProperty.call(bound, name)) return null;
+    if (!valueMatches(bound[name], specs.get(name) || {})) return null;
+    args[name] = bound[name];
+  }
+  const operationRef = String(candidate.operation_ref || candidate.ref || '').trim();
+  const detailGroup = candidate.detail_group == null
+    ? (operationRef.startsWith('detail:') ? operationRef.split(':').slice(2).join(':') || null : null)
+    : String(candidate.detail_group);
+  try {
+    return validateProposal({
+      intent: 'query',
+      operation_ref: operationRef,
+      detail_group: detailGroup,
+      arguments: args,
+    }, preflight);
+  } catch {
+    return null;
+  }
+}
+
 function buildClassificationPrompt(question, preflight) {
   const candidates = (Array.isArray(preflight && preflight.candidates) ? preflight.candidates : [])
     .slice(0, 3)
@@ -82,8 +175,10 @@ function buildClassificationPrompt(question, preflight) {
     'Return exactly one JSON object and no markdown or explanation.',
     'Schema: {"intent":"query","operation_ref":"...","detail_group":null,"arguments":{}}',
     'Choose exactly one operation_ref from candidates. Fill only arguments supported by its contract.',
+    'Use Bound arguments when they already satisfy a candidate contract.',
     `Question: ${String(question || '')}`,
     `Catalog version: ${String(preflight && preflight.catalog_version || '')}`,
+    `Bound arguments: ${JSON.stringify(compactBoundArguments(preflight && preflight.bound_arguments))}`,
     `Candidates: ${JSON.stringify(candidates)}`,
   ].join('\n');
 }
@@ -210,7 +305,35 @@ function validateProposal(raw, preflight) {
   });
 }
 
-function createSelectorColdHedge({ limiter = globalPairLimiter } = {}) {
+async function dispatchValidated(proposal, {
+  dispatchProposal,
+  signal,
+  isCurrent,
+  decisionCache,
+  question,
+  preflight,
+  modelCalls,
+  extras = {},
+}) {
+  const dispatched = await dispatchProposal(proposal);
+  if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
+  if (!dispatched || dispatched.handled !== true) {
+    return { handled: false, reason: 'proposal_rejected', modelCalls };
+  }
+  if (decisionCache) decisionCache.set(question, preflight, proposal);
+  return {
+    ...dispatched,
+    source: 'selector-cold',
+    modelCalls,
+    classifiedOperationRef: proposal.operation_ref,
+    ...extras,
+  };
+}
+
+function createSelectorColdHedge({
+  limiter = globalPairLimiter,
+  decisionCache = createDecisionCache(),
+} = {}) {
   return async function runSelectorColdHedge({
     question,
     preflight,
@@ -229,6 +352,39 @@ function createSelectorColdHedge({ limiter = globalPairLimiter } = {}) {
     }
     if (!candidates.some((candidate) => candidateKind(candidate))) {
       return { handled: false, reason: 'unsupported_candidates', modelCalls: 0 };
+    }
+
+    const cached = decisionCache ? decisionCache.get(question, preflight) : null;
+    if (cached) {
+      try {
+        const proposal = validateProposal(cached, preflight);
+        return await dispatchValidated(proposal, {
+          dispatchProposal,
+          signal,
+          isCurrent,
+          decisionCache,
+          question,
+          preflight,
+          modelCalls: 0,
+          extras: { cacheHit: true },
+        });
+      } catch {
+        // Stale cache entries fall through to schema gating / classifiers.
+      }
+    }
+
+    const gated = schemaGatedProposal(preflight);
+    if (gated) {
+      return dispatchValidated(gated, {
+        dispatchProposal,
+        signal,
+        isCurrent,
+        decisionCache,
+        question,
+        preflight,
+        modelCalls: 0,
+        extras: { schemaGated: true },
+      });
     }
 
     const release = await limiter.acquire(CLASSIFIERS_PER_TURN, signal);
@@ -266,17 +422,15 @@ function createSelectorColdHedge({ limiter = globalPairLimiter } = {}) {
     // 새 질의 선점)은 위 리스너가 두 턴을 계속 중단하므로 취소 계약은 유지된다.
     if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
 
-    const dispatched = await dispatchProposal(proposal);
-    if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
-    if (!dispatched || dispatched.handled !== true) {
-      return { handled: false, reason: 'proposal_rejected', modelCalls: CLASSIFIERS_PER_TURN };
-    }
-    return {
-      ...dispatched,
-      source: 'selector-cold',
+    return dispatchValidated(proposal, {
+      dispatchProposal,
+      signal,
+      isCurrent,
+      decisionCache,
+      question,
+      preflight,
       modelCalls: CLASSIFIERS_PER_TURN,
-      classifiedOperationRef: proposal.operation_ref,
-    };
+    });
   };
 }
 
@@ -284,10 +438,14 @@ const runSelectorColdHedge = createSelectorColdHedge();
 
 module.exports = {
   CLASSIFIERS_PER_TURN,
+  DEFAULT_DECISION_MAX_ENTRIES,
+  DEFAULT_DECISION_TTL_MS,
   GLOBAL_CLASSIFIER_LIMIT,
   buildClassificationPrompt,
+  createDecisionCache,
   createPairLimiter,
   createSelectorColdHedge,
   runSelectorColdHedge,
+  schemaGatedProposal,
   validateProposal,
 };

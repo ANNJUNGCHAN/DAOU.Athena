@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+from collections import OrderedDict
 from dataclasses import dataclass
+from functools import lru_cache
 
 from .catalog import OperationCatalog, OperationDocument
 from .eligibility import evaluate_eligibility
@@ -135,18 +137,67 @@ def _contribution(
     )
 
 
-def _zone_tokens(document: OperationDocument, zone: str) -> set[str]:
-    tokens = {
-        token for value in document.searchable_zones.get(zone, ()) for token in tokenize(value)
+_ZONE_TOKEN_CACHE: dict[tuple[str, str], frozenset[str]] = {}
+_SEEN_FAMILY_REFS: OrderedDict[str, None] = OrderedDict()
+_SEEN_FAMILY_LIMIT = 64
+_RETRIEVAL_FLOOR = 12
+_RETRIEVAL_CAP = 64
+_SURFACE_INDEX_CACHE: OrderedDict[tuple[str, str], "_SurfaceIndex"] = OrderedDict()
+_SURFACE_INDEX_CACHE_LIMIT = 8
+_SEEN_REASONS = frozenset(
+    {
+        ReasonCode.EXACT_OPERATION_REF,
+        ReasonCode.EXACT_TR_ID,
+        ReasonCode.EXACT_GROUP_ID,
+        ReasonCode.TR_ID_TOKEN_MATCH,
+        ReasonCode.TITLE_PHRASE_MATCH,
+        ReasonCode.PROJECTION_TITLE_MATCH,
     }
-    tokens.update(
-        term
-        for value in document.searchable_zones.get(zone, ())
-        for term in reviewed_canonical_terms(value)
-    )
-    if zone == "family_capability":
-        tokens.difference_update(_CAPABILITY_STOP_TOKENS)
-    return tokens
+)
+
+
+def mark_seen_family(family_ref: str) -> None:
+    """Record a family that already survived resolve in this process.
+
+    ToolRerank treats seen tools as well-calibrated: extra candidates past the
+    top hit mostly add noise. Unseen families keep a wider window.
+    """
+    ref = str(family_ref or "").strip()
+    if not ref:
+        return
+    if ref in _SEEN_FAMILY_REFS:
+        _SEEN_FAMILY_REFS.move_to_end(ref)
+        return
+    _SEEN_FAMILY_REFS[ref] = None
+    while len(_SEEN_FAMILY_REFS) > _SEEN_FAMILY_LIMIT:
+        _SEEN_FAMILY_REFS.popitem(last=False)
+
+
+def seen_family_refs() -> frozenset[str]:
+    return frozenset(_SEEN_FAMILY_REFS)
+
+
+def reset_seen_families() -> None:
+    _SEEN_FAMILY_REFS.clear()
+
+
+def _zone_tokens(document: OperationDocument, zone: str) -> set[str]:
+    key = (document.operation_ref, zone)
+    cached = _ZONE_TOKEN_CACHE.get(key)
+    if cached is None:
+        tokens = {
+            token for value in document.searchable_zones.get(zone, ()) for token in tokenize(value)
+        }
+        tokens.update(
+            term
+            for value in document.searchable_zones.get(zone, ())
+            for term in reviewed_canonical_terms(value)
+        )
+        if zone == "family_capability":
+            tokens.difference_update(_CAPABILITY_STOP_TOKENS)
+        cached = frozenset(tokens)
+        _ZONE_TOKEN_CACHE[key] = cached
+    return set(cached)
 
 
 def _matched_phrase(title: str, normalized_query: str) -> str | None:
@@ -221,27 +272,64 @@ def uninformative_zone_tokens(
     return frozenset(suppressed)
 
 
-def rank_document(
-    query: str,
-    document: OperationDocument,
-    uninformative: frozenset[tuple[str, str]] = frozenset(),
-) -> RankedDocument:
+@dataclass(frozen=True, slots=True)
+class _QueryFeatures:
+    stripped: str
+    semantic_query: str
+    normalized_query: str
+    ordered_direct_tokens: tuple[str, ...]
+    direct_tokens: frozenset[str]
+    fragment_tokens: frozenset[str]
+    synonym_tokens: frozenset[str]
+    cited_ids: frozenset[str]
+    retrieval_tokens: frozenset[str]
+
+
+@lru_cache(maxsize=256)
+def _query_features(query: str) -> _QueryFeatures:
     stripped = query.strip()
     semantic_query = mask_opaque_instrument_spans(query)
     normalized_query = normalize_text(semantic_query)
     ordered_direct_tokens = tuple(tokenize(semantic_query, korean_bigrams=False))
-    direct_tokens = set(ordered_direct_tokens)
-    # Bigrams let a question reach inside a Korean compound: 체결 has to find 주식체결.
-    # They are evidence of a different grade from a word the user actually typed, though,
-    # because a two-syllable slice of one word is a whole word of another. 실시간 yields
-    # 시간, which matches 주식시간외호가 as strongly as 호가 does, and that false match
-    # alone tied 0E with the correctly named 0D on a question about 호가 잔량.
+    direct_tokens = frozenset(ordered_direct_tokens)
     all_tokens = set(tokenize(semantic_query))
-    fragment_tokens = reviewed_query_fragments(all_tokens.difference(direct_tokens))
-    # Only authored whole tokens trigger synonym emission. Raw Korean fragments still match
-    # document compounds below, but they no longer manufacture synonym bigrams that count as
-    # correlated evidence a second time.
-    synonym_tokens = set(synonym_only_tokens(ordered_direct_tokens)).difference(all_tokens)
+    fragment_tokens = frozenset(reviewed_query_fragments(all_tokens.difference(direct_tokens)))
+    synonym_tokens = frozenset(synonym_only_tokens(ordered_direct_tokens)).difference(all_tokens)
+    cited_ids = identity_tokens(query)
+    retrieval_tokens = (
+        set(direct_tokens)
+        | set(fragment_tokens)
+        | set(synonym_tokens)
+        | set(tokenize(stripped, korean_bigrams=False))
+        | {token.casefold() for token in cited_ids}
+        | set(cited_ids)
+    )
+    return _QueryFeatures(
+        stripped=stripped,
+        semantic_query=semantic_query,
+        normalized_query=normalized_query,
+        ordered_direct_tokens=ordered_direct_tokens,
+        direct_tokens=direct_tokens,
+        fragment_tokens=fragment_tokens,
+        synonym_tokens=synonym_tokens,
+        cited_ids=cited_ids,
+        retrieval_tokens=frozenset(retrieval_tokens),
+    )
+
+
+def rank_document(
+    query: str,
+    document: OperationDocument,
+    uninformative: frozenset[tuple[str, str]] = frozenset(),
+    *,
+    features: _QueryFeatures | None = None,
+) -> RankedDocument:
+    features = features or _query_features(query)
+    stripped = features.stripped
+    normalized_query = features.normalized_query
+    direct_tokens = features.direct_tokens
+    fragment_tokens = features.fragment_tokens
+    synonym_tokens = features.synonym_tokens
     contributions: list[ScoreContribution] = []
     matched_direct: set[str] = set()
     matched_fragments: set[str] = set()
@@ -369,9 +457,10 @@ def rank_documents(
 ) -> tuple[RankedDocument, ...]:
     # Computed over the candidate set, not the whole catalog: what a token can discriminate
     # depends on what it is being asked to discriminate between.
+    features = _query_features(query)
     frame = extract_query_frame(query)
-    stripped = query.strip()
-    cited_ids = identity_tokens(query)
+    stripped = features.stripped
+    cited_ids = features.cited_ids
     identity_matches = {
         document.operation_ref
         for document in documents
@@ -390,7 +479,7 @@ def rank_documents(
     uninformative = uninformative_zone_tokens(query, eligible_documents)
     ranked = []
     for document in eligible_documents:
-        item = rank_document(query, document, uninformative)
+        item = rank_document(query, document, uninformative, features=features)
         typed = eligibility[document.operation_ref]
         contributions = tuple(
             sorted(
@@ -437,6 +526,143 @@ def rank_documents(
             ),
         )
     )
+
+
+@dataclass(frozen=True, slots=True)
+class _SurfaceIndex:
+    documents: tuple[OperationDocument, ...]
+    postings: dict[str, tuple[int, ...]]
+
+
+def _surface_index(catalog: OperationCatalog, intent: DiscoveryIntent) -> _SurfaceIndex:
+    key = (catalog.version, intent.value)
+    cached = _SURFACE_INDEX_CACHE.get(key)
+    if cached is not None:
+        _SURFACE_INDEX_CACHE.move_to_end(key)
+        return cached
+    documents = catalog.visible_for(intent)
+    buckets: dict[str, list[int]] = {}
+    for index, document in enumerate(documents):
+        tokens = set()
+        for zone in _ZONE_RULES:
+            tokens.update(_zone_tokens(document, zone))
+        tokens.add(document.operation_ref)
+        tokens.add(document.tr_id)
+        tokens.add(document.tr_id.casefold())
+        if document.group_id:
+            tokens.add(document.group_id)
+            tokens.update(tokenize(document.group_id, korean_bigrams=False))
+        tokens.update(tokenize(document.operation_ref, korean_bigrams=False))
+        for token in tokens:
+            buckets.setdefault(token, []).append(index)
+    built = _SurfaceIndex(
+        documents=documents,
+        postings={token: tuple(indexes) for token, indexes in buckets.items()},
+    )
+    _SURFACE_INDEX_CACHE[key] = built
+    _SURFACE_INDEX_CACHE.move_to_end(key)
+    while len(_SURFACE_INDEX_CACHE) > _SURFACE_INDEX_CACHE_LIMIT:
+        _SURFACE_INDEX_CACHE.popitem(last=False)
+    return built
+
+
+def retrieve_candidates(query: str, index: _SurfaceIndex) -> tuple[OperationDocument, ...]:
+    """Cheap dual-encoder analog: inverted-index shortlist before cross scoring."""
+    documents = index.documents
+    if not documents:
+        return documents
+    features = _query_features(query)
+    overlap: dict[int, int] = {}
+    for token in features.retrieval_tokens:
+        for document_index in index.postings.get(token, ()):
+            overlap[document_index] = overlap.get(document_index, 0) + 1
+    identity_indexes = [
+        document_index
+        for document_index, document in enumerate(documents)
+        if features.stripped in {document.operation_ref, document.tr_id, document.group_id}
+        or document.tr_id in features.cited_ids
+    ]
+    for document_index in identity_indexes:
+        overlap.setdefault(document_index, 0)
+    if len(overlap) < _RETRIEVAL_FLOOR:
+        return documents
+    ranked_indexes = sorted(
+        overlap,
+        key=lambda document_index: (
+            -overlap[document_index],
+            documents[document_index].operation_ref,
+        ),
+    )
+    selected = set(ranked_indexes[:_RETRIEVAL_CAP])
+    selected.update(identity_indexes)
+    return tuple(
+        documents[document_index]
+        for document_index in range(len(documents))
+        if document_index in selected
+    )
+
+
+def _is_multi_tool_query(ranked: tuple[RankedDocument, ...]) -> bool:
+    family_best: dict[str, int] = {}
+    for item in ranked[:8]:
+        family = item.document.family_ref
+        score = family_best.get(family, 0)
+        if item.score > score:
+            family_best[family] = item.score
+    if len(family_best) < 2:
+        return False
+    leading = sorted(family_best.values(), reverse=True)
+    return leading[1] >= max(400, leading[0] * 7 // 10)
+
+
+def hierarchy_aware_rerank(ranked: tuple[RankedDocument, ...]) -> tuple[RankedDocument, ...]:
+    """Concentrate one family, or diversify when two families both score."""
+    if len(ranked) < 2:
+        return ranked
+    if _is_multi_tool_query(ranked):
+        buckets: OrderedDict[str, list[RankedDocument]] = OrderedDict()
+        for item in ranked:
+            buckets.setdefault(item.document.family_ref, []).append(item)
+        mixed: list[RankedDocument] = []
+        while any(buckets.values()):
+            for family in list(buckets):
+                if buckets[family]:
+                    mixed.append(buckets[family].pop(0))
+        return tuple(mixed)
+    top_family = ranked[0].document.family_ref
+    primary = [item for item in ranked if item.document.family_ref == top_family]
+    rest = [item for item in ranked if item.document.family_ref != top_family]
+    return tuple(primary + rest)
+
+
+def adaptive_truncate_limit(
+    ranked: tuple[RankedDocument, ...],
+    limit: int,
+    *,
+    seen_families: frozenset[str] | None = None,
+) -> int:
+    """Seen/high-margin hits keep a short window; unseen hits keep recall."""
+    if not ranked:
+        return 0
+    if limit <= 1:
+        return min(1, len(ranked))
+    # Wider search windows keep recall for diagnostics; the cold-path shortlist
+    # (limit<=3) is what Adaptive Truncation is for.
+    if limit > 3:
+        return min(limit, len(ranked))
+    top = ranked[0]
+    seen = (seen_families or seen_family_refs())
+    seen_hit = top.document.family_ref in seen or any(
+        contribution.reason_code in _SEEN_REASONS for contribution in top.contributions
+    )
+    if not seen_hit:
+        return min(limit, len(ranked))
+    if len(ranked) == 1:
+        return 1
+    gap = top.score - ranked[1].score
+    if gap >= max(400, top.score // 4):
+        return 1
+    return min(2, limit, len(ranked))
 
 
 def searchable_surface(
@@ -497,9 +723,12 @@ def _suggested_intent(
 
 
 def search_catalog(catalog: OperationCatalog, request: SearchRequest) -> SearchResponse:
-    ranked = rank_documents(request.query, searchable_surface(catalog, request))
+    index = _surface_index(catalog, request.intent)
+    retrieved = retrieve_candidates(request.query, index)
+    ranked = hierarchy_aware_rerank(rank_documents(request.query, retrieved))
+    truncated = adaptive_truncate_limit(ranked, request.limit)
     results = []
-    for item in ranked[: request.limit]:
+    for item in ranked[:truncated]:
         document = item.document
         results.append(
             SearchHit(
