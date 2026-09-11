@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+CONFIG="$ROOT/scripts/security/gitleaks.toml"
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-push: gitleaks is required" >&2
+  exit 1
+fi
+if [[ -f "$CONFIG" ]]; then
+  gitleaks git "$ROOT" --redact=100 --no-banner -c "$CONFIG"
+else
+  gitleaks git "$ROOT" --redact=100 --no-banner
+fi
+
+if [[ "${ATHENA_ALLOW_PUBLIC_PUSH:-}" == "1" ]]; then
+  exit 0
+fi
+
+if command -v gh >/dev/null 2>&1; then
+  PRIV="$(gh repo view --json isPrivate --jq .isPrivate 2>/dev/null || echo "")"
+  if [[ "$PRIV" != "true" ]]; then
+    echo "pre-push: refusing push while GitHub origin is not private." >&2
+    echo "Make the remote private, or set ATHENA_ALLOW_PUBLIC_PUSH=1 only if you intend a public push." >&2
+    exit 1
+  fi
+fi
