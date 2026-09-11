@@ -13,15 +13,14 @@ else
   gitleaks git "$ROOT" --redact=100 --no-banner
 fi
 
-if [[ "${ATHENA_ALLOW_PUBLIC_PUSH:-}" == "1" ]]; then
-  exit 0
-fi
-
+# Public remotes are intended. Refuse only if GitHub push protection is off.
 if command -v gh >/dev/null 2>&1; then
-  PRIV="$(gh repo view --json isPrivate --jq .isPrivate 2>/dev/null || echo "")"
-  if [[ "$PRIV" != "true" ]]; then
-    echo "pre-push: refusing push while GitHub origin is not private." >&2
-    echo "Make the remote private, or set ATHENA_ALLOW_PUBLIC_PUSH=1 only if you intend a public push." >&2
-    exit 1
+  SCAN="$(gh api repos/:owner/:repo --jq '.security_and_analysis.secret_scanning_push_protection.status' 2>/dev/null || echo "")"
+  if [[ -n "$SCAN" && "$SCAN" != "enabled" ]]; then
+    echo "pre-push: GitHub secret_scanning_push_protection is '$SCAN', not enabled." >&2
+    echo "Enable it on the public repo before pushing, or set ATHENA_SKIP_PUSH_PROTECTION_CHECK=1." >&2
+    if [[ "${ATHENA_SKIP_PUSH_PROTECTION_CHECK:-}" != "1" ]]; then
+      exit 1
+    fi
   fi
 fi
