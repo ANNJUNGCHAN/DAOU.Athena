@@ -1,0 +1,14 @@
+{
+  "board_id": "2YNQ-0",
+  "name": "CC-06 / R04-S10 · 종목찾기 — 시간외 등락률",
+  "card_id": "CC-06",
+  "width": 1440,
+  "height": 980,
+  "state": {
+    "kind": "sort",
+    "parent_board": "13K0-2",
+    "control": "시간외 등락률",
+    "control_text": "시간외 단일가"
+  },
+  "saved_at": "2026-09-02T11:30:16Z"
+}

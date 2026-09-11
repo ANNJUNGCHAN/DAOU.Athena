@@ -1,0 +1,251 @@
+'use strict';
+
+const test = require('node:test');
+const assert = require('node:assert/strict');
+
+const {
+  HYDRATE_PATH, buildHydrateBody, normalizeSlotValues, normalizeOperations,
+  normalizePrimaryEnvelope, primaryReloadAuthority, hydrateBoard,
+} = require('./board-hydrate');
+
+function makeFetch(reply) {
+  const calls = [];
+  const fetchImpl = async (url, options) => {
+    calls.push({ url, options, body: options && options.body ? JSON.parse(options.body) : null });
+    if (typeof reply === 'function') return reply();
+    return reply;
+  };
+  return { calls, fetchImpl };
+}
+
+function jsonResponse(status, payload) {
+  return { ok: status >= 200 && status < 300, status, json: async () => payload };
+}
+
+// 백엔드가 실제로 돌려주는 모양(backend/tests/api/test_canvas_push.py:498-518).
+function hydrateResponse(slotValues, unbound = []) {
+  return jsonResponse(200, {
+    board_id: '2SKU-1',
+    card_id: 'CC-01',
+    operations: [{ operation_ref: 'base:ka10085', status: 'bound', reason: null, bound_count: 1 }],
+    surface_contract: {
+      surface_version: 1,
+      board_id: '2SKU-1',
+      card_id: 'CC-01',
+      slot_values: slotValues,
+      unbound_slots: unbound,
+      state_boards: [],
+    },
+  });
+}
+
+test('요청 몸체의 target은 manifest alias 가방이고 빈 값은 싣지 않는다', () => {
+  assert.deepEqual(
+    buildHydrateBody({
+      boardId: '2R3M-1',
+      target: { stk_cd: '005930', stex_tp: '0' },
+      account: '8012344721',
+      slotIds: ['s005', 's006', 's005', ''],
+    }),
+    {
+      board_id: '2R3M-1', target: { stk_cd: '005930', stex_tp: '0' },
+      account: '8012344721', slot_ids: ['s005', 's006'],
+    },
+  );
+  // 값 없는 alias는 버린다 — 백엔드가 ''를 인자로 오인하게 두지 않는다.
+  assert.deepEqual(
+    buildHydrateBody({ boardId: ' 2R3M-1 ', target: { stk_cd: '005930', qry_tp: '  ' }, account: ' ' }),
+    { board_id: '2R3M-1', target: { stk_cd: '005930' } },
+  );
+  // 가방이 비면 target 자체를 싣지 않는다.
+  assert.deepEqual(buildHydrateBody({ boardId: 'B1', target: {} }), { board_id: 'B1' });
+  // 가방이 아닌 값(옛 문자열 계약)은 백엔드 모델이 거부한다 — 아예 싣지 않는다.
+  assert.deepEqual(buildHydrateBody({ boardId: 'B1', target: '005930' }), { board_id: 'B1' });
+  assert.throws(() => buildHydrateBody({ target: { stk_cd: '005930' } }), /board_id/);
+});
+
+test('종목 코드 배열은 첫 6자리만 stk_cd로 올리고 JSON 배열로 보내지 않는다', () => {
+  assert.deepEqual(
+    buildHydrateBody({
+      boardId: '49Y4-0',
+      target: { stk_cd: ['005930', '000660'], stex_tp: '0' },
+    }),
+    { board_id: '49Y4-0', target: { stex_tp: '0', stk_cd: '005930' } },
+  );
+  assert.deepEqual(
+    buildHydrateBody({ boardId: '49Y4-0', target: { stk_cds: ['005930', '000660'] } }),
+    { board_id: '49Y4-0', target: { stk_cd: '005930' } },
+  );
+  const body = buildHydrateBody({
+    boardId: '49Y4-0',
+    target: { stk_cd: ['005930', '000660'], symbols: ['035420'] },
+  });
+  assert.equal(body.target.stk_cd, '005930');
+  assert.equal(Array.isArray(body.target.stk_cd), false);
+  assert.equal('stk_cds' in body.target, false);
+  assert.equal('symbols' in body.target, false);
+  assert.equal('targets' in body, false);
+});
+
+test('빈·잘못된 종목 배열은 stk_cd를 만들지 않는다', () => {
+  assert.deepEqual(
+    buildHydrateBody({ boardId: '49Y4-0', target: { stk_cd: [], stex_tp: '0' } }),
+    { board_id: '49Y4-0', target: { stex_tp: '0' } },
+  );
+  assert.deepEqual(
+    buildHydrateBody({ boardId: '49Y4-0', target: { stk_cds: ['AAPL'] } }),
+    { board_id: '49Y4-0' },
+  );
+});
+
+test('slot_values는 목록으로 와도 표로 와도 같은 표가 된다', () => {
+  assert.deepEqual(
+    normalizeSlotValues([{ slot_id: 'a', value: 1 }, { slot_id: 'b', value: 0 }]),
+    { a: 1, b: 0 },
+  );
+  assert.deepEqual(normalizeSlotValues({ a: 1, b: null }), { a: 1, b: null });
+  // 모양이 틀린 항목은 버린다 — 값 없는 슬롯을 undefined로 채워 결측 판정을 흐리지 않는다.
+  assert.deepEqual(normalizeSlotValues([{ slot_id: 'a' }, { value: 3 }, null, 'x']), {});
+  assert.deepEqual(normalizeSlotValues(undefined), {});
+});
+
+test('operation 상태는 로딩 완료와 부분 실패를 판단할 최소 필드만 전달한다', () => {
+  assert.deepEqual(normalizeOperations([
+    { operation_ref: 'base:ka10001', status: 'bound', reason: null, bound_count: 6, private: 'x' },
+    { operationRef: 'base:ka10003', status: 'unbound', reason: 'upstream_error' },
+    { operation_ref: '', status: 'bound' },
+  ]), [
+    { operation_ref: 'base:ka10001', status: 'bound', bound_count: 6 },
+    { operation_ref: 'base:ka10003', status: 'unbound', reason: 'upstream_error' },
+  ]);
+});
+
+test('금현물 primary는 봉이 든 AITS 차트 envelope만 통과시킨다', () => {
+  const envelope = {
+    renderer_id: 'aits-chart-v1', operation_ref: 'base:ka50092',
+    data: { symbol: 'M04020000', chart: { candles: [{ time: 1, close: 188910 }] } },
+  };
+  assert.equal(normalizePrimaryEnvelope(envelope), envelope);
+  assert.equal(normalizePrimaryEnvelope({ ...envelope, renderer_id: 'legacy' }), null);
+  assert.equal(normalizePrimaryEnvelope({ ...envelope, data: { ...envelope.data, chart: { candles: [] } } }), null);
+});
+
+test('ka50100 원 요청의 paint 권위는 hydrated ka50092 primary 계약으로 교체한다', () => {
+  const correlation = { dataset_id: 'd1', item_id: 'i1', ordinal: 0 };
+  const primary = {
+    renderer_id: 'aits-chart-v1', operation_ref: 'base:ka50092',
+    operation_args: { stk_cd: 'M04020000', tic_scope: '5' },
+    data: {
+      symbol: 'M04020000',
+      chart: { period: 'min', target: 'gold', trId: 'ka50092', candles: [{ time: 1, close: 188910 }] },
+      chart_meta: { series_scope: 'today', reload_group: 'gold-today', reload_targets: {} },
+    },
+  };
+  assert.deepEqual(primaryReloadAuthority({ primary_envelope: primary }, correlation, 'acct-1'), {
+    correlation,
+    operationRef: 'base:ka50092',
+    operationArgs: { stk_cd: 'M04020000', tic_scope: '5' },
+    accountId: 'acct-1',
+    chartBody: primary.data.chart,
+    chartMeta: primary.data.chart_meta,
+  });
+  assert.equal(primaryReloadAuthority({ primary_envelope: primary }, correlation, ''), null);
+});
+
+test('하이드레이션 POST의 stk_cd는 배열이 아니라 첫 종목 문자열이다', async () => {
+  const { calls, fetchImpl } = makeFetch(hydrateResponse([]));
+  await hydrateBoard({
+    backendBase: 'http://127.0.0.1:8010',
+    fetchImpl,
+    token: 'board-hydrate-token',
+    boardId: '49Y4-0',
+    target: { stk_cd: ['005930', '000660'] },
+  });
+  assert.deepEqual(calls[0].body.target, { stk_cd: '005930' });
+  assert.equal(typeof calls[0].body.target.stk_cd, 'string');
+  await hydrateBoard({
+    backendBase: 'http://127.0.0.1:8010',
+    fetchImpl,
+    token: 'board-hydrate-token',
+    boardId: '49Y4-0',
+    target: { stk_cds: ['035420', '000660'] },
+  });
+  assert.deepEqual(calls[1].body.target, { stk_cd: '035420' });
+});
+
+test('하이드레이션은 로컬 베어러를 싣고 surface_contract.slot_values를 읽는다', async () => {
+  const { calls, fetchImpl } = makeFetch(hydrateResponse([
+    { slot_id: 'kpi_prsm_dpst_aset_amt', occurrence_id: 'base:kt00003|$.prsm_dpst_aset_amt|1', observation_id: 'obs', value: '12340000' },
+  ], ['col_stk_nm']));
+  const result = await hydrateBoard({
+    backendBase: 'http://127.0.0.1:8010',
+    fetchImpl,
+    token: 'board-hydrate-token',
+    boardId: '2SKU-1',
+    target: { stk_cd: '005930' },
+    slotIds: ['kpi_prsm_dpst_aset_amt'],
+  });
+  assert.equal(calls[0].url, `http://127.0.0.1:8010${HYDRATE_PATH}`);
+  assert.equal(calls[0].options.method, 'POST');
+  assert.equal(calls[0].options.headers.Authorization, 'Bearer board-hydrate-token');
+  assert.deepEqual(calls[0].body, {
+    board_id: '2SKU-1', target: { stk_cd: '005930' }, slot_ids: ['kpi_prsm_dpst_aset_amt'],
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.status, 'hydrated');
+  assert.equal(result.board_id, '2SKU-1');
+  assert.deepEqual(result.slot_values, { kpi_prsm_dpst_aset_amt: '12340000' });
+  assert.equal(result.filled, 1);
+  assert.deepEqual(result.operations, [
+    { operation_ref: 'base:ka10085', status: 'bound', bound_count: 1 },
+  ]);
+  // 실시간 재색인은 observation_id가 붙은 원본 계약을 필요로 한다.
+  assert.equal(result.surface_contract.slot_values[0].observation_id, 'obs');
+});
+
+test('토큰이 없으면 빈 Authorization을 지어내지 않는다', async () => {
+  const { calls, fetchImpl } = makeFetch(hydrateResponse([]));
+  await hydrateBoard({ backendBase: 'http://x', fetchImpl, boardId: 'B1' });
+  assert.equal('Authorization' in calls[0].options.headers, false);
+});
+
+test('베어러가 거부되면 조용히 접지 않는다 — 설정 결함은 오류다', async () => {
+  const { fetchImpl } = makeFetch(jsonResponse(401, { detail: 'Invalid bearer credential' }));
+  const result = await hydrateBoard({ backendBase: 'http://x', fetchImpl, boardId: 'B1', token: 'x' });
+  assert.deepEqual(result, { ok: false, status: 'error', httpStatus: 401, error: 'HTTP 401' });
+});
+
+test('엔드포인트가 아직 없으면 unavailable을 돌려 renderer가 재시도할 수 있다', async () => {
+  for (const status of [404, 405, 501, 503]) {
+    const { fetchImpl } = makeFetch(jsonResponse(status, { detail: 'not found' }));
+    const result = await hydrateBoard({ backendBase: 'http://x', fetchImpl, boardId: 'B1' });
+    assert.deepEqual(result, { ok: false, status: 'unavailable', httpStatus: status });
+  }
+  // 백엔드가 아예 안 떠 있어도 같다.
+  const dead = { fetchImpl: async () => { throw new Error('ECONNREFUSED'); } };
+  const result = await hydrateBoard({ backendBase: 'http://x', fetchImpl: dead.fetchImpl, boardId: 'B1' });
+  assert.equal(result.ok, false);
+  assert.equal(result.status, 'unavailable');
+});
+
+test('서버가 있는데 터진 것은 오류로 보고한다(조용히 접지 않는다)', async () => {
+  const { fetchImpl } = makeFetch(jsonResponse(500, {}));
+  const result = await hydrateBoard({ backendBase: 'http://x', fetchImpl, boardId: 'B1' });
+  assert.deepEqual(result, { ok: false, status: 'error', httpStatus: 500, error: 'HTTP 500' });
+});
+
+test('board_id 없이 부르면 네트워크를 건드리지 않는다', async () => {
+  const { calls, fetchImpl } = makeFetch(hydrateResponse([]));
+  const result = await hydrateBoard({ backendBase: 'http://x', fetchImpl, boardId: '' });
+  assert.equal(result.ok, false);
+  assert.equal(result.status, 'invalid');
+  assert.deepEqual(calls, []);
+});
+
+test('빈 응답은 채우지 않는다', async () => {
+  const { fetchImpl } = makeFetch(hydrateResponse([]));
+  const result = await hydrateBoard({ backendBase: 'http://x', fetchImpl, boardId: 'B1' });
+  assert.equal(result.ok, true);
+  assert.equal(result.filled, 0);
+  assert.deepEqual(result.slot_values, {});
+});

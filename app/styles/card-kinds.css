@@ -1,0 +1,369 @@
+/* app/styles/card-kinds.css — 카드 v3(.omc/state/card-v3-plan.md §1,§3 Wave 0-FE) 산출물.
+   1) 공유 UI 프리미티브 9종(.card-kit-*) 스타일. app/canvas.css의 .facts-*/.compound-*와
+      섞이지 않도록 접두어를 분리했다(§1 클래스 네이밍 규칙) — app/canvas.css는 건드리지 않는다.
+   2) 카드종별 활성 렌더러 섹션(KIND 주석) — 각 카드 종류의 전용 스타일은 자기
+      섹션 안쪽에만 둬 섹션 경계와 유지보수 책임을 분명히 한다.
+   토큰은 전부 styles/tokens.css SSOT를 쓴다 — 색·크기를 새로 만들지 않는다.
+   카드 자신(.card)이 이미 backdrop-filter blur(14px)로 유리다 — 여기 프리미티브는
+   카드 표면 위 작은 칩/막대일 뿐 자체 blur/불투명 레이어를 얹지 않는다(glass-safe). */
+
+/* ---------- 프리미티브(§1) ---------- */
+
+.card-kit-quote-header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.card-kit-quote-price {
+  font-family: var(--font-strong);
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-num);
+  color: var(--color-k-text);
+}
+.card-kit-quote-subline {
+  flex-basis: 100%;
+  font-size: var(--text-xs);
+  color: var(--color-k-faint);
+}
+
+.card-kit-badge-change {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-flat);
+}
+.card-kit-badge-change.is-up { color: var(--color-up); }
+.card-kit-badge-change.is-down { color: var(--color-down); }
+.card-kit-badge-change.is-flat { color: var(--color-flat); }
+
+.card-kit-tab-switcher {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--color-k-panel3);
+}
+.card-kit-tab {
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-k-dim);
+  cursor: pointer;
+}
+.card-kit-tab.is-active {
+  background: var(--color-k-panel);
+  color: var(--color-k-text);
+  font-family: var(--font-strong);
+}
+
+.card-kit-bar-proportional { display: flex; flex-direction: column; gap: 6px; }
+.card-kit-bar-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; }
+.card-kit-bar-label { font-size: var(--text-sm); color: var(--color-k-faint); }
+.card-kit-bar-track {
+  position: relative;
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--color-k-panel3);
+}
+.card-kit-bar-fill { display: block; height: 100%; border-radius: 3px; background: var(--color-flat); }
+.card-kit-bar-fill.is-up { background: var(--color-up); }
+.card-kit-bar-fill.is-down { background: var(--color-down); }
+.card-kit-bar-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-k-text);
+  text-align: right;
+}
+
+.card-kit-bar-range { display: flex; flex-direction: column; gap: 4px; }
+.card-kit-bar-range-track {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-k-panel3);
+}
+.card-kit-bar-range-marker {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-k-text);
+  transform: translate(-50%, -50%);
+}
+.card-kit-bar-range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-k-faint);
+}
+
+.card-kit-row-ranked {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.card-kit-row-ranked-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--font-strong);
+  font-size: var(--text-xs);
+  color: var(--color-k-dim);
+}
+.card-kit-row-ranked-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  color: var(--color-k-text);
+}
+.card-kit-row-ranked-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-k-text);
+  text-align: right;
+}
+
+.card-kit-row-two-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+}
+.card-kit-row-two-line-left,
+.card-kit-row-two-line-right { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.card-kit-row-two-line-right { align-items: flex-end; text-align: right; }
+.card-kit-row-two-line-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  color: var(--color-k-text);
+}
+.card-kit-row-two-line-value { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-k-text); }
+.card-kit-row-two-line-subline { font-size: var(--text-xs); color: var(--color-k-faint); }
+
+.card-kit-pill-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--font-strong);
+  font-size: var(--text-xs);
+  color: var(--color-k-dim);
+}
+.card-kit-pill-status.is-up { color: var(--color-up); }
+.card-kit-pill-status.is-down { color: var(--color-down); }
+.card-kit-pill-status.is-flat { color: var(--color-flat); }
+
+.card-kit-row-ladder {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+}
+.card-kit-row-ladder-bar { display: block; height: 6px; border-radius: 3px; background: var(--color-flat); }
+.card-kit-row-ladder.is-bid .card-kit-row-ladder-bar { background: var(--color-up); }
+.card-kit-row-ladder.is-ask .card-kit-row-ladder-bar { background: var(--color-down); justify-self: end; }
+.card-kit-row-ladder-price { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-k-text); }
+.card-kit-row-ladder-qty {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-k-faint);
+  text-align: right;
+}
+
+/* ---------- 카드종별 렌더러 ----------
+   시세·수급·거래원·계좌·주문내역·보유주식·관심종목·차트·호가·주문·
+   프로그램매매·종목정보 등 등록된 카드 종류의 전용 표면을 이 파일에 모은다.
+   주문도 card-kind-주문.js가 등록·검증하는 활성 렌더러다. */
+
+/* KIND: 시세 */
+
+.card-kind-시세 { display: flex; flex-direction: column; gap: 4px; }
+
+/* 실시간/일별 탭(878-0 실측) — "실시간"이 기본 활성이고 실제로 라이브 체결이
+   반영되니 이제 장식이 아니다. "일별" 클릭은 갱신을 멈출 뿐 다른 데이터를 새로
+   불러오지 않는다(재조회 없음 원칙, card-kind-시세.js 머리말 그대로). */
+.card-kind-시세-tabs { display: flex; gap: 6px; }
+.card-kind-시세-tab {
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-2xs);
+  line-height: 12px;
+  color: var(--color-k-dim);
+  cursor: pointer;
+}
+.card-kind-시세-tab.is-active {
+  background: var(--color-k-panel);
+  border-color: var(--color-k-line);
+  font-family: var(--font-strong);
+  color: var(--color-k-text);
+}
+
+/* 4열 틱 표(체결가·체결량·등락률·거래량) — 표 골격은 fin-table(canvas.css) 재사용,
+   여기는 카드 본문 안 여백만 보탠다. */
+.card-kind-시세-ticker { display: block; }
+.card-kind-시세-ticker .fin-table td:nth-child(3) { padding-top: 3px; padding-bottom: 3px; }
+
+/* KIND: 수급 */
+
+.card-kit-sugub-note {
+  font-size: var(--text-xs);
+  color: var(--color-k-faint);
+  margin-bottom: 6px;
+}
+
+/* KIND: 거래원 */
+
+.card-kit-broker-ranking { display: flex; flex-direction: column; }
+.card-kit-broker-ranking-label {
+  font-size: var(--text-xs);
+  color: var(--color-k-faint);
+  margin-bottom: 2px;
+}
+.card-kit-broker-ranking .card-kit-row-ranked:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+
+/* KIND: 계좌 */
+
+/* 손익 필드 목록(profit) 또는 KRW/USD 통화 행(currency) — 둘 다 TwoLineRow 나열이라
+   같은 래퍼로 충분하다. divider는 미묘하게(마지막 행 제외) — .facts-grid 관행과 같다. */
+.card-kind-account-rows { display: flex; flex-direction: column; }
+.card-kind-account-rows .card-kit-row-two-line:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+
+/* KIND: 주문내역 */
+
+.card-kit-order-list { display: flex; flex-direction: column; }
+.card-kit-order-list .card-kit-row-two-line:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+/* ord_stt(주문상태) 톤 확장 — 정확한 원문 열거값은 모른다(card-kind-주문내역.js
+   상단 주석 참고). "완료"→ok(초록)/"대기"→warn(호박)로만 판정해 쓴다. */
+.card-kit-pill-status.is-ok { color: var(--color-ok); }
+.card-kit-pill-status.is-warn { color: var(--color-warn); }
+.card-kit-pill-status.is-info { color: var(--color-info); }
+
+/* KIND: 보유주식 */
+
+.card-kit-position-list { display: flex; flex-direction: column; }
+.card-kit-position-list .card-kit-row-two-line:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+
+/* KIND: 관심종목 */
+
+/* ka10095 레일 로우 나열 — "토스 우측 관심 레일" 스타일(종목명+가격+등락을 한
+   가로줄로 압축). card-kind-account-rows와 같은 이유의 미묘한 divider. */
+.card-kind-watchlist-rail { display: flex; flex-direction: column; }
+.card-kind-watchlist-rail .card-kit-row-two-line:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+
+/* KIND: 차트 */
+
+/* renderLiveChart의 AUGMENT 삽입 조각(canvas.js) — 차트 마운트 지점(.chart-card-body)
+   위에 얹는 가격 헤더. 아래쪽에 여백만 보태 캔들 영역과 붙지 않게 한다. */
+.card-kind-차트-quote { margin-bottom: 8px; }
+
+/* KIND: 호가 */
+
+/* 잔량 래더 — 이 카드 계열의 detail: 응답은 가격+잔량을 같은 봉투에 담지 않는다(실측,
+   card-kind-호가.js 머리말) — .card-kit-row-ladder를 세로로 쌓기만 한다. */
+.card-kit-hoga-ladder { display: flex; flex-direction: column; gap: 2px; }
+
+/* KIND: 주문 — 실행 전 guarded action은 canvas.js가 담당하고, 여기서는 주문체결
+   WebSocket·주문 결과를 읽기 전용 receipt로 표시한다. */
+
+.card-kind-order-receipt,
+.card-kind-order-facts { display: flex; flex-direction: column; }
+.card-kind-order-receipt-state {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2px 0 8px;
+}
+.card-kind-order-receipt .card-kit-row-two-line:not(:last-child),
+.card-kind-order-facts .card-kit-row-two-line:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+
+/* KIND: 프로그램매매 */
+
+.card-kit-program-trend { display: flex; flex-direction: column; gap: 8px; }
+.card-kit-program-trend .card-kit-tab-switcher { align-self: flex-start; }
+
+/* KIND: 종목정보 */
+
+/* ka10001 daily_price_band/price_range 그룹 — RangeBar 위에 "1일 범위"/"연중 범위"
+   라벨을 얹는다. 두 그룹 모두 이 envelope엔 현재가가 없어(다른 detail_group 소유)
+   점 마커는 안 뜬다 — 라벨-값 정직성 우선(card-kind-종목정보.js 상단 주석). */
+.card-kind-종목정보-range { display: flex; flex-direction: column; gap: 4px; }
+.card-kind-종목정보-range-label { font-size: var(--text-xs); color: var(--color-k-faint); }
+
+/* ---------- US-004 잔여 4종(.omc/state/card-v3-wave5-specs.json) ---------- */
+
+/* KIND: 신용거래 */
+
+.card-kind-신용거래-list { display: flex; flex-direction: column; }
+.card-kind-신용거래-list .card-kit-row-two-line:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+
+/* KIND: 대차거래 */
+
+.card-kind-대차거래-list { display: flex; flex-direction: column; }
+.card-kind-대차거래-list .card-kit-row-two-line:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+
+/* KIND: 공매도 */
+
+.card-kind-공매도-list { display: flex; flex-direction: column; }
+.card-kind-공매도-list .card-kit-row-two-line:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+
+/* KIND: 종목발굴 */
+
+.card-kind-discovery-list,
+.card-kind-discovery-facts,
+.card-kind-discovery-compound { display: flex; flex-direction: column; }
+.card-kind-discovery-compound { gap: 12px; }
+.card-kind-discovery-list .card-kit-row-two-line:not(:last-child),
+.card-kind-discovery-facts .card-kit-row-two-line:not(:last-child) {
+  border-bottom: 1px solid var(--color-k-panel3);
+}
+.card-kind-discovery-list .card-kit-row-two-line:first-child {
+  border-top: 2px solid var(--color-brand);
+}

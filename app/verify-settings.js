@@ -1,0 +1,352 @@
+// 검증 스크립트 — 설정·온보딩 IPC 핸들러(lib/main/*.js)의 실제 반환 모양을
+// 확인한다. `npm run verify:settings` (= electron verify-settings.js).
+//
+// verify.js와 같은 패턴: main.js를 라이브러리로 불러오고, 자동 기동은 끈 채
+// createWindows()를 직접 호출해 실제 창이 뜨는지도 함께 확인한다. 그 위에
+// settingsHandlers(=main.js가 노출한, 실제 ipcMain.handle에 연결된 그 함수들)를
+// 렌더러를 거치지 않고 직접 호출해 반환 값을 콘솔에 출력한다.
+//
+// 격리:
+//   - userData를 임시 디렉터리로 바꿔 이 컴퓨터의 실제 CLI 계정 감지 파일
+//     (~/.claude.json 등)은 "읽기"는 실제로 하되(그게 감지 로직이 맞는지
+//     확인하는 유일한 방법이다), 이 스크립트가 만드는 계좌/온보딩/CLI 계정
+//     상태 파일은 실제 사용자 데이터를 건드리지 않는다.
+//   - ATHENA_MCP_REGISTRY_PATH를 임시 경로로 돌려 이 컴퓨터의 진짜
+//     ~/.athena/mcp_servers.json을 건드리지 않는다.
+//   - 계좌 등록 "성공" 경로는 실제 키움 모의투자 서버에 유효한 앱키가 없어
+//     끝까지 재현할 수 없다 — https.request를 이 스크립트 안에서만 최소
+//     스텁으로 바꿔 성공 응답을 시뮬레이션한다(accounts.js 자체는 손대지
+//     않는다, 실제 코드는 항상 진짜 https 모듈을 쓴다). "실패(auth)" 경로는
+//     스텁 없이 진짜 네트워크로 검증한다 — 요청 모양이 실제로 맞다는 증거는
+//     이쪽에서 나온다.
+
+process.env.ATHENA_NO_AUTOSTART = '1';
+
+const os = require('os');
+const path = require('path');
+const fs = require('fs');
+const { EventEmitter } = require('events');
+const { captureRoot } = require('./lib/probe-captures');
+
+// **이 스크립트는 공유 프로필로 돌릴 수 없다.** 아래에서 계좌를 등록하고
+// (`검증-실패계좌`·`검증-성공계좌`) 다시 삭제한다 — ATHENA_USERDATA_DIR로
+// 실프로필을 가리키면 사용자가 등록한 계좌 옆에 검증용 쓰레기를 쓰고 remove까지
+// 부른다. 다른 하네스와 달리 harness-profile.js를 쓰지 않고 명시적으로 거부한다.
+if (process.env.ATHENA_USERDATA_DIR) {
+  console.error(
+    '[verify-settings] ATHENA_USERDATA_DIR이 설정돼 있다. 이 스크립트는 계좌를 등록·삭제하므로\n'
+    + '                  실프로필로 돌릴 수 없다. 변수를 해제하고 다시 실행하라.'
+  );
+  process.exit(2);
+}
+
+const TMP_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), 'athena-verify-'));
+const MCP_STATE_DIR = path.join(TMP_ROOT, 'mcp-state');
+fs.mkdirSync(MCP_STATE_DIR, { recursive: true });
+process.env.ATHENA_MCP_REGISTRY_PATH = path.join(MCP_STATE_DIR, 'mcp_servers.json');
+
+const { app } = require('electron');
+app.setPath('userData', path.join(TMP_ROOT, 'userData'));
+
+// ---- https 스텁 (계좌 등록 "성공" 경로 전용, appkey==='VERIFY_OK_KEY'일 때만) ----
+const https = require('https');
+const realRequest = https.request.bind(https);
+https.request = function stubbedRequest(options, callback) {
+  if (options && options.hostname === 'mockapi.kiwoom.com') {
+    const req = new EventEmitter();
+    let written = '';
+    req.write = (chunk) => { written += chunk; return true; };
+    req.end = () => {
+      let body = {};
+      try { body = JSON.parse(written); } catch { /* ignore */ }
+      if (body.appkey !== 'VERIFY_OK_KEY') {
+        return realRequestThrough(options, callback, written);
+      }
+      process.nextTick(() => {
+        const res = new EventEmitter();
+        res.statusCode = 200;
+        callback(res);
+        process.nextTick(() => {
+          res.emit('data', Buffer.from(JSON.stringify({
+            return_code: 0,
+            token: 'verify-fake-token',
+            expires_dt: '20991231235959',
+          })));
+          res.emit('end');
+        });
+      });
+    };
+    req.destroy = () => {};
+    return req;
+  }
+  return realRequest(options, callback);
+};
+function realRequestThrough(options, callback, writtenBody) {
+  const req = realRequest(options, callback);
+  req.write(writtenBody);
+  req.end();
+  return req;
+}
+
+// 계좌 동기화는 실제 백엔드를 사용하지 않는다. 같은 IPC가 보내는 인증·등록·삭제를
+// 임시 계좌 목록으로 검증하며, 그 밖의 fetch 경로는 연결 불가로 닫는다.
+process.env.ATHENA_BACKEND_URL = 'http://127.0.0.1:1';
+process.env.ATHENA_LOCAL_BEARER_TOKEN = 'verify-settings-local-token';
+const backendAccounts = new Map();
+globalThis.fetch = async (input, options = {}) => {
+  const url = new URL(String(input));
+  const match = /^\/runtime\/accounts\/([^/]+)$/.exec(url.pathname);
+  if (url.origin !== process.env.ATHENA_BACKEND_URL || !match) {
+    return new Response('{}', { status: 503 });
+  }
+  if (new Headers(options.headers).get('Authorization') !== 'Bearer verify-settings-local-token') {
+    return new Response('{}', { status: 401 });
+  }
+  const id = decodeURIComponent(match[1]);
+  if (options.method === 'PUT') {
+    const body = JSON.parse(options.body);
+    if (body.app_key !== 'VERIFY_OK_KEY' || body.secret_key !== 'VERIFY_OK_SECRET_0123456789') {
+      return new Response('{}', { status: 403 });
+    }
+    backendAccounts.set(id, body);
+    return Response.json({ ok: true, ready: true, backend_alias: 'verify-account' });
+  }
+  if (options.method === 'DELETE' && backendAccounts.delete(id)) {
+    return Response.json({ ok: true });
+  }
+  return new Response('{}', { status: 404 });
+};
+
+const main = require('./main.js');
+const h = main.settingsHandlers;
+
+function wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+const report = {};
+const failures = [];
+function log(section, value) {
+  report[section] = value;
+  console.log(`\n[${section}]`);
+  console.log(JSON.stringify(value, null, 2));
+}
+function accountCount(value) {
+  return value && Array.isArray(value.accounts) ? value.accounts.length : -1;
+}
+
+async function run() {
+  console.log(`[verify-settings] TMP_ROOT=${TMP_ROOT}`);
+  await app.whenReady();
+  await main.createWindows();
+  const wins = main.getWins();
+  console.log(`[verify-settings] windows created: chat=${!!wins.shellWin} canvas=${!!wins.shellWin}`);
+  if (!wins.shellWin) failures.push('셸 창이 없다');
+  await wait(400);
+
+  // ---------------- 온보딩 ----------------
+  log('onboarding.state.initial', h.onboardingState());
+  const layoutBefore = main.getLayout();
+  log('onboarding.advance.step2', h.onboardingAdvance(null, { step: 2 }));
+  log('onboarding.state.afterStep2', h.onboardingState());
+  const heightBeforeStep3Done = main.getWins().shellWin.getBounds().height;
+  const advanceStep3 = h.onboardingAdvance(null, { step: 3 });
+  log('onboarding.advance.step3', advanceStep3);
+  await wait(50);
+  const heightAfterStep3Done = main.getWins().shellWin.getBounds().height;
+  const heightRoundTrip = {
+    heightBeforeStep3Done,
+    heightAfterStep3Done,
+    shellH: layoutBefore.shellH,
+    completed: advanceStep3.ok && advanceStep3.done && !h.onboardingState().needed,
+    keptShellHeight: Number.isFinite(layoutBefore.shellH)
+      && Math.abs(heightBeforeStep3Done - layoutBefore.shellH) <= 2
+      && Math.abs(heightAfterStep3Done - layoutBefore.shellH) <= 2,
+  };
+  log('onboarding.shellHeight.stableOnComplete', heightRoundTrip);
+  if (!heightRoundTrip.completed || !heightRoundTrip.keptShellHeight) {
+    failures.push('온보딩 완료 상태 또는 고정 셸 높이가 올바르지 않다');
+  }
+
+  // ---------------- CLI 계정 ----------------
+  log('cli.list', h.cliList());
+  log('cli.login.unknownProvider', await h.cliLogin(null, { providerId: 'nope' }));
+  // gemini는 LOGIN_COMMANDS에 없다 — 설치 여부와 무관하게 unknownProvider
+  // 경로("알 수 없는 CLI다")를 탄다. grok은 이제 알려진 공급자라 여기서
+  // login()을 부르면 실제 콘솔 창이 뜬다 — claude/codex와 같이 스폰하지 않는다.
+  log('cli.login.gemini(unknownProvider)', await h.cliLogin(null, { providerId: 'gemini' }));
+  const cliAccounts = require('./lib/main/cli-accounts');
+  log('cli.probeBinaryExists', {
+    claude: await cliAccounts.probeBinaryExists('claude'),
+    codex: await cliAccounts.probeBinaryExists('codex'),
+    gemini: await cliAccounts.probeBinaryExists('gemini'),
+    grok: await cliAccounts.probeBinaryExists('grok'),
+  });
+  console.log('[verify-settings] NOTE: claude/codex/grok 실제 login() 스폰(대화형 콘솔 창 오픈, codex는 기존 세션 로그아웃 위험 실측됨)은');
+  console.log('  이 자동 검증에서 의도적으로 실행하지 않았다 — probeBinaryExists()로 설치 감지만 확인했다.');
+
+  // ---------------- 계좌 ----------------
+  log('account.list.empty', h.accountList());
+  const emptyAlias = await h.accountRegister(null, { alias: '', appKey: 'x', secretKey: 'y' });
+  log('account.register.invalid(emptyAlias)', emptyAlias);
+  if (!emptyAlias || emptyAlias.ok) failures.push('빈 별칭 등록이 성공으로 나왔다');
+  log('account.register.auth(realNetworkCall)', await h.accountRegister(null, { alias: '검증-실패계좌', appKey: 'not-a-real-key', secretKey: 'not-a-real-secret' }));
+  // Paper FPE-0 — 검증과 저장이 갈렸다. verifyOnly는 같은 발급 왕복을 하되
+  // 계좌를 만들지 않는다(목록이 그대로여야 확인 완료 상태가 저장이 아님을 증명한다).
+  log('account.register.verifyOnly(stubbedNetwork)', await h.accountRegister(null, {
+    alias: '검증-성공계좌', appKey: 'VERIFY_OK_KEY', secretKey: 'VERIFY_OK_SECRET_0123456789', verifyOnly: true,
+  }));
+  const afterVerifyOnly = h.accountList();
+  log('account.list.afterVerifyOnly', afterVerifyOnly);
+  if (accountCount(afterVerifyOnly) !== 0) failures.push('verifyOnly가 계좌를 저장했다');
+  const okReg = await h.accountRegister(null, { alias: '검증-성공계좌', appKey: 'VERIFY_OK_KEY', secretKey: 'VERIFY_OK_SECRET_0123456789' });
+  log('account.register.ok(stubbedNetwork)', okReg);
+  const afterRegister = h.accountList();
+  log('account.list.afterRegister', afterRegister);
+  if (!(okReg && okReg.ok)) failures.push('스텁 계좌 등록이 실패했다');
+  else if (accountCount(afterRegister) !== 1) failures.push('스텁 계좌 등록 뒤 목록이 1개가 아니다');
+  if (!okReg.backendConnected || !backendAccounts.has(okReg.id)) failures.push('등록 계좌가 스텁 백엔드에 연결되지 않았다');
+
+  if (okReg.ok) {
+    const enabled = await h.orderApiSet(null, { id: okReg.id, enabled: true });
+    log('order-api-set.enable.ok(tokenReady)', enabled);
+    if (!enabled.ok || backendAccounts.get(okReg.id)?.order_api !== true) failures.push('주문 허용이 스텁 백엔드에 반영되지 않았다');
+    log('account.list.afterOrderApiOn', h.accountList());
+    const disabled = await h.orderApiSet(null, { id: okReg.id, enabled: false });
+    log('order-api-set.disable', disabled);
+    if (!disabled.ok || backendAccounts.get(okReg.id)?.order_api !== false) failures.push('주문 차단이 스텁 백엔드에 반영되지 않았다');
+    log('auth-token-status', h.authTokenStatus(null, { id: okReg.id }));
+    log('auth-token-refresh', await h.authTokenRefresh(null, { id: okReg.id }));
+    // "연결 해제" 버튼(auth-screen.js) 결선 — au10002(접근토큰폐기) 계약을 같은
+    // 스텁 네트워크로 확인한다. 폐기 후 상태는 항상 needed로 돌아가야 한다.
+    log('auth-token-revoke.ok(stubbedNetwork)', await h.authTokenRevoke(null, { id: okReg.id }));
+    log('auth-token-status.afterRevoke', h.authTokenStatus(null, { id: okReg.id }));
+    // 두 번째 폐기 — 이미 로컬 토큰이 없는 상태(needed)에서는 upstream 호출 없이
+    // 바로 ok:true를 돌려줘야 한다(revoke_token()의 "토큰 없으면 즉시 반환"과 동일).
+    log('auth-token-revoke.alreadyNeeded(noUpstreamCall)', await h.authTokenRevoke(null, { id: okReg.id }));
+    log('account.setActive.self', await h.accountSetActive(null, { id: okReg.id }));
+    const removed = await h.accountRemove(null, { id: okReg.id });
+    log('account.remove', removed);
+    if (!removed.ok || backendAccounts.has(okReg.id)) failures.push('스텁 백엔드 계좌 삭제가 완료되지 않았다');
+    const afterRemove = h.accountList();
+    log('account.list.afterRemove', afterRemove);
+    if (accountCount(afterRemove) !== 0) failures.push('계좌 삭제 뒤 목록이 비지 않았다');
+  }
+
+  log('mcp.list.empty', await h.mcpList());
+
+  const pythonExe = '.venv/Scripts/python.exe';
+  const fixture = 'tests/mcp/fixtures/fake_server.py';
+  const PLAINTEXT_SECRET = 'plaintext-verify-value-0123456789';
+  const snippet = JSON.stringify({
+    mcpServers: {
+      '검증용 테스트 서버': { command: pythonExe, args: [fixture], env: { MY_TEST_SECRET: PLAINTEXT_SECRET } },
+    },
+  });
+  const staged = await h.mcpStageSnippet(null, { snippet });
+  log('mcp.stageSnippet', staged);
+  if (!(staged && staged.ok && staged.staged && staged.staged.length)) {
+    failures.push(`mcp.stageSnippet 실패: ${JSON.stringify(staged)}`);
+  }
+
+  if (staged && staged.ok && staged.staged.length) {
+    const one = staged.staged[0];
+    const reg = h.mcpRegister(null, { staged: one });
+    log('mcp.register', reg);
+    const approve = await h.mcpApprove(null, { alias: one.alias });
+    log('mcp.approve', approve);
+    const probe1 = await h.mcpProbe(null, { alias: one.alias });
+    log('mcp.probe.beforeAllow', {
+      ok: probe1.ok,
+      protocolVersion: probe1.protocolVersion,
+      encodingCorrupt: probe1.encodingCorrupt,
+      toolCount: (probe1.tools || []).length,
+      echoAllowed: (probe1.tools || []).find((t) => t.name === 'echo'),
+    });
+    const allowOn = await h.mcpAllowTool(null, { alias: one.alias, tool: 'echo', allowed: true });
+    log('mcp.allowTool.on(realCli)', allowOn);
+    const probe2 = await h.mcpProbe(null, { alias: one.alias });
+    log('mcp.probe.afterAllowOn.echoAllowed', (probe2.tools || []).find((t) => t.name === 'echo'));
+    const allowOff = await h.mcpAllowTool(null, { alias: one.alias, tool: 'echo', allowed: false });
+    log('mcp.allowTool.off(consentJsonMutation)', allowOff);
+    const probe3 = await h.mcpProbe(null, { alias: one.alias });
+    log('mcp.probe.afterAllowOff.echoAllowed', (probe3.tools || []).find((t) => t.name === 'echo'));
+    log('mcp.list.afterProbe', await h.mcpList());
+
+    {
+      const mcpEnv = require('./lib/main/mcp-env');
+      const { PYTHON_EXE, BACKEND_DIR } = require('./lib/main/mcp-config');
+      const { spawnSync } = require('child_process');
+
+      const registryRaw = fs.readFileSync(mcpEnv.registryPath(), 'utf-8');
+      const registryJson = JSON.parse(registryRaw);
+      const redactedValue = registryJson.servers[one.alias].env.MY_TEST_SECRET;
+      const isSentinel = redactedValue === mcpEnv.SENTINEL;
+      const noPlaintext = !registryRaw.includes(PLAINTEXT_SECRET);
+      log('mcp-env.afterMigrate.isSentinel', isSentinel);
+      log('mcp-env.afterMigrate.noPlaintextOnDisk', noPlaintext);
+      if (!isSentinel) failures.push('mcp-env 마이그레이션이 센티널을 쓰지 않았다');
+      if (!noPlaintext) failures.push('mcp-env 레지스트리에 평문 비밀이 남았다');
+
+      const overrides = mcpEnv.buildEnvOverrides(one.alias);
+      const varName = mcpEnv.envVarName(one.alias, 'MY_TEST_SECRET');
+      const roundTrip = overrides[varName] === PLAINTEXT_SECRET;
+      log('mcp-env.buildEnvOverrides.decryptRoundTripMatches', roundTrip);
+      if (!roundTrip) failures.push('mcp-env 복호화 왕복이 원문과 다르다');
+
+      // 앱 경유 없이 이 서버를 직접 probe — 주입 환경변수가 없으므로 센티널을
+      // 못 풀어 spawn이 명확히 실패해야 한다(fail-closed, registry.py의
+      // MissingSecretEnvError).
+      const directNoEnv = spawnSync(
+        PYTHON_EXE, ['-m', 'athena_mcp', 'probe', one.alias, '--json'],
+        { cwd: BACKEND_DIR, env: { ...process.env, PYTHONPATH: BACKEND_DIR }, encoding: 'utf-8' }
+      );
+      let directNoEnvReport = null;
+      try {
+        const idx = directNoEnv.stdout.indexOf('{');
+        if (idx >= 0) directNoEnvReport = JSON.parse(directNoEnv.stdout.slice(idx));
+      } catch { /* 파싱 실패해도 아래 exitCode/ok로 판단 가능 */ }
+      log('mcp-env.directSpawn.withoutAppInjection', {
+        exitCode: directNoEnv.status,
+        ok: directNoEnvReport ? directNoEnvReport.ok : null,
+        errorMentionsInjectionVar: !!(directNoEnvReport && directNoEnvReport.error && directNoEnvReport.error.includes(varName)),
+      });
+
+      // 앱 spawn 경로 시뮬레이션 — 복호화된 값을 환경변수로 주입하면 성공해야 한다.
+      const directWithEnv = spawnSync(
+        PYTHON_EXE, ['-m', 'athena_mcp', 'probe', one.alias, '--json'],
+        { cwd: BACKEND_DIR, env: { ...process.env, PYTHONPATH: BACKEND_DIR, ...overrides }, encoding: 'utf-8' }
+      );
+      let directWithEnvReport = null;
+      try {
+        const idx = directWithEnv.stdout.indexOf('{');
+        if (idx >= 0) directWithEnvReport = JSON.parse(directWithEnv.stdout.slice(idx));
+      } catch { /* ignore */ }
+      log('mcp-env.directSpawn.withAppSimulatedInjection', {
+        exitCode: directWithEnv.status,
+        ok: directWithEnvReport ? directWithEnvReport.ok : null,
+        toolCount: directWithEnvReport ? (directWithEnvReport.tools || []).length : null,
+      });
+    }
+
+    const removed = await h.mcpRemove(null, { alias: one.alias });
+    log('mcp.remove', removed);
+    log('mcp.list.afterRemove', await h.mcpList());
+  }
+
+  const reportPath = path.join(captureRoot(__dirname), 'VERIFY-SETTINGS-REPORT.json');
+  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf-8');
+  console.log('\n[verify-settings] 리포트 저장:', reportPath);
+  console.log(`[verify-settings] 임시 디렉터리(수동 정리 필요 없음, OS temp): ${TMP_ROOT}`);
+
+  if (failures.length) {
+    console.error(`[verify-settings] 실패 ${failures.length}건`);
+    for (const item of failures) console.error(`  - ${item}`);
+    app.exit(1);
+    return;
+  }
+  app.quit();
+}
+
+run().catch((err) => {
+  console.error('[verify-settings] FAILED', err);
+  app.exit(1);
+});

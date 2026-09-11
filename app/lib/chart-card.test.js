@@ -1,0 +1,256 @@
+'use strict';
+
+// DOM/Electron 없이 검증 가능한 부분만 스모크 테스트한다 — createChartCard는
+// document/lightweight-charts DOM 마운트가 필요해 node --test(순수 Node) 경로에서는
+// 못 돈다. toCandleSeriesData/toVolumeSeriesData/withAlpha는 순수 함수라 분리해뒀다
+// (chart-card.js 상단 주석 "순수 변환" 절 참조) — 이 스위트가 그 부분을 커버한다.
+
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const {
+  toCandleSeriesData, toVolumeSeriesData, withAlpha, formatVolumeKo, UP_COLOR, DOWN_COLOR,
+  resolveInitialPeriod, createCachedChartLibraryLoader, renderNowAndOnNextFrame,
+  withReloadDeadline, RELOAD_DEADLINE_MS, RELOAD_DEADLINE_ERROR,
+  clipIntradayToLatestSession, INTRADAY_SESSION_GAP_SEC,
+} = require('./chart-card');
+
+const FIXTURE = require(path.join(__dirname, '..', 'data', 'chart-mock-ohlcv.json'));
+
+test('formatVolumeKo uses 만·억 instead of K/M/B', () => {
+  assert.equal(formatVolumeKo(14030000), '1,403만');
+  assert.equal(formatVolumeKo(214000000), '2억 1,400만');
+  assert.equal(formatVolumeKo(9800), '9,800');
+  const src = fs.readFileSync(path.join(__dirname, 'chart-card.js'), 'utf8');
+  assert.match(src, /priceFormat: VOLUME_FORMAT/);
+  assert.doesNotMatch(src, /type: 'volume'/);
+});
+
+test('cold-start chart import is started once and every renderer awaits the same ready result', async () => {
+  let imports = 0;
+  let resolveImport;
+  const load = createCachedChartLibraryLoader(
+    () => { imports += 1; return new Promise((resolve) => { resolveImport = resolve; }); },
+    () => 123.5,
+  );
+  const prewarm = load();
+  const firstRender = load();
+  assert.strictEqual(firstRender, prewarm);
+  assert.equal(imports, 0);
+  await Promise.resolve();
+  assert.equal(imports, 1);
+  resolveImport({ createChart() {} });
+  assert.deepEqual(await prewarm, { library: { createChart: (await firstRender).library.createChart }, readyAt: 123.5 });
+  assert.strictEqual(load(), prewarm);
+  assert.equal(imports, 1);
+});
+
+test('withReloadDeadline: 한도가 지나면 거부하고 타이머를 지운다', async () => {
+  const timers = new Map();
+  let nextId = 1;
+  let cleared = 0;
+  const pending = withReloadDeadline(new Promise(() => {}), {
+    setTimeout: (fn, ms) => {
+      const id = nextId++;
+      timers.set(id, { fn, ms });
+      return id;
+    },
+    clearTimeout: (id) => {
+      cleared += 1;
+      timers.delete(id);
+    },
+  });
+  assert.equal(timers.size, 1);
+  const [{ fn, ms }] = timers.values();
+  assert.equal(ms, RELOAD_DEADLINE_MS);
+  fn();
+  await assert.rejects(pending, { message: RELOAD_DEADLINE_ERROR });
+  assert.equal(timers.size, 0);
+  assert.equal(cleared, 1);
+});
+
+test('withReloadDeadline: 작업이 먼저 끝나면 그 값을 주고 타이머를 지운다', async () => {
+  let cleared = 0;
+  const value = await withReloadDeadline(Promise.resolve({ ok: true, candles: [] }), {
+    setTimeout: () => 7,
+    clearTimeout: (id) => {
+      assert.equal(id, 7);
+      cleared += 1;
+    },
+  });
+  assert.deepEqual(value, { ok: true, candles: [] });
+  assert.equal(cleared, 1);
+});
+
+test('withReloadDeadline: 작업이 실패해도 타이머를 지운다', async () => {
+  let cleared = 0;
+  await assert.rejects(
+    withReloadDeadline(Promise.reject(new Error('reload가 완료되지 않았다')), {
+      setTimeout: () => 3,
+      clearTimeout: (id) => {
+        assert.equal(id, 3);
+        cleared += 1;
+      },
+    }),
+    { message: 'reload가 완료되지 않았다' },
+  );
+  assert.equal(cleared, 1);
+});
+
+test('volume-profile toggle renders immediately even when the next animation frame is withheld', () => {
+  const calls = [];
+  let queuedFrame = null;
+  renderNowAndOnNextFrame(
+    () => calls.push('render'),
+    (callback) => { queuedFrame = callback; },
+  );
+  assert.deepEqual(calls, ['render']);
+  assert.equal(typeof queuedFrame, 'function');
+  queuedFrame();
+  assert.deepEqual(calls, ['render', 'render']);
+  const source = fs.readFileSync(path.join(__dirname, 'chart-card.js'), 'utf8');
+  assert.match(
+    source,
+    /onVolumeProfileToggle:\s*\(on\)\s*=>\s*\{[\s\S]*?renderNowAndOnNextFrame\(renderVolumeProfile\)/,
+  );
+});
+
+test('chart-mock-ohlcv.json: 240 일봉, OHLC 정합(low<=open/close<=high)', () => {
+  assert.equal(FIXTURE.bars.length, 240);
+  for (const b of FIXTURE.bars) {
+    assert.ok(b.low <= b.open && b.low <= b.close, `low가 open/close보다 커야 안 됨: ${JSON.stringify(b)}`);
+    assert.ok(b.high >= b.open && b.high >= b.close, `high가 open/close보다 작으면 안 됨: ${JSON.stringify(b)}`);
+    assert.ok(b.low <= b.high);
+    assert.ok(b.volume > 0);
+  }
+});
+
+test('toCandleSeriesData: time/open/high/low/close만 뽑고 숫자로 강제한다', () => {
+  const out = toCandleSeriesData(FIXTURE.bars);
+  assert.equal(out.length, FIXTURE.bars.length);
+  assert.deepEqual(Object.keys(out[0]).sort(), ['close', 'high', 'low', 'open', 'time']);
+  assert.equal(typeof out[0].open, 'number');
+});
+
+test('toCandleSeriesData: 결측/비정상 봉은 걸러낸다', () => {
+  const out = toCandleSeriesData([
+    { time: '2026-01-01', open: 100, high: 110, low: 90, close: 105 },
+    { time: '2026-01-02', open: NaN, high: 110, low: 90, close: 105 },
+    { time: null, open: 100, high: 110, low: 90, close: 105 },
+    null,
+  ]);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].time, '2026-01-01');
+});
+
+test('toCandleSeriesData: 빈/비배열 입력은 빈 배열', () => {
+  assert.deepEqual(toCandleSeriesData([]), []);
+  assert.deepEqual(toCandleSeriesData(null), []);
+  assert.deepEqual(toCandleSeriesData(undefined), []);
+});
+
+function minBar(time, close) {
+  return { time, open: close, high: close, low: close, close, volume: 1 };
+}
+
+test('분·틱은 장 사이 공백 뒤의 마지막 세션만 남긴다', () => {
+  const yesterday = 1_700_000_000;
+  const today = yesterday + 18 * 3600;
+  const bars = [
+    minBar(yesterday, 1860000),
+    minBar(yesterday + 60, 1861000),
+    minBar(today, 1776000),
+    minBar(today + 60, 1775000),
+  ];
+  const clipped = clipIntradayToLatestSession(bars, 'MIN');
+  assert.equal(clipped.length, 2);
+  assert.equal(clipped[0].close, 1776000);
+  assert.equal(clipped[1].close, 1775000);
+  assert.ok(today - (yesterday + 60) > INTRADAY_SESSION_GAP_SEC);
+  assert.deepEqual(clipIntradayToLatestSession(bars, 'TICK').map((b) => b.close), [1776000, 1775000]);
+  assert.equal(clipIntradayToLatestSession(bars, 'D').length, 4);
+});
+
+test('같은 장 안의 1분봉은 자르지 않는다', () => {
+  const t0 = 1_700_000_000;
+  const bars = [minBar(t0, 1), minBar(t0 + 60, 2), minBar(t0 + 120, 3)];
+  const clipped = clipIntradayToLatestSession(bars, 'MIN');
+  assert.equal(clipped.length, 3);
+  assert.equal(clipped[2].close, 3);
+});
+
+test('toVolumeSeriesData: 상승봉은 UP_COLOR alpha 0.5, 하락봉은 DOWN_COLOR alpha 0.5', () => {
+  const out = toVolumeSeriesData([
+    { time: '2026-01-01', open: 100, close: 110, volume: 1000 }, // 상승
+    { time: '2026-01-02', open: 110, close: 100, volume: 2000 }, // 하락
+    { time: '2026-01-03', open: 100, close: 100, volume: 3000 }, // 보합 — 상승 취급(>=)
+  ]);
+  assert.equal(out.length, 3);
+  assert.equal(out[0].color, withAlpha(UP_COLOR, 0.5));
+  assert.equal(out[1].color, withAlpha(DOWN_COLOR, 0.5));
+  assert.equal(out[2].color, withAlpha(UP_COLOR, 0.5));
+  assert.equal(out[0].value, 1000);
+});
+
+test('withAlpha: HEX를 rgba() 문자열로 정확히 변환한다', () => {
+  assert.equal(withAlpha('#FF5C5C', 0.5), 'rgba(255,92,92,0.5)');
+  assert.equal(withAlpha('#4D9FFF', 0.5), 'rgba(77,159,255,0.5)');
+});
+
+test('mock 데이터에 대한 실제 변환도 산술적으로 닫힌다(전량 유지)', () => {
+  const candles = toCandleSeriesData(FIXTURE.bars);
+  const volumes = toVolumeSeriesData(FIXTURE.bars);
+  assert.equal(candles.length, FIXTURE.bars.length);
+  assert.equal(volumes.length, FIXTURE.bars.length);
+});
+
+
+test('크게 보기는 보드 카드도 확대하고 Esc는 카드를 지우지 않는다', () => {
+  const src = fs.readFileSync(path.join(__dirname, 'chart-card.js'), 'utf8');
+  assert.match(src, /container\.closest\('\.card'\)/);
+  assert.match(src, /onFullscreenKey/);
+  assert.match(src, /event\.stopPropagation\(\)/);
+  assert.match(src, /document\.addEventListener\('keydown', onFullscreenKey, true\)/);
+  const css = fs.readFileSync(path.join(__dirname, '..', 'canvas.css'), 'utf8');
+  assert.match(css, /\.card\.is-expanded/);
+  assert.match(css, /canvas-tab-deck:has\(\.card\.is-expanded\)/);
+});
+
+test('resolveInitialPeriod: AITS 주기 D/W/M/Y/MIN/TICK은 그대로 통과시킨다', () => {
+  assert.equal(resolveInitialPeriod({ period: 'D' }), 'D');
+  assert.equal(resolveInitialPeriod({ period: 'W' }), 'W');
+  assert.equal(resolveInitialPeriod({ period: 'M' }), 'M');
+  assert.equal(resolveInitialPeriod({ period: 'Y' }), 'Y');
+  assert.equal(resolveInitialPeriod({ period: 'MIN' }), 'MIN');
+  assert.equal(resolveInitialPeriod({ period: 'TICK' }), 'TICK');
+});
+
+test('resolveInitialPeriod: initial 부재/period 부재는 조용히 D로 폴백(로그 없음)', () => {
+  const warn = console.warn;
+  let called = false;
+  console.warn = () => { called = true; };
+  try {
+    assert.equal(resolveInitialPeriod(undefined), 'D');
+    assert.equal(resolveInitialPeriod(null), 'D');
+    assert.equal(resolveInitialPeriod({}), 'D');
+    assert.equal(resolveInitialPeriod({ period: null }), 'D');
+    assert.equal(resolveInitialPeriod({ period: '' }), 'D');
+  } finally {
+    console.warn = warn;
+  }
+  assert.equal(called, false, '단순 부재는 미인식 경고를 남기지 않는다');
+});
+
+test('resolveInitialPeriod: 미인식 값은 D로 폴백하고 경고를 남긴다', () => {
+  const warn = console.warn;
+  const calls = [];
+  console.warn = (...args) => calls.push(args.join(' '));
+  try {
+    assert.equal(resolveInitialPeriod({ period: 'X' }), 'D');
+  } finally {
+    console.warn = warn;
+  }
+  assert.equal(calls.length, 1);
+  assert.match(calls[0], /인식할 수 없는/);
+});
