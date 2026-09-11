@@ -1,0 +1,65 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "daou-athena-backend"
+version = "0.1.0"
+description = "FastAPI facade for the Kiwoom mock REST and WebSocket APIs"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115,<1",
+  "httpx>=0.27,<1",
+  "jsonschema>=4.23,<5",
+  "mcp==1.28.*",
+  # 그래프 분석(군집·중심성·경로). **순수 파이썬**이라 ladybug를 걷어낸 이유였던
+  # 네이티브 휠·DLL 경로 세금이 없다 — Electron 앱을 일반 사용자에게 배포하는 우리에게
+  # 그 차이가 의존성을 다시 들이는 근거다.
+  "networkx>=3.4,<4",
+  # 백테스트 엔진(결정 D1, docs/architecture/backtest-mode-plan.md §1). 위 networkx
+  # 주석이 말한 "네이티브 휠 세금"을 여기서 처음 낸다 — 되갚는 것은 지표 80종을 손으로
+  # 짜지 않아도 되는 것, 그리고 사용자·LLM이 쓰는 전략 코드가 pandas를 기대한다는 것이다.
+  # 그 대가가 실제로 배포에서 문제를 내는지는 P1.5가 실측한다.
+  "numpy>=1.26,<3",
+  "pandas>=2.2,<3",
+  "pydantic-settings>=2.6,<3",
+  # PDF 브리프(경제 학술지 등)를 글로 옮기는 갈래. **순수 파이썬**이라 위 networkx 주석이
+  # 말한 네이티브 휠·DLL 경로 세금이 없다 — 그 점이 이 의존성을 들이는 근거다.
+  "pypdf>=5,<6",
+  "uvicorn[standard]>=0.32,<1",
+  "websockets>=15,<16",
+]
+
+[project.scripts]
+# `.mcp.json`이 `{"command": "athena-mcp", "args": ["serve"]}`로 부르는 진입점.
+athena-mcp = "athena_mcp.__main__:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3,<9",
+  "pytest-asyncio>=0.24,<1",
+  "pytest-xdist>=3.6,<4",
+  "respx>=0.21,<1",
+  "ruff>=0.8,<1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["athena_api", "athena_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+  # 검증 3층(leaf 9). 층마다 CI에서 따로 돌릴 수 있어야 한다 — 한 덩어리면
+  # "무엇이 검증됐나"에 층 단위로 답할 수 없다.
+  "deterministic: 결정층 — 저장층 계약과 결정적 티어(체결·잔고). LLM 없음, 난수 없음.",
+  "replay: 녹화응답층 — 녹화한 LLM 응답으로 추출 전 경로를 LLM 없이 재생한다.",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["athena_api/generated"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]

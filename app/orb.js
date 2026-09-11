@@ -1,0 +1,2375 @@
+// 알림 오브 렌더러 (2026-08-24 리프 1.3.1 · 시각 재작업 1.3.2).
+//
+// nodeIntegration:false / contextIsolation:true / sandbox:true — preload.js의
+// window.athena 다리로만 main과 통신한다. lib/routine-turn.js는 orb.html이
+// <script> 태그로 미리 로드해 window.AthenaLib에 얹어둔 전역이다.
+//
+// **이 파일이 하지 않는 것이 계약이다.** 감시를 승인·취소하지 않는다 — 그건
+// 여전히 오브의 액션이 아니다. 주문 집행(확정 결정 3)은 2026-08-27 CP2
+// 사용자 승인으로 절반만 풀렸다 — 미니 주문 티켓(board-33⑤)의 실행 버튼
+// 하나뿐이고, 그 밖에는 여전히 오브가 스스로 주문을 내지 않는다.
+//
+// 2026-09-07 — 키우미 패널은 셸 표시 여부와 무관하게 질문을 받을 수 있다.
+// 상태 B에서는 알림을 먼저 보여주되 입력줄은 열어 두고, 유효한 질문을 제출하면
+// 현재 패널만 대화 이력으로 전환한다. 질의는 athena:orb-chat-submit으로 내는데,
+// 이건 셸의 커맨드바가 부르는 것과 완전히 같은 runLiveQuery로 이어진다 — 오브가
+// 자기 파이프라인을 새로 만들지 않는다.
+//
+// 본문은 지어내지 않는다: 발화 배지 · 방식 표기 · 소스 라벨 · 시점 고지는 전부
+// lib/routine-turn.js의 결정론 템플릿이 만든다(LLM 0). 렌더는 전부 textContent —
+// 동적 본문을 SVG 마스코트의 고정 마크업에 섞지 않는다.
+//
+// 2026-08-27 갭 클로징 Step 0 — CP(체크포인트) 결정 4건.
+// 글라우: Paper의 갈색 올빼미 실루엣을 유지하고 기존 상태를 표정 10종에 연결한다.
+// CP1: 즐거움(glad, 목표달성) 표정 — 2026-08-27 사용자 승인, 백로그 해제.
+// PnL/목표추적 신호 배선(FACE.GLAD)은 별도 스텝(CP1a)에서 진행한다.
+// CP1b(수익 갱신 — 계좌 손익 상시 폴러+신고점 추적): 2026-08-27 사용자 결정
+// "만들지 않는다(보류 유지)". 임의 근사 금지 — 재개하려면 "갱신"의 정의부터.
+// CP2: 미니 주문 티켓(board-33⑤) — 2026-08-27 사용자 승인, 백로그 해제.
+// 승인 범위는 확정 결정 3(오브가 주문을 집행하지 않는다)의 **주문집행
+// 절반만**이다(Paper board-33⑤ 캡션 50G-0/50H-0 원문: "⑤ 미니 주문 티켓 —
+// 오브에서 집행한다" / "확정 결정 3의 다른 절반도 폐기된다. 방어 장치 없이
+// 셸과 동일하게 1회 확인 — alwaysOnTop 창에 실행 버튼이 상주한다는 뜻이다").
+// 감시 승인·취소 금지(routine-confirm/cancel)와 athena__render_canvas 금지는
+// 승인 대상이 아니다 — 그대로 유효하다.
+// CP3: 경계(watch, 임계 근접) 표정 — 2026-08-27 사용자 승인, 백로그 해제.
+// 발화 전 근접 틱 신호 배선(FACE.WATCH)은 별도 스텝(CP3-*)에서 진행한다.
+(() => {
+  'use strict';
+
+  const routineTurn = window.AthenaLib.RoutineTurn;
+  const glauMascot = window.AthenaLib.GlauMascot;
+  const glauHost = document.getElementById('orbVisor');
+  const toolStepTrack = window.AthenaLib.ToolStepTrack;
+  const liveQueryLock = window.AthenaLib.LiveQueryLock;
+  const marketHours = window.AthenaLib.MarketHours;
+  const columnFold = window.AthenaLib.ColumnFold;
+  const factsCard = window.AthenaLib.FactsCard;
+  const cardPrimitives = window.AthenaLib.CardPrimitives;
+  const orderTicketLib = window.AthenaLib.OrderTicket;
+  const orbMiniCard = window.AthenaLib.OrbMiniCard;
+
+  const $root = document.getElementById('orbRoot');
+  const $orb = document.getElementById('orb');
+  const $ring = document.getElementById('orbRing');
+  const $panel = document.getElementById('orbPanel');
+  const $count = document.getElementById('orbCount');
+  const $toggle = document.getElementById('orbToggle');
+  const $close = document.getElementById('orbClose');
+  const $more = document.getElementById('orbMore');
+  const $badge = document.getElementById('orbBadge');
+  const $mode = document.getElementById('orbMode');
+  const $relative = document.getElementById('orbRelative');
+  const $body = document.getElementById('orbBody');
+  const $card = document.getElementById('orbCard');
+  const $source = document.getElementById('orbSource');
+  const $foot = document.getElementById('orbFoot');
+  const $headerTitle = document.getElementById('orbHeaderTitle');
+
+  // ── 대화 모드 DOM(2026-08-26 board-33) ──
+  const $chatBody = document.getElementById('orbChatBody');
+  const $chatEmpty = document.getElementById('orbChatEmpty');
+  const $chatTurns = document.getElementById('orbChatTurns');
+  const $inputStack = document.getElementById('orbInputStack');
+  const $chatInput = document.getElementById('orbInput');
+  const $lockHint = document.getElementById('orbLockHint');
+  const $lockText = document.getElementById('orbLockText');
+  const $esc = document.getElementById('orbEsc');
+  const $chatDot = document.getElementById('orbChatDot');
+  const $chatCli = document.getElementById('orbChatCli');
+  const $chatRoutine = document.getElementById('orbChatRoutine');
+  const $chatGo = document.getElementById('orbChatGo');
+  // 알림 전용 표면 — 대화 모드일 때 통째로 감춘다(applyMode).
+  const ALERT_ONLY_ELS = [$badge, $mode, $relative, $body, $card, $foot];
+
+  // ── 미니 주문 티켓 DOM(board-33⑤, CP2 2026-08-27 사용자 승인) ──
+  const $ticket = document.getElementById('orbTicket');
+  const $ticketAccount = document.getElementById('orbTicketAccount');
+  const $ticketRowSymbol = document.getElementById('orbTicketRowSymbol');
+  const $ticketSymbol = document.getElementById('orbTicketSymbol');
+  const $ticketRowSide = document.getElementById('orbTicketRowSide');
+  const $ticketSide = document.getElementById('orbTicketSide');
+  const $ticketRowQty = document.getElementById('orbTicketRowQty');
+  const $ticketQty = document.getElementById('orbTicketQty');
+  const $ticketRowAmount = document.getElementById('orbTicketRowAmount');
+  const $ticketAmount = document.getElementById('orbTicketAmount');
+  const $ticketExec = document.getElementById('orbTicketExec');
+  const $ticketCancel = document.getElementById('orbTicketCancel');
+  const $ticketGate = document.getElementById('orbTicketGate');
+  const $ticketStatus = document.getElementById('orbTicketStatus');
+
+  // 미확인 알림. 이 배열이 비어 있으면 오브는 무채색이고, 하나라도 있으면 얼굴이
+  // 드러난다(renderPresence). 펼치면 도착 순서의 한 건만 보여주고 그 건만 확인한다.
+  const unread = [];
+  const startupNotices = [];
+  const pendingAlerts = [];
+  let current = null;
+  let expanded = false;
+  // setExpanded()의 낙관 상태와 main이 확인한 실제 상태를 분리한다. 패널 높이만
+  // 바뀌어도 expanded:true가 다시 오므로, 알림 읽음/모드 전환은 실제 경계에서만 한다.
+  let confirmedExpanded = false;
+  // 접힌 채 도착한 대화 답(board-33⑥) 건수 — unread와 별도 카운터다. unread는
+  // 루틴 이벤트 전용 배열이라 대화 답을 그 안에 넣으면 가짜 루틴 이벤트를
+  // 위장해 넣는 꼴이 된다(정직성 위반) — renderPresence()가 아래에서 둘을
+  // 합산만 하고, 내용물은 절대 안 섞는다.
+  let foldedChatAnswers = 0;
+
+  function renderPresence() {
+    const n = unread.length + startupNotices.length + foldedChatAnswers;
+    const fired = n > 0;
+    $root.dataset.alert = fired ? 'fired' : 'none';
+    // 얼굴과 배지는 같은 사실의 두 표현이다 — 한 함수가 같이 정해야 두 곳에서
+    // 따로 켜지는 사고가 안 난다(호와 얼굴의 상호 배타를 여기서 지던 것과 같은 이유).
+    if (fired) setFace(FACE.FIRED);
+    // SURPRISE·GLAD도 여기서 같이 풀어준다 — 둘 다 fired의 대체 표현일 뿐
+    // 별도 사건이 아니라서(위 FACE 주석), 읽으면(unread 비면) fired와 똑같이
+    // 풀려야 한다. mopey/crying은 다른 축(만료·복원실패, 별도 사건)이라 여기서
+    // 안 건드린다.
+    // settleAmbientFace()를 직접 부른다(resolveAmbientFace가 아니다) — 이유는
+    // triggerDoneFace 주석과 같은 자기참조 함정이다: 이 시점의 face는 아직
+    // FIRED/SURPRISE/GLAD 그대로라 eventFaceActive()가 "아직 활성"으로 오판해
+    // 못 빠져나간다. 직접 setFace(FACE.IDLE)로 꽂으면 watching/listening/
+    // thinking/feedDown/drowsy/sleep 같은 앰비언트 신호가 살아 있어도 무시하고
+    // idle로 떨어뜨려 WATCH 불변식(근접 이탈 신호가 와야 풀린다, 위 WATCH 주석)을
+    // 깬다 — settleAmbientFace가 그 사다리를 다시 타게 한다.
+    else if (face === FACE.FIRED || face === FACE.SURPRISE || face === FACE.GLAD) settleAmbientFace();
+    // 0을 그리지 않는다 — 없는 알림을 있는 것처럼 보이게 하는 가장 흔한 방법이다.
+    $count.textContent = fired ? String(n) : '';
+    // 스크린 리더에는 색이 안 들리므로 상태를 라벨로도 말한다.
+    $toggle.setAttribute(
+      'aria-label',
+      fired ? `읽지 않은 알림 ${n}건 펼치기` : '알림 펼치기',
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  // 감시 궤도 링(2026-08-27 갭 클로징 Step 1, board-30② "궤도 위성 = 감시
+  // 건수") — 접힌 원 둘레에 활성 감시(루틴) 수만큼 위성 점을 놓는다. 표정과는
+  // 다른 채널이라 화면당 신호 원칙을 깨지 않는다: 무채색(rgb(16 19 26/50%))
+  // 이고 바이저의 눈 모양을 건드리지 않는다 — .orb-count 배지(신호가 아니라
+  // 신호의 크기 표시)와 같은 격이다. 발화(fired)로 눈이 동그래질 때도 링은
+  // 원 가장자리 밖(orb.css #orbRing inset:-7px)이라 바이저 안쪽 눈과 자리가
+  // 겹치지 않는다.
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** 위성 점 각도 배치 — 감시 건수만큼 궤도 위에 고르게 놓는다. 12시 방향에서
+   * 시작해 시계 방향으로 등분한다. 순수 함수라 count만으로 결과가 정해진다. */
+  function computeSatelliteDots(count) {
+    const n = Math.max(0, Math.floor(Number(count)) || 0);
+    const dots = [];
+    for (let i = 0; i < n; i++) dots.push({ angle: (360 / n) * i });
+    return dots;
+  }
+
+  /** 감시 0건이면 링 자체를 그리지 않는다 — 없는 감시를 있는 것처럼 보이면
+   * 안 된다. createElement/textContent만 쓴다(innerHTML 0건, 함정 ⑪). */
+  function renderSatelliteRing(count) {
+    const n = Math.max(0, Math.floor(Number(count)) || 0);
+    $root.dataset.watching = n > 0 ? 'true' : 'false';
+    $ring.replaceChildren();
+    for (const dot of computeSatelliteDots(n)) {
+      const el = document.createElement('span');
+      el.className = 'orb-ring-dot';
+      el.style.setProperty('--dot-angle', `${dot.angle}deg`);
+      $ring.appendChild(el);
+    }
+  }
+
+  // 셸 대화 컨트롤 스트립(refreshChatControlStrip)과 같은 IPC를 재사용한다 —
+  // 오브가 감시 목록을 새로 만들지 않는다. 상시 열린 창이라 초 단위 폴링은
+  // 낭비다 — 60s 간격 + 루틴 이벤트 수신 시 갱신이면 충분하다.
+  async function refreshSatelliteRing() {
+    try {
+      const res = await window.athena.invoke('athena:routines-list');
+      const routines = res && res.ok && res.data && Array.isArray(res.data.routines) ? res.data.routines : [];
+      renderSatelliteRing(routines.filter((r) => r.status === 'active').length);
+    } catch { /* 표시만 못한다 — 감시 자체엔 영향 없다 */ }
+  }
+
+  refreshSatelliteRing();
+  setInterval(refreshSatelliteRing, 60000);
+
+  // ─────────────────────────────────────────────────────────────────────
+  // 표정 · 대기 루프 (2026-08-25)
+  //
+  // 표정은 **눈 모양 하나로만** 만든다 — 눈썹도 입도 눈동자도 붙이지 않는다.
+  // 시선은 검은 눈 두 개가 크림색 얼굴 안에서 함께 움직이는 것으로 낸다.
+  // 모양은 공유 GlauMascot 렌더러가 지고, 여기서는 **언제 어느 얼굴인가**만
+  // 정한다.
+  //
+  // **얼굴은 앱에 이미 있는 신호에만 붙인다.** 지금 배선하는 것은 열이다:
+  //   idle   — 기본(대기)
+  //   sleep  — 오래 아무 일 없음(idle > 5min. 옛 판의 '평소'가 여기로 내려왔다)
+  //   drowsy — 장 마감 시간대(board-30⑫/31⑨) — 2026-08-27 갭 클로징 Step 6
+  //            신규. sleep과 다른 축이다: sleep은 사용자 무활동 5분(로컬 사실),
+  //            drowsy는 KST 평일 09:00~15:30 밖(세계 사실 — market-hours.js
+  //            isMarketOpen). 바이저는 줄지 않는다(풀사이즈, 팀 실측) — 눈만
+  //            처진다. listen/think보다 아래, sleep보다도 아래(둘 다 활성인
+  //            폐장 중 5분 무활동이면 더 깊은 sleep이 이긴다 — settleAmbientFace).
+  //   listen — 셸 입력줄 포커스(input:focus) — 2026-08-26 board-32 신규
+  //   think  — 질의 진행 중(query running) — 2026-08-26 board-32 신규. 스피너 대신이다
+  //   done   — 턴 완료(result ok) — 2026-08-26 board-32 신규. 웃고 2초 뒤 idle로 돌아간다
+  //   wink   — 감시 등록 반영(athena:routine-confirm 성공 릴레이) — 2026-08-27
+  //            갭 클로징 Step 3b 신규. done과 같은 구조(DONE_HOLD 뒤 settleAmbientFace
+  //            복귀)지만 전용 타이머를 따로 둬서 둘이 서로 안 밟는다.
+  //   frown  — 대화 질의 실패(result.ok===false) — 2026-08-27 갭 클로징 Step 4a 신규.
+  //            done/wink와 같은 구조·같은 유지 시간이다. Step 4b부터는 루틴 피드
+  //            연결 끊김(disconnected) 동안에도 같은 얼굴을 쓴다 — 이쪽은 타이머로
+  //            안 풀리고 connected가 올 때까지 지속된다(아래 feedDown 축).
+  //   fired  — 미확인 알림이 있다(data-alert와 짝)
+  //   surprise — 발화 중 급변(관측값이 임계 초과폭 1.5배 이상 —
+  //            routine-turn.js exceedRatio) — 2026-08-27 갭 클로징 Step 5 신규.
+  //            fired를 대체한다(같은 unread 생애주기 — 읽으면 같이 풀린다,
+  //            아래 renderPresence 주석 참조) — 배지·카운트는 그대로
+  //            data-alert="fired"를 쓴다(board-31⑤ "변동성 급등").
+  //   glad   — 발화한 루틴이 사용자가 명시한 목표가 도달(event.goal===true,
+  //            §CP1a-1 goal 플래그) — 2026-08-27 CP1a 신규(board-31④·32
+  //            "셀·신남", 5H3-0 캡션 "가장 큰 아치. 아껴 써야 값이 남는다").
+  //            surprise와 같은 축(fired 대체·같은 unread 생애주기)이지만 이
+  //            표정이 먼저다: goal은 사용자가 스스로 정한 milestone이고
+  //            급변(surprise)은 크기 추정치일 뿐이라 확정 신호가 추정보다
+  //            앞선다.
+  //   mopey  — 루틴 만료(routineTurn kind: expired) — 옛 '미안'의 절반
+  //   crying — 감시 복원 실패(routineTurn kind: restore-failed) — 옛 '미안'의 나머지 절반
+  // 2026-08-26: '미안' 하나가 만료·복원실패 둘을 뭉뚱그렸는데, routine-turn.js가
+  // 이미 kind로 둘을 갈라 준다 — 같은 사실을 오브만 뭉개고 있었다(board-31).
+  //   watch  — 루틴이 임계에 근접(routine-near active, 아직 발화 전) — 2026-08-27
+  //            CP3 신규(board-30②b·32 '셀·경계'). listen보다 아래, sleep/drowsy/idle
+  //            보다 위에 둔다: 사용자 행위·장애(생각 중·피드 끊김·듣는 중)가 배경
+  //            정보보다 급하고, watch는 무정보 상태보다는 위다(settleAmbientFace).
+  //            지속 상태다 — done/wink처럼 타이머로 풀리지 않고 근접 이탈 신호가
+  //            와야 풀린다(feedDown과 같은 축). 유일한 예외(2026-08-27 A3,
+  //            사용자 승인): 피드가 disconnected→connected로 재연결되는 순간은
+  //            이탈 신호 없이도 강제로 false로 리셋한다(아래 handleFeedStatus) —
+  //            백엔드가 재시작되면 이탈 신호(routine-near active:false) 자체가
+  //            유실될 수 있어서, 원칙만 고수하면 유령 watch가 영구 고착한다.
+  //            재연결 직후 백엔드가 재발신하는 근접 스냅샷이 필요하면 곧바로
+  //            다시 세운다(단순 네트워크 순단이면 깜빡임 없이 즉시 복원).
+  const FACE = {
+    IDLE: 'idle', SLEEP: 'sleep', DROWSY: 'drowsy', LISTEN: 'listen', THINK: 'think', DONE: 'done',
+    WINK: 'wink', FROWN: 'frown', FIRED: 'fired', SURPRISE: 'surprise', MOPEY: 'mopey', CRYING: 'crying',
+    WATCH: 'watch', GLAD: 'glad',
+  };
+
+  // 2026-08-27 결함 2 — renderPresence()가 방금 세운 FIRED 위에, 지금 쌓여
+  // 있는 unread 중 가장 심각한 kind를 다시 얹는다. routine-event 핸들러
+  // (아래 athena:routine-event)는 renderPresence() 직후 자신이 받은 새
+  // 이벤트의 kind로 항상 재확정하지만, 접힌 채 도착한 대화 답(foldedChatAnswers)은
+  // routine이 아니라 그 재확정이 없어 MOPEY/CRYING/GLAD/SURPRISE가 일반
+  // FIRED로 다운그레이드됐다 — '얼굴과 배지는 같은 사실의 두 표현' 불변식
+  // 위반. renderPresence() 자체는 손대지 않는다(probe-orb-mopey-crying.js가
+  // 고정한 'renderPresence→FIRED 후 kind override' 순서 계약을 그대로 둔다) —
+  // 이 호출자(접힌 답 경로)에서만 그 재확정을 흉내 낸다. 서열은 routine-event
+  // 핸들러(아래)와 같다: 만료(mopey) > 복원실패(crying) > 목표달성(glad) >
+  // 급변(surprise) — 일반 fired뿐이면 손대지 않는다(이미 FIRED로 맞다).
+  const UNREAD_FACE_RANK = [FACE.MOPEY, FACE.CRYING, FACE.GLAD, FACE.SURPRISE];
+  function unreadEventFace(event) {
+    const kind = routineTurn.buildTurnModel(event, Date.now()).kind;
+    if (kind === 'expired') return FACE.MOPEY;
+    if (kind === 'restore-failed') return FACE.CRYING;
+    if (kind === 'fired' && event.goal === true) return FACE.GLAD;
+    if (kind === 'fired' && routineTurn.exceedRatio(event.observed, event.threshold)) return FACE.SURPRISE;
+    return null;
+  }
+  function reapplyUnreadFace() {
+    let best = null;
+    for (const event of unread) {
+      const f = unreadEventFace(event);
+      if (f && (best === null || UNREAD_FACE_RANK.indexOf(f) < UNREAD_FACE_RANK.indexOf(best))) best = f;
+    }
+    if (best) setFace(best);
+  }
+
+  const BLINK_CLOSE = 90;          // 감는 시간
+  const BLINK_OPEN = 130;          // 뜨는 시간 — 감는 쪽보다 느려야 셔터로 안 읽힌다
+  const BLINK_EVERY = [4000, 7000];
+  const BLINK_DOUBLE = 0.15;       // 가끔 두 번 연속 — 이 불규칙이 생물이라는 증거다
+  // 2026-08-26 2차 — 사용자 지적("눈이 너무 왔다갔다한다, 심란함"). board-32
+  // 원문도 "가끔 두리번거린다"다 — 가끔이 핵심이지 빈도가 아니다. 간격을 15~40s로
+  // 늘리고 진폭도 줄인다: 대기는 거의 정지 + 아주 가끔 두리번 + 깜빡임뿐이어야 한다.
+  const SACCADE_EVERY = [15000, 40000];
+  const SACCADE_OUT = 260;         // 갈 때는 빠르고
+  const SACCADE_BACK = 340;        // 돌아올 때는 느리다 — 사람 눈이 그렇다
+  const SACCADE_HOLD = 1200;
+  const SACCADE_AMP = 5;           // px — 7에서 축소, 곁눈질 정도로만
+  const SLEEP_AFTER = 5 * 60 * 1000;
+
+  const CURSOR_RADIUS = 320;       // 화면 px — 이 밖의 커서는 쳐다보지 않는다
+  const CURSOR_AMP = 3;            // px — 두리번(5)보다 작아야 '곁눈질'로 읽힌다
+  const CURSOR_INTEREST = 2500;    // 커서가 멈춰 있으면 이 뒤에 시선을 놓는다
+  const CURSOR_LAG = 120;          // 0이면 눈이 커서에 붙어버려 기계가 된다
+
+  const LISTEN_GAZE_Y = 6;         // px — 듣는 중 시선이 입력줄 쪽(아래)으로 내려앉는 양
+  // 경계 — 임계에 붙은 쪽으로 한쪽을 붙박는다(board-32 "시선은 정보가 아니라
+  // 태도다. 틀려도 사용자가 손해 보지 않는다" — 어느 종목인지 실제로 가리키는
+  // 게 아니라 "쏠려 있다"는 태도만 낸다). 두리번(5)보다 살짝 커야 '붙박음'과
+  // '가끔 두리번'이 구분된다.
+  const WATCH_GAZE_X = 6;
+  // 생각 중 시선 — "위를 훑는다"는 스피너 대신 천천히 미끄러지는 드리프트다.
+  // 처음엔 520ms마다 좌우로 튀게 짜서 "왔다갔다"로 읽혔다(사용자 지적) — 간격을
+  // 늘리고 전이 시간도 같이 늘려 급한 왕복이 아니라 느린 표류로 보이게 한다.
+  const THINK_SWEEP_EVERY = 2600;  // ms — 생각 중 시선이 위를 훑는 주기
+  const THINK_SWEEP_DUR = 1400;    // ms — 느린 전이(예전 260ms는 홱 튀는 느낌이었다)
+  const THINK_SWEEP_AMP = 4;       // px — 두리번(5)보다도 작게, 미세한 표류
+  const DONE_HOLD = 2000;          // ms — 완료 웃음이 유지되는 시간(board-32)
+  const DRAG_THRESHOLD = 4;        // px — 이보다 적게 움직이면 클릭, 넘으면 드래그
+  const DRAG_GAZE_AMP = 6;         // px — 드래그 관성 시선 진폭
+
+  // 모션을 원치 않는 사용자에게는 루프를 **아예 돌리지 않는다.** CSS로 전이만 끄면
+  // 타이머는 계속 돌면서 감은 프레임에서 굳을 수 있고, 그건 없는 상태('잠듦')를
+  // 만들어내는 것이다(orb.css의 같은 이유 주석과 짝).
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  let face = FACE.IDLE;
+  let lastSignalAt = Date.now();
+  let blinkTimer = null;
+  let saccadeTimer = null;
+  let doneTimer = null;
+  let winkTimer = null;
+  let frownTimer = null;
+
+  const rand = (lo, hi) => lo + Math.random() * (hi - lo);
+
+  function setGaze(gx, gy, durMs) {
+    $root.style.setProperty('--orb-gaze-dur', `${durMs}ms`);
+    $root.style.setProperty('--orb-gx', `${gx.toFixed(2)}px`);
+    $root.style.setProperty('--orb-gy', `${gy.toFixed(2)}px`);
+  }
+
+  /** 표정의 기본 시선. 듣는 중만 아래(입력줄)로 내려앉는다 — 나머지는 정면이다.
+   * 생각 중의 "위를 훑는다"는 정지 시선이 아니라 루프라서 startThinkSweep()이
+   * 별도로 --orb-gx/gy를 몬다(여기 baseGaze는 그 루프의 출발점만 준다). */
+  function baseGaze() {
+    if (face === FACE.LISTEN) return { gx: 0, gy: LISTEN_GAZE_Y };
+    if (face === FACE.WATCH) return { gx: WATCH_GAZE_X, gy: 0 };
+    return { gx: 0, gy: 0 };
+  }
+
+  function setFace(next) {
+    if (face === next) return;
+    const prev = face;
+    face = next;
+    $root.dataset.face = next;
+    glauMascot.render(glauHost, next);
+    if (prev === FACE.THINK) stopThinkSweep();
+    if (next === FACE.THINK) { startThinkSweep(); return; }
+    const g = baseGaze();
+    setGaze(g.gx, g.gy, SACCADE_BACK);
+  }
+
+  // ── 생각 중 — 스피너 대신 시선이 위를 훑는다(board-32 section C). ──
+  let thinkTimer = null;
+
+  function startThinkSweep() {
+    clearInterval(thinkTimer);
+    if (reduceMotion.matches) { setGaze(0, -THINK_SWEEP_AMP * 0.85, SACCADE_BACK); return; }
+    let dir = -1;
+    setGaze(dir * THINK_SWEEP_AMP, -THINK_SWEEP_AMP * 0.85, THINK_SWEEP_DUR);
+    thinkTimer = setInterval(() => {
+      dir *= -1;
+      setGaze(dir * THINK_SWEEP_AMP, -THINK_SWEEP_AMP * 0.85, THINK_SWEEP_DUR);
+    }, THINK_SWEEP_EVERY);
+  }
+
+  function stopThinkSweep() {
+    clearInterval(thinkTimer);
+    thinkTimer = null;
+  }
+
+  // ── 깜빡임 ──
+  function blinkOnce(then) {
+    $root.style.setProperty('--orb-blink-dur', `${BLINK_CLOSE}ms`);
+    $root.style.setProperty('--orb-lid', '0.06');
+    setTimeout(() => {
+      $root.style.setProperty('--orb-blink-dur', `${BLINK_OPEN}ms`);
+      $root.style.setProperty('--orb-lid', '1');
+      setTimeout(then, BLINK_OPEN);
+    }, BLINK_CLOSE);
+  }
+
+  function scheduleBlink() {
+    clearTimeout(blinkTimer);
+    if (reduceMotion.matches) return;
+    blinkTimer = setTimeout(() => {
+      // 잠들었거나 졸리면 눈이 이미 (거의) 감겨 있다 — drowsy 눈 높이가 sleep과
+      // 같은 6.5%라 그 위에 깜빡임을 얹으면 똑같이 경련처럼 보인다.
+      if (face === FACE.SLEEP || face === FACE.DROWSY) { scheduleBlink(); return; }
+      const twice = Math.random() < BLINK_DOUBLE;
+      blinkOnce(() => (twice ? blinkOnce(scheduleBlink) : scheduleBlink()));
+    }, rand(BLINK_EVERY[0], BLINK_EVERY[1]));
+  }
+
+  // ── 두리번 ── 아래는 목적지에서 뺀다 — 아래를 보면 시무룩해 보인다.
+  const SACCADE_DIRS = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0]];
+
+  function scheduleSaccade() {
+    clearTimeout(saccadeTimer);
+    if (reduceMotion.matches) return;
+    saccadeTimer = setTimeout(() => {
+      // 커서를 쳐다보는 중이거나 드래그 관성이 시선을 쥔 중이면 쉰다 — 같은 층을
+      // 써서 겹치면 시선이 튄다(드래그 조건은 2026-08-27 결함③ 커서 가드와 짝).
+      if (face !== FACE.IDLE || cursorHeld || isDragGazeActive()) { scheduleSaccade(); return; }
+      const [dx, dy] = SACCADE_DIRS[Math.floor(Math.random() * SACCADE_DIRS.length)];
+      setGaze(dx * SACCADE_AMP, dy * SACCADE_AMP * 0.85, SACCADE_OUT);
+      setTimeout(() => {
+        if (!cursorHeld) setGaze(0, 0, SACCADE_BACK);
+        scheduleSaccade();
+      }, SACCADE_OUT + SACCADE_HOLD);
+    }, rand(SACCADE_EVERY[0], SACCADE_EVERY[1]));
+  }
+
+  // ── 잠듦 ── 오래 아무 일 없으면 내려앉는다. 상호작용이나 발화가 깨운다.
+  // 2026-08-27 결함 1 — 깨우기 목적지가 marketClosed를 반영한다: 장 마감
+  // 중이면 IDLE이 아니라 DROWSY로 정착한다(settleAmbientFace와 같은 판정).
+  // listen/think/watch 신호 핸들러는 touchActivity() 직후 resolveAmbientFace()로
+  // 자기 교정하지만, 커서 접근·드래그 시작·오브 클릭은 touchActivity()가 깨우기의
+  // 유일한 판정이라 여기서 어긋나면 다음 updateMarketClosed 틱(최대 15초)까지
+  // idle로 오표시된다.
+  function touchActivity() {
+    lastSignalAt = Date.now();
+    if (face === FACE.SLEEP) setFace(marketClosed ? FACE.DROWSY : FACE.IDLE);
+  }
+
+  setInterval(() => {
+    // drowsy(장 마감)에서도 5분 무활동이 쌓이면 더 깊은 sleep으로 넘어간다 —
+    // sleep이 drowsy보다 우선하는 축이라서(settleAmbientFace) idle뿐 아니라
+    // drowsy에서도 승격을 허용해야 한다. 그 밖의 능동 표정(listen/think 등)은
+    // 여전히 막는다.
+    if (face !== FACE.IDLE && face !== FACE.DROWSY) return;
+    if (Date.now() - lastSignalAt >= SLEEP_AFTER) setFace(FACE.SLEEP);
+  }, 15000);
+
+  // ── 장 마감(board-30⑫/31⑨) — KST 평일 09:00~15:30 밖이면 졸림. 세계 시각
+  // 사실이라 사용자 상호작용과 무관하게 매 15초 재확인한다(위 sleep 판정과
+  // 같은 주기 패턴 재사용) — settleAmbientFace가 그 값을 읽어 우선순위를 잰다.
+  // 부트 호출(updateMarketClosed() 최초 실행 + setInterval)은 파일 맨 끝에
+  // 있다 — resolveAmbientFace가 읽는 thinking/feedDown/listening이 아직
+  // 선언 전(TDZ)이라 여기서 바로 부르면 터진다. */
+  let marketClosed = false;
+
+  function updateMarketClosed() {
+    marketClosed = marketHours ? !marketHours.isMarketOpen(new Date()) : false;
+    resolveAmbientFace();
+  }
+
+  // ── 커서 추적 ──
+  // main이 screen.getCursorScreenPoint()를 폴링해 **오브 창 중심 기준 상대 좌표**를
+  // 준다(athena:orb-cursor). 렌더러 mousemove로는 안 되는 이유는 창이 76px이라
+  // 커서가 창 위에 있을 때만 이벤트가 오기 때문이다 — 정작 눈이 따라가는 게 보여야
+  // 할 "떨어져 있을 때"는 좌표가 안 들어온다.
+  //
+  // "조금만"은 세 장치가 만든다: 반경 밖이면 안 보고, 이동량은 감쇠하고,
+  // 커서가 멈춰 있으면 흥미를 잃는다.
+  let cursorHeld = false;
+  let lastCursorAt = 0;
+
+  function releaseCursor() {
+    if (!cursorHeld) return;
+    cursorHeld = false;
+    setGaze(0, 0, SACCADE_BACK);
+  }
+
+  window.athena.on('athena:orb-cursor', (p) => {
+    if (reduceMotion.matches) return;
+    if (!p || typeof p.dx !== 'number' || typeof p.dy !== 'number') { releaseCursor(); return; }
+    // 드래그 확정 중엔 관성 시선(pushDragGaze)이 --orb-gx/gy를 소유한다 — 커서
+    // 추적이 같은 변수를 덮어쓰면 board-32 "관성"이 커서 방향과 경합해 흔들린다
+    // (사케이드의 cursorHeld 층 규칙과 같은 원리, 2026-08-27 병합 점검 결함③).
+    if (isDragGazeActive()) { cursorHeld = false; return; }
+    lastCursorAt = Date.now();
+
+    // 다가오면 깬다 — 잠듦은 시선을 안 쓰는 표정이라 여기서만 상태를 건드린다.
+    if (face === FACE.SLEEP && p.dist <= CURSOR_RADIUS) { touchActivity(); return; }
+    // 시선이 뜻을 나르는 표정에서는 커서를 보지 않는다. 정보가 장난에 밀리면 안 된다.
+    if (face !== FACE.IDLE) { releaseCursor(); return; }
+    if (p.dist > CURSOR_RADIUS) { releaseCursor(); return; }
+
+    // 반경 안쪽 75%는 최대치로 따라가고 바깥 25%에서만 잦아든다. 반경 전체에
+    // 감쇠를 걸면(프로토타입 첫 판) 커서가 코앞에 와야 겨우 움직여서 "따라다닌다"가
+    // 성립하지 않는다 — 실측: 반경 320, 거리 267에서 0.9px뿐이었다. 감쇠의 목적은
+    // 세기 조절이 아니라 경계에서 툭 켜지지 않게 하는 것이다.
+    const band = CURSOR_RADIUS * 0.25;
+    const t = Math.min(1, Math.max(0, (CURSOR_RADIUS - p.dist) / band));
+    const amp = CURSOR_AMP * (t * t * (3 - 2 * t));
+    const d = p.dist || 1;
+    cursorHeld = true;
+    // 세로는 0.85배 — 바이저가 세로로 짧아 같은 값이면 눈이 위아래로 새어 보인다.
+    setGaze((p.dx / d) * amp, (p.dy / d) * amp * 0.85, CURSOR_LAG);
+  });
+
+  setInterval(() => {
+    if (cursorHeld && Date.now() - lastCursorAt > CURSOR_INTEREST) releaseCursor();
+  }, 250);
+
+  // ── 듣는 중 · 생각 중 · 완료 — 셸 쪽 실신호(2026-08-26 board-32) ──
+  // chat.js가 input:focus/blur와 질의 시작/끝을 athena:orb-signal로 보낸다.
+  // main은 그대로 릴레이만 한다(routine-event와 같은 얇은 다리). 우선순위는
+  // 발화·만료·복원실패(event-driven face)가 가장 세다 — 능동 알림 위에 "듣는
+  // 중"을 덮어씌우면 진짜 신호가 묻힌다.
+  let listening = false;
+  let thinking = false;
+  // 루틴 피드 연결 끊김(board-30⑩) — listening/thinking과 같은 층의 축이다.
+  // 다른 둘과 달리 타이머로 안 풀리고 'connected' 신호가 와야 풀린다(연결이
+  // 죽어 있는 동안 계속 사실이니까) — 그래서 이 축은 done/wink/frown 같은
+  // DONE_HOLD 일시 표정이 아니라 앰비언트 판정(settleAmbientFace) 쪽에 있다.
+  let feedDown = false;
+  // 루틴 근접(routine-near, board-30②b/32 '셀·경계', CP3) — feedDown과 같은
+  // 성격: 타이머로 안 풀리고 이탈 신호(active:false)가 와야 풀린다. 지속
+  // 배경 상태라 settleAmbientFace 쪽에 둔다(eventFaceActive가 아니다).
+  let watching = false;
+
+  function eventFaceActive() {
+    // WINK·FROWN은 DONE과 같은 격이다(셋 다 신호 하나에 반응해 DONE_HOLD만큼
+    // 떴다가 스스로 꺼지는 일시 표정) — DONE을 여기 넣은 이유(듣는 중/생각
+    // 중 같은 능동 표정이 유지 시간 안에 끼어들어 조기에 지우면 안 된다)가
+    // 셋 모두에 그대로 적용된다. SURPRISE·GLAD는 FIRED의 대체 표현이라(같은
+    // unread 기반 알림) FIRED와 같은 줄에 둔다 — 이게 없으면 급변·목표달성
+    // 발화 중에도 listen/think 같은 능동 표정이 이들을 밀어낸다.
+    return face === FACE.FIRED || face === FACE.SURPRISE || face === FACE.GLAD
+      || face === FACE.MOPEY || face === FACE.CRYING
+      || face === FACE.DONE || face === FACE.WINK || face === FACE.FROWN;
+  }
+
+  /** 앰비언트(듣는 중/생각 중/잠듦/기본) 판정의 공통 계산 — resolveAmbientFace와
+   * done·wink 타이머가 같이 쓴다(하나로 통일해야 규칙이 두 벌로 안 갈린다). */
+  function settleAmbientFace() {
+    if (thinking) { setFace(FACE.THINK); return; }
+    // 피드가 죽어 있는 동안은 찡그림을 깔아 둔다 — 듣는 중보다는 위, 생각
+    // 중보다는 아래(생각 중은 지금 실제로 진행 중인 일이라 더 급하다).
+    if (feedDown) { setFace(FACE.FROWN); return; }
+    if (listening) { setFace(FACE.LISTEN); return; }
+    // 근접(watch)은 listen보다 아래, sleep/drowsy/idle보다 위 — 사용자 행위·
+    // 장애가 배경 정보보다 급하고, watch는 무정보 상태보다는 위이기 때문이다.
+    if (watching) { setFace(FACE.WATCH); return; }
+    // sleep(무활동 5분)이 drowsy(장 마감)보다 우선한다 — sleep은 drowsy 위에
+    // 얹힌 더 깊은 상태로만 도달한다(위 sleep 승격 타이머가 idle뿐 아니라
+    // drowsy에서도 승격을 허용한다). 그래서 이미 sleep이면 유지하고, 아니면
+    // marketClosed로 drowsy/idle을 가른다.
+    setFace(face === FACE.SLEEP ? FACE.SLEEP : (marketClosed ? FACE.DROWSY : FACE.IDLE));
+  }
+
+  function resolveAmbientFace() {
+    if (eventFaceActive()) return;
+    settleAmbientFace();
+  }
+
+  window.athena.on('athena:orb-signal', ({ signal, active, status } = {}) => {
+    if (signal === 'listen') {
+      listening = !!active;
+      if (listening) touchActivity();
+      resolveAmbientFace();
+    } else if (signal === 'think') {
+      thinking = !!active;
+      if (thinking) touchActivity();
+      resolveAmbientFace();
+    } else if (signal === 'done') {
+      triggerDoneFace();
+    } else if (signal === 'registered') {
+      triggerWinkFace();
+    } else if (signal === 'feed-status') {
+      handleFeedStatus(status);
+    } else if (signal === 'watch') {
+      watching = !!active;
+      if (watching) touchActivity();
+      resolveAmbientFace();
+    }
+  });
+
+  // 루틴 피드 연결 상태(board-30⑩) — main.js RoutineFeed의 status를 그대로
+  // 받는다({state: 'connected'|'disconnected'|'unsupported'}). disconnected는
+  // 실제 끊김이라 지속 찡그림을 켜고, connected 복귀 시 끈다. unsupported는
+  // 신호가 아니라 무시한다 — 이 런타임에 WebSocket 구현 자체가 없다는 뜻이지
+  // "연결하다가 끊겼다"는 사실이 아니다(연결 시도조차 하지 않는다).
+  function handleFeedStatus(status) {
+    const state = status && status.state;
+    if (state === 'disconnected') {
+      feedDown = true;
+      touchActivity();
+      resolveAmbientFace();
+    } else if (state === 'connected') {
+      // 2026-08-27 A3(사용자 승인) — disconnected→connected로 재연결되는
+      // 이 순간만 watching을 강제로 false로 내린다(위 WATCH 주석의 유일한
+      // 예외). feedDown이 지금 true였을 때만(정말 끊겼다 돌아온 경우) 리셋한다
+      // — 백엔드 재시작으로 이탈 신호(routine-near active:false) 자체가
+      // 유실돼도 유령 watch가 남지 않는다. 재연결 직후 백엔드가 재발신하는
+      // 근접 스냅샷(현재 near인 루틴마다 routine-near active:true, main.js:398-406
+      // 릴레이)이 필요하면 아래 settleAmbientFace 이후 곧바로 다시 세운다.
+      if (feedDown) watching = false;
+      feedDown = false;
+      // resolveAmbientFace가 아니라 settleAmbientFace를 직접 부른다 — face가
+      // 여전히 FROWN이면(방금까지 feedDown이 그걸 골랐으니 그럴 확률이 높다)
+      // eventFaceActive()가 지금 막 끄려는 그 FROWN 자신을 "아직 활성"으로
+      // 오판해 되돌림을 막는다(triggerDoneFace/triggerWinkFace 주석과 같은
+      // 자기참조 함정). 다만 발화·만료·복원실패처럼 정말 더 급한 사실 위는
+      // 연결 복구 따위로 덮으면 안 된다. 위 watching 리셋도 이 호출 하나로
+      // 표정에 반영된다 — 여기서 다시 resolveAmbientFace를 부르면 같은
+      // 자기참조 함정을 또 밟는다.
+      if (face === FACE.FIRED || face === FACE.SURPRISE || face === FACE.GLAD || face === FACE.MOPEY || face === FACE.CRYING) return;
+      settleAmbientFace();
+    }
+  }
+
+  // 완료 웃음 — 셸의 'done' 실신호와 오브 자신의 대화 모드 제출(2026-08-26
+  // board-33)이 공유한다. 발화·만료·복원실패 중에는 덮지 않는다 — 그쪽이 더
+  // 중요한 사실이다.
+  function triggerDoneFace() {
+    if (face === FACE.FIRED || face === FACE.SURPRISE || face === FACE.GLAD || face === FACE.MOPEY || face === FACE.CRYING) return;
+    touchActivity();
+    setFace(FACE.DONE);
+    clearTimeout(doneTimer);
+    doneTimer = setTimeout(() => {
+      // resolveAmbientFace가 아니라 settleAmbientFace를 직접 부른다 — 얼굴은
+      // 값이 하나뿐이라 이 시점의 face는 항상 DONE과 "같다"(자기 자신이니까),
+      // 그래서 resolveAmbientFace를 거치면 eventFaceActive()가 "DONE이 아직
+      // 활성"이라고 스스로 오판해 절대 못 빠져나간다(자기 참조 교착 — 실측:
+      // 2026-08-27 프로브가 DONE_HOLD 경과 후에도 계속 'done'을 잡아냈다,
+      // wink를 얹으며 발견). 그사이 다른 이벤트가 face를 바꿔놨으면(fired 등)
+      // 아래 체크로 손대지 않는다.
+      if (face === FACE.DONE) settleAmbientFace();
+    }, DONE_HOLD);
+  }
+
+  // 윙크 — 감시 등록 반영(main.js athena:routine-confirm 성공 릴레이, board-30⑧/
+  // 31③). triggerDoneFace와 같은 구조지만 별도 타이머(winkTimer)를 쓴다 —
+  // 두 표정이 겹치는 타이밍에 서로의 setTimeout을 밟지 않게 하려면(각 타이머는
+  // 자기 얼굴일 때만 되돌린다) 축을 나눠야 한다.
+  function triggerWinkFace() {
+    if (face === FACE.FIRED || face === FACE.SURPRISE || face === FACE.GLAD || face === FACE.MOPEY || face === FACE.CRYING) return;
+    touchActivity();
+    setFace(FACE.WINK);
+    clearTimeout(winkTimer);
+    winkTimer = setTimeout(() => {
+      // settleAmbientFace 직접 호출 이유는 triggerDoneFace 주석과 같다.
+      if (face === FACE.WINK) settleAmbientFace();
+    }, DONE_HOLD);
+  }
+
+  // 찡그림 — 대화 질의 실패(board-30⑩). submitChatQuery가 result.ok===false를
+  // 확정하는 지점에서 부른다. done/wink와 같은 구조·같은 전용 타이머 원칙.
+  function triggerFrownFace() {
+    if (face === FACE.FIRED || face === FACE.SURPRISE || face === FACE.GLAD || face === FACE.MOPEY || face === FACE.CRYING) return;
+    touchActivity();
+    setFace(FACE.FROWN);
+    clearTimeout(frownTimer);
+    frownTimer = setTimeout(() => {
+      if (face === FACE.FROWN) settleAmbientFace();
+    }, DONE_HOLD);
+  }
+
+  // ── 드래그 — 포인터로 창을 옮긴다(2026-08-26 board-32). ──
+  // app-region:drag를 안 쓰는 이유는 orb.css #orb 규칙 위 주석 참조: OS가 이동을
+  // 가로채면 이동량이 렌더러에 안 들어와 "관성" 시선을 그릴 수 없다. 그래서
+  // pointerdown에서 포인터를 캡처하고, pointermove의 movementX/Y(창 위치와
+  // 무관한 원시 이동량)를 그대로 main에 실어 보낸다 — main이 오브 창의 현재
+  // getBounds()에 더해 setPosition한다(athena:orb-drag-move).
+  //
+  // 클릭(펼치기)과의 구분: 문턱(4px) 전까지는 그냥 pointerdown일 뿐이고, 넘는
+  // 순간부터 드래그로 확정한다. 문턱을 넘은 상호작용이면 뒤이어 오는 클릭
+  // 이벤트를 한 번 삼킨다(justDragged) — 안 그러면 드래그 후 손을 뗀 자리에서
+  // 펼침까지 같이 터진다.
+  let dragPointerId = null;
+  let dragMoved = false;
+  let justDragged = false;
+  let dragGazeTimer = null;
+
+  // 문턱을 넘어 확정된 드래그 중인가 — 커서 추적·사케이드가 관성 시선에 양보할 때
+  // 쓴다(위 두 곳에서 부른다 — 함수 선언이라 앞 줄에서 불러도 안전하다).
+  function isDragGazeActive() { return dragPointerId !== null && dragMoved; }
+
+  function pushDragGaze(mx, my) {
+    const mag = Math.hypot(mx, my) || 1;
+    // 끌리는 방향 반대로 밀린다(관성) — board-32 "B · 시선" 사용자 항목.
+    setGaze((-mx / mag) * DRAG_GAZE_AMP, (-my / mag) * DRAG_GAZE_AMP * 0.85, 70);
+    clearTimeout(dragGazeTimer);
+    dragGazeTimer = setTimeout(() => {
+      const g = baseGaze();
+      setGaze(g.gx, g.gy, SACCADE_BACK);
+    }, 220);
+  }
+
+  $orb.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 || dragPointerId !== null) return;
+    dragPointerId = e.pointerId;
+    dragMoved = false;
+    $orb.setPointerCapture(dragPointerId);
+  });
+
+  $orb.addEventListener('pointermove', (e) => {
+    if (dragPointerId === null || e.pointerId !== dragPointerId) return;
+    // 4px 문턱 — pointerdown 이후 첫 pointermove부터 여기 온다. 프레임당
+    // movementX/Y는 보통 문턱보다 작지만, 이동이 실제로 있었다는 사실 자체가
+    // "누르고 안 놓은 채 움직였다"이므로 드래그로 확정해도 된다 — 진짜 클릭은
+    // pointerup까지 pointermove가 거의 안 온다(사람 손 떨림 수준만 온다).
+    if (!dragMoved && Math.hypot(e.movementX, e.movementY) < DRAG_THRESHOLD) return;
+    dragMoved = true;
+    // 들림(board-30③) — 문턱을 넘어 드래그로 확정되는 순간 커진다. endDrag가
+    // 뗀다. "들린 만큼 그림자가 멀어진다"는 orb.css [data-dragging] #orb가 진다.
+    $root.dataset.dragging = 'true';
+    touchActivity();
+    window.athena.send('athena:orb-drag-move', { dx: e.movementX, dy: e.movementY });
+    if (!reduceMotion.matches) pushDragGaze(e.movementX, e.movementY);
+  });
+
+  function endDrag(e) {
+    if (dragPointerId === null || (e && e.pointerId !== dragPointerId)) return;
+    if ($orb.hasPointerCapture(dragPointerId)) $orb.releasePointerCapture(dragPointerId);
+    dragPointerId = null;
+    delete $root.dataset.dragging;
+    if (dragMoved) {
+      justDragged = true;
+      clearTimeout(dragGazeTimer);
+      const g = baseGaze();
+      setGaze(g.gx, g.gy, SACCADE_BACK);
+    }
+    dragMoved = false;
+  }
+
+  $orb.addEventListener('pointerup', endDrag);
+  $orb.addEventListener('pointercancel', endDrag);
+
+  /** label/value 한 줄. 값은 항상 문자열로 박아 넣는다(textContent만 쓴다). */
+  function row(label, value) {
+    const el = document.createElement('div');
+    el.className = 'orb-row';
+    const l = document.createElement('span');
+    l.className = 'orb-row-label';
+    l.textContent = label;
+    const v = document.createElement('span');
+    v.className = 'orb-row-value';
+    v.textContent = value;
+    el.append(l, v);
+    return el;
+  }
+
+  /**
+   * 대표 카드 — 이벤트 원장 행의 1:1 렌더. 없는 필드는 줄 자체를 만들지 않는다
+   * (빈 값을 '-'로 채우면 "측정했는데 값이 없다"로 읽힌다).
+   */
+  function renderCard(event) {
+    $card.replaceChildren();
+    if (!event) {
+      $card.hidden = true;
+      return;
+    }
+    const fields = [
+      ['종목', event.symbol],
+      ['관측값', event.observed],
+      ['임계', event.threshold],
+      ['소스', event.source],
+      ['루틴', event.note || event.routine_id],
+    ];
+    for (const [label, value] of fields) {
+      if (value === null || value === undefined || String(value).trim() === '') continue;
+      $card.appendChild(row(label, String(value)));
+    }
+    $card.hidden = $card.childElementCount === 0;
+  }
+
+  function renderPanel(event) {
+    const model = routineTurn.buildTurnModel(event, Date.now());
+    // 시점 정직성 3종 — 값이 없는 종류(만료·복원실패)에서는 칸을 비운다.
+    $badge.textContent = model.badge || '';
+    $badge.hidden = !model.badge;
+    $mode.textContent = model.modeText || '';
+    $mode.hidden = !model.modeText;
+    $relative.textContent = model.relative || '';
+    $relative.hidden = !model.relative;
+    $body.textContent = model.body;
+    $source.textContent = model.sourceLabel || '';
+    // 대표 카드는 발화(fired)에만 있다 — 만료·복원실패는 원장 행에 관측값이 없다.
+    renderCard(model.kind === 'fired' ? event : null);
+    // 더보기는 캔버스에 쌓을 카드가 있을 때만 의미가 있다. 없으면 숨긴다 —
+    // 눌러도 아무 일 없는 버튼을 남기지 않는다(soul.md §7).
+    $more.hidden = model.kind !== 'fired';
+    requestPanelHeight();
+  }
+
+  function renderAppNotification(payload) {
+    $badge.textContent = '시작 알림';
+    $badge.hidden = false;
+    $mode.textContent = '';
+    $mode.hidden = true;
+    $relative.textContent = '';
+    $relative.hidden = true;
+    $body.textContent = `${payload.title}\n${payload.body}`;
+    $source.textContent = 'ATHENA';
+    renderCard(null);
+    $more.hidden = true;
+    requestPanelHeight();
+  }
+
+  // ── 패널 높이 — 400 기본, 콘텐츠만큼 자라 640에서 멈춘다(board-33) ──
+  // 창 크기는 여기서도 main이 정한다(orb-toggle의 기존 계약 그대로) — 렌더러는
+  // "이 정도면 안 잘린다"는 값만 재서 실어 보낸다. 얼굴(#orb)은 anchor 배치라
+  // 패널이 자라도 제자리다 — 새 계산이 필요 없다.
+  const PANEL_HEIGHT_BASE = 400;
+  const PANEL_HEIGHT_MAX = 640;
+  // 펼친 창에서도 오브 원이 앉는 모서리 76px은 패널 바깥에 남는다
+  // (orb.css의 네 anchor 모두 panel top/bottom에서 76px을 비운다).
+  const PANEL_ORB_RESERVE = 76;
+
+  function measureContentHeight() {
+    const head = $panel.querySelector('.orb-panel-head');
+    // 대화 모드와 알림 모드는 서로 다른 본문을 재되, 입력줄은 양쪽에 포함한다.
+    // hidden 요소는 author CSS가 display를 갖는 경우에도 높이 계산에서 제외한다.
+    const parts = chatModeActive
+      ? [head, $chatBody, $inputStack].filter(Boolean)
+      : [head, $body, $card, $foot, $inputStack].filter(Boolean);
+    const visibleParts = parts.filter((el) => !el.hidden && !el.classList.contains('orb-mode-hidden'));
+    const borderY = (el) => {
+      const style = getComputedStyle(el);
+      return Number.parseFloat(style.borderTopWidth || '0')
+        + Number.parseFloat(style.borderBottomWidth || '0');
+    };
+    // scrollHeight는 overflow:auto인 영역에서도 잘리지 않은 실제 콘텐츠 높이를
+    // 준다 — 지금 보이는 크기가 아니라 필요한 크기를 재는 이유다.
+    // scrollHeight에는 border가 빠지므로 border-box가 필요한 실제 높이에 맞춰 더한다.
+    const content = visibleParts.reduce(
+      (sum, el) => sum + Math.max(el.offsetHeight, el.scrollHeight + borderY(el)), 0);
+    const gaps = 8 * Math.max(0, visibleParts.length - 1); // .orb-panel gap(orb.css)
+    const padY = 28; // .orb-panel padding 14px 위아래(orb.css)
+    return content + gaps + padY + borderY($panel) + PANEL_ORB_RESERVE;
+  }
+
+  function requestPanelHeight() {
+    if (!expanded) return;
+    const height = Math.min(PANEL_HEIGHT_MAX, Math.max(PANEL_HEIGHT_BASE, measureContentHeight()));
+    window.athena.send('athena:orb-toggle', { expanded: true, height });
+  }
+
+  function setExpanded(next) {
+    if (expanded === next) return;
+    expanded = next;
+    // 창 크기 변경은 main이 한다(기하는 orb-window.js가 계산한다). 렌더러는
+    // 요청만 하고, main이 anchor를 돌려주면 그때 상태를 반영한다.
+    window.athena.send('athena:orb-toggle', { expanded: next });
+  }
+
+  // ── 대화 모드 게이트. 상태 A는 곧바로 대화를 보여준다. 상태 B는 알림과 입력줄을
+  // 보여주고, 사용자가 질문을 제출한 동안에만 localChatOverride로 대화 이력을 연다.
+  // 접으면 override를 해제해 보존된 알림 큐로 돌아간다. ──
+  let displayMode = 'B';
+  let localChatOverride = false;
+  // null = 아직 한 번도 적용 안 됨. 첫 applyMode()가 반드시 돌아 data-orb-mode를
+  // 세우게 한다 — 없으면 부팅 직후 표면이 "모드를 모르는" 상태로 남는다.
+  let chatModeActive = null;
+
+  function applyMode() {
+    const next = displayMode === 'A' || localChatOverride;
+    if (chatModeActive === next) return;
+    chatModeActive = next;
+    $root.dataset.orbMode = chatModeActive ? 'chat' : 'alert';
+    $headerTitle.textContent = chatModeActive ? '글라우 대화' : '알림';
+    for (const el of ALERT_ONLY_ELS) el.classList.toggle('orb-mode-hidden', chatModeActive);
+    $chatBody.hidden = !chatModeActive;
+    $inputStack.hidden = false;
+    if (chatModeActive) {
+      $chatEmpty.hidden = $chatTurns.childElementCount > 0;
+    }
+    refreshChatControlStrip();
+    if (expanded) requestPanelHeight();
+  }
+
+  window.athena.on('athena:shell-visibility', ({ hidden, displayMode: mode } = {}) => {
+    displayMode = mode || (hidden ? 'A' : 'B');
+    applyMode();
+  });
+
+  // main이 창 크기를 실제로 바꾼 뒤에 온다 — 렌더러가 먼저 펼치면 창보다 큰
+  // 패널이 한 프레임 잘려 보인다.
+  window.athena.on('athena:orb-state', ({ expanded: isOpen, anchor } = {}) => {
+    const nextExpanded = !!isOpen;
+    const stateChanged = confirmedExpanded !== nextExpanded;
+    confirmedExpanded = nextExpanded;
+    if (anchor) $root.dataset.anchor = anchor;
+    if (isOpen && stateChanged && !reduceMotion.matches) {
+      // 펼침 성장 전환(board-30 3단계 근사, Option B) — hidden 해제와 data-state
+      // 전환이 한 틱에서 겹치면 display:none→flex 첫 프레임이라 orb.css의
+      // transition이 안 붙는다(전이할 "이전 프레임"이 아예 없었으므로). 그래서
+      // 작게 접힌 시작 프레임(data-panel-anim="enter")을 먼저 강제 리플로우로
+      // 확정하고, 다음 프레임에서 그 속성을 떼 최종 크기로 넘긴다.
+      $root.dataset.panelAnim = 'enter';
+      $panel.hidden = false;
+      $root.dataset.state = 'expanded';
+      void $panel.offsetHeight;
+      requestAnimationFrame(() => { delete $root.dataset.panelAnim; });
+    } else {
+      // 접힘은 즉시(과설계 금지 — 보드가 요구하는 건 등장뿐이다). reduced-motion도
+      // 여기로 와서 시작 프레임 없이 바로 최종 상태로 넘어간다.
+      $root.dataset.state = isOpen ? 'expanded' : 'collapsed';
+      $panel.hidden = !isOpen;
+    }
+    expanded = nextExpanded;
+    // 접힌 동안 도착한 알림은 renderPanel() 시점에는 높이를 요청할 수 없다.
+    // main이 기본 높이로 펼침을 확정한 첫 상태에서 실제 DOM 높이를 다시 재야
+    // 대표 카드가 입력줄에 밀려 내부 스크롤로 잘리지 않는다. 같은 높이 확인
+    // 이벤트에서는 다시 요청하지 않아 resize 왕복을 만들지 않는다.
+    if (isOpen && stateChanged) requestPanelHeight();
+    // B 모드에서 시작한 대화는 접어도 이력 자체를 유지한다. 다만 답변을 모두 읽은
+    // 뒤 대기 알림이 있으면 현재 접힘이나 다음 펼침에서 알림 표면으로 돌아간다.
+    // 진행 중/접힌 채 도착한 답은 먼저 대화에서 읽혀야 하므로 override를 유지한다.
+    if (stateChanged && displayMode === 'B' && localChatOverride && !chatBusy
+        && foldedChatAnswers === 0 && pendingAlerts.length > 0) {
+      localChatOverride = false;
+    }
+    applyMode();
+    // requestPanelHeight() 뒤의 크기 확인처럼 같은 expanded 상태가 다시 온 경우다.
+    // 이미 보던 답이나 대기 알림을 이 resize 확인으로 읽음 처리하지 않는다.
+    if (!stateChanged) return;
+    if (isOpen && chatModeActive) {
+      // 대화 모드에서는 "펼침 = 확인 처리"가 아니다 — 알림(unread, 루틴
+      // 이벤트)은 다른 방이다(board-34 "방은 알림에서만 생긴다"), 그건 그대로
+      // 둔다. 하지만 접힌 채 도착한 대화 답(board-33⑥)은 다르다 — 지금
+      // 펼치는 이 화면(chatModeActive)이 바로 그 턴을 보여주는 화면 자체다
+      // ($chatTurns가 이미 담고 있다). "본 것을 안 봤다고 하지 않는다"가
+      // 여기서는 이 순간 확인 처리하는 쪽이다.
+      if (foldedChatAnswers > 0) { foldedChatAnswers = 0; renderPresence(); }
+      $chatInput.focus();
+      return;
+    }
+    if (isOpen) {
+      // 도착 순서의 첫 알림 하나만 확인 처리한다. 실제로 렌더하지 않은 나머지를
+      // 지우지 않아 app-notification 뒤 routine이 와도 시작 알림이 소실되지 않는다.
+      const nextAlert = pendingAlerts.shift();
+      if (nextAlert && nextAlert.kind === 'app') {
+        const index = startupNotices.indexOf(nextAlert.payload);
+        if (index >= 0) startupNotices.splice(index, 1);
+      } else if (nextAlert && nextAlert.kind === 'routine') {
+        const index = unread.indexOf(nextAlert.payload);
+        if (index >= 0) unread.splice(index, 1);
+        current = nextAlert.payload;
+      }
+      renderPresence();
+      if (nextAlert && nextAlert.kind === 'app') renderAppNotification(nextAlert.payload);
+      else if (nextAlert && nextAlert.kind === 'routine') renderPanel(nextAlert.payload);
+      reapplyUnreadFace();
+    }
+  });
+
+  window.athena.on('athena:app-notification', (payload = {}) => {
+    const title = typeof payload.title === 'string' ? payload.title.trim() : '';
+    const body = typeof payload.body === 'string' ? payload.body.trim() : '';
+    if (!title || !body) return;
+    const notice = { title, body };
+    touchActivity();
+    if (expanded && !chatModeActive) {
+      renderAppNotification(notice);
+      window.athena.send('athena:app-notification-shown');
+      return;
+    }
+    startupNotices.push(notice);
+    pendingAlerts.push({ kind: 'app', payload: notice });
+    renderPresence();
+    setFace(FACE.FIRED);
+    window.athena.send('athena:app-notification-shown');
+  });
+
+  window.athena.on('athena:routine-event', (event) => {
+    if (!event || typeof event !== 'object') return;
+    current = event;
+    // 무엇이 왔든 오브는 깬다 — 일이 생겼다는 것 자체가 신호다.
+    touchActivity();
+    // 루틴 상태가 바뀌었을 수 있다(만료·발화 등) — 감시 궤도 링 수를 다시 잰다.
+    refreshSatelliteRing();
+    if (expanded && !chatModeActive) {
+      // 이미 펼쳐져 있으면 바로 갈아끼운다 — 쌓아두면 최신이 아닌 것을 보게 된다.
+      // 대화 모드로 펼쳐진 동안에는(이론상 셸이 그새 열렸다가 다시 숨는 등)
+      // 진행 중인 대화를 알림이 덮지 않는다 — 그냥 미확인으로 쌓아둔다.
+      renderPanel(event);
+      return;
+    }
+    unread.push(event);
+    pendingAlerts.push({ kind: 'routine', payload: event });
+    renderPresence();
+    // 발화가 아닌 종류(만료·복원 실패)는 활짝 여는 얼굴이 아니다. 같은 결정론
+    // 템플릿의 kind를 그대로 읽어 쓴다 — 여기서 따로 판정하면 두 벌이 된다.
+    const kind = routineTurn.buildTurnModel(event, Date.now()).kind;
+    if (kind === 'expired') setFace(FACE.MOPEY);
+    else if (kind === 'restore-failed') setFace(FACE.CRYING);
+    // 목표가 도달(event.goal===true, §CP1a-1) — 급변(surprise) 판정보다 먼저
+    // 본다: goal은 사용자가 명시적으로 말해서 생긴 확정 의도(milestone)이고,
+    // 급변은 관측값 크기로 추정한 휴리스틱일 뿐이다(5H3-0 "셀·신남" 캡션:
+    // "가장 큰 아치. 아껴 써야 값이 남는다" — board-31④·32). 아래 surprise와
+    // 같은 조작 방식(눈 모양 = face 값, 배지·카운트는 renderPresence의
+    // data-alert="fired" 그대로) — 새 채널을 만들지 않는다.
+    else if (kind === 'fired' && event.goal === true) setFace(FACE.GLAD);
+    // 급변(board-31⑤) — renderPresence가 방금 세운 FIRED를 대체한다. "눈
+    // 모양만 바꾼다"와 "fired 대신 surprise를 켠다"가 여기서는 같은 조작이다:
+    // 이 파일의 표정은 눈 모양 하나로만 지어지므로(orb.js 상단 주석), face
+    // 값 자체가 곧 눈 모양이다 — 별도로 "덧씌우는" 채널이 없다. 배지·카운트는
+    // renderPresence가 이미 정한 data-alert="fired"를 그대로 쓴다(단일 책임 유지).
+    else if (kind === 'fired' && routineTurn.exceedRatio(event.observed, event.threshold)) setFace(FACE.SURPRISE);
+  });
+
+  // 2026-08-26 실사용 회귀("오브를 어떻게 펼쳐? 안펼쳐") — 리스너를 $toggle이
+  // 아니라 $orb에 건다. 원인 실측: $orb.setPointerCapture(위 pointerdown)이
+  // 활성화되는 타이밍이 비결정적이라(같은 tick에 pointerup까지 오면 캡처가
+  // gotpointercapture로 붙어버리고, 그 사이 pointermove가 한 번이라도 끼면
+  // 안 붙는다 — Chromium 쪽 타이밍 경합), 캡처가 붙은 경우 click의 target이
+  // 실제 클릭 지점(#orbToggle)이 아니라 캡처 요소(#orb)로 바뀐다. $toggle에
+  // 리스너가 있으면 그 click은 $toggle까지 버블링될 조상 경로가 아니라서
+  // 그냥 사라진다(계측 로그로 확인 — target:"orb"). $orb는 어느 쪽으로
+  // 리타깃되든(orb 자신이거나, orb의 자손인 orbToggle이거나) 항상 버블 경로
+  // 위에 있어 이 경합에 안전하다.
+  $orb.addEventListener('click', () => {
+    // 드래그 문턱을 넘긴 상호작용의 꼬리에 붙는 클릭 1건을 삼킨다 — 안 그러면
+    // 오브를 옮기고 손을 뗀 자리에서 펼침까지 같이 터진다.
+    if (justDragged) { justDragged = false; return; }
+    touchActivity();
+    setExpanded(!expanded);
+  });
+  $close.addEventListener('click', () => { touchActivity(); setExpanded(false); });
+
+  // 알림에서 셸로 가는 경로. 셸 창을 앞으로 가져오고 대표 카드를 중앙 캔버스에
+  // 쌓는다 — main이 기존 facts 봉투로 접어 보낸다(신규 카드 타입 0개).
+  // 같은 발화 이벤트의 카드는 한 번만 접어 보낸다(2026-08-27 질의응답 결정) —
+  // 재클릭의 뜻은 "보여줘"지 "하나 더"가 아니다. event 없는 전송은 main이 이미
+  // 지원한다("대화창으로 가기"와 같은 모양 — 셸만 앞으로 가져온다).
+  let moreSentEvent = null;
+  $more.addEventListener('click', () => {
+    if (!current) return;
+    window.athena.send('athena:orb-open-shell', moreSentEvent === current ? {} : { event: current });
+    moreSentEvent = current;
+    setExpanded(false);
+  });
+
+  // ─────────────────────────────────────────────────────────────────────
+  // 대화 모드(2026-08-26 board-33, 2026-09-07 확장) — 상태 A에서는 바로 열리고,
+  // 상태 B에서는 입력을 제출한 뒤 현재 패널에서 이어진다.
+  // 질의는 athena:orb-chat-submit 하나로 나간다 — main의 runLiveQuery를
+  // 그대로 부르는 것뿐, 별도 파이프라인이 아니다(orb.js 상단 주석 참고).
+  // ─────────────────────────────────────────────────────────────────────
+  let chatBusy = false;
+  // 셸이 돌리고 있는 질의 — athena:live-query-state 브로드캐스트로 안다(2026-08-26
+  // 어드버서리얼 리뷰 결함 #1). chat.js는 이미 이 이벤트를 구독해 오브가 대화
+  // 중이면 셸 입력을 잠근다(chat.js remoteQueryBusy와 짝) — 반대 방향이 없어서
+  // 오브가 셸의 진행 중 질의를 조용히 죽이는 사고로 이어졌다.
+  let remoteQueryBusy = false;
+
+  // 판정은 lib/live-query-lock.js(순수 함수) 하나로 통일한다 — chatBusy·
+  // remoteQueryBusy가 바뀔 때마다 여기 하나만 부르면 입력 잠금·안내 문구가
+  // 항상 같은 규칙으로 갱신된다.
+  function syncInputLock() {
+    const lock = liveQueryLock.resolveInputLock({ chatBusy, remoteQueryBusy });
+    $chatInput.disabled = lock.disabled;
+    $lockHint.hidden = lock.hintHidden;
+    if (lock.hintText) $lockText.textContent = lock.hintText;
+  }
+
+  window.athena.on('athena:live-query-state', ({ busy } = {}) => {
+    remoteQueryBusy = !!busy;
+    syncInputLock();
+  });
+
+  function orbTurn(className) {
+    const el = document.createElement('div');
+    el.className = className;
+    return el;
+  }
+
+  function renderChatQuestion(text) {
+    const line = orbTurn('orb-turn');
+    const q = document.createElement('div');
+    q.className = 'orb-turn-q';
+    q.textContent = text;
+    line.appendChild(q);
+    $chatTurns.appendChild(line);
+    return line;
+  }
+
+  function renderProgressCard() {
+    const card = orbTurn('orb-progress-card');
+    const judging = document.createElement('div');
+    judging.className = 'orb-progress-judging';
+    judging.textContent = '판단 중';
+    const steps = document.createElement('div');
+    steps.className = 'orb-tool-steps';
+    card.append(judging, steps);
+    $chatTurns.appendChild(card);
+    card._steps = steps;
+    card._byId = new Map(); // DOM 엘리먼트 캐시(id별)
+    card._stepStates = new Map(); // tool-step-track.applyToolStep이 드는 판정 상태(id별)
+    return card;
+  }
+
+  // 판정은 lib/tool-step-track.js(순수 함수) 하나로 통일한다 — chat.js도
+  // 같은 모듈을 쓴다(2026-08-26 어드버서리얼 리뷰 결함 #3, 라벨 두 벌 방지).
+  function updateProgressStep(card, step) {
+    if (!card || !card.isConnected) return;
+    const result = toolStepTrack.applyToolStep(card._stepStates, step);
+    if (!result) return;
+    let el = card._byId.get(result.id);
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'orb-tool-step';
+      const icon = document.createElement('span');
+      icon.className = 'orb-tool-step-icon';
+      const label = document.createElement('span');
+      label.className = 'orb-tool-step-label';
+      const time = document.createElement('span');
+      time.className = 'orb-tool-step-time';
+      el.append(icon, label, time);
+      card._steps.appendChild(el);
+      card._byId.set(result.id, el);
+    }
+    el.classList.toggle('done', result.done);
+    el.classList.toggle('is-warn', result.error);
+    el.querySelector('.orb-tool-step-label').textContent = result.label;
+    el.querySelector('.orb-tool-step-time').textContent = result.timeText;
+    requestPanelHeight();
+  }
+
+  function renderChatAnswer(text) {
+    const line = orbTurn('orb-turn');
+    const a = document.createElement('div');
+    a.className = 'orb-turn-a';
+    a.textContent = text;
+    line.appendChild(a);
+    $chatTurns.appendChild(line);
+    return { line, textEl: a };
+  }
+
+  function scrollChatToBottom() {
+    $chatBody.scrollTop = $chatBody.scrollHeight;
+  }
+
+  // ---------- board-33③④ 선행 — 캔버스 엔벌로프 축약 카드 ----------
+  // main.js가 athena:orb-canvas-result로 relay하는 건 origin:'orb' 질의의
+  // render_canvas 결과뿐이다(9a 결정) — 셸 캔버스와 같은 종류를 오브 안에서도
+  // 실시간으로 축약해 보여준다.
+  const ORB_FOLD_CARD_WIDTH_PX = 360; // 패널 400 - 카드 padding(12px×2) - 여유
+  const ORB_TABLE_MAX_ROWS = 3; // 보드 실측(4XV-0) — 헤더 제외 3행까지만 편다
+
+  // 카드 제목/부제 — canvas.js의 cardTitleAndSubtitle과 같은 규칙(card_title이
+  // 고정 카드명이면 타이틀, caption은 부제로 내려간다). 오브는 별도 창(스크립트
+  // 스코프도 분리)이라 그대로 참조할 수 없어 3줄짜리 규칙만 그대로 복제한다 —
+  // 공유 모듈을 새로 만들 만큼 크지 않다.
+  function orbCardTitleAndSubtitle(envelope, fallback) {
+    const fixedTitle = envelope && typeof envelope.card_title === 'string' && envelope.card_title
+      ? envelope.card_title
+      : null;
+    const caption = envelope && envelope.caption;
+    if (fixedTitle) return [fixedTitle, caption || null];
+    return [caption || fallback, null];
+  }
+
+  // 표 축약 카드(board-33③, Paper 4XV-0 실측) — column-fold.js의 foldColumns를
+  // 셸 캔버스(1560px)가 아니라 오브 카드 폭(360px)에 다시 적용한다. 데이터
+  // 셀 최소폭(90px)+패딩(24px)=114px라 360px에서는 짧은 라벨 기준 최대 3컬럼
+  // 안팎까지만 보인다(column-fold.test.js가 이 가정을 고정한다). 셸의 16종
+  // CardKinds 전용 렌더러는 재사용하지 않는다 — 일반 fold 표 하나로 충분한
+  // 별도의 더 단순한 렌더러다.
+  function buildOrbTableCard(envelope) {
+    const rawCols = (envelope.data && Array.isArray(envelope.data.columns)) ? envelope.data.columns : [];
+    const rows = (envelope.data && Array.isArray(envelope.data.rows)) ? envelope.data.rows : [];
+    if (!rawCols.length || !rows.length) return null;
+
+    const { visible: cols, hidden } = columnFold.foldColumns(rawCols, ORB_FOLD_CARD_WIDTH_PX);
+    const visibleRows = rows.slice(0, ORB_TABLE_MAX_ROWS);
+    const hiddenRowCount = rows.length - visibleRows.length;
+    const [title, subtitle] = orbCardTitleAndSubtitle(envelope, '표');
+
+    const card = document.createElement('div');
+    card.className = 'orb-fold-card';
+
+    const head = document.createElement('div');
+    head.className = 'orb-fold-card-head';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'orb-fold-card-title';
+    titleEl.textContent = title;
+    head.appendChild(titleEl);
+    if (subtitle) {
+      const subtitleEl = document.createElement('div');
+      subtitleEl.className = 'orb-fold-card-subtitle';
+      subtitleEl.textContent = subtitle;
+      head.appendChild(subtitleEl);
+    }
+    card.appendChild(head);
+
+    function buildRow(cells, isHead) {
+      const row = document.createElement('div');
+      row.className = isHead ? 'orb-fold-row is-head' : 'orb-fold-row';
+      cells.forEach((text, i) => {
+        const cell = document.createElement('div');
+        cell.className = i === 0 ? 'orb-fold-cell-label' : 'orb-fold-cell-value';
+        cell.textContent = text;
+        row.appendChild(cell);
+      });
+      return row;
+    }
+
+    const table = document.createElement('div');
+    table.className = 'orb-fold-table';
+    table.appendChild(buildRow(cols.map((col) => (col && col.label != null ? col.label : (col && col.key) || '')), true));
+    for (const r of visibleRows) {
+      table.appendChild(buildRow(cols.map((col) => {
+        const v = r ? r[col.key] : undefined;
+        return v == null ? '—' : String(v);
+      }), false));
+    }
+    card.appendChild(table);
+
+    // 결정론 축약 고지(보드 원문 형식) — 실제로 뭔가 접었을 때만 낸다. 아무것도
+    // 안 접혔는데 "0개를 접었습니다"를 내는 건 정직성 계약에 어긋난다.
+    if (hidden.length > 0 || hiddenRowCount > 0) {
+      const note = document.createElement('div');
+      note.className = 'orb-fold-note';
+      note.textContent = `열 ${hidden.length}개 · 행 ${hiddenRowCount}개를 접었습니다 — 전체는 캔버스에서`;
+      card.appendChild(note);
+    }
+    return card;
+  }
+
+  const ORB_CHART_WIDTH_PX = 336; // Paper 4ZM-0 실측 "차트 판 (336×116)"
+  const ORB_CHART_HEIGHT_PX = 116;
+  // canvas.js PERIOD_TITLE과 같은 값 — 오브는 별도 스크립트 스코프라 그대로
+  // 참조할 수 없어 복제한다(키움 API 주기 6종 고정값이라 드리프트 위험이 낮다).
+  const ORB_CHART_PERIOD_LABEL = Object.freeze({
+    tick: '틱', min: '분봉', day: '일봉', week: '주봉', month: '월봉', year: '년봉',
+  });
+
+  // 2026-08-27 결함 3 — 분·틱봉 candle.time은 8자리 dt 문자열이 아니라
+  // 백엔드 canvas_transform.py _aits_time()이 만드는 Unix epoch 초 정수다
+  // (예: 1772203200). facts-card.js formatDatetime은 8자리 문자열만 인식하고
+  // 그 외는 String() 그대로 찍어 이 정수가 그대로 노출된다. 셸 캔버스
+  // lib/chart-card.js:96-99 kstLabel()에 이미 '숫자면 new Date(time*1000)→
+  // Asia/Seoul' 관례가 있다(2026-08-25 실측 수정 이력 주석 포함) — 그 관례를
+  // 재사용한다. chart-card.js를 그대로 require할 수는 없다: orb.html이
+  // 안 불러오는 파일이고(위 lib/*.js 로드 목록 참조), 부트 시 lightweight-charts
+  // ESM을 즉시 로드하는 부작용이 있으며, kstLabel 자신도 __exports 밖의
+  // 비공개 헬퍼다 — 그래서 같은 로직만 최소 복제한다. 일/주/월/년봉의
+  // 'YYYY-MM-DD' 문자열 time은 그대로 formatDatetime 경로를 타 기존 동작을
+  // 유지한다.
+  const ORB_CHART_KST_DT_PARTS = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  });
+  function orbChartDateLabel(time) {
+    if (typeof time !== 'number' || !Number.isFinite(time)) return factsCard.formatDatetime(time);
+    const p = Object.fromEntries(ORB_CHART_KST_DT_PARTS.formatToParts(new Date(time * 1000)).map((x) => [x.type, x.value]));
+    return `${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}`;
+  }
+
+  // 오브용 미니 차트(board-33④, Paper 4ZM-0 실측) — 캔버스 차트(lightweight-charts
+  // 툴바·지표·드로잉·매물대)의 축소판이 아니라 완전히 별도의 렌더러다(보드 캡션
+  // 원문). 구성 상한: 가격 + 등락률 + 종가 라인 1개 + 시작/끝 날짜 2개까지 — 그
+  // 외(그리드선·면적 채움·끝점 마커 포함)는 넣지 않는다. SVG는 createElementNS만
+  // 쓴다(innerHTML 0, 게이트 규범).
+  function buildOrbChartCard(envelope) {
+    const data = envelope.data || {};
+    const chart = data.chart && typeof data.chart === 'object' ? data.chart : null;
+    const candles = chart && Array.isArray(chart.candles) ? chart.candles : [];
+    const closes = candles.map((c) => c && c.close).filter((v) => v != null);
+    if (closes.length < 2) return null; // 선 하나를 그릴 최소 조건(chartLinePoints와 같은 기준)
+
+    const last = candles[candles.length - 1];
+    const prev = candles[candles.length - 2];
+    const changeAmount = (last.close != null && prev.close != null) ? last.close - prev.close : null;
+    const changePercent = (changeAmount != null && prev.close) ? (changeAmount / prev.close) * 100 : null;
+    const tone = changeAmount != null ? factsCard.changeTone(undefined, changeAmount) : 'flat';
+
+    const [title] = orbCardTitleAndSubtitle(envelope, data.symbol || '차트');
+    const periodLabel = chart.period ? ORB_CHART_PERIOD_LABEL[chart.period] : null;
+
+    const card = document.createElement('div');
+    card.className = 'orb-fold-card';
+
+    const head = document.createElement('div');
+    head.className = 'orb-fold-card-head';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'orb-fold-card-title';
+    titleEl.textContent = title;
+    head.appendChild(titleEl);
+    if (periodLabel) {
+      const subtitleEl = document.createElement('div');
+      subtitleEl.className = 'orb-fold-card-subtitle';
+      subtitleEl.textContent = periodLabel;
+      head.appendChild(subtitleEl);
+    }
+    card.appendChild(head);
+
+    // 가격 헤드라인 — 캔들 close는 이미 정규화된 순수 숫자(normalizeChartCandle의
+    // finiteOrNull)라 부호 오염이 없지만, 카드 렌더러 전반의 priceMagnitude→
+    // formatNumeric 관례(card-primitives.js/facts-card.js)를 그대로 따른다.
+    // 등락률은 방향이 의미라 부호를 그대로 남긴다(priceMagnitude를 안 거친다 —
+    // ChangeBadge와 같은 원칙, card-primitives.js 주석 참조).
+    const headline = document.createElement('div');
+    headline.className = 'orb-chart-headline';
+    const priceEl = document.createElement('span');
+    priceEl.className = 'orb-chart-price';
+    priceEl.textContent = factsCard.formatNumeric(cardPrimitives.priceMagnitude(last.close));
+    headline.appendChild(priceEl);
+    if (changeAmount != null) {
+      const changeEl = document.createElement('span');
+      changeEl.className = `orb-chart-change is-${tone}`;
+      const sign = changeAmount > 0 ? '+' : '';
+      const pct = changePercent != null ? ` (${changePercent > 0 ? '+' : ''}${changePercent.toFixed(2)}%)` : '';
+      changeEl.textContent = `${sign}${factsCard.formatNumeric(changeAmount)}${pct}`;
+      headline.appendChild(changeEl);
+    }
+    card.appendChild(headline);
+
+    // 차트 판 — 종가 라인 1개만. 좌표 변환은 card-primitives.js chartLinePoints
+    // (순수 함수, node --test 대상)가 하고 여기서는 DOM만 짓는다.
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width', String(ORB_CHART_WIDTH_PX));
+    svg.setAttribute('height', String(ORB_CHART_HEIGHT_PX));
+    svg.setAttribute('viewBox', `0 0 ${ORB_CHART_WIDTH_PX} ${ORB_CHART_HEIGHT_PX}`);
+    svg.setAttribute('class', 'orb-chart-svg');
+    const points = cardPrimitives.chartLinePoints(closes, { width: ORB_CHART_WIDTH_PX, height: ORB_CHART_HEIGHT_PX });
+    if (points.length) {
+      const path = document.createElementNS(svgNS, 'path');
+      const d = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+      path.setAttribute('d', d);
+      path.setAttribute('fill', 'none');
+      // 토큰을 SVG 프리젠테이션 속성에 그대로 쓴다(Paper 가이드 "SVGs support
+      // design tokens through CSS variables for stroke and fill attributes").
+      path.setAttribute('stroke', `var(--color-${tone})`);
+      path.setAttribute('stroke-width', '1.6');
+      path.setAttribute('stroke-linejoin', 'round');
+      svg.appendChild(path);
+    }
+    card.appendChild(svg);
+
+    // 시작/끝 날짜 2개 — 구성 상한의 마지막 항목.
+    const firstTime = candles[0] && candles[0].time;
+    const lastTime = last.time;
+    if (firstTime != null && lastTime != null) {
+      const dates = document.createElement('div');
+      dates.className = 'orb-chart-dates';
+      const startEl = document.createElement('span');
+      startEl.textContent = orbChartDateLabel(firstTime);
+      const endEl = document.createElement('span');
+      endEl.textContent = orbChartDateLabel(lastTime);
+      dates.append(startEl, endEl);
+      card.appendChild(dates);
+    }
+
+    // 능력 고지(보드 원문) — 축약 여부와 무관하게 항상 낸다(지표·드로잉·매물대가
+    // 구조적으로 없는 렌더러라는 사실 자체를 알린다).
+    const note = document.createElement('div');
+    note.className = 'orb-fold-note';
+    note.textContent = '지표 · 드로잉 · 매물대는 캔버스에서';
+    card.appendChild(note);
+
+    return card;
+  }
+
+  // ---------- board-33⑤ 미니 주문 티켓(CP2 2026-08-27 사용자 승인) ----------
+  // 판별 관례 — canvas.js가 title로 CardKinds를 고르는 것과 같은 방식이다.
+  // 새 canvas_type을 짓지 않는다(신규 canvas_type 발명 금지): 백엔드가 이미
+  // 검증하는 8종(stream/reader/timeline/table/chart/facts/compound/free) 중
+  // 'facts'를 그대로 쓰고, card_title이 정확히 "주문 티켓"일 때만 이 특수
+  // 렌더로 분기한다 — 그 밖의 facts 엔벌로프는 지금처럼 오브에 카드가 없다.
+  const ORDER_TICKET_TITLE = '주문 티켓';
+
+  // 실행 버튼이 실제로 쏘는 구조화 값 — 표시 문자열(예: "삼성전자 005930")과
+  // 별도다. buildOrderPayload(lib/order-ticket.js, chat.js가 이미 쓰는 바로 그
+  // 함수)가 기대하는 {symbol, side, qty} 모양 그대로 들고 있는다.
+  let activeTicketOrder = null;
+  // 상태기계 — 셸(chat.js ticket)과 같은 orderTicketLib.createTicket/transition을
+  // 그대로 쓴다(결함5, 2026-08-27 CP2 확장 승인). review → executing →
+  // done|in_doubt|failed, failed만 재시도 가능(라이브러리 전이표 그대로 — 새
+  // 상태기계를 짓지 않는다).
+  let activeTicket = null;
+  // 게이트 차단 사유(결함4) — null이면 실행 가능. 조회 중에는 자리표시자
+  // 문자열을 넣어 그 사이 실행을 막는다(계좌 확인 전 낙관적 실행 금지).
+  let ticketGateBlocked = null;
+  let ticketExecuting = false;
+  // 세대 번호 — 게이트 조회·주문 실행 응답이 비동기라, 그사이 티켓이 닫히거나
+  // 새 티켓으로 갈아끼워진 뒤 늦게 도착한 응답이 새 화면을 덮어쓰는 것을 막는다.
+  let ticketGeneration = 0;
+
+  function orbTicketFieldValue(fields, key) {
+    const f = fields.find((f) => f && f.key === key);
+    return f ? f.value : undefined;
+  }
+
+  // 실행 버튼 활성 조건 — 셸 syncExec()과 같은 규칙(chat.js:1516-1519): 필수값 +
+  // 게이트 통과 + 진행 중 아님 + 종결 상태(done/in_doubt) 아님. failed는
+  // 재시도를 허용한다(사람이 다시 누른 경우만, 새 멱등키).
+  function updateTicketExecDisabled() {
+    $ticketExec.disabled = !activeTicketOrder || !!ticketGateBlocked || ticketExecuting
+      || !activeTicket || activeTicket.state === 'done' || activeTicket.state === 'in_doubt';
+  }
+
+  // 게이트 조회(결함4) — 셸 renderOrderTicket()의 account-list 조회(chat.js:
+  // 1493-1503)와 같은 판정(orderTicketLib.gateBlocker)을 그대로 재사용한다.
+  // 새 방어 장치를 발명하지 않는다 — 이미 있는 판정을 오브에도 붙일 뿐이다.
+  async function refreshTicketGate(gen) {
+    ticketGateBlocked = '계좌 확인 중…';
+    updateTicketExecDisabled();
+    let blocked;
+    try {
+      const res = await window.athena.invoke('athena:account-list');
+      const accounts = (res && res.accounts) || [];
+      const active = accounts.find((a) => a.active) || accounts[0] || null;
+      blocked = orderTicketLib.gateBlocker(active);
+    } catch {
+      blocked = orderTicketLib.gateBlocker(null);
+    }
+    if (gen !== ticketGeneration) return; // 그사이 티켓이 닫히거나 갈렸다 — 낡은 응답을 버린다
+    ticketGateBlocked = blocked;
+    if (blocked) {
+      $ticketGate.textContent = `지금은 실행할 수 없음: ${blocked}`;
+      $ticketGate.hidden = false;
+    } else {
+      $ticketGate.hidden = true;
+      $ticketGate.textContent = '';
+    }
+    updateTicketExecDisabled();
+  }
+
+  /**
+   * 미니 주문 티켓 — 엔벌로프 값 1:1(LLM 0, 가격×수량 계산을 오브가 하지
+   * 않는다). 없는 필드는 행 자체를 감춘다("없는 필드 행 미생성", orb.js의
+   * renderCard()와 같은 원칙). 정적 라벨 4종은 orb.html이 이미 갖고 있다
+   * (Step 10b) — 여기서는 값만 채우고 행/티켓 표시 여부만 토글한다.
+   */
+  function renderOrbTicket(envelope) {
+    const fields = (envelope.data && Array.isArray(envelope.data.fields)) ? envelope.data.fields : [];
+    const symbol = orbTicketFieldValue(fields, 'symbol');
+    const symbolName = orbTicketFieldValue(fields, 'symbol_name');
+    const side = orbTicketFieldValue(fields, 'side');
+    const qty = orbTicketFieldValue(fields, 'qty');
+    const amount = orbTicketFieldValue(fields, 'estimated_amount');
+
+    $ticketAccount.textContent = envelope.caption != null ? String(envelope.caption) : '';
+
+    if (symbol != null && symbol !== '') {
+      $ticketSymbol.textContent = symbolName ? `${symbolName} ${symbol}` : String(symbol);
+      $ticketRowSymbol.hidden = false;
+    } else {
+      $ticketRowSymbol.hidden = true;
+    }
+
+    // 시장가 고정 — order-ticket.js buildOrderPayload와 같은 P4 1차 범위
+    // 제약(지정가는 후속)이라 "· 시장가"는 데이터가 아니라 그 제약의 표기다.
+    $ticketSide.classList.remove('is-buy', 'is-sell');
+    if (side === 'buy' || side === 'sell') {
+      $ticketSide.textContent = `${side === 'buy' ? '매수' : '매도'} · 시장가`;
+      $ticketSide.classList.add(side === 'buy' ? 'is-buy' : 'is-sell');
+      $ticketRowSide.hidden = false;
+    } else {
+      $ticketRowSide.hidden = true;
+    }
+
+    if (Number.isFinite(qty) && qty > 0) {
+      $ticketQty.textContent = `${qty}주`;
+      $ticketRowQty.hidden = false;
+    } else {
+      $ticketRowQty.hidden = true;
+    }
+
+    if (Number.isFinite(amount)) {
+      $ticketAmount.textContent = `${factsCard.formatNumeric(amount)}원`;
+      $ticketRowAmount.hidden = false;
+    } else {
+      $ticketRowAmount.hidden = true;
+    }
+
+    // 실행 가능 여부 — 세 필수값(종목·방향·수량)이 다 있어야 buildOrderPayload가
+    // 던지지 않는다. 방어 장치를 새로 두는 게 아니라 이미 있는 함수의 전제를
+    // 그대로 존중하는 것뿐이다.
+    activeTicketOrder = (symbol != null && symbol !== '' && (side === 'buy' || side === 'sell') && Number.isFinite(qty) && qty > 0)
+      ? { symbol: String(symbol), side, qty: Number(qty) }
+      : null;
+    // 새 티켓 — 상태기계를 review로 되돌리고(결함5), 이전 실행 결과 표시를
+    // 지운다. 게이트는 매 렌더마다 다시 조회한다(활성 계좌가 바뀌었을 수
+    // 있다 — 캐시하지 않는다).
+    activeTicket = activeTicketOrder ? orderTicketLib.createTicket(null) : null;
+    ticketExecuting = false;
+    $ticketStatus.hidden = true;
+    $ticketStatus.textContent = '';
+    $ticketStatus.classList.remove('is-failed', 'is-doubt');
+    const gen = ++ticketGeneration;
+    if (activeTicketOrder) {
+      refreshTicketGate(gen);
+    } else {
+      ticketGateBlocked = null;
+      $ticketGate.hidden = true;
+    }
+    updateTicketExecDisabled();
+
+    $ticket.hidden = false;
+    return $ticket;
+  }
+
+  function closeOrbTicket() {
+    $ticket.hidden = true;
+    activeTicketOrder = null;
+    activeTicket = null;
+    ticketExecuting = false;
+    ticketGateBlocked = null;
+    ticketGeneration++; // 대기 중이던 게이트 조회 응답을 무효화
+    $ticketGate.hidden = true;
+    $ticketStatus.hidden = true;
+  }
+
+  $ticketCancel.addEventListener('click', closeOrbTicket);
+
+  // 실행 — 셸(chat.js execBtn 핸들러)과 같은 페이로드·같은 IPC·같은 1회
+  // 확인 흐름이다: 새 파이프라인 0개(board-33⑤ 캡션 50G-0 — "방어 장치 없이
+  // 셸과 동일하게 1회 확인"). 이 클릭 자체가 그 1회 확인이다 — 실행 후 별도
+  // 확인 대화상자를 띄우지 않는다. 2026-08-27 CP2 확장 승인(결함4/5) — 게이트
+  // 확인과 결과 3갈래(done/in_doubt/failed)를 셸과 동등하게 이식한다(공유
+  // 라이브러리 재사용, 새 방어 장치 발명 금지).
+  $ticketExec.addEventListener('click', async () => {
+    if (!activeTicketOrder || !activeTicket || $ticketExec.disabled) return;
+    let payload;
+    try {
+      payload = orderTicketLib.buildOrderPayload(activeTicketOrder);
+    } catch {
+      return; // 값이 깨졌으면 조용히 무시 — 새 오류 UI를 짓지 않는다(방어 장치 0).
+    }
+    const ticket = activeTicket;
+    const gen = ticketGeneration;
+    orderTicketLib.transition(ticket, 'executing');
+    ticketExecuting = true;
+    $ticketStatus.hidden = true;
+    updateTicketExecDisabled();
+    const res = await window.athena.invoke('athena:order-execute', {
+      trId: payload.tr_id,
+      body: payload.body,
+      idempotencyKey: orderTicketLib.newIdempotencyKey(),
+    });
+    if (gen !== ticketGeneration) return; // 응답 도착 전 티켓이 닫히거나 갈렸다 — 낡은 응답을 버린다
+    ticketExecuting = false;
+    const outcome = orderTicketLib.interpretExecuteStatus((res && res.status) || 0);
+    orderTicketLib.transition(ticket, orderTicketLib.ticketStateAfterExecute(outcome));
+    $ticketStatus.textContent = orderTicketLib.executeOutcomeCopy(outcome, res);
+    $ticketStatus.hidden = false;
+    if (outcome === 'done') {
+      // 간결한 완료 표시 후 닫기 — DONE_HOLD(완료 웃음 유지 시간)와 같은
+      // 길이만큼 보여준 뒤 닫는다(별도 영수증 카드를 새로 만들지 않는다).
+      updateTicketExecDisabled();
+      setTimeout(() => { if (gen === ticketGeneration) closeOrbTicket(); }, DONE_HOLD);
+    } else if (outcome === 'in_doubt') {
+      $ticketStatus.classList.add('is-doubt');
+      updateTicketExecDisabled();
+    } else if (outcome === 'needs_confirm') {
+      updateTicketExecDisabled();
+    } else {
+      $ticketStatus.classList.add('is-failed');
+      updateTicketExecDisabled();
+    }
+  });
+
+  // ---------- 미니 카드 확장(Paper 키우미 보드 09, 2026-09-01 전수검사) ----------
+  // 보드 09가 캔버스 9종 → 미니 10종의 상한과 공통 규칙을 확정했다. 그 전까지는
+  // table·chart·주문 티켓 셋만 카드가 되고 facts 일반·compound·event·action·
+  // status·reader·stream은 카드 없이 텍스트로 흘러갔다 — 사용자 쪽에서 보면
+  // "오브에서는 안 보이는 응답"이 있었다는 뜻이다.
+  //
+  // 무엇을 보여주고 무엇을 접을지는 lib/orb-mini-card.js(순수 함수, 단위 테스트로
+  // 상한과 고지 문구를 고정)가 정하고, 여기서는 DOM만 짓는다. 셸 캔버스의 16종
+  // 전용 렌더러는 여전히 재사용하지 않는다(보드 09 "축소판이 아니다") —
+  // buildOrbTableCard/buildOrbChartCard가 이미 그 방침으로 서 있는 것과 같다.
+
+  /** 카드 껍데기 — 표·차트 카드가 쓰는 것과 같은 머리(제목 + 부제). */
+  function orbCardShell(envelope, fallbackTitle, titleOverride) {
+    const [resolvedTitle, subtitle] = orbCardTitleAndSubtitle(envelope, fallbackTitle);
+    const card = document.createElement('div');
+    card.className = 'orb-fold-card';
+    const head = document.createElement('div');
+    head.className = 'orb-fold-card-head';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'orb-fold-card-title';
+    titleEl.textContent = titleOverride || resolvedTitle;
+    head.appendChild(titleEl);
+    if (subtitle) {
+      const subtitleEl = document.createElement('div');
+      subtitleEl.className = 'orb-fold-card-subtitle';
+      subtitleEl.textContent = subtitle;
+      head.appendChild(subtitleEl);
+    }
+    card.appendChild(head);
+    return card;
+  }
+
+  /** 고지 한 줄. 빈 문자열·null이면 아무것도 붙이지 않는다(보드 09 규칙 2). */
+  function appendOrbNote(card, text) {
+    if (!text) return;
+    const note = document.createElement('div');
+    note.className = 'orb-fold-note';
+    note.textContent = text;
+    card.appendChild(note);
+  }
+
+  /** 라벨·값 한 줄. 표 카드의 .orb-fold-row 어휘를 그대로 쓴다. */
+  function orbLabelValueRow(label, value, tone) {
+    const row = document.createElement('div');
+    row.className = 'orb-fold-row';
+    const labelEl = document.createElement('div');
+    labelEl.className = 'orb-fold-cell-label';
+    labelEl.textContent = label;
+    const valueEl = document.createElement('div');
+    valueEl.className = tone ? `orb-fold-cell-value is-${tone}` : 'orb-fold-cell-value';
+    valueEl.textContent = value;
+    row.append(labelEl, valueEl);
+    return row;
+  }
+
+  /** 상태 배지 — 이벤트·주문 확인·인증 상태가 공유한다. 색은 상태를 나르되
+   * 색만으로 말하지 않는다: 항상 "무엇의 상태인지"를 라벨로 함께 쓴다
+   * (Paper 56 접근성 결정 — 비색상 단서를 같이 둔다). */
+  const ORB_STATE_TONE = Object.freeze({
+    connected: 'ok', ready: 'ok', done: 'ok', filled: 'ok',
+    connecting: 'warn', review: 'warn', executing: 'warn', in_doubt: 'warn', refreshing: 'warn',
+    disconnected: 'down', failed: 'down', error: 'down', expired: 'down', auth_required: 'down',
+  });
+  function orbStateBadge(kind, state) {
+    const badge = document.createElement('div');
+    const tone = ORB_STATE_TONE[String(state)] || 'flat';
+    badge.className = `orb-state-badge is-${tone}`;
+    const dot = document.createElement('span');
+    dot.className = 'orb-state-dot';
+    dot.setAttribute('aria-hidden', 'true');
+    const text = document.createElement('span');
+    text.className = 'orb-state-text';
+    text.textContent = `${kind} · ${state}`;
+    badge.append(dot, text);
+    return badge;
+  }
+
+  /** facts 필드 한 개의 표시 문자열과 톤 — 셸 캔버스 renderFactsFieldGroup과
+   * 같은 셀 프리미티브(lib/facts-card.js)를 쓴다. 두 표면이 같은 값을 다른
+   * 문자열로 보여주면 어느 쪽이 맞는지 사용자가 알 수 없다. */
+  function orbFactsValue(field) {
+    const key = field && field.key;
+    const value = field ? field.value : undefined;
+    const cell = factsCard.classifyCell(key);
+    if (cell === 'price' || cell === 'quantity') return { text: factsCard.formatNumeric(value), tone: null };
+    if (cell === 'datetime') return { text: factsCard.formatDatetime(value), tone: null };
+    if (cell === 'change') return { text: String(value), tone: factsCard.changeTone(key, value) };
+    return { text: String(value), tone: null };
+  }
+
+  function orbFieldRow(field) {
+    const { text, tone } = orbFactsValue(field);
+    const label = (field && (field.label != null ? field.label : field.key)) || '';
+    return orbLabelValueRow(String(label), text, tone);
+  }
+
+  function orbTableEl() {
+    const table = document.createElement('div');
+    table.className = 'orb-fold-table';
+    return table;
+  }
+
+  // ── 03 사실(facts 일반) ──
+  function buildOrbFactsCard(envelope) {
+    const fields = (envelope.data && Array.isArray(envelope.data.fields)) ? envelope.data.fields : [];
+    const picked = orbMiniCard.pickFactsRows(fields);
+    if (!picked.shown.length) return null; // 빈 카드를 그리지 않는다
+    const card = orbCardShell(envelope, '사실');
+    const table = orbTableEl();
+    for (const field of picked.shown) table.appendChild(orbFieldRow(field));
+    card.appendChild(table);
+    appendOrbNote(card, orbMiniCard.foldNote('facts', { items: picked.hidden }));
+    return card;
+  }
+
+  // ── 04 복합(compound) ──
+  // 봉투 계약은 canvas.js와 같다: data.header(스칼라 필드) + data.table{columns,rows}.
+  function buildOrbCompoundCard(envelope) {
+    const data = (envelope.data && typeof envelope.data === 'object') ? envelope.data : {};
+    const tableData = (data.table && typeof data.table === 'object') ? data.table : {};
+    const rawCols = Array.isArray(tableData.columns) ? tableData.columns : [];
+    const rawRows = Array.isArray(tableData.rows) ? tableData.rows : [];
+    const picked = orbMiniCard.pickCompound(data.header, rawRows);
+    if (!picked.scalars.shown.length && !picked.table.shown.length) return null;
+    const card = orbCardShell(envelope, '복합');
+
+    if (picked.scalars.shown.length) {
+      const band = document.createElement('div');
+      band.className = 'orb-band';
+      for (const field of picked.scalars.shown) {
+        const cell = document.createElement('div');
+        cell.className = 'orb-band-cell';
+        const label = document.createElement('div');
+        label.className = 'orb-band-label';
+        label.textContent = String((field.label != null ? field.label : field.key) || '');
+        const { text, tone } = orbFactsValue(field);
+        const value = document.createElement('div');
+        value.className = tone ? `orb-band-value is-${tone}` : 'orb-band-value';
+        value.textContent = text;
+        cell.append(label, value);
+        band.appendChild(cell);
+      }
+      card.appendChild(band);
+    }
+
+    let hiddenCols = 0;
+    if (picked.table.shown.length && rawCols.length) {
+      const folded = columnFold.foldColumns(rawCols, ORB_FOLD_CARD_WIDTH_PX);
+      hiddenCols = folded.hidden.length;
+      const grid = orbTableEl();
+      const head = document.createElement('div');
+      head.className = 'orb-fold-row is-head';
+      folded.visible.forEach((col, i) => {
+        const cell = document.createElement('div');
+        cell.className = i === 0 ? 'orb-fold-cell-label' : 'orb-fold-cell-value';
+        cell.textContent = (col && col.label != null ? col.label : (col && col.key) || '');
+        head.appendChild(cell);
+      });
+      grid.appendChild(head);
+      for (const row of picked.table.shown) {
+        const tr = document.createElement('div');
+        tr.className = 'orb-fold-row';
+        folded.visible.forEach((col, i) => {
+          const cell = document.createElement('div');
+          cell.className = i === 0 ? 'orb-fold-cell-label' : 'orb-fold-cell-value';
+          const v = row ? row[col.key] : undefined;
+          cell.textContent = v == null ? '—' : String(v);
+          tr.appendChild(cell);
+        });
+        grid.appendChild(tr);
+      }
+      card.appendChild(grid);
+    }
+
+    appendOrbNote(card, orbMiniCard.foldNote('compound', {
+      scalars: picked.scalars.hidden,
+      rows: picked.table.hidden + hiddenCols,
+    }));
+    return card;
+  }
+
+  // ── 07 실시간 이벤트(event) ──
+  function buildOrbEventCard(envelope) {
+    const data = (envelope.data && typeof envelope.data === 'object') ? envelope.data : {};
+    const lifecycle = data.state_label || data.lifecycle || data.state || 'connecting';
+    const picked = orbMiniCard.pickLogRecords(data.records);
+    const card = orbCardShell(envelope, '실시간 이벤트');
+    card.appendChild(orbStateBadge('수신 상태', lifecycle));
+    const table = orbTableEl();
+    if (picked.shown.length) {
+      for (const record of picked.shown) {
+        const row = document.createElement('div');
+        row.className = 'orb-fold-row';
+        const line = document.createElement('div');
+        line.className = 'orb-log-line';
+        line.textContent = orbMiniCard.recordLine(record);
+        row.appendChild(line);
+        table.appendChild(row);
+      }
+    } else {
+      // 건수를 지어내지 않는다 — 없으면 없다고 말한다(캔버스와 같은 문구).
+      const row = document.createElement('div');
+      row.className = 'orb-fold-row';
+      const line = document.createElement('div');
+      line.className = 'orb-log-line is-empty';
+      line.textContent = '표시할 이벤트가 없습니다.';
+      row.appendChild(line);
+      table.appendChild(row);
+    }
+    card.appendChild(table);
+    appendOrbNote(card, orbMiniCard.foldNote('log', { shown: picked.shown.length, total: picked.total })
+      || '표시 전용 · 원본 프레임과 인증값은 노출하지 않음');
+    return card;
+  }
+
+  // ── 06 주문 확인(action) ──
+  // 05 미니 주문 티켓과 다르다: 이미 낸 주문의 상태이지 새 주문이 아니라 버튼이
+  // 없다. 영수증 필드는 캔버스와 같은 허용 목록 2개만 그린다(그 밖은 원문 유출).
+  const ORB_ACTION_RECEIPT_FIELDS = Object.freeze([
+    { key: 'ord_no', label: '주문번호' },
+    { key: 'dmst_stex_tp', label: '거래소 구분' },
+  ]);
+  function buildOrbActionCard(envelope) {
+    const data = (envelope.data && typeof envelope.data === 'object') ? envelope.data : {};
+    const state = data.state_label || data.lifecycle || data.state || 'review';
+    const receipt = (data.receipt && typeof data.receipt === 'object') ? data.receipt : {};
+    const card = orbCardShell(envelope, '주문 확인');
+    card.appendChild(orbStateBadge('주문 단계', state));
+    const rows = ORB_ACTION_RECEIPT_FIELDS.filter((f) => orbMiniCard.hasValue(receipt[f.key]));
+    if (rows.length) {
+      const table = orbTableEl();
+      for (const field of rows) table.appendChild(orbLabelValueRow(field.label, String(receipt[field.key]), null));
+      card.appendChild(table);
+    }
+    appendOrbNote(card, '표시 전용 · 실행과 최종 확인은 대화창에서만');
+    return card;
+  }
+
+  // ── 08 인증 상태(status) ──
+  function buildOrbStatusCard(envelope) {
+    const data = (envelope.data && typeof envelope.data === 'object') ? envelope.data : {};
+    const lifecycle = data.lifecycle || data.state || (data.ready === true ? 'ready' : 'auth_required');
+    const card = orbCardShell(envelope, '연결 상태');
+    card.appendChild(orbStateBadge('인증 상태', lifecycle));
+    const table = orbTableEl();
+    // 캔버스 renderStatusCard와 같은 세 행 고정 — 두 표면에서 다른 사실이
+    // 보이지 않게 한다. 만료 시각이 없을 때의 '—'도 캔버스와 같다.
+    table.appendChild(orbLabelValueRow('설정됨', data.configured === true ? '예' : '아니오', null));
+    table.appendChild(orbLabelValueRow('사용 가능', data.ready === true ? '예' : '아니오', null));
+    table.appendChild(orbLabelValueRow('만료 시각', orbMiniCard.hasValue(data.expires_at) ? String(data.expires_at) : '—', null));
+    card.appendChild(table);
+    appendOrbNote(card, '토큰과 자격 증명 값은 표시하지 않음');
+    return card;
+  }
+
+  // ── 09 본문(reader) ──
+  function buildOrbReaderCard(envelope) {
+    const data = (envelope.data && typeof envelope.data === 'object') ? envelope.data : {};
+    const title = orbMiniCard.hasValue(data.title) ? String(data.title) : null;
+    if (data.error_state === 'not_found' || data.error_state === 'processing_delayed') {
+      const card = orbCardShell(envelope, '리더 · 공시 원문', title);
+      appendOrbNote(card, data.error_state === 'not_found'
+        ? '문서를 찾을 수 없습니다 — not_found'
+        : '문서 처리가 지연되고 있습니다 — processing_delayed');
+      return card;
+    }
+    const clamped = orbMiniCard.clampReaderBody(data.body_markdown);
+    if (!clamped.text) return null;
+    const card = orbCardShell(envelope, '리더 · 공시 원문', title);
+    const body = document.createElement('div');
+    body.className = 'orb-reader-body';
+    body.textContent = clamped.text;
+    card.appendChild(body);
+    if (clamped.clipped) appendOrbNote(card, orbMiniCard.foldNote('reader', { total: clamped.total }));
+    return card;
+  }
+
+  // ── 10 스트림(stream) ──
+  function buildOrbStreamCard(envelope) {
+    const data = (envelope.data && typeof envelope.data === 'object') ? envelope.data : {};
+    const picked = orbMiniCard.pickLogRecords(data.records);
+    if (!picked.shown.length) return null;
+    const card = orbCardShell(envelope, '스트림 · 뉴스');
+    const list = orbTableEl();
+    for (const record of picked.shown) {
+      const row = document.createElement('div');
+      row.className = 'orb-fold-row orb-stream-item';
+      const title = document.createElement('div');
+      title.className = 'orb-stream-title';
+      title.textContent = orbMiniCard.hasValue(record && record.title) ? String(record.title) : '(제목 없음)';
+      row.appendChild(title);
+      const time = orbMiniCard.formatStreamTime(record && record.ts, record && record.ts_precision);
+      const source = orbMiniCard.streamSource(record);
+      // 시각도 출처도 없으면 메타 줄 자체를 만들지 않는다 — 빈 줄은 정보가 아니다.
+      if (time || source) {
+        const meta = document.createElement('div');
+        meta.className = 'orb-stream-meta';
+        meta.textContent = [time, source].filter(Boolean).join(' · ');
+        row.appendChild(meta);
+      }
+      list.appendChild(row);
+    }
+    card.appendChild(list);
+    appendOrbNote(card, orbMiniCard.foldNote('log', { shown: picked.shown.length, total: picked.total }));
+    return card;
+  }
+
+  // ---------- Paper H-1 카드미니 96장(360×420) ----------
+  // surface_contract.kiumi가 있으면 canvas_type의 일반 축약 규칙보다 이 카드별
+  // 고정 선택을 우선한다. 선택은 질문과 무관하고 값만 현재 응답의 slot_values에서
+  // 읽는다. Paper의 예시 문자열은 buildKiumiPlan이 의도적으로 무시한다.
+  function orbKiumiSurfaceContract(envelope) {
+    return envelope && (envelope.surface_contract || envelope.surfaceContract);
+  }
+
+  function orbKiumiShell(plan, envelope) {
+    const card = document.createElement('div');
+    card.className = 'orb-kiumi-card';
+    card.dataset.kiumiGrammar = plan.grammar;
+    card.dataset.boardId = plan.boardId;
+
+    const head = document.createElement('div');
+    head.className = 'orb-kiumi-head';
+    const title = document.createElement('div');
+    title.className = 'orb-kiumi-title';
+    title.textContent = plan.title;
+    head.appendChild(title);
+
+    const caption = envelope && envelope.caption != null ? String(envelope.caption).trim() : '';
+    if (caption && caption !== plan.title) {
+      const meta = document.createElement('div');
+      meta.className = 'orb-kiumi-meta';
+      meta.textContent = caption;
+      head.appendChild(meta);
+    }
+    card.appendChild(head);
+    return card;
+  }
+
+  function orbKiumiValue(element) {
+    const value = document.createElement('div');
+    value.className = element.tone
+      ? `orb-kiumi-value is-${element.tone}`
+      : 'orb-kiumi-value';
+    if (element.missing) value.classList.add('is-missing');
+    value.textContent = element.text;
+    return value;
+  }
+
+  function orbKiumiRow(element) {
+    const row = document.createElement('div');
+    row.className = 'orb-kiumi-row';
+    const label = document.createElement('div');
+    label.className = 'orb-kiumi-label';
+    label.textContent = element.label;
+    row.append(label, orbKiumiValue(element));
+    return row;
+  }
+
+  function appendOrbKiumiChart(body, plan, envelope) {
+    const headline = document.createElement('div');
+    headline.className = 'orb-kiumi-chart-headline';
+    for (const element of plan.elements) {
+      const item = document.createElement('div');
+      item.className = `orb-kiumi-chart-value is-${element.role}`;
+      const label = document.createElement('span');
+      label.className = 'orb-kiumi-label';
+      label.textContent = element.label;
+      item.append(label, orbKiumiValue(element));
+      headline.appendChild(item);
+    }
+    body.appendChild(headline);
+
+    // 선은 응답에 실제 캔들이 두 개 이상 있을 때만 그린다. 고정 슬롯 선택과
+    // 별개로, 없는 시계열을 Paper 모양 때문에 만들어내지 않는다.
+    const chart = envelope && envelope.data && envelope.data.chart;
+    const candles = chart && Array.isArray(chart.candles) ? chart.candles : [];
+    const closes = candles.map((c) => c && c.close).filter((v) => Number.isFinite(v));
+    if (closes.length < 2) return;
+
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${ORB_CHART_WIDTH_PX} ${ORB_CHART_HEIGHT_PX}`);
+    svg.setAttribute('class', 'orb-kiumi-chart');
+    const points = cardPrimitives.chartLinePoints(closes, {
+      width: ORB_CHART_WIDTH_PX,
+      height: ORB_CHART_HEIGHT_PX,
+    });
+    const path = document.createElementNS(svgNS, 'path');
+    path.setAttribute('d', points.map((point, index) => (
+      `${index === 0 ? 'M' : 'L'}${point.x.toFixed(1)} ${point.y.toFixed(1)}`
+    )).join(' '));
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'var(--color-k-text)');
+    path.setAttribute('stroke-width', '1.6');
+    path.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(path);
+    body.appendChild(svg);
+
+    const firstTime = candles[0] && candles[0].time;
+    const lastTime = candles[candles.length - 1] && candles[candles.length - 1].time;
+    if (firstTime != null && lastTime != null) {
+      const dates = document.createElement('div');
+      dates.className = 'orb-kiumi-chart-dates';
+      const start = document.createElement('span');
+      start.textContent = orbChartDateLabel(firstTime);
+      const end = document.createElement('span');
+      end.textContent = orbChartDateLabel(lastTime);
+      dates.append(start, end);
+      body.appendChild(dates);
+    }
+  }
+
+  function buildOrbKiumiCard(envelope) {
+    const surfaceContract = orbKiumiSurfaceContract(envelope);
+    const plan = orbMiniCard.buildKiumiPlan(surfaceContract);
+    if (!plan) return null;
+
+    // 주문 기능은 기존 티켓의 계좌 게이트·상태기계·IPC를 그대로 사용한다.
+    if (plan.grammar === 'order_ticket') {
+      const ticket = renderOrbTicket(envelope);
+      ticket.classList.add('orb-kiumi-card', 'orb-kiumi-ticket');
+      ticket.dataset.kiumiGrammar = plan.grammar;
+      ticket.dataset.boardId = plan.boardId;
+      return ticket;
+    }
+
+    const card = orbKiumiShell(plan, envelope);
+    const body = document.createElement('div');
+    body.className = 'orb-kiumi-body';
+
+    if (plan.grammar === 'compound') {
+      const kpis = plan.elements.filter((element) => element.role === 'primary' || element.role === 'secondary');
+      const rows = plan.elements.filter((element) => !kpis.includes(element));
+      if (kpis.length) {
+        const grid = document.createElement('div');
+        grid.className = 'orb-kiumi-kpis';
+        for (const element of kpis) {
+          const cell = document.createElement('div');
+          cell.className = `orb-kiumi-kpi is-${element.role}`;
+          const label = document.createElement('div');
+          label.className = 'orb-kiumi-label';
+          label.textContent = element.label;
+          cell.append(label, orbKiumiValue(element));
+          grid.appendChild(cell);
+        }
+        body.appendChild(grid);
+      }
+      if (rows.length) {
+        const list = document.createElement('div');
+        list.className = 'orb-kiumi-list';
+        for (const element of rows) list.appendChild(orbKiumiRow(element));
+        body.appendChild(list);
+      }
+    } else if (plan.grammar === 'chart') {
+      appendOrbKiumiChart(body, plan, envelope);
+    } else {
+      const list = document.createElement('div');
+      list.className = 'orb-kiumi-list';
+      for (const element of plan.elements) list.appendChild(orbKiumiRow(element));
+      body.appendChild(list);
+    }
+
+    card.appendChild(body);
+    if (plan.foldNote) {
+      const note = document.createElement('div');
+      note.className = 'orb-kiumi-note';
+      note.textContent = plan.foldNote;
+      card.appendChild(note);
+    }
+    return card;
+  }
+
+  // canvas.js의 addLiveCard와 같은 1차 게이트(성공/폴백만 카드, 나머지는 통과)를
+  // 따른다 — 'pushed'는 main.js 9a 결정으로 애초에 relay되지 않는다. rejected/
+  // error/unparseable은 카드 없이 기존 "전체는 대화창에서 이어집니다" 안내로
+  // 넘어간다. 알 수 없는 canvas_type도 마찬가지다 — 모르는 봉투를 아는 척
+  // 그리지 않는다(보드 09는 지금 계약에 있는 9종만 받는다).
+  function buildOrbCanvasCard(r) {
+    if (!r || (r.status !== 'success' && r.status !== 'fallback')) return null;
+    const envelope = r.envelope;
+    if (!envelope || envelope.fell_back) return null;
+    const kiumiCard = buildOrbKiumiCard(envelope);
+    if (kiumiCard) return kiumiCard;
+    switch (envelope.canvas_type) {
+      case 'table': return buildOrbTableCard(envelope);
+      case 'chart': return buildOrbChartCard(envelope);
+      case 'facts':
+        return envelope.card_title === ORDER_TICKET_TITLE
+          ? renderOrbTicket(envelope)
+          : buildOrbFactsCard(envelope);
+      case 'compound': return buildOrbCompoundCard(envelope);
+      case 'event': return buildOrbEventCard(envelope);
+      case 'action': return buildOrbActionCard(envelope);
+      case 'status': return buildOrbStatusCard(envelope);
+      case 'reader': return buildOrbReaderCard(envelope);
+      case 'stream': return buildOrbStreamCard(envelope);
+      default: return null;
+    }
+  }
+
+  // ---------- 검사 전용 봉투 통로 (Paper 키우미 보드 09) ----------
+  // 미니 카드는 질의가 도는 동안에만 사는 구독으로만 그려진다(아래 submitChatQuery).
+  // 그래서 화면계 게이트가 도달 어휘(main→렌더러 이벤트)로 봉투를 쏴도 듣는 쪽이
+  // 없어 열 종 중 한 장도 못 세웠다. 질의 밖에서 봉투가 오면 main에게 검사 모드인지
+  // 한 번 묻고, 그렇다고 답할 때만 **같은 buildOrbCanvasCard로** 같은 자리에 붙인다 —
+  // 별도 렌더러를 두지 않는 것이 이 통로의 전부다(다른 것을 그리면 재는 뜻이 없다).
+  // 제품에서는 main이 늘 false를 답하므로(main.js 같은 이름 핸들러) 아무 일도 없다.
+  let canvasProbeAnswer = null;
+  function askCanvasProbeMode() {
+    if (!canvasProbeAnswer) {
+      canvasProbeAnswer = window.athena.invoke('athena:orb-canvas-probe').catch(() => false);
+    }
+    return canvasProbeAnswer;
+  }
+  window.athena.on('athena:orb-canvas-result', async (r) => {
+    // 질의가 도는 동안은 그쪽 구독이 그린다 — 두 번 그리지 않는다. 물음이 도는 사이에
+    // 질의가 시작될 수 있으므로 답이 온 뒤에도 한 번 더 본다.
+    if (chatBusy) return;
+    if (!await askCanvasProbeMode() || chatBusy) return;
+    const el = buildOrbCanvasCard(r);
+    if (!el) return;
+    const line = orbTurn('orb-turn');
+    line.appendChild(el);
+    $chatTurns.appendChild(line);
+    $chatEmpty.hidden = true;
+    scrollChatToBottom();
+    requestPanelHeight();
+  });
+
+  // main의 canvas 이벤트 전송과 invoke 응답은 서로 다른 IPC 큐다. 응답이 먼저
+  // 도착해 구독을 바로 해제하면 끝부분 카드가 유실될 수 있으므로 main이 보고한
+  // 개수만큼 관찰할 때까지 짧게 큐를 비운다. 보통 1~2장은 첫 확인에서 끝난다.
+  function waitForOrbCanvasDrain(expected, received, timeoutMs = 1500) {
+    const target = Math.max(0, Number(expected) || 0);
+    if (received() >= target) return Promise.resolve();
+    return new Promise((resolve) => {
+      const deadline = performance.now() + timeoutMs;
+      const poll = () => {
+        if (received() >= target || performance.now() >= deadline) {
+          resolve();
+          return;
+        }
+        setTimeout(poll, 16);
+      };
+      poll();
+    });
+  }
+
+  async function submitChatQuery(rawText) {
+    const text = String(rawText || '').trim();
+    if (!text || chatBusy || remoteQueryBusy) return;
+    if (displayMode === 'B' && !localChatOverride) {
+      localChatOverride = true;
+      applyMode();
+    }
+    chatBusy = true;
+    $chatEmpty.hidden = true;
+    $chatInput.value = '';
+    syncInputLock();
+    setChatDot('judging');
+    renderChatQuestion(text);
+    const card = renderProgressCard();
+    scrollChatToBottom();
+    requestPanelHeight();
+
+    thinking = true;
+    touchActivity();
+    resolveAmbientFace();
+
+    let calling = false;
+    let answer = null;
+    const clientSubmitId = window.crypto.randomUUID();
+    const rendererSubmittedAt = performance.now();
+    window.AthenaProviderFirstPaint.registerSubmit({ clientSubmitId, rendererSubmittedAt, origin: 'orb' });
+    const claimProviderVisible = (meta, node) => {
+      if (!meta || meta.clientSubmitId !== clientSubmitId) return false;
+      return window.AthenaProviderFirstPaint.claimFirstVisible({
+        clientSubmitId,
+        turnId: meta.turnId,
+        sequence: meta.sequence,
+        origin: 'orb',
+        owner: 'orb',
+        node,
+        rendererReceivedAt: meta.rendererReceivedAt,
+      });
+    };
+    // board-33③④ 선행 — answer가 아직 없으면(텍스트 델타보다 카드가 먼저 오는
+    // 경로, main.js 주석 "카드 먼저, 텍스트는 나중" 참조) 카드를 잠깐 들고
+    // 있다가 answer가 생기는 순간 이어붙인다.
+    const pendingCanvasCards = [];
+    const handledCanvasTypes = new Set();
+    let receivedCanvasResults = 0;
+    const unsubCanvas = window.athena.on('athena:orb-canvas-result', (r) => {
+      const rendererReceivedAt = performance.now();
+      if (r && r.envelope) receivedCanvasResults += 1;
+      const el = buildOrbCanvasCard(r);
+      if (!el || !r.envelope) return;
+      handledCanvasTypes.add(r.envelope.canvas_type);
+      if (answer) {
+        answer.line.appendChild(el);
+        claimProviderVisible({ ...r, rendererReceivedAt }, el);
+        scrollChatToBottom();
+        requestPanelHeight();
+      } else {
+        el.__athenaProviderPaintMeta = { ...r, rendererReceivedAt };
+        pendingCanvasCards.push(el);
+      }
+    });
+    const unsubStep = window.athena.on('athena:live-tool-step', (step) => {
+      const rendererReceivedAt = performance.now();
+      if (!calling) { calling = true; setChatDot('calling'); }
+      updateProgressStep(card, step);
+      claimProviderVisible({ ...step, rendererReceivedAt }, card);
+    });
+
+    // 추론 미리보기(2026-08-26 어드버서리얼 리뷰 결함 #2) — chat.js의
+    // onLiveThinkingDelta와 같은 규칙: 답변 텍스트가 나오기 전 긴 침묵 구간을
+    // 채우는 미리보기 전용 줄이다. 답변 첫 조각이 오거나 턴이 끝나면 지운다 —
+    // 턴 기록에는 절대 안 남는다. 빈 조각은 조용히 무시한다.
+    let thinkingEl = null;
+    let thinkingBody = null;
+    let thinkingText = '';
+    const clearThinkingPreview = () => {
+      if (!thinkingEl) return;
+      thinkingEl.remove();
+      thinkingEl = null;
+      thinkingBody = null;
+      thinkingText = '';
+    };
+    const unsubThinking = window.athena.on('athena:live-thinking-delta', ({ text: delta } = {}) => {
+      if (!delta) return;
+      if (!calling) { calling = true; setChatDot('calling'); }
+      if (!thinkingEl) {
+        thinkingEl = document.createElement('div');
+        thinkingEl.className = 'orb-thinking-preview';
+        const label = document.createElement('div');
+        label.className = 'orb-thinking-label';
+        label.textContent = '추론 중…';
+        thinkingBody = document.createElement('div');
+        thinkingBody.className = 'orb-thinking-body';
+        thinkingEl.append(label, thinkingBody);
+        if (card.isConnected) card.appendChild(thinkingEl);
+      }
+      thinkingText += delta;
+      thinkingBody.textContent = thinkingText;
+      scrollChatToBottom();
+      requestPanelHeight();
+    });
+
+    const unsubDelta = window.athena.on('athena:live-text-delta', (payload = {}) => {
+      const rendererReceivedAt = performance.now();
+      const { text: delta } = payload;
+      if (!delta) return;
+      if (!calling) { calling = true; setChatDot('calling'); }
+      clearThinkingPreview(); // 답변이 시작됐다 — 추론 미리보기는 자리를 비켜준다
+      if (!answer) {
+        if (card.isConnected) card.remove();
+        answer = renderChatAnswer('');
+      }
+      answer.textEl.textContent += delta;
+      scrollChatToBottom();
+      claimProviderVisible({ ...payload, rendererReceivedAt }, answer.textEl);
+    });
+
+    let result;
+    try {
+      result = await window.athena.invoke('athena:orb-chat-submit', {
+        query: text, clientSubmitId, rendererSubmittedAt,
+      });
+    } catch (err) {
+      result = { ok: false, error: String((err && err.message) || err) };
+    } finally {
+      unsubStep();
+      unsubThinking();
+      unsubDelta();
+      clearThinkingPreview(); // 방어적 — 답변 조각 없이 턴이 끝나는 경로에서도 안 남는다
+      thinking = false;
+      resolveAmbientFace();
+    }
+
+    const expectedCanvasResults = Number(result && result.canvasResultCount)
+      || ((result && result.canvasCaptions && result.canvasCaptions.length) || 0);
+    await waitForOrbCanvasDrain(expectedCanvasResults, () => receivedCanvasResults);
+    unsubCanvas();
+    chatBusy = false;
+    syncInputLock();
+    setChatDot(null);
+
+    // 최종 텍스트는 응답값이 권위다(스트리밍 누적치가 아니다) — chat.js
+    // runQueryLive와 같은 원칙(조각 유실·순서 어긋남에도 이 줄이 항상 이긴다).
+    const finalText = result && result.answerText
+      ? result.answerText
+      : (result && result.ok ? '완료 — 답변 텍스트 없음' : `실패 — ${(result && result.error) || '알 수 없는 오류'}`);
+    if (answer) {
+      answer.textEl.textContent = finalText;
+    } else {
+      if (card.isConnected) card.remove();
+      answer = renderChatAnswer(finalText);
+    }
+    // answer가 없던 동안 도착한 카드(카드 먼저 오는 경로)를 여기서 이어붙인다.
+    for (const el of pendingCanvasCards) {
+      answer.line.appendChild(el);
+      claimProviderVisible(el.__athenaProviderPaintMeta, el);
+      delete el.__athenaProviderPaintMeta;
+    }
+    // 실제로 미니 카드를 그린 canvas_type은 이미 카드가 붙었다 — 그 종류는
+    // "표·차트는 여기서 다시 그리지 않는다"는 옛 안내를 반복하지 않는다.
+    // 2026-09-01(보드 09)부로 계약상 9종 전부에 렌더러가 생겼으므로 이 안내는
+    // 이제 **카드를 만들지 못한 봉투**에만 남는다: 값이 하나도 없어 builder가
+    // null을 돌려준 경우(빈 facts·빈 stream 등)와, 계약에 없는 새 canvas_type이
+    // 나중에 추가되는 경우다. 그때도 "여기 없다"는 사실은 정직하게 말한다.
+    const canvasTypes = (result && result.canvasTypes) || [];
+    const unrenderedCanvasTypes = canvasTypes.filter((t) => !handledCanvasTypes.has(t));
+    if (unrenderedCanvasTypes.length) {
+      const note = document.createElement('div');
+      note.className = 'orb-turn-fold-note';
+      note.textContent = '전체는 대화창에서 이어집니다';
+      answer.line.appendChild(note);
+    }
+    if (confirmedExpanded) {
+      // main이 실제 펼침을 확인한 화면에서 지켜본 턴 — 잠깐 웃고/찡그리고 앰비언트로
+      // 돌아간다(DONE_HOLD). 사용자가 이미 봤으니 지속 배지가 필요 없다.
+      if (result && result.ok) triggerDoneFace();
+      else if (result && result.ok === false) triggerFrownFace();
+    } else {
+      // 접힌 채 도착(board-33⑥, "질의해놓고 접었을 때") — 성공·실패 무관하게
+      // 답이 왔다는 사실 자체가 신호다. DONE_HOLD짜리 일시 표정을 켰다가 몇 초
+      // 뒤 꺼버리면 다시 접힌 동안 생긴 알림이 사라져 버린다 — 그래서 done/
+      // frown 대신 기존 미확인 메커니즘(renderPresence)을 그대로 쓴다. 새 배지
+      // 시스템 0개, unread 배열도 안 건드린다(그건 루틴 전용 — 정직성).
+      foldedChatAnswers += 1;
+      touchActivity();
+      renderPresence();
+      // 결함 2 — renderPresence()가 방금 FIRED로 밀어놨을 수 있는 특수 표정을
+      // unread 기준으로 재확정한다(위 reapplyUnreadFace 주석 참조).
+      reapplyUnreadFace();
+    }
+    scrollChatToBottom();
+    requestPanelHeight();
+    if (!$chatInput.disabled) $chatInput.focus();
+  }
+
+  function setChatDot(mode) {
+    $chatDot.classList.remove('judging', 'calling');
+    if (mode) $chatDot.classList.add(mode);
+  }
+
+  function abortChat() {
+    if (!chatBusy) return;
+    window.athena.send('athena:abort-live-query');
+  }
+
+  // 컨트롤 스트립 — 셸의 CLI 필·루틴 칩과 같은 어휘를 읽기 전용으로 보여준다
+  // (오브에는 팝오버·전환 UI가 없다 — 진입로는 "대화창으로 가기" 하나).
+  async function refreshChatControlStrip() {
+    try {
+      const st = await window.athena.invoke('athena:model-get');
+      // 셸 툴바(chat.js renderComposerModel)와 같은 값 — main.js resolveActiveModelSelection이
+      // 정한 active(공급자·모델·강도)다. 오브가 Claude 값을 따로 읽으면 Grok 계정이 활성일 때
+      // 셸은 Grok-4.5, 오브는 FABLE을 말한다(2026-09-08 실측). 모델이 없으면 공급자 이름.
+      const a = (st && st.active) || { provider: 'claude', model: null, effort: null };
+      const label = String(a.model || a.provider || 'claude').toUpperCase();
+      $chatCli.textContent = a.effort ? `${label} · ${String(a.effort).toUpperCase()}` : label;
+    } catch { /* 표시만 못한다 — 대화 기능에는 영향 없다 */ }
+    try {
+      const res = await window.athena.invoke('athena:routines-list');
+      const routines = res && res.ok && res.data && Array.isArray(res.data.routines) ? res.data.routines : [];
+      const active = routines.filter((r) => r.status === 'active').length;
+      $chatRoutine.hidden = active === 0;
+      $chatRoutine.textContent = `감시 ${active}`;
+    } catch {
+      $chatRoutine.hidden = true;
+    }
+  }
+
+  $chatInput.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' || e.isComposing || e.keyCode === 229 || chatBusy || remoteQueryBusy) return;
+    e.preventDefault();
+    submitChatQuery($chatInput.value);
+  });
+  $chatInput.addEventListener('focus', () => {
+    listening = true;
+    touchActivity();
+    resolveAmbientFace();
+  });
+  $chatInput.addEventListener('blur', () => {
+    listening = false;
+    resolveAmbientFace();
+  });
+  // 모델·강도 변경이나 계정 전환(main.js broadcastModelChanged)이 오면 스트립을 다시 읽는다.
+  window.athena.on('athena:model-changed', () => { if (chatModeActive) refreshChatControlStrip(); });
+  $esc.addEventListener('click', () => abortChat());
+  // 대화 이어짐(board-34 A→B) — 셸을 앞으로 가져온다, 새 방을 열지 않는다.
+  $chatGo.addEventListener('click', () => {
+    window.athena.send('athena:orb-open-shell', {});
+  });
+
+  // Esc: 답변을 기다리는 중이면 중단, 아니면 접는다(오브에는 닫을 모드가
+  // 이 둘뿐이다). "ESC 중단"이 board-33이 요구하는 잠금 해제 경로다.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !expanded) return;
+    e.preventDefault();
+    if (chatModeActive && chatBusy) { abortChat(); return; }
+    setExpanded(false);
+  });
+
+  renderPresence();
+  // 초기 얼굴 — setFace()는 같은 값이면 일찍 빠지므로 속성은 여기서 직접 박는다.
+  $root.dataset.face = face;
+  glauMascot.render(glauHost, face);
+  scheduleBlink();
+  scheduleSaccade();
+  // updateMarketClosed 최초 호출 — 위 선언부 주석 참조(TDZ 회피로 여기로 미룸).
+  updateMarketClosed();
+  setInterval(updateMarketClosed, 15000);
+})();

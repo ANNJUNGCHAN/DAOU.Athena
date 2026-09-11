@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Athena">
+  <!-- Boot wordmark colors: type blue #0E20B2, caret pink #EE137B -->
+  <rect width="256" height="256" rx="52" fill="#0E20B2"/>
+  <path fill="#FFFFFF" d="M128 46 L206 214 H168.5 L152.2 172.4 H103.8 L87.5 214 H50 Z M128 92 L109.6 140.8 H146.4 Z"/>
+  <path fill="#EE137B" d="M176 40 L228 40 L228 92 Z"/>
+</svg>

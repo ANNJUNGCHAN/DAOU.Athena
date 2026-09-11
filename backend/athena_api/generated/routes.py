@@ -1,0 +1,148 @@
+# ruff: noqa: E501, I001
+"""Generated static OpenAPI routes registered from the inventory. Do not edit."""
+from typing import Annotated
+
+from fastapi import APIRouter, Header, Request, Response
+
+from athena_api.generated.runtime import (
+    call_internal_oauth,
+    call_order_tr,
+    call_typed_tr,
+    call_websocket_tr,
+)
+from athena_api.dependencies import (
+    AccountAliasDep,
+    KiwoomClientDep,
+    KiwoomWsClientDep,
+    OrderKiwoomClientDep,
+    TokenManagerDep,
+)
+from athena_api.generated.registry import (
+    DETAIL_REGISTRY,
+    SPLIT_BASE_TR_IDS,
+    TR_REGISTRY,
+    DetailSpec,
+    TrSpec,
+)
+
+router = APIRouter()
+
+
+def _query_endpoint(spec: TrSpec):
+    request_model, response_model = spec.request_model, spec.response_model
+
+    async def endpoint(payload: request_model, request: Request, response: Response, client: KiwoomClientDep) -> response_model:
+        return await call_typed_tr(spec.tr_id, payload, request, response, client)
+
+    return endpoint
+
+
+def _order_endpoint(spec: TrSpec):
+    request_model, response_model = spec.request_model, spec.response_model
+
+    async def endpoint(
+        payload: request_model,
+        request: Request,
+        response: Response,
+        client: OrderKiwoomClientDep,
+        account: AccountAliasDep,
+        authorization: Annotated[str, Header(alias="Authorization")],
+        confirmation: Annotated[str, Header(alias="X-Athena-Confirm")],
+        idempotency_key: Annotated[str, Header(alias="Idempotency-Key")],
+    ) -> response_model:
+        return await call_order_tr(
+            spec.tr_id, payload, request, response, client, authorization, confirmation, idempotency_key, account
+        )
+
+    return endpoint
+
+
+def _websocket_endpoint(spec: TrSpec):
+    request_model, response_model = spec.request_model, spec.response_model
+
+    async def endpoint(payload: request_model, client: KiwoomWsClientDep) -> response_model:
+        return await call_websocket_tr(spec.tr_id, payload, client)
+
+    return endpoint
+
+
+def _oauth_endpoint(spec: TrSpec):
+    request_model, response_model = spec.request_model, spec.response_model
+
+    async def endpoint(
+        payload: request_model,
+        request: Request,
+        response: Response,
+        manager: TokenManagerDep,
+        authorization: Annotated[str, Header(alias="Authorization")],
+    ) -> response_model:
+        del payload, response
+        return await call_internal_oauth(spec.tr_id, request, manager, authorization)
+
+    return endpoint
+
+
+def _detail_endpoint(spec: TrSpec, detail: DetailSpec):
+    request_model = spec.request_model
+    response_model = detail.response_model
+
+    async def endpoint(payload: request_model, request: Request, response: Response, client: KiwoomClientDep) -> response_model:
+        return await call_typed_tr(
+            spec.tr_id, payload, request, response, client, response_model=response_model
+        )
+
+    return endpoint
+
+
+for _spec in TR_REGISTRY.values():
+    if _spec.kind == "query" and _spec.tr_id in SPLIT_BASE_TR_IDS:
+        # Replaced by this TR's detail projections; see ref/kiwoom-common-screen-manifest.json
+        # "exclusions". The base response is 5.5x wider on average and nothing consumes it.
+        # To restore it, drop this branch in scripts/generate_api.py and regenerate.
+        continue
+    if _spec.kind == "query":
+        _path, _tag, _factory = f"/api/v1/tr/{_spec.domain}/{_spec.tr_id}", "Kiwoom TR", _query_endpoint
+        _extra = {"x-kiwoom-tr-id": _spec.tr_id, "x-athena-llm-exposed": False}
+    elif _spec.kind == "websocket":
+        _path, _tag, _factory = f"/api/v1/websocket/{_spec.tr_id}", "Kiwoom WebSocket", _websocket_endpoint
+        _extra = {
+            "x-kiwoom-tr-id": _spec.tr_id,
+            "x-athena-operation-kind": "websocket",
+            "x-athena-upstream-transport": "wss",
+            "x-athena-llm-exposed": False,
+        }
+        if _spec.tr_id == "0g":
+            _extra["x-athena-case-sensitive-note"] = "0g is lowercase and distinct from 0G"
+    elif _spec.kind == "order":
+        _path, _tag, _factory = f"/api/v1/order/{_spec.tr_id}", "Kiwoom Orders", _order_endpoint
+        _extra = {"x-kiwoom-tr-id": _spec.tr_id, "x-athena-operation-kind": "order", "x-athena-retry-count": 0, "x-athena-llm-exposed": False}
+    else:
+        _path, _tag, _factory = f"/api/v1/internal/oauth/{_spec.tr_id}", "Internal OAuth lifecycle", _oauth_endpoint
+        _extra = {"x-kiwoom-tr-id": _spec.tr_id, "x-athena-operation-kind": "internal-oauth", "x-athena-secrets-exposed": False, "x-athena-llm-exposed": False}
+    router.add_api_route(
+        _path,
+        _factory(_spec),
+        methods=["POST"],
+        response_model=_spec.response_model,
+        tags=[_tag],
+        summary=_spec.name,
+        operation_id=f"post_{_spec.kind}_{_spec.domain}_{_spec.tr_id}",
+        openapi_extra=_extra,
+    )
+
+for _detail in DETAIL_REGISTRY.values():
+    _spec = TR_REGISTRY[_detail.tr_id]
+    router.add_api_route(
+        f"/api/v1/tr/{_spec.domain}/{_detail.tr_id}/detail/{_detail.group_id}",
+        _detail_endpoint(_spec, _detail),
+        methods=["POST"],
+        response_model=_detail.response_model,
+        tags=["Kiwoom TR details"],
+        summary=_detail.title_en or _detail.title_ko or _detail.group_id,
+        operation_id=f"post_tr_{_spec.domain}_{_detail.tr_id}_detail_{_detail.group_id}",
+        openapi_extra={
+            "x-kiwoom-tr-id": _detail.tr_id,
+            "x-athena-detail-group": _detail.group_id,
+            "x-athena-llm-exposed": False,
+        },
+    )

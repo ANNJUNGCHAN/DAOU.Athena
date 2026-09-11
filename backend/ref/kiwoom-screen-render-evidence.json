@@ -1,0 +1,503 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "machine_renderer_provenance",
+  "source_report": {
+    "path": "app/captures/VERIFY-REPORT.json",
+    "sha256": "9020f055fe571cbf399895aecbe99eeead4d057c2af5f2079719cdaf2182c72c",
+    "started_at": "2026-08-24T07:24:36.911Z",
+    "finished_at": "2026-08-24T07:25:18.777Z",
+    "command": "cd app && npm run verify"
+  },
+  "source_hashes": {
+    "app/verify.js": "052a3d54d4d54c4f9bbcf896e398184137e55ea09fb75baaaccc938478b4a4af",
+    "app/shell.html": "ac1185a2a506077501616d35e8774fdd814e1235c71a4c9ebd173712ba232659",
+    "app/shell.css": "d2b7599a40d4621ac1255a1bd1bdb574baff5d09b19338e11185e0b746ab4967",
+    "app/canvas.js": "210acd8c8694e52a0da30cecf7127950384f41ff2bcb235cbc13d350f28e052c",
+    "app/canvas.css": "ab1f80ef34627a0142a9cabedab29507ce47bc22725a8837a5694d4065dd4e8c",
+    "app/lib/canvas-layout.js": "98023857555c3dda00124c27e55056b7ee04a3603887a16a059ef0b5d29bda55",
+    "app/lib/chart-card.js": "589692bec4c465688ca8238faf17c9f62b540dff4ade46f8a487e6a4007c9e85",
+    "backend/ref/kiwoom-screen-definitions.json": "7e03c82db221b2736251acf4bb669ffcaacfdf7a32fb8b770a5f8f39952ae79b"
+  },
+  "representative_cases": [
+    {
+      "template_case_id": "A1",
+      "screen_id": "AT-CV-005:A1",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-A1.png",
+      "screenshot_sha256": "ff59097fd36e15314820fa1f0f7f179be4c09024f887cb684e0728ecd2970a06",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "C1",
+      "screen_id": "AT-CV-005:C1",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-C1.png",
+      "screenshot_sha256": "4cb9d54342cc13d31a7eca714a7113d06c2eef81b9c5bdebd542d3ce78927e5f",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "C2",
+      "screen_id": "AT-CV-005:C2",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-C2.png",
+      "screenshot_sha256": "e2c8921d3aef768da9bff952c94acbfe1f0a8bb8e64ba607020d0ff8a658474f",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "E1",
+      "screen_id": "AT-CV-005:E1",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-E1.png",
+      "screenshot_sha256": "0ee179fb68b1fd23003fc8d3204cf952a1dc602921108c9116dd66c6475aca3a",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "E2",
+      "screen_id": "AT-CV-005:E2",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-E2.png",
+      "screenshot_sha256": "e2ef66dceecd87401c0b7535de4cb0dad82f02d3fbddcf79e507ade5953bc65b",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "E3",
+      "screen_id": "AT-CV-005:E3",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-E3.png",
+      "screenshot_sha256": "e7293c75ba3367076233253881e3e12f1ab84980fded95ac9ff9e021ae3e70a1",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "F1",
+      "screen_id": "AT-CV-005:F1",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-F1.png",
+      "screenshot_sha256": "cecb1ec9b81bb88baefc7bb3a879b178486041f02ad574e5eb7b5e8aab026370",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "F2",
+      "screen_id": "AT-CV-005:F2",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-F2.png",
+      "screenshot_sha256": "50598ae0a225f14f6c146e4f6f3341964107b8761c01678a87b737748b705668",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "S1",
+      "screen_id": "AT-CV-005:S1",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-S1.png",
+      "screenshot_sha256": "4409f6a3772102e5767875030467a633cf2038f6d3111aa9b7ac762404d42edd",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "T1",
+      "screen_id": "AT-CV-005:T1",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-T1.png",
+      "screenshot_sha256": "946221b4feb4662a85dfa19aa76fbfdfe0ad983f9402bdbfd96e040c94a3068c",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "T2",
+      "screen_id": "AT-CV-005:T2",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-T2.png",
+      "screenshot_sha256": "613f3b0045a962d09ef4854ff5925a239e708131a1892c5467e0716afb908e38",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "T3",
+      "screen_id": "AT-CV-005:T3",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-T3.png",
+      "screenshot_sha256": "27f777f6b6b3401f80216c27300d3436c2091656d818b76f5de4d4ac7693ecb3",
+      "status": "pass"
+    },
+    {
+      "template_case_id": "T4",
+      "screen_id": "AT-CV-005:T4",
+      "report_assertions": {
+        "dom": {
+          "connected": true,
+          "nonzeroRect": true,
+          "bodyHasContent": true,
+          "screenIdMatches": true
+        },
+        "layout": {
+          "cardMeasured": true,
+          "paperWidthApplied": true
+        },
+        "controls": {
+          "closeControlRendered": true,
+          "protectedActionsAbsent": true
+        },
+        "states": {
+          "declaredStateRendered": true,
+          "displayOnlyGuardRendered": true,
+          "chartAuthorityMatches": true,
+          "chartRenderStateIsData": true,
+          "chartRendererIdMatches": true,
+          "chartSurfaceMounted": true,
+          "chartErrorNoteAbsent": true
+        }
+      },
+      "fixture": "verify.js:paper-at-cv-005-display-only-v1",
+      "screenshot": "app/captures/paper-T4.png",
+      "screenshot_sha256": "a2e8e27c466af35fe325d01d7c555a5b5a06dbbef3ca0320c784c68567eb47d6",
+      "status": "pass"
+    }
+  ],
+  "coverage": {
+    "fit_gate_representative_cases": [
+      "A1",
+      "C1",
+      "C2",
+      "E1",
+      "E2",
+      "E3",
+      "F1",
+      "F2",
+      "S1",
+      "T1",
+      "T2",
+      "T3",
+      "T4"
+    ],
+    "fit_gate_status": "pass",
+    "all_paper_template_cases": [
+      "A1",
+      "C1",
+      "C2",
+      "E1",
+      "E2",
+      "E3",
+      "F1",
+      "F2",
+      "S1",
+      "T1",
+      "T2",
+      "T3",
+      "T4"
+    ],
+    "paper_cases_with_machine_screenshot_dom_evidence": [
+      "A1",
+      "C1",
+      "C2",
+      "E1",
+      "E2",
+      "E3",
+      "F1",
+      "F2",
+      "S1",
+      "T1",
+      "T2",
+      "T3",
+      "T4"
+    ],
+    "paper_cases_without_case_specific_machine_evidence": [],
+    "all_paper_cases_visual_status": "complete",
+    "note": "Every approved Paper case has current case-specific renderer DOM, layout, control, state, and screenshot evidence."
+  }
+}

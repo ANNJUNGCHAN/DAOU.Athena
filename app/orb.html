@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Athena — 알림</title>
+<!-- 알림 오브 창 (2026-08-24 리프 1.3.1). 셸 창과 같은 토큰·접근성 CSS를 쓴다 —
+     유리 사다리와 글자 크기 5단이 두 창에서 갈라지면 같은 앱으로 안 읽힌다. -->
+<link rel="stylesheet" href="styles/tokens.css" />
+<link rel="stylesheet" href="orb.css" />
+<link rel="stylesheet" href="styles/glau-mascot.css" />
+<link rel="stylesheet" href="styles/access.css" />
+</head>
+<body>
+  <!-- data-anchor: 펼친 창 안에서 오브 원이 앉는 모서리. main이 계산해서 알려준다
+       (lib/main/orb-window.js computeExpandedBounds) — 오브를 화면 어디로 끌어놨든
+       패널이 화면 안쪽으로 자라게 하는 값이다.
+       data-state: collapsed | expanded. -->
+  <div id="orbRoot" class="orb-root" data-anchor="bottom-right" data-state="collapsed" data-alert="none">
+
+    <!-- 펼침 패널 — 상태는 둘뿐이다(board-33/34, tree-34-deep.raw):
+         상태 A(셸 숨김) = 대화 모드, 상태 B(셸 표시) = 알림 모드.
+         알림 모드에서도 입력줄은 열어 둔다. 사용자가 질문을 보내면 같은 패널이
+         대화 이력으로 전환되고, 접으면 보존한 알림 큐를 다시 보여준다. -->
+    <section id="orbPanel" class="orb-panel" hidden aria-live="polite">
+      <header class="orb-panel-head">
+        <!-- 시점 정직성 3종 — 발화 배지 · 방식 표기는 lib/routine-turn.js의
+             결정론 템플릿이 만든다. 오브가 문장을 짓지 않는다(LLM 0).
+             대화 모드에서는 badge/mode/relative를 비우고 헤더 타이틀만 쓴다. -->
+        <span id="orbBadge" class="orb-badge"></span>
+        <span id="orbMode" class="orb-mode"></span>
+        <span id="orbHeaderTitle" class="orb-header-title"></span>
+        <span id="orbRelative" class="orb-relative"></span>
+        <button id="orbClose" class="orb-close" type="button" aria-label="접기" title="접기"></button>
+      </header>
+
+      <!-- 알림 전용 본문(상태 B) -->
+      <p id="orbBody" class="orb-body"></p>
+
+      <!-- 대표 카드 1 — 이벤트 원장 행의 1:1 렌더링이다. 지어낸 값이 없다.
+           캔버스의 카드 12종과 별개 표면이라 여기 미리보기는 카드 종류를 늘리지 않는다. -->
+      <div id="orbCard" class="orb-card" hidden></div>
+
+      <footer id="orbFoot" class="orb-foot">
+        <!-- 소스 라벨 — "묻지 않은 턴입니다"까지 포함한 정직성 계약 문구. -->
+        <span id="orbSource" class="orb-source"></span>
+        <!-- 알림에서 셸로 가는 경로. 셸을 앞으로 가져오고 카드를 중앙 캔버스에 쌓는다. -->
+        <button id="orbMore" class="orb-more" type="button">셸로 가기</button>
+      </footer>
+
+      <!-- 대화 본문(상태 A, board-33) — 빈 안내 → 질문/진행/답변 턴이 쌓인다. -->
+      <div id="orbChatBody" class="orb-chat-body" hidden>
+        <div id="orbChatEmpty" class="orb-chat-empty">
+          <p>셸을 내려두셨네요. 여기서 바로 물어보셔도 됩니다.</p>
+          <p>긴 표와 차트는 줄여서 보여드리고, 전체는 대화창에서 이어집니다.</p>
+        </div>
+        <div id="orbChatTurns" class="orb-chat-turns"></div>
+
+        <!-- 미니 주문 티켓(board-33⑤, CP2 2026-08-27 사용자 승인, Paper 51D-0
+             실측) — 확정 결정 3의 주문집행 절반은 폐기됐다(캡션 50G-0/50H-0).
+             방어 장치 없이 셸과 동일한 1회 확인 — 실행을 누르는 순간이 그
+             확인이다. 라벨만 정적이고 값·표시 여부는 orb.js가 채운다(로직은
+             Step 10c) — "없는 필드 행 미생성"이라 각 행은 기본 hidden이다. -->
+        <div id="orbTicket" class="orb-ticket" hidden>
+          <div class="orb-ticket-head">
+            <span class="orb-ticket-title">주문 티켓</span>
+            <span id="orbTicketAccount" class="orb-ticket-account"></span>
+          </div>
+          <div class="orb-ticket-rows">
+            <div id="orbTicketRowSymbol" class="orb-row" hidden>
+              <span class="orb-row-label">종목</span>
+              <span id="orbTicketSymbol" class="orb-row-value"></span>
+            </div>
+            <div id="orbTicketRowSide" class="orb-row" hidden>
+              <span class="orb-row-label">구분</span>
+              <span id="orbTicketSide" class="orb-row-value"></span>
+            </div>
+            <div id="orbTicketRowQty" class="orb-row" hidden>
+              <span class="orb-row-label">수량</span>
+              <span id="orbTicketQty" class="orb-row-value"></span>
+            </div>
+            <div id="orbTicketRowAmount" class="orb-row" hidden>
+              <span class="orb-row-label">예상 체결금액</span>
+              <span id="orbTicketAmount" class="orb-row-value"></span>
+            </div>
+          </div>
+          <!-- 게이트 고지(결함4, 2026-08-27 CP2 확장 승인) — 셸 gateLine과 같은
+               정직 고지, 차단 사유가 있을 때만 보인다. -->
+          <div id="orbTicketGate" class="orb-ticket-gate" hidden></div>
+          <div class="orb-ticket-actions">
+            <button id="orbTicketExec" class="orb-ticket-exec" type="button">실행</button>
+            <button id="orbTicketCancel" class="orb-ticket-cancel" type="button">취소</button>
+            <span class="orb-ticket-confirm">1회 확인</span>
+          </div>
+          <!-- 실행 결과 3갈래(결함5, 2026-08-27 CP2 확장 승인) — done/failed/
+               in_doubt를 셸 status와 같은 취지로 보여준다. -->
+          <div id="orbTicketStatus" class="orb-ticket-status" hidden></div>
+        </div>
+      </div>
+
+      <!-- 오브의 대화 입력 — 알림 모드에서도 질문을 시작할 수 있고, 제출하면
+           orb.js가 현재 패널을 기존 이력이 보이는 대화 모드로 전환한다. -->
+      <div id="orbInputStack" class="orb-input-stack" hidden>
+        <div class="orb-input-row">
+          <input id="orbInput" class="orb-input" type="text" placeholder="무엇이든 물어보세요" autocomplete="off" />
+          <div id="orbLockHint" class="orb-lock-hint" hidden>
+            <span id="orbLockText">답변 중…</span>
+            <button id="orbEsc" class="orb-esc" type="button">ESC 중단</button>
+          </div>
+        </div>
+        <div class="orb-control-strip">
+          <span id="orbChatDot" class="orb-chat-dot" aria-hidden="true"></span>
+          <span id="orbChatCli" class="orb-chat-cli-pill"></span>
+          <span id="orbChatRoutine" class="orb-chat-routine-chip" hidden></span>
+          <!-- 대화 이어짐(board-34 A→B) — 셸을 앞으로 가져온다, 새 방이 아니다. -->
+          <button id="orbChatGo" class="orb-chat-go" type="button">대화창으로 가기</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="orb" class="orb" title="끌어서 옮기고, 가운데를 눌러 펼친다">
+      <span id="orbVisor" class="orb-visor" aria-hidden="true"></span>
+      <span id="orbRing" class="orb-ring" aria-hidden="true"></span>
+      <button id="orbToggle" class="orb-core" type="button" aria-label="알림 펼치기">
+        <span id="orbCount" class="orb-count" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+<script src="lib/routine-turn.js"></script>
+<script src="lib/tool-step-track.js"></script>
+<script src="lib/live-query-lock.js"></script>
+<script src="lib/market-hours.js"></script>
+<script src="lib/column-fold.js"></script>
+<script src="lib/facts-card.js"></script>
+<script src="lib/board-format.js"></script>
+<script src="lib/card-primitives.js"></script>
+<script src="lib/order-ticket.js"></script>
+<script src="lib/orb-mini-card.js"></script>
+<script src="provider-first-paint.js"></script>
+<script src="lib/glau-mascot.js"></script>
+<script src="orb.js"></script>
+</body>
+</html>
