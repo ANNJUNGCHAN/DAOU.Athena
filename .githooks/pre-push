@@ -14,9 +14,10 @@ else
 fi
 
 if ! command -v node >/dev/null 2>&1; then
-  echo "pre-push: node is required for prompt-security markers" >&2
+  echo "pre-push: node is required for prompt-security markers and tracked-keepset" >&2
   exit 1
 fi
+node "$ROOT/scripts/security/check-tracked-keepset.mjs"
 node "$ROOT/scripts/security/check-prompt-security.mjs"
 
 # Public remotes are intended. Refuse only if GitHub push protection is off.

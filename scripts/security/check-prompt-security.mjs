@@ -59,6 +59,8 @@ const CHECKS = [
     needles: [
       "check-prompt-security.mjs",
       "prompt-markers",
+      "check-tracked-keepset.mjs",
+      "tracked-keepset",
     ],
   },
   {
@@ -71,11 +73,18 @@ const CHECKS = [
     file: ".githooks/pre-push",
     needles: [
       "check-prompt-security.mjs",
+      "check-tracked-keepset.mjs",
+    ],
+  },
+  {
+    file: ".githooks/pre-commit",
+    needles: [
+      "check-tracked-keepset.mjs",
     ],
   },
 ];
 
-if (CHECKS.length < 7) {
+if (CHECKS.length < 8) {
   failures.push("FAIL  checker: CHECKS too small");
 }
 

@@ -20,12 +20,17 @@ Gate 'gitleaks.toml' (Test-Path (Join-Path $root 'scripts\security\gitleaks.toml
 Gate 'ci-workflow' (Test-Path (Join-Path $root '.github\workflows\secret-scan.yml')) 'file'
 
 $checker = Join-Path $root 'scripts\security\check-prompt-security.mjs'
+$keepset = Join-Path $root 'scripts\security\check-tracked-keepset.mjs'
 Gate 'prompt-checker-file' (Test-Path $checker) 'file'
+Gate 'keepset-checker-file' (Test-Path $keepset) 'file'
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
   Gate 'prompt-markers' $false 'node missing'
+  Gate 'tracked-keepset' $false 'node missing'
 } else {
   & node $checker | Out-Host
   Gate 'prompt-markers' ($LASTEXITCODE -eq 0) "rc=$LASTEXITCODE"
+  & node $keepset | Out-Host
+  Gate 'tracked-keepset' ($LASTEXITCODE -eq 0) "rc=$LASTEXITCODE"
 }
 
 $cfg = Join-Path $root 'scripts\security\gitleaks.toml'

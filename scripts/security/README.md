@@ -8,6 +8,7 @@ Gates:
 - `.githooks/pre-push` — refuses a push if gitleaks finds a leak, GitHub push protection is off, or prompt markers are missing.
 - `.github/workflows/secret-scan.yml` — CI gitleaks after a push, then prompt-marker check.
 - `scripts/security/check-prompt-security.mjs` — fail-closed marker presence check, invoked by eval, pre-push, and CI.
+- `scripts/security/keepset.mjs` / `check-tracked-keepset.mjs` — only run/rebuild + dest-control paths may be tracked.
 
 Policy (instructed, not a sandbox):
 - `GROK.md` / `AGENTS.md` / `CLAUDE.md` — coding-agent deploy procedure (no `--no-verify`, no live secrets in git).
