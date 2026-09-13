@@ -36,6 +36,10 @@ test("app lib/data/styles runtime sources stay; tests and probes do not", () => 
   assert.equal(isKeepPath("app/styles/tokens.css"), true);
   assert.equal(isKeepPath("app/lib/main/live-prompt.test.js"), false);
   assert.equal(isKeepPath("app/lib/card-kind-주문.test.js"), false);
+  assert.equal(isKeepPath("app/lib/board-probe.js"), false);
+  assert.equal(isKeepPath("app/lib/board-sweep-targets.js"), false);
+  assert.equal(isKeepPath("app/lib/probe-captures.js"), false);
+  assert.equal(isKeepPath("app/lib/probe-model-prefs.js"), false);
   assert.equal(isKeepPath("app/probe-orb-chat.js"), false);
   assert.equal(isKeepPath("app/verify.js"), false);
 });

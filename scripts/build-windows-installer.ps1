@@ -132,9 +132,15 @@ $runtimeRootFiles = @(
   'app/package.json',
   'app/package-lock.json'
 )
+$nonRuntimeAppFiles = @(
+  'app/lib/board-probe.js',
+  'app/lib/board-sweep-targets.js',
+  'app/lib/probe-captures.js',
+  'app/lib/probe-model-prefs.js'
+)
 $appFiles = @($tracked | Where-Object {
   $_ -in $runtimeRootFiles -or
-  ($_ -match '^app/(lib|data|styles)/' -and $_ -notmatch '(?:^|/)(?:__pycache__|node_modules)/' -and $_ -notmatch '\.test\.js$') -or
+  ($_ -match '^app/(lib|data|styles)/' -and $_ -notin $nonRuntimeAppFiles -and $_ -notmatch '(?:^|/)(?:__pycache__|node_modules)/' -and $_ -notmatch '\.test\.js$') -or
   $_ -eq 'app/test-fixtures/provider-contract/decision.json'
 })
 $backendFiles = @($tracked | Where-Object {

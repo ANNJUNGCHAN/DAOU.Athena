@@ -118,3 +118,9 @@ datasets/eval-runs/
 
 # Paper extraction sources stay local; generated app phrases and runtime templates stay tracked.
 /backend/ref/paper-ledger/
+
+# QA-only board probe helpers are not shipped with the runtime.
+/app/lib/board-probe.js
+/app/lib/board-sweep-targets.js
+/app/lib/probe-captures.js
+/app/lib/probe-model-prefs.js

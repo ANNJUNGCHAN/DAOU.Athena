@@ -36,6 +36,12 @@ export const DEST_CONTROL_FILES = Object.freeze([
 
 const RUNTIME_ROOT = new Set(RUNTIME_ROOT_FILES);
 const DEST_FILES = new Set(DEST_CONTROL_FILES);
+const NON_RUNTIME_APP_FILES = new Set([
+  "app/lib/board-probe.js",
+  "app/lib/board-sweep-targets.js",
+  "app/lib/probe-captures.js",
+  "app/lib/probe-model-prefs.js",
+]);
 
 export function normalizeGitPath(path) {
   return String(path || "").replace(/\\/g, "/").replace(/^\.\//, "");
@@ -50,6 +56,7 @@ export function isKeepPath(path) {
   if (p.startsWith("scripts/release/")) return true;
   if (RUNTIME_ROOT.has(p)) return true;
   if (p === "app/test-fixtures/provider-contract/decision.json") return true;
+  if (NON_RUNTIME_APP_FILES.has(p)) return false;
   if (
     /^app\/(lib|data|styles)\//.test(p) &&
     !/(?:^|\/)(?:__pycache__|node_modules)\//.test(p) &&
