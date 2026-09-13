@@ -44,6 +44,10 @@ function fetchPresets({ backendBase, fetchImpl }) {
   return backtestHttp('GET', '/api/v1/backtest/presets', undefined, { backendBase, fetchImpl });
 }
 
+function fetchIndicators({ backendBase, fetchImpl }) {
+  return backtestHttp('GET', '/api/v1/backtest/indicators', undefined, { backendBase, fetchImpl });
+}
+
 // plan/backfill은 계약상 {stk_cd, period, adjusted, from_dt, to_dt}를 몸체로 받는다
 // (backtest-mode-plan.md §8.2) — 여기서는 필드명을 하드코딩하지 않고 호출자가 준
 // 나머지 필드를 그대로 몸체로 전달한다. 프리셋 자체는 종목·기간을 모르는 순수
@@ -459,6 +463,7 @@ function deleteProjectFile({ backendBase, fetchImpl, project_id, path }) {
 module.exports = {
   backtestHttp,
   fetchPresets,
+  fetchIndicators,
   planBacktest,
   backfillBacktest,
   runBacktest,

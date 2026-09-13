@@ -1640,7 +1640,12 @@
     const key = field && field.key;
     const value = field ? field.value : undefined;
     const cell = factsCard.classifyCell(key);
-    if (cell === 'price' || cell === 'quantity') return { text: factsCard.formatNumeric(value), tone: null };
+    // 키움 가격의 +/- 접두는 기준가 대비 방향이고 가격 자체의 부호가 아니다.
+    // 변화량과 일반 숫자는 이 경로를 타지 않아 실제 음수 의미를 보존한다.
+    if (cell === 'price') {
+      return { text: factsCard.formatNumeric(cardPrimitives.priceMagnitude(value)), tone: null };
+    }
+    if (cell === 'quantity') return { text: factsCard.formatNumeric(value), tone: null };
     if (cell === 'datetime') return { text: factsCard.formatDatetime(value), tone: null };
     if (cell === 'change') return { text: String(value), tone: factsCard.changeTone(key, value) };
     return { text: String(value), tone: null };
@@ -1971,7 +1976,7 @@
 
   function buildOrbKiumiCard(envelope) {
     const surfaceContract = orbKiumiSurfaceContract(envelope);
-    const plan = orbMiniCard.buildKiumiPlan(surfaceContract);
+    const plan = orbMiniCard.buildKiumiPlan(surfaceContract, envelope);
     if (!plan) return null;
 
     // 주문 기능은 기존 티켓의 계좌 게이트·상태기계·IPC를 그대로 사용한다.

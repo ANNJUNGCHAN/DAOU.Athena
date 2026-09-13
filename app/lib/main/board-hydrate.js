@@ -125,17 +125,35 @@ function normalizeOperations(raw) {
 }
 
 function normalizePrimaryEnvelope(raw) {
-  if (!raw || typeof raw !== 'object' || raw.renderer_id !== 'aits-chart-v1') return null;
+  if (!raw || typeof raw !== 'object') return null;
   const data = raw.data && typeof raw.data === 'object' ? raw.data : null;
+  const operationRef = String(raw.operation_ref || '').trim();
+  if (raw.renderer_id === 'orderbook-ladder') {
+    const symbol = String(raw.stk_cd || '').trim();
+    const sources = Array.isArray(raw.source_operations) ? raw.source_operations : [];
+    const sourceRefs = new Set(sources.flatMap((source) => {
+      if (!source || typeof source !== 'object') return [];
+      const ref = String(source.source_operation_ref || '').trim();
+      const args = source.operation_args;
+      if (!ref || !args || typeof args !== 'object' || String(args.stk_cd || '').trim() !== symbol) return [];
+      return [ref];
+    }));
+    const fields = data && Array.isArray(data.fields) ? data.fields : [];
+    const fieldsHaveSource = fields.length && fields.every((field) => field && typeof field.key === 'string'
+      && sourceRefs.has(String(field.source_operation_ref || '').trim()));
+    return operationRef && symbol && sourceRefs.has(operationRef) && fieldsHaveSource ? raw : null;
+  }
+  if (raw.renderer_id !== 'aits-chart-v1') return null;
   const chart = data && data.chart && typeof data.chart === 'object' ? data.chart : null;
   if (!data || !chart || !Array.isArray(chart.candles) || !chart.candles.length) return null;
-  if (!String(data.symbol || '').trim() || !String(raw.operation_ref || '').trim()) return null;
+  if (!String(data.symbol || '').trim() || !operationRef) return null;
   return raw;
 }
 
 function primaryReloadAuthority(reply, correlation, accountId) {
   const primary = reply && normalizePrimaryEnvelope(reply.primary_envelope || reply.primaryEnvelope);
-  if (!primary || !correlation || typeof correlation !== 'object' || !String(accountId || '').trim()) return null;
+  if (!primary || primary.renderer_id !== 'aits-chart-v1'
+    || !correlation || typeof correlation !== 'object' || !String(accountId || '').trim()) return null;
   return {
     correlation,
     operationRef: primary.operation_ref,

@@ -144,6 +144,7 @@ const INVOKE_CHANNELS = new Set([
   // backfill(수집)만 사람 클릭 전용 경로다 — 쿼터를 태우는 백필은 모델 툴에 없다
   // (routine-confirm/cancel과 같은 원칙).
   'athena:backtest-presets',
+  'athena:backtest-indicators',
   'athena:backtest-plan',
   'athena:backtest-run',
   'athena:backtest-status',
@@ -323,6 +324,8 @@ const ON_CHANNELS = new Set([
   // 호가잔량 실시간(키움 REAL 0D, task #25) — main이 파싱만, 래더 갱신은
   // card-kind-호가.js의 applyLiveTick이 한다.
   'athena:orderbook-ticks',
+  // direct 호가 카드가 자기 opaque lease의 실제 feed lifecycle만 받는다.
+  'athena:renderer-realtime-state',
   // 6종 통합 카드 상태와 generation이 붙은 REAL rows. 렌더러는 자신의 최신
   // lease generation과 일치하는 이벤트만 카드 section에 병합한다.
   'athena:integrated-card-realtime-state',

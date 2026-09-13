@@ -258,10 +258,16 @@ function workflowStateLabel(value) {
   const state = clean(value);
   if (!state) return '상태 확인 중';
   const productLabels = {
+    snapshot: '조회값',
+    static: '조회값',
+    registering: '실시간 연결 중',
     connecting: '실시간 연결 중',
-    connected: '실시간 연결됨',
-    reconnected: '실시간 다시 연결됨',
-    reconnecting: '실시간 재연결 중',
+    live: '실시간 수신 대기',
+    active: '실시간 수신 대기',
+    connected: '실시간 수신 대기',
+    reconnected: '실시간 수신 대기',
+    receiving: '실시간 수신 중',
+    reconnecting: '실시간 연결 중',
     disconnected: '실시간 연결 중지',
     stopped: '실시간 연결 중지',
     paused: '실시간 수신 일시 중지',

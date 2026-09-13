@@ -5,7 +5,6 @@
 'use strict';
 
 const LEVEL_COUNT = 10;
-const QUIET_MARK_MS = 5000;
 
 const KA10004 = {
   askPrices: ['sel_10th_pre_bid', 'sel_9th_pre_bid', 'sel_8th_pre_bid', 'sel_7th_pre_bid', 'sel_6th_pre_bid', 'sel_5th_pre_bid', 'sel_4th_pre_bid', 'sel_3th_pre_bid', 'sel_2th_pre_bid', 'sel_fpr_bid'],
@@ -526,20 +525,6 @@ function applyTickNow(wrap, tick) {
   if (state.liveSource !== '0D') return;
   mergeTickIntoState(state, tick);
   wrap.__athenaOrderbookState = state;
-  const status = wrap.querySelector('[data-role="status"]');
-  if (status) {
-    status.classList.add('is-live');
-    const label = status.children[1];
-    if (label) label.textContent = '실시간';
-  }
-  if (wrap.__athenaOrderbookStaleTimer) clearTimeout(wrap.__athenaOrderbookStaleTimer);
-  wrap.__athenaOrderbookStaleTimer = setTimeout(() => {
-    const currentStatus = wrap.querySelector('[data-role="status"]');
-    if (!currentStatus) return;
-    currentStatus.classList.remove('is-live');
-    const label = currentStatus.children[1];
-    if (label) label.textContent = '5초간 변동 없음';
-  }, QUIET_MARK_MS);
   updateOrderbookDom(wrap, state, true);
 }
 

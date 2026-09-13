@@ -28,7 +28,19 @@
 const LIVE_RULES_TEXT = [
     '아래 사용자 질문에 답하라. 데이터 조회가 필요하면 연결된 MCP 툴을 호출하라.',
     '',
-    '작업 규율 — 데이터 조회가 필요하면 초반에 필요한 툴(athena_search,',
+    '종목 선행 확인 — 개별 종목 시세·차트·호가 질문은 어떤 도구도 찾거나 호출하기 전에',
+    '대상 종목이 근거로 확정됐는지 먼저 확인한다. 이 확인은 아고라(summary)와 글라우에서',
+    '개별 종목 금융 조회를 요청한 경우에만 적용한다. graph·backtest·agent·plugin 모드에서는',
+    '각 모드 접두의 화면 해석과 도구 규칙이 우선하며, 종목을 확인하라는 질문을 강요하지 않는다.',
+    '종목 근거는 현재 질문에 명시된 종목명·정확한',
+    '6자리 종목 코드 또는 같은 대화의 앞선 턴에서 명확히 확정된 종목뿐이다. 새 대화나 다른',
+    '대화의 카드·기억을 이어받지 말고, "그 종목" 같은 표현에 같은 대화의 확정 종목이 없으면',
+    'athena_search·athena_describe·athena_resolve·athena_call·athena__render_canvas와',
+    'search_tool을 전부 호출하지 말고 "어느 종목인지 이름이나 6자리 코드를 알려주세요."라고',
+    '짧게 한 번만 묻고 끝낸다. 현재 질문에 종목명·6자리 코드가 있거나 같은 대화에서 종목이',
+    '명확히 확정됐다면 이 확인 질문 없이 아래 정상 조회 순서를 따른다.',
+    '',
+    '작업 규율 — 종목 선행 확인을 통과했고 데이터 조회가 필요하면 초반에 필요한 툴(athena_search,',
     'athena_describe, athena_resolve, athena_call, athena__render_canvas)을 로드해',
     '두라. 명시적 fallback의 athena_call이 성공하면 그 데이터로 즉시 렌더한다 — 같은 질문에 대해',
     'call을 반복하거나 재확인 조회를 하지 마라(이미 받은 응답이 정답이다).',
@@ -97,6 +109,12 @@ const LIVE_RULES_TEXT = [
     '조회 규율 — 사용자가 출처를 지목하면(예: "DART에서", "네이버 뉴스로") 반드시',
     '그 출처의 툴로 조회한다. 그 출처가 실패했으면 실패 사실을 밝히고, 부득이 다른',
     '출처로 대체했다면 대체했다는 사실을 답변에 명시한다 — 조용한 대체 금지.',
+    '도구 기능 부재 중단 — 현재 세션의 실제 도구 목록 또는 정확한 기능명으로 수행한',
+    '검색 결과가 요청한 출처나 기능을 제공하지 않는다고 확인하면 그 결과를 권위로 삼는다.',
+    '유사어·다른 제공자 이름·넓은 검색어로 도구 찾기를 반복하지 말고, 플러그인 설치·외부',
+    '연결·다른 출처 대체를 임의로 시도하지 않는다. 사용자에게 필요한 출처나 기능이 현재',
+    '연결되지 않아 조회할 수 없다고 짧게 설명하고 끝낸다. 이 규칙은 확인된 기능 부재에만',
+    '적용하며, 사용 가능한 도구로 진행하는 복잡한 작업의 전체 호출 수를 제한하지 않는다.',
     '"최근"·"이번 분기"·"오늘" 같은 상대 날짜가 나오면 오늘 날짜를 추측하지 말고',
     '날짜 확인 툴(get_today_date/get_current_date류)로 먼저 확인한 뒤 계산한다.',
     '공시의 내용(정정 사유·계약 조건 등)에 대한 결론은 목록의 제목만으로 내리지',
@@ -575,14 +593,16 @@ function buildBacktestModePrefix(context, today) {
     '- "최근 3개월" 같은 상대 기간은 위 기준값을 사용한다. 사용자가 YYYYMMDD 날짜를 직접 지정했으면 그 값을 우선하고 덮어쓰지 않는다. 기준이 미상이면 날짜를 만들지 말고 확인한다.',
     '- 캔버스 카드를 올리지 않는다 — athena__render_canvas를 호출하지 않는다. athena_search/athena_describe/athena_resolve/athena_call은 종목코드·시세 같은 정보 확인에만 쓴다.',
     '- **설명은 칸으로 한다.** 사용자에게 말할 때는 칸 번호(①~④)와 사람 말을 쓰고, 코드 줄 번호·파이썬 문법·함수 이름을 앞세우지 않는다.',
-    '- **칸을 고쳐달라는 말은 바로 반영한다.** 폼 경로면 propose_spec, 코드 경로면 propose_code로 보내고, 답 첫 줄에 어느 칸이 어떻게 바뀌는지 한 줄로 적는다(예: "③ 사고·파는 순간 — 청산을 …로 바꿨습니다").',
+    '- **칸을 고쳐달라는 말은 캔버스로 보낸다.** 폼 경로면 propose_spec, 코드 경로면 propose_code로 보내고, 답 첫 줄에 어느 칸의 어떤 변경안을 보냈는지 한 줄로 적는다(예: "③ 사고·파는 순간 — 청산 변경안을 캔버스로 보냈습니다").',
     '- **실행이 칸에서 멈추면 그 칸 번호로 시작한다.** 아래 칸 판정에서 상태가 ok가 아닌 칸을 찾아 그 번호로 말문을 열고, 왜 멈췄는지와 어떻게 고칠지를 사람 말로 잇는다.',
     '- 실행·활성화·일반 파일 저장은 모델이 하지 않는다. 단, 현재 기법 폴더가 명시된 새 기법 초안은 위의 제한된 write_file로 저장 완료까지 수행한다.',
-    `- **칸·노드를 말로 고쳐달라고 하면 위의 즉시 반영 규칙이 그대로 적용된다** — 폼 설정은 propose_spec으로 보내 바로 반영하고, 신호를 바꾸는 것은 ${techniqueProjectId ? 'write_file' : 'propose_code/propose_file'}로 코드를 고쳐 낸다. 코드 줄 번호는 말하지 않는다.`,
+    `- **칸·노드를 말로 고쳐달라고 하면 위의 전송 규칙이 그대로 적용된다** — 폼 설정은 propose_spec으로 한 번 보내고, 신호를 바꾸는 것은 ${techniqueProjectId ? 'write_file' : 'propose_code/propose_file'}로 코드를 고쳐 낸다. 코드 줄 번호는 말하지 않는다.`,
     '- 말풍선에 코드·수치 표·지어낸 결과를 쓰지 않는다. 결과 수치는 아래 컨텍스트나 result·list_runs 액션이 준 값만 말한다 — 없으면 "아직 실행 결과가 없다"고 말한다.',
     techniqueProjectId
-      ? '- 설정은 athena_backtest action=propose_spec으로 폼에 바로 반영하고, 현재 기법 코드는 위의 write_file 전체 파일 저장 규칙을 따른다.'
-      : '- 설정은 athena_backtest action=propose_spec 으로 patch를 보내면 폼에 바로 반영된다 — 빈 종목·날짜처럼 검증에 걸리는 값이 있어도 반영되고, 그 항목은 아래 "실행 전 확인"에 실린다(다음 턴에 마저 채운다). 코드는 propose_code로 보내면 편집기에 바로 들어간다. 채팅에는 변경 내역과 [되돌리기]가 뜬다.',
+      ? '- 설정은 athena_backtest action=propose_spec으로 캔버스에 보내고, 실제 적용 여부는 변경 영수증에서 확인한다. 현재 기법 코드는 위의 write_file 전체 파일 저장 규칙을 따른다.'
+      : '- 설정은 athena_backtest action=propose_spec으로 patch를 캔버스에 보낸다 — 렌더러는 빈 종목·날짜처럼 검증에 걸리는 값도 폼에 두고, 그 항목을 아래 "실행 전 확인"에 싣는다(다음 턴에 마저 채운다). 코드는 propose_code로 보내면 편집기에 들어간다. 채팅에는 변경 내역과 [되돌리기]가 뜬다.',
+    '- 지표 목록·파라미터 정의·$참조는 현재 실행경로가 code여도 propose_spec 한 번으로 고친다. 앱이 폼 실행 경로와 생성 코드를 함께 맞추므로 같은 변경을 write_file·propose_code로 다시 쓰거나 navigate를 덧붙이지 마라.',
+    '- propose_spec 도구 응답의 application_status=pending은 캔버스 전달만 뜻한다. 모델은 실제 적용 영수증을 받지 못하므로 "폼에 반영됐다"고 단정하지 말고 "캔버스로 보냈습니다. 실제 반영 여부는 변경 영수증에서 확인해 주세요"라고 답한다.',
     techniqueProjectId
       ? '- 요청별 경로 — 폼 설정: propose_spec · 현재 기법 코드 작성/수정·오류 수정: write_file(파일 전체, 성공 응답을 기다림) · 결과 설명: 아래 자동 백테스트 · 이력·비교: navigate(history) + list_runs · 최적화: propose_optimize(method) · 배포: navigate(deploy) 후 사람이 한다고 안내 · 데이터 필요량: plan.'
       : '- 요청별 경로 — 폼 설정: propose_spec(대상→기간·주기→지표→진입 조건→청산 조건→리스크·비용 순서, 한 턴에 한 항목) · 코드 작성/수정: propose_code(전체 파일 — PARAMS 딕셔너리 + def signals(df, p). signals는 entry·exit 불리언 열을 가진 DataFrame 하나를 반환한다, 예: return df.assign(entry=..., exit=...)[["entry", "exit"]] — 튜플이나 시리즈 반환 금지. import athena_bt as bt) · 오류 수정: 아래 마지막 실행 오류·진단·현재 코드를 읽고 propose_code(고친 전체 코드, suggest_run:true) · 실행: 폼이면 propose_spec(빈 patch, suggest_run:true), 코드면 propose_code(현재 코드, suggest_run:true) · 결과 설명: 아래 마지막 실행 · 이력·비교: navigate(history) + list_runs · 최적화: propose_optimize(method) · 배포: navigate(deploy) 후 사람이 한다고 안내 · 데이터 필요량: plan. 사용자가 "알아서"·"한 번에"·"전부" 해달라고 하면 한 턴에 필요한 항목을 모두 채운다.',
@@ -701,6 +721,8 @@ function buildGraphModePrefix(context, today) {
 function buildAgentModePrefix(context, today) {
   const ctx = context && typeof context === 'object' ? context : null;
   const project = ctx && ctx.project && typeof ctx.project === 'object' ? ctx.project : null;
+  const routines = ctx && ctx.routines && typeof ctx.routines === 'object' ? ctx.routines : null;
+  const history = ctx && ctx.history && typeof ctx.history === 'object' ? ctx.history : null;
   const projectId = project && typeof project.id === 'string' ? project.id : '';
   const projectName = project && typeof project.name === 'string' && project.name
     ? project.name
@@ -708,16 +730,63 @@ function buildAgentModePrefix(context, today) {
   const projectLine = projectId
     ? `프로젝트: ${projectName} (${projectId})`
     : '프로젝트 없음 — 코드 작업 화면의 프로젝트 만들기 또는 폴더 열기로 작업 폴더를 먼저 정해야 한다. 임의의 기존 프로젝트를 쓰지 마라.';
+  const timestamp = (state) => state && typeof state.updatedAt === 'string' && state.updatedAt
+    ? state.updatedAt : '갱신 시각 없음';
+  const routinesLine = routines && routines.status === 'success'
+    && Number.isInteger(routines.total) && Array.isArray(routines.items)
+    ? `작업 목록: 조회 성공 (${timestamp(routines)}) · 등록된 작업 ${routines.total}건 · 항목 ${JSON.stringify(routines.items)}`
+    : routines && routines.status === 'error'
+      ? `작업 목록: 조회 실패 (${timestamp(routines)}) · 등록된 작업 수를 알 수 없으며 0건이라고 말하지 마라.`
+      : '작업 목록: 조회 대기 중 · 등록된 작업 수를 알 수 없으며 0건이라고 말하지 마라.';
+  const historyLine = history && history.status === 'success' && Array.isArray(history.items)
+    ? `선택 작업 실행 이력: 조회 성공 (${timestamp(history)}) · 작업 ${history.routineId || '식별자 없음'} · 실행 ${history.items.length}건 · 항목 ${JSON.stringify(history.items)}`
+    : history && history.status === 'error'
+      ? `선택 작업 실행 이력: 조회 실패 (${timestamp(history)}) · 실행 이력을 0건이라고 말하지 마라.`
+      : history && history.status === 'pending'
+        ? '선택 작업 실행 이력: 조회 대기 중 · 실행 이력을 0건이라고 말하지 마라.'
+        : '선택 작업 실행 이력: 아직 조회하지 않음 · 실행 이력을 0건이라고 말하지 마라.';
   return [
     `[모드: 에이전트] 오늘: ${today ? String(today) : '미상'}`,
     projectLine,
-    projectId ? '' : '프로젝트를 정하기 전에는 propose_watch_code나 draft를 부르지 말고, 위 복구 방법만 짧게 안내한다.',
+    `현재 화면: ${ctx && typeof ctx.view === 'string' ? ctx.view : '모름'} · 목록 탭: ${ctx && typeof ctx.tab === 'string' ? ctx.tab : '모름'} · 선택 작업: ${ctx && ctx.selectedRoutineId ? String(ctx.selectedRoutineId) : '없음'}`,
+    routinesLine,
+    historyLine,
+    '- 등록된 작업과 실행 이력 질문은 위 화면 조회 상태와 항목만으로 답한다. 조회 대기·실패·아직 조회하지 않음은 빈 목록이 아니다.',
+    '- 위 프로젝트 id는 코드 알람 파일용이다. 작업 목록·실행 이력 조회에 athena_backtest를 부르지 않는다. 특히 list_files의 backtest project_id로 넘기거나 navigate로 이력 화면 전환을 시도하지 않는다.',
+    '- 이 턴에는 에이전트 화면 전환 기능이 없다. 화면 전환 결과를 받은 적이 없으면 화면을 열었다고 말하지 마라.',
+    projectId ? '' : '프로젝트를 정하기 전에는 propose_watch_code와 code.watch 기반 draft만 부르지 않는다. 일반 고정 source·예약 작업의 draft는 허용한다.',
     '코드 알람 — 사용자가 원하는 감시 규칙이 고정 source(price.current·price.change_rate·trade.strength·volume.prev_day_ratio·vi.triggered·schedule.daily)로 적히지 않으면(예: 거래량이 최근 N일 평균의 배수, 지표 교차, 두 값의 비율) 가장 가까운 고정 source로 바꿔 적지 마라 — 그건 다른 알람이다. 아래 다섯 걸음을 밟는다.',
     '① athena_routine action=propose_watch_code 로 감시 함수 파일을 쓴다: project_id는 위 프로젝트 id, path는 "watch/<영문 이름>.py", labels는 함수명 → 한국어 제목. source(파이썬 원문)에는 최상위 PARAMS = {...} 리터럴, 최상위 NODE_LABELS = {함수명: "한국어 제목"} 리터럴(signals를 포함한 최상위 함수 전부), 판단 하나에 함수 하나인 최상위 도우미 함수 2~5개(제목은 「일봉 불러오기」·「거래량 평균」·「배수 비교」·「알림」처럼 한국어), 그리고 def signals(df, p)가 있어야 한다. signals는 df.assign(entry=..., exit=False)[["entry","exit"]]를 돌려주고 entry가 울릴지 여부다. df는 open/high/low/close/volume 열을 가진 날짜 오름차순 일봉이고, 쓸 수 있는 것은 pandas·numpy·math·statistics·datetime·athena_bt(지표는 import athena_bt as bt — sma·ema·rsi·atr·bbands 등)뿐이다.',
     '② 파일을 쓰면 앱이 「함수 N개 만듦」 영수증을 띄운다. 사용자가 확인 주기를 명시하지 않았으면 지원 범위의 기본값 poll_interval_s:60, lookback_days:30, cooldown_s:1800, expires_days:7을 사용하고 선택 질문을 만들거나 답을 기다리지 마라. 사용자가 값을 명시했으면 지원 범위 안에서 그 값을 우선한다.',
     '③ 같은 턴에 action=draft 를 부른다: symbol(6자리), condition은 {source:"code.watch", op:"==", value:true}, cooldown_s·expires_days·note(한국어 상태 한 줄), watch는 {project_id, path, version_hash: code_hash, params, poll_interval_s, lookback_days}. 코드 저장에서 받은 code_hash를 그대로 쓰고 초안 생성을 미루지 마라.',
     '④ 앱이 코드 초안을 자동 검사해 승인 가능 여부를 카드에 표시한다. 검사 실패는 이유를 사실대로 말하고 승인 가능하다고 꾸미지 마라. 검사를 통과해도 사람이 「이 알람 승인」을 눌러야 감시가 돈다 — 등록됐다·켜졌다고 말하지 마라.',
     '⑤ 사용자가 칸이 이상하다고 하면(「이상해요」·「고칠 게 있어」·「…칸이 이상해」) 같은 path로 propose_watch_code를 다시 불러 파일을 새로 쓰고 다시 초안·검사로 간다. 알람이 켜진 상태면 파일을 덮어쓸 수 없으니, 먼저 잠시 멈춰 달라고 말한 뒤 고친다.',
+  ].join('\n');
+}
+
+// 플러그인 모드는 화면이 이미 읽은 등록 목록을 질의 컨텍스트로 쓴다. athena_plugin은
+// 설치·권한·활성화 제안 전용이므로 목록이나 상태를 알아내기 위한 조회 도구로 쓰지 않는다.
+function buildPluginModePrefix(context, today) {
+  const ctx = context && typeof context === 'object' ? context : null;
+  const registry = ctx && ctx.registry && typeof ctx.registry === 'object' ? ctx.registry : null;
+  const updatedAt = registry && typeof registry.updatedAt === 'string' && registry.updatedAt
+    ? registry.updatedAt : '갱신 시각 없음';
+  const validSuccess = registry && registry.status === 'success'
+    && Number.isInteger(registry.total) && Array.isArray(registry.items);
+  const registryLine = validSuccess
+    ? `플러그인 등록 목록: 조회 성공 (${updatedAt}) · 등록된 플러그인 ${registry.total}개 · 항목과 기능 ${JSON.stringify(registry.items)}`
+    : registry && registry.status === 'error'
+      ? `플러그인 등록 목록: 조회 실패 (${updatedAt}) · 등록된 플러그인이 0개라고 말하지 마라.`
+      : '플러그인 등록 목록: 조회 대기 중 · 등록된 플러그인이 0개라고 말하지 마라.';
+  return [
+    `[모드: 플러그인] 오늘: ${today ? String(today) : '미상'}`,
+    `현재 화면: ${ctx && typeof ctx.view === 'string' ? ctx.view : '모름'}`,
+    registryLine,
+    '- 등록된 플러그인과 사용 가능한 기능 목록 질문은 위 읽기 전용 화면 컨텍스트만으로 답한다. 항목에 없는 이름·기능·허용 상태를 추정하지 않는다.',
+    '- 기능은 featureStatus=success이고 features=[]일 때만 확인된 0개다. featureStatus=pending/error이거나 features=null이면 기능 수를 알 수 없으며 0개라고 말하지 마라.',
+    '- athena_plugin은 설치·삭제·활성화·권한 변경 제안 전용이다. 목록·상태 질문에는 athena_plugin을 호출하지 않는다.',
+    '- 사용자가 변경을 명시적으로 요청하지 않았다면 mutation 제안 카드를 만들지 않는다.',
+    '- 이 컨텍스트에는 화면 전환 영수증이 없다. 실제 전환 결과를 받지 않았으면 플러그인 화면을 열었다고 말하지 마라.',
   ].join('\n');
 }
 
@@ -761,6 +830,9 @@ function buildLiveTurnPrompt(input) {
   if (isObject && input.canvasMode === 'agent') {
     return `${buildAgentModePrefix(input.agentContext, input.today)}\n\n${body}`;
   }
+  if (isObject && input.canvasMode === 'plugin') {
+    return `${buildPluginModePrefix(input.pluginContext, input.today)}\n\n${body}`;
+  }
   return body;
 }
 
@@ -775,6 +847,7 @@ module.exports = {
   buildAgentModePrefix,
   buildBacktestModePrefix,
   buildGraphModePrefix,
+  buildPluginModePrefix,
   buildLivePrompt,
   buildLiveSystemPrompt,
   buildLiveTurnPrompt,

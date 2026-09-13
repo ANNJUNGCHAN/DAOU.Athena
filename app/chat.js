@@ -1609,6 +1609,12 @@ async function runQueryLive(text) {
       // 없으면 모델은 그래프의 존재조차 몰라 시세 질문으로 되묻는다(실측).
       graphContext: (window.AthenaCanvasMode && typeof window.AthenaCanvasMode.getContext === 'function')
         ? window.AthenaCanvasMode.getContext() : null,
+      // 에이전트/플러그인 목록 질문은 현재 화면이 완료한 조회만 근거로 답한다.
+      // pending/error를 []로 바꾸지 않아 "0건"이라는 거짓 빈값을 막는다.
+      agentContext: (window.AthenaAgentCanvas && typeof window.AthenaAgentCanvas.getContext === 'function')
+        ? window.AthenaAgentCanvas.getContext() : null,
+      pluginContext: (window.AthenaPluginCanvas && typeof window.AthenaPluginCanvas.getContext === 'function')
+        ? window.AthenaPluginCanvas.getContext() : null,
     });
   } catch (err) {
     // 핸들러가 reject하면(예: main 쪽 미처리 예외) 결과 없이 아래로 떨어져

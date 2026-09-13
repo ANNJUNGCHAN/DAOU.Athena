@@ -3148,10 +3148,12 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 .agent-alarm-col, .agent-live-col {
-  flex: 1 1 0%;
+  flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -3233,10 +3235,10 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
 .agent-live-timeline-label { color: var(--color-k-text); font-family: var(--font-body); font-size: var(--text-sm); }
 .agent-live-timeline-sub { margin-left: auto; color: var(--color-k-faint); font-family: var(--font-body); font-weight: 300; font-size: var(--text-xs); }
 
-.agent-live-ws { display: flex; align-items: center; gap: 6px; padding: 8px 10px 0; }
+.agent-live-ws { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding: 8px 10px 0; }
 .agent-live-ws-dot { font-size: var(--text-xs); }
-.agent-live-ws-label { color: var(--color-k-text); font-family: var(--font-strong); font-size: var(--text-sm); }
-.agent-live-ws-caption { padding: 0 10px; color: var(--color-k-faint); font-family: var(--font-body); font-weight: 300; font-size: var(--text-xs); }
+.agent-live-ws-label { white-space: nowrap; color: var(--color-k-text); font-family: var(--font-strong); font-size: var(--text-sm); }
+.agent-live-ws-caption { flex: 0 0 auto; padding: 0 10px; color: var(--color-k-faint); font-family: var(--font-body); font-weight: 300; font-size: var(--text-xs); }
 
 /* ---------- 실행 이력·결과 드릴인(10단계, Paper 보드 41 실측) ---------- */
 .agent-breadcrumb { flex: 1 1 auto; display: flex; align-items: center; gap: 8px; margin-left: 14px; min-width: 0; }
@@ -3964,6 +3966,7 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
   .sidebar-head-btn > :not(.sidebar-head-ic),
   .sidebar-mode-caption,
   .sidebar-mode-item-label,
+  .sidebar-mode-item > .sidebar-mode-count,
   .sidebar-mode-watch,
   .sidebar-divider,
   .sidebar-list,
@@ -4013,10 +4016,13 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
   .sidebar-mode-badge {
     position: absolute;
     top: -3px;
-    right: -3px;
+    right: 0;
     min-width: 14px;
+    max-width: 24px;
     height: 14px;
-    padding: 0 3px;
+    padding: 0 2px;
+    overflow: hidden;
+    font-size: 9px;
   }
 
   .sidebar-account-row {
@@ -4031,6 +4037,205 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
     gap: 10px;
     padding: 0 10px;
   }
+
+  /* 설정은 좁은 창에서도 네 목적지를 위 탭으로 유지하고, 선택 패널에 전폭을 준다. */
+  #settings {
+    padding: 12px 12px 14px;
+  }
+
+  .settings-head {
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    padding-right: 72px;
+  }
+
+  .settings-hint {
+    flex: 1 1 100%;
+    line-height: 16px;
+  }
+
+  .settings-body {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .settings-nav {
+    flex: 0 0 auto;
+    flex-direction: row;
+    gap: 2px;
+    width: 100%;
+    padding: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .settings-nav-item {
+    flex: 0 0 auto;
+    height: 36px;
+    padding: 0 8px;
+  }
+
+  #settingsGrid {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #settingsGrid .card.model .uk-accounts-head,
+  #settingsGrid .card.model .uk-model-account-row {
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  #settingsGrid .card.model .uk-accounts-head > .uk-btn {
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  #settingsGrid .card.model .uk-account-main {
+    flex: 1 1 100%;
+    width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  #settingsGrid .card.model .uk-account-title-row {
+    flex-wrap: wrap;
+  }
+
+  #settingsGrid .card.model .uk-account-actions {
+    margin-left: auto;
+  }
+}
+
+/* 펼친 사이드바가 남기는 실제 캔버스 폭을 기준으로 Aegis를 세로 흐름으로 접는다. */
+@media (max-width: 900px) {
+  #agentCanvas {
+    padding: 14px 10px 18px;
+  }
+
+  #agentCanvas .agent-head {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  #agentCanvas .agent-view-tabs,
+  #agentCanvas .agent-tabs {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+
+  #agentCanvas .agent-view-tabs {
+    overflow-x: auto;
+  }
+
+  #agentCanvas .agent-tasks-head .agent-subtitle {
+    flex: 1 1 100%;
+  }
+
+  #agentCanvas .agent-head-actions {
+    flex: 1 1 100%;
+    margin-left: 0;
+    min-width: 0;
+  }
+
+  #agentCanvas .agent-search {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+  }
+
+  #agentCanvas .agent-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #agentCanvas .agent-stat-card {
+    min-width: 0;
+  }
+
+  #agentCanvas .agent-panels {
+    flex-direction: column;
+  }
+
+  #agentCanvas .agent-list-col {
+    flex-shrink: 1;
+    width: auto;
+    overflow-y: visible;
+  }
+
+  #agentCanvas .agent-detail-col {
+    overflow-y: visible;
+  }
+
+  #backtestCanvas .backtest-head {
+    align-items: stretch;
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+  #backtestCanvas .backtest-head-title {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+  }
+
+  #backtestCanvas .backtest-head-name {
+    white-space: nowrap;
+  }
+
+  #backtestCanvas .backtest-head-home,
+  #backtestCanvas .backtest-run-button {
+    order: 2;
+  }
+
+  #backtestCanvas .backtest-run-button {
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  #backtestCanvas .backtest-tabs {
+    order: 3;
+    flex: 1 1 100%;
+    width: 100%;
+    margin-left: 0;
+    overflow-x: auto;
+  }
+
+  #backtestCanvas .backtest-body {
+    padding: 14px 10px 20px;
+  }
+
+  #backtestCanvas .backtest-subtabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  #backtestCanvas .backtest-tab,
+  #backtestCanvas .backtest-subtab {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 699px) {
+  .backtest-technique-new {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px 12px;
+  }
+
+  .backtest-technique-new-chip {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+}
+
+/* 계좌 행의 실제 액션은 두 글자 폭 삭제 슬롯보다 넓다. 고유 클래스로 그 열만 넓힌다. */
+#settingsGrid .card.accounts .uk-col-actions {
+  flex-basis: 72px;
+}
+
+#settingsGrid .uk-account-backend-button {
+  white-space: nowrap;
 }
 
 /* 이력 비교의 곡선 겹쳐보기(보드 05) — 실행 두 건을 같은 축에 놓는다. */

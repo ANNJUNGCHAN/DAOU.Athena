@@ -369,12 +369,20 @@ function createAgentCanvas(deps) {
     // 캐널은 canvas.js가 정한다(플러그인 결과와 같은 자리의 CustomEvent).
     onControlResult,
   } = deps || {};
-  if (!container) return { mount() {}, async refresh() {} };
+  if (!container) return {
+    mount() {}, async refresh() {},
+    getContext: () => ({
+      view: 'tasks', tab: 'all', selectedRoutineId: null,
+      routines: { status: 'pending', updatedAt: null, total: null, items: null },
+      history: { status: 'not_requested', updatedAt: null, routineId: null, items: null },
+    }),
+  };
 
   let activeTab = 'all';
   let searchQuery = '';
   let routinesCache = [];
   let routinesLoadState = 'pending';
+  let routinesUpdatedAt = null;
   let firedTodayCache = null; // GET /api/v1/routines의 fired_today(3단계) — 독립 왕복.
   let requestId = 0; // stale-응답 가드 — sidebar.js 3단계(loadAgentRoutines)와 같은 이유.
   let suggestionsCache = [];
@@ -386,6 +394,8 @@ function createAgentCanvas(deps) {
   let heldSuggestionIds = new Set(); // "보류"한 제안(11단계) — 세션 동안만, 저장 안 됨.
   let historyRequestId = 0; // 위와 같은 이유 — 별개 요청이라 별개 가드를 쓴다.
   let historyRunsCache = []; // 최신 30건(정렬 완료) — 접기/펼치기가 같은 배열을 다시 그린다.
+  let historyRunsLoadState = 'not_requested';
+  let historyRunsUpdatedAt = null;
   let historyRunsExpanded = false; // "지난 실행 N건 더"를 눌렀는가. 드릴인을 새로 열면 접힌 상태로 돌아간다.
   let alertsExpanded = false; // 알람 피드의 같은 접기 상태 — 뷰를 떠나도 세션 동안 유지한다.
   let avgDurationCache = null; // GET /{id}/runs의 avg_duration_ms(5단계) — 드릴인 대상별로 갱신.
@@ -730,7 +740,7 @@ function createAgentCanvas(deps) {
   body.appendChild(panels);
 
   // ---------- 알람 센터 · 라이브 관제(9단계, Paper 보드 40) ----------
-  // "알람"·"라이브" 뷰가 공유하는 한 화면 — 위 머리말 참고.
+  // 두 뷰는 바깥 컨테이너만 공유하고, 각 탭에서는 자기 데이터만 보인다.
   const alarmLiveBody = el('div', 'agent-alarm-live');
   alarmLiveBody.hidden = true;
 
@@ -819,81 +829,53 @@ function createAgentCanvas(deps) {
     }
   }
 
-  // 라이브 컬럼 — 진행바·"다음 24시간" 전부 fixture다(위 머리말). "WS 연결됨"만
-  // getWsConnected(canvas.js가 athena:routine-feed-status를 구독해 준다)로 실데이터다.
-  function fixtureLiveProgress() {
-    return [
-      { key: 'p1', label: '● 시세 수집 — 삼성전자', badge: '데모', sub: '조건 2/3 · 12초 전 확인', pct: 66 },
-      { key: 'p2', label: '● 평일 아침 브리핑', badge: '대기 → 07:30', sub: '49분 후 · 소스 예열됨', pct: 92 },
-    ];
-  }
-
-  // 시각·점 색까지 Paper 보드 02 실측 그대로다 — 시각이 없으면 "다음 24시간"이
-  // 순서만 있고 언제인지는 없는 목록이 된다(원 목업의 핵심 열이 빠진 상태였다).
-  // 점 색은 그 줄이 어떤 갈래인지를 말한다(예약=ok · 프로액티브=brand ·
-  // 감시=info) — 리스트 행의 statusRowIcon 색 규칙과 같은 어휘를 쓴다.
-  function fixtureTimeline() {
-    return [
-      { time: '07:30', label: '아침 브리핑', sub: '기존 채팅', colorVar: '--color-ok' },
-      { time: '08:55', label: '장 시작 전 말걸기', sub: '프로액티브', colorVar: '--color-brand' },
-      { time: '15:30', label: '감시 마감 확인', sub: '삼성 88,000', colorVar: '--color-info' },
-      { time: '16:00', label: '성향 제안 검토', sub: '그래프 반영', colorVar: '--color-brand' },
-    ];
-  }
-
   const liveCol = el('div', 'agent-live-col');
-  liveCol.setAttribute('data-source', 'fixture');
+  liveCol.setAttribute('data-source', 'live');
   const liveCaption = el('div', 'agent-panel-caption');
   liveCaption.textContent = '라이브';
-  liveCaption.appendChild(fixtureMark());
   liveCol.appendChild(liveCaption);
 
   const liveProgressWrap = el('div', 'agent-live-progress');
-  for (const p of fixtureLiveProgress()) {
-    const row = el('div', 'agent-live-progress-row');
-    const headRow = el('div', 'agent-live-progress-head');
-    const label = el('span', 'agent-live-progress-label');
-    label.textContent = p.label;
-    headRow.appendChild(label);
-    const badge = el('span', 'agent-live-progress-badge');
-    badge.textContent = p.badge;
-    headRow.appendChild(badge);
-    row.appendChild(headRow);
-    const sub = el('div', 'agent-live-progress-sub');
-    sub.textContent = p.sub;
-    row.appendChild(sub);
-    const bar = el('div', 'agent-live-progress-bar');
-    const fill = el('div', 'agent-live-progress-fill');
-    fill.style.width = `${p.pct}%`;
-    bar.appendChild(fill);
-    row.appendChild(bar);
-    liveProgressWrap.appendChild(row);
-  }
   liveCol.appendChild(liveProgressWrap);
 
-  const timelineCaption = el('div', 'agent-panel-caption');
-  timelineCaption.textContent = '다음 24시간';
-  timelineCaption.appendChild(fixtureMark());
-  liveCol.appendChild(timelineCaption);
-  const timelineWrap = el('div', 'agent-live-timeline');
-  for (const t of fixtureTimeline()) {
-    const row = el('div', 'agent-live-timeline-row');
-    const time = el('span', 'agent-live-timeline-time');
-    time.textContent = t.time;
-    row.appendChild(time);
-    const dot = el('span', 'agent-live-timeline-dot');
-    dot.textContent = '●';
-    dot.style.color = `var(${t.colorVar})`;
-    row.appendChild(dot);
-    const label = el('span', 'agent-live-timeline-label');
-    label.textContent = t.label;
-    row.appendChild(label);
-    const sub = el('span', 'agent-live-timeline-sub');
-    sub.textContent = t.sub;
-    row.appendChild(sub);
-    timelineWrap.appendChild(row);
+  function renderLiveColumn() {
+    while (liveProgressWrap.firstChild) liveProgressWrap.removeChild(liveProgressWrap.firstChild);
+    if (routinesLoadState === 'pending') {
+      const pending = el('div', 'agent-list-empty');
+      pending.textContent = '라이브 작업을 불러오는 중입니다';
+      liveProgressWrap.appendChild(pending);
+      return;
+    }
+    if (routinesLoadState === 'error') {
+      const error = el('div', 'agent-list-empty');
+      error.textContent = '라이브 작업을 확인하지 못했습니다';
+      liveProgressWrap.appendChild(error);
+      return;
+    }
+    const active = routinesCache.filter((routine) =>
+      routine && routine.status === 'active' && routine.mode !== 'scheduled');
+    if (!active.length) {
+      const empty = el('div', 'agent-list-empty');
+      empty.textContent = '현재 관제 중인 작업이 없습니다';
+      liveProgressWrap.appendChild(empty);
+      return;
+    }
+    for (const routine of active) {
+      const row = el('div', 'agent-live-progress-row');
+      const headRow = el('div', 'agent-live-progress-head');
+      const label = el('span', 'agent-live-progress-label');
+      label.textContent = routine.note || routine.symbol || String(routine.id || '이름 없는 작업');
+      headRow.appendChild(label);
+      const badge = el('span', 'agent-live-progress-badge');
+      badge.textContent = '감시 중';
+      headRow.appendChild(badge);
+      row.appendChild(headRow);
+      const sub = el('div', 'agent-live-progress-sub');
+      sub.textContent = routine.source_label || routine.mode || '실행 정보 없음';
+      row.appendChild(sub);
+      liveProgressWrap.appendChild(row);
+    }
   }
-  liveCol.appendChild(timelineWrap);
 
   const wsRow = el('div', 'agent-live-ws');
   wsRow.setAttribute('data-source', 'live');
@@ -1120,6 +1102,23 @@ function createAgentCanvas(deps) {
   // 도착)와 푸터 클릭(펼치기) 둘 다 이 함수만 부른다(단일 그리기 지점).
   function renderHistoryRuns() {
     while (historyRunsList.firstChild) historyRunsList.removeChild(historyRunsList.firstChild);
+    if (historyRunsLoadState === 'pending') {
+      const pending = el('div', 'agent-list-empty');
+      pending.textContent = '실행 이력을 불러오는 중입니다';
+      historyRunsList.appendChild(pending);
+      return;
+    }
+    if (historyRunsLoadState === 'error') {
+      const error = el('div', 'agent-list-empty');
+      error.textContent = '실행 이력을 불러오지 못했습니다';
+      historyRunsList.appendChild(error);
+      const retry = el('button', 'agent-history-retry');
+      retry.type = 'button';
+      retry.textContent = '다시 확인';
+      retry.addEventListener('click', () => refreshHistoryRuns());
+      historyRunsList.appendChild(retry);
+      return;
+    }
     if (!historyRunsCache.length) {
       const empty = el('div', 'agent-list-empty');
       empty.textContent = '실행 이력이 없습니다';
@@ -1161,12 +1160,22 @@ function createAgentCanvas(deps) {
     if (!historyItem) return;
     const id = historyItem.id;
     const rid = ++historyRequestId;
+    historyRunsCache = [];
+    historyRunsLoadState = 'pending';
+    historyRunsUpdatedAt = null;
+    avgDurationCache = null;
+    engagementCache = null;
+    renderHistoryOutput([]);
+    renderHistoryStats();
+    renderHistoryRuns();
     let runs = [];
+    let runsLoadState = 'success';
     try {
       runs = (typeof fetchRuns === 'function') ? await fetchRuns(id) : [];
-      if (!Array.isArray(runs)) runs = [];
+      if (!Array.isArray(runs)) throw new TypeError('작업 실행 이력 응답이 배열이 아니다');
     } catch {
       runs = [];
+      runsLoadState = 'error';
     }
     let avgDuration = null;
     try {
@@ -1183,6 +1192,8 @@ function createAgentCanvas(deps) {
       engagement = null;
     }
     if (rid !== historyRequestId || !historyItem || historyItem.id !== id) return;
+    historyRunsLoadState = runsLoadState;
+    historyRunsUpdatedAt = new Date().toISOString();
     avgDurationCache = avgDuration;
     engagementCache = engagement;
     renderHistoryStats();
@@ -1447,6 +1458,10 @@ function createAgentCanvas(deps) {
   function openHistory(item) {
     historyItem = item;
     historyRunsCache = [];
+    historyRunsLoadState = 'pending';
+    historyRunsUpdatedAt = null;
+    avgDurationCache = null;
+    engagementCache = null;
     historyRunsExpanded = false; // 다른 작업의 드릴인을 펼친 채로 물려받지 않는다.
     // 드릴인은 항상 "이력"으로 연다 — 지난 드릴인의 "설정" 상태를 물려받지 않는다.
     historyTab = 'runs';
@@ -1469,6 +1484,9 @@ function createAgentCanvas(deps) {
     breadcrumbTitle.textContent = item.title;
     breadcrumbBadge.className = `agent-breadcrumb-badge is-${item.status}`;
     breadcrumbBadge.textContent = item.status === 'paused' ? '일시중지' : '활성';
+    renderHistoryOutput([]);
+    renderHistoryStats();
+    renderHistoryRuns();
     historyBody.hidden = false;
     return refreshHistoryRuns(); // 호출부(클릭 핸들러)가 await할 수 있게 돌려준다.
   }
@@ -1478,6 +1496,14 @@ function createAgentCanvas(deps) {
   // 이 복원이 빠져 있어 복귀 후 어떤 탭도 활성으로 안 보였다).
   function closeHistory() {
     historyItem = null;
+    historyRunsCache = [];
+    historyRunsLoadState = 'not_requested';
+    historyRunsUpdatedAt = null;
+    avgDurationCache = null;
+    engagementCache = null;
+    renderHistoryOutput([]);
+    renderHistoryStats();
+    renderHistoryRuns();
     breadcrumb.hidden = true;
     historyTabs.hidden = true;
     historySettingsBody.hidden = true;
@@ -2694,16 +2720,23 @@ function createAgentCanvas(deps) {
       viewTabButtons[k].className = k === activeView ? 'agent-view-tab is-active' : 'agent-view-tab';
     }
     const isTasks = activeView === 'tasks';
-    const isAlarmLive = activeView === 'alerts' || activeView === 'live';
+    const isAlerts = activeView === 'alerts';
+    const isLive = activeView === 'live';
+    const isAlarmLive = isAlerts || isLive;
     const isProactive = activeView === 'proactive';
     tasksHead.hidden = !isTasks;
     stats.hidden = !isTasks;
     body.hidden = !isTasks;
-    markAllReadBtn.hidden = !isAlarmLive;
+    markAllReadBtn.hidden = !isAlerts;
     alarmLiveBody.hidden = !isAlarmLive;
+    alarmCol.hidden = !isAlerts;
+    liveCol.hidden = !isLive;
+    wsRow.hidden = !isLive;
+    wsCaption.hidden = !isLive;
     proactiveBody.hidden = !isProactive;
     graphLinkBtn.hidden = !isProactive;
-    if (isAlarmLive) { renderAlarmColumn(); renderWsStatus(); }
+    if (isAlerts) renderAlarmColumn();
+    if (isLive) { renderLiveColumn(); renderWsStatus(); }
     if (isProactive) renderProactiveView();
   }
 
@@ -2721,6 +2754,7 @@ function createAgentCanvas(deps) {
     updateSubtitle();
     renderPanels();
     renderAlarmColumn(); // 배지 라벨(알람 N)은 뷰와 무관하게 항상 최신이어야 한다.
+    renderLiveColumn();
     renderWsStatus();
     renderProactiveView(); // 배지 라벨(제안 N)도 마찬가지 — 위와 같은 이유.
   }
@@ -2732,11 +2766,14 @@ function createAgentCanvas(deps) {
   // 원칙(위 머리말)을 그대로 따른다, 실패해도 routinesCache 갱신을 막지 않는다.
   async function refreshRoutines() {
     const rid = ++requestId;
+    routinesLoadState = 'pending';
+    routinesUpdatedAt = null;
+    renderLiveColumn();
     let rows = [];
     let loadState = 'success';
     try {
       rows = (typeof fetchRoutines === 'function') ? await fetchRoutines() : [];
-      if (!Array.isArray(rows)) rows = [];
+      if (!Array.isArray(rows)) throw new TypeError('작업 목록 응답이 배열이 아니다');
     } catch {
       rows = [];
       loadState = 'error';
@@ -2751,10 +2788,12 @@ function createAgentCanvas(deps) {
     if (rid !== requestId) return;
     if (loadState === 'success') routinesCache = rows;
     routinesLoadState = loadState;
+    routinesUpdatedAt = new Date().toISOString();
     firedTodayCache = firedToday;
     updateSubtitle();
     renderStats();
     renderPanels();
+    renderLiveColumn();
   }
 
   // 네 소스는 서로 무관한 왕복이다 — 하나가 느려도(또는 실패해도) 다른 쪽을
@@ -2776,7 +2815,47 @@ function createAgentCanvas(deps) {
     await Promise.all(tasks);
   }
 
-  return { mount, refresh, setActiveTab, selectRow, setActiveView, setHistoryTab, updateWsStatus: renderWsStatus };
+  // 모델에는 화면이 실제로 확인한 최소 필드만 전달한다. pending/error에서 빈 배열을
+  // 보내면 "0건"으로 오해하므로 items/total은 성공한 조회에서만 값이 있다.
+  function getContext() {
+    const routinesOk = routinesLoadState === 'success';
+    const routineItems = routinesOk ? routinesCache.slice(0, 50).map((routine) => ({
+      id: routine && routine.id != null ? String(routine.id) : null,
+      title: routine && (routine.note || routine.symbol || routine.id)
+        ? String(routine.note || routine.symbol || routine.id) : null,
+      status: routine && typeof routine.status === 'string' ? routine.status : null,
+      mode: routine && typeof routine.mode === 'string' ? routine.mode : null,
+      symbol: routine && typeof routine.symbol === 'string' ? routine.symbol : null,
+      nextFireAt: routine && typeof routine.next_fire_at === 'string' ? routine.next_fire_at : null,
+    })) : null;
+    const historyOk = Boolean(historyItem) && historyRunsLoadState === 'success';
+    const historyItems = historyOk ? historyRunsCache.slice(0, 30).map((run) => ({
+      ts: run && typeof run.ts === 'string' ? run.ts : null,
+      verdict: run && typeof run.verdict === 'string' ? run.verdict : null,
+      reason: run && typeof run.reason === 'string' ? run.reason : null,
+      observed: run && run.observed != null ? run.observed : null,
+      threshold: run && run.threshold != null ? run.threshold : null,
+    })) : null;
+    return {
+      view: activeView,
+      tab: activeTab,
+      selectedRoutineId: selectedId || null,
+      routines: {
+        status: routinesLoadState,
+        updatedAt: routinesUpdatedAt,
+        total: routinesOk ? routinesCache.length : null,
+        items: routineItems,
+      },
+      history: {
+        status: historyItem ? historyRunsLoadState : 'not_requested',
+        updatedAt: historyItem ? historyRunsUpdatedAt : null,
+        routineId: historyItem && historyItem.id != null ? String(historyItem.id) : null,
+        items: historyItems,
+      },
+    };
+  }
+
+  return { mount, refresh, setActiveTab, selectRow, setActiveView, setHistoryTab, updateWsStatus: renderWsStatus, getContext };
 }
 
 const __exports = { createAgentCanvas, settingsSummaryLines, settingsFormModel, settingsUpdateBody };

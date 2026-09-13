@@ -100,16 +100,35 @@ function normalizeChartCandle(value, period) {
   return normalized;
 }
 
+function isStrictIsoCalendarDate(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ''));
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(0);
+  date.setUTCHours(0, 0, 0, 0);
+  date.setUTCFullYear(year, month - 1, day);
+  return date.getUTCFullYear() === year
+    && date.getUTCMonth() === month - 1
+    && date.getUTCDate() === day;
+}
+
 function normalizeChartCardBody(value) {
   const body = value && typeof value === 'object' ? value : {};
   if (!VALID_PERIODS.has(body.period)) throw new Error(`AITS ChartCardBody.period 오류: ${String(body.period)}`);
   if (!VALID_TARGETS.has(body.target)) throw new Error(`AITS ChartCardBody.target 오류: ${String(body.target)}`);
   if (typeof body.trId !== 'string' || !body.trId.trim()) throw new Error('AITS ChartCardBody.trId가 비어 있다');
+  const initialVisibleFrom = typeof body.initialVisibleFrom === 'string'
+    && isStrictIsoCalendarDate(body.initialVisibleFrom)
+    ? body.initialVisibleFrom
+    : null;
   return {
     period: body.period,
     target: body.target,
     trId: body.trId.trim(),
     candles: (Array.isArray(body.candles) ? body.candles : []).map((candle) => normalizeChartCandle(candle, body.period)),
+    ...(initialVisibleFrom ? { initialVisibleFrom } : {}),
   };
 }
 
@@ -167,7 +186,10 @@ function rendererOptions(body, context) {
     name: meta.name,
     trId: body.trId,
     ohlcv: body.candles,
-    initial: { period: initialPeriod },
+    initial: {
+      period: initialPeriod,
+      ...(body.initialVisibleFrom ? { visibleFrom: body.initialVisibleFrom } : {}),
+    },
     preSampled: true,
     // reload 계약에 min·tick이 있으면 분·틱 탭을 연다(canvas.js describeAitsChartPanel).
     intradayAvailable: meta.intradayAvailable === true,

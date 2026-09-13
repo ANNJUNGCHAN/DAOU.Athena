@@ -1550,6 +1550,75 @@ async def internal_canvas_board_hydrate(
                 ),
             }
             break
+    elif primary.get("renderer") == "orderbook-ladder":
+        # 호가 primary는 보드 슬롯을 위해 이미 조회한 typed REST 응답만 합친다.
+        # detail group은 같은 실제 TR을 공유하므로 첫 성공 결과 하나가 그 TR의
+        # 초기 사다리 원본이다. 추가 호출 없이 실제 출처와 인자를 필드마다 남긴다.
+        source_operations: list[dict[str, Any]] = []
+        fields_by_key: dict[str, dict[str, Any]] = {}
+        args_by_source: dict[str, dict[str, Any]] = {}
+        seen_sources: set[str] = set()
+        for operation_ref in operation_refs:
+            hydrated = hydrated_results.get(operation_ref)
+            if hydrated is None:
+                continue
+            parts = operation_ref.split(":", 2)
+            # orderbook-ladder가 저작된 두 보드는 정규장 10단 + 0D 표면이다.
+            # ka10087 시간외 5단 raw를 섞으면 renderer가 시간외 모드로 바뀌어
+            # 정규장 0D 리스를 놓으므로, 그 조회는 슬롯에만 남긴다.
+            if len(parts) < 2 or parts[1] not in {"ka10004", "ka10007"}:
+                continue
+            source_operation_ref = f"base:{parts[1]}"
+            if source_operation_ref in seen_sources:
+                continue
+            seen_sources.add(source_operation_ref)
+            result, arguments = hydrated
+            operation_args = arguments.model_dump(
+                mode="json", by_alias=True, exclude_none=True
+            )
+            source_fields: dict[str, dict[str, Any]] = {}
+            for key, value in result.model_dump(by_alias=True, exclude_none=True).items():
+                if isinstance(value, (dict, list)):
+                    continue
+                if isinstance(value, str) and not value.strip():
+                    continue
+                source_fields[key] = {
+                    "key": key,
+                    "label": key,
+                    "value": value,
+                    "source_operation_ref": source_operation_ref,
+                }
+            if not source_fields:
+                continue
+            source_operations.append(
+                {
+                    "operation_ref": operation_ref,
+                    "source_operation_ref": source_operation_ref,
+                    "operation_args": operation_args,
+                }
+            )
+            args_by_source[source_operation_ref] = operation_args
+            fields_by_key.update(source_fields)
+        symbol = payload.target.get("stk_cd")
+        if fields_by_key and isinstance(symbol, str) and symbol.strip():
+            preferred_source = next(
+                (
+                    source
+                    for source in ("base:ka10007", "base:ka10004")
+                    if source in args_by_source
+                ),
+                None,
+            )
+            assert preferred_source is not None
+            primary_envelope = {
+                "canvas_type": "facts",
+                "renderer_id": "orderbook-ladder",
+                "operation_ref": preferred_source,
+                "operation_args": args_by_source[preferred_source],
+                "stk_cd": symbol,
+                "data": {"fields": list(fields_by_key.values())},
+                "source_operations": source_operations,
+            }
 
     return JSONResponse(
         content={

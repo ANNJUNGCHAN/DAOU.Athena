@@ -47,6 +47,67 @@ function staticTextOf(slot) {
     : null;
 }
 
+// 1JPU-0의 두 레일 문구는 Paper 목업에서 거래대금·가격 비교로 저작됐지만 실제
+// ka10007 바인딩은 오늘/전일 거래량과 그 전일비다. 런타임 청크는 출처 메타데이터를
+// 싣지 않으므로 보드·슬롯·원문·포맷 관계가 모두 같은 경우에만 문구를 바로잡는다.
+function verifiedOrderbookRailLabel(contract, slot, fallback) {
+  if (!contract || contract.board_id !== '1JPU-0' || !slot || slot.kind !== 'label') return fallback;
+  if (slot.slot_id !== 's251' && slot.slot_id !== 's254') return fallback;
+  const byId = new Map(slotList(contract).map((item) => [item.slot_id, item]));
+  const hasFormat = (item, unit, sign, precision, tone) => item && item.kind === 'value'
+    && item.format && item.format.unit === unit && item.format.sign === sign
+    && item.format.precision === precision && item.format.tone === tone;
+  if (slot.slot_id === 's251') {
+    const today = byId.get('s252');
+    const previous = byId.get('s253');
+    if (slot.paper_text === '거래량·거래대금'
+      && hasFormat(today, 'shares', false, 0, 'neutral')
+      && hasFormat(previous, 'shares', false, 0, 'neutral')
+      && previous.paired_with === 's252') {
+      return '오늘·전일 거래량';
+    }
+  }
+  if (slot.slot_id === 's254') {
+    const ratio = byId.get('s255');
+    if (slot.paper_text === '어제 대비'
+      && hasFormat(ratio, 'percent', true, 0, 'change')) {
+      return '전일 거래량 대비';
+    }
+  }
+  return fallback;
+}
+
+function verifiedChartHeaderTone(contract, slot, bound) {
+  if (!contract || contract.board_id !== '137X-2' || !slot || slot.slot_id !== 's006'
+    || slot.node !== '14O7-2' || slot.kind !== 'value'
+    || slot.paper_text !== '+1,850 · +1.24%'
+    || !slot.format || slot.format.unit !== 'percent' || slot.format.sign !== true
+    || slot.format.precision !== 0 || slot.format.tone !== 'change') return null;
+  const slotParts = slot.composite && slot.composite.parts;
+  const valueComposite = boardFormat.compositeSpecOf(bound);
+  const valueParts = valueComposite && valueComposite.parts;
+  if (!Array.isArray(slotParts) || !Array.isArray(valueParts)
+    || slotParts.length !== 2 || valueParts.length !== 2) return null;
+  const expected = [
+    ['pred_pre', 'number', 0],
+    ['flu_rt', 'percent', 2],
+  ];
+  for (let index = 0; index < expected.length; index += 1) {
+    const [field, kind, precision] = expected[index];
+    const authored = slotParts[index];
+    const actual = valueParts[index];
+    if (!authored || !actual || authored.mapping_id !== 'detail:ka10001:current_trading'
+      || authored.f !== field || actual.mapping_id !== authored.mapping_id || actual.f !== field
+      || !authored.format || authored.format.kind !== kind || authored.format.sign !== true
+      || authored.format.precision !== precision || authored.format.tone !== 'change'
+      || !actual.format || actual.format.kind !== kind || actual.format.sign !== true
+      || actual.format.precision !== precision || actual.format.tone !== 'change'
+      || boardFormat.toNumber(actual.value) === null) return null;
+  }
+  const tones = valueParts.map((part) => boardFormat.toneOf(part.value));
+  return { tone: tones[0] === tones[1] ? tones[0] : 'flat', forceFlat: true };
+}
+
 // H1 영값 묶음(헌장 §3.1) — 그룹 안 0·결측 항목이 3개 이상일 때만 접는다.
 // 값이 있는 항목은 접지 않는다("값이 생기면 그 항목만 자동으로 행으로 올라온다").
 function collapsePlan(contract, values) {
@@ -183,9 +244,10 @@ function mountPlan(contract, values, options = {}) {
     // 카드 자신의 종목 이름·코드는 응답이 채우는 자리가 아니라 **카드의 주제**다.
     // 「응답에 그 값이 없다」는 빈 칸(`static: "blank"`)보다 이쪽이 앞선다 — 실측
     // 15N5-2 `s002`를 빈 칸으로 덮으면 탭을 옮길 때 종목 코드가 사라졌다.
-    const staticText = (missingBound || (slot.static && !identitySlots.has(slot.slot_id)))
+    const authoredText = (missingBound || (slot.static && !identitySlots.has(slot.slot_id)))
       ? (missingBound && pending.has(String(slot.slot_id)) ? '' : staticTextOf(slot))
       : null;
+    const staticText = verifiedOrderbookRailLabel(contract, slot, authoredText);
     let formatted = override
       ? { text: override, tone: null, missing: false }
       : (staticText !== null
@@ -202,11 +264,14 @@ function mountPlan(contract, values, options = {}) {
         formatted = { text: '미제공', tone: null, missing: true };
       }
     }
+    const verifiedTone = verifiedChartHeaderTone(contract, slot, bound);
+    if (verifiedTone) formatted = { ...formatted, tone: verifiedTone.tone };
     assignments.push({
       slotId: slot.slot_id,
       node,
       text: formatted.text,
       tone: formatted.tone,
+      forceFlatTone: Boolean(verifiedTone && verifiedTone.forceFlat),
       missing: formatted.missing,
       // 값이 아니라 디자인이 정한 글자(Paper 라벨·static 문면·빈 칸).
       designText: !override && staticText !== null,
@@ -275,8 +340,10 @@ function setHidden(el, hidden) {
   el.hidden = hidden;
 }
 
-function setTone(el, tone) {
-  const color = boardFormat.toneColorVar(tone);
+function setTone(el, tone, forceFlat = false) {
+  const color = forceFlat && tone === 'flat'
+    ? 'var(--color-k-text)'
+    : boardFormat.toneColorVar(tone);
   const hasOriginal = Object.prototype.hasOwnProperty.call(el, '__bsColor');
   if (!color && !hasOriginal) return;
   if (!hasOriginal) el.__bsColor = el.style.color || '';
@@ -571,7 +638,7 @@ function applyPlan(root, plan, options = {}) {
     if (!el) { unbound.push(assignment.slotId); continue; }
     if (elementChildCount(el) > 0) { containers.push(assignment.slotId); continue; }
     el.textContent = assignment.text;
-    setTone(el, assignment.tone);
+    setTone(el, assignment.tone, assignment.forceFlatTone);
     if (el.dataset) {
       el.dataset.slotId = assignment.slotId;
       if (assignment.valueAtomic) el.dataset.bsValueAtomic = 'true';

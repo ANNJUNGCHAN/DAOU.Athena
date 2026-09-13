@@ -534,6 +534,55 @@ html, body { background: transparent; }
   font-family: var(--font-strong); font-size: var(--text-sm); color: #fff;
 }
 
+/* 700px Snap에서는 펼친 사이드바 뒤 캔버스가 약 400px, 최소폭에서는 약 290px다.
+ * 고정 한 줄을 유지하면 배너 본문과 수집 스위치가 한 글자 폭까지 눌린다. */
+@media (max-width: 900px) {
+  .summary-hero {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .summary-hero-stats {
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .summary-hero-stat {
+    align-items: flex-start;
+  }
+
+  .confirm-banner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 8px 10px;
+  }
+
+  .confirm-banner-body,
+  .confirm-banner-cta {
+    grid-column: 1 / -1;
+  }
+
+  .confirm-banner-body {
+    overflow-wrap: anywhere;
+  }
+
+  .confirm-banner-cta {
+    justify-self: end;
+  }
+
+  .graph-settings-source-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .graph-settings-source-controls {
+    margin-left: auto;
+  }
+}
+
 /* 성향 신호 표(보드 06/07 §7). 열 폭은 06(6열 전체판) 기준 — 스텝0-2/4 시점엔
  * 공통 패널이 아직 비어 있어 표 영역이 전체 폭을 쓴다. */
 .summary-table-wrap { padding: 18px 18px 4px; flex-shrink: 0; }

@@ -1019,6 +1019,8 @@ function ensureRealtimeFeed(backendAccountAlias) {
   const feedInstanceGeneration = ++realtimeFeedInstanceGeneration;
   realtimeFeedEpoch += 1;
   realtimeBackendAccountAlias = backendAccountAlias;
+  let directFeedNeedsReregister = false;
+  let directFeedStatusRevision = 0;
   chartRealtimeFeed = new RoutineFeed({
     url: `${BACKEND_WS_BASE}/api/v1/ws/stream?account=${encodeURIComponent(backendAccountAlias)}`,
     token: LOCAL_BEARER_TOKEN,
@@ -1043,9 +1045,61 @@ function ensureRealtimeFeed(backendAccountAlias) {
     },
     onStatus: (s) => {
       if (feedInstanceGeneration !== realtimeFeedInstanceGeneration) return;
+      const statusRevision = ++directFeedStatusRevision;
       if (s && s.state) mdlog(`차트 실시간 피드: ${s.state}`);
       if (s && Number(s.connectionEpoch) >= realtimeFeedEpoch) {
         realtimeFeedEpoch = Number(s.connectionEpoch);
+      }
+      const feedState = String((s && s.state) || '');
+      if (feedState === 'disconnected' || feedState === 'retrying') {
+        directFeedNeedsReregister = true;
+      }
+      const directStatus = {
+        connecting: 'reconnecting',
+        retrying: 'reconnecting',
+        disconnected: 'reconnecting',
+        unsupported: 'error',
+      }[feedState];
+      if (directStatus && shellWin && !shellWin.isDestroyed()) {
+        for (const [leaseToken, lease] of rendererRealtimeLeases) {
+          if (lease.kind !== 'orderbook' || lease.generation !== realtimeAccountGeneration) continue;
+          shellWin.webContents.send('athena:renderer-realtime-state', {
+            leaseToken,
+            kind: lease.kind,
+            symbol: lease.symbol,
+            status: directStatus,
+            connectionGeneration: Number((s && s.connectionEpoch) || realtimeFeedEpoch),
+          });
+        }
+      }
+      if ((feedState === 'open' || feedState === 'connected')
+        && directFeedNeedsReregister && orderbookRealtimeRegistrar) {
+        directFeedNeedsReregister = false;
+        const reconnectRegistrar = orderbookRealtimeRegistrar;
+        const reconnectAccountGeneration = realtimeAccountGeneration;
+        const reconnectFeedGeneration = feedInstanceGeneration;
+        const connectionGeneration = Number((s && s.connectionEpoch) || realtimeFeedEpoch);
+        void reconnectRegistrar.reRegisterActive().then((results) => {
+          if (reconnectFeedGeneration !== realtimeFeedInstanceGeneration
+            || reconnectAccountGeneration !== realtimeAccountGeneration
+            || reconnectRegistrar !== orderbookRealtimeRegistrar
+            || statusRevision !== directFeedStatusRevision
+            || !shellWin || shellWin.isDestroyed()) return;
+          const resultBySymbol = new Map(results.map((result) => [result.symbol, result.ok]));
+          for (const [leaseToken, lease] of rendererRealtimeLeases) {
+            if (lease.kind !== 'orderbook' || lease.generation !== reconnectAccountGeneration
+              || lease.registrar !== reconnectRegistrar) continue;
+            shellWin.webContents.send('athena:renderer-realtime-state', {
+              leaseToken,
+              kind: lease.kind,
+              symbol: lease.symbol,
+              status: resultBySymbol.get(lease.symbol) ? 'active' : 'error',
+              connectionGeneration,
+            });
+          }
+        }).catch((error) => {
+          mdlog(`호가 REAL 재등록 예외: ${String((error && error.message) || error)}`);
+        });
       }
       if (integratedCardRealtimeManager) {
         integratedCardRealtimeManager.handleFeedStatus(s, realtimeFeedEpoch).catch((error) => {
@@ -1581,6 +1635,9 @@ async function callBacktestBridge(call, body = {}) {
 
 ipcMain.handle('athena:backtest-presets', async () => {
   return callBacktestBridge(backtestBridge.fetchPresets);
+});
+ipcMain.handle('athena:backtest-indicators', async () => {
+  return callBacktestBridge(backtestBridge.fetchIndicators);
 });
 ipcMain.handle('athena:backtest-plan', async (_e, body = {}) => {
   return callBacktestBridge(backtestBridge.planBacktest, body);
@@ -2589,6 +2646,31 @@ ipcMain.handle('athena:integrated-card-realtime-command', async (event, payload 
   return commandIntegratedCardRealtime(payload);
 });
 
+async function hydrateCanvasBoardForActiveAccount(payload = {}) {
+  const generation = realtimeAccountGeneration;
+  const requestedAccountId = payload.accountId == null ? payload.account_id : payload.accountId;
+  const bound = await createActiveBackendAccountInvoker((options) => boardHydrate.hydrateBoard({
+    backendBase: BACKEND_HTTP_BASE,
+    fetchImpl: fetch,
+    token: LOCAL_BEARER_TOKEN,
+    boardId: payload.boardId || payload.board_id,
+    target: payload.target,
+    // 봉투의 account는 로컬 ID·계좌번호·서버 alias가 섞일 수 있다. 계좌 동기화가
+    // 확인한 서버 alias만 백엔드 라우팅 값으로 사용한다.
+    account: options.backendAccountAlias,
+    slotIds: payload.slotIds || payload.slot_ids,
+  }), requestedAccountId);
+  if (!bound.ok) return { ok: false, status: 'error', error: bound.error };
+  if (generation !== realtimeAccountGeneration || bound.accountId !== activeRestAccountId()) {
+    return { ok: false, status: 'error', error: '활성 계좌가 변경되어 보드 조회를 중단했다' };
+  }
+  const reply = await bound.run();
+  if (generation !== realtimeAccountGeneration || bound.accountId !== activeRestAccountId()) {
+    return { ok: false, status: 'error', error: '활성 계좌가 변경되어 보드 조회 결과를 버렸다' };
+  }
+  return reply;
+}
+
 // 보드 슬롯 하이드레이션(읽기 전용). 봉투의 surface_contract.unbound_slots가 남았을
 // 때만 렌더러가 부른다. 엔드포인트가 없거나 조회가 실패하면 상태를 그대로 돌려
 // 렌더러가 로딩 오류와 재시도를 표시한다.
@@ -2599,15 +2681,7 @@ ipcMain.handle('athena:canvas-board-hydrate', async (event, payload = {}) => {
   if (process.env.ATHENA_CANVAS_SOURCE === 'fixture') {
     return { ok: false, status: 'unavailable' };
   }
-  const reply = await boardHydrate.hydrateBoard({
-    backendBase: BACKEND_HTTP_BASE,
-    fetchImpl: fetch,
-    token: LOCAL_BEARER_TOKEN,
-    boardId: payload.boardId || payload.board_id,
-    target: payload.target,
-    account: payload.account,
-    slotIds: payload.slotIds || payload.slot_ids,
-  });
+  const reply = await hydrateCanvasBoardForActiveAccount(payload);
   const primary = reply && reply.primary_envelope;
   const correlation = payload.correlation && typeof payload.correlation === 'object'
     ? payload.correlation : {};
@@ -2810,6 +2884,9 @@ function createLiveGrokChatSession() {
             .map(([name, value]) => ({ name, value })),
         }];
       },
+      requiredMcpServerNames: ['athena'],
+      mcpReadinessDeadlineMs: 15_000,
+      mcpReadinessRpcTimeoutMs: 5_000,
       // Athena 플러그인은 자체 게이트웨이에서 권한을 확인한다. 다른 코딩 앱의
       // 전역 MCP를 함께 시작하면 질문마다 무관한 서버 준비를 기다리게 된다.
       envOverridesFn: () => ({
@@ -4681,7 +4758,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   // REST 직결·Selector)을 전부 건너뛴다 — 넷 다 모델을 안 부르고 카드를 밀어, 모드 규율과
   // 턴 프리픽스(live-prompt.js)가 무력화된다. 그래프 모드는 이유가 하나 더 있다: 그 모드의
   // 모든 질문은 그래프 질문이라(사용자 확정) 시세 경로가 가로채면 접두가 실릴 기회조차 없다.
-  const modePromptRequired = ['backtest', 'graph', 'agent'].includes(submit.canvasMode);
+  const modePromptRequired = ['backtest', 'graph', 'agent', 'plugin'].includes(submit.canvasMode);
   if (!modePromptRequired) {
     if (!runtime.goldOrderContextInitialized) {
       runtime.goldOrderContextInitialized = true;
@@ -5099,7 +5176,11 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     canvasMode: submit.canvasMode,
     backtestContext: submit.backtestContext,
     graphContext: submit.graphContext,
-    agentContext: { project: activeAgentProject() },
+    agentContext: {
+      ...(submit.agentContext && typeof submit.agentContext === 'object' ? submit.agentContext : {}),
+      project: activeAgentProject(),
+    },
+    pluginContext: submit.pluginContext,
     today: todayYyyymmdd(),
     providerId: liveProviderId,
   };
@@ -5546,6 +5627,10 @@ ipcMain.handle('athena__render_canvas', async (e, payload = {}) => {
       ? payload.backtestContext : null,
     graphContext: payload.graphContext && typeof payload.graphContext === 'object'
       ? payload.graphContext : null,
+    agentContext: payload.agentContext && typeof payload.agentContext === 'object'
+      ? payload.agentContext : null,
+    pluginContext: payload.pluginContext && typeof payload.pluginContext === 'object'
+      ? payload.pluginContext : null,
   });
 });
 

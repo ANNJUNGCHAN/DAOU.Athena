@@ -5,6 +5,11 @@ const boardFormat = (typeof module !== 'undefined' && module.exports)
   : (typeof window !== 'undefined' && window.AthenaLib && window.AthenaLib.BoardFormat);
 
 const CARD_SIZE = Object.freeze({ width: 360, height: 420 });
+const GRAMMAR_TITLE = Object.freeze({
+  table: '표', chart: '차트', facts: '사실', compound: '복합', event: '이벤트',
+  action: '작업', status: '상태', reader: '본문', stream: '스트림',
+  order_ticket: '주문 티켓',
+});
 
 // 키우미 미니 카드의 결정 로직 (Paper 키우미 보드 09 · 2026-09-01).
 //
@@ -60,7 +65,7 @@ function slotValueMap(surfaceContract) {
  * 뿐 런타임 값으로 쓰지 않는다. 선택 슬롯이 이번 응답에 없으면 반드시 ``미제공``을
  * 표시해 Paper 예시값을 실제 조회값처럼 보이는 일을 막는다.
  */
-function buildKiumiPlan(surfaceContract) {
+function buildKiumiPlan(surfaceContract, envelope) {
   const spec = surfaceContract && surfaceContract.kiumi;
   if (!spec || spec.version !== 1 || spec.fixed !== true) return null;
   if (spec.width_px !== CARD_SIZE.width || spec.height_px !== CARD_SIZE.height) return null;
@@ -83,11 +88,37 @@ function buildKiumiPlan(surfaceContract) {
       missing: formatted.missing === true,
     };
   });
+  // kiumi는 Paper에서 고른 슬롯만 책임진다. 실제 응답의 카드 종류와 종목은
+  // 런타임 봉투가 권위다. 둘이 다르면 이 계획을 거부해 orb.js의 일반 렌더러가
+  // 실제 fields·rows로 제목과 접힘 수를 계산하게 한다.
+  const runtimeCanvasType = envelope && typeof envelope.canvas_type === 'string'
+    ? envelope.canvas_type
+    : '';
+  const runtimeGrammar = ['table', 'chart', 'facts', 'compound', 'event', 'action', 'status', 'reader', 'stream']
+    .includes(runtimeCanvasType)
+    ? runtimeCanvasType
+    : '';
+  const grammarMismatch = !!runtimeGrammar
+    && spec.grammar !== 'order_ticket'
+    && runtimeGrammar !== spec.grammar;
+  if (grammarMismatch) return null;
+  const runtimeTitle = envelope && typeof envelope.card_title === 'string'
+    ? envelope.card_title.trim()
+    : '';
+  const runtimeCaption = envelope && typeof envelope.caption === 'string'
+    ? envelope.caption.trim()
+    : '';
+  const runtimeCode = envelope && envelope.stk_cd != null
+    ? String(envelope.stk_cd).trim()
+    : '';
+  const actualTitle = runtimeTitle || runtimeCaption || GRAMMAR_TITLE[spec.grammar] || '정보';
   return {
     boardId: String(surfaceContract.board_id || ''),
     cardId: String(surfaceContract.card_id || ''),
     grammar: String(spec.grammar || ''),
-    title: String(spec.title || ''),
+    title: envelope
+      ? [runtimeCode, actualTitle].filter(Boolean).join(' · ')
+      : String(spec.title || ''),
     eyebrow: String(spec.eyebrow || ''),
     width: CARD_SIZE.width,
     height: CARD_SIZE.height,

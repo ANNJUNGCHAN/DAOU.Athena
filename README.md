@@ -64,6 +64,14 @@ ATHENA는 대화, 차트, 투자 기록, 외부 도구와 전략 검증을 하�
   <strong>Glaux</strong> · 작업 곁에서 알림과 대화를 이어가는 데스크톱 파트너
 </p>
 
+## Windows에 설치
+
+[ATHENA v0.1.0 설치 파일 다운로드](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.0/Athena-Setup-0.1.0-x64.exe)
+
+Windows x64용 설치 프로그램은 Electron 앱과 로컬 Python 백엔드를 포함합니다. 설치 후 ATHENA를 실행하고 사용할 모델 공급자에 로그인하세요. 키움 데이터 조회에는 별도의 API 자격 증명 연결이 필요합니다.
+
+현재 설치 파일은 코드 서명되지 않았습니다. 릴리스에 첨부한 SHA-256 체크섬으로 다운로드 파일을 확인할 수 있습니다.
+
 ## 개발 환경에서 실행
 
 현재 공개 저장소는 Windows 앱 실행과 재빌드에 필요한 소스를 제공합니다. 실행에는 **Node.js와 npm**, **Python 3.11 이상**, **uv**가 필요합니다.
@@ -105,20 +113,20 @@ npm --prefix app start
 깨끗한 `main`에서 버전을 맞춘 뒤 커밋하고 태그를 푸시합니다. origin/main 푸시 전에 `powershell -File scripts/security/eval-security-gates.ps1`가 `ALL_GATES_PASS`여야 합니다.
 
 ```powershell
-node scripts/release/set-version.mjs 0.1.0-beta.1
+node scripts/release/set-version.mjs 0.1.0
 node scripts/release/check-version.mjs
 git add app/package.json app/package-lock.json backend/pyproject.toml
-git commit -m "chore(release): v0.1.0-beta.1"
-git tag -a v0.1.0-beta.1 -m "v0.1.0-beta.1"
+git commit -m "chore(release): v0.1.0"
+git tag -a v0.1.0 -m "v0.1.0"
 git push origin main
-git push origin v0.1.0-beta.1
+git push origin v0.1.0
 ```
 
 Windows 설치 파일은 CI가 만들지 않습니다. 로컬에서 같은 버전으로 빌드한 뒤 선택적으로 올립니다. `-Version`을 생략하면 `app/package.json` 버전을 씁니다.
 
 ```powershell
 pwsh -NoProfile -File scripts/build-windows-installer.ps1
-gh release upload v0.1.0-beta.1 .omc/artifacts/windows-installer/0.1.0-beta.1/dist/Athena-Setup-0.1.0-beta.1-x64.exe
+gh release upload v0.1.0 .omc/artifacts/windows-installer/0.1.0/dist/Athena-Setup-0.1.0-x64.exe
 ```
 
 </details>

@@ -12,6 +12,43 @@ const FALLTHROUGH_STATUSES = new Set([
   'missing_arguments',
   'arguments_required',
 ]);
+const RECENT_MONTH_CHART_QUERY_RE = /^(?:[가-힣A-Za-z0-9][가-힣A-Za-z0-9._&()·-]{0,39}\s+)?최근\s*(\d+)\s*개월\s+(?:일봉\s+)?차트(?:와\s*거래량)?(?:\s*(?:보여\s*줘|보여\s*주세요|보여줘요))?[.!?]?$/u;
+
+function kstDateParts(date) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(date);
+  return Object.fromEntries(parts.map((part) => [part.type, Number(part.value)]));
+}
+
+function recentThreeMonthStart(question, now) {
+  const normalizedQuestion = String(question || '').normalize('NFKC').trim();
+  const match = RECENT_MONTH_CHART_QUERY_RE.exec(normalizedQuestion);
+  if (!match || Number(match[1]) !== 3) return null;
+  const value = now instanceof Date ? now : new Date(now);
+  if (!Number.isFinite(value.getTime())) return null;
+  const current = kstDateParts(value);
+  const targetMonthStart = new Date(Date.UTC(current.year, current.month - 1 - 3, 1));
+  const year = targetMonthStart.getUTCFullYear();
+  const month = targetMonthStart.getUTCMonth() + 1;
+  const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  const day = Math.min(current.day, lastDay);
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function withRequestedChartViewport(envelope, question, now) {
+  const visibleFrom = recentThreeMonthStart(question, now);
+  const data = envelope && envelope.data;
+  const chart = data && data.chart;
+  if (!visibleFrom || !chart || typeof chart !== 'object') return envelope;
+  return {
+    ...envelope,
+    data: {
+      ...data,
+      chart: { ...chart, initialVisibleFrom: visibleFrom },
+    },
+  };
+}
 
 class SelectorFastPathError extends Error {
   constructor(code, message) {
@@ -181,11 +218,13 @@ async function runSelectorFastPath({
   isCurrent = () => true,
   idFactory = () => crypto.randomUUID(),
   clock = () => performance.now(),
+  calendarNow = () => new Date(),
   deadlineMs = DEFAULT_DEADLINE_MS,
 } = {}) {
   if (typeof fetchImpl !== 'function') throw new TypeError('fetchImpl이 필요하다');
   const rawQuestion = String(question || '');
   if (!rawQuestion.trim()) throw new TypeError('question이 필요하다');
+  const requestCalendarNow = calendarNow();
   if (!/^[a-z0-9][a-z0-9_-]{0,31}$/.test(String(backendAccountAlias || ''))) {
     return { handled: false, reason: 'missing_backend_account_alias' };
   }
@@ -357,6 +396,9 @@ async function runSelectorFastPath({
   }
   const inlineAt = clock();
   ensureCurrent(signal, isCurrent);
+  const displayEnvelope = verified.canvas_type === 'chart'
+    ? withRequestedChartViewport(verified.envelope, rawQuestion, requestCalendarNow)
+    : verified.envelope;
   const paint = await emitCanvas({
     datasetId,
     itemId,
@@ -364,7 +406,7 @@ async function runSelectorFastPath({
     operationRef: verified.operation_ref,
     operationArgs: verified.operation_args || {},
     canvasType: verified.canvas_type,
-    envelope: verified.envelope,
+    envelope: displayEnvelope,
     requestStartedAt: startedAt,
     inlineAt,
     paintDeadlineAt: startedAt + 3000,
@@ -384,7 +426,7 @@ async function runSelectorFastPath({
     error: queryOk ? null : (verified.code || 'selector_dispatch_error'),
     answerText,
     canvasTypes: [verified.canvas_type],
-    canvasCaptions: [verified.envelope.card_title || verified.envelope.caption].filter(Boolean),
+    canvasCaptions: [displayEnvelope.card_title || displayEnvelope.caption].filter(Boolean),
     operationRef: verified.operation_ref,
     firstCanvasMs: Math.max(0, (Number(paint && paint.visiblePaintAt) || clock()) - startedAt),
     durationMs: Math.max(0, clock() - startedAt),
@@ -399,4 +441,5 @@ module.exports = {
   buildMarketOrderDraft,
   runSelectorFastPath,
   verifyAcknowledgedWebsocket,
+  recentThreeMonthStart,
 };

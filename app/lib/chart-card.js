@@ -206,6 +206,14 @@ function resolveInitialPeriod(initial) {
   return requested;
 }
 
+function initialVisibleLogicalRange(bars, visibleFrom) {
+  if (!Array.isArray(bars) || !bars.length || !/^\d{4}-\d{2}-\d{2}$/.test(String(visibleFrom || ''))) {
+    return null;
+  }
+  const from = bars.findIndex((bar) => bar && typeof bar.time === 'string' && bar.time >= visibleFrom);
+  return from === -1 ? null : { from, to: bars.length - 1 };
+}
+
 // ---------- 카드 마운트 (DOM 필요) ----------
 // container: 카드 본문 DOM 노드(canvas.js의 chartBody — .chart-card-body).
 // opts: {symbol, name, ohlcv, initial, preSampled}. 기존 fixture는 일봉 원본에서
@@ -346,6 +354,9 @@ async function createChartCard(container, opts) {
   // 이걸 표시하지 않으면 "탭은 분인데 그려진 건 일봉"이 된다(§8 정보 정직성).
   let intradayUnavailable = initialResample.unavailable || null;
   let currentBars = initialResample.bars;
+  let initialVisibleFrom = o.initial && typeof o.initial.visibleFrom === 'string'
+    ? o.initial.visibleFrom
+    : null;
   let priceSeries = null;
   let volumeSeries = null;
   let drawLayer = null; // CC-105 — buildPriceSeries보다 늦게 만들어져서 let 선언
@@ -705,6 +716,13 @@ async function createChartCard(container, opts) {
     intradayAxis = currentPeriod === 'MIN' || currentPeriod === 'TICK';
     tickSeconds = currentPeriod === 'TICK';
     chart.timeScale().applyOptions({ timeVisible: intradayAxis, secondsVisible: tickSeconds });
+    const requestedRange = currentPeriod === 'D' && initialVisibleFrom
+      ? initialVisibleLogicalRange(toCandleSeriesData(currentBars), initialVisibleFrom)
+      : null;
+    if (requestedRange) {
+      chart.timeScale().setVisibleLogicalRange(requestedRange);
+      return;
+    }
     // 적재 봉이 표준 폭으로 화면을 못 채우면 폭에 맞춘다. 년봉은 30봉뿐이라
     // 8px 고정이면 240px만 쓰고 나머지가 통째로 빈다(2026-08-25 실서버 실측).
     // 채울 수 있을 때만 고정 밀도를 쓴다 — 그때만 좌측에 팬할 과거가 남는다.
@@ -750,6 +768,7 @@ async function createChartCard(container, opts) {
     historyExhausted = false;
     historyPending = false;
     historyFailures = 0;
+    initialVisibleFrom = null;
     if (VALID_INITIAL_PERIODS.indexOf(replacement.period) !== -1) {
       currentPeriod = replacement.period;
       currentInterval = replacement.interval || 1;
@@ -980,6 +999,7 @@ const __exports = {
   RELOAD_DEADLINE_MS,
   RELOAD_DEADLINE_ERROR,
   resolveInitialPeriod,
+  initialVisibleLogicalRange,
   toCandleSeriesData,
   toVolumeSeriesData,
   clipIntradayToLatestSession,

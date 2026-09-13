@@ -134,6 +134,8 @@ function createRealtimeRegistrar(opts) {
   const refCounts = new Map(); // code -> 열린 참조 수(0 이하는 저장하지 않는다)
   const pendingRegister = new Map(); // code -> 진행 중인 REG의 Promise(경합 방지)
   const pendingRemove = new Set(); // 진행 중인 일반 release REMOVE
+  const pendingReregisters = new Set();
+  const orphanSubscriptions = new Set(); // owner 없이 서버에 남았을 수 있는 REG
   let draining = false;
   let drainCleanupOk = true;
   let drainCompletion = Promise.resolve(true);
@@ -189,10 +191,32 @@ function createRealtimeRegistrar(opts) {
     }
     const ok = await inFlight;
     if (!ok) return false;
+    orphanSubscriptions.delete(code);
     const next = (refCounts.get(code) || 0) + 1;
     refCounts.set(code, next);
     if (next === 1) mdlog(`REAL ${trId} 등록 — ${code}`);
     return true;
+  }
+
+  // downstream WS가 새 backend 프로세스에 다시 붙으면 기존 refCount는 남아 있어도
+  // 서버의 REG 상태는 사라져 있다. 참조 수를 늘리지 않고 현재 active 종목만 다시
+  // 등록한다. 재등록 중 마지막 owner가 빠지면 늦게 성공한 REG를 REMOVE로 회수한다.
+  function reRegisterActive() {
+    if (draining) return Promise.resolve([]);
+    const symbols = [...refCounts.keys()];
+    const inFlight = Promise.all(symbols.map(async (symbol) => {
+      const ok = await postFrame('REG', symbol);
+      if (!ok) return { symbol, ok: false };
+      if (!draining && (refCounts.get(symbol) || 0) > 0) return { symbol, ok: true };
+      const removed = await postFrame('REMOVE', symbol);
+      if (!removed) {
+        orphanSubscriptions.add(symbol);
+        if (draining) drainCleanupOk = false;
+      }
+      return { symbol, ok: false };
+    })).finally(() => { pendingReregisters.delete(inFlight); });
+    pendingReregisters.add(inFlight);
+    return inFlight;
   }
 
   // 카드/패널이 닫힐 때 부른다. 참조가 아직 남아 있으면(같은 종목을 쓰는 다른
@@ -226,16 +250,21 @@ function createRealtimeRegistrar(opts) {
 
   async function releaseAll() {
     draining = true;
-    const pending = [...pendingRegister.values(), ...pendingRemove];
-    const activeCleanup = Promise.all([...refCounts.keys()].map(async (code) => {
+    const pending = [...pendingRegister.values(), ...pendingRemove, ...pendingReregisters];
+    const cleanupCodes = new Set([...refCounts.keys(), ...orphanSubscriptions]);
+    const activeCleanup = Promise.all([...cleanupCodes].map(async (code) => {
       const ok = await postFrame('REMOVE', code);
-      if (ok) refCounts.delete(code);
+      if (ok) {
+        refCounts.delete(code);
+        orphanSubscriptions.delete(code);
+      }
       else drainCleanupOk = false;
       return ok;
     }));
     drainCompletion = Promise.allSettled([...pending, activeCleanup]).then((results) => (
       drainCleanupOk
       && refCounts.size === 0
+      && orphanSubscriptions.size === 0
       && results.every((result) => result.status === 'fulfilled')
     ));
     const results = await activeCleanup;
@@ -244,6 +273,7 @@ function createRealtimeRegistrar(opts) {
 
   return {
     acquire,
+    reRegisterActive,
     release,
     releaseAll,
     whenDrained: () => drainCompletion,

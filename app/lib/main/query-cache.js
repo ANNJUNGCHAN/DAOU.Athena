@@ -6,6 +6,11 @@ const DEFAULT_TTL_MS = 30 * 60 * 1000; // 30분 — 판정(라우팅)은 데이�
 const DEFAULT_MAX_ENTRIES = 200;
 
 const REPLAYABLE_INTENTS = new Set(['auto', 'query']);
+const RELATIVE_RANGE_RE = /최근\s*\d+\s*(?:일|주|개월|년)/u;
+
+function isRelativeRangeQuery(query) {
+  return RELATIVE_RANGE_RE.test(String(query || '').normalize('NFKC'));
+}
 
 function isSensitiveCacheKey(key) {
   const raw = String(key || '');
@@ -187,6 +192,10 @@ class QueryCache {
   get(query) {
     const key = normalizeQuery(query);
     if (!key) return null;
+    if (isRelativeRangeQuery(query)) {
+      this._map.delete(key);
+      return null;
+    }
     const entry = this._map.get(key);
     if (!entry) return null;
     if (this._clock() - entry.storedAt > this._ttlMs) {
@@ -198,7 +207,7 @@ class QueryCache {
 
   set(query, judgment) {
     const key = normalizeQuery(query);
-    if (!key || !judgment) return;
+    if (!key || !judgment || isRelativeRangeQuery(query)) return;
     if (this._map.has(key)) this._map.delete(key); // 재삽입 — 최신이 뒤로
     this._map.set(key, { storedAt: this._clock(), judgment: sanitizeCacheValue(judgment) });
     while (this._map.size > this._maxEntries) {
@@ -227,4 +236,5 @@ module.exports = {
   ReplayTurnCapture,
   DEFAULT_TTL_MS,
   DEFAULT_MAX_ENTRIES,
+  isRelativeRangeQuery,
 };

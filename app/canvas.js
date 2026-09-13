@@ -41,6 +41,7 @@ const quoteRealtimePanels = createQuoteRealtimePanelAdapter();
 // 호가 카드 실시간 세션(task #25) — 같은 어댑터 팩토리를 새 인스턴스로 재사용한다
 // (0B 체결과 0D 호가잔량은 완전히 다른 피드라 패널을 나눈다).
 const orderbookRealtimePanels = createQuoteRealtimePanelAdapter();
+const directOrderbookRealtimeSessions = new Map();
 
 // snapshot().period는 AITS 표기(day/week/…)다. 과거 조회 IPC는 툴바와 같은
 // UI 주기 코드를 쓰므로 여기서 되돌린다.
@@ -66,6 +67,7 @@ if (window.athena && typeof window.athena.on === 'function') {
     if (!Array.isArray(ticks)) return;
     for (const tick of ticks) orderbookRealtimePanels.applyRealtimeTick(tick);
   });
+  window.athena.on('athena:renderer-realtime-state', handleOrderbookRealtimeState);
 }
 
 // event/status 카드(Paper AT-CV-005 보호 워크플로) — 지금까지 이 두 canvas_type을
@@ -314,6 +316,7 @@ if (window.athena && typeof window.athena.on === 'function') {
         operationIds: realtime.operationIds || [],
       }, tick);
       if (!accepts) continue;
+      stampBoardRealtimeStatus(root, 'receiving');
       if (root.dataset.taskCanvas === 'true' && semanticWorkspace) {
         semanticWorkspace.applyRealtimeTick(root, tick);
       }
@@ -1813,6 +1816,8 @@ async function showBoardReady(state, host, envelope, mounted, retry) {
   host.style.minHeight = '';
   if (state.loadCard) state.loadCard.dataset.boardId = state.boardId;
   if (state.loadCard && !state.primaryDescriptor) state.loadCard.dataset.renderState = 'data';
+  const root = typeof host.closest === 'function' ? host.closest('.card') : null;
+  if (root) stampBoardRealtimeStatus(root, integratedRealtimeMeta(root).status || 'snapshot');
   if (state.hydrationWarnings.length) {
     const partial = errorNote('일부 추가 정보를 불러오지 못했습니다. 확인된 정보만 표시합니다.');
     partial.classList.add('board-surface-partial');
@@ -2117,6 +2122,90 @@ function stampIntegratedRealtimeState(root, state) {
     ? [...new Set(state.bindings.map((binding) => String(binding.operationId || '')).filter(Boolean))]
     : [];
   if (operationIds.length) realtime.operationIds = operationIds;
+  stampBoardRealtimeStatus(root, realtime.status);
+}
+
+// Paper 원문에 박힌 「정규장·실시간」은 실제 REG 상태가 아니다. 시각·휴일을
+// 추정하지 않고, 확인된 REST/연결/첫 수신 lifecycle만 해당 상태 잎에 덮는다.
+function stampBoardRealtimeStatus(root, status) {
+  if (!root || typeof root.querySelectorAll !== 'function') return;
+  const normalized = String(status || 'snapshot').toLowerCase();
+  if (['registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error'].includes(normalized)) {
+    root.__athenaBoardRealtimeReceived = false;
+  } else if (normalized === 'receiving') {
+    root.__athenaBoardRealtimeReceived = true;
+  }
+  const effective = root.__athenaBoardRealtimeReceived
+    && ['live', 'active', 'connected', 'reconnected'].includes(normalized)
+    ? 'receiving'
+    : normalized;
+  const label = integratedCardSurface.workflowStateLabel(effective);
+  const slotsByBoard = {
+    '137X-2': ['s003', 's004', 's136'],
+    '2R3M-1': ['s003', 's004', 's154', 's258'],
+    '1JPU-0': ['s005', 's262'],
+  };
+  for (const host of root.querySelectorAll('.board-surface-host')) {
+    const boardId = String((host.__athenaBoard && host.__athenaBoard.boardId) || '');
+    for (const slotId of slotsByBoard[boardId] || []) {
+      const node = host.querySelector(`[data-slot-id="${slotId}"]`);
+      if (node) node.textContent = label;
+    }
+  }
+}
+
+function stampOrderbookRealtimeStatus(card, wrap, status) {
+  stampBoardRealtimeStatus(card, status);
+  if (!wrap || typeof wrap.querySelector !== 'function') return;
+  const statusNode = wrap.querySelector('[data-role="status"]');
+  const label = statusNode && statusNode.children && statusNode.children[1];
+  if (!label) return;
+  const normalized = String(status || 'snapshot').toLowerCase();
+  const receiving = normalized === 'receiving';
+  if (statusNode.classList) {
+    if (receiving) statusNode.classList.add('is-live');
+    else statusNode.classList.remove('is-live');
+  }
+  if (wrap.__athenaOrderbookStaleTimer) {
+    clearTimeout(wrap.__athenaOrderbookStaleTimer);
+    wrap.__athenaOrderbookStaleTimer = null;
+  }
+  if (!receiving) {
+    if (wrap.__athenaOrderbookFrame && typeof cancelAnimationFrame === 'function') {
+      cancelAnimationFrame(wrap.__athenaOrderbookFrame);
+    }
+    wrap.__athenaOrderbookFrame = null;
+    wrap.__athenaPendingOrderbookTick = null;
+  }
+  label.textContent = {
+    snapshot: '조회 데이터',
+    static: '조회 데이터',
+    registering: '연결 중',
+    connecting: '연결 중',
+    reconnecting: '연결 중',
+    disconnected: '연결 중지',
+    stopped: '연결 중지',
+    live: '수신 대기',
+    active: '수신 대기',
+    connected: '수신 대기',
+    reconnected: '수신 대기',
+    receiving: '수신 중',
+    error: '연결 오류',
+  }[normalized] || '상태 확인 중';
+}
+
+function handleOrderbookRealtimeState(state) {
+  if (!state || state.kind !== 'orderbook') return false;
+  const leaseToken = String(state.leaseToken || '');
+  const session = directOrderbookRealtimeSessions.get(leaseToken);
+  if (!session || session.released || session.symbol !== String(state.symbol || '')) return false;
+  if (['registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error'].includes(String(state.status || ''))) {
+    session.acceptsTicks = false;
+  } else if (['live', 'active', 'connected', 'reconnected'].includes(String(state.status || ''))) {
+    session.acceptsTicks = true;
+  }
+  stampOrderbookRealtimeStatus(session.card, session.wrap, state.status);
+  return true;
 }
 
 function integratedRealtimeMeta(root) {
@@ -2163,6 +2252,7 @@ function syncIntegratedRealtime(root, envelope) {
   realtime.leaseId = payload.leaseId;
   realtime.target = integratedCardSurface.normalizeIdentity(payload.target);
   realtime.status = 'registering';
+  stampBoardRealtimeStatus(root, realtime.status);
   const prior = integratedRealtimeTasks.get(root) || Promise.resolve();
   const task = prior.catch(() => {}).then(async () => {
     const boardId = String((surfaceContractOf(envelope) || {}).board_id || '');
@@ -2174,6 +2264,7 @@ function syncIntegratedRealtime(root, envelope) {
         realtime.mounted = false;
       }
       if (root.isConnected) realtime.status = 'snapshot';
+      stampBoardRealtimeStatus(root, realtime.status);
       clearIntegratedRealtimeError(root);
       return { ok: true, status: 'snapshot' };
     }
@@ -2184,6 +2275,7 @@ function syncIntegratedRealtime(root, envelope) {
         realtime.mounted = false;
       }
       if (root.isConnected) realtime.status = 'static';
+      stampBoardRealtimeStatus(root, realtime.status);
       clearIntegratedRealtimeError(root);
       return { ok: true, status: 'static' };
     }
@@ -2213,6 +2305,7 @@ function syncIntegratedRealtime(root, envelope) {
   }).catch((error) => {
     if (root.isConnected) {
       realtime.status = 'error';
+      stampBoardRealtimeStatus(root, realtime.status);
       showIntegratedRealtimeError(root, envelope, error);
     }
   });
@@ -2578,24 +2671,60 @@ function wireQuoteRealtime(card, wrap, envelope, applyTick) {
 function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
   const symbol = resolveEnvelopeSymbol(envelope);
   if (!symbol || typeof applyTick !== 'function') return null;
-  orderbookRealtimePanels.openPanel(card, symbol, (tick) => applyTick(wrap, envelope, tick));
+  stampOrderbookRealtimeStatus(card, wrap, 'connecting');
+  const session = { card, wrap, symbol, released: false, acceptsTicks: false };
+  orderbookRealtimePanels.openPanel(card, symbol, (tick) => {
+    if (!session.acceptsTicks || session.released) return;
+    stampOrderbookRealtimeStatus(card, wrap, 'receiving');
+    applyTick(wrap, envelope, tick);
+  });
   let leaseToken = null;
+  let released = false;
   void window.athena.invoke('athena:orderbook-realtime-acquire', { symbol }).then((result) => {
-    if (!result || !result.ok || !result.leaseToken) return;
     if (released) {
-      releaseRendererRealtimeLease('athena:orderbook-realtime-release', result.leaseToken);
+      if (result && result.ok && result.leaseToken) {
+        releaseRendererRealtimeLease('athena:orderbook-realtime-release', result.leaseToken);
+      }
+      return;
+    }
+    if (result && result.ok && result.status === 'fixture-disabled') {
+      released = true;
+      session.released = true;
+      session.acceptsTicks = false;
+      orderbookRealtimePanels.closePanel(card);
+      stampOrderbookRealtimeStatus(card, wrap, 'snapshot');
+      return;
+    }
+    if (!result || !result.ok || !result.leaseToken) {
+      released = true;
+      session.released = true;
+      session.acceptsTicks = false;
+      orderbookRealtimePanels.closePanel(card);
+      stampOrderbookRealtimeStatus(card, wrap, 'error');
       return;
     }
     leaseToken = result.leaseToken;
-  }).catch(() => {});
+    session.acceptsTicks = true;
+    directOrderbookRealtimeSessions.set(leaseToken, session);
+    stampOrderbookRealtimeStatus(card, wrap, 'active');
+  }).catch(() => {
+    if (released) return;
+    released = true;
+    session.released = true;
+    session.acceptsTicks = false;
+    orderbookRealtimePanels.closePanel(card);
+    stampOrderbookRealtimeStatus(card, wrap, 'error');
+  });
   // 해제는 한 번만 나간다 — acquire보다 release가 많으면 main의 REG 셈이 무너져
   // 같은 종목을 보는 남의 카드 피드까지 끊긴다.
-  let released = false;
   const release = () => {
     if (released) return false;
     released = true;
+    session.released = true;
+    session.acceptsTicks = false;
     orderbookRealtimePanels.closePanel(card);
     if (leaseToken) {
+      directOrderbookRealtimeSessions.delete(leaseToken);
       releaseRendererRealtimeLease('athena:orderbook-realtime-release', leaseToken);
       leaseToken = null;
     }
@@ -3733,6 +3862,7 @@ const pluginCanvas = window.AthenaLib.PluginCanvas.createPluginCanvas({
   installed: [],
   onPermission: (plugin) => { void pluginProbe(plugin && plugin.id); },
   onManage: () => { void pluginRefresh(); },
+  onRetryRegistry: () => pluginRefresh(),
   // GUI 진입 5종(허용·철회·켜기끄기·삭제·직접 등록)이 전부 여기로 합류한다.
   // 버튼은 봉투를 만들 뿐이고, athena:mcp-*를 부르는 실행은 승인 하나뿐이다.
   onPropose: (spec, reason) => { mountPluginProposal(buildGuiProposal(spec, reason)); },
@@ -3811,6 +3941,19 @@ function pluginRearmProposal(envelope) {
   pluginCanvas.setProposals(pluginProposals, { revision: pluginRevision });
 }
 
+const PLUGIN_PROBE_CACHE_INVALIDATING_ACTIONS = new Set([
+  'install', 'remove', 'update_snippet', 'allow_tools', 'revoke_tools',
+]);
+
+function invalidatePluginProbeCache(actions) {
+  for (const action of (Array.isArray(actions) ? actions : [])) {
+    if (!action || !PLUGIN_PROBE_CACHE_INVALIDATING_ACTIONS.has(action.action)
+      || typeof action.target !== 'string' || !action.target) continue;
+    pluginToolCache.delete(action.target);
+    pluginProbeErrors.delete(action.target);
+  }
+}
+
 async function pluginForgetProposal(envelope) {
   dropPluginProposal(envelope);
   try {
@@ -3837,13 +3980,21 @@ async function pluginDecide(channel, envelope, options) {
   }
   const kind = (result && result.kind) || 'failed';
   if (result && typeof result.revision === 'number') pluginRevision = result.revision;
-  if (kind === 'success') {
+  const successfulActions = result && Array.isArray(result.results)
+    ? result.results.filter((row) => row && row.ok === true)
+    : [];
+  if (successfulActions.length > 0) {
     pluginRegistryChangedThisSession = true;
-    for (const action of (envelope && envelope.actions) || []) {
-      if (action.action === 'update_snippet') {
-        pluginCanvas.discardAppliedSnippetDraft(action.target, action.snippet);
-        pluginToolCache.delete(action.target);
-        pluginProbeErrors.delete(action.target);
+    // 삭제 뒤 같은 alias 재설치, 권한 허용/철회 뒤에는 이전 probe가 더 이상
+    // 권위가 아니다. 다음 probe 전까지 기능 상태를 pending/null로 되돌린다.
+    invalidatePluginProbeCache(successfulActions);
+    for (const resultAction of successfulActions) {
+      if (resultAction.action !== 'update_snippet') continue;
+      const requestedAction = ((envelope && envelope.actions) || []).find((action) => (
+        action && action.action === resultAction.action && action.target === resultAction.target
+      ));
+      if (requestedAction) {
+        pluginCanvas.discardAppliedSnippetDraft(requestedAction.target, requestedAction.snippet);
       }
     }
     await pluginRefresh();
@@ -3887,7 +4038,9 @@ function pluginHealthLabel(server) {
 }
 
 function pluginRowFromServer(server) {
-  const tools = pluginToolCache.get(server.alias) || null;
+  const tools = pluginToolCache.has(server.alias) ? pluginToolCache.get(server.alias) : null;
+  const probeError = pluginProbeErrors.has(server.alias);
+  const featureStatus = probeError ? 'error' : (tools ? 'success' : 'pending');
   // 카탈로그에서 설치한 서버는 사람이 읽는 이름을 되돌려준다. 모르는 별칭에는
   // 이름을 지어내지 않고 별칭 그대로 쓴다(BETA-017의 가짜 이름 재발 방지).
   const catalogEntry = pluginCatalog.findEntry(server.alias);
@@ -3899,9 +4052,10 @@ function pluginRowFromServer(server) {
       : [server.command, server.argsPreview].filter(Boolean).join(' '),
     source: pluginHealthLabel(server),
     enabled: !!server.approved,
-    // probe 전에는 consent.json이 아는 허용 도구 수만 안다 — 그 수를 그대로 쓴다.
-    featureCount: tools ? tools.length : server.toolCount,
-    features: tools || [],
+    // probe 전/실패는 확인된 0개가 아니다. 성공한 probe만 기능 수와 배열을 싣는다.
+    featureStatus,
+    featureCount: featureStatus === 'success' ? tools.length : null,
+    features: featureStatus === 'success' ? tools : null,
     error: pluginProbeErrors.get(server.alias) || null,
     warnings: Array.isArray(server.warnings) ? server.warnings : [],
     configSnippet: server.configSnippet || null,
@@ -3912,11 +4066,18 @@ function pluginRowFromServer(server) {
 // 삭제했다면 그 변경은 다음 실행부터 대화에 반영된다. 사용자가 "설치했는데 안 쓰인다"로
 // 오해하지 않도록 화면에 명시한다.
 let pluginRegistryChangedThisSession = false;
+let pluginRefreshGeneration = 0;
 
 async function pluginRefresh() {
+  const refreshGeneration = ++pluginRefreshGeneration;
   try {
     const res = await window.athena.invoke('athena:mcp-list');
-    const servers = (res && Array.isArray(res.servers)) ? res.servers : [];
+    if (refreshGeneration !== pluginRefreshGeneration) return;
+    if (!res || res.ok === false || !Array.isArray(res.servers)
+      || !Number.isSafeInteger(res.revision)) {
+      throw new TypeError('플러그인 등록 목록 응답이 올바르지 않습니다');
+    }
+    const servers = res.servers;
     // 목록과 함께 오는 판번호가 GUI 제안의 만료 기준이다(R-4).
     if (res && typeof res.revision === 'number') pluginRevision = res.revision;
     pluginCanvas.setData({
@@ -3929,6 +4090,8 @@ async function pluginRefresh() {
     // 목록이 바뀌면 떠 있는 카드의 만료 판정도 함께 갱신된다.
     pluginCanvas.setProposals(pluginProposals, { revision: pluginRevision });
   } catch (err) {
+    if (refreshGeneration !== pluginRefreshGeneration) return;
+    pluginCanvas.setData({ loadState: 'error' });
     console.warn('athena:mcp-list 실패', err);
   }
 }
@@ -4003,6 +4166,14 @@ const backtestCanvas = window.AthenaLib.BacktestCanvas.createBacktestCanvas({
     const res = await window.athena.invoke('athena:backtest-presets');
     if (!res || !res.ok) throw new Error(backtestError(res, '프리셋을 불러오지 못했습니다'));
     return (res.data && Array.isArray(res.data.presets)) ? res.data.presets : [];
+  },
+  fetchIndicators: async () => {
+    const res = await window.athena.invoke('athena:backtest-indicators');
+    if (!res || !res.ok) throw new Error(backtestError(res, '지표 목록을 불러오지 못했습니다'));
+    if (!res.data || !Array.isArray(res.data.indicators)) {
+      throw new TypeError('지표 목록 응답이 올바르지 않습니다');
+    }
+    return res.data.indicators;
   },
   // P4 상태 기계는 직접 부르지 않는다(설계 폼이 최소 입력뿐이라 사전 계획
   // 조회를 안 거친다, backtest-canvas.js 머리말 참고) — P5/P6이 이어 쓸 자리다.
@@ -4468,7 +4639,11 @@ const agentCanvas = window.AthenaLib.AgentCanvas.createAgentCanvas({
   // 10단계 — 실행 이력 드릴인. 6단계 GET /{id}/runs를 사람 클릭 전용 채널로.
   fetchRuns: async (id) => {
     const res = await window.athena.invoke('athena:routine-runs', { id });
-    return (res && res.ok && res.data && Array.isArray(res.data.runs)) ? res.data.runs : [];
+    if (!res || !res.ok) throw new Error('작업 실행 이력을 불러오지 못했습니다');
+    if (!res.data || !Array.isArray(res.data.runs)) {
+      throw new TypeError('작업 실행 이력 응답이 올바르지 않습니다');
+    }
+    return res.data.runs;
   },
   // 5단계 — 드릴인 "30회 통계"의 "평균" 타일. avg_duration_ms는 runs 배열이
   // 아니라 같은 응답의 다른 필드(4단계, 최근 30건 non-null 평균)라 별개

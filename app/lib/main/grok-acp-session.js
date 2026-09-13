@@ -13,6 +13,7 @@ const DEFAULT_MAX_LINE_BYTES = 1_000_000;
 const DEFAULT_MAX_STDOUT_BYTES = 5_000_000;
 const DEFAULT_MAX_ERROR_BYTES = 16_000;
 const DEFAULT_MAX_PROMPT_DURATION_MS = 600_000;
+const MCP_LIST_METHOD = '_x.ai/mcp/list';
 const MAX_SELECTOR_FAILURES = 4;
 const SELECTOR_SELECTION_ERRORS = new Set([
   'AMBIGUOUS_OPERATION', 'NO_CONFIDENT_MATCH', 'OPERATION_NOT_FOUND',
@@ -142,6 +143,10 @@ class GrokAcpSession {
     trustProjectFolder = false,
     mcpServers = [],
     mcpServersFn = null,
+    requiredMcpServerNames = [],
+    mcpReadinessDeadlineMs = 15_000,
+    mcpReadinessRpcTimeoutMs = DEFAULT_RPC_TIMEOUT_MS,
+    mcpReadinessPollMs = 1_000,
     grokBin = getGrokBin(),
     args = null,
     buildArgs = buildGrokAcpArgs,
@@ -167,6 +172,14 @@ class GrokAcpSession {
     this._mcpServersFn = typeof mcpServersFn === 'function'
       ? mcpServersFn
       : () => this._mcpServers;
+    this._requiredMcpServerNames = [...new Set(
+      (Array.isArray(requiredMcpServerNames) ? requiredMcpServerNames : [])
+        .map((name) => String(name || '').trim())
+        .filter(Boolean),
+    )];
+    this._mcpReadinessDeadlineMs = mcpReadinessDeadlineMs;
+    this._mcpReadinessRpcTimeoutMs = mcpReadinessRpcTimeoutMs;
+    this._mcpReadinessPollMs = mcpReadinessPollMs;
     this._grokBin = grokBin;
     this._args = Array.isArray(args) ? [...args] : null;
     this._buildArgs = buildArgs;
@@ -296,21 +309,39 @@ class GrokAcpSession {
     if (!proc || proc.dead) {
       spawnedFresh = true;
       const initStartedAt = this._now();
-      try {
-        proc = await this._start(config, requestedLineage, (started) => {
-          runProc = started;
-          if (typeof onSpawn === 'function') onSpawn({ pid: started.child.pid, kill: () => cancel() });
-        });
-        initMs = Math.max(0, this._now() - initStartedAt);
-      } catch (error) {
-        if (signal) signal.removeEventListener('abort', onAbort);
-        if (this._proc && !this._proc.dead) this._failProcess(this._proc, error);
-        return this._failure(cancelReason || error, false, startedAt, {
-          aborted: cancelled || this._stopped || !!(signal && signal.aborted),
-          spawnedFresh,
-          initMs: Math.max(0, this._now() - initStartedAt),
-        });
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          proc = await this._start(config, requestedLineage, (started) => {
+            runProc = started;
+            if (typeof onSpawn === 'function') onSpawn({ pid: started.child.pid, kill: () => cancel() });
+          });
+          break;
+        } catch (error) {
+          const failedProc = this._proc && !this._proc.dead ? this._proc : null;
+          const termination = failedProc ? this._failProcess(failedProc, error) : null;
+          const canRecover = error && error.code === 'MCP_NOT_READY' && attempt === 0
+            && !cancelled && !this._stopped && !(signal && signal.aborted);
+          if (canRecover) {
+            try {
+              const results = await Promise.allSettled([termination]);
+              if (termination) this._terminations.delete(termination);
+              assertSessionStopsSucceeded(results);
+              continue;
+            } catch (cause) {
+              const recoveryError = this._mcpConnectionError(null, 'MCP_RECOVERY_SHUTDOWN_FAILED');
+              recoveryError.causeCode = cause && cause.code != null ? cause.code : 'TERMINATION_FAILED';
+              error = recoveryError;
+            }
+          }
+          if (signal) signal.removeEventListener('abort', onAbort);
+          return this._failure(cancelReason || error, false, startedAt, {
+            aborted: cancelled || this._stopped || !!(signal && signal.aborted),
+            spawnedFresh,
+            initMs: Math.max(0, this._now() - initStartedAt),
+          });
+        }
       }
+      initMs = Math.max(0, this._now() - initStartedAt);
     } else {
       runProc = proc;
       if (typeof onSpawn === 'function') onSpawn({ pid: proc.child.pid, kill: () => cancel() });
@@ -437,6 +468,7 @@ class GrokAcpSession {
     const proc = {
       child, config: { ...config }, state: 'starting', sessionId: null,
       carry: '', stderr: '', pending: new Map(), active: null, dead: false,
+      mcpRetryWaiters: new Set(),
     };
     this._proc = proc;
     child.stdout?.setEncoding?.('utf8');
@@ -484,8 +516,118 @@ class GrokAcpSession {
       if (!created || !created.sessionId) throw new Error('session/new 응답에 sessionId가 없다');
       proc.sessionId = created.sessionId;
     }
+    await this._waitForMcpReady(
+      proc,
+      this._requiredMcpServerNames,
+      this._mcpReadinessDeadlineMs,
+      this._mcpReadinessRpcTimeoutMs,
+      this._mcpReadinessPollMs,
+    );
     proc.state = 'idle';
     return proc;
+  }
+
+  async _waitForMcpReady(proc, names, deadlineMs, rpcTimeoutMs, pollMs) {
+    if (!Array.isArray(names) || names.length === 0) return;
+    const deadlineAt = this._now() + Math.max(0, Number(deadlineMs) || 0);
+    const readCatalog = async () => {
+      try {
+        const remainingMs = Math.max(1, deadlineAt - this._now());
+        return await this._request(
+          proc,
+          MCP_LIST_METHOD,
+          { sessionId: proc.sessionId },
+          Math.min(Math.max(1, Number(rpcTimeoutMs) || 1), remainingMs),
+          false,
+        );
+      } catch (cause) {
+        const error = this._mcpConnectionError(null, 'MCP_READINESS_PROTOCOL');
+        error.causeCode = cause && cause.code != null ? cause.code : 'UNKNOWN';
+        throw error;
+      }
+    };
+    let firstRead = true;
+    while (true) {
+      if (!firstRead && this._now() >= deadlineAt) throw this._mcpConnectionError();
+      firstRead = false;
+      const catalog = await readCatalog();
+      if (this._mcpCatalogReady(catalog, names)) return;
+      const status = this._mcpCatalogStatus(catalog, names);
+      if (status === 'needs_auth' || status === 'unavailable') {
+        throw this._mcpConnectionError(status, status === 'needs_auth' ? null : 'MCP_UNAVAILABLE');
+      }
+      if (!this._mcpCatalogInitializing(catalog, names) || this._now() >= deadlineAt) {
+        throw this._mcpConnectionError(status);
+      }
+      const remainingMs = deadlineAt - this._now();
+      await this._waitForMcpRetry(
+        proc,
+        Math.min(Math.max(1, Number(pollMs) || 1), remainingMs),
+      );
+    }
+  }
+
+  _waitForMcpRetry(proc, retryMs) {
+    return new Promise((resolve, reject) => {
+      let timer = null;
+      const finish = (error = null) => {
+        if (!proc.mcpRetryWaiters.has(finish)) return;
+        proc.mcpRetryWaiters.delete(finish);
+        if (timer) this._clearTimeout(timer);
+        if (error) reject(error);
+        else resolve();
+      };
+      proc.mcpRetryWaiters.add(finish);
+      timer = this._setTimeout(() => finish(), retryMs);
+    });
+  }
+
+  _mcpConnectionError(status = null, code = null) {
+    const message = status === 'needs_auth'
+      ? 'Athena 기능 서버 인증이 필요합니다. 설정에서 연결 상태를 확인해 주세요.'
+      : 'Athena 기능 서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.';
+    const error = new Error(message);
+    error.code = code || (status === 'needs_auth' ? 'MCP_AUTH_REQUIRED' : 'MCP_NOT_READY');
+    return error;
+  }
+
+  _mcpCatalogServers(catalog) {
+    const value = catalog && catalog.result != null ? catalog.result : catalog;
+    if (Array.isArray(value)) return value;
+    return value && Array.isArray(value.servers) ? value.servers : [];
+  }
+
+  _mcpCatalogEntries(catalog, names) {
+    const servers = this._mcpCatalogServers(catalog);
+    return names
+      .map((name) => servers.find((server) => server && String(server.name || '') === name))
+      .filter(Boolean)
+      .map((server) => ({
+        enabled: server.session?.enabled ?? server.enabled ?? true,
+        status: String(server.session?.status ?? server.status ?? '').toLowerCase(),
+        tools: Array.isArray(server.session?.tools)
+          ? server.session.tools
+          : (Array.isArray(server.tools) ? server.tools : []),
+      }));
+  }
+
+  _mcpCatalogReady(catalog, names) {
+    const entries = this._mcpCatalogEntries(catalog, names);
+    return entries.length === names.length
+      && entries.every((entry) => entry.enabled && entry.status === 'ready' && entry.tools.length > 0);
+  }
+
+  _mcpCatalogInitializing(catalog, names) {
+    const entries = this._mcpCatalogEntries(catalog, names);
+    return entries.length === names.length
+      && entries.every((entry) => entry.enabled && entry.status === 'initializing');
+  }
+
+  _mcpCatalogStatus(catalog, names) {
+    const entries = this._mcpCatalogEntries(catalog, names);
+    return entries.find((entry) => entry.status === 'needs_auth')?.status
+      || entries.find((entry) => entry.status === 'unavailable')?.status
+      || null;
   }
 
   _request(proc, method, params, timeoutMs, submitted) {
@@ -666,7 +808,7 @@ class GrokAcpSession {
   }
 
   _failProcess(proc, reason) {
-    if (!proc || proc.dead) return;
+    if (!proc || proc.dead) return Promise.resolve();
     proc.dead = true;
     proc.state = 'down';
     const error = reason instanceof Error ? reason : new Error(String(reason || 'Grok ACP 프로세스가 종료됐다'));
@@ -676,6 +818,8 @@ class GrokAcpSession {
       pending.reject(error);
     }
     proc.pending.clear();
+    for (const finish of [...proc.mcpRetryWaiters]) finish(error);
+    proc.mcpRetryWaiters.clear();
     proc.active = null;
     if (this._proc === proc) this._proc = null;
     try {
@@ -684,12 +828,15 @@ class GrokAcpSession {
         const pending = Promise.resolve(operation);
         this._terminations.add(pending);
         pending.catch(() => {});
+        return pending;
       }
     } catch (error) {
       const pending = Promise.reject(error);
       this._terminations.add(pending);
       pending.catch(() => {});
+      return pending;
     }
+    return Promise.resolve();
   }
 
   _failure(reason, submitted, startedAt, extra = {}) {
@@ -712,6 +859,7 @@ class GrokAcpSession {
       finalResult: null,
       stderr: extra.stderr || '',
       diagnostics: extra.diagnostics || null,
+      causeCode: reason && reason.causeCode != null ? reason.causeCode : null,
       metrics,
       ...metrics,
     };

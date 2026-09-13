@@ -38,17 +38,34 @@ function consentPath() {
 function readJson(p, fallback) {
   try {
     return JSON.parse(fs.readFileSync(p, 'utf-8'));
-  } catch {
-    return fallback;
+  } catch (err) {
+    if (err && err.code === 'ENOENT') return fallback;
+    throw err;
   }
 }
 
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
 function readRegistry() {
-  return readJson(registryPath(), { servers: {} });
+  const registry = readJson(registryPath(), { servers: {}, revision: 0 });
+  if (!isPlainObject(registry) || !isPlainObject(registry.servers)) {
+    throw new TypeError('invalid MCP registry state');
+  }
+  // revision 도입 전 파일은 servers만 있었다. 그 형식 하나만 0으로 올리고,
+  // 명시된 revision의 잘못된 타입·음수는 손상으로 취급한다.
+  const revision = registry.revision === undefined ? 0 : registry.revision;
+  if (!Number.isSafeInteger(revision) || revision < 0) {
+    throw new TypeError('invalid MCP registry state');
+  }
+  return { ...registry, revision };
 }
 
 function readConsent() {
-  return readJson(consentPath(), {});
+  const consent = readJson(consentPath(), {});
+  if (!isPlainObject(consent)) throw new TypeError('invalid MCP consent state');
+  return consent;
 }
 
 function runCli(args, opts = {}) {

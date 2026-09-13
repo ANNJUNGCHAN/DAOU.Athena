@@ -134,6 +134,33 @@ function referenceNames(spec) {
   return aliases.concat(['open', 'high', 'low', 'close', 'volume']);
 }
 
+// 슬라이더가 실제 계산에 닿는지 본다. 백엔드의 resolve_params는 지표 params에 적힌
+// 정확한 "$이름"만 치환하므로, 선언·기본값과 숫자가 같다는 이유로 연결됐다고 추정하지
+// 않는다. 순서는 PARAMS 선언 순서다 — 오류 문구와 폼의 슬라이더 순서가 같아야 한다.
+function unusedParamNames(spec, indicatorCatalog) {
+  const indicators = Array.isArray(spec && spec.indicators) ? spec.indicators : [];
+  const knownParams = new Map();
+  (Array.isArray(indicatorCatalog) ? indicatorCatalog : []).forEach((indicator) => {
+    if (!indicator || typeof indicator.id !== 'string') return;
+    const params = indicator.params && typeof indicator.params === 'object'
+      ? Object.keys(indicator.params) : [];
+    knownParams.set(indicator.id, new Set(params));
+  });
+  const references = new Set();
+  indicators.forEach((indicator) => {
+    const params = indicator && indicator.params && typeof indicator.params === 'object'
+      ? indicator.params : {};
+    const allowed = knownParams.get(indicator && indicator.id) || new Set();
+    Object.entries(params).forEach(([key, value]) => {
+      if (!allowed.has(key)) return;
+      if (typeof value === 'string' && value.startsWith('$') && value.length > 1) {
+        references.add(value.slice(1));
+      }
+    });
+  });
+  return Object.keys((spec && spec.params) || {}).filter((name) => !references.has(name));
+}
+
 // 조건이 참조하는 이름이 아는 이름인가. 다중 출력 지표(DONCHIAN → dc_upper·dc_lower·
 // dc_mid, BBANDS → bb_upper…)는 `별칭_출력` 열을 낸다 — 백엔드 compile.py가 그렇게
 // 붙이고 프리셋(52주 신고가 돌파)도 그 이름을 쓴다. 화면은 출력 목록을 모르므로
@@ -483,6 +510,7 @@ const __exports = {
   removeCondition,
   setLogic,
   referenceNames,
+  unusedParamNames,
   validate,
   applyPatch,
   diffFields,

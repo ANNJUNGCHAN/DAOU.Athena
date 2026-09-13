@@ -921,6 +921,11 @@ function createBacktestCanvas(options) {
   let armErrors = {};
 
   let presets = [];
+  // GET /backtest/indicators가 준 실제 계산 파라미터 목록. compile.py도 이 레지스트리에
+  // 선언된 키만 지표 함수에 넘기므로, 모델 제안의 $참조를 검사할 때 같은 계약을 쓴다.
+  let indicatorCatalog = null;
+  let indicatorCatalogState = deps.fetchIndicators ? 'idle' : 'error';
+  let indicatorCatalogRequestId = 0;
   // 내 폴더의 .py를 프리셋과 같은 자리에 세운 등록부(GET /backtest/user-strategies).
   // 배선이 없으면 빈 목록이고, 그때 설계 폼은 지금까지처럼 프리셋만 보여준다.
   let userStrategies = [];
@@ -997,6 +1002,7 @@ function createBacktestCanvas(options) {
   // 폼 경로에서 [코드 열기]가 만든 코드 — 같은 폼이면 다시 만들지 않는다(§7.3: 생성은
   // 저장이 아니다. 이 캐시는 화면 것이고 백엔드에는 아무것도 남지 않는다).
   let codegenCache = null;
+  let codegenRequestId = 0;
   // IDE가 코드 탭을 가져갔는가. 폴더를 고르면 참이 되고, 기법을 새로 고르거나
   // [+ 새 기법 만들기]로 빈 뼈대를 세우면 거짓으로 돌아간다 — 그 둘은 "앞 폴더의
   // 파일이 아니라 이 기법의 코드"를 보는 자리라 IDE가 아니라 단일 편집기가 서야 한다.
@@ -1045,10 +1051,31 @@ function createBacktestCanvas(options) {
 
   // ---------- 데이터 흐름 ----------
 
+  async function loadIndicatorCatalog() {
+    const rid = ++indicatorCatalogRequestId;
+    indicatorCatalogState = 'loading';
+    try {
+      const list = await deps.fetchIndicators();
+      if (rid !== indicatorCatalogRequestId) return;
+      if (!Array.isArray(list)) throw new TypeError('지표 목록 응답이 올바르지 않습니다');
+      indicatorCatalog = list;
+      indicatorCatalogState = 'ready';
+    } catch (err) {
+      if (rid !== indicatorCatalogRequestId) return;
+      indicatorCatalog = null;
+      indicatorCatalogState = 'error';
+    }
+  }
+
   async function loadPresets() {
     const rid = ++loadRequestId;
     stopPolling();
     setState({ view: 'empty' });
+    // 프리셋 화면은 먼저 열되 지표 계약은 별도로 읽는다. 느리거나 실패해도 날짜·종목·
+    // 파라미터 값 설정은 이어지고, 새 indicators 목록만 mergeBlockers가 fail-closed한다.
+    if (indicatorCatalogState === 'idle' || indicatorCatalogState === 'error') {
+      void loadIndicatorCatalog();
+    }
     let list;
     try {
       list = deps.fetchPresets ? await deps.fetchPresets() : [];
@@ -1337,7 +1364,7 @@ function createBacktestCanvas(options) {
   function parkCurrent() {
     const key = parkKey();
     if (!key) return;
-    const project = projectIde ? projectIde.currentProject() : null;
+    const project = currentWorkspaceProject();
     const t = techniqueState();
     parked.set(key, {
       // 홈의 「수정 중」 카드가 읽을 이름 — 잠재운 뒤에는 폴더를 물어볼 수 없어 지금 적는다.
@@ -1476,10 +1503,28 @@ function createBacktestCanvas(options) {
     return techniqueDraft || !!userStrategyId || !!presetProject;
   }
 
+  // IDE는 저장하지 않은 탭을 보존하려고 이전 프로젝트를 계속 들고 있을 수 있다. 화면의
+  // 기법 정체와 project id가 맞을 때만 그 폴더를 현재 작업공간으로 취급한다. 폼 전환에서
+  // 숨겨 둔 이전 IDE를 헤더·모델 컨텍스트·세션 봉인이 현재 기법으로 잘못 묶지 않게 한다.
+  function currentWorkspaceProject() {
+    const project = projectIde ? projectIde.currentProject() : null;
+    if (!project) return null;
+    if (!workspaceActive()) return runPath === 'code' ? project : null;
+    const registered = userStrategyId
+      ? userStrategies.find((entry) => entry.id === userStrategyId) : null;
+    const expectedId = (registered && registered.project_id)
+      || techniqueState().projectId
+      || (presetProject && presetProject.projectId)
+      || null;
+    return expectedId && String(project.id) === String(expectedId) ? project : null;
+  }
+
   // 사람이 고친 것이 디스크에 닿았다(편집기의 자동 저장) — 기법 본문이면 화면의 코드도
   // 그것이고, 검사는 사람이 고친 것도 예외가 아니다(사용자 확정).
   function onIdeSaved(path, text) {
-    if (!workspaceActive()) return;
+    // 폼이 현재 실행 기준이면 IDE에 남겨 둔 이전 기법의 늦은 자동 저장이다. 그 파일은
+    // 보존하되 현재 폼의 생성 코드·실행경로를 다시 code로 뒤집지 않는다.
+    if (runPath !== 'code' || !currentWorkspaceProject()) return;
     const strategyPath = techniqueState().path || TECHNIQUE_STRATEGY_PATH;
     const entry = userStrategyId ? userStrategies.find((s) => s.id === userStrategyId) : null;
     if (path !== strategyPath && !(entry && path === entry.path)) return;
@@ -1588,7 +1633,7 @@ function createBacktestCanvas(options) {
   // 설정 반영·다음 턴 컨텍스트가 같은 규칙을 읽어야 한다: 한 곳만 조건을 세면 코드 기법의
   // 화면에 「진입 조건이 하나도 없습니다」가 서고 모델은 폼 조건을 채우러 간다.
   function codeRuns() {
-    return runPath === 'code' || !!activeProjectFile();
+    return runPath === 'code';
   }
 
   function specPending(target) {
@@ -1602,7 +1647,8 @@ function createBacktestCanvas(options) {
   async function handleRun(allowPartial) {
     // 저장 안 한 편집으로 실행하면 화면의 코드와 도는 코드가 갈라진다 — 디스크가
     // 진실이라는 결정(D2)이 여기서 지켜진다.
-    if (projectIde && projectIde.isDirty()) {
+    if (runPath === 'code' && currentWorkspaceProject()
+      && projectIde && projectIde.isDirty()) {
       setState({
         designTab: 'code',
         codeErrors: ['저장하고 실행하세요 — 저장하지 않은 편집이 있습니다'],
@@ -1649,7 +1695,7 @@ function createBacktestCanvas(options) {
       // 편집기 버퍼가 아니라 디스크를 다시 읽는 이유: 채팅이 방금 쓴 파일이 열려 있으면
       // 버퍼에는 아직 옛 내용이 남아 있다(IDE에 다시 읽는 길이 없다). 저장 안 한 편집은
       // 위 handleRun이 이미 막았으므로, 여기서 디스크를 읽어도 사람이 친 것은 안 사라진다.
-      const activeFile = activeProjectFile();
+      const activeFile = runPath === 'code' ? activeProjectFile() : null;
       if (activeFile) {
         body.source = await projectFileText(activeFile);
         if (generation !== workspaceGeneration) return;
@@ -1867,7 +1913,7 @@ function createBacktestCanvas(options) {
   // 화면에서 읽고 있는 코드를 설명해야 하고, 그것은 저장 전 편집분까지 포함한다.
   function currentSource() {
     const active = activeProjectFile();
-    return (active && active.text) || codeSource;
+    return runPath === 'code' ? ((active && active.text) || codeSource) : codeSource;
   }
 
   // 지도가 무엇을 두고 그려지는가 — 폼이면 지금 폼, 코드면 지금 보고 있는 코드다.
@@ -1875,7 +1921,7 @@ function createBacktestCanvas(options) {
   function mapRequest() {
     const body = { version: state.mapVersion };
     const source = currentSource();
-    if ((runPath === 'code' || activeProjectFile()) && source) body.source = source;
+    if (runPath === 'code' && source) body.source = source;
     else if (spec) body.yaml = currentYaml();
     else return null;
     // 칸 오른쪽의 사실은 지도가 계산한 값이 아니라 그 실행이 실제로 만든 값이다.
@@ -2069,6 +2115,29 @@ function createBacktestCanvas(options) {
       return [`${wanted}는 없는 기법입니다`];
     }
     if (!merged) return ['기법이 없어 설정을 얹을 수 없습니다'];
+    // 지표 목록을 바꾸는 순간에만 전체 결과를 검사한다. 대상·기간·파라미터 값처럼 서로
+    // 나눠 보내는 단계별 설정은 기존 연결을 건드리지 않는다. 반면 indicators는 목록을
+    // 통째로 교체하므로, 프리셋의 "$fast"를 20으로 덮으면 슬라이더가 보여도 실행과
+    // 최적화가 그 값을 읽지 않는다. 숫자가 우연히 기본값과 같아도 연결로 추정하지 않는다.
+    if (Array.isArray(patch.indicators)) {
+      if (indicatorCatalogState === 'loading' || indicatorCatalogState === 'idle') {
+        return ['지표 목록을 확인하는 중입니다 — 잠시 후 다시 시도하세요'];
+      }
+      if (indicatorCatalogState !== 'ready') {
+        // 최초 조회가 일시적으로 실패했어도 앱 재기동까지 잠그지 않는다. 현재 제안은
+        // fail-closed하고, 다음 제안을 위해 읽기 전용 목록을 백그라운드에서 다시 묻는다.
+        void loadIndicatorCatalog();
+        return ['지표 목록을 불러오지 못해 설정을 확인할 수 없습니다 — 다시 시도하세요'];
+      }
+      const unused = SpecModel.unusedParamNames(merged, indicatorCatalog);
+      if (unused.length) {
+        const refs = unused.map((name) => `"$${name}"`).join(', ');
+        return [
+          `파라미터 ${unused.join(', ')}가 지표에서 사용되지 않습니다 — `
+          + `indicators[].params에서 ${refs}로 참조하세요`,
+        ];
+      }
+    }
     return [];
   }
 
@@ -2153,6 +2222,12 @@ function createBacktestCanvas(options) {
       spec: spec ? JSON.parse(JSON.stringify(spec)) : null,
       codeSource,
       runPath,
+      userStrategyId,
+      presetProject: presetProject ? Object.assign({}, presetProject) : null,
+      techniqueDraft,
+      technique: JSON.parse(JSON.stringify(techniqueState())),
+      ideOwnsCode,
+      lastError,
       tab: state.tab,
       designTab: state.designTab,
     };
@@ -2196,12 +2271,16 @@ function createBacktestCanvas(options) {
     const ide = projectIde;
     const project = ide && ide.currentProject();
     const generation = workspaceGeneration;
+    const normalizeRoot = (value) => {
+      const normalized = String(value || '')
+        .replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+      return normalized === '.' ? '' : normalized;
+    };
     const path = typeof envelope.path === 'string'
       ? envelope.path.trim().replace(/\\/g, '/') : '';
     const root = ide && typeof ide.currentRootPath === 'function'
-      ? String(ide.currentRootPath() || '').replace(/\\/g, '/').replace(/^\/+|\/+$/g, '') : '';
-    const receiptRoot = String(envelope.root_path || '')
-      .replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+      ? normalizeRoot(ide.currentRootPath()) : '';
+    const receiptRoot = normalizeRoot(envelope.root_path);
     if (!project || envelope.status !== 'written' || typeof envelope.source !== 'string'
       || String(envelope.project_id || '') !== String(project.id)
       || receiptRoot !== root || !path || /^(?:[A-Za-z]:|\/)/.test(path)
@@ -2225,7 +2304,7 @@ function createBacktestCanvas(options) {
     if (typeof ide.refreshTree === 'function') await ide.refreshTree();
     const stillCurrent = () => generation === workspaceGeneration
       && ide.currentProject() && String(ide.currentProject().id) === String(project.id)
-      && String(ide.currentRootPath() || '') === root;
+      && normalizeRoot(ide.currentRootPath()) === root;
     if (!stillCurrent()) return { applied: false, path };
     await loadProjectFiles(project.id, root);
     if (!stillCurrent()) return { applied: false, path };
@@ -2285,21 +2364,41 @@ function createBacktestCanvas(options) {
     const nodes = receiptNodes(nodeRows);
     const version = bumpMapVersion();
 
-    // 검증 오류가 있어도 반영한다 — 오류는 폼 오류 줄과 영수증 errors("실행 전에 채울 것")로
-    // 남고, 모델은 다음 턴 컨텍스트의 pending에서 같은 목록을 읽어 마저 채운다.
-    const pending = specPending(merged);
     const before = snapshot();
     spec = merged;
     // 대화가 기법(프리셋)을 골랐고 폴더 배선이 있으면 사람이 목록에서 누른 것과 같은 길로
     // 그 기법의 화면(보드 20)에 간다. 초안 중이면 지금까지처럼 초안의 스펙만 바뀐다.
-    const switched = (!techniqueDraft && typeof patch.preset === 'string' && presetWorkspaceWired())
+    const switched = (!techniqueDraft && typeof patch.preset === 'string'
+      && patch.preset !== base.presetId && presetWorkspaceWired())
       ? presets.find((entry) => entry.id === patch.preset) || null
       : null;
-    // 반영된 결과를 보는 자리는 그 기법의 코드다 — 한 페이지가 한 알고리즘이라
-    // 대화가 고친 설정도 그 화면 안에서 읽힌다(2026-09-07 사용자 확정).
+    // indicators는 폼 yaml이 신호 계산을 정하는 구조 변경이다. 이미 열린 폴더 파일을 계속
+    // 우선하면 spec 영수증만 성공하고 실행·화면은 옛 리터럴 코드를 쓴다. 같은 프리셋을
+    // 다시 고른 것으로 취급하지 않고 폼을 실행 기준으로 바꾼 뒤 생성 코드를 다시 맞춘다.
+    const formOwnsSignals = Array.isArray(patch.indicators);
+    if (formOwnsSignals) {
+      runPath = 'form';
+      codeSource = '';
+      codegenCache = null;
+      techniqueNodesSource = null;
+      // 다른 프리셋의 지표를 한 번에 받으면 이전 폴더는 dirty 탭 보존을 위해 IDE 안에만
+      // 남기고 현재 기법에서는 떼어 낸다. target 폴더의 옛 파일을 읽거나 덮지 않는다.
+      if (switched) {
+        userStrategyId = null;
+        presetProject = { presetId: merged.presetId, projectId: null };
+        techniqueDraft = false;
+        ideOwnsCode = false;
+        lastError = null;
+        resetTechnique();
+      }
+    }
+    // 검증 오류가 있어도 반영한다 — 오류는 폼 오류 줄과 영수증 errors("실행 전에 채울 것")로
+    // 남고, 모델은 다음 턴 컨텍스트의 pending에서 같은 목록을 읽어 마저 채운다. 지표 구조
+    // 패치는 위에서 폼 경로로 바꾼 뒤 검사해야 실제 실행이 요구하는 조건과 같은 목록이 된다.
+    const pending = specPending(merged);
     setState({
       draft: null, formErrors: pending, view: 'design', tab: 'design',
-      designTab: 'code',
+      designTab: formOwnsSignals ? 'form' : 'code',
       mapVersion: version.to,
     });
     const receipt = remember(makeReceipt('spec_draft', {
@@ -2307,8 +2406,11 @@ function createBacktestCanvas(options) {
       tab: state.tab, designTab: state.designTab, canUndo: true,
     }), changed);
     pushUndo(receipt.id, 'spec_draft', before);
-    if (switched) void openPresetWorkspace(switched);
-    else void loadMap();
+    if (switched && !formOwnsSignals) void openPresetWorkspace(switched);
+    else {
+      if (runPath === 'form') void refreshGeneratedSpecCode();
+      void loadMap();
+    }
     return receipt;
   }
 
@@ -2612,6 +2714,11 @@ function createBacktestCanvas(options) {
     spec = before.spec ? JSON.parse(JSON.stringify(before.spec)) : null;
     codeSource = before.codeSource;
     runPath = before.runPath;
+    userStrategyId = before.userStrategyId;
+    presetProject = before.presetProject ? Object.assign({}, before.presetProject) : null;
+    techniqueDraft = before.techniqueDraft;
+    ideOwnsCode = before.ideOwnsCode;
+    lastError = before.lastError;
     // 되돌린 변경은 더 이상 서 있지 않다 — 남겨두면 읽는 쪽이 반영된 것으로 읽는다.
     lastChange = null;
     setState({
@@ -2626,7 +2733,9 @@ function createBacktestCanvas(options) {
       // 없는 줄을 가리키고, getContext().code.errors도 복원된 원문과 어긋난다.
       codeErrors: [],
       draft: null,
+      technique: before.technique || TECHNIQUE_EMPTY,
     });
+    if (runPath === 'form') void refreshGeneratedSpecCode();
     void loadMap();
     return { ok: true, restored: { rows } };
   }
@@ -2742,7 +2851,7 @@ function createBacktestCanvas(options) {
   // 열린 폴더의 사실만 — 모델이 경로를 지어내지 않게 하고, 아직 안 쓴 파일 초안이
   // 서 있다는 것을 매 턴 다시 알린다(썼다고 말해버리는 것을 막는 유일한 장치다).
   function projectContext() {
-    const project = projectIde ? projectIde.currentProject() : null;
+    const project = currentWorkspaceProject();
     if (!project) return null;
     const active = projectIde.activeFile();
     const draft = state.fileDraft;
@@ -2976,7 +3085,7 @@ function createBacktestCanvas(options) {
   function renderWorkspaceHeader() {
     const head = el('div', 'backtest-head is-workspace');
     const title = el('div', 'backtest-head-title');
-    const project = projectIde ? projectIde.currentProject() : null;
+    const project = currentWorkspaceProject();
     const nestedTechnique = techniqueState().rootPath;
     const name = (nestedTechnique && spec && spec.name)
       || (project && project.name)
@@ -3774,6 +3883,29 @@ function createBacktestCanvas(options) {
     return codegenCache.source;
   }
 
+  // 폼이 신호 구조를 바꾼 뒤 코드 탭·다음 턴 컨텍스트도 같은 yaml을 보여준다. 저장된
+  // 프로젝트 파일은 건드리지 않는다 — 폼 경로에서는 실행도 yaml이므로 생성은 저장이 아니다.
+  async function refreshGeneratedSpecCode() {
+    if (!spec || !deps.codegen || runPath !== 'form') return '';
+    const requestId = ++codegenRequestId;
+    const generation = workspaceGeneration;
+    const yaml = currentYaml();
+    let res;
+    try { res = await deps.codegen({ yaml }); }
+    catch (err) {
+      if (requestId !== codegenRequestId || generation !== workspaceGeneration
+        || runPath !== 'form' || !spec || currentYaml() !== yaml) return '';
+      setState({ codeErrors: [`생성 코드를 다시 만들지 못했습니다 — ${String((err && err.message) || err)}`] });
+      return '';
+    }
+    if (requestId !== codegenRequestId || generation !== workspaceGeneration
+      || runPath !== 'form' || !spec || currentYaml() !== yaml) return '';
+    codeSource = String((res && res.source) || '');
+    codegenCache = { yaml, source: codeSource };
+    setState({ codeErrors: codeSource ? [] : ['생성 코드를 다시 만들지 못했습니다 — 빈 결과'] });
+    return codeSource;
+  }
+
   // ── 보드 22 · 자동 백테스트 ───────────────────────────────────────────────
   //
   // 검사를 넘고 노드까지 받았으면 다음 행동은 하나뿐이다: 돌려보는 것. 폴더 안에서는
@@ -4076,8 +4208,13 @@ function createBacktestCanvas(options) {
     const card = el('div', 'backtest-card');
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-card-title', '파라미터'));
+    const paramsNote = runPath === 'form'
+      ? `신호는 이 폼의 지표와 조건이 만듭니다 · ${presetProject
+        ? '범위는 기법이 정한 값입니다'
+        : '슬라이더 범위는 기본값에서 화면이 잡은 것입니다'}`
+      : (presetProject ? PRESET_PARAMS_NOTE : USER_PARAMS_NOTE);
     head.appendChild(el(
-      'div', 'backtest-card-note', presetProject ? PRESET_PARAMS_NOTE : USER_PARAMS_NOTE,
+      'div', 'backtest-card-note', paramsNote,
     ));
     card.appendChild(head);
     const names = spec ? Object.keys(spec.params) : [];
@@ -4247,7 +4384,7 @@ function createBacktestCanvas(options) {
     // 편집기는 자기 루트 노드를 계속 들고 있다 — 여기서는 붙이고 왼쪽 열만 갱신한다.
     // 폴더를 못 만든 초안(연결 없음·이름 충돌)은 지금까지처럼 단일 버퍼로 물러난다.
     const ide = workspace ? ensureProjectIde() : null;
-    if (ide && ide.currentProject() && (ideOwnsCode || activeProjectFile())) {
+    if (runPath === 'code' && ide && ide.currentProject() && (ideOwnsCode || activeProjectFile())) {
       wrap.appendChild(ide.element);
       ide.refreshSide();
       if (state.fileDraft) wrap.appendChild(renderFileDraft());
@@ -4465,12 +4602,12 @@ function createBacktestCanvas(options) {
       const heldRun = restoreSealed && restoreApplied && !restoreApplied.result
         ? restoreSealed.run : null;
       const technique = techniqueState();
-      const project = projectIde ? projectIde.currentProject() : null;
-      const activeFile = activeProjectFile();
+      const project = currentWorkspaceProject();
+      const activeFile = project ? activeProjectFile() : null;
       const registeredEntry = userStrategyId
         ? userStrategies.find((entry) => entry.id === userStrategyId) : null;
       const rootPath = technique.rootPath || (
-        projectIde && typeof projectIde.currentRootPath === 'function'
+        project && projectIde && typeof projectIde.currentRootPath === 'function'
           ? projectIde.currentRootPath() : null
       );
       // 봉인 항목표는 42번 보드가 정한 것 하나뿐이다 — 여기서 다시 고르지 않는다.
@@ -4669,7 +4806,9 @@ function createBacktestCanvas(options) {
         ideOwnsCode = !!opened;
         applied.technique = !!opened;
         const active = opened ? activeProjectFile() : null;
-        if (active && typeof active.text === 'string') codeSource = active.text;
+        // 폼 경로의 codeSource는 그 yaml에서 만든 코드다. 프로젝트 파일은 이전 코드 경로의
+        // 원문일 수 있으므로, 복원하면서 다시 우선하면 방금 고친 $참조가 다음 세션에 사라진다.
+        if (runPath === 'code' && active && typeof active.text === 'string') codeSource = active.text;
         setState({ restore: SessionRestore.restoreReport(saved, applied) });
       } else {
         setState({ restore: SessionRestore.restoreReport(saved, applied) });
@@ -4773,7 +4912,7 @@ function createBacktestCanvas(options) {
   // 복원 표식에 적히는 코드의 이름 — 파일이면 그 경로, 단일 편집기면 strategy.py,
   // 아직 아무것도 없으면 생성된 코드다.
   function codeFileLabel() {
-    const active = activeProjectFile();
+    const active = runPath === 'code' ? activeProjectFile() : null;
     if (active) return active.path;
     if (codeSource.trim()) return 'strategy.py';
     return '생성됨';

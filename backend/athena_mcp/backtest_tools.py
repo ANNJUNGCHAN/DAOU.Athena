@@ -54,7 +54,7 @@ _ALLOWED_ACTIONS: tuple[str, ...] = (
     "map",
     "codegen",
     "optimize",
-    # 폼 설정 — HTTP를 타지 않고 캔버스로 간다. 검증을 통과하면 폼에 바로 반영되고,
+    # 폼 설정 — HTTP를 타지 않고 캔버스로 간다. 반영/차단은 렌더러 영수증이 확정하고,
     # 실행은 사람이 채팅의 [실행]을 눌러야 시작된다.
     "propose_spec",
     # 화면 전환(navigate)과 최적화 제안(propose_optimize)도 HTTP를 타지 않고 캔버스로만
@@ -130,11 +130,13 @@ _INPUT_SCHEMA: dict[str, Any] = {
                 "(실행하지 않는다 — run_id를 주면 그 실행이 남긴 사실이 같이 실린다). "
                 "codegen = 지도(폼 yaml) 뒤에 놓을 전략 코드를 만든다(저장·활성화하지 않는다). "
                 "propose_code = 코드를 낸다 — strategy_id가 있으면 **비활성 버전**으로 "
-                "저장하고(활성화는 사람 전용), 없으면 캔버스 편집기에 바로 반영된다(HTTP 없음). "
+                "저장하고(활성화는 사람 전용), 없으면 캔버스 편집기로 전달된다(HTTP 없음). "
+                "실제 반영 여부는 캔버스 영수증에서 확인한다. "
                 "채팅에 변경 내역과 [되돌리기]가 뜬다. "
                 "optimize = 캐시 안에서 파라미터 조합을 훑는다(추가 TR 호출 없음). "
-                "propose_spec = 폼 설정(patch)을 캔버스로 보낸다 — 검증을 통과하면 폼에 바로 "
-                "반영되고 채팅에 변경 내역과 [되돌리기]가 뜬다(오류면 반영되지 않는다). 실행은 "
+                "propose_spec = 폼 설정(patch)을 캔버스로 보낸다 — 도구 응답은 전달 완료만 "
+                "뜻하며 실제 반영 여부는 캔버스 영수증에서 확인한다. 반영되면 채팅에 변경 "
+                "내역과 [되돌리기]가 뜬다. 실행은 "
                 "사람이 채팅의 [실행]을 누른다. "
                 "navigate = 캔버스 탭을 옮긴다(design/result/history/optimize/deploy, "
                 "designTab=form|code|flow). "
@@ -208,14 +210,15 @@ _INPUT_SCHEMA: dict[str, Any] = {
             "type": "string",
             "description": (
                 "action=read_code일 때 대상 전략 id(필수). propose_code에선 선택 — 넣으면 그 "
-                "전략의 비활성 초안 버전으로 저장되고, 빼면 캔버스 편집기에 바로 반영된다."
+                "전략의 비활성 초안 버전으로 저장되고, 빼면 캔버스 편집기로 전달된다. "
+                "실제 반영 여부는 캔버스 영수증에서 확인한다."
             ),
         },
         "propose_code": {
             "type": "object",
             "description": (
                 "action=propose_code일 때의 입력 — 제안할 **전체 소스**와 왜 바꿨는지. "
-                "저장되든 편집기에 바로 반영되든 **활성화되지 않는다**."
+                "저장되거나 편집기로 전달돼도 **활성화되지 않는다**."
             ),
             "required": ["source"],
             "properties": {
@@ -301,7 +304,8 @@ _INPUT_SCHEMA: dict[str, Any] = {
             "type": "object",
             "description": (
                 "action=propose_spec일 때의 입력 — 백테스트 폼에 제안할 설정 초안. "
-                "검증을 통과하면 폼에 바로 반영되고, 오류가 있으면 반영되지 않는다. "
+                "도구 응답은 캔버스 전달만 확인한다. 실제 반영 여부와 오류는 캔버스 "
+                "영수증에서 확인한다. "
                 "실행·수집·저장은 일어나지 않는다."
             ),
             "required": ["patch"],
@@ -661,9 +665,10 @@ _DESCRIPTION = (
     "최적화 제안(propose_optimize). run과 optimize는 **캐시가 충분할 때만 즉시 실행된다** — "
     "부족하면 실행하지 않고 blocked 상태로 필요한 수집량을 알려준다(사람이 앱에서 데이터 "
     "수집을 승인해야 한다). propose_code는 strategy_id가 있으면 초안을 저장할 뿐 활성화하지 "
-    "않고, strategy_id가 없으면 캔버스 편집기에 바로 반영된다 — 지금 도는 전략은 그대로다. "
-    "propose_spec은 폼 설정을 캔버스로 보낸다 — 검증을 통과하면 폼에 바로 반영되고, 채팅의 "
-    "[되돌리기]로 되돌린다. propose_optimize도 방식만 준비한다. 프로젝트 폴더(내 컴퓨터의 "
+    "않고, strategy_id가 없으면 캔버스 편집기로 전달된다 — 실제 반영 여부는 캔버스 영수증이 "
+    "확정하고, 지금 도는 전략은 그대로다. propose_spec은 폼 설정을 캔버스로 보내며 도구 "
+    "응답은 전달 완료만 뜻한다. 반영된 설정은 채팅의 [되돌리기]로 되돌린다. "
+    "propose_optimize도 방식만 전달한다. 프로젝트 폴더(내 컴퓨터의 "
     "폴더 하나)는 list_files·read_file로 모든 항목과 텍스트를 읽는다. propose_file은 diff를 "
     "제안할 뿐이고, write_file은 현재 기법 폴더 안으로 제한해 백엔드 저장 완료 뒤에 성공한다. "
     "propose_file 뒤에는 사람이 적용하기 전에 파일을 썼다고 말하지 마라. terminal은 프로젝트 "
@@ -849,6 +854,7 @@ async def dispatch(
         return _success(
             {
                 "delivered": "canvas",
+                "application_status": "pending",
                 "kind": "technique_question",
                 "payload": {
                     "question_ko": question,
@@ -856,7 +862,8 @@ async def dispatch(
                     "why_ko": why if isinstance(why, str) else None,
                 },
                 "message": (
-                    "질문 카드를 띄웠다. 사용자가 고르면 그 답이 채팅으로 온다. "
+                    "질문 카드를 캔버스로 전달했다. 실제 표시 여부는 캔버스 영수증에서 "
+                    "확인한다. 사용자가 고르면 그 답이 채팅으로 온다. "
                     "네가 대신 고르지 마라."
                 ),
             }
@@ -874,13 +881,15 @@ async def dispatch(
         return _success(
             {
                 "delivered": "canvas",
+                "application_status": "pending",
                 "kind": "code_draft",
                 "source": source,
                 "note": note if isinstance(note, str) else None,
                 "suggest_run": code_input.get("suggest_run") is True,
                 "suggest_validate": code_input.get("suggest_validate") is True,
                 "notice": (
-                    "코드가 편집기에 바로 들어갔다. 실행·검증은 사람이 채팅의 버튼을 누른다."
+                    "코드 초안을 캔버스로 전달했다. 실제 반영 여부는 캔버스 영수증에서 "
+                    "확인한다. 실행·검증은 사람이 채팅의 버튼을 누른다."
                 ),
             }
         )
@@ -902,6 +911,7 @@ async def dispatch(
         return _success(
             {
                 "delivered": "canvas",
+                "application_status": "pending",
                 "kind": "navigate",
                 "tab": tab,
                 "designTab": design_tab,
@@ -922,11 +932,13 @@ async def dispatch(
         return _success(
             {
                 "delivered": "canvas",
+                "application_status": "pending",
                 "kind": "optimize_request",
                 "method": method,
                 "note": note if isinstance(note, str) else None,
                 "notice": (
-                    "최적화 탭에 방식을 준비했다. 사용자가 [탐색 시작]을 눌러야 실행된다."
+                    "최적화 방식을 캔버스로 전달했다. 실제 반영 여부는 캔버스 영수증에서 "
+                    "확인한다. 사용자가 [탐색 시작]을 눌러야 실행된다."
                 ),
             }
         )
@@ -941,6 +953,7 @@ async def dispatch(
         return _success(
             {
                 "delivered": "canvas",
+                "application_status": "pending",
                 "kind": "file_draft",
                 "project_id": project_input["project_id"],
                 "path": project_input["path"],
@@ -948,16 +961,16 @@ async def dispatch(
                 "note": note if isinstance(note, str) else None,
                 "suggest_run": project_input.get("suggest_run") is True,
                 "notice": (
-                    "아직 파일에 쓰지 않았다. 캔버스가 diff를 띄웠고, 사람이 적용을 누른 "
-                    "뒤에야 디스크에 쓰인다 — 파일을 만들었다·고쳤다고 말하지 마라."
+                    "아직 파일에 쓰지 않았다. diff 초안을 캔버스로 전달했으며 실제 표시 "
+                    "여부는 캔버스 영수증에서 확인한다. 사람이 적용을 누른 뒤에야 디스크에 "
+                    "쓰인다 — 파일을 만들었다·고쳤다고 말하지 마라."
                 ),
             }
         )
 
     if action == "propose_spec":
-        # 백엔드를 타지 않는다 — main.js가 이 결과를 렌더러로 보내고 캔버스가 바로 반영한다.
-        # 검증에 걸리는 값이 있어도 반영된다(실행 전 확인으로 남는다). 실행은 사람이 채팅
-        # 카드의 버튼을 눌러야 일어난다.
+        # 백엔드를 타지 않는다 — main.js가 이 결과를 렌더러로 보낸다. 실제 반영/차단은
+        # 렌더러 영수증이 확정하며, 실행은 사람이 채팅 카드의 버튼을 눌러야 일어난다.
         spec_input = arguments.get("propose_spec")
         spec_input = spec_input if isinstance(spec_input, dict) else {}
         patch = spec_input.get("patch")
@@ -967,13 +980,14 @@ async def dispatch(
         return _success(
             {
                 "delivered": "canvas",
+                "application_status": "pending",
                 "patch": patch,
                 "note": note if isinstance(note, str) else None,
                 "suggest_run": spec_input.get("suggest_run") is True,
                 "notice": (
-                    "설정이 폼에 바로 반영됐다. 빈 종목·날짜처럼 실행 전에 채울 값은 다음 턴 "
-                    "컨텍스트의 '실행 전 확인'에 보인다 — 마저 채워 보낸다. "
-                    "실행은 사람이 채팅의 [실행]을 누른다."
+                    "설정 초안을 캔버스로 전달했다. 실제 반영 여부는 캔버스 영수증에서 "
+                    "확인한다. 실행 전 확인 항목도 그 영수증을 따른다. 실행은 사람이 채팅의 "
+                    "[실행]을 누른다."
                 ),
             }
         )

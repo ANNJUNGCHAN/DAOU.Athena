@@ -103,10 +103,19 @@ function createPluginCanvas(options) {
       mount() {}, setView() {}, setSearch() {}, setData() {}, setProposals() {},
       openPermissions() {},
       getState: () => ({ view: 'hub', search: '' }),
+      getContext: () => ({
+        view: 'hub',
+        registry: { status: 'pending', updatedAt: null, total: null, items: null },
+      }),
     };
   }
 
   const installed = cloneRows(deps.installed || SAMPLE_INSTALLED);
+  // 실제 셸은 빈 배열로 시작한 뒤 setData()로 조회 결과를 넣는다. 반면 목록을
+  // 직접 넘기지 않은 단위 사용처는 아래 샘플을 즉시 쓰므로 성공 상태로 본다.
+  let registryLoadState = Array.isArray(deps.installed) && deps.installed.length === 0
+    ? 'pending' : 'success';
+  let registryUpdatedAt = null;
   let view = deps.initialView === 'manage' ? 'manage' : 'hub';
   // 게이트웨이(athena_mcp serve)는 기동 시점에 레지스트리를 읽는다. 앱이 떠 있는
   // 동안 서버를 설치·승인·삭제해도 이미 실행 중인 대화 세션은 그 서버를 모른다 —
@@ -504,8 +513,16 @@ function createPluginCanvas(options) {
 
   function renderHubLists() {
     if (!hubLists) return;
-    const installedRows = installed.filter(matches);
     clear(hubLists.installedGrid);
+    if (registryLoadState === 'pending') {
+      hubLists.installedGrid.appendChild(registryStateMessage('플러그인 등록 목록을 확인하는 중입니다'));
+      return;
+    }
+    if (registryLoadState === 'error') {
+      hubLists.installedGrid.appendChild(registryErrorBanner());
+      return;
+    }
+    const installedRows = installed.filter(matches);
     // 빈 이유를 뭉뚱그리지 않는다. 하나도 설치하지 않은 첫 화면에 "검색과
     // 일치하는 …이 없습니다"가 뜨면 검색어를 지우면 나올 것처럼 읽힌다.
     const searching = !!search.trim();
@@ -513,6 +530,36 @@ function createPluginCanvas(options) {
     else hubLists.installedGrid.appendChild(emptyMessage(searching
       ? '검색과 일치하는 설치 플러그인이 없습니다'
       : '설치한 플러그인이 없습니다 · [+ 서버 추가]에서 직접 등록합니다'));
+  }
+
+  function registryStateMessage(copy) {
+    const message = el('div', 'plugin-canvas-empty plugin-canvas-registry-state', copy);
+    message.setAttribute('role', 'status');
+    return message;
+  }
+
+  function retryRegistry() {
+    if (registryLoadState === 'pending') return;
+    registryLoadState = 'pending';
+    render();
+    if (typeof deps.onRetryRegistry !== 'function') return;
+    Promise.resolve()
+      .then(() => deps.onRetryRegistry())
+      .catch(() => {
+        // 호스트가 그 사이 성공 데이터를 넣었다면 늦게 끝난 실패가 다시 덮지 않는다.
+        if (registryLoadState !== 'pending') return;
+        registryLoadState = 'error';
+        registryUpdatedAt = new Date().toISOString();
+        render();
+      });
+  }
+
+  function registryErrorBanner() {
+    const banner = el('div', 'plugin-canvas-error-banner plugin-canvas-registry-state');
+    banner.setAttribute('role', 'alert');
+    banner.appendChild(el('span', 'plugin-canvas-error-text', '플러그인 등록 목록을 확인하지 못했습니다'));
+    banner.appendChild(actionButton('다시 확인', 'is-retry-registry', retryRegistry));
+    return banner;
   }
 
   function renderHub() {
@@ -598,8 +645,11 @@ function createPluginCanvas(options) {
     header.appendChild(el('div', 'plugin-canvas-spacer'));
     const featureFallback = installed.reduce((sum, item) => sum + (Number(item.featureCount) || 0), 0);
     const counts = deps.counts || {};
-    const pluginCount = countValue(deps.pluginCount, countValue(counts.plugins, installed.length));
-    const featureCount = countValue(deps.featureCount, countValue(counts.features, featureFallback));
+    const registryReady = registryLoadState === 'success';
+    const pluginCount = registryReady
+      ? countValue(deps.pluginCount, countValue(counts.plugins, installed.length)) : '—';
+    const featureCount = registryReady
+      ? countValue(deps.featureCount, countValue(counts.features, featureFallback)) : '—';
     const countLabels = [
       ['플러그인', pluginCount, 'is-primary'],
       ['기능', featureCount, ''],
@@ -618,7 +668,15 @@ function createPluginCanvas(options) {
     ));
 
     const installedList = el('div', 'plugin-canvas-manage-list plugin-canvas-manage-plugins');
-    installed.forEach((plugin) => installedList.appendChild(manageRow(plugin)));
+    if (registryLoadState === 'pending') {
+      installedList.appendChild(registryStateMessage('플러그인 등록 목록을 확인하는 중입니다'));
+    } else if (registryLoadState === 'error') {
+      installedList.appendChild(registryErrorBanner());
+    } else if (installed.length) {
+      installed.forEach((plugin) => installedList.appendChild(manageRow(plugin)));
+    } else {
+      installedList.appendChild(emptyMessage('설치한 플러그인이 없습니다'));
+    }
     panel.appendChild(installedList);
     panel.appendChild(renderAudit());
     return panel;
@@ -1163,7 +1221,14 @@ function createPluginCanvas(options) {
   function setData(next) {
     if (!next) return;
     if (typeof next.restartRequired === 'boolean') restartRequired = next.restartRequired;
-    replaceRows(installed, next.installed);
+    if (next.loadState === 'error') {
+      registryLoadState = 'error';
+      registryUpdatedAt = new Date().toISOString();
+    } else if (Array.isArray(next.installed)) {
+      replaceRows(installed, next.installed);
+      registryLoadState = 'success';
+      registryUpdatedAt = new Date().toISOString();
+    }
     // 'add' 시트에는 plugin이 없다 — 스니펫을 붙여넣는 중에 목록 갱신이
     // 도착하면 여기서 터졌다(activeSheet.plugin.id).
     if (activeSheet && activeSheet.plugin) {
@@ -1237,6 +1302,42 @@ function createPluginCanvas(options) {
     };
   }
 
+  // 등록 목록 질문에 쓰는 읽기 전용 스냅샷. 조회 전/실패 때 빈 배열을 내보내지
+  // 않아 모델이 "설치된 플러그인 0개"라고 추정할 수 없게 한다.
+  function pluginContextRow(plugin) {
+    const featuresOk = plugin && plugin.featureStatus === 'success' && Array.isArray(plugin.features);
+    const featureStatus = plugin && plugin.featureStatus === 'error'
+      ? 'error' : (featuresOk ? 'success' : 'pending');
+    return {
+      id: plugin && plugin.id != null ? String(plugin.id) : null,
+      name: plugin && typeof plugin.name === 'string' ? plugin.name : null,
+      enabled: plugin && typeof plugin.enabled === 'boolean' ? plugin.enabled : null,
+      health: plugin && typeof plugin.source === 'string' ? plugin.source : null,
+      featureStatus,
+      featureCount: featuresOk ? plugin.features.length : null,
+      features: featuresOk ? plugin.features.slice(0, 50).map((feature) => ({
+        id: feature && feature.id != null ? String(feature.id) : null,
+        name: feature && typeof feature.name === 'string'
+          ? feature.name
+          : (feature && typeof feature.label === 'string' ? feature.label : null),
+        allowed: feature && typeof feature.allowed === 'boolean' ? feature.allowed : null,
+      })) : null,
+    };
+  }
+
+  function getContext() {
+    const registryOk = registryLoadState === 'success';
+    return {
+      view,
+      registry: {
+        status: registryLoadState,
+        updatedAt: registryUpdatedAt,
+        total: registryOk ? installed.length : null,
+        items: registryOk ? installed.slice(0, 50).map(pluginContextRow) : null,
+      },
+    };
+  }
+
   function discardAppliedSnippetDraft(target, snippet) {
     if (snippetDrafts.get(target) === snippet) snippetDrafts.delete(target);
   }
@@ -1249,6 +1350,7 @@ function createPluginCanvas(options) {
     setProposals,
     openPermissions,
     getState,
+    getContext,
     discardAppliedSnippetDraft,
   };
 }
