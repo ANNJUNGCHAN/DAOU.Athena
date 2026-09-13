@@ -114,7 +114,7 @@ $DependencyDir = Join-Path $BuildRoot 'dependencies'
 $DistDir = Join-Path $BuildRoot 'dist'
 [void](New-Item -ItemType Directory -Path $StageApp, $StageBackend, $RuntimeRoot, $DependencyDir, $DistDir)
 
-$tracked = @(Invoke-NativeCapture git @('-C', $RepoRoot, 'ls-files', '--', 'app', 'backend') $RepoRoot)
+$tracked = @(Invoke-NativeCapture git @('-C', $RepoRoot, '-c', 'core.quotepath=false', 'ls-files', '--', 'app', 'backend') $RepoRoot)
 $runtimeRootFiles = @(
   'app/main.js',
   'app/preload.js',
