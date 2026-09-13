@@ -7010,6 +7010,23 @@ async function withDeadline(promise, timeoutMs, message) {
 async function waitForStockIndex(context) {
   let readyStatus = null;
   try {
+    readyStatus = await stockMasterClient.fetchStockMasterStatus({
+      backendBase: BACKEND_HTTP_BASE,
+      fetchImpl: fetch,
+      timeoutMs: 2_000,
+      signal: stockMasterAbortController.signal,
+    });
+  } catch (error) {
+    startStockMasterReadinessRecovery();
+    throw error;
+  }
+  if (readyStatus.ready) {
+    return { detail: `SQLite 종목 마스터 ${readyStatus.size}개 준비 완료` };
+  }
+  if (!activeRestAccountId()) {
+    return { disabled: true, detail: '등록된 계좌가 없어 종목 검색 데이터 준비를 건너뜀' };
+  }
+  try {
     await waitForInitialReadiness({
       ensureReady: async (timeoutMs) => {
         readyStatus = await stockMasterClient.waitForStockMasterReady({
