@@ -142,7 +142,7 @@ _SEEN_FAMILY_REFS: OrderedDict[str, None] = OrderedDict()
 _SEEN_FAMILY_LIMIT = 64
 _RETRIEVAL_FLOOR = 12
 _RETRIEVAL_CAP = 64
-_SURFACE_INDEX_CACHE: OrderedDict[tuple[str, str], "_SurfaceIndex"] = OrderedDict()
+_SURFACE_INDEX_CACHE: OrderedDict[tuple[str, str], _SurfaceIndex] = OrderedDict()
 _SURFACE_INDEX_CACHE_LIMIT = 8
 _SEEN_REASONS = frozenset(
     {
@@ -651,7 +651,7 @@ def adaptive_truncate_limit(
     if limit > 3:
         return min(limit, len(ranked))
     top = ranked[0]
-    seen = (seen_families or seen_family_refs())
+    seen = seen_family_refs() if seen_families is None else seen_families
     seen_hit = top.document.family_ref in seen or any(
         contribution.reason_code in _SEEN_REASONS for contribution in top.contributions
     )

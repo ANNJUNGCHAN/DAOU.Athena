@@ -242,13 +242,32 @@ async function runStartupOrchestration({
   if (!readiness || typeof readiness.start !== 'function') {
     throw new TypeError('readiness is required');
   }
-  for (const id of continuousTaskIds) void readiness.start(id);
   const concurrent = concurrentTaskIds.map((id) => readiness.start(id));
+  // 백엔드처럼 나머지 작업의 런타임 주소를 정하는 선행 작업은 어떤 background
+  // loop/MCP/provider보다 먼저 끝나야 한다. 실패했을 때도 소비자를 시작하지 않고
+  // 종결 상태로 바꿔, 기본 주소나 다른 프로세스에 잘못 붙을 여지를 없앤다.
+  if (dependencyTaskId) {
+    const dependencySnapshot = await readiness.start(dependencyTaskId);
+    const dependency = dependencySnapshot.tasks.find((task) => task.id === dependencyTaskId);
+    if (!dependency || dependency.state !== 'succeeded') {
+      const blockedIds = new Set([
+        ...dependencyTaskChains.flat(),
+        ...dependentTaskIds,
+        ...sequentialDependentTaskIds,
+        ...continuousTaskIds,
+      ]);
+      for (const id of blockedIds) {
+        readiness.disable(id, `선행 작업 ${dependencyTaskId} 실패로 시작하지 않음`);
+      }
+      await Promise.all(concurrent);
+      return readiness.snapshot();
+    }
+  }
+  for (const id of continuousTaskIds) void readiness.start(id);
   const chains = dependencyTaskChains.map((ids) => ids.reduce(
     (prior, id) => prior.then(() => readiness.start(id)),
     Promise.resolve(),
   ));
-  if (dependencyTaskId) await readiness.start(dependencyTaskId);
   const dependent = dependentTaskIds.map((id) => readiness.start(id));
   for (const id of sequentialDependentTaskIds) await readiness.start(id);
   await Promise.all([...concurrent, ...chains, ...dependent]);

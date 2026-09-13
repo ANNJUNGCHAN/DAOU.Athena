@@ -2406,7 +2406,8 @@ function restoreConversation(switched, messages, snapshot, { stored = false, con
   const mounted = stored && mountStoredPane(conversationId);
   if (!mounted) while ($history.firstChild) $history.removeChild($history.firstChild);
   if (window.AthenaShell && typeof window.AthenaShell.clearCanvases === 'function') {
-    window.AthenaShell.clearCanvases();
+    // 대화 전환은 현재 DOM을 떼는 일이다. 목적지/출발지 어느 세션에도 빈 카드 스택을 저장하지 않는다.
+    window.AthenaShell.clearCanvases({ persist: false });
   }
   // 대화는 모드에 묶인다 — 백테스트 대화를 열면 백테스트 캔버스가 뜬다(35번 보드).
   const snapshotLib = window.AthenaLib && window.AthenaLib.SessionSnapshot;

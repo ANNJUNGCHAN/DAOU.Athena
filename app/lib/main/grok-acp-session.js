@@ -5,12 +5,19 @@ const { StreamJsonSession } = require('./stream-json-parser');
 const { terminateTree } = require('./proc-utils');
 const { getGrokBin } = require('./grok-bin');
 const { assertSessionStopsSucceeded } = require('./provider-session-shutdown');
+const { describeToolFailure } = require('./tool-failure');
 
 const DEFAULT_TIMEOUT_MS = 180_000;
 const DEFAULT_RPC_TIMEOUT_MS = 30_000;
 const DEFAULT_MAX_LINE_BYTES = 1_000_000;
 const DEFAULT_MAX_STDOUT_BYTES = 5_000_000;
 const DEFAULT_MAX_ERROR_BYTES = 16_000;
+const DEFAULT_MAX_PROMPT_DURATION_MS = 600_000;
+const MAX_SELECTOR_FAILURES = 4;
+const SELECTOR_SELECTION_ERRORS = new Set([
+  'AMBIGUOUS_OPERATION', 'NO_CONFIDENT_MATCH', 'OPERATION_NOT_FOUND',
+  'PREFERRED_REF_NOT_SUPPORTED_BY_QUERY', 'DETAIL_GROUP_REQUIRED',
+]);
 
 function buildGrokAcpArgs({
   model = null,
@@ -146,6 +153,8 @@ class GrokAcpSession {
     spawnFn = spawn,
     killFn = terminateTree,
     nowFn = Date.now,
+    setTimeoutFn = setTimeout,
+    clearTimeoutFn = clearTimeout,
     env = process.env,
     envOverridesFn = () => ({}),
   } = {}) {
@@ -169,6 +178,8 @@ class GrokAcpSession {
     this._spawn = spawnFn;
     this._kill = killFn;
     this._now = nowFn;
+    this._setTimeout = setTimeoutFn;
+    this._clearTimeout = clearTimeoutFn;
     this._env = env;
     this._envOverridesFn = envOverridesFn;
     this._proc = null;
@@ -321,6 +332,8 @@ class GrokAcpSession {
       firstTextMs: null,
       stdoutBytes: 0,
       completedToolIds: new Set(),
+      selectorTools: new Map(),
+      selectorFailures: 0,
       callbacks: { onEvent, onTextDelta, onThinkingDelta, onCanvasResult },
     };
     proc.active = active;
@@ -479,21 +492,65 @@ class GrokAcpSession {
     if (proc.dead) return Promise.reject(Object.assign(new Error('Grok ACP 프로세스가 종료됐다'), { code: submitted ? 'ABORTED' : 'STARTUP_FAILED' }));
     const id = this._nextId++;
     return new Promise((resolve, reject) => {
-      const timer = timeoutMs > 0 ? setTimeout(() => {
+      const pending = {
+        resolve,
+        reject,
+        timer: null,
+        absoluteTimer: null,
+        submitted,
+        refreshIdle: null,
+      };
+      const rejectTimeout = (absolute = false) => {
+        if (!proc.pending.has(id)) return;
         proc.pending.delete(id);
-        const error = new Error(`${method} RPC 타임아웃(${Math.round(timeoutMs / 1000)}s)`);
+        this._clearPendingTimers(pending);
+        const seconds = absolute
+          ? Math.round(Math.max(timeoutMs, Math.min(DEFAULT_MAX_PROMPT_DURATION_MS, timeoutMs * 3)) / 1000)
+          : Math.round(timeoutMs / 1000);
+        const error = new Error(`${method} RPC ${absolute ? '절대 ' : ''}타임아웃(${seconds}s)`);
         error.code = 'RPC_TIMEOUT';
         reject(error);
-      }, timeoutMs) : null;
-      proc.pending.set(id, { resolve, reject, timer, submitted });
+      };
+      proc.pending.set(id, pending);
+      if (timeoutMs > 0) {
+        const armIdle = () => {
+          if (!proc.pending.has(id)) return;
+          if (pending.timer) this._clearTimeout(pending.timer);
+          pending.timer = this._setTimeout(() => rejectTimeout(false), timeoutMs);
+        };
+        pending.refreshIdle = armIdle;
+        armIdle();
+        if (submitted && method === 'session/prompt') {
+          const absoluteTimeoutMs = Math.max(
+            timeoutMs,
+            Math.min(DEFAULT_MAX_PROMPT_DURATION_MS, timeoutMs * 3),
+          );
+          pending.absoluteTimer = this._setTimeout(() => rejectTimeout(true), absoluteTimeoutMs);
+          if (proc.active) proc.active.promptRequestId = id;
+        }
+      }
       try {
         proc.child.stdin.write(`${JSON.stringify({ jsonrpc: '2.0', id, method, params })}\n`);
       } catch (error) {
         proc.pending.delete(id);
-        if (timer) clearTimeout(timer);
+        this._clearPendingTimers(pending);
         reject(error);
       }
     });
+  }
+
+  _clearPendingTimers(pending) {
+    if (!pending) return;
+    if (pending.timer) this._clearTimeout(pending.timer);
+    if (pending.absoluteTimer) this._clearTimeout(pending.absoluteTimer);
+    pending.timer = null;
+    pending.absoluteTimer = null;
+  }
+
+  _refreshPromptIdle(proc) {
+    const requestId = proc && proc.active && proc.active.promptRequestId;
+    const pending = requestId && proc.pending.get(requestId);
+    if (pending && typeof pending.refreshIdle === 'function') pending.refreshIdle();
   }
 
   _onStdout(proc, chunk) {
@@ -525,7 +582,7 @@ class GrokAcpSession {
       const pending = proc.pending.get(message.id);
       if (!pending) return;
       proc.pending.delete(message.id);
-      if (pending.timer) clearTimeout(pending.timer);
+      this._clearPendingTimers(pending);
       if (message.error) {
         const error = new Error(boundedText(message.error.message || JSON.stringify(message.error), this._maxErrorBytes));
         error.code = message.error.code;
@@ -547,11 +604,38 @@ class GrokAcpSession {
       const kind = update && (update.sessionUpdate || update.session_update);
       const id = kind === 'tool_call_update' ? toolId(update) : null;
       const events = acpUpdateToEvents(update);
+      if (kind === 'agent_message_chunk' && contentText(update.content)) {
+        this._refreshPromptIdle(proc);
+      }
       if (id && events.some((event) => event.type === 'user')) {
         if (active.completedToolIds.has(id)) return;
         active.completedToolIds.add(id);
+        this._refreshPromptIdle(proc);
       }
-      for (const event of events) this._emitCompat(active, event);
+      for (const event of events) {
+        this._emitCompat(active, event);
+        for (const block of event.message?.content || []) {
+          if (block.type === 'tool_use') {
+            const name = block.name === 'use_tool' ? block.input?.tool_name : block.name;
+            active.selectorTools.set(block.id, name || '');
+          } else if (block.type === 'tool_result') {
+            const name = active.selectorTools.get(block.tool_use_id) || '';
+            if (!/athena_(?:resolve|describe|call)$/.test(name)) continue;
+            const failure = block.is_error ? describeToolFailure(block.content) : null;
+            if (failure && SELECTOR_SELECTION_ERRORS.has(failure.code)) {
+              active.selectorFailures += 1;
+              if (active.selectorFailures >= MAX_SELECTOR_FAILURES) {
+                const error = new Error('조회 방법을 확정하지 못해 반복 요청을 중단했습니다. 확인할 지수·종목과 조회 항목을 구체적으로 지정해 주세요.');
+                error.code = 'SELECTOR_RETRY_LIMIT';
+                this._failProcess(proc, error);
+                return;
+              }
+            } else if (!block.is_error && /athena_(?:resolve|call)$/.test(name)) {
+              active.selectorFailures = 0;
+            }
+          }
+        }
+      }
       return;
     }
     if (message.method && Object.prototype.hasOwnProperty.call(message, 'id')) {
@@ -588,7 +672,7 @@ class GrokAcpSession {
     const error = reason instanceof Error ? reason : new Error(String(reason || 'Grok ACP 프로세스가 종료됐다'));
     if (error.exitCode == null && reason && reason.exitCode != null) error.exitCode = reason.exitCode;
     for (const pending of proc.pending.values()) {
-      if (pending.timer) clearTimeout(pending.timer);
+      this._clearPendingTimers(pending);
       pending.reject(error);
     }
     proc.pending.clear();

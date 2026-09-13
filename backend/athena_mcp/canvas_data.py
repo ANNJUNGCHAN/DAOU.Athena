@@ -2,17 +2,10 @@
 from __future__ import annotations
 
 import json
-import logging
 from typing import Any
 
 import httpx
 from mcp import types
-
-from athena_api.canvas_card_registry import (
-    CanvasCardRegistryError,
-    resolve_canvas_card,
-)
-from athena_api.canvas_field_registry import get_operation_field_contract
 
 # 순수 변환·manifest 기반 카드 종류 결정은 백엔드 단일 소재지로 이동
 # (athena_api/canvas_transform.py) — 캐시 리플레이 라우트와 공용이다. 여기서는
@@ -22,97 +15,9 @@ from athena_api.canvas_transform import (
     TABLE_ROWS_MAX as TABLE_ROWS_MAX,
 )
 from athena_api.canvas_transform import (
-    build_aits_chart_envelope_data as build_aits_chart_envelope_data,
-)
-from athena_api.canvas_transform import (
-    build_compound_generic as build_compound_generic,
-)
-from athena_api.canvas_transform import (
-    build_facts as build_facts,
-)
-from athena_api.canvas_transform import (
     build_table as build_table,
 )
-from athena_api.canvas_transform import (
-    describe_unsupported_render_plan_kind as describe_unsupported_render_plan_kind,
-)
-from athena_api.canvas_transform import (
-    resolve_fixed_card_title as resolve_fixed_card_title,
-)
-from athena_api.canvas_transform import (
-    resolve_render_plan_kind as resolve_render_plan_kind,
-)
-
-# 표면 계약은 REST(api/canvas_push.py)와 **같은** 헬퍼로 붙는다 — 두 경로가 서로 다른
-# surface_contract를 만들면 /canvas/push의 canonical 대조가 422로 깨진다.
-from athena_api.card_surface_contract import attach_surface_contract
 from athena_api.screen_manifest import get_mapping
-from athena_mcp.canvas import validate_canvas_payload
-
-logger = logging.getLogger(__name__)
-
-# facts/compound는 TR 응답 본문(`call_payload["data"]`)만 보고 top-level 스칼라를
-# 뽑는다(canvas_transform.build_facts 계약) — chart/table처럼 전체 응답 트리를
-# 재귀 탐색하지 않는다. call_payload 전체를 넘기면 `operation_ref` 같은 봉투
-# 필드를 TR 필드로 오인한다(실측 확인) — 반드시 `.get("data")`만 넘긴다.
-_BUILD_FROM_TR_DATA = {
-    "facts": build_facts,
-    "compound": build_compound_generic,
-}
-
-
-def _integrated_card_contract(operation_ref: str) -> dict[str, Any]:
-    resolved = resolve_canvas_card(operation_ref)
-    field_contract = get_operation_field_contract(operation_ref)
-    if not field_contract:
-        raise CanvasCardRegistryError(
-            f"operation {operation_ref!r} has no Canvas field contract"
-        )
-    for field in field_contract:
-        if (
-            field.get("card_id") != resolved.card_id
-            or field.get("card_kind") != resolved.card_kind
-            or field.get("capability_id") != resolved.capability_id
-        ):
-            raise CanvasCardRegistryError(
-                f"operation {operation_ref!r} field contract disagrees with card registry"
-            )
-    unresolved = [
-        field["occurrence_id"]
-        for field in field_contract
-        if field.get("semantic_status") == "unresolved"
-    ]
-    metadata = resolved.runtime_metadata()
-    metadata.update(
-        {
-            "field_contract": field_contract,
-            "coverage_receipt": {
-                "operation_ref": operation_ref,
-                "field_occurrence_count": len(field_contract),
-                "reachable_occurrence_count": len(field_contract),
-                "unresolved_occurrence_ids": unresolved,
-                "lossless": not unresolved,
-            },
-        }
-    )
-    attach_surface_contract(metadata, operation_ref)
-    return metadata
-
-
-def _lossless_source_data(call_payload: dict[str, Any]) -> dict[str, Any]:
-    source_data = {
-        key: value
-        for key, value in call_payload.items()
-        if key in {"operation_ref", "data", "continuation", "canvas_context"}
-    }
-    continuation = source_data.get("continuation")
-    if isinstance(continuation, dict):
-        source_data["continuation"] = {
-            key: value
-            for key, value in continuation.items()
-            if key != "next_plan_token"
-        }
-    return source_data
 
 
 def _error(text: str) -> types.CallToolResult:
@@ -261,180 +166,98 @@ async def render_with_plan(
     *,
     call_timeout_seconds: float,
 ) -> types.CallToolResult:
-    """plan_token을 게이트웨이가 직접 실행해 카드 봉투를 채운다.
-
-    전체 카드 봉투는 side-channel로만 전달한다. 성공한 tool result에는 값이나
-    요약 없이 display receipt만 반환한다.
-    """
+    """서명된 plan을 백엔드 단일 렌더 경로로 실행하고 표시 영수증만 돌려준다."""
     plan_token = arguments["plan_token"]
+    request_payload: dict[str, Any] = {
+        "plan_token": plan_token,
+        "delivery": "side_channel",
+    }
+    if "caption" in arguments:
+        request_payload["caption"] = arguments["caption"]
     try:
         response = await http_client.post(
-            "/api/v1/llm/tools/call-query",
-            json={"plan_token": plan_token},
+            "/api/v1/canvas/render-query",
+            json=request_payload,
             timeout=call_timeout_seconds,
         )
     except httpx.ConnectError:
-        return _error("키움 백엔드(127.0.0.1:8010)가 기동돼 있지 않다 — 사용자에게 안내하라")
+        return _error("앱에 연결된 키움 백엔드가 응답하지 않는다 — 사용자에게 안내하라")
     except httpx.HTTPError as exc:
-        return _error(f"plan 실행 중 전송 오류: {exc}")
+        return _error(f"plan 렌더 중 전송 오류: {exc}")
     if response.status_code >= 400:
-        if response.status_code in {409, 428}:
-            try:
-                error_payload = response.json()
-            except ValueError:
-                error_payload = None
+        try:
+            error_payload = response.json()
+        except ValueError:
+            error_payload = None
+        if response.status_code in {409, 428} and isinstance(error_payload, dict):
             if (
-                isinstance(error_payload, dict)
-                and (
-                    error_payload.get("code") == "ORDER_TICKET_REQUIRED"
-                    or error_payload.get("detail")
-                    == "X-Athena-Confirm: true is required"
-                )
+                error_payload.get("code") == "ORDER_TICKET_REQUIRED"
+                or error_payload.get("detail") == "X-Athena-Confirm: true is required"
             ):
                 details = error_payload.get("details")
                 return _order_confirmation_required(details if isinstance(details, dict) else None)
-        return _error(f"plan 실행 실패 (HTTP {response.status_code}): {response.text[:300]}")
+        return _error(f"plan 렌더 실패 (HTTP {response.status_code}): {response.text[:300]}")
     try:
-        call_payload = response.json()
+        response_payload = response.json()
     except ValueError:
-        return _error("plan 실행 응답이 JSON이 아니다")
-    if not isinstance(call_payload, dict):
-        call_payload = {}
+        return _error("plan 렌더 응답이 JSON이 아니다")
+    if not isinstance(response_payload, dict):
+        return _error("plan 렌더 응답 형식이 올바르지 않다")
+    if (
+        response_payload.get("queued") is not True
+        or response_payload.get("delivery") != "side_channel"
+        or response_payload.get("status") != "queued"
+        or "envelope" not in response_payload
+        or response_payload.get("envelope") is not None
+    ):
+        return _error("캔버스 side-channel 배달을 확인하지 못했다")
 
-    operation_ref = call_payload.get("operation_ref")
-    model_canvas_type = arguments.get("canvas_type")
-    mapping = get_mapping(operation_ref) if isinstance(operation_ref, str) else None
-    if mapping is None:
-        return _error(f"키움 화면 계약 누락: {operation_ref!r}의 mapping")
-    try:
-        card_contract = _integrated_card_contract(operation_ref)
-    except (CanvasCardRegistryError, KeyError, ValueError) as exc:
-        return _error(f"통합 카드 계약 누락: {exc}")
-    screen_reference = mapping.get("screen_reference")
-    if not isinstance(screen_reference, dict) or not screen_reference.get("screen_id"):
-        return _error(f"키움 화면 계약 누락: {operation_ref}의 screen_reference")
-    canvas_kind = resolve_render_plan_kind(operation_ref)
-
-    if canvas_kind is None:
-        reason = describe_unsupported_render_plan_kind(operation_ref)
-        logger.error(
-            "render_with_plan coverage 결함 — operation_ref=%s model_canvas_type=%s 사유=%s",
-            operation_ref,
-            model_canvas_type,
-            reason,
-        )
-        return _error(
-            f"키움 화면 계약 오류: {operation_ref}의 presentation은 plan 렌더 대상이 아니다"
-        )
-
-    if model_canvas_type is not None and model_canvas_type != canvas_kind:
-        logger.warning(
-            "render_with_plan canvas_type 불일치 — model=%s manifest=%s "
-            "operation_ref=%s (manifest가 이긴다)",
-            model_canvas_type,
-            canvas_kind,
-            operation_ref,
-        )
-
-    if canvas_kind == "chart":
-        built = build_aits_chart_envelope_data(operation_ref, call_payload)
-        if isinstance(built, str):
-            return _error(f"차트 변환 실패: {built}")
-        chart_envelope, meta = built
-        renderer_id = chart_envelope["renderer_id"]
-        data = chart_envelope["data"]
-    elif canvas_kind == "table":
-        built = build_table(call_payload)
-        if isinstance(built, str):
-            return _error(f"테이블 변환 실패: {built}")
-        data, meta = built
-    else:  # facts / compound — TR 응답 본문만(위 _BUILD_FROM_TR_DATA 주석)
-        tr_data = call_payload.get("data")
-        if not isinstance(tr_data, dict):
-            tr_data = {}
-        built = _BUILD_FROM_TR_DATA[canvas_kind](tr_data)
-        if isinstance(built, str):
-            return _error(f"{canvas_kind} 변환 실패: {built}")
-        data, meta = built
-
-    if canvas_kind == "chart":
-        # AITS 차트는 generated manifest/screen definition의 renderer·JSONPath
-        # 계약으로 이미 검증됐다. legacy MCP chart schema(bars)를 통과시키거나
-        # caller data로 재검증하면 계약이 다시 낡은 형상으로 퇴행한다.
-        result_canvas_type = "chart"
-        result_fell_back = False
-        result_fallback_reason = None
-        result_data = data
-    else:
-        renderer_id = None
-        result = validate_canvas_payload(canvas_kind, data)
-        if result.fell_back:
-            return _error(
-                f"키움 화면 계약 오류: {operation_ref}의 {canvas_kind} payload가 "
-                "manifest와 맞지 않는다"
-            )
-        result_canvas_type = result.canvas_type
-        result_fell_back = result.fell_back
-        result_fallback_reason = result.fallback_reason
-        result_data = result.data
-
-    payload = {
-        "operation_ref": operation_ref,
-        "canvas_type": result_canvas_type,
-        "fell_back": result_fell_back,
-        "fallback_reason": result_fallback_reason,
-        "caption": arguments.get("caption"),
-        # TR이 Paper 카드 페이지 14~30의 카드 16종 중 하나로 확정되면 카드 헤드는 이
-        # 고정 이름을 타이틀로 쓰고, 위 caption(종목명·주기 등 가변 정보)은
-        # 서브타이틀로 내려간다(app/canvas.js makeCard). 16종 밖이면 None —
-        # 렌더러가 기존처럼 caption을 타이틀로 쓴다(정보 손실 없음).
-        "card_title": resolve_fixed_card_title(operation_ref),
-        "data": result_data,
-        "raw_data": call_payload.get("data"),
-        "source_data": _lossless_source_data(call_payload),
-        "layout": None,
-        "drop_types": [],
-        **card_contract,
+    raw_receipt = response_payload.get("receipt")
+    if not isinstance(raw_receipt, dict):
+        return _error("캔버스 표시 영수증이 누락되었다")
+    required_receipt = {
+        "pushed": bool,
+        "delivery": str,
+        "canvas_type": str,
+        "screen_id": str,
+        "fell_back": bool,
+        "trimmed": bool,
+        "partial": bool,
+        "cache_reused": bool,
     }
-    if renderer_id is not None:
-        payload["renderer_id"] = renderer_id
-    # 서명된 plan이 봉인한 종목 식별자(canvas_context.symbol)를 봉투에 싣는다 —
-    # api/canvas_push.py 성공 봉투와 같은 규칙. 앱의 시세류 실시간 구독
-    # (main.js extractLiveQuoteSymbol)이 이 필드를 본다.
-    canvas_context = call_payload.get("canvas_context")
-    sealed_symbol = canvas_context.get("symbol") if isinstance(canvas_context, dict) else None
-    if isinstance(sealed_symbol, str) and sealed_symbol:
-        payload["stk_cd"] = sealed_symbol
+    if any(
+        not isinstance(raw_receipt.get(key), expected_type)
+        for key, expected_type in required_receipt.items()
+    ) or raw_receipt.get("pushed") is not True or raw_receipt.get("delivery") != "side_channel":
+        return _error("캔버스 표시 영수증 형식이 올바르지 않다")
+    if not raw_receipt["canvas_type"] or not raw_receipt["screen_id"]:
+        return _error("캔버스 표시 영수증 형식이 올바르지 않다")
+    if response_payload.get("canvas_type") != raw_receipt["canvas_type"]:
+        return _error("캔버스 표시 영수증 형식이 올바르지 않다")
+    if "fallback_reason" not in raw_receipt:
+        return _error("캔버스 표시 영수증 형식이 올바르지 않다")
+    fallback_reason = raw_receipt.get("fallback_reason")
+    if fallback_reason is not None and not isinstance(fallback_reason, str):
+        return _error("캔버스 표시 영수증 형식이 올바르지 않다")
+    renderer_id = raw_receipt.get("renderer_id")
+    if renderer_id is not None and not isinstance(renderer_id, str):
+        return _error("캔버스 표시 영수증 형식이 올바르지 않다")
 
-    # 봉투는 사이드 채널(POST /canvas/push → 앱 WS)로만 민다. tool result에는
-    # 데이터 요약도 싣지 않는다 — 성공한 캔버스 자체가 기본 답이다.
-    push_note: str | None = None
-    try:
-        push_response = await http_client.post("/api/v1/canvas/push", json=payload, timeout=5.0)
-        pushed = push_response.status_code < 400
-        if not pushed:
-            push_note = f"HTTP {push_response.status_code}"
-    except httpx.HTTPError as exc:
-        pushed = False
-        push_note = str(exc)
-
-    if pushed:
-        receipt = {
-            "canvas_type": result_canvas_type,
-            # 파서(stream-json-parser.js)가 이 플래그로 'pushed' 분류를 한다 —
-            # 앱은 이 결과로 카드를 그리지 않는다(사이드 채널이 이미 그렸다).
-            "pushed": True,
-            "fell_back": result_fell_back,
-            "fallback_reason": result_fallback_reason,
-            "trimmed": bool(meta.get("trimmed")),
-            "partial": bool(meta.get("partial")),
-        }
-        return types.CallToolResult(
-            content=[types.TextContent(type="text", text=json.dumps(receipt, ensure_ascii=False))],
-            structuredContent=receipt,
-            isError=False,
-        )
-
-    # 키움 plan 경로에서는 full payload를 MCP tool result로 되돌리지 않는다.
-    # push 실패는 성공으로 위장하거나 legacy free 카드로 강등하지 않고 명시 오류다.
-    return _error(f"캔버스 push 실패: {push_note or '알 수 없는 오류'}")
+    allowed_keys = (
+        "pushed",
+        "delivery",
+        "canvas_type",
+        "screen_id",
+        "fell_back",
+        "fallback_reason",
+        "trimmed",
+        "partial",
+        "cache_reused",
+        "renderer_id",
+    )
+    receipt = {key: raw_receipt[key] for key in allowed_keys if key in raw_receipt}
+    return types.CallToolResult(
+        content=[types.TextContent(type="text", text=json.dumps(receipt, ensure_ascii=False))],
+        structuredContent=receipt,
+        isError=False,
+    )

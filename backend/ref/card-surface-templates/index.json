@@ -1370,7 +1370,7 @@
         "text_nodes": 191,
         "slots": 191,
         "anchored_slots": 0,
-        "mapped_slots": 113,
+        "mapped_slots": 111,
         "labels": 85,
         "values": 106,
         "layer_직접": 164,
@@ -1453,7 +1453,8 @@
         "base:ka10069",
         "base:ka20068",
         "base:ka90008",
-        "base:ka90013"
+        "base:ka90013",
+        "base:0w"
       ],
       "counts": {
         "elements": 278,
@@ -4369,6 +4370,7 @@
         "detail:kt00005:cash_and_capacity",
         "detail:kt00010:cash_and_withdrawal_capacity",
         "detail:kt00010:margin_order_capacity",
+        "detail:kt00013:margin_order_capacity",
         "detail:kt00011:margin_capacity_20_to_50",
         "detail:kt00011:margin_capacity_60_to_cash_only",
         "detail:kt00012:account_and_receivable_capacity",

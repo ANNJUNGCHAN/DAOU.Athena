@@ -22,12 +22,16 @@ function describeToolFailure(content) {
     }
     for (const key of ['error_code', 'errorCode', 'code', 'reason']) {
       const candidate = String(value[key] || '');
-      if (/^(?:ORDER_TICKET_REQUIRED|INVALID_ARGUMENTS|MISSING_ARGUMENTS|CANVAS_COVERAGE_MISSING|CANVAS_CARD_COVERAGE_MISSING|TRANSFORM_ERROR|GATEWAY_BLOCKED|UPSTREAM_ERROR|TIMEOUT|UNAUTHORIZED|FORBIDDEN|NOT_FOUND|INTERNAL_ERROR|PREFERRED_REF_NOT_SUPPORTED_BY_QUERY)$/i.test(candidate)) code = candidate.toUpperCase();
+      if (/^(?:ORDER_TICKET_REQUIRED|INVALID_ARGUMENTS|MISSING_ARGUMENTS|CANVAS_COVERAGE_MISSING|CANVAS_CARD_COVERAGE_MISSING|TRANSFORM_ERROR|GATEWAY_BLOCKED|UPSTREAM_ERROR|TIMEOUT|UNAUTHORIZED|FORBIDDEN|NOT_FOUND|INTERNAL_ERROR|PREFERRED_REF_NOT_SUPPORTED_BY_QUERY|AMBIGUOUS_OPERATION|NO_CONFIDENT_MATCH|OPERATION_NOT_FOUND|DETAIL_GROUP_REQUIRED)$/i.test(candidate)) code = candidate.toUpperCase();
     }
     for (const key of ['text', 'message', 'error', 'detail', 'content']) visit(value[key], depth + 1);
   };
   visit(content);
   const text = messages.join('\n');
+  if (!code) {
+    const match = text.match(/\b(AMBIGUOUS_OPERATION|NO_CONFIDENT_MATCH|OPERATION_NOT_FOUND|PREFERRED_REF_NOT_SUPPORTED_BY_QUERY|DETAIL_GROUP_REQUIRED)\b/);
+    if (match) code = match[1];
+  }
   if (!status) {
     const match = text.match(/\b(?:HTTP(?:Error)?|status(?:_code| code)?)[^\d\n]{0,12}([45]\d{2})\b/i)
       || text.match(/\b(502|503|504)\s+(?:Bad Gateway|Service Unavailable|Gateway Timeout)\b/i);
@@ -37,13 +41,17 @@ function describeToolFailure(content) {
   if (code === 'ORDER_TICKET_REQUIRED'
       || (status === 428 && /X-Athena-Confirm:\s*true is required/i.test(text))) message = '주문 확인이 필요합니다. 주문 티켓에서 내용을 확인해 주세요. 이 요청으로 주문은 접수되지 않았습니다.';
   else if (/CANVAS.*COVERAGE|TRANSFORM_ERROR/.test(code)) message = '조회 응답을 화면으로 변환하지 못했습니다.';
+  else if (code === 'AMBIGUOUS_OPERATION' || code === 'DETAIL_GROUP_REQUIRED') message = '조회 후보가 여러 개여서 확정하지 못했습니다. 조회 대상과 항목을 구체적으로 지정해 주세요.';
+  else if (code === 'NO_CONFIDENT_MATCH' || code === 'PREFERRED_REF_NOT_SUPPORTED_BY_QUERY') message = '요청한 내용에 맞는 조회 방법을 찾지 못했습니다. 조회 대상과 조건을 확인해 주세요.';
+  else if (code === 'OPERATION_NOT_FOUND') message = '선택한 조회 도구를 찾지 못했습니다. 도구 목록을 다시 확인해야 합니다.';
   else if (status === 401 || status === 403) message = '조회 인증 또는 권한을 확인해 주세요.';
   else if (status === 400 || status === 422 || /ARGUMENTS|PREFERRED_REF/.test(code)) message = '조회 요청 조건을 처리하지 못했습니다.';
   else if ([502, 503, 504].includes(status)) message = '조회 서비스 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.';
   else if (/timeout|timed out|시간.?초과/i.test(text) || code === 'TIMEOUT') message = '조회 응답 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요.';
   else if (/ECONNREFUSED|connection refused|connecterror/i.test(text)) message = '조회 서비스에 연결하지 못했습니다.';
   const suffix = [status && `HTTP ${status}`, code].filter(Boolean).join(' · ');
-  return { message: suffix ? `${message} (${suffix})` : message, httpStatus: status, code,
+  const selectionFailure = /^(AMBIGUOUS_OPERATION|NO_CONFIDENT_MATCH|OPERATION_NOT_FOUND|PREFERRED_REF_NOT_SUPPORTED_BY_QUERY|DETAIL_GROUP_REQUIRED)$/.test(code);
+  return { message: suffix && !selectionFailure ? `${message} (${suffix})` : message, httpStatus: status, code,
     fingerprint: createHash('sha256').update(raw).digest('hex').slice(0, 16) };
 }
 

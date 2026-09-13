@@ -41,6 +41,10 @@ const KOREAN_TRADING_SOURCE_CORE = '(?:거래원)';
 const KOREAN_STOCKINFO_CORE = '(?:종목정보|기업정보)';
 // 프로그램매매는 종목 무관(시장 전체) — entity 결선이 아예 없다.
 const KOREAN_PROGRAM_TRADE_CORE = '(?:프로그램매매(?:\\s*동향)?)';
+const DOMESTIC_MARKET_SNAPSHOT_RE = new RegExp(
+  `^${GRAMMAR_EDGE}현재\\s*장\\s*상황은\\s*어때(?:요)?${GRAMMAR_EDGE}$`,
+  'iu',
+);
 
 class RestDatasetError extends Error {
   constructor(code, message, details = {}) {
@@ -1089,6 +1093,37 @@ function buildQuoteDataset(query, index, { idFactory = () => `rest-${Date.now().
   };
 }
 
+// 범위를 지정하지 않은 이 한 문장은 live prompt 계약상 코스피·코스닥 현재
+// 스냅샷 두 장으로 끝난다. 질문 전체를 소진하는 닫힌 문법이라 종목/업종/차트/
+// 주문/분석 요구가 하나라도 붙으면 기존 Selector·모델 경로로 넘긴다.
+function buildDomesticMarketSnapshotDataset(query, {
+  idFactory = () => `rest-${Date.now().toString(36)}`,
+} = {}) {
+  const text = String(query || '').normalize('NFKC').toLocaleLowerCase('ko-KR').trim();
+  if (!DOMESTIC_MARKET_SNAPSHOT_RE.test(text)) return null;
+  const datasetId = String(idFactory()).slice(0, 64);
+  return {
+    datasetId,
+    question: String(query || '').trim(),
+    items: [
+      {
+        itemId: `${datasetId}-kospi`,
+        ordinal: 1,
+        operationRef: 'detail:ka20001:market_snapshot',
+        args: { mrkt_tp: '0', inds_cd: '001' },
+        caption: '코스피',
+      },
+      {
+        itemId: `${datasetId}-kosdaq`,
+        ordinal: 2,
+        operationRef: 'detail:ka20001:market_snapshot',
+        args: { mrkt_tp: '1', inds_cd: '101' },
+        caption: '코스닥',
+      },
+    ],
+  };
+}
+
 // 일봉 차트 — base:ka10081(주식일봉차트조회요청)만 대상이다. base_dt는 "이
 // 날짜까지"를 뜻하는 커서라 오늘 날짜를 준다(chart-reload.js의 today() 관례와
 // 동일). upd_stkpc_tp:'1'은 수정주가 — AITS 차트 패널의 기본값과 맞춘다.
@@ -1268,6 +1303,7 @@ module.exports = {
   isEligibleOperationRef,
   buildDeterministicAnswer,
   restItemForScreenKind,
+  buildDomesticMarketSnapshotDataset,
   buildQuoteDataset,
   buildChartDataset,
   buildCompoundScreenDataset,

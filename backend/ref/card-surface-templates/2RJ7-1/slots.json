@@ -77,7 +77,7 @@
     "text_nodes": 191,
     "slots": 191,
     "anchored_slots": 0,
-    "mapped_slots": 113,
+    "mapped_slots": 111,
     "labels": 85,
     "values": 106,
     "layer_직접": 164,
@@ -577,8 +577,7 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null,
-      "extra_fields": null
+      "expanded_board": null
     },
     {
       "slot_id": "s005",
@@ -605,7 +604,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": null,
       "composite": {
         "separator": " · ",
         "parts": [
@@ -862,6 +860,16 @@
       "mapping_id": null,
       "f": null,
       "alt_mappings": null,
+      "kor": "시가",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
       "legacy_alt_mappings": [
         {
           "mapping_id": "base:ka50012",
@@ -968,16 +976,6 @@
           "f": "low_pric"
         }
       ],
-      "kor": "시가",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
       "extra_fields": [
         {
           "mapping_id": "base:ka50100",
@@ -1118,17 +1116,29 @@
           {
             "mapping_id": "base:ka50100",
             "f": "open_pric",
-            "format": { "kind": "number", "absolute": true, "precision": 0 }
+            "format": {
+              "kind": "number",
+              "absolute": true,
+              "precision": 0
+            }
           },
           {
             "mapping_id": "base:ka50100",
             "f": "high_pric",
-            "format": { "kind": "number", "absolute": true, "precision": 0 }
+            "format": {
+              "kind": "number",
+              "absolute": true,
+              "precision": 0
+            }
           },
           {
             "mapping_id": "base:ka50100",
             "f": "low_pric",
-            "format": { "kind": "number", "absolute": true, "precision": 0 }
+            "format": {
+              "kind": "number",
+              "absolute": true,
+              "precision": 0
+            }
           }
         ]
       }
@@ -2164,8 +2174,7 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null,
-      "extra_fields": null
+      "expanded_board": null
     },
     {
       "slot_id": "s053",
@@ -2297,6 +2306,7 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
+      "paper_text_override": "52주 최저 미제공",
       "static": true,
       "unbound_reason": "52주 최저 — 이 보드 13개 op 응답에 52주 범위 필드가 없다(정본 비교 기준값)"
     },
@@ -2325,6 +2335,7 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
+      "paper_text_override": "최고 미제공",
       "static": true,
       "unbound_reason": "52주 최고 — 이 보드 13개 op 응답에 52주 범위 필드가 없다(정본 비교 기준값)"
     },
@@ -2910,6 +2921,7 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
+      "paper_text_override": "미제공",
       "static": true,
       "unbound_reason": "국내 대비 괴리율 — 국제가·국내가에서 계산한 파생 표기, 응답 필드가 아니다"
     },
@@ -3755,6 +3767,7 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
+      "paper_text_override": "기준 시각 미제공",
       "static": true,
       "unbound_reason": "장전 예상 기준 시각 — 응답에 기준 시각 필드가 없다(예상 체결 시간은 exp_tm에 바인딩)"
     },
@@ -4007,6 +4020,7 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
+      "paper_text_override": "기준일 미제공",
       "static": true,
       "unbound_reason": "투자자별 매매 기준일 — ka52301 응답에 일자 필드가 없다(확정 기준일 표기)"
     },
@@ -5863,6 +5877,7 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
+      "paper_text_override": "집계 기간 미제공",
       "static": true,
       "unbound_reason": "누적 순매수 집계 기간 — ka52301 응답에 기간 필드가 없다(누적 구간 표기)"
     },

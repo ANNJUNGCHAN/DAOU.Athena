@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 import time
 from collections import OrderedDict
 from collections.abc import Callable
@@ -14,7 +15,7 @@ from pydantic import BaseModel, ValidationError
 from athena_api.errors import KiwoomNotReadyError
 from athena_api.generated.registry import SPLIT_BASE_TR_IDS
 from athena_api.generated.runtime import call_order_tr, call_typed_tr, call_websocket_tr
-from athena_api.routing_contract import BindingRole
+from athena_api.routing_contract import BindingRole, EntityKind
 
 from .catalog import OperationCatalog, OperationDocument, realtime_item_model
 from .compatibility import (
@@ -38,6 +39,7 @@ from .errors import (
     UnsupportedOperationError,
 )
 from .instrument_identity import InstrumentIdentityIndex, TargetResolution
+from .normalization import normalize_text
 from .plans import PlanSigner, VerifiedPlan
 from .primitive_evidence import TargetResolver
 from .ranking import mark_seen_family, search_catalog
@@ -500,6 +502,82 @@ class SelectorService:
             return None
         return preferred
 
+    def _guarded_sector_preferred(
+        self,
+        question: str,
+        preferred: OperationDocument | None,
+        detail_group: str | None,
+        *,
+        decision: CompatibilityDecision,
+        target_resolution: TargetResolution | None,
+    ) -> OperationDocument | None:
+        """Accept a verified sector query assertion only with independent evidence.
+
+        Sector queries have no instrument identity that can satisfy
+        ``_guarded_preferred_fallback``.  A preferred operation is nevertheless safe
+        when typed compatibility already includes that exact operation, or when the
+        question contains the catalog's canonical operation name and that name belongs
+        to one family only.  This keeps candidate hints, unrelated preferred refs, and
+        every order/websocket surface outside the fallback.
+        """
+        if (
+            preferred is None
+            or preferred.kind != "query"
+            or EntityKind.SECTOR_INDEX not in preferred.routing.entity_kinds
+        ):
+            return None
+
+        typed_match = preferred.operation_ref in decision.compatible_operation_refs
+        normalized_name = normalize_text(preferred.name)
+        named_families = {
+            document.family_ref
+            for document in self.catalog.documents
+            if document.kind == "query"
+            and normalize_text(document.name) == normalized_name
+        }
+        if normalized_name.isascii():
+            name_pattern = rf"(?<![0-9a-z_]){re.escape(normalized_name)}(?![0-9a-z_])"
+        else:
+            name_pattern = rf"(?<![가-힣]){re.escape(normalized_name)}(?![가-힣])"
+        preferred_proof = next(
+            (
+                proof
+                for proof in decision.proofs
+                if proof.operation_ref == preferred.operation_ref
+            ),
+            None,
+        )
+        normalized_question = normalize_text(question)
+        explicitly_negated = (
+            re.search(
+                rf"{name_pattern}\s*하지\s*마",
+                normalized_question,
+            )
+            is not None
+        )
+        canonical_name_match = (
+            bool(normalized_name)
+            and re.search(name_pattern, normalized_question) is not None
+            and named_families == {preferred.family_ref}
+            and target_resolution is None
+            and preferred_proof is not None
+            and not preferred_proof.contradictions
+            and not explicitly_negated
+        )
+        if not typed_match and not canonical_name_match:
+            return None
+
+        if preferred.group_id is not None:
+            if detail_group is not None and detail_group != preferred.group_id:
+                return None
+            return preferred
+        if detail_group is not None:
+            try:
+                return self._asserted_detail(preferred.family_ref, detail_group)
+            except UnknownDetailGroupError:
+                return None
+        return preferred
+
     def describe(self, request: DescribeRequest) -> OperationDescription:
         document = self.catalog.find_exact(request.operation_ref)
         if document is None or not _intent_allows(document, request.intent):
@@ -694,6 +772,14 @@ class SelectorService:
                     preferred, detail_group, trusted_code=trusted_code
                 )
                 if fallback_document is None:
+                    fallback_document = self._guarded_sector_preferred(
+                        request.question,
+                        preferred,
+                        detail_group,
+                        decision=decision,
+                        target_resolution=target_resolution,
+                    )
+                if fallback_document is None:
                     public_reasons = _public_reason_codes(decision)
                     raise NoConfidentMatchError(
                         "No operation has complete typed compatibility with the question",
@@ -754,6 +840,14 @@ class SelectorService:
                     and detail_group is None
                 ):
                     fallback_document = preferred
+                if fallback_document is None:
+                    fallback_document = self._guarded_sector_preferred(
+                        request.question,
+                        preferred,
+                        detail_group,
+                        decision=decision,
+                        target_resolution=target_resolution,
+                    )
                 if fallback_document is None:
                     public_reasons = _public_reason_codes(decision)
                     raise AmbiguousOperationError(

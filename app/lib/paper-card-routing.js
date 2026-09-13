@@ -85,6 +85,22 @@ const APP_PRIMARY_ORDER_OPS = new Set([
   'base:kt50002', 'base:kt50003',
 ]);
 
+// 업종 현재가의 market_snapshot은 현재 지수·등락·거래 현황 8개만 주는 낱값
+// projection이다. CC-06 업종 보드는 다른 조회(업종 목록·순매수·구성 종목)까지
+// 함께 저작된 복합 화면이라 이 봉투 하나로 세우면 응답에 없는 Paper 예시 값이
+// 실제 값처럼 남는다. 해당 projection만 실제 fields 렌더러로 보존한다.
+const APP_PRIMARY_FACT_OPS = new Set([
+  'detail:ka20001:market_snapshot',
+]);
+
+function isExclusiveAppPrimaryEnvelope(envelope) {
+  if (!envelope) return false;
+  return APP_PRIMARY_FACT_OPS.has(operationRefOf(envelope))
+    && envelope.canvas_type === 'facts'
+    && envelope.fell_back !== true
+    && String(envelope.card_title || envelope.cardTitle || '').trim() === '종목발굴';
+}
+
 // 이 봉투의 primary를 그리는 앱 렌더러 이름. 앱 primary가 아니면 빈 문자열이다.
 // 이름은 보드 slots.json의 primary.renderer와 같은 어휘라 그대로 맞대볼 수 있다 —
 // 보드가 얹을 줄 아는 종류와 봉투가 필요한 종류가 다르면 예외는 그대로다(차트
@@ -98,6 +114,7 @@ function appPrimaryRendererFor(envelope) {
   const ref = operationRefOf(envelope);
   if (APP_PRIMARY_CHART_OPS.has(ref)) return 'athena-chart';
   if (APP_PRIMARY_ORDER_OPS.has(ref)) return 'order-ticket';
+  if (APP_PRIMARY_FACT_OPS.has(ref)) return 'facts-card';
   return '';
 }
 
@@ -113,8 +130,9 @@ function blockedReason(envelope) {
 
 const __exports = {
   isKiwoomEnvelope, operationRefOf, paperCardRoute, blockedReason, preservesAppPrimary,
+  isExclusiveAppPrimaryEnvelope,
   APP_PRIMARY_RENDERERS, APP_PRIMARY_CHART_OPS, BOARD_MOUNTED_RENDERERS,
-  APP_PRIMARY_ORDER_OPS,
+  APP_PRIMARY_ORDER_OPS, APP_PRIMARY_FACT_OPS,
 };
 
 // UMD 각주(2026-08-18 렌더러 격리) — card-kinds.js와 같은 패턴.

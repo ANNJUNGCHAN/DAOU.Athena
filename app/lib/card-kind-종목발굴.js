@@ -19,6 +19,13 @@ const CHANGE_KEYS = ['flu_rt', 'pred_pre', 'change_rt', 'change_rate'];
 const RANK_KEYS = ['rank', 'rnk', 'rank_no', 'bigdata_rank', 'pred_rank'];
 const CODE_KEYS = ['stk_cd', 'inds_cd', 'thema_cd', 'theme_cd', 'item_cd'];
 const META_KEYS = new Set(['result_code', 'result_message', 'service_name', 'return_code', 'return_msg']);
+const SECTOR_SNAPSHOT_UNITS = Object.freeze({
+  flu_rt: '%',
+  trde_qty: '천주',
+  trde_prica: '백만원',
+  trde_frmatn_stk_num: '종목',
+  trde_frmatn_rt: '%',
+});
 
 function findColumnKey(columns, keys, labelPattern) {
   const list = Array.isArray(columns) ? columns : [];
@@ -73,11 +80,19 @@ function selectDiscoveryRows(columns, rows) {
   return out;
 }
 
-function selectDiscoveryFacts(fields) {
+function selectDiscoveryFacts(fields, operationRef = '') {
+  const sectorSnapshot = operationRef === 'detail:ka20001:market_snapshot';
   return (Array.isArray(fields) ? fields : [])
     .filter((field) => field && !META_KEYS.has(field.key)
       && field.value !== null && field.value !== undefined && field.value !== '')
-    .map((field) => ({ label: field.label || field.key, value: field.value }));
+    .map((field) => ({
+      key: field.key,
+      label: field.label || field.key,
+      value: sectorSnapshot && field.key === 'cur_prc'
+        ? priceMagnitude(field.value)
+        : field.value,
+      unit: sectorSnapshot ? (SECTOR_SNAPSHOT_UNITS[field.key] || '') : '',
+    }));
 }
 
 function displayValue(value, unit) {
@@ -111,7 +126,7 @@ function renderDiscoveryFacts(fields) {
   wrap.className = 'card-kind-discovery-facts';
   fields.forEach((field) => wrap.appendChild(TwoLineRow({
     title: field.label,
-    value: formatNumeric(field.value),
+    value: displayValue(field.value, field.unit),
   })));
   return wrap;
 }
@@ -126,9 +141,9 @@ function resolveDiscoveryData(data) {
   };
 }
 
-function selectDiscoveryView(data) {
+function selectDiscoveryView(data, operationRef = '') {
   const resolved = resolveDiscoveryData(data);
-  const facts = selectDiscoveryFacts(resolved.fields);
+  const facts = selectDiscoveryFacts(resolved.fields, operationRef);
   if (resolved.rows.length) {
     const rows = selectDiscoveryRows(resolved.columns, resolved.rows);
     if (!rows || !rows.length) return null;
@@ -140,7 +155,8 @@ function selectDiscoveryView(data) {
 function render종목발굴(envelope) {
   const data = envelope && envelope.data;
   if (!data) return null;
-  const view = selectDiscoveryView(data);
+  const operationRef = String(envelope.operation_ref || envelope.operationRef || '');
+  const view = selectDiscoveryView(data, operationRef);
   if (!view) return null;
   const facts = renderDiscoveryFacts(view.facts);
   const rows = renderDiscoveryRows(view.rows);

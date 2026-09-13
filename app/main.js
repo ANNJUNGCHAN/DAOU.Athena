@@ -79,10 +79,11 @@ const { createClaudeSelectorWorkerPool } = require('./lib/main/claude-selector-w
 const chartReload = require('./lib/main/chart-reload');
 const chartReloadAuthority = chartReload.createChartReloadAuthority();
 const ticketCapacity = require('./lib/main/ticket-capacity');
-const { appIconPath } = require('./lib/main/app-icon');
+const { appIconPath, appTrayIconPath } = require('./lib/main/app-icon');
 const orderTicket = require('./lib/order-ticket');
 const { presentProviderOrderTicket } = require('./lib/main/provider-order-ticket');
 const APP_ICON = appIconPath();
+const TRAY_ICON = appTrayIconPath();
 const goldOrderIntent = require('./lib/main/gold-order-intent');
 const goldQuoteIntent = require('./lib/main/gold-quote-intent');
 const protectedCards = require('./lib/protected-cards');
@@ -119,6 +120,7 @@ const mockdata = require('./lib/main/mockdata');
 // 백엔드(FastAPI/uvicorn) 자동 기동 — 헬스체크 후 죽어 있을 때만 스폰한다(중복
 // 스폰 금지, lib/main/backend-launcher.js 상단 주석 참고).
 const backendLauncher = require('./lib/main/backend-launcher');
+const backendEndpoint = require('./lib/main/backend-endpoint');
 // 채팅 → HistoryStore 영속 훅(.omc/plans/plan-chat-graph-pipeline.md §2(a)/(g)).
 // fire-and-forget — 절대 await로 채팅 UX를 막지 않는다(모듈 상단 주석 참조).
 const historySink = require('./lib/main/history-sink');
@@ -524,6 +526,10 @@ const createWindows = createOnce(async function createWindows() {
   // 백엔드 gate 통과 뒤 startRoutineFeed()/startCanvasFeed()를 부른다. 백엔드가 뜨기
   // 전에 붙기 시작하면 지수 백오프(최대 30초)가 첫 연결 20초 제한을 넘겨 gate가
   // 실패한다(2026-09-07 실측).
+  // 트레이는 숨김 때만 만들면 Windows 알림 영역에서 빠질 수 있다. 완전 종료가
+  // 트레이 "종료"뿐이라 창을 만든 직후부터 아이콘을 올려 둔다.
+  try { ensureTray(); }
+  catch (error) { mdlog(`ensureTray at createWindows failed: ${String((error && error.message) || error)}`); }
 }, () => mdlog('createWindows reused (already started)'));
 
 // ---------- 루틴 알림 — 백엔드 WS 구독 → 토스트 + 능동 턴 (실행계획 P2) ----------
@@ -532,8 +538,13 @@ const createWindows = createOnce(async function createWindows() {
 const { RoutineFeed } = require('./lib/main/routine-feed');
 const routineTurn = require('./lib/routine-turn');
 
-const BACKEND_HTTP_BASE = process.env.ATHENA_BACKEND_URL || 'http://127.0.0.1:8010';
-const BACKEND_WS_BASE = BACKEND_HTTP_BASE.replace(/^http/, 'ws');
+let BACKEND_HTTP_BASE = backendEndpoint.getBackendUrl();
+let BACKEND_WS_BASE = BACKEND_HTTP_BASE ? backendEndpoint.getBackendWsUrl() : null;
+
+function applyBackendEndpoint(backendUrl) {
+  BACKEND_HTTP_BASE = backendEndpoint.setBackendUrl(backendUrl);
+  BACKEND_WS_BASE = backendEndpoint.getBackendWsUrl();
+}
 
 // 로컬 베어러는 키움 APP KEY가 아니다. 설치본은 배포 .env를 읽지 않는다.
 // 프론트가 계좌를 저장할 때 백엔드 cwd에 설정 파일을 붙인다(로깅 금지).
@@ -1557,57 +1568,52 @@ ipcMain.handle('athena:nudge-guard-set', async (_e, body) => {
 // 백테스트 REST 프록시(P4, backtest-mode-plan.md §8.2) — routineHttp와 같은 원칙(렌더러는
 // 백엔드에 직접 붙지 않는다). 별도 파일(lib/main/backtest-bridge.js)로 뺀 이유는 단위 테스트
 // (backtest-bridge.test.js) — routineHttp는 main.js 안에 있어 직접 테스트하지 못했다.
+async function callBacktestBridge(call, body = {}) {
+  try {
+    const backendBase = await backendEndpoint.waitForBackendUrl({
+      timeoutMs: backendLauncher.STARTUP_HARD_TIMEOUT_MS + 5_000,
+    });
+    return await call({ ...body, backendBase, fetchImpl: fetch });
+  } catch (e) {
+    return { ok: false, status: 0, error: String((e && e.message) || e) };
+  }
+}
+
 ipcMain.handle('athena:backtest-presets', async () => {
-  try { return await backtestBridge.fetchPresets({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch }); }
-  catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+  return callBacktestBridge(backtestBridge.fetchPresets);
 });
 ipcMain.handle('athena:backtest-plan', async (_e, body = {}) => {
-  try { return await backtestBridge.planBacktest({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch, ...body }); }
-  catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+  return callBacktestBridge(backtestBridge.planBacktest, body);
 });
 ipcMain.handle('athena:backtest-run', async (_e, body = {}) => {
-  try {
-    const res = await backtestBridge.runBacktest({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch, ...body });
-    attachSessionJob(res, 'run_id', 'backtest.run');
-    return res;
-  }
-  catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+  const res = await callBacktestBridge(backtestBridge.runBacktest, body);
+  attachSessionJob(res, 'run_id', 'backtest.run');
+  return res;
 });
 // 백필 잡 상태(수집 승인 카드가 진행률을 폴링한다).
 ipcMain.handle('athena:backtest-status', async (_e, { job_id } = {}) => {
-  try {
-    const res = await backtestBridge.fetchJobStatus({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch, job_id });
-    syncSessionJob(job_id, res);
-    return res;
-  }
-  catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+  const res = await callBacktestBridge(backtestBridge.fetchJobStatus, { job_id });
+  syncSessionJob(job_id, res);
+  return res;
 });
 // 실행 상태+지표+자산곡선+stdout — running 상태가 1초 간격으로 이 채널을 폴링한다.
 ipcMain.handle('athena:backtest-result', async (_e, { run_id } = {}) => {
-  try {
-    const res = await backtestBridge.fetchRunResult({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch, run_id });
-    syncSessionJob(run_id, res);
-    return res;
-  }
-  catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+  const res = await callBacktestBridge(backtestBridge.fetchRunResult, { run_id });
+  syncSessionJob(run_id, res);
+  return res;
 });
 ipcMain.handle('athena:backtest-trades', async (_e, { run_id } = {}) => {
-  try { return await backtestBridge.fetchRunTrades({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch, run_id }); }
-  catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+  return callBacktestBridge(backtestBridge.fetchRunTrades, { run_id });
 });
 ipcMain.handle('athena:backtest-runs', async () => {
-  try { return await backtestBridge.fetchRuns({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch }); }
-  catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+  return callBacktestBridge(backtestBridge.fetchRuns);
 });
 // 사람 클릭 전용 경로(계획서 §7.6/§9와 같은 원칙) — 쿼터를 태우는 백필은 모델 툴에 없다.
 // 캔버스의 [수집하고 실행] 버튼 클릭에서만 이 IPC를 부른다.
 ipcMain.handle('athena:backtest-backfill', async (_e, body = {}) => {
-  try {
-    const res = await backtestBridge.backfillBacktest({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch, ...body });
-    attachSessionJob(res, 'job_id', 'backtest.backfill');
-    return res;
-  }
-  catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+  const res = await callBacktestBridge(backtestBridge.backfillBacktest, body);
+  attachSessionJob(res, 'job_id', 'backtest.backfill');
+  return res;
 });
 
 // 2026-09-01 전수 파리티 — Paper 보드 02·05·06·07·08·09. 전부 같은 프록시 모양이라
@@ -1671,8 +1677,7 @@ const BACKTEST_EXTRA_CHANNELS = {
 Object.keys(BACKTEST_EXTRA_CHANNELS).forEach((channel) => {
   const call = BACKTEST_EXTRA_CHANNELS[channel];
   ipcMain.handle(channel, async (_e, body = {}) => {
-    try { return await call({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch, ...body }); }
-    catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+    return callBacktestBridge(call, body);
   });
 });
 
@@ -1698,8 +1703,7 @@ const PROJECT_CHANNELS = {
 Object.keys(PROJECT_CHANNELS).forEach((channel) => {
   const call = PROJECT_CHANNELS[channel];
   ipcMain.handle(channel, async (_e, body = {}) => {
-    try { return await call({ backendBase: BACKEND_HTTP_BASE, fetchImpl: fetch, ...body }); }
-    catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+    return callBacktestBridge(call, body);
   });
 });
 
@@ -2237,9 +2241,13 @@ let backgroundNoticeController = null;
 // 이미지 에셋 없이 브랜드 점(#EE137B)을 16×16 비트맵으로 직접 그린다 — 대화 창의
 // 점(.dot)과 같은 시각 언어다. BGRA + 프리멀티플라이(합성 시 검은 테두리 방지).
 function buildTrayIcon() {
-  if (APP_ICON) {
-    const image = nativeImage.createFromPath(APP_ICON);
-    if (!image.isEmpty()) return image.resize({ width: 16, height: 16 });
+  const iconPath = TRAY_ICON || APP_ICON;
+  if (iconPath) {
+    const image = nativeImage.createFromPath(iconPath);
+    if (!image.isEmpty()) {
+      if (/\.ico$/i.test(iconPath)) return image;
+      return image.resize({ width: 16, height: 16 });
+    }
   }
   const size = 16;
   const buf = Buffer.alloc(size * size * 4);
@@ -2299,7 +2307,12 @@ const enterBackground = backgroundClose.createBackgroundEntry({
 });
 
 function ensureTray() {
-  if (tray) return;
+  if (tray && !tray.isDestroyed()) return;
+  if (tray) {
+    try { tray.destroy(); } catch { /* explorer가 이미 지운 핸들 */ }
+    tray = null;
+    trayMenu = null;
+  }
   tray = new Tray(buildTrayIcon());
   tray.setToolTip('Athena');
   tray.on('click', restoreFromBackground);
@@ -2309,6 +2322,7 @@ function ensureTray() {
     { id: 'quit', label: '종료', click: () => app.quit() },
   ]);
   tray.setContextMenu(trayMenu);
+  mdlog('ensureTray: 트레이 아이콘 생성');
 }
 
 function showTrayMenuForReview() {
@@ -2746,6 +2760,7 @@ async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs
 let liveMcpConfig = null; // 지연 생성 — app.getPath('userData')는 whenReady 이후에만 안전
 
 function getLiveMcpConfig() {
+  backendEndpoint.requireBackendUrl();
   if (!liveMcpConfig) liveMcpConfig = ensureMcpConfig(app.getPath('userData'));
   return liveMcpConfig;
 }
@@ -4729,6 +4744,21 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   }
   chartFollowupTracker.invalidateForQuery(query);
 
+  const domesticMarketDataset = modePromptRequired
+    ? null
+    : restDatasetRunner.buildDomesticMarketSnapshotDataset(query, {
+      idFactory: () => `rest-${crypto.randomUUID()}`,
+    });
+  if (domesticMarketDataset) {
+    mdlog('국내 시장 스냅샷 REST 직결 — 종목 검색/Selector/모델 무호출');
+    return runDirectRestDataset(domesticMarketDataset, expand, {
+      allowRetry: true,
+      conversationId: turnConversationId,
+      userAlreadyPersisted: true,
+      origin,
+    });
+  }
+
   let stockResolution = { ready: false, instrument: null };
   if (!modePromptRequired) {
     try {
@@ -6585,7 +6615,7 @@ function configureConversationGraphPipeline() {
     dbPath: path.join(app.getPath('userData'), 'athena-chat-outbox.sqlite3'),
   });
   conversationGraphRefresher = createConversationGraphRefresher({
-    baseUrl: historySink.getBackendUrl(),
+    baseUrl: backendEndpoint.requireBackendUrl(),
     getBearerToken: historySink.getBearerToken,
     flushPending: async (options = {}) => {
       await historySink.refreshBrainReady({ mdlog });
@@ -6869,6 +6899,8 @@ async function ensureBackendStrict(context) {
   }
   if (result.reason === 'no-venv') throw new Error('백엔드 가상환경이 설치되지 않음');
   if (result.ready === false) throw new Error('백엔드 lifespan 준비를 아직 확인하지 못함');
+  applyBackendEndpoint(result.backendUrl || backendEndpoint.requireBackendUrl());
+  configureConversationGraphPipeline();
   return { detail: result.spawned ? '백엔드 기동 및 lifespan 확인 완료' : '실행 중인 백엔드 확인 완료' };
 }
 
@@ -7099,7 +7131,7 @@ function registerLiveBootRunners(createWindowsPromise) {
 
 async function startLiveBoot(createWindowsPromise) {
   registerLiveBootRunners(createWindowsPromise);
-  await runStartupOrchestration({
+  const bootSnapshot = await runStartupOrchestration({
     readiness: startupReadiness,
     // stock-index는 백엔드 SQLite 상태를 확인하므로 backend gate 뒤에 둔다.
     // 전체 종목 갱신과 1시간 배치는 백엔드 lifespan이 단독 소유한다.
@@ -7110,9 +7142,15 @@ async function startLiveBoot(createWindowsPromise) {
     sequentialDependentTaskIds: ['brain-ingestion', 'chat-history-flush', 'graph-projection'],
     continuousTaskIds: ['background-loops'],
   });
+  const backendTask = bootSnapshot.tasks.find((task) => task.id === 'backend');
+  if (!backendTask || backendTask.state !== 'succeeded') {
+    mdlog('대화 그래프 갱신 예약 건너뜀 — 백엔드 endpoint 준비 실패');
+    return bootSnapshot;
+  }
   startHourlyConversationGraphRefresh();
   startConversationGraphObserver();
   mdlog(`대화 그래프 갱신 예약 — 1시간 action + 60초 read-only observer · owner=${conversationGraphScheduleOwner || 'unknown'}`);
+  return bootSnapshot;
 }
 
 let fixtureBootStarted = false;
@@ -7196,6 +7234,11 @@ ipcMain.on('athena:shell-handoff-ready', (event) => {
 });
 
 if (!process.env.ATHENA_NO_AUTOSTART) {
+  backendLauncher.setOwnedChildExitListener(({ code, signal, summary }) => {
+    if (isQuitting) return;
+    mdlog(`ensureBackend: 소유 백엔드가 예기치 않게 종료됨 — code=${code} signal=${signal}${summary ? ` — ${summary}` : ''} — 재기동한다`);
+    void backendLauncher.ensureBackend({ mdlog });
+  });
   app.whenReady().then(() => {
     // 2026-08-22 팔레트 반전(사용자 지시 "애플 Liquid Glass 형태 그대로"):
     // Windows의 acrylic/mica는 **앱 테마**를 따라 렌더된다. 다크로 두면 재질 자체가
@@ -7205,7 +7248,9 @@ if (!process.env.ATHENA_NO_AUTOSTART) {
     // 이 앱의 팔레트가 흰 유리 위 잉크 하나뿐이라 다크에서 성립하지 않는다.
     nativeTheme.themeSource = 'light';
     try {
-      configureConversationGraphPipeline();
+      historySink.configureChatHistoryStore({
+        dbPath: path.join(app.getPath('userData'), 'athena-chat-outbox.sqlite3'),
+      });
     } catch (error) {
       mdlog(`대화 이력 SQLite 준비 실패 — ${String((error && error.message) || error)}`);
     }

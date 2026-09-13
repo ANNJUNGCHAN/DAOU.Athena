@@ -4,11 +4,11 @@ const crypto = require('crypto');
 const prefs = require('./prefs');
 const { ChatHistoryStore } = require('./chat-history-store');
 
-const DEFAULT_BACKEND_URL = 'http://127.0.0.1:8010';
+const backendEndpoint = require('./backend-endpoint');
 const MAX_CHAT_MESSAGE_CHARS = 20_000;
 
 function getBackendUrl() {
-  return process.env.ATHENA_BACKEND_URL || DEFAULT_BACKEND_URL;
+  return backendEndpoint.requireBackendUrl();
 }
 
 function getBearerToken() {

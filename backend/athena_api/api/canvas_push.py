@@ -40,12 +40,6 @@ from athena_api.canvas_transform import (
     resolve_screen_render_contract,
     screen_definition_for,
 )
-from athena_api.hydrate_defaults import (
-    chain_for,
-    fill_missing_arguments,
-    missing_required_aliases,
-)
-from athena_api.mock_unsupported import is_mock_unsupported
 from athena_api.card_surface_contract import (
     attach_surface_contract,
     bind_surface_values,
@@ -64,7 +58,13 @@ from athena_api.dependencies import (
 from athena_api.errors import KiwoomError, KiwoomNotReadyError
 from athena_api.generated.registry import WEBSOCKET_TR_IDS
 from athena_api.generated.runtime import call_typed_tr
+from athena_api.hydrate_defaults import (
+    chain_for,
+    fill_missing_arguments,
+    missing_required_aliases,
+)
 from athena_api.kiwoom import KiwoomClient
+from athena_api.mock_unsupported import is_mock_unsupported
 from athena_api.security import require_local_bearer
 from athena_api.selector import SelectorService
 from athena_api.selector.errors import (
@@ -83,6 +83,9 @@ from athena_api.selector.schemas import (
 )
 from athena_api.semantic_presentation_registry import get_semantic_presentation_registry
 from athena_api.view_recipe_registry import get_view_recipe_registry
+
+BOARD_HYDRATE_MAX_CONCURRENCY = 3
+BOARD_HYDRATE_TIMEOUT_SECONDS = 20.0
 
 logger = logging.getLogger(__name__)
 
@@ -468,6 +471,21 @@ def _view_instance_id(
     )
     digest = hashlib.sha256(f"task-canvas-view\0{canonical}".encode()).hexdigest()[:20]
     return f"view_{digest}"
+
+
+def _verified_sector_target_label(
+    operation_ref: str, arguments: Mapping[str, Any]
+) -> str | None:
+    """Return a display label only for the two explicitly verified market indices."""
+
+    if operation_ref != "detail:ka20001:market_snapshot":
+        return None
+    market_type = str(arguments.get("mrkt_tp") or "").strip()
+    sector_code = str(arguments.get("inds_cd") or "").strip()
+    return {
+        ("0", "001"): "코스피",
+        ("1", "101"): "코스닥",
+    }.get((market_type, sector_code))
 
 
 @dataclass(frozen=True, slots=True)
@@ -1149,7 +1167,8 @@ async def _resolve_chained_arguments(
     request: Request,
     client: KiwoomClient,
     selector: SelectorService,
-    resolved: dict[str, str | None],
+    resolved: dict[tuple[str, str, str], asyncio.Task[str | None]],
+    semaphore: asyncio.Semaphore,
 ) -> dict[str, Any]:
     """비어 있는 필수 인자 중 **API가 목록으로 알려주는** 값을 채운다.
 
@@ -1171,11 +1190,23 @@ async def _resolve_chained_arguments(
         chain = chain_for(alias)
         if chain is None:
             continue
-        if alias not in resolved:
-            resolved[alias] = await _first_chain_value(
-                chain, target, request, client, selector
+        chain_key = (
+            chain["operation_ref"],
+            chain["json_path"],
+            json.dumps(
+                dict(target),
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
             )
-        value = resolved[alias]
+        )
+        if chain_key not in resolved:
+            resolved[chain_key] = asyncio.create_task(
+                _first_chain_value(
+                    chain, target, request, client, selector, semaphore
+                )
+            )
+        value = await resolved[chain_key]
         if value is not None:
             filled[alias] = value
     return filled
@@ -1187,6 +1218,7 @@ async def _first_chain_value(
     request: Request,
     client: KiwoomClient,
     selector: SelectorService,
+    semaphore: asyncio.Semaphore,
 ) -> str | None:
     """목록 op를 부르고 그 경로의 첫 값을 돌려준다. 실패는 ``None``.
 
@@ -1210,7 +1242,10 @@ async def _first_chain_value(
     except ValidationError:
         return None
     try:
-        result = await call_typed_tr(document.tr_id, model, request, Response(), client)
+        async with semaphore:
+            result = await call_typed_tr(
+                document.tr_id, model, request, Response(), client
+            )
     except (KiwoomError, httpx.HTTPError, TimeoutError, ValueError):
         return None
     if isinstance(result, JSONResponse):
@@ -1229,9 +1264,12 @@ async def _hydrate_operation(
     payload: BoardHydrateRequest,
     request: Request,
     client: KiwoomClient,
-    fetched: dict[tuple[str, str], tuple[BaseModel | None, str | None]],
+    fetched: dict[
+        tuple[str, str], asyncio.Task[tuple[BaseModel | None, str | None]]
+    ],
+    semaphore: asyncio.Semaphore,
     selector: SelectorService | None = None,
-    chained: dict[str, str | None] | None = None,
+    chained: dict[tuple[str, str, str], asyncio.Task[str | None]] | None = None,
     hydrated_results: dict[str, tuple[BaseModel, BaseModel]] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """read op 하나를 호출해 (상태, 바인딩)으로 돌려준다. 실패는 예외로 새지 않는다."""
@@ -1255,7 +1293,7 @@ async def _hydrate_operation(
     target: Mapping[str, Any] = payload.target
     if selector is not None and chained is not None:
         chain_values = await _resolve_chained_arguments(
-            document, target, request, client, selector, chained
+            document, target, request, client, selector, chained, semaphore
         )
         if chain_values:
             target = {**target, **chain_values}
@@ -1271,29 +1309,10 @@ async def _hydrate_operation(
     )
     fetch_key = (document.tr_id, argument_key)
     if fetch_key not in fetched:
-        try:
-            result = await call_typed_tr(
-                document.tr_id,
-                arguments,
-                request,
-                Response(),
-                client,
-            )
-        except (KiwoomError, httpx.HTTPError, TimeoutError, ValueError) as exc:
-            logger.warning(
-                "board-hydrate upstream failed tr=%s error=%s",
-                document.tr_id,
-                type(exc).__name__,
-            )
-            fetched[fetch_key] = (None, "upstream_error")
-        else:
-            if isinstance(result, JSONResponse):
-                # 업무 오류 응답(return_code != 0)은 같은 실제 호출을 공유하는 모든
-                # detail group에서도 값이 아니다.
-                fetched[fetch_key] = (None, "upstream_business_result")
-            else:
-                fetched[fetch_key] = (result, None)
-    result, fetch_error = fetched[fetch_key]
+        fetched[fetch_key] = asyncio.create_task(
+            _fetch_hydrate_result(document, arguments, request, client, semaphore)
+        )
+    result, fetch_error = await fetched[fetch_key]
     if result is None:
         assert fetch_error is not None
         return unbound(fetch_error)
@@ -1309,6 +1328,38 @@ async def _hydrate_operation(
         },
         bound,
     )
+
+
+async def _fetch_hydrate_result(
+    document: Any,
+    arguments: BaseModel,
+    request: Request,
+    client: KiwoomClient,
+    semaphore: asyncio.Semaphore,
+) -> tuple[BaseModel | None, str | None]:
+    """Call one unique hydration query, sharing its success or failure."""
+
+    try:
+        async with semaphore:
+            result = await call_typed_tr(
+                document.tr_id,
+                arguments,
+                request,
+                Response(),
+                client,
+            )
+    except (KiwoomError, httpx.HTTPError, TimeoutError, ValueError) as exc:
+        logger.warning(
+            "board-hydrate upstream failed tr=%s error=%s",
+            document.tr_id,
+            type(exc).__name__,
+        )
+        return None, "upstream_error"
+    if isinstance(result, JSONResponse):
+        # 업무 오류 응답(return_code != 0)은 같은 실제 호출을 공유하는 모든
+        # detail group에서도 값이 아니다.
+        return None, "upstream_business_result"
+    return result, None
 
 
 @router.post(
@@ -1346,10 +1397,13 @@ async def internal_canvas_board_hydrate(
     # 한 실제 TR은 detail group이 여러 개여도 요청 인자와 upstream 응답이 같다.
     # 보드 한 장 안에서는 한 번만 호출하고, 원본 응답을 각 operation_ref의 가시
     # occurrence로 따로 투영한다. 같은 실패도 다시 호출하지 않는다.
-    fetched: dict[tuple[str, str], tuple[BaseModel | None, str | None]] = {}
+    fetched: dict[
+        tuple[str, str], asyncio.Task[tuple[BaseModel | None, str | None]]
+    ] = {}
     # 연쇄 인자(회원사·테마 등)는 요청 하나에서 한 번만 조회한다.
-    chained: dict[str, str | None] = {}
+    chained: dict[tuple[str, str, str], asyncio.Task[str | None]] = {}
     hydrated_results: dict[str, tuple[BaseModel, BaseModel]] = {}
+    semaphore = asyncio.Semaphore(BOARD_HYDRATE_MAX_CONCURRENCY)
     operation_refs = list(_hydrate_operation_refs(board, payload.slot_ids))
     primary = board.primary if isinstance(board.primary, Mapping) else {}
     if primary.get("renderer") == "athena-chart":
@@ -1357,18 +1411,58 @@ async def internal_canvas_board_hydrate(
             primary_ref = source.get("mapping_id") if isinstance(source, Mapping) else None
             if isinstance(primary_ref, str) and primary_ref not in operation_refs:
                 operation_refs.append(primary_ref)
-    for operation_ref in operation_refs:
-        status, values = await _hydrate_operation(
-            operation_ref,
-            selector.catalog.find_exact(operation_ref),
-            payload,
-            request,
-            data_client,
-            fetched,
-            selector,
-            chained,
-            hydrated_results,
+    operation_tasks = [
+        asyncio.create_task(
+            _hydrate_operation(
+                operation_ref,
+                selector.catalog.find_exact(operation_ref),
+                payload,
+                request,
+                data_client,
+                fetched,
+                semaphore,
+                selector,
+                chained,
+                hydrated_results,
+            )
         )
+        for operation_ref in operation_refs
+    ]
+    _done: set[asyncio.Task[tuple[dict[str, Any], dict[str, Any]]]] = set()
+    pending_operations: set[
+        asyncio.Task[tuple[dict[str, Any], dict[str, Any]]]
+    ] = set()
+    try:
+        if operation_tasks:
+            _done, pending_operations = await asyncio.wait(
+                operation_tasks, timeout=BOARD_HYDRATE_TIMEOUT_SECONDS
+            )
+    finally:
+        pending = [
+            task
+            for task in [*operation_tasks, *fetched.values(), *chained.values()]
+            if not task.done()
+        ]
+        for task in pending:
+            task.cancel()
+        if pending:
+            await asyncio.gather(*pending, return_exceptions=True)
+    # 결과 병합은 템플릿 선언 순서를 유지한다. 같은 슬롯에 여러 source가 있으면
+    # 기존 직렬 구현과 같은 우선순위로 마지막 source가 투영된다. 전체 예산 안에
+    # 끝나지 않은 조회만 명시적으로 재시도 가능한 상태로 남기고, 먼저 끝난 값은
+    # 버리지 않는다.
+    for operation_ref, task in zip(operation_refs, operation_tasks, strict=True):
+        if task in pending_operations:
+            status, values = (
+                {
+                    "operation_ref": operation_ref,
+                    "status": "unbound",
+                    "reason": "hydration_timeout",
+                },
+                {},
+            )
+        else:
+            status, values = task.result()
         operations.append(status)
         bound.update(values)
 
@@ -1378,7 +1472,8 @@ async def internal_canvas_board_hydrate(
     retryable_refs = {
         status["operation_ref"]
         for status in operations
-        if status.get("reason") in {"upstream_error", "upstream_business_result"}
+        if status.get("reason")
+        in {"upstream_error", "upstream_business_result", "hydration_timeout"}
     }
     requested_slots = (
         board.binding_slots
@@ -1423,7 +1518,9 @@ async def internal_canvas_board_hydrate(
     if primary.get("renderer") == "athena-chart":
         for source in primary.get("props_from") or ():
             operation_ref = source.get("mapping_id") if isinstance(source, Mapping) else None
-            hydrated = hydrated_results.get(operation_ref) if isinstance(operation_ref, str) else None
+            hydrated = (
+                hydrated_results.get(operation_ref) if isinstance(operation_ref, str) else None
+            )
             if hydrated is None:
                 continue
             result, arguments = hydrated
@@ -2401,13 +2498,16 @@ async def canvas_render_plan(
             reservation=reservation,
         )
 
+    target_label = _verified_sector_target_label(
+        operation_ref, getattr(verified_plan, "arguments", None) or {}
+    )
     envelope = {
         "operation_ref": operation_ref,
         "canvas_type": canvas_kind,
         "screen_id": screen_id,
         "fell_back": False,
         "fallback_reason": None,
-        "caption": payload.caption,
+        "caption": target_label or payload.caption,
         # canvas_data.render_with_plan과 같은 규칙 — TR이 카드 16종 중 하나로
         # 확정되면 고정 이름이 타이틀, caption은 서브타이틀로 내려간다.
         "card_title": resolve_fixed_card_title(operation_ref),
@@ -2421,6 +2521,8 @@ async def canvas_render_plan(
         "source_data": _lossless_source_data(call_payload),
         **card_contract,
     }
+    if target_label is not None:
+        envelope["target_label"] = target_label
     if renderer_id is not None:
         envelope["renderer_id"] = renderer_id
     if correlation is not None:
@@ -2445,6 +2547,11 @@ async def canvas_render_plan(
                 "screen_id": screen_id,
                 "correlation": correlation,
                 "envelope": envelope,
+                **(
+                    {"target_label": target_label}
+                    if target_label is not None
+                    else {}
+                ),
                 "receipt": _display_receipt(
                     delivery="inline",
                     canvas_kind=canvas_kind,
@@ -2490,6 +2597,45 @@ async def canvas_render_plan(
             ),
             "next_actions": [],
         }
+    )
+
+
+@router.post(
+    "/api/v1/canvas/render-query",
+    operation_id="canvas_render_query",
+    summary="Render a signed query while preserving the confirmed order ticket boundary",
+    openapi_extra={"x-athena-llm-exposed": False},
+)
+async def canvas_render_query(
+    payload: RenderPlanRequest,
+    request: Request,
+    response: Response,
+    client: OptionalDataClientDep,
+    selector: SelectorServiceDep,
+    account: AccountAliasDep,
+) -> JSONResponse:
+    # MCP previously used call-query before rebuilding a card without its signed
+    # target identity. Keep that endpoint's pre-execution rejection contract for
+    # orders/WebSockets, then let the signed renderer own query execution and UI.
+    verified_plan = selector.signer.verify(
+        payload.plan_token, selector.catalog, expected_account=account
+    )
+    document = selector.catalog.find_exact(verified_plan.operation_ref)
+    if document is None or document.kind != "query":
+        # This raises before consuming the token or dispatching: order plans keep
+        # their sanitized ticket draft and remain available for human confirmation.
+        await selector.call(
+            CallRequest(plan_token=payload.plan_token),
+            request,
+            response,
+            client,
+            account=account,
+            query_only=True,
+        )
+    if client is None or not client.is_ready:
+        raise KiwoomNotReadyError("Kiwoom data service is not ready")
+    return await canvas_render_plan(
+        payload, request, response, client, None, None, selector, account
     )
 
 

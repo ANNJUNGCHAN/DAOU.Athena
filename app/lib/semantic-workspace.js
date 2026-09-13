@@ -97,6 +97,16 @@ function isSafePrimary(envelope, card) {
   return ['action', 'status'].includes(envelope.canvas_type) && !envelope.fell_back;
 }
 
+function usesExclusiveSpecializedPrimary(envelope, root) {
+  if (!envelope || !root) return false;
+  const routing = typeof module !== 'undefined' && module.exports
+    ? require('./paper-card-routing')
+    : window.AthenaLib && window.AthenaLib.PaperCardRouting;
+  const dataset = asObject(root.dataset);
+  return Boolean(routing && routing.isExclusiveAppPrimaryEnvelope(envelope))
+    && dataset.semanticPrimary === 'specialized';
+}
+
 function fieldClass(field) {
   return firstText(field.field_class, field.fieldClass, field.semantic_status, field.semanticStatus, 'semantic').toLowerCase();
 }
@@ -1014,8 +1024,21 @@ function rebuildObservationIndex(root, workspace, state) {
 }
 
 function upsert(root, envelope) {
+  if (!root) return null;
+  // 업종 현재가 snapshot의 8개 실데이터 필드는 CardKinds가 부호와 단위를 포함해
+  // 이미 완전하게 표시한다. 같은 관측값을 semantic workspace로 다시 펴면 지수의
+  // 방향 부호가 음수 값처럼 보이고 내부 단위 설명까지 중복 노출된다.
+  if (usesExclusiveSpecializedPrimary(envelope, root)) {
+    disposeRealtime(root);
+    const existing = root.querySelector('.semantic-workspace');
+    if (existing && typeof existing.remove === 'function') existing.remove();
+    delete root.__athenaSemanticWorkspaceState;
+    root.dataset.taskCanvas = 'true';
+    delete root.dataset.semanticWorkspaceStatus;
+    return null;
+  }
   const presentation = normalizePresentation(envelope);
-  if (!root || !presentation) return null;
+  if (!presentation) return null;
   const viewInstanceId = firstText(envelope.view_instance_id, envelope.viewInstanceId, 'legacy');
   const typedContract = typedEnvelopeContract(envelope);
   const incomingGenerations = typedContract.generations;
@@ -1250,6 +1273,7 @@ const api = {
   HIDDEN_FIELD_CLASSES, applyRealtimeTick, dedupeFields, disposeRealtime, formatValue,
   isSafePrimary, isTaskCanvasEnvelope, looksInternalLabel, normalizeField, normalizePresentation,
   presentationContract, safeRealtimeBindingId, semanticRealtimeUpdates, upsert, userVisibleField,
+  usesExclusiveSpecializedPrimary,
 };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 else {

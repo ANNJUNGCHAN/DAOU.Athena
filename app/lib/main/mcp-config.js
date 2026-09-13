@@ -3,6 +3,7 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
+const { normalizeBackendUrl } = require('./backend-endpoint');
 
 const BACKEND_DIR = path.join(__dirname, '..', '..', '..', 'backend');
 const PYTHON_EXE = path.join(BACKEND_DIR, '.venv', 'Scripts', 'python.exe');
@@ -58,17 +59,22 @@ function sanitizeClaudeServers(servers) {
   if (!athena || typeof athena !== 'object') return {};
   const env = athena.env && typeof athena.env === 'object' ? athena.env : {};
   const expectedArgs = ['-m', 'athena_mcp', 'serve'];
+  const expectedBackendUrl = normalizeBackendUrl(process.env.ATHENA_BACKEND_URL);
   if (athena.command !== PYTHON_EXE
     || !Array.isArray(athena.args)
     || canonicalJson(athena.args) !== canonicalJson(expectedArgs)
-    || env.PYTHONPATH !== BACKEND_DIR) {
+    || env.PYTHONPATH !== BACKEND_DIR
+    || (env.ATHENA_BACKEND_URL || null) !== expectedBackendUrl) {
     throw new TypeError('Athena gateway config does not match the app-owned contract');
   }
   return {
     athena: {
       command: PYTHON_EXE,
       args: expectedArgs,
-      env: { PYTHONPATH: BACKEND_DIR },
+      env: {
+        PYTHONPATH: BACKEND_DIR,
+        ...(expectedBackendUrl ? { ATHENA_BACKEND_URL: expectedBackendUrl } : {}),
+      },
     },
   };
 }
@@ -146,6 +152,7 @@ function writeGrokProjectMcpConfig(dir) {
     `args = ${JSON.stringify(['-m', 'athena_mcp', 'serve'])}`,
     `env = ${tomlInlineTable({
       PYTHONPATH: BACKEND_DIR,
+      ...(process.env.ATHENA_BACKEND_URL ? { ATHENA_BACKEND_URL: normalizeBackendUrl(process.env.ATHENA_BACKEND_URL) } : {}),
       ATHENA_MCP_TOOL_NAME_STYLE: 'grok',
     })}`,
     'enabled = true',
@@ -164,7 +171,10 @@ function ensureMcpConfig(userDataDir) {
       athena: {
         command: PYTHON_EXE,
         args: ['-m', 'athena_mcp', 'serve'],
-        env: { PYTHONPATH: BACKEND_DIR },
+        env: {
+          PYTHONPATH: BACKEND_DIR,
+          ...(process.env.ATHENA_BACKEND_URL ? { ATHENA_BACKEND_URL: normalizeBackendUrl(process.env.ATHENA_BACKEND_URL) } : {}),
+        },
       },
     },
   };

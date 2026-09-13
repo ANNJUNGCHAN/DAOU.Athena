@@ -193,6 +193,11 @@ const routineMainCardSessionClearGuard = window.AthenaLib.RoutineMainCard.create
 window.addEventListener('athena:routine-main-card-preserve-session', () => {
   routineMainCardSessionClearGuard.preserveNextClear();
 });
+// 새 대화로 넘어가며 화면을 비우는 것은 이전 대화의 카드 삭제가 아니다.
+// sidebar가 이 이벤트를 보낸 직후 clearCanvases()를 부르므로, 그 한 번의 빈 스택 보고만 막는다.
+window.addEventListener('athena:new-conversation', () => {
+  routineMainCardSessionClearGuard.preserveNextClear();
+});
 // 통합 카드 하나 안의 각 mode/section은 기존 차트·호가 renderer의 lifecycle을
 // 그대로 소유한다. 같은 panel key가 갱신될 때만 해당 lifecycle을 닫고, 카드가
 // 닫히면 남은 panel을 모두 닫는다.
@@ -513,8 +518,9 @@ window.athena.on('athena:add-canvas', ({ type, sessionCardId }) => {
 // 카드 비우기 — 옛 판에서는 main이 캔버스 창을 수축시킬 때 `athena:clear-canvases`
 // IPC로 보냈다. 두 영역이 같은 문서에 사는 지금은 IPC를 왕복할 이유가 없다:
 // chat.js의 Esc(유휴 상태)가 shell.js 버스를 통해 이 함수를 직접 부른다.
-function clearCanvases() {
-  const shouldReportSessionCards = routineMainCardSessionClearGuard.shouldReportAfterClear();
+function clearCanvases({ persist = true } = {}) {
+  const shouldReportSessionCards = routineMainCardSessionClearGuard.shouldReportAfterClear()
+    && persist;
   if (routineMainCardRenderer) routineMainCardRenderer.invalidate();
   for (const card of grid.querySelectorAll('.card')) {
     destroyCard(card);
@@ -1692,7 +1698,7 @@ async function mountBoardPrimary(host, envelope, mounted, retry) {
 }
 
 const RETRYABLE_BOARD_HYDRATE_REASONS = new Set([
-  'upstream_error', 'upstream_business_result', 'primary_transform_error',
+  'upstream_error', 'upstream_business_result', 'primary_transform_error', 'hydration_timeout',
 ]);
 
 // 봉투가 못 채운 슬롯을 마운트 뒤에 한 번 더 채운다. 조회 자체가 실패하면 결측값을

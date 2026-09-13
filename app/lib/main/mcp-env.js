@@ -73,7 +73,15 @@ function runRedactEnv(alias, keys) {
 // **멱등**이다 — 이미 센티널이거나 빈 값이면 아무것도 하지 않는다. 값 자체는
 // 반환값에 절대 담지 않는다(alias/key만).
 async function migratePlaintextEnv() {
-  const registry = readRegistryStrict();
+  let registry;
+  try {
+    registry = readRegistryStrict();
+  } catch (error) {
+    // 사용자가 MCP를 등록하기 전에는 레지스트리 파일이 없어도 정상이다.
+    // 이전을 시작한 뒤의 검증은 아래 readRegistryStrict로 계속 엄격히 수행한다.
+    if (error.code === 'ENOENT') return { migrated: [], skipped: [] };
+    throw error;
+  }
   const migrated = [];
   const skipped = [];
 

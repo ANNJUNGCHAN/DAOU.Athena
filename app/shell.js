@@ -176,8 +176,8 @@
     // 없어진 뒤 남는 의미는 "쌓인 카드를 치운다"이고, 두 영역이 같은 문서에
     // 사는 지금은 IPC를 왕복할 이유가 없다.
     registerCanvasClear(fn) { hooks.clearCanvases = typeof fn === 'function' ? fn : null; },
-    clearCanvases() {
-      if (hooks.clearCanvases) hooks.clearCanvases();
+    clearCanvases(options) {
+      if (hooks.clearCanvases) hooks.clearCanvases(options);
     },
     // chat.js가 openSettings()를 등록한다 — 사이드바 계정 메뉴의 "설정" 항목
     // (Paper 보드 16)이 점·커맨드바와 동등한 진입로가 되려면 이 다리가 필요하다.

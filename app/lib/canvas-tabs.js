@@ -26,6 +26,8 @@ function maskAccount(value) {
 function targetLabel(envelope) {
   const args = (envelope && (envelope.operation_args || envelope.arguments)) || {};
   const data = (envelope && envelope.data) || {};
+  const verifiedTarget = clean(envelope && (envelope.target_label || envelope.targetLabel));
+  if (verifiedTarget) return verifiedTarget;
   const name = clean(envelope && envelope.stk_nm) || clean(args.stk_nm) || clean(data.stk_nm);
   if (name) return name;
   const code = clean(envelope && envelope.stk_cd) || clean(args.stk_cd)

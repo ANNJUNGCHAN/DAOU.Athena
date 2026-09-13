@@ -123,7 +123,7 @@ async def _auto_execute_call(
         )
     except httpx.ConnectError:
         return None, (
-            "자동 실행(athena_call)이 키움 백엔드(127.0.0.1:8010) 미기동으로 실패했다. "
+            "자동 실행(athena_call)이 앱에 연결된 키움 백엔드의 응답이 없어 실패했다. "
             "plan_token은 이미 소비됐다 — 재시도하지 말고 athena_resolve부터 다시 부른다."
         )
     except httpx.TimeoutException as exc:
@@ -482,7 +482,8 @@ _DESCRIPTION_BY_TOOL: dict[str, str] = {
         f"2/4단계 — 실제 operation_ref 하나의 정확한 인자·응답 계약을 읽는다. {_FLOW_NOTE_POINTER}"
     ),
     RESOLVE_TOOL: (
-        f"3/4단계 — 오퍼레이션을 선택하고 인자를 검증해 서명된 실행 계획을 발급한다. {_FLOW_NOTE_POINTER}"
+        "3/4단계 — 오퍼레이션을 선택하고 인자를 검증해 서명된 실행 계획을 발급한다. "
+        f"{_FLOW_NOTE_POINTER}"
     ),
     CALL_TOOL: (
         "4/4단계 — 서명된 계획을 실행한다. 웹소켓 계획은 등록 프레임 하나를 보내고 "
@@ -584,10 +585,27 @@ def _extract_error_detail(response: httpx.Response) -> str:
         return response.text[:500]
     if isinstance(body, dict):
         code = body.get("code")
-        detail = body.get("detail")
+        detail = body.get("message") or body.get("detail")
         if detail is not None:
             rendered = detail if isinstance(detail, str) else json.dumps(detail, ensure_ascii=False)
-            return f"{code}: {rendered}" if isinstance(code, str) else rendered
+            rendered = f"{code}: {rendered}" if isinstance(code, str) else rendered
+            if code in {
+                "AMBIGUOUS_OPERATION", "NO_CONFIDENT_MATCH", "PREFERRED_REF_NOT_SUPPORTED_BY_QUERY"
+            }:
+                details = body.get("details")
+                if isinstance(details, dict):
+                    recovery = {
+                        key: details[key]
+                        for key in ("candidates", "reason", "reason_codes")
+                        if key in details
+                    }
+                    if recovery:
+                        rendered += " · " + json.dumps(recovery, ensure_ascii=False)
+                rendered += (
+                    " · 같은 요청을 반복하지 말고 검색·스키마 근거로 조회 대상과 조건을 보완하라."
+                    " 확정할 수 없으면 필요한 조건을 사용자에게 확인하라."
+                )
+            return rendered
         return json.dumps(body, ensure_ascii=False)
     return json.dumps(body, ensure_ascii=False)
 
@@ -617,7 +635,7 @@ async def dispatch(
         response = await http_client.post(url, json=arguments, timeout=timeout)
     except httpx.ConnectError:
         return _upstream_failed(
-            "키움 백엔드(127.0.0.1:8010)가 기동돼 있지 않다. 사용자에게 백엔드 "
+            "앱에 연결된 키움 백엔드가 응답하지 않는다. 사용자에게 백엔드 "
             "실행을 안내하고, 다른 데이터 소스로 대체하지 마라."
         )
     except httpx.TimeoutException as exc:

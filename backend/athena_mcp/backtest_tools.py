@@ -1143,7 +1143,7 @@ async def dispatch(
             )
     except httpx.ConnectError:
         return _upstream_failed(
-            "키움 백엔드(127.0.0.1:8010)가 기동돼 있지 않다. 사용자에게 백엔드 "
+            "앱에 연결된 키움 백엔드가 응답하지 않는다. 사용자에게 백엔드 "
             "실행을 안내하고, 실행이 시작됐다고 말하지 마라."
         )
     except httpx.HTTPError as exc:

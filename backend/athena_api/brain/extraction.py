@@ -760,9 +760,10 @@ class ExtractionService:
             response = await self._client.complete(prompt)
         except asyncio.CancelledError:
             raise
-        except Exception as exc:
-            detail = str(exc).strip() or type(exc).__name__
-            raise ExtractionError(f"structured extraction request failed: {detail}") from exc
+        except Exception:
+            # Provider failures can include credentials, prompts, or response fragments.
+            # This error is persisted in job state, so its outward text must stay fixed.
+            raise ExtractionError("structured extraction request failed") from None
         try:
             envelope = parse_extraction_response(
                 response,
