@@ -25,6 +25,7 @@ export const DEST_CONTROL_FILES = Object.freeze([
   ".gitignore",
   ".gitattributes",
   ".github/workflows/secret-scan.yml",
+  ".github/workflows/release.yml",
   "scripts/build-windows-installer.ps1",
   "scripts/windows-installer.config.cjs",
   "README.md",
@@ -46,6 +47,7 @@ export function isKeepPath(path) {
   if (DEST_FILES.has(p)) return true;
   if (p.startsWith(".githooks/")) return true;
   if (p.startsWith("scripts/security/")) return true;
+  if (p.startsWith("scripts/release/")) return true;
   if (RUNTIME_ROOT.has(p)) return true;
   if (p === "app/test-fixtures/provider-contract/decision.json") return true;
   if (
@@ -56,6 +58,7 @@ export function isKeepPath(path) {
     return true;
   }
   if (p === "backend/pyproject.toml" || p === "backend/uv.lock") return true;
+  if (p.startsWith("backend/ref/paper-ledger/")) return false;
   if (
     /^backend\/(athena_api|athena_mcp|ref)\//.test(p) &&
     !/(?:^|\/)(?:__pycache__|tests?)\//.test(p) &&

@@ -23,6 +23,10 @@ test("dest-control files stay in the keep-set", () => {
   assert.equal(isKeepPath(".githooks/pre-commit"), true);
   assert.equal(isKeepPath("scripts/security/keepset.mjs"), true);
   assert.equal(isKeepPath("scripts/security/check-tracked-keepset.mjs"), true);
+  assert.equal(isKeepPath(".github/workflows/release.yml"), true);
+  assert.equal(isKeepPath("scripts/release/version.mjs"), true);
+  assert.equal(isKeepPath("scripts/release/check-version.mjs"), true);
+  assert.equal(isKeepPath("scripts/release/set-version.mjs"), true);
 });
 
 test("app lib/data/styles runtime sources stay; tests and probes do not", () => {
@@ -52,6 +56,13 @@ test("handoff, datasets, paper ledgers, and prompt dumps are outside the keep-se
   assert.equal(isKeepPath("_g5b_prompt.txt"), false);
   assert.equal(isKeepPath("docs/blog/athena-ai/README.md"), false);
   assert.equal(isKeepPath("docs/product-pages/index.html"), false);
+});
+
+test("Paper extraction ledgers stay local while runtime card templates remain tracked", () => {
+  assert.equal(isKeepPath("backend/ref/paper-ledger/1-0/1DX-0.json"), false);
+  assert.equal(isKeepPath("backend/ref/paper-ledger/index.json"), false);
+  assert.equal(isKeepPath("backend/ref/card-surface-templates/2RJ7-1/slots.json"), true);
+  assert.equal(isKeepPath("app/lib/paper-screen-phrases.generated.js"), true);
 });
 
 test("forbiddenTrackedPaths returns only drop paths in input order", () => {

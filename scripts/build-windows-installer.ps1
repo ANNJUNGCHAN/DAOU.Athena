@@ -2,8 +2,7 @@
 
 [CmdletBinding()]
 param(
-  [ValidatePattern('^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$')]
-  [string]$Version = '0.1.0-beta.1',
+  [string]$Version,
   [string]$OutputRoot
 )
 
@@ -65,6 +64,15 @@ $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $AppSource = Join-Path $RepoRoot 'app'
 $BackendSource = Join-Path $RepoRoot 'backend'
 $ConfigPath = Join-Path $PSScriptRoot 'windows-installer.config.cjs'
+
+if ([string]::IsNullOrWhiteSpace($Version)) {
+  $packagePath = Join-Path $AppSource 'package.json'
+  $package = Get-Content -LiteralPath $packagePath -Raw | ConvertFrom-Json
+  $Version = [string]$package.version
+}
+if ($Version -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
+  throw "Version must be X.Y.Z or X.Y.Z-prerelease. Got: $Version"
+}
 
 foreach ($command in @('git', 'node', 'npm', 'npx', 'uv')) {
   if (-not (Get-Command $command -ErrorAction SilentlyContinue)) {

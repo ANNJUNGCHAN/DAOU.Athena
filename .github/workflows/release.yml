@@ -1,0 +1,31 @@
+name: release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+permissions:
+  contents: write
+jobs:
+  github-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Require tag commit is on origin/main
+        run: |
+          git fetch origin main --prune
+          git merge-base --is-ancestor HEAD origin/main
+      - name: Check version matches tag
+        run: node scripts/release/check-version.mjs
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          extra=()
+          if [[ "$TAG" == *-* ]]; then
+            extra+=(--prerelease)
+          fi
+          gh release create "$TAG" --title "$TAG" --generate-notes --verify-tag "${extra[@]}"

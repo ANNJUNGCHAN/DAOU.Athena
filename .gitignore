@@ -55,6 +55,7 @@ datasets/eval-runs/
 !/.github/
 !/.github/workflows/
 !/.github/workflows/secret-scan.yml
+!/.github/workflows/release.yml
 !/README.md
 !/GROK.md
 !/AGENTS.md
@@ -63,6 +64,8 @@ datasets/eval-runs/
 /scripts/*
 !/scripts/security/
 !/scripts/security/**
+!/scripts/release/
+!/scripts/release/**
 !/scripts/build-windows-installer.ps1
 !/scripts/windows-installer.config.cjs
 !/app/
@@ -112,3 +115,6 @@ datasets/eval-runs/
 **/*.test.js
 **/test/
 **/tests/
+
+# Paper extraction sources stay local; generated app phrases and runtime templates stay tracked.
+/backend/ref/paper-ledger/
