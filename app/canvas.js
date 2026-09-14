@@ -2265,6 +2265,15 @@ function ensureIntegratedRealtimeCleanup(root) {
 function stampIntegratedRealtimeState(root, state) {
   if (!root || !state) return;
   const realtime = integratedRealtimeMeta(root);
+  const nextGeneration = Number(state.generation);
+  const nextConnectionGeneration = Number(state.connectionGeneration);
+  const sourceChanged = realtime.mounted === true && (
+    (Number.isFinite(nextGeneration) && Number.isFinite(Number(realtime.generation))
+      && nextGeneration !== Number(realtime.generation))
+    || (Number.isFinite(nextConnectionGeneration) && Number.isFinite(Number(realtime.connectionGeneration))
+      && nextConnectionGeneration !== Number(realtime.connectionGeneration))
+  );
+  if (sourceChanged) stampBoardRealtimeStatus(root, 'registering');
   realtime.status = String(state.status || 'unknown');
   if (realtime.status === 'active') {
     realtime.mounted = true;
@@ -2731,10 +2740,18 @@ function syncIntegratedRealtime(root, envelope) {
   const payload = integratedRealtimePayload(root, envelope);
   const realtime = integratedRealtimeMeta(root);
   const accountGeneration = rendererRealtimeAccountGeneration;
+  const failedStatus = ['registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error']
+    .includes(String(realtime.status || ''));
+  const preserveReceiving = realtime.mounted === true
+    && realtime.accountGeneration === accountGeneration
+    && !failedStatus;
   realtime.leaseId = payload.leaseId;
   realtime.target = integratedCardSurface.normalizeIdentity(payload.target);
-  realtime.status = 'registering';
-  stampBoardRealtimeStatus(root, realtime.status);
+  realtime.accountGeneration = accountGeneration;
+  if (!preserveReceiving) {
+    realtime.status = 'registering';
+    stampBoardRealtimeStatus(root, realtime.status);
+  }
   const prior = integratedRealtimeTasks.get(root) || Promise.resolve();
   const task = prior.catch(() => {}).then(async () => {
     const boardId = String((surfaceContractOf(envelope) || {}).board_id || '');

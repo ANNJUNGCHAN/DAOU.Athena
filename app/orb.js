@@ -1610,7 +1610,7 @@
   }
 
   /** 라벨·값 한 줄. 표 카드의 .orb-fold-row 어휘를 그대로 쓴다. */
-  function orbLabelValueRow(label, value, tone) {
+  function orbLabelValueRow(label, value, tone, fieldKey = '', component = null) {
     const row = document.createElement('div');
     row.className = 'orb-fold-row';
     const labelEl = document.createElement('div');
@@ -1618,6 +1618,15 @@
     labelEl.textContent = label;
     const valueEl = document.createElement('div');
     valueEl.className = tone ? `orb-fold-cell-value is-${tone}` : 'orb-fold-cell-value';
+    if (fieldKey) valueEl.dataset.orbFieldKey = fieldKey;
+    if (component && component.path) {
+      valueEl.dataset.cardComponentPath = component.path;
+      valueEl.dataset.cardComponentLabel = String(component.label || label || '선택 항목').slice(0, 80);
+      valueEl.dataset.cardComponentObservation = 'true';
+      if (/^obs_[a-f0-9]{12,64}$/i.test(String(component.observationId || ''))) {
+        valueEl.dataset.semanticObservationId = String(component.observationId);
+      }
+    }
     valueEl.textContent = value;
     row.append(labelEl, valueEl);
     return row;
@@ -1663,10 +1672,13 @@
     return { text: String(value), tone: null };
   }
 
-  function orbFieldRow(field) {
+  function orbFieldRow(field, index, observationId = '') {
     const { text, tone } = orbFactsValue(field);
-    const label = (field && (field.label != null ? field.label : field.key)) || '';
-    return orbLabelValueRow(String(label), text, tone);
+    const label = (field && (field.label_ko != null ? field.label_ko
+      : field.label != null ? field.label : field.key)) || '';
+    return orbLabelValueRow(String(label), text, tone, String((field && field.key) || ''), {
+      path: `data.fields.${index}.value`, label, observationId,
+    });
   }
 
   function orbTableEl() {
@@ -1682,8 +1694,25 @@
     if (!picked.shown.length) return null; // 빈 카드를 그리지 않는다
     const card = orbCardShell(envelope, '사실');
     const table = orbTableEl();
-    for (const field of picked.shown) table.appendChild(orbFieldRow(field));
+    const observations = Array.isArray(envelope.semantic_observations) ? envelope.semantic_observations : [];
+    const observationFor = (field) => {
+      const label = String((field && (field.label_ko || field.label || field.key)) || '');
+      const found = observations.find((observation) => (
+        String((observation && (observation.label_ko || observation.label)) || '') === label
+      ));
+      return String((found && found.observation_id) || '');
+    };
+    for (const field of picked.shown) {
+      table.appendChild(orbFieldRow(field, fields.indexOf(field), observationFor(field)));
+    }
     card.appendChild(table);
+    if (isOrbLegacyQuoteFactsEnvelope(envelope)) {
+      const realtimeStatus = document.createElement('div');
+      realtimeStatus.className = 'orb-kiumi-note';
+      realtimeStatus.dataset.orbRealtimeFallbackStatus = 'true';
+      realtimeStatus.hidden = true;
+      card.appendChild(realtimeStatus);
+    }
     appendOrbNote(card, orbMiniCard.foldNote('facts', { items: picked.hidden }));
     return card;
   }
@@ -2181,7 +2210,16 @@
     } else if (state.status === 'unavailable') {
       node.textContent = '실시간 중단 · 다시 조회 필요';
       node.hidden = false;
-    } else if (state.status === 'ws-active' || state.status === 'stopped') {
+    } else if (state.status === 'ws-active') {
+      if (state.phase !== 'active' && node.dataset.orbRealtimeReceiving === 'true') return;
+      if (state.phase === 'active') node.dataset.orbRealtimeReceiving = 'false';
+      node.textContent = '실시간 연결됨 · 첫 체결 대기';
+      node.hidden = false;
+    } else if (state.status === 'receiving') {
+      node.dataset.orbRealtimeReceiving = 'true';
+      node.textContent = '실시간 수신 중';
+      node.hidden = false;
+    } else if (state.status === 'stopped') {
       node.hidden = true;
       node.textContent = '';
     }
@@ -2214,25 +2252,140 @@
     });
   }
 
+  function isOrbLegacyQuoteFactsEnvelope(envelope) {
+    const refs = Array.isArray(envelope && envelope.operation_refs) ? envelope.operation_refs : [];
+    const surfaceContract = orbKiumiSurfaceContract(envelope);
+    return Boolean(envelope && envelope.canvas_type === 'facts'
+      && envelope.card_id === 'CC-03' && envelope.mode === 'profile'
+      && refs.includes('detail:ka10001:current_trading')
+      && String((surfaceContract && surfaceContract.board_id) || '') === '137X-2');
+  }
+
+  function orbLegacyQuoteTrustedKeys(envelope) {
+    if (!isOrbLegacyQuoteFactsEnvelope(envelope)) return new Map();
+    const bindings = Array.isArray(envelope.realtime_bindings) ? envelope.realtime_bindings : [];
+    const bindingByObservation = new Map();
+    for (const binding of bindings) {
+      const bindingId = String((binding && binding.binding_id) || '');
+      const observationId = String((binding && binding.observation_id) || '');
+      if (/^rtb_[a-f0-9]{12,64}$/i.test(bindingId) && /^obs_[a-f0-9]{12,64}$/i.test(observationId)) {
+        bindingByObservation.set(observationId, bindingId);
+      }
+    }
+    const trusted = new Map();
+    const surfaceContract = orbKiumiSurfaceContract(envelope);
+    const rawSlots = surfaceContract && Array.isArray(surfaceContract.slot_values)
+      ? surfaceContract.slot_values : [];
+    for (const slot of rawSlots) {
+      const slotId = String((slot && slot.slot_id) || '');
+      const directObservation = String((slot && slot.observation_id) || '');
+      if (slotId === 's005' && bindingByObservation.has(directObservation)) trusted.set('cur_prc', slotId);
+      if (slotId === 's018' && bindingByObservation.has(directObservation)) trusted.set('trde_qty', slotId);
+      const composite = slot && slot.value && slot.value.composite;
+      for (const part of (composite && Array.isArray(composite.parts)) ? composite.parts : []) {
+        const observationId = String((part && part.observation_id) || '');
+        if (slotId === 's006' && bindingByObservation.has(observationId)
+          && (part.f === 'pred_pre' || part.f === 'flu_rt')) trusted.set(part.f, slotId);
+      }
+    }
+    const fields = envelope.data && Array.isArray(envelope.data.fields) ? envelope.data.fields : [];
+    const observations = Array.isArray(envelope.semantic_observations) ? envelope.semantic_observations : [];
+    const signField = fields.find((field) => String((field && field.key) || '') === 'pre_sig');
+    const signLabel = String((signField && (signField.label_ko || signField.label)) || '');
+    const signObservation = signLabel && observations.find((observation) => {
+      const observationId = String((observation && observation.observation_id) || '');
+      const bindingId = String((observation && observation.realtime_binding_id) || '');
+      const label = String((observation && (observation.label_ko || observation.label)) || '');
+      return label === signLabel && bindingByObservation.get(observationId) === bindingId;
+    });
+    if (signObservation) trusted.set('pre_sig', '');
+    return trusted;
+  }
+
+  function orbLegacyQuoteText(key, value) {
+    if (key === 'cur_prc') return factsCard.formatNumeric(cardPrimitives.priceMagnitude(value));
+    if (key === 'pre_sig') return String(value);
+    if (key === 'pred_pre') {
+      const formatted = factsCard.formatNumeric(value);
+      return Number(value) > 0 ? `+${formatted}` : formatted;
+    }
+    if (key === 'flu_rt') return factsCard.formatPercent(Number(value) > 0 ? `+${value}` : String(value));
+    return factsCard.formatNumeric(value);
+  }
+
+  function applyOrbLegacyQuoteValues(card, values) {
+    const currentEnvelope = card && card.__athenaOrbCurrentEnvelope;
+    const trusted = orbLegacyQuoteTrustedKeys(currentEnvelope);
+    const fields = currentEnvelope && currentEnvelope.data && Array.isArray(currentEnvelope.data.fields)
+      ? currentEnvelope.data.fields : [];
+    const fieldKeys = new Set(fields.map((field) => String((field && field.key) || '')));
+    const appliedKeys = new Set();
+    for (const node of card.querySelectorAll('[data-orb-field-key]')) {
+      const key = String((node.dataset && node.dataset.orbFieldKey) || '');
+      if (!fieldKeys.has(key) || !trusted.has(key) || !values.has(key)) continue;
+      const value = values.get(key);
+      node.textContent = orbLegacyQuoteText(key, value);
+      const tone = factsCard.changeTone(key === 'pre_sig' ? 'pred_pre_sig' : key, value);
+      for (const name of ['up', 'down', 'flat']) node.classList.toggle(`is-${name}`, tone === name);
+      appliedKeys.add(key);
+    }
+    if (!appliedKeys.size) return 0;
+    card.__athenaOrbCurrentEnvelope = {
+      ...currentEnvelope,
+      data: {
+        ...currentEnvelope.data,
+        fields: fields.map((field) => {
+          const key = String((field && field.key) || '');
+          return appliedKeys.has(key) ? { ...field, value: values.get(key) } : field;
+        }),
+      },
+    };
+    const revisions = card.__athenaOrbLiveSlotRevisions || new Map();
+    for (const slotId of new Set([...appliedKeys].map((key) => trusted.get(key)).filter(Boolean))) {
+      revisions.set(slotId, (revisions.get(slotId) || 0) + 1);
+    }
+    card.__athenaOrbLiveSlotRevisions = revisions;
+    return appliedKeys.size;
+  }
+
   function applyOrbQuoteFallbackData(card, event) {
     const envelope = event && event.envelope;
     const surfaceContract = orbKiumiSurfaceContract(envelope);
     const plan = orbMiniCard.buildKiumiPlan(surfaceContract, envelope);
-    if (!plan || plan.grammar !== 'chart' || String(surfaceContract.board_id || '') !== '137X-2') return;
+    if (!plan) {
+      if (!isOrbLegacyQuoteFactsEnvelope(card && card.__athenaOrbCurrentEnvelope)
+        || !isOrbLegacyQuoteFactsEnvelope(envelope)) return 0;
+      const values = new Map();
+      const fields = envelope.data && Array.isArray(envelope.data.fields) ? envelope.data.fields : [];
+      for (const field of fields) {
+        const key = String((field && field.key) || '');
+        const value = field && field.value;
+        const hasValue = value !== null && value !== undefined && String(value).trim() !== '';
+        if (hasValue && ((key === 'cur_prc' && Number.isFinite(Number(value)) && Number(value) > 0)
+          || (key === 'pre_sig' && /^[1-5]$/.test(String(value).trim()))
+          || ((key === 'pred_pre' || key === 'flu_rt') && Number.isFinite(Number(value)))
+          || (key === 'trde_qty' && Number.isFinite(Number(value)) && Number(value) >= 0))) {
+          values.set(key, Number(value));
+        }
+      }
+      return applyOrbLegacyQuoteValues(card, values);
+    }
+    if (plan.grammar !== 'chart' || String(surfaceContract.board_id || '') !== '137X-2') return 0;
     const appliedSlotIds = orbMiniCard.applyRevisionedKiumiUpdates(card, plan.elements);
     card.__athenaOrbCurrentEnvelope = mergeOrbKiumiSlots(
       card.__athenaOrbCurrentEnvelope,
       envelope,
       appliedSlotIds,
     );
+    return appliedSlotIds.length;
   }
 
   function applyOrbKiumiQuoteTick(card, surfaceContract, tick) {
     const updates = orbMiniCard.kiumiChartLiveUpdates(surfaceContract, tick);
     const appliedSlotIds = orbMiniCard.applyRevisionedKiumiUpdates(card, updates);
-    const applied = new Set(appliedSlotIds);
+    const appliedSlots = new Set(appliedSlotIds);
     const slotValues = Object.fromEntries(updates
-      .filter((update) => applied.has(String(update.slotId || '')) && update.value !== undefined)
+      .filter((update) => appliedSlots.has(String(update.slotId || '')) && update.value !== undefined)
       .map((update) => [String(update.slotId), update.value]));
     if (Object.keys(slotValues).length) {
       card.__athenaOrbCurrentEnvelope = orbMiniCard.withKiumiHydration(
@@ -2240,6 +2393,14 @@
         { ok: true, slot_values: slotValues },
       );
     }
+    if (appliedSlotIds.length) return appliedSlotIds.length;
+    const nextValues = new Map();
+    if (Number.isFinite(tick.price) && tick.price > 0) nextValues.set('cur_prc', tick.price);
+    if (/^[1-5]$/.test(String(tick.sign))) nextValues.set('pre_sig', Number(tick.sign));
+    if (Number.isFinite(tick.change)) nextValues.set('pred_pre', tick.change);
+    if (Number.isFinite(tick.changeRate)) nextValues.set('flu_rt', tick.changeRate);
+    if (Number.isFinite(tick.accVolume) && tick.accVolume >= 0) nextValues.set('trde_qty', tick.accVolume);
+    return applyOrbLegacyQuoteValues(card, nextValues);
   }
 
   function wireOrbKiumiQuoteRealtime(card, envelope) {
@@ -2281,7 +2442,9 @@
           card.__athenaOrbAccountGeneration = result.accountGeneration;
         }
         if (state === 'active' || state === 'receiving') {
-          showOrbQuoteFallbackState(card, { status: 'ws-active' });
+          showOrbQuoteFallbackState(card, {
+            status: state === 'receiving' ? 'receiving' : 'ws-active', phase: state,
+          });
         }
         if (state === 'registration-failed' || state === 'active' || state === 'receiving') {
           void ensureFallback().handleQuoteState(state);
@@ -2331,7 +2494,9 @@
         invoke: (channel, payload) => window.athena.invoke(channel, payload),
         onStatus: (state) => {
           if (state === 'active' || state === 'receiving') {
-            showOrbQuoteFallbackState(card, { status: 'ws-active' });
+            showOrbQuoteFallbackState(card, {
+              status: state === 'receiving' ? 'receiving' : 'ws-active', phase: state,
+            });
           }
           if (fallback) void fallback.handleRealtimeState(state);
         },

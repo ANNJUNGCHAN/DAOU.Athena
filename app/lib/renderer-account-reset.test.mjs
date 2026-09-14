@@ -160,6 +160,9 @@ test('account reset fences an in-flight integrated update and the next sync moun
     },
   }, 'let rendererRealtimeAccountGeneration = 1;');
   const envelope = { card_id: 'CC-03', mode: 'quote', operation_args: {} };
+  root.__athenaIntegratedRealtime.accountGeneration = 1;
+  root.__athenaIntegratedRealtime.status = 'active';
+  root.__athenaBoardRealtimeReceived = true;
 
   context.syncIntegratedRealtime(root, envelope);
   await flush();

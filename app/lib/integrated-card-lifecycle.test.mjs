@@ -22,7 +22,11 @@ function fixture(invoke) {
       calls.push({ channel, payload });
       return invoke(channel, payload);
     } } },
-    integratedRealtimePayload: () => ({ leaseId: 'card-1', target: '005930' }),
+    integratedRealtimePayload: (_root, envelope = {}) => ({
+      leaseId: 'card-1', cardId: '137X-2', mode: envelope.mode || 'quote',
+      target: envelope.target || '005930', symbol: envelope.target || '005930',
+      verifiedOperationRefs: [envelope.operationRef || 'base:ka10001'], semanticBindingIds: [], visibleTargets: [],
+    }),
     integratedRealtimeMeta: (card) => card.realtime,
     integratedRealtimeTasks: tasks,
     integratedCardSurface: {
@@ -33,7 +37,15 @@ function fixture(invoke) {
     realtimePolicies: async () => [{}],
     hasRealtimePolicy: () => true,
     surfaceContractOf: () => ({}),
-    stampBoardRealtimeStatus() {},
+    stampBoardRealtimeStatus(card, status) {
+      const normalized = String(status || 'snapshot');
+      if (['registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error'].includes(normalized)) {
+        card.__athenaBoardRealtimeReceived = false;
+      } else if (normalized === 'receiving') card.__athenaBoardRealtimeReceived = true;
+      card.displayedRealtimeStatus = card.__athenaBoardRealtimeReceived
+        && ['live', 'active', 'connected', 'reconnected'].includes(normalized)
+        ? 'receiving' : normalized;
+    },
     syncCardRealtimeFallback() {},
     showIntegratedRealtimeError: (card) => { card.hasError = true; },
     clearIntegratedRealtimeError: (card) => { card.hasError = false; },
@@ -87,4 +99,58 @@ test('automatic recovery clears the error and records the active lease generatio
   assert.equal(run.root.realtime.mounted, true);
   assert.equal(run.root.realtime.generation, 2);
   assert.equal(run.root.realtime.connectionGeneration, 3);
+});
+
+test('same integrated identity refresh preserves receiving after a valid tick', async () => {
+  const run = fixture(async () => ({
+    ok: true, status: 'active', generation: 1, connectionGeneration: 1,
+    bindings: [{ operationId: '0B' }],
+  }));
+  run.context.syncIntegratedRealtime(run.root, {
+    mode: 'chart', target: '005930', operationRef: 'base:ka10080',
+  });
+  await run.tasks.get(run.root);
+  run.context.stampBoardRealtimeStatus(run.root, 'receiving');
+  assert.equal(run.root.displayedRealtimeStatus, 'receiving');
+
+  run.context.syncIntegratedRealtime(run.root, {
+    mode: 'chart', target: '005930', operationRef: 'base:ka10081',
+  });
+  await run.tasks.get(run.root);
+  assert.equal(run.root.__athenaBoardRealtimeReceived, true);
+  assert.equal(run.root.displayedRealtimeStatus, 'receiving');
+});
+
+test('new integrated identity clears receiving until that subscription gets a tick', async () => {
+  let generation = 0;
+  const run = fixture(async () => ({
+    ok: true, status: 'active', generation: ++generation, connectionGeneration: 1,
+    bindings: [{ operationId: generation === 1 ? '0B' : '0J' }],
+  }));
+  run.context.syncIntegratedRealtime(run.root, { mode: 'quote', target: '005930' });
+  await run.tasks.get(run.root);
+  run.context.stampBoardRealtimeStatus(run.root, 'receiving');
+
+  run.context.syncIntegratedRealtime(run.root, { mode: 'quote', target: '000660' });
+  await run.tasks.get(run.root);
+  assert.equal(run.root.__athenaBoardRealtimeReceived, false);
+  assert.equal(run.root.displayedRealtimeStatus, 'active');
+});
+
+test('same identity after a failed state cannot restore an old receiving label', async () => {
+  const run = fixture(async () => ({
+    ok: true, status: 'active', generation: 2, connectionGeneration: 2,
+    bindings: [{ operationId: '0B' }],
+  }));
+  const envelope = { mode: 'quote', target: '005930' };
+  run.context.syncIntegratedRealtime(run.root, envelope);
+  await run.tasks.get(run.root);
+  run.context.stampBoardRealtimeStatus(run.root, 'receiving');
+  run.root.realtime.status = 'reconnecting';
+  run.context.stampBoardRealtimeStatus(run.root, 'reconnecting');
+
+  run.context.syncIntegratedRealtime(run.root, envelope);
+  await run.tasks.get(run.root);
+  assert.equal(run.root.__athenaBoardRealtimeReceived, false);
+  assert.equal(run.root.displayedRealtimeStatus, 'active');
 });

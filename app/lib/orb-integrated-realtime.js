@@ -257,8 +257,13 @@ function createOrbIntegratedRealtimeSession({
 
   function applyState(state) {
     if (closed || !matches(state)) return false;
-    if (Number.isFinite(Number(state.generation))) generation = Number(state.generation);
-    if (Number.isFinite(Number(state.connectionGeneration))) connectionGeneration = Number(state.connectionGeneration);
+    const nextGeneration = Number(state.generation);
+    const nextConnectionGeneration = Number(state.connectionGeneration);
+    if ((generation !== null && Number.isFinite(nextGeneration) && nextGeneration < generation)
+      || (connectionGeneration !== null && Number.isFinite(nextConnectionGeneration)
+        && nextConnectionGeneration < connectionGeneration)) return false;
+    if (Number.isFinite(nextGeneration)) generation = nextGeneration;
+    if (Number.isFinite(nextConnectionGeneration)) connectionGeneration = nextConnectionGeneration;
     if (state.status === 'unmounted') mounted = false;
     else if (state.status === 'active') mounted = true;
     stamp(state.status || status, state);
@@ -268,8 +273,11 @@ function createOrbIntegratedRealtimeSession({
   function applySlot(slotId, nextValue, observationId = '') {
     const entry = plan.entries.get(slotId);
     if (!entry) return 0;
+    const currentEntry = slotEntriesOf(surfaceContractOf(card.__athenaOrbCurrentEnvelope))
+      .find((candidate) => clean(candidate && (candidate.slot_id || candidate.slotId)) === slotId);
+    const valueEntry = currentEntry || entry;
     const next = observationId
-      ? updateValue(entry.value, observationId, nextValue)
+      ? updateValue(valueEntry.value, observationId, nextValue)
       : { updated: true, value: nextValue };
     if (!next.updated) return 0;
     const format = plan.formats.get(slotId) || entry.format || {};
@@ -284,6 +292,7 @@ function createOrbIntegratedRealtimeSession({
     }
     if (!applied) return 0;
     entry.value = next.value;
+    if (currentEntry) currentEntry.value = next.value;
     const revisions = card.__athenaOrbLiveSlotRevisions || new Map();
     revisions.set(slotId, (revisions.get(slotId) || 0) + 1);
     card.__athenaOrbLiveSlotRevisions = revisions;

@@ -181,6 +181,19 @@ test('quote 상태는 fallback 전환과 복구에 필요한 실패·active·rec
   assert.deepEqual(states, ['registration-failed', 'active', 'receiving', 'stopped']);
 });
 
+test('실제 카드에 적용된 값이 없으면 receiving을 표시하지 않는다', async () => {
+  const states = [];
+  const session = createOrbQuoteRealtimeSession({
+    symbol: '023590', acquire: async () => ({ ok: true, leaseToken: 'lease-empty' }),
+    release() {}, onTick: () => 0, onState: (state) => states.push(state),
+  });
+  session.start();
+  await flush();
+  assert.equal(session.applyTick({ symbol: '023590', price: 41100 }), false);
+  assert.deepEqual(states, ['active']);
+  session.close();
+});
+
 test('renderer reREG 상태는 exact lease·kind·symbol에서만 기존 quote 세션을 전환한다', async () => {
   const states = [];
   const ticks = [];

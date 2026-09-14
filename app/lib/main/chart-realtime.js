@@ -9,6 +9,7 @@
 const F_TIME = '20';   // 체결시간 HHMMSS(KST)
 const F_PRICE = '10';  // 현재가
 const F_CHANGE = '11'; // 전일대비(현재가와 같은 0B 체결 프레임의 직접값)
+const F_CHANGE_SIGN = '25'; // 전일대비기호(1 상한·2 상승·3 보합·4 하한·5 하락)
 const F_VOLUME = '15'; // 체결량(부호는 매수/매도 구분 — 크기만 쓴다)
 // 시세 카드(단계 8 확장 조사, card-kind-시세.js 4열) 전용 — 진행봉 접기에는 안 쓴다.
 // F_TIME/F_PRICE/F_VOLUME과 같은 외부 규격(키움 실시간 FID) 근거이되, 이 두 필드는
@@ -129,6 +130,8 @@ function parseRealTick(row, tradingDate) {
     at,
     price,
     change: toSignedNumber(values[F_CHANGE]),
+    sign: /^[1-5]$/.test(String(values[F_CHANGE_SIGN] == null ? '' : values[F_CHANGE_SIGN]).trim())
+      ? Number(String(values[F_CHANGE_SIGN]).trim()) : null,
     volume: toMagnitude(values[F_VOLUME]) || 0,
     // 시세 카드 4열 확장분 — 프레임에 없으면 null(소비측이 갱신을 스킵한다).
     changeRate: toSignedNumber(values[F_CHANGE_RATE]),

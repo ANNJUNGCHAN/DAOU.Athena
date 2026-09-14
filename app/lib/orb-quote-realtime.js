@@ -93,7 +93,8 @@ function createOrbQuoteRealtimeSession({
         this.close();
         return false;
       }
-      onTick(tick);
+      const applied = onTick(tick);
+      if (applied === false || applied === 0) return false;
       onState('receiving');
       return true;
     },

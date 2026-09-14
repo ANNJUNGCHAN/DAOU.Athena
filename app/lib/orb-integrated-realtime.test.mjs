@@ -157,6 +157,76 @@ test('mount adopts authoritative account generation before accepting ticks', asy
   assert.equal(node.textContent, '+30주');
 });
 
+test('live slot update also advances the hydrated current envelope', async () => {
+  const source = envelope();
+  const current = structuredClone(source);
+  const node = { textContent: '+10주', classList: classList(), dataset: { kiumiSlotId: 's-flow' } };
+  const card = cardFor({ 's-flow': node });
+  card.__athenaOrbCurrentEnvelope = current;
+  const session = realtime.createOrbIntegratedRealtimeSession({
+    card, envelope: source, leaseId: 'orb:hydrated-current', accountGeneration: 7,
+    excludedSlotIds: ['s-price'],
+    invoke: async () => ({ ok: true, status: 'active', generation: 2, connectionGeneration: 5 }),
+  });
+  await session.start();
+
+  assert.equal(session.applyTick({
+    leaseId: 'orb:hydrated-current', cardId: 'CC-03', mode: 'quote', accountGeneration: 7,
+    generation: 2, connectionGeneration: 5,
+    semantic_updates: [{ binding_id: binding('2'), value: 30 }],
+  }), 1);
+  assert.equal(node.textContent, '+30주');
+  assert.equal(current.surface_contract.slot_values.find((entry) => entry.slot_id === 's-flow').value, 30);
+});
+
+test('late older active state cannot roll generations back and admit an old tick', async () => {
+  const node = { textContent: '+10주', classList: classList(), dataset: { kiumiSlotId: 's-flow' } };
+  const session = realtime.createOrbIntegratedRealtimeSession({
+    card: cardFor({ 's-flow': node }), envelope: envelope(), leaseId: 'orb:state-fence', accountGeneration: 7,
+    excludedSlotIds: ['s-price'],
+    invoke: async () => ({ ok: true, status: 'active', generation: 2, connectionGeneration: 5 }),
+  });
+  await session.start();
+  const state = {
+    leaseId: 'orb:state-fence', cardId: 'CC-03', mode: 'quote', accountGeneration: 7,
+  };
+  assert.equal(session.applyState({ ...state, status: 'reconnecting', generation: 3, connectionGeneration: 6 }), true);
+  assert.equal(session.applyState({ ...state, status: 'active', generation: 2, connectionGeneration: 5 }), false);
+  assert.equal(session.applyTick({
+    ...state, generation: 2, connectionGeneration: 5,
+    semantic_updates: [{ binding_id: binding('2'), value: 30 }],
+  }), 0);
+  assert.equal(node.textContent, '+10주');
+});
+
+test('a new account session starts a fresh monotonic generation scope', async () => {
+  const oldNode = { textContent: '+10주', classList: classList(), dataset: { kiumiSlotId: 's-flow' } };
+  const oldSession = realtime.createOrbIntegratedRealtimeSession({
+    card: cardFor({ 's-flow': oldNode }), envelope: envelope(), leaseId: 'orb:old-account', accountGeneration: 7,
+    excludedSlotIds: ['s-price'],
+    invoke: async () => ({ ok: true, status: 'active', generation: 9, connectionGeneration: 12 }),
+  });
+  await oldSession.start();
+  assert.equal(oldSession.applyState({
+    leaseId: 'orb:old-account', cardId: 'CC-03', mode: 'quote', accountGeneration: 8,
+    status: 'active', generation: 1, connectionGeneration: 1,
+  }), false);
+
+  const newNode = { textContent: '+10주', classList: classList(), dataset: { kiumiSlotId: 's-flow' } };
+  const newSession = realtime.createOrbIntegratedRealtimeSession({
+    card: cardFor({ 's-flow': newNode }), envelope: envelope(), leaseId: 'orb:new-account', accountGeneration: 8,
+    excludedSlotIds: ['s-price'],
+    invoke: async () => ({ ok: true, status: 'active', generation: 1, connectionGeneration: 1 }),
+  });
+  await newSession.start();
+  assert.equal(newSession.applyTick({
+    leaseId: 'orb:new-account', cardId: 'CC-03', mode: 'quote', accountGeneration: 8,
+    generation: 1, connectionGeneration: 1,
+    semantic_updates: [{ binding_id: binding('2'), value: 30 }],
+  }), 1);
+  assert.equal(newNode.textContent, '+30주');
+});
+
 test('composite slot updates only the matching observation and preserves its peer', async () => {
   const node = { textContent: '+10 · +1.00%', classList: classList(), dataset: { kiumiSlotId: 's-flow' } };
   const e = envelope();
@@ -371,6 +441,12 @@ test('Orb runtime loads and wires generic sessions after direct quote ownership 
     orb.indexOf('function buildOrbKiumiCard('),
     orb.indexOf('function buildOrbCanvasCard('),
   );
+  const factsBuilder = orb.slice(
+    orb.indexOf('function buildOrbFactsCard('),
+    orb.indexOf('function buildOrbCompoundCard('),
+  );
   assert.match(kiumiBuilder, /card\.appendChild\(body\);[\s\S]*dataset\.orbRealtimeFallbackStatus = 'true'/);
-  assert.equal((orb.match(/dataset\.orbRealtimeFallbackStatus = 'true'/g) || []).length, 1);
+  assert.equal((kiumiBuilder.match(/dataset\.orbRealtimeFallbackStatus = 'true'/g) || []).length, 1);
+  assert.match(factsBuilder, /isOrbLegacyQuoteFactsEnvelope\(envelope\)[\s\S]*dataset\.orbRealtimeFallbackStatus = 'true'/);
+  assert.equal((factsBuilder.match(/dataset\.orbRealtimeFallbackStatus = 'true'/g) || []).length, 1);
 });
