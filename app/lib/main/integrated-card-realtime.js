@@ -4,10 +4,25 @@ const {
   buildRegisterBody,
   buildRemoveBody,
   createRealtimeRegistrar,
+  normalizeSecurityTarget,
+  runWithControlTimeout,
 } = require('./chart-realtime');
 
 const MAX_VISIBLE_TARGETS = 50;
 const BROADCAST_OPERATIONS = new Set(['0s', '1h']);
+const INDEX_CHART_QUERY_OPERATIONS = Object.freeze([
+  'ka20004', 'ka20005', 'ka20006', 'ka20007', 'ka20008', 'ka20019',
+]);
+const STOCK_CHART_QUERY_OPERATIONS = Object.freeze([
+  'ka10060', 'ka10064', 'ka10079', 'ka10080', 'ka10081', 'ka10082', 'ka10083', 'ka10094',
+]);
+const GOLD_CHART_QUERY_OPERATIONS = Object.freeze([
+  'ka50079', 'ka50080', 'ka50081', 'ka50082', 'ka50083', 'ka50091', 'ka50092',
+]);
+const NON_STOCK_CHART_QUERY_OPERATIONS = Object.freeze([
+  ...INDEX_CHART_QUERY_OPERATIONS, ...GOLD_CHART_QUERY_OPERATIONS,
+]);
+const INDEX_CHART_REALTIME_OPERATIONS = new Set(['0J', '0U']);
 
 const OPERATION_POLICIES = Object.freeze([
   policy('00', 'CC-01', 'account', ['overview', 'executions', 'all'], 'account', [
@@ -17,28 +32,38 @@ const OPERATION_POLICIES = Object.freeze([
     rule('CC-02', ['draft', 'review', 'confirm', 'all'], 'account'),
   ]),
   policy('0A', 'CC-03', 'quote', ['quote', 'expected'], 'symbol'),
-  policy('0B', 'CC-03', 'quote', ['quote', 'chart', 'profile', 'etf', 'elw'], 'symbol', [
+  policy('0B', 'CC-03', 'quote', ['quote', 'profile', 'etf', 'elw'], 'symbol', [
+    rule('CC-03', ['chart'], 'symbol', { excludedOperationIds: NON_STOCK_CHART_QUERY_OPERATIONS }),
     rule('CC-05', ['program', 'investor', 'broker'], 'symbol'),
     rule('CC-06', ['ranking', 'watchlist'], 'visibleTargets'),
-  ]),
+  ], { excludedOperationIds: NON_STOCK_CHART_QUERY_OPERATIONS }),
   policy('0C', 'CC-04', 'orderbook', ['regular', 'composite'], 'symbol'),
   policy('0D', 'CC-04', 'orderbook', ['regular', 'composite'], 'symbol'),
   policy('0E', 'CC-04', 'orderbook', ['after-hours'], 'symbol'),
   policy('0F', 'CC-05', 'broker', ['broker'], 'symbol'),
   policy('0G', 'CC-03', 'etf', ['etf'], 'symbol'),
   policy('0H', 'CC-03', 'quote', ['expected'], 'symbol', [
+    rule('CC-03', ['quote'], 'symbol', { requiredOperationIds: ['ka10046', 'ka10047'] }),
     rule('CC-06', ['ranking'], 'visibleTargets'),
   ]),
   policy('0I', 'CC-03', 'gold', ['gold'], 'market'),
-  policy('0J', 'CC-06', 'sector', ['sector'], 'sector'),
-  policy('0U', 'CC-06', 'sector', ['sector'], 'sector'),
+  policy('0J', 'CC-06', 'sector', ['sector'], 'sector', [
+    rule('CC-03', ['chart'], 'indexSector', { requiredOperationIds: INDEX_CHART_QUERY_OPERATIONS }),
+  ]),
+  policy('0U', 'CC-06', 'sector', ['sector'], 'sector', [
+    rule('CC-03', ['chart'], 'indexSector', { requiredOperationIds: INDEX_CHART_QUERY_OPERATIONS }),
+  ]),
   policy('0g', 'CC-03', 'stock-info', ['profile'], 'symbol', [
     rule('CC-06', ['watchlist'], 'visibleTargets'),
   ]),
   policy('0m', 'CC-03', 'elw', ['elw'], 'symbol'),
   policy('0s', 'CC-06', 'market-status', ['market-status', 'session'], 'market'),
   policy('0u', 'CC-03', 'elw', ['elw'], 'symbol'),
-  policy('0w', 'CC-05', 'program-trading', ['program'], 'symbol'),
+  policy('0w', 'CC-05', 'program-trading', ['program'], 'symbol', [
+    rule('CC-05', ['broker'], 'symbol', { requiredOperationIds: ['ka10043', 'ka10052', 'ka10078'] }),
+    rule('CC-05', ['investor'], 'symbol', { requiredOperationIds: ['ka10059'] }),
+    rule('CC-05', ['credit-lending-short'], 'symbol', { requiredOperationIds: ['ka10013'] }),
+  ]),
   policy('1h', 'CC-06', 'market-status', ['market-status', 'vi'], 'market'),
   commandPolicy('ka10171', 'condition-list'),
   commandPolicy('ka10172', 'condition-search'),
@@ -61,17 +86,31 @@ const OPERATION_POLICIES = Object.freeze([
 const WEBSOCKET_OPERATION_IDS = new Set(OPERATION_POLICIES.map((entry) => entry.operationId));
 const OPAQUE_REALTIME_BINDING = /^rtb_[a-f0-9]{12,64}$/i;
 
-function rule(cardId, modes, targetSource) {
-  return Object.freeze({ cardId, modes: Object.freeze([...modes]), targetSource });
+function rule(cardId, modes, targetSource, constraints = {}) {
+  return Object.freeze({
+    cardId,
+    modes: Object.freeze([...modes]),
+    targetSource,
+    requiredOperationIds: Object.freeze([...(constraints.requiredOperationIds || [])]),
+    excludedOperationIds: Object.freeze([...(constraints.excludedOperationIds || [])]),
+  });
 }
 
-function policy(operationId, primaryCardId, capabilityId, modes, targetSource, sharedRules = []) {
+function policy(
+  operationId,
+  primaryCardId,
+  capabilityId,
+  modes,
+  targetSource,
+  sharedRules = [],
+  primaryConstraints = {},
+) {
   return Object.freeze({
     operationId,
     primaryCardId,
     capabilityId,
     behavior: 'lease',
-    rules: Object.freeze([rule(primaryCardId, modes, targetSource), ...sharedRules]),
+    rules: Object.freeze([rule(primaryCardId, modes, targetSource, primaryConstraints), ...sharedRules]),
   });
 }
 
@@ -147,11 +186,6 @@ function createSemanticBindingSourceProvider(options = {}) {
   };
 }
 
-function normalizeSecurityTarget(value) {
-  const target = clean(value);
-  return /^[AJQ]\d{6}$/.test(target) ? target.slice(1) : target;
-}
-
 function validateTarget(source, value) {
   const target = source === 'symbol' || source === 'visibleTargets'
     ? normalizeSecurityTarget(value)
@@ -159,6 +193,7 @@ function validateTarget(source, value) {
   const patterns = {
     account: /^[A-Za-z0-9-]{1,32}$/,
     condition: /^\d{1,10}$/,
+    indexSector: /^\d{3}$/,
     market: /^[A-Za-z0-9_-]{1,16}$/,
     sector: /^[A-Za-z0-9_-]{1,16}$/,
     symbol: /^[0-9A-Z]{6}$/,
@@ -181,11 +216,15 @@ function targetsFor(source, config) {
   const bySource = {
     account: config.accountId || config.target,
     condition: config.conditionId || config.target,
+    indexSector: config.indexSectorId,
     market: config.target || 'MARKET',
     sector: config.sectorId || config.target,
     symbol: config.symbol || config.target,
   };
   const target = clean(bySource[source]);
+  if (source === 'indexSector' && !target) {
+    throw new TypeError(`${source} realtime target is required`);
+  }
   return target ? [validateTarget(source, target)] : [];
 }
 
@@ -200,12 +239,32 @@ function resolveLeaseBindings(config = {}) {
   const verifiedRefs = Array.isArray(config.verifiedOperationRefs)
     ? config.verifiedOperationRefs
     : (Array.isArray(config.operationRefs) ? config.operationRefs : []);
+  const verifiedOperationIds = new Set(
+    verifiedRefs.map((ref) => clean(ref).replace(/^base:/, '')).filter(Boolean),
+  );
   const requestedOperations = new Set(
-    verifiedRefs
-      .map((ref) => clean(ref).replace(/^base:/, ''))
+    [...verifiedOperationIds]
       .filter((operationId) => WEBSOCKET_OPERATION_IDS.has(operationId))
       .filter(Boolean),
   );
+  if (cardId === 'CC-03' && mode === 'chart') {
+    const hasIndexAuthority = INDEX_CHART_QUERY_OPERATIONS
+      .some((operationId) => verifiedOperationIds.has(operationId));
+    const hasStockAuthority = STOCK_CHART_QUERY_OPERATIONS
+      .some((operationId) => verifiedOperationIds.has(operationId));
+    const hasGoldAuthority = GOLD_CHART_QUERY_OPERATIONS
+      .some((operationId) => verifiedOperationIds.has(operationId));
+    const hasForeignRealtimeAuthority = [...requestedOperations]
+      .some((operationId) => !INDEX_CHART_REALTIME_OPERATIONS.has(operationId));
+    const hasIndexRealtimeAuthority = [...requestedOperations]
+      .some((operationId) => INDEX_CHART_REALTIME_OPERATIONS.has(operationId));
+    if ((hasIndexAuthority && (hasStockAuthority || hasForeignRealtimeAuthority))
+      || (hasStockAuthority && hasIndexRealtimeAuthority)
+      || (hasGoldAuthority && requestedOperations.size > 0)
+      || (hasStockAuthority && requestedOperations.has('0I'))) {
+      throw new TypeError('mixed chart realtime authority');
+    }
+  }
   const bindings = [];
   for (const operation of OPERATION_POLICIES) {
     if (operation.behavior !== 'lease') continue;
@@ -214,6 +273,9 @@ function resolveLeaseBindings(config = {}) {
       const explicit = requestedOperations.has(operation.operationId);
       if (!explicit && !bindingRule.modes.includes(mode)) continue;
       if (requestedOperations.size > 0 && !explicit) continue;
+      if (bindingRule.requiredOperationIds.length > 0
+        && !bindingRule.requiredOperationIds.some((operationId) => verifiedOperationIds.has(operationId))) continue;
+      if (bindingRule.excludedOperationIds.some((operationId) => verifiedOperationIds.has(operationId))) continue;
       for (const target of targetsFor(bindingRule.targetSource, config)) {
         bindings.push(Object.freeze({
           operationId: operation.operationId,
@@ -244,7 +306,12 @@ function publicPolicies() {
     capabilityId: entry.capabilityId,
     behavior: entry.behavior,
     releaseOperationId: entry.releaseOperationId || null,
-    rules: entry.rules.map((item) => ({ ...item, modes: [...item.modes] })),
+    rules: entry.rules.map((item) => ({
+      ...item,
+      modes: [...item.modes],
+      requiredOperationIds: [...item.requiredOperationIds],
+      excludedOperationIds: [...item.excludedOperationIds],
+    })),
   }));
 }
 
@@ -295,12 +362,22 @@ function createRegistrarTransport(options = {}) {
   const backendBase = options.backendBase;
   const fetchImpl = options.fetchImpl || globalThis.fetch;
   const mdlog = options.mdlog || (() => {});
+  const controlRequestOptions = {
+    timeoutMs: options.controlRequestTimeoutMs,
+    setTimer: options.setTimer,
+    clearTimer: options.clearTimer,
+    AbortControllerImpl: options.AbortControllerImpl,
+  };
   const registrarProvider = options.registrarProvider || ((binding) => createRealtimeRegistrar({
     backendBase,
     fetchImpl: createValidatedFetch(fetchImpl),
     mdlog,
     trId: binding.operationId,
     backendAccountAlias: binding.backendAccountAlias || null,
+    controlRequestTimeoutMs: options.controlRequestTimeoutMs,
+    setTimer: options.setTimer,
+    clearTimer: options.clearTimer,
+    AbortControllerImpl: options.AbortControllerImpl,
   }));
   const registrars = new Map();
 
@@ -321,20 +398,23 @@ function createRegistrarTransport(options = {}) {
     const headers = { 'Content-Type': 'application/json' };
     headers['X-Athena-Account'] = clean(backendAccountAlias);
     try {
-      const response = await fetchImpl(`${backendBase}/api/v1/websocket/${operationId}`, {
-        method: 'POST', redirect: 'error', headers, body: JSON.stringify(body),
-      });
-      if (!response || !response.ok) {
-        return { ok: false, error: `HTTP ${response ? response.status : '?'}` };
-      }
-      let data = null;
-      if (typeof response.json === 'function') {
-        try { data = await response.json(); } catch { /* ACK body is optional here. */ }
-      }
-      if (!data || String(data.return_code) !== '0') {
-        return { ok: false, error: `Kiwoom return_code ${data ? data.return_code : '?'}` };
-      }
-      return { ok: true, data };
+      return await runWithControlTimeout(async (signal) => {
+        const response = await fetchImpl(`${backendBase}/api/v1/websocket/${operationId}`, {
+          method: 'POST', redirect: 'error', headers, body: JSON.stringify(body),
+          ...(signal ? { signal } : {}),
+        });
+        if (!response || !response.ok) {
+          return { ok: false, error: `HTTP ${response ? response.status : '?'}` };
+        }
+        let data = null;
+        if (typeof response.json === 'function') {
+          try { data = await response.json(); } catch { /* ACK body is optional here. */ }
+        }
+        if (!data || String(data.return_code) !== '0') {
+          return { ok: false, error: `Kiwoom return_code ${data ? data.return_code : '?'}` };
+        }
+        return { ok: true, data };
+      }, controlRequestOptions);
     } catch (error) {
       return { ok: false, error: String((error && error.message) || error) };
     }
@@ -428,6 +508,15 @@ class CardLeaseManager {
     this._drainCleanupOk = true;
     this._connectionGeneration = Number(options.initialConnectionGeneration) || 1;
     this._needsReconnect = false;
+    this._feedState = 'unknown';
+    this._setTimer = options.setTimer || setTimeout;
+    this._clearTimer = options.clearTimer || clearTimeout;
+    this._retryBaseMs = Math.max(1, Number(options.retryBaseMs) || 250);
+    this._retryMaxMs = Math.max(this._retryBaseMs, Number(options.retryMaxMs) || 5000);
+    this._retryAttempt = 0;
+    this._retryTimer = null;
+    this._pendingRetryKeys = new Set();
+    this._retryOnlyKeys = null;
   }
 
   mount(config = {}) {
@@ -444,6 +533,12 @@ class CardLeaseManager {
       const lease = this._leases.get(id);
       if (!lease) {
         const tombstone = this._tombstones.get(id);
+        if (tombstone) {
+          await this._retryPendingRemovals();
+          if (!this._tombstones.has(id)) {
+            return { ok: true, status: 'unmounted', leaseId: id };
+          }
+        }
         return tombstone
           ? { ok: false, ...tombstone }
           : { ok: true, status: 'unmounted', leaseId: id };
@@ -454,11 +549,13 @@ class CardLeaseManager {
         if (!await this._dropOwner(binding, id)) removed = false;
       }
       if (!removed) {
+        this._cancelRetryIfIdle();
         const state = { ...this._snapshotLease(lease), status: 'remove-pending', error: 'REMOVE failed' };
         this._tombstones.set(id, state);
         this._emit(state);
         return { ok: false, ...state };
       }
+      this._cancelRetryIfIdle();
       this._tombstones.delete(id);
       const state = { ...this._snapshotLease(lease), status: 'unmounted' };
       this._emit(state);
@@ -472,10 +569,12 @@ class CardLeaseManager {
     if (observed && observed < this._connectionGeneration) {
       return Promise.resolve({ ok: true, status: 'stale-connection-status' });
     }
+    this._feedState = state || this._feedState;
     if (state === 'disconnected' || state === 'retrying') {
+      this._clearRetry(true);
       this._needsReconnect = true;
       for (const lease of this._leases.values()) {
-        if (lease.bindings.length === 0) continue;
+        if (lease.bindings.length === 0 && !(lease.pendingBindings || []).length) continue;
         lease.status = 'reconnecting';
         this._emit(this._snapshotLease(lease));
       }
@@ -489,16 +588,37 @@ class CardLeaseManager {
         this._needsReconnect = false;
         this._connectionGeneration = observed
           || this._connectionGeneration + 1;
-        const activeEntries = [...this._physical.values()].filter((entry) => entry.owners.size > 0);
-        const bindings = activeEntries.map((entry) => entry.binding);
-        let results = bindings.length === 0 ? [] : await this._transport.reconnect(bindings);
+        const retryOnlyKeys = this._retryOnlyKeys;
+        this._retryOnlyKeys = null;
+        const reconnectCandidates = new Map();
+        const activeCandidateKeys = new Set();
+        for (const entry of this._physical.values()) {
+          const key = physicalKey(entry.binding);
+          if (entry.owners.size > 0 && (!retryOnlyKeys || retryOnlyKeys.has(key))) {
+            reconnectCandidates.set(key, entry.binding);
+            activeCandidateKeys.add(key);
+          }
+        }
+        for (const lease of this._leases.values()) {
+          for (const binding of lease.pendingBindings || []) {
+            const key = physicalKey(binding);
+            if (!retryOnlyKeys || retryOnlyKeys.has(key)) reconnectCandidates.set(key, binding);
+          }
+        }
+        const bindings = [...reconnectCandidates.values()];
+        const attemptedKeys = new Set(reconnectCandidates.keys());
+        const acquireKeys = new Set([...attemptedKeys].filter((key) => !activeCandidateKeys.has(key)));
+        let results = await this._registerCandidates(bindings, acquireKeys);
         if (this._draining || lifecycleGeneration !== this._lifecycleGeneration) {
           await this._releaseSuccessfulReconnects(results);
           return { ok: false, status: 'draining' };
         }
         let failed = results.filter((result) => !result.ok);
         if (failed.length) {
-          const retry = await this._transport.reconnect(failed.map((result) => result.binding));
+          const retry = await this._registerCandidates(
+            failed.map((result) => result.binding),
+            new Set(failed.map((result) => physicalKey(result.binding)).filter((key) => acquireKeys.has(key))),
+          );
           const retried = new Map(retry.map((result) => [physicalKey(result.binding), result]));
           results = results.map((result) => retried.get(physicalKey(result.binding)) || result);
           if (this._draining || lifecycleGeneration !== this._lifecycleGeneration) {
@@ -508,17 +628,53 @@ class CardLeaseManager {
           failed = results.filter((result) => !result.ok);
         }
         const failedKeys = new Set(failed.map((result) => physicalKey(result.binding)));
+        const resultByKey = new Map(results.map((result) => [physicalKey(result.binding), result]));
         for (const lease of this._leases.values()) {
-          if (lease.bindings.length === 0) continue;
+          const pendingBindings = lease.pendingBindings || [];
+          const attemptedLeaseBindings = lease.bindings.filter((binding) => attemptedKeys.has(physicalKey(binding)));
+          const attemptedPendingBindings = pendingBindings.filter((binding) => attemptedKeys.has(physicalKey(binding)));
+          if (attemptedLeaseBindings.length === 0 && attemptedPendingBindings.length === 0) continue;
           lease.generation += 1;
           lease.connectionGeneration = this._connectionGeneration;
-          const leaseFailed = lease.bindings.some((binding) => failedKeys.has(physicalKey(binding)));
+          let leaseFailed = pendingBindings.length > attemptedPendingBindings.length
+            || attemptedLeaseBindings.some((binding) => {
+              const key = physicalKey(binding);
+              return failedKeys.has(key) || !resultByKey.get(key)?.ok;
+            });
+          if (pendingBindings.length) {
+            const stillPending = [];
+            const ownedKeys = new Set(lease.bindings.map(physicalKey));
+            for (const binding of pendingBindings) {
+              const key = physicalKey(binding);
+              if (!attemptedKeys.has(key)) {
+                stillPending.push(binding);
+                continue;
+              }
+              if (!resultByKey.get(key)?.ok) {
+                leaseFailed = true;
+                stillPending.push(binding);
+                continue;
+              }
+              let entry = this._physical.get(key);
+              if (!entry) {
+                entry = { binding, owners: new Set() };
+                this._physical.set(key, entry);
+              }
+              entry.pendingRemove = false;
+              entry.owners.add(lease.id);
+              if (!ownedKeys.has(key)) lease.bindings.push(binding);
+            }
+            lease.bindings.sort((a, b) => physicalKey(a).localeCompare(physicalKey(b)));
+            lease.pendingBindings = stillPending;
+          }
           lease.status = leaseFailed ? 'error' : 'active';
           lease.error = leaseFailed ? 'realtime re-registration failed' : null;
           this._emit(this._snapshotLease(lease));
         }
         await this._retryPendingRemovals();
         const ok = failed.length === 0;
+        if (ok) this._clearRetry(true);
+        else this._scheduleRetry(failed.map((result) => result.binding));
         return { ok, status: ok ? 'active' : 'error', connectionGeneration: this._connectionGeneration };
       });
     }
@@ -571,6 +727,7 @@ class CardLeaseManager {
 
   releaseAll() {
     if (this._drainPromise) return this._drainPromise;
+    this._clearRetry(true);
     this._draining = true;
     this._lifecycleGeneration += 1;
     const leases = [...this._leases.values()];
@@ -675,13 +832,21 @@ class CardLeaseManager {
           id,
           config: { ...config },
           bindings: [],
+          pendingBindings: bindings,
+          semanticSourceBindings,
           generation: 0,
           connectionGeneration: this._connectionGeneration,
         };
+        if (old && old.bindings.length === 0) {
+          failed.config = { ...config, leaseId: id };
+          failed.pendingBindings = bindings;
+          failed.semanticSourceBindings = semanticSourceBindings;
+        }
         failed.status = 'error';
         failed.error = `REG failed: ${binding.operationId}`;
         if (!old) this._leases.set(id, failed);
         this._emit(this._snapshotLease(failed));
+        if ((failed.pendingBindings || []).length) this._scheduleRetry(failed.pendingBindings);
         return { ok: false, ...this._snapshotLease(failed) };
       }
       staged.push(binding);
@@ -714,6 +879,7 @@ class CardLeaseManager {
       }
     }
     this._emit(this._snapshotLease(next));
+    this._cancelRetryIfIdle();
     return { ok: true, ...this._snapshotLease(next) };
   }
 
@@ -760,10 +926,67 @@ class CardLeaseManager {
   }
 
   async _releaseSuccessfulReconnects(results) {
-    const release = this._transport.forceRelease || this._transport.release;
     for (const result of results) {
+      const release = result.registration === 'acquire'
+        ? this._transport.release
+        : (this._transport.forceRelease || this._transport.release);
       if (result.ok && !await release(result.binding)) this._drainCleanupOk = false;
     }
+  }
+
+  async _registerCandidates(bindings, acquireKeys) {
+    const reconnect = bindings.filter((binding) => !acquireKeys.has(physicalKey(binding)));
+    const acquire = bindings.filter((binding) => acquireKeys.has(physicalKey(binding)));
+    const [reconnected, acquired] = await Promise.all([
+      reconnect.length ? this._transport.reconnect(reconnect) : [],
+      Promise.all(acquire.map(async (binding) => {
+        const ok = await this._transport.acquire(binding);
+        return { binding, ok, error: ok ? null : 'realtime registration failed', registration: 'acquire' };
+      })),
+    ]);
+    return [
+      ...reconnected.map((result) => ({ ...result, registration: 'reconnect' })),
+      ...acquired,
+    ];
+  }
+
+  _scheduleRetry(bindings = []) {
+    for (const binding of bindings) {
+      this._pendingRetryKeys.add(typeof binding === 'string' ? binding : physicalKey(binding));
+    }
+    if (this._retryTimer !== null || this._draining
+      || this._feedState === 'disconnected' || this._feedState === 'retrying') return;
+    const lifecycleGeneration = this._lifecycleGeneration;
+    const delay = Math.min(this._retryBaseMs * (2 ** this._retryAttempt), this._retryMaxMs);
+    this._retryAttempt += 1;
+    this._retryTimer = this._setTimer(() => {
+      this._retryTimer = null;
+      if (this._draining || lifecycleGeneration !== this._lifecycleGeneration
+        || this._feedState === 'disconnected' || this._feedState === 'retrying') return undefined;
+      const retryKeys = new Set(this._pendingRetryKeys);
+      this._pendingRetryKeys.clear();
+      this._retryOnlyKeys = retryKeys;
+      this._needsReconnect = true;
+      return this.handleFeedStatus({ state: 'open' }, this._connectionGeneration)
+        .catch(() => this._scheduleRetry(retryKeys));
+    }, delay);
+    if (this._retryTimer && typeof this._retryTimer.unref === 'function') this._retryTimer.unref();
+  }
+
+  _clearRetry(resetAttempt = false) {
+    if (this._retryTimer !== null) this._clearTimer(this._retryTimer);
+    this._retryTimer = null;
+    if (resetAttempt) {
+      this._retryAttempt = 0;
+      this._pendingRetryKeys.clear();
+      this._retryOnlyKeys = null;
+    }
+  }
+
+  _cancelRetryIfIdle() {
+    if (![...this._leases.values()].some((lease) => (
+      lease.status === 'error' || (lease.pendingBindings || []).length > 0
+    ))) this._clearRetry(true);
   }
 
   _snapshotLease(lease) {

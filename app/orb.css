@@ -1126,6 +1126,29 @@ html, body {
 .orb-chat-go:hover { background: rgba(255, 255, 255, 0.78); }
 .orb-chat-go:focus-visible { outline: 2px solid var(--color-k-text); outline-offset: 2px; }
 
+.orb-component-selection {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.orb-component-question-trigger {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid rgb(16 19 26 / 12%);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--color-k-faint);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.orb-component-question-trigger:hover { background: rgba(255, 255, 255, 0.78); color: var(--color-k-text); }
+.orb-component-question-trigger:focus-visible { outline: 2px solid var(--color-k-text); outline-offset: 2px; }
+.orb-chat-turns.is-component-question-targeting [data-session-card-id] { cursor: crosshair; }
+.orb-chat-turns .component-question-card-selected { border-color: rgb(16 19 26 / 28%); }
+
 @media (prefers-reduced-transparency: reduce) {
   .orb-panel, .orb-card {
     background-color: rgb(255 255 255 / 98%);

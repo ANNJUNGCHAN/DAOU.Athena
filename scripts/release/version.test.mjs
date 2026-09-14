@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 import {
+  bumpBackendLockVersion,
   bumpLockVersions,
   bumpPackageVersion,
   bumpPyprojectVersion,
@@ -60,11 +61,20 @@ description = "test"
 target-version = "py311"
 `;
 
+const backendLock = `version = 1
+
+[[package]]
+name = "daou-athena-backend"
+version = "0.1.0"
+source = { editable = "." }
+`;
+
 function alignedTree() {
   return fixture({
     "app/package.json": packageJson,
     "app/package-lock.json": packageLock,
     "backend/pyproject.toml": pyproject,
+    "backend/uv.lock": backendLock,
   });
 }
 
@@ -126,6 +136,19 @@ test("backend drift fails the check", () => {
   }
 });
 
+test("backend lock drift fails the check", () => {
+  const dir = alignedTree();
+  try {
+    writeFileSync(
+      join(dir, "backend/uv.lock"),
+      backendLock.replace('version = "0.1.0"', 'version = "0.2.0"'),
+    );
+    assert.throws(() => checkProjectVersions(dir, {}), /version mismatch/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("set-version updates package, lock, and pyproject together", () => {
   const dir = alignedTree();
   try {
@@ -135,7 +158,20 @@ test("set-version updates package, lock, and pyproject together", () => {
     assert.equal(lock.version, "0.1.0-beta.1");
     assert.equal(lock.packages[""].version, "0.1.0-beta.1");
     assert.match(readFileSync(join(dir, "backend/pyproject.toml"), "utf8"), /^version = "0\.1\.0-beta\.1"$/m);
+    assert.match(readFileSync(join(dir, "backend/uv.lock"), "utf8"), /^version = "0\.1\.0-beta\.1"$/m);
     assert.doesNotMatch(readFileSync(join(dir, "backend/pyproject.toml"), "utf8"), /target-version = "0\.1\.0/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("set-version validates every manifest before writing", () => {
+  const dir = alignedTree();
+  try {
+    writeFileSync(join(dir, "backend/uv.lock"), "version = 1\n", "utf8");
+    assert.throws(() => setProjectVersion(dir, "0.2.0"), /expected 1/);
+    assert.equal(JSON.parse(readFileSync(join(dir, "app/package.json"), "utf8")).version, "0.1.0");
+    assert.match(readFileSync(join(dir, "backend/pyproject.toml"), "utf8"), /^version = "0\.1\.0"$/m);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -161,4 +197,5 @@ test("lock bump requires both athena-shell version fields", () => {
   assert.equal(JSON.parse(bumped).packages[""].version, "0.2.0");
   assert.equal(JSON.parse(bumpPackageVersion(packageJson, "0.2.0")).version, "0.2.0");
   assert.match(bumpPyprojectVersion(pyproject, "0.2.0"), /^version = "0\.2\.0"$/m);
+  assert.match(bumpBackendLockVersion(backendLock, "0.2.0"), /^version = "0\.2\.0"$/m);
 });

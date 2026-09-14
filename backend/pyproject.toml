@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "daou-athena-backend"
-version = "0.1.0"
+version = "0.1.1"
 description = "FastAPI facade for the Kiwoom mock REST and WebSocket APIs"
 requires-python = ">=3.11"
 dependencies = [

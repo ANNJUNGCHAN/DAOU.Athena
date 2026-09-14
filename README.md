@@ -102,7 +102,7 @@ npm --prefix app start
 
 ### 버전 규칙
 
-- 트리 안 버전은 `app/package.json`, `app/package-lock.json`, `backend/pyproject.toml`이 같습니다.
+- 트리 안 버전은 `app/package.json`, `app/package-lock.json`, `backend/pyproject.toml`, `backend/uv.lock`이 같습니다.
 - Git 태그는 `v` + 그 버전입니다. 예: `0.1.0-beta.1` → `v0.1.0-beta.1`
 - 하이픈이 있는 버전(`-beta.1` 등)은 GitHub prerelease이고 Latest가 되지 않습니다.
 
@@ -115,7 +115,7 @@ npm --prefix app start
 ```powershell
 node scripts/release/set-version.mjs 0.1.0
 node scripts/release/check-version.mjs
-git add app/package.json app/package-lock.json backend/pyproject.toml
+git add app/package.json app/package-lock.json backend/pyproject.toml backend/uv.lock
 git commit -m "chore(release): v0.1.0"
 git tag -a v0.1.0 -m "v0.1.0"
 git push origin main

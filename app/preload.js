@@ -93,6 +93,11 @@ const INVOKE_CHANNELS = new Set([
   'athena:integrated-card-realtime-status',
   'athena:integrated-card-realtime-command',
   'athena:realtime-acquire',
+  'athena:realtime-generation',
+  'athena:realtime-fallback-register',
+  'athena:realtime-fallback-unregister',
+  'athena:realtime-fallback-status',
+  'athena:realtime-fallback-visibility',
   'athena:realtime-release',
   'athena:orderbook-realtime-acquire',
   'athena:orderbook-realtime-release',
@@ -326,6 +331,10 @@ const ON_CHANNELS = new Set([
   'athena:orderbook-ticks',
   // direct 호가 카드가 자기 opaque lease의 실제 feed lifecycle만 받는다.
   'athena:renderer-realtime-state',
+  // 계좌 경계가 바뀌면 renderer의 pending quote REG 재시도를 즉시 닫는다.
+  'athena:realtime-account-reset',
+  'athena:realtime-fallback-state',
+  'athena:realtime-fallback-data',
   // 6종 통합 카드 상태와 generation이 붙은 REAL rows. 렌더러는 자신의 최신
   // lease generation과 일치하는 이벤트만 카드 section에 병합한다.
   'athena:integrated-card-realtime-state',

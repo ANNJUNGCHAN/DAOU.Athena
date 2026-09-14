@@ -22,6 +22,7 @@ async def kiwoom_real_stream(websocket: WebSocket, client: KiwoomWsClientDep) ->
     if not await authenticate_downstream_ws(websocket):
         return
 
+    await websocket.send_json({"type": "feed-ready", "feed": "kiwoom-real"})
     queue = client.subscribe_events()
     try:
         await pump_queue_to_websocket(websocket, queue)

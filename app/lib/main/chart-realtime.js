@@ -8,6 +8,7 @@
 // 0B 체결 필드(키움 실시간 규격). 값은 등락 부호가 붙은 문자열로 온다("-257000").
 const F_TIME = '20';   // 체결시간 HHMMSS(KST)
 const F_PRICE = '10';  // 현재가
+const F_CHANGE = '11'; // 전일대비(현재가와 같은 0B 체결 프레임의 직접값)
 const F_VOLUME = '15'; // 체결량(부호는 매수/매도 구분 — 크기만 쓴다)
 // 시세 카드(단계 8 확장 조사, card-kind-시세.js 4열) 전용 — 진행봉 접기에는 안 쓴다.
 // F_TIME/F_PRICE/F_VOLUME과 같은 외부 규격(키움 실시간 FID) 근거이되, 이 두 필드는
@@ -17,10 +18,62 @@ const F_ACC_VOLUME = '13';  // 누적거래량
 
 const REAL_TR_ID = '0B';
 const KST_OFFSET_SEC = 9 * 3600;
+const DEFAULT_CONTROL_REQUEST_TIMEOUT_MS = 3000;
+
+function runWithControlTimeout(operation, options = {}) {
+  const timeoutMs = Math.max(1, Number(options.timeoutMs) || DEFAULT_CONTROL_REQUEST_TIMEOUT_MS);
+  const setTimer = options.setTimer || setTimeout;
+  const clearTimer = options.clearTimer || clearTimeout;
+  const AbortControllerImpl = options.AbortControllerImpl || globalThis.AbortController;
+  const controller = typeof AbortControllerImpl === 'function' ? new AbortControllerImpl() : null;
+  let timer = null;
+  let timedOut = false;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimer(() => {
+      timedOut = true;
+      if (controller) controller.abort();
+      const error = new Error(`realtime control request timed out after ${timeoutMs}ms`);
+      error.code = 'REALTIME_CONTROL_TIMEOUT';
+      reject(error);
+    }, timeoutMs);
+  });
+  let request;
+  try {
+    request = Promise.resolve(operation(controller ? controller.signal : undefined));
+  } catch (error) {
+    request = Promise.reject(error);
+  }
+  request.then(
+    (value) => {
+      if (timedOut && typeof options.onLateResolve === 'function') options.onLateResolve(value);
+    },
+    () => {},
+  ).catch(() => {});
+  return Promise.race([request, timeout]).finally(() => {
+    if (timer !== null) clearTimer(timer);
+  });
+}
+
+function fetchWithControlTimeout(fetchImpl, url, init = {}, options = {}) {
+  return runWithControlTimeout((signal) => fetchImpl(url, {
+    ...init,
+    ...(signal ? { signal } : {}),
+  }), options);
+}
+
+// 키움 REAL item은 국내 종목에도 A/J/Q 시장 접두를 붙여 보낼 수 있다. REST 차트와
+// 카드 신원은 6자리 종목코드이므로, 정확히 그 형식일 때만 접두를 걷는다. ETF·ELW 등
+// 6자리 영숫자 코드는 그대로 둬 파생상품 신원을 훼손하지 않는다.
+function normalizeSecurityTarget(value) {
+  const target = String(value == null ? '' : value).trim();
+  return /^[AJQ]\d{6}$/.test(target) ? target.slice(1) : target;
+}
 
 function toMagnitude(value) {
   if (value == null) return null;
-  const n = Number(String(value).trim().replace(/^[+-]/, ''));
+  const text = String(value).trim();
+  if (!text) return null;
+  const n = Number(text.replace(/^[+-]/, ''));
   return Number.isFinite(n) ? n : null;
 }
 
@@ -28,7 +81,9 @@ function toMagnitude(value) {
 // 보존한 채로만 숫자화한다. 없으면 null(값을 지어내지 않는다, §8).
 function toSignedNumber(value) {
   if (value == null) return null;
-  const n = Number(String(value).trim());
+  const text = String(value).trim();
+  if (!text) return null;
+  const n = Number(text);
   return Number.isFinite(n) ? n : null;
 }
 
@@ -37,7 +92,9 @@ function toSignedNumber(value) {
 // (chart-card.js kstLabel) — 여기서 9시간을 더해 값을 위조하지 않는다.
 function kstToEpochSec(yyyymmdd, hhmmss) {
   const date = String(yyyymmdd || '');
-  const time = String(hhmmss || '').padStart(6, '0');
+  const rawTime = String(hhmmss == null ? '' : hhmmss).trim();
+  if (!rawTime) return null;
+  const time = rawTime.padStart(6, '0');
   if (!/^\d{8}$/.test(date) || !/^\d{6}$/.test(time)) return null;
   const y = Number(date.slice(0, 4));
   const mo = Number(date.slice(4, 6));
@@ -60,7 +117,7 @@ function kstTradingDate(now) {
 function parseRealTick(row, tradingDate) {
   if (!row || typeof row !== 'object') return null;
   if (String(row.type) !== REAL_TR_ID) return null;
-  const symbol = String(row.item || '').trim();
+  const symbol = normalizeSecurityTarget(row.item);
   if (!symbol) return null;
   const values = row.values && typeof row.values === 'object' ? row.values : {};
   const price = toMagnitude(values[F_PRICE]);
@@ -71,6 +128,7 @@ function parseRealTick(row, tradingDate) {
     symbol,
     at,
     price,
+    change: toSignedNumber(values[F_CHANGE]),
     volume: toMagnitude(values[F_VOLUME]) || 0,
     // 시세 카드 4열 확장분 — 프레임에 없으면 null(소비측이 갱신을 스킵한다).
     changeRate: toSignedNumber(values[F_CHANGE_RATE]),
@@ -131,11 +189,19 @@ function createRealtimeRegistrar(opts) {
   const fetchImpl = o.fetchImpl || globalThis.fetch;
   const account = String(o.backendAccountAlias || '');
   const mdlog = o.mdlog || (() => {});
+  const controlRequestOptions = {
+    timeoutMs: o.controlRequestTimeoutMs,
+    setTimer: o.setTimer,
+    clearTimer: o.clearTimer,
+    AbortControllerImpl: o.AbortControllerImpl,
+  };
   const refCounts = new Map(); // code -> 열린 참조 수(0 이하는 저장하지 않는다)
   const pendingRegister = new Map(); // code -> 진행 중인 REG의 Promise(경합 방지)
   const pendingRemove = new Set(); // 진행 중인 일반 release REMOVE
   const pendingReregisters = new Set();
+  const pendingLateCleanups = new Set();
   const orphanSubscriptions = new Set(); // owner 없이 서버에 남았을 수 있는 REG
+  const registerRevisions = new Map();
   let draining = false;
   let drainCleanupOk = true;
   let drainCompletion = Promise.resolve(true);
@@ -148,10 +214,26 @@ function createRealtimeRegistrar(opts) {
     const headers = { 'Content-Type': 'application/json' };
     headers['X-Athena-Account'] = account;
     const body = trnm === 'REMOVE' ? buildRemoveBody([code], trId) : buildRegisterBody([code], trId);
+    const registerRevision = trnm === 'REG' ? (registerRevisions.get(code) || 0) + 1 : 0;
+    if (trnm === 'REG') registerRevisions.set(code, registerRevision);
     let res;
     try {
-      res = await fetchImpl(`${backendBase}/api/v1/websocket/${trId}`, {
+      res = await fetchWithControlTimeout(fetchImpl, `${backendBase}/api/v1/websocket/${trId}`, {
         method: 'POST', redirect: 'error', headers, body: JSON.stringify(body),
+      }, {
+        ...controlRequestOptions,
+        onLateResolve: trnm === 'REG' ? (lateResponse) => {
+          if (!lateResponse || !lateResponse.ok
+            || registerRevisions.get(code) !== registerRevision
+            || (refCounts.get(code) || 0) > 0) return;
+          orphanSubscriptions.add(code);
+          const cleanup = postFrame('REMOVE', code).then((ok) => {
+            if (ok) orphanSubscriptions.delete(code);
+            else if (draining) drainCleanupOk = false;
+            return ok;
+          }).finally(() => pendingLateCleanups.delete(cleanup));
+          pendingLateCleanups.add(cleanup);
+        } : undefined,
       });
     } catch (err) {
       mdlog(`REAL ${trnm} 실패(${code}): ${String((err && err.message) || err)}`);
@@ -250,7 +332,9 @@ function createRealtimeRegistrar(opts) {
 
   async function releaseAll() {
     draining = true;
-    const pending = [...pendingRegister.values(), ...pendingRemove, ...pendingReregisters];
+    const pending = [
+      ...pendingRegister.values(), ...pendingRemove, ...pendingReregisters, ...pendingLateCleanups,
+    ];
     const cleanupCodes = new Set([...refCounts.keys(), ...orphanSubscriptions]);
     const activeCleanup = Promise.all([...cleanupCodes].map(async (code) => {
       const ok = await postFrame('REMOVE', code);
@@ -291,5 +375,8 @@ module.exports = {
   buildRemoveBody,
   kstToEpochSec,
   kstTradingDate,
+  normalizeSecurityTarget,
+  runWithControlTimeout,
+  fetchWithControlTimeout,
   createRealtimeRegistrar,
 };

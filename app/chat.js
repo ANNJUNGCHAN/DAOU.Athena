@@ -48,6 +48,14 @@ window.athena.on('athena:app-notification', (payload = {}) => {
 // 이력의 에이전트 카드(runQueryLive의 ensureAgentCard)가 그 자리를 잇는다.
 const $inputStack = document.getElementById('inputStack');
 const $inputRow = $inputStack.querySelector('.input-row');
+const cardComponentTarget = window.AthenaLib.CardComponentTarget.createController({
+  root: document.getElementById('grid'),
+  button: document.getElementById('componentQuestionBtn'),
+  selection: document.getElementById('componentQuestionSelection'),
+  selectionLabel: document.getElementById('componentQuestionSelectionLabel'),
+  clearButton: document.getElementById('componentQuestionClear'),
+  document,
+});
 // 캐럿 SVG(Paper 44) — 활동 줄·에이전트 카드·출처 버튼이 같은 10px 꺾쇠를 쓴다.
 function chevronSvg(direction) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -1597,9 +1605,14 @@ async function runQueryLive(text) {
     const rendererSubmittedAt = performance.now();
     window.AthenaProviderFirstPaint.registerSubmit({ clientSubmitId, rendererSubmittedAt, origin: 'shell' });
     // @멘션은 여기서만 동봉한다 — 사용자 버블(qText)에는 타이핑 원문이 남는다.
+    if (window.AthenaCanvasCards && typeof window.AthenaCanvasCards.flushReport === 'function') {
+      window.AthenaCanvasCards.flushReport();
+    }
+    const cardContext = cardComponentTarget.getContext();
     result = await window.athena.invoke('athena__render_canvas', {
       source: 'live', query: augmentMentions(text), expand: prefs.autoExpandCanvas, conversationId: cid,
       clientSubmitId, rendererSubmittedAt,
+      cardContext,
       // 백테스트 설계 턴 — main.js가 모드·폼 상태를 buildLiveTurnPrompt에 넘긴다. 모델은
       // 폼을 읽기만 하고, 바꾸는 것은 propose_spec 초안 카드의 [적용]을 사람이 누를 때다.
       canvasMode: (window.AthenaCanvasMode && window.AthenaCanvasMode.state && window.AthenaCanvasMode.state.view) || 'summary',
@@ -1616,6 +1629,7 @@ async function runQueryLive(text) {
       pluginContext: (window.AthenaPluginCanvas && typeof window.AthenaPluginCanvas.getContext === 'function')
         ? window.AthenaPluginCanvas.getContext() : null,
     });
+    if (cardContext) cardComponentTarget.clearSelection(cardContext);
   } catch (err) {
     // 핸들러가 reject하면(예: main 쪽 미처리 예외) 결과 없이 아래로 떨어져
     // 잠금·타이머가 얼어붙었다(2026-08-31 실측). 실패 턴으로 정직하게 그린다.

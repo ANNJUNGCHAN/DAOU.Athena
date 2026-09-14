@@ -14,6 +14,18 @@ from athena_api.kiwoom.rate_limiter import RateLimiter
 from athena_api.kiwoom.return_codes import normalize_return_code
 
 KIWOOM_MOCK_WS_URL = "wss://mockapi.kiwoom.com:10000/api/dostk/websocket"
+_FEED_STATUS_STATES = frozenset({"ready", "reconnecting", "unavailable"})
+_FEED_STATUS_REASONS = frozenset(
+    {
+        "not_started",
+        "client_closed",
+        "reader_failed",
+        "control_send_failed",
+        "control_cancelled",
+        "control_timeout",
+        "control_missing_return_code",
+    }
+)
 
 
 class WsConnection(Protocol):
@@ -29,6 +41,34 @@ ConnectFn = Callable[[str], Awaitable[WsConnection]]
 
 class KiwoomWsError(RuntimeError):
     """Secret-safe WebSocket transport error."""
+
+
+class _SubscriberQueue(asyncio.Queue[dict[str, Any]]):
+    """Bounded REAL queue that reserves a pending upstream status signal."""
+
+    def __init__(self, maxsize: int) -> None:
+        super().__init__(maxsize)
+        self.status_pending = False
+
+    def put_nowait(self, item: dict[str, Any]) -> None:
+        super().put_nowait(item)
+        if item.get("type") == "feed-status":
+            self.status_pending = True
+
+    def get_nowait(self) -> dict[str, Any]:
+        item = super().get_nowait()
+        if item.get("type") == "feed-status":
+            self.status_pending = any(
+                queued.get("type") == "feed-status" for queued in self._queue
+            )
+        return item
+
+    def discard_oldest_real(self) -> bool:
+        for index, queued in enumerate(self._queue):
+            if queued.get("type") != "feed-status":
+                del self._queue[index]
+                return True
+        return False
 
 
 class KiwoomWsClient:
@@ -70,11 +110,15 @@ class KiwoomWsClient:
         self._control_lock = asyncio.Lock()
         self._recovery_complete = asyncio.Event()
         self._write_lock = asyncio.Lock()
-        self._subscribers: set[asyncio.Queue[dict[str, Any]]] = set()
+        self._subscribers: set[_SubscriberQueue] = set()
         self._subscriptions: dict[str, tuple[str, dict[str, Any]]] = {}
         self._closing = False
         self._ready = False
         self._last_error: str | None = None
+        self._upstream_generation = 0
+        self._status_revision = 0
+        self._status_state = "unavailable"
+        self._status_reason: str | None = "not_started"
 
     @property
     def is_ready(self) -> bool:
@@ -98,6 +142,7 @@ class KiwoomWsClient:
         if not self._ready or self._connection is None:
             raise KiwoomWsError("Kiwoom WebSocket disconnected during LOGIN")
         self._recovery_complete.set()
+        self._publish_status("ready")
 
     async def execute(self, tr_id: str, payload: dict[str, Any]) -> dict[str, Any]:
         """Serialize ambiguous control replies and correlate each to one caller."""
@@ -133,6 +178,7 @@ class KiwoomWsClient:
             self._last_error = "control_timeout"
             await self._discard_connection(self._connection)
             if not self._closing:
+                self._publish_status("reconnecting", "control_timeout")
                 self._schedule_reconnect()
             raise KiwoomWsError("Kiwoom WebSocket control timed out") from exc
         finally:
@@ -191,8 +237,9 @@ class KiwoomWsClient:
                 }
 
     def subscribe_events(self) -> asyncio.Queue[dict[str, Any]]:
-        queue: asyncio.Queue[dict[str, Any]] = asyncio.Queue(self._queue_size)
+        queue = _SubscriberQueue(self._queue_size)
         self._subscribers.add(queue)
+        queue.put_nowait(self._status_message())
         return queue
 
     def unsubscribe_events(self, queue: asyncio.Queue[dict[str, Any]]) -> None:
@@ -201,6 +248,7 @@ class KiwoomWsClient:
     async def close(self) -> None:
         self._closing = True
         self._ready = False
+        self._publish_status("unavailable", "client_closed")
         reconnect_task = self._reconnect_task
         self._reconnect_task = None
         if reconnect_task is not None:
@@ -245,6 +293,7 @@ class KiwoomWsClient:
             if login_future is not None and login_future.done() and not login_future.cancelled():
                 login_future.exception()
         self._ready = True
+        self._upstream_generation += 1
 
     async def _read(self, connection: WsConnection) -> None:
         try:
@@ -293,6 +342,7 @@ class KiwoomWsClient:
                 self._recovery_complete.clear()
                 self._fail_pending()
                 if not self._closing:
+                    self._publish_status("reconnecting", self._last_error or "reader_failed")
                     self._schedule_reconnect()
 
     async def _send(self, message: dict[str, Any]) -> None:
@@ -323,6 +373,7 @@ class KiwoomWsClient:
                 if not self._ready or self._connection is None:
                     raise KiwoomWsError("Kiwoom WebSocket disconnected during recovery")
                 self._recovery_complete.set()
+                self._publish_status("ready")
                 return
             except Exception:
                 self._last_error = "reconnect_failed"
@@ -413,13 +464,45 @@ class KiwoomWsClient:
         self._last_error = reason
         await self._discard_connection(self._connection)
         if not self._closing:
+            self._publish_status("reconnecting", reason)
             self._schedule_reconnect()
 
     def _publish(self, message: dict[str, Any]) -> None:
         for queue in self._subscribers:
             if queue.full():
-                queue.get_nowait()
+                if queue.status_pending and not queue.discard_oldest_real():
+                    continue
+                if queue.full():
+                    queue.get_nowait()
             queue.put_nowait(message)
+
+    def _publish_status(self, state: str, reason_code: str | None = None) -> None:
+        if state not in _FEED_STATUS_STATES:
+            raise ValueError(f"invalid feed status state: {state}")
+        if reason_code is not None and reason_code not in _FEED_STATUS_REASONS:
+            reason_code = "reader_failed"
+        if state == self._status_state:
+            return
+        self._status_state = state
+        self._status_reason = reason_code if state != "ready" else None
+        self._status_revision += 1
+        message = self._status_message()
+        for queue in self._subscribers:
+            if queue.full():
+                queue.get_nowait()
+            queue.put_nowait(dict(message))
+
+    def _status_message(self) -> dict[str, Any]:
+        message: dict[str, Any] = {
+            "type": "feed-status",
+            "feed": "kiwoom-real",
+            "state": self._status_state,
+            "upstreamGeneration": self._upstream_generation,
+            "revision": self._status_revision,
+        }
+        if self._status_reason is not None:
+            message["reasonCode"] = self._status_reason
+        return message
 
     def _fail_pending(self) -> None:
         for future in (self._login_future, self._control_future):

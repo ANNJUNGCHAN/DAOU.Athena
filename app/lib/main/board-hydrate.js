@@ -164,7 +164,17 @@ function primaryReloadAuthority(reply, correlation, accountId) {
   };
 }
 
-async function hydrateBoard({ backendBase, fetchImpl, token, boardId, target, account, slotIds } = {}) {
+function raceWithAbort(promise, signal) {
+  if (!signal) return Promise.resolve(promise);
+  if (signal.aborted) return Promise.reject(signal.reason || new Error('aborted'));
+  return new Promise((resolve, reject) => {
+    const abort = () => reject(signal.reason || new Error('aborted'));
+    signal.addEventListener('abort', abort, { once: true });
+    Promise.resolve(promise).then(resolve, reject).finally(() => signal.removeEventListener('abort', abort));
+  });
+}
+
+async function hydrateBoard({ backendBase, fetchImpl, token, boardId, target, account, slotIds, timeoutMs = 12_000 } = {}) {
   let body;
   try {
     body = buildHydrateBody({ boardId, target, account, slotIds });
@@ -181,18 +191,24 @@ async function hydrateBoard({ backendBase, fetchImpl, token, boardId, target, ac
   const bearer = clean(token);
   if (bearer) headers.Authorization = `Bearer ${bearer}`;
   let response;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(new Error('보드 하이드레이션 시간 제한을 넘겼다')),
+    Math.max(1, Number(timeoutMs) || 12_000));
   try {
-    response = await fetcher(`${clean(backendBase)}${HYDRATE_PATH}`, {
+    response = await raceWithAbort(fetcher(`${clean(backendBase)}${HYDRATE_PATH}`, {
       method: 'POST',
       headers,
       body: JSON.stringify(body),
-    });
+      signal: controller.signal,
+    }), controller.signal);
   } catch (error) {
+    clearTimeout(timer);
     // 백엔드가 아직 안 떴거나 경로가 없다 — renderer가 재시도 가능한 오류로 표시한다.
     return { ok: false, status: 'unavailable', error: String((error && error.message) || error) };
   }
   const httpStatus = Number(response && response.status) || 0;
   if (!response || !response.ok) {
+    clearTimeout(timer);
     if (UNAVAILABLE_STATUS.has(httpStatus)) {
       return { ok: false, status: 'unavailable', httpStatus };
     }
@@ -200,9 +216,12 @@ async function hydrateBoard({ backendBase, fetchImpl, token, boardId, target, ac
   }
   let payload = null;
   try {
-    payload = typeof response.json === 'function' ? await response.json() : null;
+    payload = typeof response.json === 'function'
+      ? await raceWithAbort(response.json(), controller.signal) : null;
   } catch {
     payload = null;
+  } finally {
+    clearTimeout(timer);
   }
   if (!payload || typeof payload !== 'object') {
     return { ok: false, status: 'error', httpStatus, error: '하이드레이션 응답이 비었다' };
@@ -239,5 +258,6 @@ module.exports = {
   normalizeOperations,
   normalizePrimaryEnvelope,
   primaryReloadAuthority,
+  raceWithAbort,
   hydrateBoard,
 };

@@ -47,6 +47,15 @@ export function readBackendVersion(root) {
   return match[1];
 }
 
+export function readBackendLockVersion(root) {
+  const text = readFileSync(join(root, "backend/uv.lock"), "utf8");
+  const match = text.match(
+    /\[\[package\]\]\r?\nname = "daou-athena-backend"\r?\nversion = "([^"]+)"/,
+  );
+  if (!match) throw new Error("backend/uv.lock is missing daou-athena-backend version");
+  return match[1];
+}
+
 export function bumpLockVersions(raw, version) {
   let seen = 0;
   const next = raw.replace(
@@ -70,6 +79,21 @@ export function bumpPyprojectVersion(raw, version) {
   return next;
 }
 
+export function bumpBackendLockVersion(raw, version) {
+  let seen = 0;
+  const next = raw.replace(
+    /(\[\[package\]\]\r?\nname = "daou-athena-backend"\r?\nversion = ")([^"]+)(")/g,
+    (_, prefix, _old, suffix) => {
+      seen += 1;
+      return `${prefix}${version}${suffix}`;
+    },
+  );
+  if (seen !== 1) {
+    throw new Error(`backend/uv.lock: expected 1 daou-athena-backend version field, found ${seen}`);
+  }
+  return next;
+}
+
 export function bumpPackageVersion(raw, version) {
   const next = raw.replace(/^(\s*"version": ")([^"]+)(")/m, `$1${version}$3`);
   if (next === raw && !raw.includes(`"version": "${version}"`)) {
@@ -82,20 +106,22 @@ export function checkProjectVersions(root, env = process.env) {
   const app = readAppVersion(root);
   const lock = readLockVersions(root);
   const backend = readBackendVersion(root);
+  const backendLock = readBackendLockVersion(root);
   const versions = {
     app,
     "package-lock": lock.root,
     "package-lock packages['']": lock.package,
     backend,
+    "backend uv.lock": backendLock,
   };
   for (const [name, value] of Object.entries(versions)) {
     if (!SEMVER.test(value)) {
       throw new Error(`${name} version is not semver: ${value}`);
     }
   }
-  if (lock.root !== app || lock.package !== app || backend !== app) {
+  if (lock.root !== app || lock.package !== app || backend !== app || backendLock !== app) {
     throw new Error(
-      `version mismatch: app=${app} lock=${lock.root}/${lock.package} backend=${backend}`,
+      `version mismatch: app=${app} lock=${lock.root}/${lock.package} backend=${backend}/${backendLock}`,
     );
   }
   const tag = tagFromEnv(env);
@@ -115,8 +141,17 @@ export function setProjectVersion(root, version) {
   const pkgPath = join(root, "app/package.json");
   const lockPath = join(root, "app/package-lock.json");
   const pyPath = join(root, "backend/pyproject.toml");
-  writeFileSync(pkgPath, bumpPackageVersion(readFileSync(pkgPath, "utf8"), version));
-  writeFileSync(lockPath, bumpLockVersions(readFileSync(lockPath, "utf8"), version));
-  writeFileSync(pyPath, bumpPyprojectVersion(readFileSync(pyPath, "utf8"), version));
+  const backendLockPath = join(root, "backend/uv.lock");
+  const nextPackage = bumpPackageVersion(readFileSync(pkgPath, "utf8"), version);
+  const nextLock = bumpLockVersions(readFileSync(lockPath, "utf8"), version);
+  const nextPyproject = bumpPyprojectVersion(readFileSync(pyPath, "utf8"), version);
+  const nextBackendLock = bumpBackendLockVersion(
+    readFileSync(backendLockPath, "utf8"),
+    version,
+  );
+  writeFileSync(pkgPath, nextPackage);
+  writeFileSync(lockPath, nextLock);
+  writeFileSync(pyPath, nextPyproject);
+  writeFileSync(backendLockPath, nextBackendLock);
   return checkProjectVersions(root, {});
 }

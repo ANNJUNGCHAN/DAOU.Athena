@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="styles/integrated-cards.css" />
 <link rel="stylesheet" href="styles/canvas-tabs.css" />
 <link rel="stylesheet" href="styles/board-surface.css" />
+<link rel="stylesheet" href="styles/card-component-target.css" />
 <link rel="stylesheet" href="styles/plugin-canvas.css" />
 <link rel="stylesheet" href="shell.css" />
 <link rel="stylesheet" href="lib/technique-create-dialog.css" />
@@ -356,6 +357,11 @@
           <!-- 첨부 칩(2026-08-27, 코덱스 UI 이식) — 키우미 메뉴로 고른 파일/폴더가
                경로 텍스트 대신 칩으로 쌓인다. 전송 시 프롬프트에 동봉되고 비워진다. -->
           <div id="attachChips" class="attach-chips" hidden></div>
+          <div id="componentQuestionSelection" class="component-question-selection" hidden aria-live="polite">
+            <span>질문 대상</span>
+            <span id="componentQuestionSelectionLabel" class="component-question-selection-label"></span>
+            <button id="componentQuestionClear" class="component-question-selection-clear" type="button" aria-label="질문 대상 선택 해제" title="선택 해제">×</button>
+          </div>
           <!-- 되물을 것들 카드(2026-09-02) — 확인 필요 배너가 약속한 "답하시면 그대로
                그래프가 갱신됩니다"를 실제로 하는 자리다. 입력창 바로 위에 도킹된다
                (레퍼런스: 권한 확인 카드). 내용은 chat.js가 채우고, 재료는 백엔드의
@@ -377,9 +383,10 @@
             <textarea id="input" class="input" rows="1" placeholder="무엇이든 물어보세요" autofocus></textarea>
             <button id="stopBtn" class="composer-stop" type="button" hidden aria-label="중단 (Esc)" title="중단 (Esc)"><span class="composer-stop-square" aria-hidden="true"></span></button>
           </div>
-          <!-- 하단 툴바(Paper 44 composer-bar, 2026-09-08 정리) — 오른쪽 [모델][사고 강도][키우미]만 남았다.
-               모델·강도는 모델 팝오버를, 키우미는 옵션 메뉴(첨부·@ 플러그인·설정)를 연다. -->
+          <!-- 하단 툴바(Paper 44 composer-bar) — 왼쪽에서 카드 안 질문 대상을 고르고,
+               오른쪽 모델·강도는 모델 팝오버를, 키우미는 옵션 메뉴(첨부·@ 플러그인·설정)를 연다. -->
           <div class="composer-bar">
+            <button id="componentQuestionBtn" class="composer-text component-question-trigger" type="button" aria-pressed="false" aria-controls="grid" title="카드 안의 차트, 지표 또는 표 행을 질문 대상으로 선택">이 항목 질문</button>
             <span class="composer-spacer"></span>
             <button id="modelBtn" class="composer-text" type="button" title="모델">모델</button>
             <button id="effortBtn" class="composer-text" type="button" title="사고 강도">강도</button>
@@ -499,6 +506,7 @@
 <script src="lib/semantic-detail-sheet.js"></script>
 <script src="lib/semantic-workspace.js"></script>
 <script src="lib/integrated-card-surface.js"></script>
+<script src="lib/card-component-target.js"></script>
 <script src="lib/ranking-axis.js"></script>
 <script src="lib/ranking-board-controls.js"></script>
 <!-- 보드 색인만 동기로 싣는다(수 KB). 원문 HTML은 카드별 청크

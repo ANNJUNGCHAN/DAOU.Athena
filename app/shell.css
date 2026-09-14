@@ -3912,7 +3912,7 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
   }
 
   /* 트레이에서는 모델·강도 글자 라벨을 접는다 — 키우미 메뉴 '모델 설정'이 같은 팝오버를 연다. */
-  #chatRegion .composer-text {
+  #chatRegion .composer-text:not(.component-question-trigger) {
     display: none;
   }
 

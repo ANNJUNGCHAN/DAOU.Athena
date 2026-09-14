@@ -581,12 +581,80 @@ _INSTRUMENT_CURRENT_PRICE_AUTHORITY = _CanonicalSemanticAuthority(
     time_basis="requested-period",
     semantic_role="price-or-money",
 )
+_INDEX_CURRENT_PRICE_AUTHORITY = _CanonicalSemanticAuthority(
+    label="현재가",
+    description="단위: 지수",
+    # Kiwoom sends index points with broker-defined decimal scaling.  Keep the
+    # value lossless instead of applying the stock-price (원) formatter.
+    unit_or_format="source-defined-number-or-text",
+    time_basis="requested-period",
+    semantic_role="index-price",
+)
+_INDEX_PREVIOUS_DAY_CHANGE_AUTHORITY = _CanonicalSemanticAuthority(
+    label="전일대비",
+    description="현재가 - 전일종가",
+    unit_or_format="source-defined-number-or-text",
+    time_basis="requested-period",
+    semantic_role="index-change",
+)
+_INDEX_PREVIOUS_DAY_SIGN_AUTHORITY = _CanonicalSemanticAuthority(
+    label="전일대비 기호",
+    description="1: 상한가, 2:상승, 3:보합, 4:하한가, 5:하락",
+    unit_or_format="source-defined-number-or-text",
+    time_basis="requested-period",
+    semantic_role="index-change-sign",
+)
+_INDEX_CHART_OPERATION_IDS = (
+    "base:ka20004",
+    "base:ka20005",
+    "base:ka20006",
+    "base:ka20007",
+    "base:ka20008",
+    "base:ka20019",
+)
+
+
 _VERIFIED_OPERATION_FIELD_AUTHORITIES = MappingProxyType(
     {
         ("base:ka10081", "cur_prc"): _INSTRUMENT_CURRENT_PRICE_AUTHORITY,
         ("base:0B", "10"): _INSTRUMENT_CURRENT_PRICE_AUTHORITY,
     }
 )
+_VERIFIED_INDEX_OPERATION_FIELD_AUTHORITIES = MappingProxyType(
+    {
+        **{
+            (operation_id, "cur_prc"): _INDEX_CURRENT_PRICE_AUTHORITY
+            for operation_id in _INDEX_CHART_OPERATION_IDS
+        },
+        **{
+            (operation_id, alias): authority
+            for operation_id in ("base:ka20004", "base:ka20005")
+            for alias, authority in (
+                ("pred_pre", _INDEX_PREVIOUS_DAY_CHANGE_AUTHORITY),
+                ("pred_pre_sig", _INDEX_PREVIOUS_DAY_SIGN_AUTHORITY),
+            )
+        },
+        **{
+            (operation_id, alias): authority
+            for operation_id in ("base:0J", "base:0U")
+            for alias, authority in (
+                ("10", _INDEX_CURRENT_PRICE_AUTHORITY),
+                ("11", _INDEX_PREVIOUS_DAY_CHANGE_AUTHORITY),
+                ("25", _INDEX_PREVIOUS_DAY_SIGN_AUTHORITY),
+            )
+        },
+    }
+)
+def _verified_field_authority(
+    mapping_id: str, alias: str
+) -> _CanonicalSemanticAuthority | None:
+    return _VERIFIED_OPERATION_FIELD_AUTHORITIES.get(
+        (mapping_id, alias)
+    ) or _VERIFIED_INDEX_OPERATION_FIELD_AUTHORITIES.get(
+        (mapping_id, alias)
+    )
+
+
 _VERIFIED_OPERATION_FIELD_DISPLAY = MappingProxyType(
     {
         ("base:ka10081", "cur_prc"): DisplayMetadataContract(
@@ -1247,9 +1315,7 @@ def _has_named_counterpart(
 
 
 def _unit_or_format(field: CanvasFieldContract) -> str:
-    authority = _VERIFIED_OPERATION_FIELD_AUTHORITIES.get(
-        (field.mapping_id, field.alias)
-    )
+    authority = _verified_field_authority(field.mapping_id, field.alias)
     if authority is not None:
         return authority.unit_or_format
     verified_unit = _VERIFIED_OPERATION_FIELD_UNITS.get(
@@ -1490,7 +1556,7 @@ def build_semantic_presentation_registry() -> SemanticPresentationRegistry:
         section_id = placement.section_id if placement else None
         component_id = placement.component_id if placement else None
         authority = (
-            _VERIFIED_OPERATION_FIELD_AUTHORITIES.get((field.mapping_id, field.alias))
+            _verified_field_authority(field.mapping_id, field.alias)
             if user_visible
             else None
         )

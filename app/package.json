@@ -1,13 +1,13 @@
 {
   "name": "athena-shell",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Athena — Codex형 셸 창 Electron 앱 (중앙 캔버스 + 우측 채팅). 프로토타입.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "test": "npm run test:unit",
-    "test:unit": "node --test lib/*.test.js lib/main/*.test.js lib/graph-mode/*.test.js",
+    "test:unit": "node --test lib/*.test.js lib/*.test.mjs lib/main/*.test.js lib/main/*.test.mjs lib/graph-mode/*.test.js",
     "test:provider-contract:unit": "node --test scripts/check-claude-agent-sdk-contract.test.mjs scripts/check-codex-app-server-contract.test.js scripts/write-provider-contract-decision.test.js scripts/check-provider-process-leaks.test.js",
     "probe:provider-contract": "node scripts/check-claude-agent-sdk-contract.mjs && node scripts/check-codex-app-server-contract.js && node scripts/write-provider-contract-decision.js --expect-decision CLAUDE_ONLY",
     "test:provider-contract": "npm run test:provider-contract:unit && npm run probe:provider-contract",

@@ -17,6 +17,7 @@ const projectDir = requiredEnvironmentPath('ATHENA_INSTALLER_PROJECT_DIR');
 const backendDir = requiredEnvironmentPath('ATHENA_INSTALLER_BACKEND_DIR');
 const outputDir = requiredEnvironmentPath('ATHENA_INSTALLER_OUTPUT_DIR');
 const electronDist = String(process.env.ATHENA_ELECTRON_DIST || '').trim();
+const appIcon = path.join(projectDir, 'data', 'athena-icon.ico');
 
 module.exports = {
   appId: 'kr.co.daou.athena',
@@ -44,12 +45,14 @@ module.exports = {
     },
   ],
   win: {
-    icon: path.join(projectDir, 'data', 'athena-icon.ico'),
+    icon: appIcon,
     target: [{ target: 'nsis', arch: ['x64'] }],
     artifactName: `Athena-Setup-${version}-x64.exe`,
     signExecutable: false,
   },
   nsis: {
+    installerIcon: appIcon,
+    uninstallerIcon: appIcon,
     oneClick: false,
     perMachine: false,
     allowElevation: false,

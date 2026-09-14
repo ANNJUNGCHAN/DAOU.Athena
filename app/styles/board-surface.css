@@ -155,6 +155,17 @@
   outline-offset: 2px;
 }
 
+/* canvas는 Paper CTA의 문구 잎에 키보드 semantics를 붙인다. 바깥 CTA 상자는 이미
+ * 44px이지만 role=button의 실제 hit target은 잎의 16px line box이므로 같은 최소
+ * 면적을 잎에도 준다. 고정 폭은 두지 않아 Paper 문구와 버튼 배치는 그대로 둔다. */
+[data-card-action][role="button"] {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ---------- 줄바꿈 정책 — 글자 단위 분절은 어느 단계에서도 없다 ----------
  *
  * 앞선 판단은 `overflow-wrap: anywhere`(Paper 원문)를 분절의 원인으로 보고 손대지

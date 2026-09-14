@@ -106,6 +106,9 @@ datasets/eval-runs/
 !/backend/athena_mcp/**
 !/backend/ref/
 !/backend/ref/**
+!/backend/verification/
+!/backend/verification/test_ws_feed_status.py
+!/backend/verification/test_index_realtime_semantics.py
 
 # Re-ignore paths the installer staging filter also omits inside keep trees.
 **/node_modules/

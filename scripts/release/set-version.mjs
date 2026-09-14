@@ -1,6 +1,6 @@
 /**
  * Set the in-tree release version in app/package.json, package-lock.json,
- * and backend/pyproject.toml. Does not commit or tag.
+ * backend/pyproject.toml, and backend/uv.lock. Does not commit or tag.
  *
  * 실행: node scripts/release/set-version.mjs 0.1.0-beta.1
  */

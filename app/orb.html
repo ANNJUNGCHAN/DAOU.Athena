@@ -6,6 +6,7 @@
 <!-- 알림 오브 창 (2026-08-24 리프 1.3.1). 셸 창과 같은 토큰·접근성 CSS를 쓴다 —
      유리 사다리와 글자 크기 5단이 두 창에서 갈라지면 같은 앱으로 안 읽힌다. -->
 <link rel="stylesheet" href="styles/tokens.css" />
+<link rel="stylesheet" href="styles/card-component-target.css" />
 <link rel="stylesheet" href="orb.css" />
 <link rel="stylesheet" href="styles/glau-mascot.css" />
 <link rel="stylesheet" href="styles/access.css" />
@@ -100,6 +101,10 @@
       <!-- 오브의 대화 입력 — 알림 모드에서도 질문을 시작할 수 있고, 제출하면
            orb.js가 현재 패널을 기존 이력이 보이는 대화 모드로 전환한다. -->
       <div id="orbInputStack" class="orb-input-stack" hidden>
+        <div id="orbComponentSelection" class="component-question-selection orb-component-selection" hidden>
+          <span id="orbComponentSelectionLabel" class="component-question-selection-label"></span>
+          <button id="orbComponentQuestionClear" class="component-question-selection-clear" type="button" aria-label="선택 항목 해제">×</button>
+        </div>
         <div class="orb-input-row">
           <input id="orbInput" class="orb-input" type="text" placeholder="무엇이든 물어보세요" autocomplete="off" />
           <div id="orbLockHint" class="orb-lock-hint" hidden>
@@ -111,6 +116,7 @@
           <span id="orbChatDot" class="orb-chat-dot" aria-hidden="true"></span>
           <span id="orbChatCli" class="orb-chat-cli-pill"></span>
           <span id="orbChatRoutine" class="orb-chat-routine-chip" hidden></span>
+          <button id="orbComponentQuestion" class="component-question-trigger orb-component-question-trigger" type="button" aria-pressed="false">항목 질문</button>
           <!-- 대화 이어짐(board-34 A→B) — 셸을 앞으로 가져온다, 새 방이 아니다. -->
           <button id="orbChatGo" class="orb-chat-go" type="button">대화창으로 가기</button>
         </div>
@@ -136,6 +142,9 @@
 <script src="lib/card-primitives.js"></script>
 <script src="lib/order-ticket.js"></script>
 <script src="lib/orb-mini-card.js"></script>
+<script src="lib/orb-quote-realtime.js"></script>
+<script src="lib/orb-integrated-realtime.js"></script>
+<script src="lib/card-component-target.js"></script>
 <script src="provider-first-paint.js"></script>
 <script src="lib/glau-mascot.js"></script>
 <script src="orb.js"></script>

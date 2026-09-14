@@ -264,6 +264,9 @@ function createAitsChartPanelAdapter(options) {
       state.renderer.setData(next.candles);
     }
     state.generation = requestedGeneration;
+    if (Number.isInteger(Number(meta.realtimeAccountGeneration))) {
+      state.realtimeAccountGeneration = Number(meta.realtimeAccountGeneration);
+    }
     state.reloads += 1;
     return publicSession(state);
   }
@@ -300,6 +303,9 @@ function createAitsChartPanelAdapter(options) {
       reloads: 0,
       generation: Number.isInteger(Number(meta.generation)) && Number(meta.generation) >= 1 ? Number(meta.generation) : 1,
       nextGeneration: Number.isInteger(Number(meta.generation)) && Number(meta.generation) >= 1 ? Number(meta.generation) + 1 : 2,
+      realtimeAccountGeneration: Number.isInteger(Number(meta.realtimeAccountGeneration))
+        ? Number(meta.realtimeAccountGeneration)
+        : null,
       closed: false,
       mountPromise: null,
     };
@@ -368,12 +374,15 @@ function createAitsChartPanelAdapter(options) {
   // 접기를 여기 두는 이유: 마지막 봉과 주기를 아는 곳이 이 세션 상태다. 바깥에서
   // 접으려면 봉을 복제해 들고 있어야 하고, 재조회로 봉이 갈릴 때 두 벌이 어긋난다.
   // tick: {symbol, at(epoch초), price, volume}.
-  async function applyRealtimeTick(tickInput) {
+  async function applyRealtimeTick(tickInput, tickContext) {
     const tick = tickInput && typeof tickInput === 'object' ? tickInput : null;
     if (!tick || !tick.symbol) return 0;
+    const realtimeAccountGeneration = Number(tickContext && tickContext.realtimeAccountGeneration);
     let applied = 0;
     for (const state of Array.from(sessions.values())) {
       if (state.closed || !state.renderer || !state.body) continue;
+      if (Number.isInteger(realtimeAccountGeneration)
+        && state.realtimeAccountGeneration !== realtimeAccountGeneration) continue;
       if (String(state.stock || '') !== String(tick.symbol)) continue;
       const period = PERIOD_TO_ATHENA[state.body.period];
       if (!period) continue;
@@ -442,6 +451,7 @@ function createAitsChartPanelAdapter(options) {
       candleCount: state.body.candles.length,
       reloads: state.reloads,
       generation: state.generation,
+      realtimeAccountGeneration: state.realtimeAccountGeneration,
       mounting: Boolean(state.mountPromise),
     })),
   };

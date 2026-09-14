@@ -48,6 +48,9 @@
   const cardPrimitives = window.AthenaLib.CardPrimitives;
   const orderTicketLib = window.AthenaLib.OrderTicket;
   const orbMiniCard = window.AthenaLib.OrbMiniCard;
+  const orbQuoteRealtime = window.AthenaLib.OrbQuoteRealtime;
+  const orbIntegratedRealtime = window.AthenaLib.OrbIntegratedRealtime;
+  const cardComponentTargetLib = window.AthenaLib.CardComponentTarget;
 
   const $root = document.getElementById('orbRoot');
   const $orb = document.getElementById('orb');
@@ -79,6 +82,15 @@
   const $chatCli = document.getElementById('orbChatCli');
   const $chatRoutine = document.getElementById('orbChatRoutine');
   const $chatGo = document.getElementById('orbChatGo');
+  const orbCardComponentTarget = cardComponentTargetLib.createController({
+    root: $chatTurns,
+    button: document.getElementById('orbComponentQuestion'),
+    selection: document.getElementById('orbComponentSelection'),
+    selectionLabel: document.getElementById('orbComponentSelectionLabel'),
+    clearButton: document.getElementById('orbComponentQuestionClear'),
+    document,
+    cardSelector: '[data-session-card-id]',
+  });
   // 알림 전용 표면 — 대화 모드일 때 통째로 감춘다(applyMode).
   const ALERT_ONLY_ELS = [$badge, $mode, $relative, $body, $card, $foot];
 
@@ -1900,23 +1912,52 @@
     return card;
   }
 
-  function orbKiumiValue(element) {
+  function orbKiumiComponentPath(envelope, slotId) {
+    const contractKey = envelope && Object.hasOwn(envelope, 'surface_contract')
+      ? 'surface_contract'
+      : envelope && Object.hasOwn(envelope, 'surfaceContract') ? 'surfaceContract' : '';
+    const surfaceContract = contractKey ? envelope[contractKey] : null;
+    const valuesKey = surfaceContract && Object.hasOwn(surfaceContract, 'slot_values')
+      ? 'slot_values'
+      : surfaceContract && Object.hasOwn(surfaceContract, 'slotValues') ? 'slotValues' : '';
+    const raw = valuesKey ? surfaceContract[valuesKey] : null;
+    const wanted = String(slotId || '');
+    if (!wanted || !raw || typeof raw !== 'object') return null;
+    if (Array.isArray(raw)) {
+      const index = raw.findIndex((entry) => String(entry && (entry.slot_id || entry.slotId) || '') === wanted);
+      return index >= 0 ? `${contractKey}.${valuesKey}.${index}.value` : null;
+    }
+    if (!Object.hasOwn(raw, wanted)) return null;
+    const value = raw[wanted];
+    return value && typeof value === 'object' && Object.hasOwn(value, 'value')
+      ? `${contractKey}.${valuesKey}.${wanted}.value`
+      : `${contractKey}.${valuesKey}.${wanted}`;
+  }
+
+  function orbKiumiValue(element, envelope) {
     const value = document.createElement('div');
     value.className = element.tone
       ? `orb-kiumi-value is-${element.tone}`
       : 'orb-kiumi-value';
     if (element.missing) value.classList.add('is-missing');
+    if (element.slotId) value.dataset.kiumiSlotId = element.slotId;
+    const componentPath = orbKiumiComponentPath(envelope, element.slotId);
+    if (componentPath) {
+      value.dataset.cardComponentPath = componentPath;
+      value.dataset.cardComponentLabel = String(element.label || '선택 항목').slice(0, 80);
+      value.dataset.cardComponentObservation = 'true';
+    }
     value.textContent = element.text;
     return value;
   }
 
-  function orbKiumiRow(element) {
+  function orbKiumiRow(element, envelope) {
     const row = document.createElement('div');
     row.className = 'orb-kiumi-row';
     const label = document.createElement('div');
     label.className = 'orb-kiumi-label';
     label.textContent = element.label;
-    row.append(label, orbKiumiValue(element));
+    row.append(label, orbKiumiValue(element, envelope));
     return row;
   }
 
@@ -1929,7 +1970,7 @@
       const label = document.createElement('span');
       label.className = 'orb-kiumi-label';
       label.textContent = element.label;
-      item.append(label, orbKiumiValue(element));
+      item.append(label, orbKiumiValue(element, envelope));
       headline.appendChild(item);
     }
     body.appendChild(headline);
@@ -2004,7 +2045,7 @@
           const label = document.createElement('div');
           label.className = 'orb-kiumi-label';
           label.textContent = element.label;
-          cell.append(label, orbKiumiValue(element));
+          cell.append(label, orbKiumiValue(element, envelope));
           grid.appendChild(cell);
         }
         body.appendChild(grid);
@@ -2012,7 +2053,7 @@
       if (rows.length) {
         const list = document.createElement('div');
         list.className = 'orb-kiumi-list';
-        for (const element of rows) list.appendChild(orbKiumiRow(element));
+        for (const element of rows) list.appendChild(orbKiumiRow(element, envelope));
         body.appendChild(list);
       }
     } else if (plan.grammar === 'chart') {
@@ -2020,11 +2061,16 @@
     } else {
       const list = document.createElement('div');
       list.className = 'orb-kiumi-list';
-      for (const element of plan.elements) list.appendChild(orbKiumiRow(element));
+      for (const element of plan.elements) list.appendChild(orbKiumiRow(element, envelope));
       body.appendChild(list);
     }
 
     card.appendChild(body);
+    const realtimeStatus = document.createElement('div');
+    realtimeStatus.className = 'orb-kiumi-note';
+    realtimeStatus.dataset.orbRealtimeFallbackStatus = 'true';
+    realtimeStatus.hidden = true;
+    card.appendChild(realtimeStatus);
     if (plan.foldNote) {
       const note = document.createElement('div');
       note.className = 'orb-kiumi-note';
@@ -2062,6 +2108,392 @@
     }
   }
 
+  function tagOrbQuestionCard(card, result) {
+    const sessionCardId = String(result && result.sessionCardId || '').trim();
+    const envelope = result && result.envelope;
+    if (!card || !sessionCardId || sessionCardId.length > 160 || !envelope || typeof envelope !== 'object') return false;
+    card.dataset.sessionCardId = sessionCardId;
+    const sessionCard = {};
+    Object.defineProperty(sessionCard, 'envelope', {
+      configurable: true,
+      enumerable: true,
+      get: () => card.__athenaOrbCurrentEnvelope || card.__athenaOrbRealtimeEnvelope || envelope,
+    });
+    Object.defineProperty(card, '__athenaSessionCard', {
+      value: sessionCard, configurable: true, writable: true,
+    });
+    return true;
+  }
+
+  // Kiumi 차트의 헤더 값은 차트 봉투와 다른 detail 조회 슬롯일 수 있다. 본체 카드와
+  // 같은 읽기 전용 하이드레이션만 사용하며, 실패하면 기존 `미제공` 표시를 보존한다.
+  // 세대가 바뀐 뒤 도착한 응답은 이전 계좌/질의의 값이므로 카드 전체를 버린다.
+  let orbCanvasRenderGeneration = 0;
+  let orbRealtimeAccountGeneration = 0;
+  const orbQuoteSessions = new Map();
+  const orbQuoteFallbackSessions = new Map();
+  const orbIntegratedSessions = new Map();
+  const orbIntegratedFallbackSessions = new Map();
+  function closeOrbQuoteSessions() {
+    for (const session of orbQuoteSessions.values()) session.close();
+    for (const session of orbQuoteFallbackSessions.values()) session.close();
+    orbQuoteSessions.clear();
+    orbQuoteFallbackSessions.clear();
+  }
+  function closeOrbIntegratedSessions() {
+    for (const session of orbIntegratedSessions.values()) session.close();
+    for (const session of orbIntegratedFallbackSessions.values()) session.close();
+    orbIntegratedSessions.clear();
+    orbIntegratedFallbackSessions.clear();
+  }
+  window.athena.on('athena:realtime-account-reset', (event = {}) => {
+    const generation = Number(event.generation);
+    orbRealtimeAccountGeneration = Number.isInteger(generation)
+      ? generation : orbRealtimeAccountGeneration + 1;
+    orbCanvasRenderGeneration += 1;
+    closeOrbQuoteSessions();
+    closeOrbIntegratedSessions();
+  });
+
+  function orbFallbackTime(value) {
+    const date = new Date(value);
+    if (!Number.isFinite(date.getTime())) return '';
+    return new Intl.DateTimeFormat('ko-KR', {
+      timeZone: 'Asia/Seoul', hour: '2-digit', minute: '2-digit', hour12: false,
+    }).format(date);
+  }
+
+  function showOrbQuoteFallbackState(card, state) {
+    const node = card && card.querySelector('[data-orb-realtime-fallback-status]');
+    if (!node || !state) return;
+    const checkedAt = orbFallbackTime(state.asOf || state.lastSuccessAt);
+    if (state.status === 'api-fallback') {
+      node.textContent = `API 대체 조회${checkedAt ? ` · 마지막 확인 ${checkedAt}` : ''}`;
+      node.hidden = false;
+    } else if (state.status === 'refreshing') {
+      node.textContent = 'API 대체 조회 · 확인 중';
+      node.hidden = false;
+    } else if (state.status === 'delayed') {
+      node.textContent = checkedAt
+        ? `API 대체 조회 지연 · 마지막 확인 ${checkedAt}`
+        : 'API 대체 조회 지연';
+      node.hidden = false;
+    } else if (state.status === 'unavailable') {
+      node.textContent = '실시간 중단 · 다시 조회 필요';
+      node.hidden = false;
+    } else if (state.status === 'ws-active' || state.status === 'stopped') {
+      node.hidden = true;
+      node.textContent = '';
+    }
+  }
+
+  function orbKiumiSlotPatch(envelope, slotIds) {
+    const surfaceContract = orbKiumiSurfaceContract(envelope);
+    const raw = surfaceContract && (surfaceContract.slot_values || surfaceContract.slotValues);
+    const wanted = new Set((slotIds || []).map((slotId) => String(slotId || '')));
+    const patch = {};
+    if (Array.isArray(raw)) {
+      for (const entry of raw) {
+        const slotId = String((entry && entry.slot_id) || '');
+        if (wanted.has(slotId)) patch[slotId] = entry.value;
+      }
+    } else if (raw && typeof raw === 'object') {
+      for (const slotId of wanted) {
+        if (Object.prototype.hasOwnProperty.call(raw, slotId)) patch[slotId] = raw[slotId];
+      }
+    }
+    return patch;
+  }
+
+  function mergeOrbKiumiSlots(currentEnvelope, sourceEnvelope, slotIds) {
+    const slotValues = orbKiumiSlotPatch(sourceEnvelope, slotIds);
+    if (!Object.keys(slotValues).length) return currentEnvelope || sourceEnvelope;
+    return orbMiniCard.withKiumiHydration(currentEnvelope || sourceEnvelope, {
+      ok: true,
+      slot_values: slotValues,
+    });
+  }
+
+  function applyOrbQuoteFallbackData(card, event) {
+    const envelope = event && event.envelope;
+    const surfaceContract = orbKiumiSurfaceContract(envelope);
+    const plan = orbMiniCard.buildKiumiPlan(surfaceContract, envelope);
+    if (!plan || plan.grammar !== 'chart' || String(surfaceContract.board_id || '') !== '137X-2') return;
+    const appliedSlotIds = orbMiniCard.applyRevisionedKiumiUpdates(card, plan.elements);
+    card.__athenaOrbCurrentEnvelope = mergeOrbKiumiSlots(
+      card.__athenaOrbCurrentEnvelope,
+      envelope,
+      appliedSlotIds,
+    );
+  }
+
+  function applyOrbKiumiQuoteTick(card, surfaceContract, tick) {
+    const updates = orbMiniCard.kiumiChartLiveUpdates(surfaceContract, tick);
+    const appliedSlotIds = orbMiniCard.applyRevisionedKiumiUpdates(card, updates);
+    const applied = new Set(appliedSlotIds);
+    const slotValues = Object.fromEntries(updates
+      .filter((update) => applied.has(String(update.slotId || '')) && update.value !== undefined)
+      .map((update) => [String(update.slotId), update.value]));
+    if (Object.keys(slotValues).length) {
+      card.__athenaOrbCurrentEnvelope = orbMiniCard.withKiumiHydration(
+        card.__athenaOrbCurrentEnvelope,
+        { ok: true, slot_values: slotValues },
+      );
+    }
+  }
+
+  function wireOrbKiumiQuoteRealtime(card, envelope) {
+    const surfaceContract = orbKiumiSurfaceContract(envelope);
+    const spec = surfaceContract && surfaceContract.kiumi;
+    const symbol = String((envelope && (envelope.stk_cd || envelope.symbol)) || '').trim();
+    if (!card || !symbol || !spec || spec.grammar !== 'chart'
+      || String(surfaceContract.board_id || '') !== '137X-2' || !orbQuoteRealtime) return;
+    card.__athenaOrbAccountGeneration = orbRealtimeAccountGeneration;
+    let fallback = null;
+    const ensureFallback = () => {
+      if (fallback) return fallback;
+      fallback = orbQuoteRealtime.createOrbQuoteFallbackSession({
+        ownerId: `orb-quote:${window.crypto.randomUUID()}`,
+        accountGeneration: card.__athenaOrbAccountGeneration,
+        correlation: envelope.correlation,
+        target: symbol,
+        invoke: (channel, payload) => window.athena.invoke(channel, payload),
+        onData: (event) => applyOrbQuoteFallbackData(card, event),
+        onState: (event) => showOrbQuoteFallbackState(card, event),
+        isCurrent: () => card.isConnected
+          && card.__athenaOrbAccountGeneration === orbRealtimeAccountGeneration,
+      });
+      orbQuoteFallbackSessions.set(card, fallback);
+      return fallback;
+    };
+    const session = orbQuoteRealtime.createOrbQuoteRealtimeSession({
+      symbol,
+      acquire: (target) => window.athena.invoke('athena:realtime-acquire', { symbol: target }),
+      release: (leaseToken) => window.athena.invoke('athena:realtime-release', { leaseToken }),
+      onTick: (tick) => applyOrbKiumiQuoteTick(
+        card,
+        orbKiumiSurfaceContract(card.__athenaOrbCurrentEnvelope) || surfaceContract,
+        tick,
+      ),
+      onState: (state, result) => {
+        if (Number.isInteger(result && result.accountGeneration)) {
+          orbRealtimeAccountGeneration = result.accountGeneration;
+          card.__athenaOrbAccountGeneration = result.accountGeneration;
+        }
+        if (state === 'active' || state === 'receiving') {
+          showOrbQuoteFallbackState(card, { status: 'ws-active' });
+        }
+        if (state === 'registration-failed' || state === 'active' || state === 'receiving') {
+          void ensureFallback().handleQuoteState(state);
+        } else if (fallback) void fallback.handleQuoteState(state);
+      },
+      isConnected: () => card.isConnected,
+    });
+    orbQuoteSessions.set(card, session);
+    const renderGeneration = orbCanvasRenderGeneration;
+    void window.athena.invoke('athena:realtime-generation').then((result) => {
+      if (orbQuoteSessions.get(card) !== session || !card.isConnected
+        || renderGeneration !== orbCanvasRenderGeneration) return null;
+      if (!result || result.ok !== true || !Number.isInteger(result.accountGeneration)) return null;
+      orbRealtimeAccountGeneration = result.accountGeneration;
+      card.__athenaOrbAccountGeneration = result.accountGeneration;
+      return ensureFallback().start();
+    }).then(() => {
+      if (orbQuoteSessions.get(card) === session && card.isConnected
+        && renderGeneration === orbCanvasRenderGeneration) session.start();
+    }).catch(() => {
+      if (orbQuoteSessions.get(card) === session && card.isConnected
+        && renderGeneration === orbCanvasRenderGeneration) session.start();
+    });
+  }
+
+  function wireOrbIntegratedRealtime(card, envelope) {
+    if (!card || !envelope || !orbIntegratedRealtime) return;
+    const renderGeneration = orbCanvasRenderGeneration;
+    const begin = (generationResult) => {
+      if (!card.isConnected || renderGeneration !== orbCanvasRenderGeneration
+        || card.__athenaOrbCurrentEnvelope !== envelope) return;
+      if (generationResult && generationResult.ok === true
+        && Number.isInteger(generationResult.accountGeneration)) {
+        orbRealtimeAccountGeneration = generationResult.accountGeneration;
+      }
+      card.__athenaOrbAccountGeneration = orbRealtimeAccountGeneration;
+      // The stock chart's direct 0B path owns these two header slots. The generic
+      // semantic path may share the main-process registrar, but never writes the same DOM values.
+      const excludedSlotIds = orbQuoteSessions.has(card) ? ['s005', 's006'] : [];
+      let fallback = null;
+      const session = orbIntegratedRealtime.createOrbIntegratedRealtimeSession({
+        card,
+        envelope,
+        leaseId: `orb:${window.crypto.randomUUID()}`,
+        accountGeneration: card.__athenaOrbAccountGeneration,
+        excludedSlotIds,
+        invoke: (channel, payload) => window.athena.invoke(channel, payload),
+        onStatus: (state) => {
+          if (state === 'active' || state === 'receiving') {
+            showOrbQuoteFallbackState(card, { status: 'ws-active' });
+          }
+          if (fallback) void fallback.handleRealtimeState(state);
+        },
+      });
+      if (!session.bindingCount) return;
+      orbIntegratedSessions.set(card, session);
+      const surfaceContract = orbKiumiSurfaceContract(envelope);
+      fallback = orbIntegratedRealtime.createOrbIntegratedFallbackSession({
+        ownerId: `orb-integrated:${window.crypto.randomUUID()}`,
+        kind: surfaceContract && surfaceContract.board_id ? 'integrated-board' : 'semantic',
+        accountGeneration: card.__athenaOrbAccountGeneration,
+        correlation: envelope.correlation,
+        target: session.payload.target,
+        slotIds: session.slotIds,
+        invoke: (channel, payload) => window.athena.invoke(channel, payload),
+        onData: (event) => {
+          if (session.applyFallbackData(event)) {
+            showOrbQuoteFallbackState(card, { ...event, status: 'api-fallback' });
+          }
+        },
+        onState: (event) => showOrbQuoteFallbackState(card, event),
+        isCurrent: () => card.isConnected
+          && card.__athenaOrbAccountGeneration === orbRealtimeAccountGeneration
+          && orbIntegratedSessions.get(card) === session,
+      });
+      orbIntegratedFallbackSessions.set(card, fallback);
+      // Register a dormant REST owner first. Global upstream failure can activate it even if
+      // semantic binding lookup or the WS mount itself never resolves.
+      const fallbackReady = fallback.start();
+      void session.start();
+      void fallbackReady.then((registration) => {
+        if (!registration && orbIntegratedSessions.get(card) === session && card.isConnected
+          && !['active', 'receiving'].includes(session.status())) {
+          showOrbQuoteFallbackState(card, { status: 'unavailable' });
+        }
+      });
+    };
+    void window.athena.invoke('athena:realtime-generation').then(begin, () => begin(null));
+  }
+
+  function activateOrbCanvasCard(card) {
+    const envelope = card && card.__athenaOrbRealtimeEnvelope;
+    if (!envelope) return;
+    card.__athenaOrbCurrentEnvelope = envelope;
+    delete card.__athenaOrbRealtimeEnvelope;
+    wireOrbKiumiQuoteRealtime(card, envelope);
+    wireOrbIntegratedRealtime(card, envelope);
+  }
+
+  function sweepOrbQuoteSessions() {
+    for (const [card, session] of [...orbQuoteSessions]) {
+      if (card.isConnected) continue;
+      session.close();
+      orbQuoteSessions.delete(card);
+      const fallback = orbQuoteFallbackSessions.get(card);
+      if (fallback) fallback.close();
+      orbQuoteFallbackSessions.delete(card);
+    }
+    for (const [card, session] of [...orbIntegratedSessions]) {
+      if (card.isConnected) continue;
+      session.close();
+      orbIntegratedSessions.delete(card);
+      const fallback = orbIntegratedFallbackSessions.get(card);
+      if (fallback) fallback.close();
+      orbIntegratedFallbackSessions.delete(card);
+    }
+  }
+
+  new MutationObserver(sweepOrbQuoteSessions).observe($chatTurns, { childList: true, subtree: true });
+
+  window.athena.on('athena:chart-ticks', (ticks) => {
+    if (!Array.isArray(ticks)) return;
+    for (const tick of ticks) {
+      for (const [card, session] of [...orbQuoteSessions]) {
+        if (!card.isConnected) {
+          session.close();
+          orbQuoteSessions.delete(card);
+          continue;
+        }
+        session.applyTick(tick);
+      }
+    }
+  });
+
+  window.athena.on('athena:renderer-realtime-state', (state) => {
+    for (const session of orbQuoteSessions.values()) session.applyState(state);
+  });
+
+  window.athena.on('athena:integrated-card-realtime-state', (state) => {
+    for (const session of orbIntegratedSessions.values()) session.applyState(state);
+  });
+  window.athena.on('athena:integrated-card-realtime-ticks', (ticks) => {
+    if (!Array.isArray(ticks)) return;
+    for (const tick of ticks) {
+      for (const [card, session] of [...orbIntegratedSessions]) {
+        if (!card.isConnected) {
+          session.close();
+          orbIntegratedSessions.delete(card);
+          continue;
+        }
+        session.applyTick(tick);
+      }
+    }
+  });
+
+  window.athena.on('athena:realtime-fallback-state', (state) => {
+    for (const fallback of orbQuoteFallbackSessions.values()) fallback.applyState(state);
+    for (const fallback of orbIntegratedFallbackSessions.values()) fallback.applyState(state);
+  });
+  window.athena.on('athena:realtime-fallback-data', (event) => {
+    for (const fallback of orbQuoteFallbackSessions.values()) fallback.applyData(event);
+    for (const fallback of orbIntegratedFallbackSessions.values()) fallback.applyData(event);
+  });
+
+  async function buildHydratedOrbCanvasCard(r, generation = orbCanvasRenderGeneration) {
+    const envelope = r && r.envelope;
+    const request = orbMiniCard.kiumiChartHydrationRequest(envelope);
+    if (!request) {
+      if (generation !== orbCanvasRenderGeneration) return null;
+      const card = buildOrbCanvasCard(r);
+      if (card) card.__athenaOrbRealtimeEnvelope = envelope;
+      return card;
+    }
+    let reply = null;
+    try {
+      reply = await window.athena.invoke('athena:canvas-board-hydrate', request);
+    } catch { /* 결측 표시가 이미 실패 상태다 — 별도 값을 만들지 않는다 */ }
+    if (generation !== orbCanvasRenderGeneration) return null;
+    const hydratedEnvelope = orbMiniCard.withKiumiHydration(envelope, reply);
+    const card = buildOrbCanvasCard({ ...r, envelope: hydratedEnvelope });
+    if (card) card.__athenaOrbRealtimeEnvelope = hydratedEnvelope;
+    return card;
+  }
+
+  async function hydrateMountedOrbCanvasCard(card, r, generation) {
+    const envelope = r && r.envelope;
+    const request = orbMiniCard.kiumiChartHydrationRequest(envelope);
+    if (!card || !request) return envelope || null;
+    const revisionsAtStart = new Map(card.__athenaOrbLiveSlotRevisions || []);
+    let reply = null;
+    try {
+      reply = await window.athena.invoke('athena:canvas-board-hydrate', request);
+    } catch { return null; }
+    if (generation !== orbCanvasRenderGeneration || !card.isConnected) return null;
+    const hydratedEnvelope = orbMiniCard.withKiumiHydration(envelope, reply);
+    const surfaceContract = orbKiumiSurfaceContract(hydratedEnvelope);
+    const plan = orbMiniCard.buildKiumiPlan(surfaceContract, hydratedEnvelope);
+    if (!plan || plan.grammar !== 'chart') return null;
+    const hydrationUpdates = orbMiniCard.kiumiHydrationUpdates(
+      plan.elements,
+      revisionsAtStart,
+      card.__athenaOrbLiveSlotRevisions,
+    );
+    orbMiniCard.applyKiumiChartLiveUpdates(card, hydrationUpdates);
+    card.__athenaOrbCurrentEnvelope = mergeOrbKiumiSlots(
+      card.__athenaOrbCurrentEnvelope || envelope,
+      hydratedEnvelope,
+      hydrationUpdates.map((update) => update.slotId),
+    );
+    return card.__athenaOrbCurrentEnvelope;
+  }
+
   // ---------- 검사 전용 봉투 통로 (Paper 키우미 보드 09) ----------
   // 미니 카드는 질의가 도는 동안에만 사는 구독으로만 그려진다(아래 submitChatQuery).
   // 그래서 화면계 게이트가 도달 어휘(main→렌더러 이벤트)로 봉투를 쏴도 듣는 쪽이
@@ -2081,11 +2513,15 @@
     // 질의가 시작될 수 있으므로 답이 온 뒤에도 한 번 더 본다.
     if (chatBusy) return;
     if (!await askCanvasProbeMode() || chatBusy) return;
-    const el = buildOrbCanvasCard(r);
+    const generation = orbCanvasRenderGeneration;
+    const el = await buildHydratedOrbCanvasCard(r, generation);
+    if (generation !== orbCanvasRenderGeneration || chatBusy) return;
     if (!el) return;
+    tagOrbQuestionCard(el, r);
     const line = orbTurn('orb-turn');
     line.appendChild(el);
     $chatTurns.appendChild(line);
+    activateOrbCanvasCard(el);
     $chatEmpty.hidden = true;
     scrollChatToBottom();
     requestPanelHeight();
@@ -2113,6 +2549,7 @@
   async function submitChatQuery(rawText) {
     const text = String(rawText || '').trim();
     if (!text || chatBusy || remoteQueryBusy) return;
+    const cardContext = orbCardComponentTarget.getContext();
     if (displayMode === 'B' && !localChatOverride) {
       localChatOverride = true;
       applyMode();
@@ -2148,27 +2585,31 @@
         rendererReceivedAt: meta.rendererReceivedAt,
       });
     };
-    // board-33③④ 선행 — answer가 아직 없으면(텍스트 델타보다 카드가 먼저 오는
-    // 경로, main.js 주석 "카드 먼저, 텍스트는 나중" 참조) 카드를 잠깐 들고
-    // 있다가 answer가 생기는 순간 이어붙인다.
-    const pendingCanvasCards = [];
+    // board-33③④ 선행 — 성공 카드가 텍스트보다 먼저 오면 빈 답변 컨테이너를 즉시
+    // 연결해 카드를 보여준다. 하이드레이션은 같은 DOM에서 뒤따르며 텍스트 완료를
+    // 기다리지 않는다.
     const handledCanvasTypes = new Set();
+    const canvasRenderGeneration = ++orbCanvasRenderGeneration;
     let receivedCanvasResults = 0;
     const unsubCanvas = window.athena.on('athena:orb-canvas-result', (r) => {
       const rendererReceivedAt = performance.now();
       if (r && r.envelope) receivedCanvasResults += 1;
+      if (!r || !r.envelope || canvasRenderGeneration !== orbCanvasRenderGeneration) return;
       const el = buildOrbCanvasCard(r);
-      if (!el || !r.envelope) return;
-      handledCanvasTypes.add(r.envelope.canvas_type);
-      if (answer) {
-        answer.line.appendChild(el);
-        claimProviderVisible({ ...r, rendererReceivedAt }, el);
-        scrollChatToBottom();
-        requestPanelHeight();
-      } else {
-        el.__athenaProviderPaintMeta = { ...r, rendererReceivedAt };
-        pendingCanvasCards.push(el);
+      if (!el) return;
+      tagOrbQuestionCard(el, r);
+      if (!answer) {
+        if (card.isConnected) card.remove();
+        answer = renderChatAnswer('');
       }
+      el.__athenaOrbRealtimeEnvelope = r.envelope;
+      answer.line.appendChild(el);
+      activateOrbCanvasCard(el);
+      handledCanvasTypes.add(r.envelope.canvas_type);
+      claimProviderVisible({ ...r, rendererReceivedAt }, el);
+      scrollChatToBottom();
+      requestPanelHeight();
+      void hydrateMountedOrbCanvasCard(el, r, canvasRenderGeneration);
     });
     const unsubStep = window.athena.on('athena:live-tool-step', (step) => {
       const rendererReceivedAt = performance.now();
@@ -2229,8 +2670,9 @@
     let result;
     try {
       result = await window.athena.invoke('athena:orb-chat-submit', {
-        query: text, clientSubmitId, rendererSubmittedAt,
+        query: text, clientSubmitId, rendererSubmittedAt, cardContext,
       });
+      if (cardContext) orbCardComponentTarget.clearSelection(cardContext);
     } catch (err) {
       result = { ok: false, error: String((err && err.message) || err) };
     } finally {
@@ -2260,12 +2702,6 @@
     } else {
       if (card.isConnected) card.remove();
       answer = renderChatAnswer(finalText);
-    }
-    // answer가 없던 동안 도착한 카드(카드 먼저 오는 경로)를 여기서 이어붙인다.
-    for (const el of pendingCanvasCards) {
-      answer.line.appendChild(el);
-      claimProviderVisible(el.__athenaProviderPaintMeta, el);
-      delete el.__athenaProviderPaintMeta;
     }
     // 실제로 미니 카드를 그린 canvas_type은 이미 카드가 붙었다 — 그 종류는
     // "표·차트는 여기서 다시 그리지 않는다"는 옛 안내를 반복하지 않는다.

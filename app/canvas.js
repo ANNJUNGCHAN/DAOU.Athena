@@ -42,6 +42,68 @@ const quoteRealtimePanels = createQuoteRealtimePanelAdapter();
 // (0B 체결과 0D 호가잔량은 완전히 다른 피드라 패널을 나눈다).
 const orderbookRealtimePanels = createQuoteRealtimePanelAdapter();
 const directOrderbookRealtimeSessions = new Map();
+const quoteRealtimeResetters = new Set();
+const directOrderbookRealtimeResetters = new Set();
+const realtimeFallbackSessions = new Map();
+let rendererRealtimeAccountGeneration = 0;
+let rendererRealtimeGenerationRequest = null;
+
+function acceptRendererRealtimeGeneration(value) {
+  const generation = Number(value);
+  if (!Number.isInteger(generation) || generation < 1
+    || generation < rendererRealtimeAccountGeneration) return false;
+  rendererRealtimeAccountGeneration = generation;
+  return true;
+}
+
+function ensureRendererRealtimeGeneration() {
+  if (rendererRealtimeAccountGeneration >= 1) {
+    return Promise.resolve(rendererRealtimeAccountGeneration);
+  }
+  if (rendererRealtimeGenerationRequest) return rendererRealtimeGenerationRequest;
+  rendererRealtimeGenerationRequest = window.athena.invoke('athena:realtime-generation')
+    .then((result) => {
+      const generation = Number(result && result.accountGeneration);
+      if (!result || result.ok !== true || !Number.isInteger(generation) || generation < 1) {
+        throw new Error('실시간 계좌 세대를 확인할 수 없다');
+      }
+      acceptRendererRealtimeGeneration(generation);
+      return rendererRealtimeAccountGeneration;
+    })
+    .finally(() => { rendererRealtimeGenerationRequest = null; });
+  return rendererRealtimeGenerationRequest;
+}
+
+function resetQuoteRealtimeForAccountChange() {
+  for (const reset of [...quoteRealtimeResetters]) reset();
+}
+
+function resetRendererRealtimeForAccountChange(payload) {
+  const nextGeneration = Number(payload && payload.generation);
+  if (Number.isInteger(nextGeneration) && nextGeneration >= 1
+    && nextGeneration >= rendererRealtimeAccountGeneration) {
+    rendererRealtimeAccountGeneration = nextGeneration;
+  } else {
+    rendererRealtimeAccountGeneration += 1;
+  }
+  if (typeof realtimeFallbackSessions !== 'undefined') {
+    for (const session of [...realtimeFallbackSessions.values()]) unregisterRealtimeFallback(session);
+  }
+  resetQuoteRealtimeForAccountChange();
+  for (const reset of [...directOrderbookRealtimeResetters]) reset();
+  for (const root of grid.querySelectorAll('.card[data-integrated-instance-key]')) {
+    const realtime = root.__athenaIntegratedRealtime;
+    if (!realtime) continue;
+    realtime.mounted = false;
+    realtime.mountAttempted = false;
+    realtime.generation = null;
+    realtime.connectionGeneration = null;
+    realtime.operationIds = [];
+    realtime.status = 'stopped';
+    integratedRealtimeTasks.delete(root);
+    stampBoardRealtimeStatus(root, realtime.status);
+  }
+}
 
 // snapshot().period는 AITS 표기(day/week/…)다. 과거 조회 IPC는 툴바와 같은
 // UI 주기 코드를 쓰므로 여기서 되돌린다.
@@ -56,7 +118,9 @@ if (window.athena && typeof window.athena.on === 'function') {
   window.athena.on('athena:chart-ticks', (ticks) => {
     if (!Array.isArray(ticks)) return;
     for (const tick of ticks) {
-      aitsChartPanels.applyRealtimeTick(tick).catch(() => { /* 진행봉 실패는 차트를 죽이지 않는다 */ });
+      aitsChartPanels.applyRealtimeTick(tick, {
+        realtimeAccountGeneration: rendererRealtimeAccountGeneration,
+      }).catch(() => { /* 진행봉 실패는 차트를 죽이지 않는다 */ });
       quoteRealtimePanels.applyRealtimeTick(tick); // 종목 불일치·열린 카드 없음은 내부에서 조용히 버려진다
     }
   });
@@ -67,7 +131,10 @@ if (window.athena && typeof window.athena.on === 'function') {
     if (!Array.isArray(ticks)) return;
     for (const tick of ticks) orderbookRealtimePanels.applyRealtimeTick(tick);
   });
+  window.athena.on('athena:realtime-account-reset', resetRendererRealtimeForAccountChange);
   window.athena.on('athena:renderer-realtime-state', handleOrderbookRealtimeState);
+  window.athena.on('athena:realtime-fallback-state', handleRealtimeFallbackState);
+  window.athena.on('athena:realtime-fallback-data', handleRealtimeFallbackData);
 }
 
 // event/status 카드(Paper AT-CV-005 보호 워크플로) — 지금까지 이 두 canvas_type을
@@ -308,7 +375,7 @@ if (window.athena && typeof window.athena.on === 'function') {
       const realtime = integratedRealtimeMeta(root);
       const accepts = integratedCardSurface.matchesRealtimeTick({
         leaseId: realtime.leaseId,
-        cardId: root.dataset.cardId,
+        cardId: root.dataset.cardId || (root.__athenaIntegratedMetadata && root.__athenaIntegratedMetadata.cardId),
         mode: root.__athenaIntegratedMetadata && root.__athenaIntegratedMetadata.mode,
         target: realtime.target,
         generation: realtime.generation,
@@ -511,6 +578,12 @@ function reportSessionCards() {
   try { window.athena.send('athena:session-cards', { cards, conversationId: canvasConversationId }); } catch { /* 채널이 없는 하네스 — 보고는 그림의 필요조건이 아니다 */ }
 }
 
+// 질문 제출 직전 chat.js가 현재 DOM 스택을 다시 보고한다. 같은 renderer에서
+// 이 send를 query invoke보다 먼저 큐에 넣어, main의 flush가 최신 카드까지 확정한다.
+window.AthenaCanvasCards = Object.assign(window.AthenaCanvasCards || {}, {
+  flushReport: reportSessionCards,
+});
+
 window.athena.on('athena:add-canvas', ({ type, sessionCardId }) => {
   Promise.resolve(addCard(type)).then((node) => {
     tagSessionCard(lastCardOr(node), { channel: 'fixture', kind: type, envelope: { type }, cardId: sessionCardId || null });
@@ -551,7 +624,20 @@ window.athena.on('athena:add-rest-canvas', async (payload) => {
       operation_args: payload.operationArgs,
     });
     const card = await addLiveCard({ status: 'success', envelope });
-    tagSessionCard(lastCardOr(card), { channel: 'rest', kind: envelope.canvas_type || null, envelope });
+    const renderedCard = lastCardOr(card);
+    tagSessionCard(renderedCard, {
+      channel: 'rest', kind: envelope.canvas_type || null, envelope,
+      cardId: payload.sessionCardId || null,
+    });
+    // REST는 최초 값을 받은 transport일 뿐 실시간 capability가 아니다. 실제 WS
+    // lease/policy를 설치한 카드면 standby owner를 함께 세우고, binding이 없는
+    // 정적 카드만 API 조회 스냅샷으로 남긴다. 기존 AITS owner의 주기 reload도 이
+    // 경로에서 새 query 권위로 교체된다.
+    if (fallbackKindFor(renderedCard, envelope)) {
+      syncCardRealtimeFallback(renderedCard, envelope);
+    } else {
+      stampRestSnapshotStatus(renderedCard, envelope);
+    }
     reportSessionCards();
     if (card && REST_RETRY_CARD_ID_PATTERN.test(String(payload.retryCardId || ''))) {
       Object.defineProperty(card, '__athenaRestRetryCardId', {
@@ -721,6 +807,7 @@ window.athena.on('athena:add-canvas-live', async (result) => {
   if (!node || !result || (result.status !== 'success' && result.status !== 'fallback')) return;
   tagSessionCard(lastCardOr(node), { channel: 'live', kind: result.envelope && result.envelope.canvas_type || null, envelope: result.envelope || null, cardId: result.sessionCardId || null });
   reportSessionCards();
+  syncCardRealtimeFallback(lastCardOr(node), result.envelope);
   window.AthenaProviderFirstPaint.claimFirstVisible({
     clientSubmitId: result.clientSubmitId,
     turnId: result.turnId,
@@ -944,6 +1031,8 @@ function boardStateOf(host) {
       primaryPanelId: '',
       // 그 자리가 잡은 실시간 리스를 놓는 문(호가 0D). 한 번만 나간다.
       primaryRelease: null,
+      // 같은 표면·같은 load cycle에서 들어온 동일 호가 봉투만 재사용한다.
+      primaryOrderbookEnvelope: null,
       // 껍질 단계가 확정한 차트 신원과 그 마운트 결과를 기다리는 자리.
       // primaryMount는 "지금 진행 중인 마운트 시도"다(늦은 거부를 가려낸다).
       primaryDescriptor: null, primarySettle: null, primaryMount: null,
@@ -1346,6 +1435,7 @@ function destroyBoardPrimary(state) {
   state.primaryRefreshTimer = null;
   state.primaryRefreshing = false;
   state.primaryEnvelope = null;
+  state.primaryOrderbookEnvelope = null;
   // 상태 보드/카드가 바뀐 뒤에는 이전 봉투가 만든 descriptor와 대기 promise도
   // 더 이상 권위가 없다. 남겨두면 다음 보드가 새 primary_envelope 대신 이전
   // stock/sector 패널 신원을 재사용할 수 있다.
@@ -1570,6 +1660,20 @@ function boardPrimaryAcceptsEnvelope(primary, envelope) {
 // 때만 REG를 쓰므로 여기서 명시로 acquire하고, 보드를 갈아타거나 카드를 닫을 때
 // destroyBoardPrimary가 같은 문으로 놓아준다.
 function mountBoardOrderbook(card, state, primary, envelope) {
+  // 결측 슬롯이 없으면 mountBoardState와 showBoardReady가 같은 표면으로 두 번 온다.
+  // 그때만 같은 사다리·0D 리스를 쓴다. 새 hydrate 봉투나 다른 종목이면 이전 값을
+  // 보이지 않게 놓고 새 snapshot으로 다시 만든다.
+  const ladders = Array.from(primary.mountPoint.children).filter(
+    (child) => child.classList.contains('card-kit-hoga-live'),
+  );
+  const existing = ladders.find((child) => !child.hidden);
+  if (existing && state.primaryOrderbookEnvelope === envelope) return existing;
+  const release = state.primaryRelease;
+  state.primaryRelease = null;
+  state.primaryOrderbookEnvelope = null;
+  if (typeof release === 'function') release();
+  for (const ladder of ladders) ladder.remove();
+  delete primary.mountPoint.dataset.bsPrimaryMounted;
   const kinds = window.AthenaLib.CardKinds;
   const render = kinds && kinds.resolve('호가');
   const built = render && render(envelope);
@@ -1581,6 +1685,7 @@ function mountBoardOrderbook(card, state, primary, envelope) {
   built.style.minHeight = '0';
   primary.mountPoint.appendChild(built);
   primary.mountPoint.dataset.bsPrimaryMounted = BOARD_ORDERBOOK_RENDERER;
+  state.primaryOrderbookEnvelope = envelope;
   const hoga = window.AthenaLib.CardKindHoga;
   if (hoga.supportsLive0D(built)) {
     state.primaryRelease = wireOrderbookRealtime(
@@ -1920,6 +2025,25 @@ async function renderTaskCanvasEnvelope(envelope) {
   // 깨진다(upsertDeveloperDiagnostics의 보드 예외와 같은 판단).
   if (!integratedCardSurface.isBoardSurface(root)) semanticWorkspace.upsert(root, envelope);
   upsertDeveloperDiagnostics(root, envelope);
+  if (realtimeBindingsOf(envelope).length) {
+    const priorMetadata = root.__athenaIntegratedMetadata || {};
+    Object.defineProperty(root, '__athenaIntegratedMetadata', {
+      value: {
+        ...priorMetadata,
+        cardId: envelope.card_id,
+        mode: envelope.mode || envelope.capability || 'overview',
+      },
+      configurable: true,
+      writable: true,
+    });
+    if (!root.__athenaSemanticRealtimeLeaseId) {
+      Object.defineProperty(root, '__athenaSemanticRealtimeLeaseId', {
+        value: `semantic:${crypto.randomUUID()}`, configurable: true, writable: false,
+      });
+    }
+    ensureIntegratedRealtimeCleanup(root);
+    syncIntegratedRealtime(root, envelope);
+  }
   return root;
 }
 
@@ -2036,8 +2160,10 @@ async function renderIntegratedCard(envelope) {
       if (realtimeTask) await settleCleanup(realtimeTask);
       const realtime = integratedRealtimeMeta(root);
       const leaseId = realtime.leaseId;
-      if (leaseId && realtime.mounted === true) {
+      if (leaseId && (realtime.mounted === true || realtime.mountAttempted === true)) {
         await settleCleanup(window.athena.invoke('athena:integrated-card-realtime-unmount', { leaseId }));
+        realtime.mounted = false;
+        realtime.mountAttempted = false;
       }
       integratedRealtimeTasks.delete(root);
     })();
@@ -2089,13 +2215,17 @@ function integratedRealtimePayload(root, envelope) {
     ? envelope.source_data.canvas_context : {};
   const first = (...values) => values.find((value) => typeof value === 'string' && value.trim()) || '';
   const target = integratedCardSurface.targetIdentity(envelope);
+  const verifiedOperationRefs = integratedCardSurface.verifiedOperationRefsFor(envelope);
+  const verifiedIndexOperation = verifiedOperationRefs.some((ref) => (
+    /^base:ka2000[4-8]$/u.test(String(ref || '')) || /^base:ka20019$/u.test(String(ref || ''))
+  ));
   const semanticBindingIds = [...new Set(
     (Array.isArray(envelope.realtime_bindings) ? envelope.realtime_bindings : [])
       .map((binding) => String(binding && (binding.binding_id || binding.bindingId) || '').trim())
       .filter((bindingId) => /^rtb_[a-f0-9]{12,64}$/i.test(bindingId)),
   )];
   return {
-    leaseId: root.dataset.integratedInstanceKey,
+    leaseId: root.dataset.integratedInstanceKey || root.__athenaSemanticRealtimeLeaseId,
     cardId: envelope.card_id,
     mode: envelope.mode || envelope.capability || 'overview',
     target,
@@ -2103,17 +2233,43 @@ function integratedRealtimePayload(root, envelope) {
     accountId: first(envelope.account_id, envelope.account_no, args.account_id, args.account_no, args.acnt_no),
     conditionId: first(envelope.condition_id, args.condition_id, args.seq),
     sectorId: first(envelope.sector_id, args.sector_id, args.sect_code),
+    indexSectorId: first(args.inds_cd, verifiedIndexOperation ? context.symbol : ''),
     visibleTargets: integratedCardSurface.visibleTargetsFor(envelope),
-    verifiedOperationRefs: integratedCardSurface.verifiedOperationRefsFor(envelope),
+    verifiedOperationRefs,
     realtimeEligible: integratedCardSurface.realtimeEligibleFor(envelope),
     semanticBindingIds,
   };
+}
+
+function ensureIntegratedRealtimeCleanup(root) {
+  if (!root || root.__athenaIntegratedRealtimeCleanup) return;
+  const priorDestroy = cardDestroyers.get(root);
+  cardDestroyers.set(root, async () => {
+    const task = integratedRealtimeTasks.get(root);
+    if (task) await settleCleanup(task);
+    const realtime = integratedRealtimeMeta(root);
+    if (realtime.leaseId && (realtime.mounted === true || realtime.mountAttempted === true)) {
+      await settleCleanup(window.athena.invoke('athena:integrated-card-realtime-unmount', {
+        leaseId: realtime.leaseId,
+      }));
+    }
+    integratedRealtimeTasks.delete(root);
+    if (priorDestroy) return priorDestroy();
+    return undefined;
+  });
+  Object.defineProperty(root, '__athenaIntegratedRealtimeCleanup', {
+    value: true, configurable: true,
+  });
 }
 
 function stampIntegratedRealtimeState(root, state) {
   if (!root || !state) return;
   const realtime = integratedRealtimeMeta(root);
   realtime.status = String(state.status || 'unknown');
+  if (realtime.status === 'active') {
+    realtime.mounted = true;
+    clearIntegratedRealtimeError(root);
+  }
   if (Number.isFinite(Number(state.generation))) realtime.generation = Number(state.generation);
   if (Number.isFinite(Number(state.connectionGeneration))) {
     realtime.connectionGeneration = Number(state.connectionGeneration);
@@ -2129,6 +2285,11 @@ function stampIntegratedRealtimeState(root, state) {
 // 추정하지 않고, 확인된 REST/연결/첫 수신 lifecycle만 해당 상태 잎에 덮는다.
 function stampBoardRealtimeStatus(root, status) {
   if (!root || typeof root.querySelectorAll !== 'function') return;
+  if (typeof root.__athenaRealtimeStatusRelay === 'function') {
+    root.__athenaRealtimeStatusRelay(status);
+  } else if (typeof relayCardRealtimeFallbackStatus === 'function') {
+    relayCardRealtimeFallbackStatus(root, status);
+  }
   const normalized = String(status || 'snapshot').toLowerCase();
   if (['registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error'].includes(normalized)) {
     root.__athenaBoardRealtimeReceived = false;
@@ -2208,6 +2369,325 @@ function handleOrderbookRealtimeState(state) {
   return true;
 }
 
+function fallbackTimestamp(value) {
+  const parsed = Date.parse(String(value || ''));
+  if (!Number.isFinite(parsed)) return '';
+  return new Date(parsed).toLocaleTimeString('ko-KR', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+  });
+}
+
+function stampRealtimeFallbackStatus(session, state) {
+  const card = session && session.card;
+  if (!card || !card.isConnected) return;
+  let node = card.querySelector('.realtime-fallback-status');
+  if (state.status === 'stopped' || state.status === 'ws-active') {
+    if (node) node.remove();
+    return;
+  }
+  if (!node) {
+    node = document.createElement('span');
+    node.className = 'realtime-fallback-status';
+    node.setAttribute('role', 'status');
+    const head = card.querySelector('.card-head') || card;
+    head.appendChild(node);
+  }
+  const at = fallbackTimestamp(state.lastSuccessAt || state.asOf || session.lastSuccessAt);
+  if (at) session.lastSuccessAt = state.lastSuccessAt || state.asOf || session.lastSuccessAt;
+  const suffix = at ? ` · 마지막 갱신 ${at}` : '';
+  node.textContent = state.status === 'refreshing'
+    ? `API 대체 조회 · 갱신 중${suffix}`
+    : state.status === 'delayed'
+      ? `API 대체 조회 지연${suffix}`
+      : `API 대체 조회${suffix}`;
+}
+
+function stampRestSnapshotStatus(card, envelope) {
+  if (!fallbackSurfaceKindFor(card, envelope)) return false;
+  const session = { card, lastSuccessAt: null };
+  stampRealtimeFallbackStatus(session, {
+    status: 'api-fallback',
+    asOf: envelope.as_of || envelope.asOf || envelope.captured_at || envelope.capturedAt || null,
+  });
+  const node = card.querySelector('.realtime-fallback-status');
+  if (node) node.textContent = node.textContent.replace('API 대체 조회', 'API 조회 스냅샷');
+  return true;
+}
+
+function realtimeFallbackSession(payload, { advanceEpoch = false } = {}) {
+  if (!payload || typeof payload.ownerId !== 'string') return null;
+  const session = realtimeFallbackSessions.get(payload.ownerId);
+  if (!session || !session.active) return null;
+  if (Number(payload.accountGeneration) !== session.accountGeneration
+    || Number(payload.registrationRevision) !== session.registrationRevision) return null;
+  const sourceEpoch = Number(payload.sourceEpoch);
+  const ownerEpoch = Number(payload.ownerEpoch);
+  if (!Number.isInteger(sourceEpoch) || !Number.isInteger(ownerEpoch)
+    || sourceEpoch < session.sourceEpoch || ownerEpoch < session.ownerEpoch) return null;
+  if (!advanceEpoch && (sourceEpoch !== session.sourceEpoch || ownerEpoch !== session.ownerEpoch)) return null;
+  if (advanceEpoch) {
+    session.sourceEpoch = sourceEpoch;
+    session.ownerEpoch = ownerEpoch;
+  }
+  return session;
+}
+
+function handleRealtimeFallbackState(payload) {
+  const session = realtimeFallbackSession(payload, { advanceEpoch: true });
+  if (!session) return false;
+  stampRealtimeFallbackStatus(session, payload);
+  return true;
+}
+
+function replaceSpecializedFallbackBody(session, envelope) {
+  const render = window.AthenaLib.CardKinds.resolve(session.title);
+  const next = render && render(envelope);
+  if (!next || !session.wrap || !session.wrap.isConnected) return false;
+  session.wrap.replaceChildren(...Array.from(next.childNodes));
+  if (session.card.__athenaSessionCard) session.card.__athenaSessionCard.envelope = envelope;
+  return true;
+}
+
+async function applyRealtimeFallbackData(session, payload) {
+  if (!payload || payload.kind !== session.kind || payload.source !== 'kiwoom-rest'
+    || payload.transport !== 'rest-fallback') return false;
+  if (session.kind === 'quote' || session.kind === 'orderbook') {
+    return !!payload.envelope && replaceSpecializedFallbackBody(session, payload.envelope);
+  }
+  if (session.kind === 'chart') {
+    const active = aitsChartPanels.snapshot().find((entry) => entry.panelId === session.panelId);
+    if (!active || payload.mode !== 'replace-latest' || payload.panelId !== session.panelId
+      || String(payload.symbol || '') !== session.symbol || payload.period !== active.body.period
+      || Number(payload.interval || 1) !== session.interval || !payload.latestCandle) return false;
+    const last = active.body.candles[active.body.candles.length - 1];
+    const tickKind = last && last.time === payload.latestCandle.time ? 'update' : 'rollover';
+    return aitsChartPanels.applyRealtimeTick({
+      kind: tickKind, stock: session.symbol, candle: payload.latestCandle,
+    }, {
+      generation: active.generation,
+      realtimeAccountGeneration: session.accountGeneration,
+    });
+  }
+  if (session.kind === 'integrated-board') {
+    const host = session.card.querySelector('.board-surface-host');
+    const state = host && host.__athenaBoard;
+    if (!state || state.boardId !== String(payload.boardId || '')) return false;
+    if (payload.mode !== 'slot-patch') return false;
+    const values = slotValuesOf({ slot_values: payload.slotValues });
+    if (!Object.keys(values).length) return false;
+    if (Object.keys(values).some((slotId) => !session.slotIds.includes(slotId))) return false;
+    state.values = { ...state.values, ...values };
+    state.valuesByBoard.set(state.boardId, state.values);
+    const mounted = boardMount.mountBoard(host, state.boardId, state.values, boardMountOptions(host, session.envelope));
+    rememberMountedBoard(state, mounted);
+    wireMountedBoardControls(host, session.envelope, mounted);
+    if (payload.primaryEnvelope) await mountBoardPrimary(host, payload.primaryEnvelope, mounted, null);
+    return true;
+  }
+  if (session.kind === 'semantic' && payload.envelope) {
+    semanticWorkspace.upsert.call(semanticWorkspace, session.card, payload.envelope);
+    if (session.card.__athenaSessionCard) session.card.__athenaSessionCard.envelope = payload.envelope;
+    return true;
+  }
+  return false;
+}
+
+function handleRealtimeFallbackData(payload) {
+  const session = realtimeFallbackSession(payload);
+  if (!session) return false;
+  void applyRealtimeFallbackData(session, payload).then((applied) => {
+    if (!applied || !realtimeFallbackSession(payload)) return;
+    session.lastSuccessAt = payload.asOf || session.lastSuccessAt;
+    stampRealtimeFallbackStatus(session, { status: 'api-fallback', asOf: payload.asOf });
+    reportSessionCards();
+  }).catch(() => {
+    if (realtimeFallbackSession(payload)) {
+      stampRealtimeFallbackStatus(session, { status: 'delayed', lastSuccessAt: session.lastSuccessAt });
+    }
+  });
+  return true;
+}
+
+function relayCardRealtimeFallbackStatus(card, state, expectedOwnerId = null) {
+  if (!card) return false;
+  const normalized = String(state && typeof state === 'object' ? state.state : state || '').toLowerCase();
+  if (!normalized) return false;
+  const session = card.__athenaRealtimeFallback;
+  if (expectedOwnerId && (!session || session.ownerId !== expectedOwnerId)) return false;
+  if (!session || !session.active || !Number.isInteger(session.registrationRevision)) {
+    if (expectedOwnerId) return false;
+    Object.defineProperty(card, '__athenaPendingRealtimeFallbackState', {
+      value: normalized, configurable: true, writable: true,
+    });
+    return false;
+  }
+  const ownerId = session.ownerId;
+  void window.athena.invoke('athena:realtime-fallback-status', {
+    ownerId,
+    accountGeneration: session.accountGeneration,
+    registrationRevision: session.registrationRevision,
+    sourceEpoch: session.sourceEpoch,
+    ownerEpoch: session.ownerEpoch,
+    state: normalized,
+  }).catch(() => {});
+  return true;
+}
+
+function installCardRealtimeStatusRelay(card) {
+  let expectedOwnerId = null;
+  const relay = (state) => {
+    const session = card && card.__athenaRealtimeFallback;
+    if (!expectedOwnerId && session && session.active) expectedOwnerId = session.ownerId;
+    return relayCardRealtimeFallbackStatus(card, state, expectedOwnerId);
+  };
+  Object.defineProperty(card, '__athenaRealtimeStatusRelay', {
+    value: relay, configurable: true, writable: true,
+  });
+  return relay;
+}
+
+function cardRealtimeFallbackVisible(card) {
+  if (!card || !card.isConnected || card.hidden) return false;
+  if (typeof card.closest === 'function' && card.closest('[hidden]')) return false;
+  if (typeof card.getClientRects === 'function' && card.getClientRects().length === 0) return false;
+  return true;
+}
+
+function setRealtimeFallbackVisibility(session, visible, { force = false } = {}) {
+  if (!session || !session.active) return false;
+  const next = visible === true;
+  const changed = session.visible !== next;
+  session.visible = next;
+  if ((!changed && !force) || !Number.isInteger(session.registrationRevision)) return changed;
+  void window.athena.invoke('athena:realtime-fallback-visibility', {
+    ownerId: session.ownerId,
+    accountGeneration: session.accountGeneration,
+    registrationRevision: session.registrationRevision,
+    visible: next,
+  }).catch(() => {});
+  return true;
+}
+
+function observeRealtimeFallbackVisibility(session) {
+  if (!session || typeof IntersectionObserver !== 'function') return null;
+  const observer = new IntersectionObserver((entries) => {
+    const entry = entries.find((candidate) => candidate.target === session.card);
+    if (!entry) return;
+    setRealtimeFallbackVisibility(session, entry.isIntersecting && entry.intersectionRatio > 0
+      && cardRealtimeFallbackVisible(session.card));
+  });
+  observer.observe(session.card);
+  return observer;
+}
+
+function unregisterRealtimeFallback(session) {
+  if (!session || !session.active) return false;
+  session.active = false;
+  if (session.visibilityObserver) session.visibilityObserver.disconnect();
+  realtimeFallbackSessions.delete(session.ownerId);
+  stampRealtimeFallbackStatus(session, { status: 'stopped' });
+  void window.athena.invoke('athena:realtime-fallback-unregister', { ownerId: session.ownerId }).catch(() => {});
+  return true;
+}
+
+function fallbackSurfaceKindFor(card, envelope) {
+  if (!card || !envelope || envelope.canvas_type === 'action') return null;
+  const title = String(envelope.card_title || '');
+  if (/주문/u.test(title)) return null;
+  if (card.querySelector('.board-surface-host')) return 'integrated-board';
+  if (card.dataset.chartPanelId) return 'chart';
+  if (card.__athenaRealtimeFallbackKind) return card.__athenaRealtimeFallbackKind;
+  if (title === '시세') return 'quote';
+  if (title === '호가') return 'orderbook';
+  if ((semanticWorkspace && semanticWorkspace.isTaskCanvasEnvelope(envelope))
+    || realtimeBindingsOf(envelope).length) return 'semantic';
+  return null;
+}
+
+function fallbackKindFor(card, envelope) {
+  const kind = fallbackSurfaceKindFor(card, envelope);
+  if (kind === 'chart') return kind;
+  if (kind === 'semantic') return realtimeBindingsOf(envelope).length ? kind : null;
+  return card && card.__athenaRealtimeFallbackCapable === true ? kind : null;
+}
+
+function syncCardRealtimeFallback(card, envelope) {
+  if (!card || !card.isConnected || !window.athena || typeof window.athena.invoke !== 'function') return null;
+  const kind = fallbackKindFor(card, envelope);
+  if (!kind) return null;
+  const prior = card.__athenaRealtimeFallback;
+  if (prior && prior.active && prior.envelope === envelope && prior.kind === kind) return prior;
+  if (prior) unregisterRealtimeFallback(prior);
+  const ownerId = `shell:${kind}:${crypto.randomUUID()}`;
+  const host = card.querySelector('.board-surface-host');
+  const state = host && host.__athenaBoard;
+  const activeChart = card.dataset.chartPanelId
+    ? aitsChartPanels.snapshot().find((entry) => entry.panelId === card.dataset.chartPanelId) : null;
+  const session = {
+    ownerId, kind, card, envelope, active: true,
+    accountGeneration: rendererRealtimeAccountGeneration,
+    registrationRevision: null,
+    sourceEpoch: null,
+    ownerEpoch: null,
+    panelId: card.dataset.chartPanelId || null,
+    symbol: activeChart ? String(activeChart.stock || cardStkCd(envelope) || '') : String(cardStkCd(envelope) || ''),
+    interval: Math.max(1, Number((envelope.operation_args || envelope.operationArgs || {}).tic_scope) || 1),
+    slotIds: state && state.mountContract && Array.isArray(state.mountContract.slots)
+      ? state.mountContract.slots.map((slot) => String(slot && slot.slot_id || '')).filter(Boolean)
+      : state ? Object.keys(state.values || {}) : [],
+    title: String(envelope.card_title || ''),
+    wrap: card.querySelector('.card-body > :first-child'),
+    lastSuccessAt: null,
+    visible: cardRealtimeFallbackVisible(card),
+    visibilityObserver: null,
+  };
+  Object.defineProperty(card, '__athenaRealtimeFallback', { value: session, configurable: true, writable: true });
+  realtimeFallbackSessions.set(ownerId, session);
+  session.visibilityObserver = observeRealtimeFallbackVisibility(session);
+  if (!card.__athenaRealtimeFallbackCleanup) {
+    const priorDestroy = cardDestroyers.get(card);
+    cardDestroyers.set(card, () => {
+      unregisterRealtimeFallback(card.__athenaRealtimeFallback);
+      if (priorDestroy) return priorDestroy();
+      return undefined;
+    });
+    Object.defineProperty(card, '__athenaRealtimeFallbackCleanup', { value: true, configurable: true });
+  }
+  void ensureRendererRealtimeGeneration().then((accountGeneration) => {
+    if (!session.active || card.__athenaRealtimeFallback !== session) return null;
+    session.accountGeneration = accountGeneration;
+    return window.athena.invoke('athena:realtime-fallback-register', {
+      ownerId,
+      kind,
+      accountGeneration,
+      correlation: envelope.correlation || null,
+      panelId: session.panelId,
+      target: host ? boardHydrateTarget(envelope, host) : (session.symbol || null),
+      slotIds: session.slotIds,
+      period: activeChart ? activeChart.body.period : null,
+      interval: session.interval,
+      visible: session.visible,
+    });
+  }).then((result) => {
+    if (result === null) return;
+    if (!session.active || card.__athenaRealtimeFallback !== session || !result || result.ok !== true
+      || result.ownerId !== ownerId || Number(result.accountGeneration) !== session.accountGeneration) return;
+    session.registrationRevision = Number(result.registrationRevision);
+    session.sourceEpoch = Number(result.sourceEpoch);
+    session.ownerEpoch = Number(result.ownerEpoch);
+    if (!Number.isInteger(session.registrationRevision) || !Number.isInteger(session.sourceEpoch)
+      || !Number.isInteger(session.ownerEpoch)) {
+      unregisterRealtimeFallback(session);
+      return;
+    }
+    const pendingState = card.__athenaPendingRealtimeFallbackState;
+    delete card.__athenaPendingRealtimeFallbackState;
+    if (pendingState) relayCardRealtimeFallbackStatus(card, pendingState);
+    setRealtimeFallbackVisibility(session, session.visible, { force: true });
+  }).catch(() => unregisterRealtimeFallback(session));
+  return session;
+}
+
 function integratedRealtimeMeta(root) {
   if (!root.__athenaIntegratedRealtime) {
     Object.defineProperty(root, '__athenaIntegratedRealtime', {
@@ -2247,8 +2727,10 @@ function hasRealtimePolicy(policies, payload) {
 
 function syncIntegratedRealtime(root, envelope) {
   if (!window.athena || typeof window.athena.invoke !== 'function') return;
+  if (typeof installCardRealtimeStatusRelay === 'function') installCardRealtimeStatusRelay(root);
   const payload = integratedRealtimePayload(root, envelope);
   const realtime = integratedRealtimeMeta(root);
+  const accountGeneration = rendererRealtimeAccountGeneration;
   realtime.leaseId = payload.leaseId;
   realtime.target = integratedCardSurface.normalizeIdentity(payload.target);
   realtime.status = 'registering';
@@ -2259,9 +2741,12 @@ function syncIntegratedRealtime(root, envelope) {
     // 2RJ7-1의 국내 금현물 시세는 15초 ka50092 조회가 갱신한다. 통합 gold 정책의
     // 0I는 국제금환산가격이므로 이 보드에 연결하면 pred_pre만 다른 상품 값으로 섞인다.
     if (boardId === '2RJ7-1') {
-      if (realtime.mounted === true) {
+      root.__athenaRealtimeFallbackCapable = false;
+      if (root.__athenaRealtimeFallback) unregisterRealtimeFallback(root.__athenaRealtimeFallback);
+      if (realtime.mounted === true || realtime.mountAttempted === true) {
         await window.athena.invoke('athena:integrated-card-realtime-unmount', { leaseId: payload.leaseId });
         realtime.mounted = false;
+        realtime.mountAttempted = false;
       }
       if (root.isConnected) realtime.status = 'snapshot';
       stampBoardRealtimeStatus(root, realtime.status);
@@ -2269,27 +2754,38 @@ function syncIntegratedRealtime(root, envelope) {
       return { ok: true, status: 'snapshot' };
     }
     const policies = await realtimePolicies();
+    if (accountGeneration !== rendererRealtimeAccountGeneration) return { ok: false, status: 'stopped' };
     if (!hasRealtimePolicy(policies, payload)) {
-      if (realtime.mounted === true) {
+      root.__athenaRealtimeFallbackCapable = false;
+      if (root.__athenaRealtimeFallback) unregisterRealtimeFallback(root.__athenaRealtimeFallback);
+      if (realtime.mounted === true || realtime.mountAttempted === true) {
         await window.athena.invoke('athena:integrated-card-realtime-unmount', { leaseId: payload.leaseId });
         realtime.mounted = false;
+        realtime.mountAttempted = false;
       }
       if (root.isConnected) realtime.status = 'static';
       stampBoardRealtimeStatus(root, realtime.status);
       clearIntegratedRealtimeError(root);
       return { ok: true, status: 'static' };
     }
+    root.__athenaRealtimeFallbackCapable = true;
+    root.__athenaRealtimeFallbackKind = root.querySelector('.board-surface-host')
+      ? 'integrated-board' : 'semantic';
+    syncCardRealtimeFallback(root, envelope);
     const channel = realtime.mounted === true
       ? 'athena:integrated-card-realtime-update'
       : 'athena:integrated-card-realtime-mount';
+    // Failed REG attempts also retain a main-process lease for reconnect recovery.
+    // Its ownership ends with this card even when no successful reply was received.
+    realtime.mountAttempted = true;
     const state = await window.athena.invoke(channel, payload);
-    if (!root.isConnected && state && state.ok) {
-      // close가 REG보다 먼저 끝난 경우 mount 성공 직후 즉시 REMOVE한다. destroyer는
-      // realtimeMounted dataset이 찍히기 전이라 이 해제를 대신할 수 없다.
-      await window.athena.invoke('athena:integrated-card-realtime-unmount', { leaseId: payload.leaseId }).catch(() => {});
+    if (accountGeneration !== rendererRealtimeAccountGeneration) return state;
+    if (!root.isConnected) {
+      await window.athena.invoke('athena:integrated-card-realtime-unmount', { leaseId: payload.leaseId });
+      realtime.mounted = false;
+      realtime.mountAttempted = false;
       return state;
     }
-    if (!root.isConnected) return state;
     integratedCardSurface.requireRealtimeSuccess(state);
     realtime.status = String(state.status || 'active');
     realtime.mounted = true;
@@ -2303,6 +2799,7 @@ function syncIntegratedRealtime(root, envelope) {
     }
     return state;
   }).catch((error) => {
+    if (accountGeneration !== rendererRealtimeAccountGeneration) return;
     if (root.isConnected) {
       realtime.status = 'error';
       stampBoardRealtimeStatus(root, realtime.status);
@@ -2502,6 +2999,7 @@ async function reloadExistingAitsChartPanel(descriptor, envelope, integratedRoot
   await aitsChartPanels.reloadPanel(descriptor.panelId, descriptor.body, {
     generation: descriptor.generation,
     interval: Number.isFinite(ticScope) && ticScope > 0 ? ticScope : 1,
+    realtimeAccountGeneration: rendererRealtimeAccountGeneration,
   });
   if (integratedSession) integratedSession.generation = descriptor.generation;
   retitleChartCard(card, descriptor.body.period);
@@ -2535,6 +3033,7 @@ async function mountAitsChartPanel(card, chartBody, descriptor, options = {}) {
   card.dataset.rendererId = descriptor.rendererId;
   card.dataset.chartPanelId = descriptor.panelId;
   card.dataset.chartGeneration = String(descriptor.generation);
+  descriptor.context.realtimeAccountGeneration = rendererRealtimeAccountGeneration;
   descriptor.context.onReloadRequest = async (request) => {
     const active = aitsChartPanels.snapshot().find((candidate) => candidate.panelId === descriptor.panelId);
     if (!active) throw new Error('AITS chart session이 닫혔다');
@@ -2572,8 +3071,10 @@ async function mountAitsChartPanel(card, chartBody, descriptor, options = {}) {
   // 통합 카드 root의 집계 정리자가 사라진다. 그 경우에만 등록을 건너뛴다.
   if (options.registerCardDestroyer !== false) {
     cardDestroyers.set(card, () => {
-      aitsChartPanels.destroyPanel(descriptor.panelId);
-      window.athena.send('athena:chart-panel-destroyed', { panelId: descriptor.panelId });
+      if (aitsChartPanels.destroyPanel(descriptor.panelId)) {
+        mountedChartSessions.delete(descriptor.panelId);
+        window.athena.send('athena:chart-panel-destroyed', { panelId: descriptor.panelId });
+      }
     });
   }
   const session = await aitsChartPanels.openPanel(chartBody, descriptor.body, descriptor.context);
@@ -2638,28 +3139,104 @@ function releaseRendererRealtimeLease(channel, leaseToken) {
   }).catch(() => {});
 }
 
+function createQuoteRealtimeLeaseLifecycle({
+  acquire,
+  release,
+  onStatus = () => {},
+  setTimer = setTimeout,
+  clearTimer = clearTimeout,
+  retryBaseMs = 250,
+  retryMaxMs = 5000,
+}) {
+  let closed = false;
+  let acquiring = false;
+  let leaseToken = null;
+  let retryTimer = null;
+  let retryAttempt = 0;
+
+  const scheduleRetry = () => {
+    if (closed || acquiring || leaseToken || retryTimer !== null) return;
+    const delay = Math.min(retryBaseMs * (2 ** retryAttempt), retryMaxMs);
+    retryAttempt += 1;
+    onStatus('retrying');
+    retryTimer = setTimer(() => {
+      retryTimer = null;
+      void tryAcquire();
+    }, delay);
+  };
+
+  const tryAcquire = async () => {
+    if (closed || acquiring || leaseToken) return false;
+    acquiring = true;
+    let result = null;
+    try {
+      result = await acquire();
+    } catch {}
+    acquiring = false;
+    if (result && result.ok && result.status === 'fixture-disabled') return false;
+    if (result && result.ok && result.leaseToken) {
+      if (closed) {
+        release(result.leaseToken);
+        return false;
+      }
+      leaseToken = result.leaseToken;
+      onStatus('active');
+      return true;
+    }
+    onStatus('error');
+    scheduleRetry();
+    return false;
+  };
+
+  return {
+    start() {
+      onStatus('connecting');
+      void tryAcquire();
+    },
+    close() {
+      if (closed) return false;
+      closed = true;
+      if (retryTimer !== null) {
+        clearTimer(retryTimer);
+        retryTimer = null;
+      }
+      if (leaseToken) {
+        const token = leaseToken;
+        leaseToken = null;
+        release(token);
+      }
+      return true;
+    },
+  };
+}
+
 function wireQuoteRealtime(card, wrap, envelope, applyTick) {
   const symbol = resolveEnvelopeSymbol(envelope);
   if (!symbol || typeof applyTick !== 'function') return;
+  card.__athenaRealtimeFallbackCapable = true;
+  card.__athenaRealtimeFallbackKind = 'quote';
+  const fallbackStatus = typeof installCardRealtimeStatusRelay === 'function'
+    ? installCardRealtimeStatusRelay(card) : () => {};
   quoteRealtimePanels.openPanel(card, symbol, (tick) => applyTick(wrap, envelope, tick));
-  let leaseToken = null;
-  let released = false;
-  void window.athena.invoke('athena:realtime-acquire', { symbol }).then((result) => {
-    if (!result || !result.ok || !result.leaseToken) return;
-    if (released) {
-      releaseRendererRealtimeLease('athena:realtime-release', result.leaseToken);
-      return;
-    }
-    leaseToken = result.leaseToken;
-  }).catch(() => {});
+  const lifecycle = createQuoteRealtimeLeaseLifecycle({
+    acquire: () => window.athena.invoke('athena:realtime-acquire', { symbol }),
+    release: (leaseToken) => releaseRendererRealtimeLease('athena:realtime-release', leaseToken),
+    onStatus: fallbackStatus,
+  });
+  let stopped = false;
+  const stopRealtime = () => {
+    if (stopped) return false;
+    stopped = true;
+    quoteRealtimeResetters.delete(stopRealtime);
+    lifecycle.close();
+    quoteRealtimePanels.closePanel(card);
+    return true;
+  };
+  quoteRealtimeResetters.add(stopRealtime);
+  lifecycle.start();
   const priorDestroy = cardDestroyers.get(card);
   cardDestroyers.set(card, () => {
-    released = true;
-    quoteRealtimePanels.closePanel(card);
-    if (leaseToken) {
-      releaseRendererRealtimeLease('athena:realtime-release', leaseToken);
-      leaseToken = null;
-    }
+    stopRealtime();
     if (priorDestroy) priorDestroy();
   });
 }
@@ -2671,6 +3248,9 @@ function wireQuoteRealtime(card, wrap, envelope, applyTick) {
 function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
   const symbol = resolveEnvelopeSymbol(envelope);
   if (!symbol || typeof applyTick !== 'function') return null;
+  card.__athenaRealtimeFallbackCapable = true;
+  card.__athenaRealtimeFallbackKind = 'orderbook';
+  if (typeof installCardRealtimeStatusRelay === 'function') installCardRealtimeStatusRelay(card);
   stampOrderbookRealtimeStatus(card, wrap, 'connecting');
   const session = { card, wrap, symbol, released: false, acceptsTicks: false };
   orderbookRealtimePanels.openPanel(card, symbol, (tick) => {
@@ -2680,6 +3260,10 @@ function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
   });
   let leaseToken = null;
   let released = false;
+  let resetForAccountChange = null;
+  const accountResetters = typeof directOrderbookRealtimeResetters === 'undefined'
+    ? null
+    : directOrderbookRealtimeResetters;
   void window.athena.invoke('athena:orderbook-realtime-acquire', { symbol }).then((result) => {
     if (released) {
       if (result && result.ok && result.leaseToken) {
@@ -2692,6 +3276,7 @@ function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
       session.released = true;
       session.acceptsTicks = false;
       orderbookRealtimePanels.closePanel(card);
+      if (accountResetters) accountResetters.delete(resetForAccountChange);
       stampOrderbookRealtimeStatus(card, wrap, 'snapshot');
       return;
     }
@@ -2700,6 +3285,7 @@ function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
       session.released = true;
       session.acceptsTicks = false;
       orderbookRealtimePanels.closePanel(card);
+      if (accountResetters) accountResetters.delete(resetForAccountChange);
       stampOrderbookRealtimeStatus(card, wrap, 'error');
       return;
     }
@@ -2713,23 +3299,27 @@ function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
     session.released = true;
     session.acceptsTicks = false;
     orderbookRealtimePanels.closePanel(card);
+    if (accountResetters) accountResetters.delete(resetForAccountChange);
     stampOrderbookRealtimeStatus(card, wrap, 'error');
   });
   // 해제는 한 번만 나간다 — acquire보다 release가 많으면 main의 REG 셈이 무너져
   // 같은 종목을 보는 남의 카드 피드까지 끊긴다.
-  const release = () => {
+  const release = (notifyMain = true) => {
     if (released) return false;
     released = true;
     session.released = true;
     session.acceptsTicks = false;
     orderbookRealtimePanels.closePanel(card);
+    if (accountResetters) accountResetters.delete(resetForAccountChange);
     if (leaseToken) {
       directOrderbookRealtimeSessions.delete(leaseToken);
-      releaseRendererRealtimeLease('athena:orderbook-realtime-release', leaseToken);
+      if (notifyMain) releaseRendererRealtimeLease('athena:orderbook-realtime-release', leaseToken);
       leaseToken = null;
     }
     return true;
   };
+  resetForAccountChange = () => release(false);
+  if (accountResetters) accountResetters.add(resetForAccountChange);
   // 보드 카드는 정리자를 renderBoardSurfaceCard가 이미 걸었다(보드 상태가 자리를
   // 닫는다) — 여기서 덮으면 그 정리자를 잃고, 갈아탈 때마다 사슬만 길어진다.
   if (options.registerCardDestroyer === false) return release;

@@ -68,12 +68,14 @@ const { GATEWAY_ALLOWED_TOOLS, DISALLOWED_EXECUTION_TOOLS } = require('./lib/mai
 const providerContractDecision = require('./test-fixtures/provider-contract/decision.json');
 const restDatasetRunner = require('./lib/main/rest-dataset-runner');
 const accountBoundDataset = require('./lib/main/account-bound-dataset');
+const { createRealtimeFallbackCoordinator } = require('./lib/main/realtime-fallback');
 const { RestRetryRegistry } = require('./lib/main/rest-retry-registry');
 const stockMasterClient = require('./lib/main/stock-master-client');
 const { reconcileStockIndexStartupTask } = require('./lib/main/stock-entity-index-readiness');
 const { createChartFollowupTracker } = require('./lib/main/chart-followup');
 const simpleChartFastPath = require('./lib/main/simple-chart-fast-path');
 const selectorFastPath = require('./lib/main/selector-fast-path');
+const activeCardQna = require('./lib/main/active-card-context');
 const selectorColdHedge = require('./lib/main/selector-cold-hedge');
 const { createClaudeSelectorWorkerPool } = require('./lib/main/claude-selector-worker-pool');
 const chartReload = require('./lib/main/chart-reload');
@@ -801,6 +803,7 @@ function runBriefingTurnWired(event) {
     configFile,
     onEvent: trackBriefingToolStep,
     onCanvasResult: (r) => {
+      rememberLiveRealtimeFallbackAuthority(r);
       // 카드 경로는 사용자 턴과 동일(athena:add-canvas-live) — 캔버스는 턴
       // 상태와 무관해 안전하다. pushed는 사이드 채널로 이미 도착한 카드다.
       if (r.status === 'pushed') return;
@@ -938,12 +941,27 @@ let chartRealtimeRegistrar = null;
 let orderbookRealtimeRegistrar = null; // 호가잔량(0D) 전용 — 0B 레지스트라와 참조를 안 섞는다(task #25)
 let integratedCardRealtimeManager = null;
 let integratedCardRealtimeTransport = null;
+const integratedRealtimeLeaseSenders = new Map();
 let realtimeBackendAccountAlias = null;
 let realtimeAccountGeneration = 1;
 let realtimeFeedInstanceGeneration = 0;
 let realtimeFeedEpoch = 1;
+let realtimeFallbackCoordinator = null;
+const realtimeFallbackAuthorities = new Map();
+const realtimeFallbackOwners = new Map();
+const realtimeFallbackSenderCleanup = new Set();
 const realtimeCleanupBarriers = new Map();
 let liveChatShutdown = Promise.resolve([]);
+
+function rendererForRealtimeLease(lease) {
+  if (lease && lease.ownerId != null) {
+    for (const win of [shellWin, orbWin]) {
+      if (win && !win.isDestroyed() && win.webContents.id === lease.ownerId) return win.webContents;
+    }
+    return null;
+  }
+  return shellWin && !shellWin.isDestroyed() ? shellWin.webContents : null;
+}
 
 const integratedRealtimeShutdown = integratedCardRealtime.createBoundedShutdownCoordinator({
   prepare: () => {
@@ -1021,16 +1039,117 @@ function ensureRealtimeFeed(backendAccountAlias) {
   realtimeBackendAccountAlias = backendAccountAlias;
   let directFeedNeedsReregister = false;
   let directFeedStatusRevision = 0;
+  let directFeedState = '';
+  let upstreamFeedGeneration = -1;
+  let upstreamFeedRevision = -1;
+  let upstreamStatusConnectionEpoch = -1;
+  const directRegistrarRetries = new Map();
+  const clearDirectRegistrarRetries = () => {
+    for (const retry of directRegistrarRetries.values()) {
+      if (retry.timer !== null) clearTimeout(retry.timer);
+    }
+    directRegistrarRetries.clear();
+  };
+  const currentDirectRegistrar = (kind) => (
+    kind === 'quote' ? chartRealtimeRegistrar : orderbookRealtimeRegistrar
+  );
+  const scheduleDirectRegistrarRetry = (kind, registrar, accountGeneration) => {
+    if (!['open', 'connected'].includes(directFeedState)
+      || feedInstanceGeneration !== realtimeFeedInstanceGeneration
+      || accountGeneration !== realtimeAccountGeneration
+      || registrar !== currentDirectRegistrar(kind)) return;
+    const retry = directRegistrarRetries.get(kind) || { attempt: 0, timer: null };
+    if (retry.timer !== null) return;
+    const delay = Math.min(250 * (2 ** retry.attempt), 5000);
+    retry.attempt += 1;
+    retry.timer = setTimeout(() => {
+      retry.timer = null;
+      runDirectRegistrarReregister(
+        kind,
+        registrar,
+        accountGeneration,
+        realtimeFeedEpoch,
+        directFeedStatusRevision,
+      );
+    }, delay);
+    if (retry.timer && typeof retry.timer.unref === 'function') retry.timer.unref();
+    directRegistrarRetries.set(kind, retry);
+  };
+  const runDirectRegistrarReregister = (
+    kind,
+    registrar,
+    accountGeneration,
+    connectionGeneration,
+    statusRevision,
+  ) => {
+    void registrar.reRegisterActive().then((results) => {
+      if (feedInstanceGeneration !== realtimeFeedInstanceGeneration
+        || accountGeneration !== realtimeAccountGeneration
+        || registrar !== currentDirectRegistrar(kind)
+        || statusRevision !== directFeedStatusRevision
+        || !['open', 'connected'].includes(directFeedState)) return;
+      const resultBySymbol = new Map(results.map((result) => [result.symbol, result.ok]));
+      for (const [leaseToken, lease] of rendererRealtimeLeases) {
+        if (lease.kind !== kind || lease.generation !== accountGeneration
+          || lease.registrar !== registrar) continue;
+        const sender = rendererForRealtimeLease(lease);
+        if (!sender) continue;
+        sender.send('athena:renderer-realtime-state', {
+          leaseToken,
+          kind: lease.kind,
+          symbol: lease.symbol,
+          status: resultBySymbol.get(lease.symbol) ? 'active' : 'error',
+          connectionGeneration,
+        });
+      }
+      if (kind === 'quote') {
+        for (const [panelId, binding] of chartRealtimePanelSymbols) {
+          if (!binding.acquired || binding.generation !== accountGeneration) continue;
+          binding.fallbackStatus = resultBySymbol.get(binding.code) ? 'active' : 'registration-failed';
+          relayChartRealtimeFallbackStatus(panelId, binding.fallbackStatus);
+        }
+      }
+      if (results.some((result) => !result.ok)) {
+        scheduleDirectRegistrarRetry(kind, registrar, accountGeneration);
+      } else {
+        directRegistrarRetries.delete(kind);
+      }
+    }).catch((error) => {
+      mdlog(`${kind === 'quote' ? '시세' : '호가'} REAL 재등록 예외: ${String((error && error.message) || error)}`);
+      scheduleDirectRegistrarRetry(kind, registrar, accountGeneration);
+    });
+  };
   chartRealtimeFeed = new RoutineFeed({
     url: `${BACKEND_WS_BASE}/api/v1/ws/stream?account=${encodeURIComponent(backendAccountAlias)}`,
+    readyFeed: 'kiwoom-real',
     token: LOCAL_BEARER_TOKEN,
     onEvent: (frame, feedMeta = {}) => {
       if (feedInstanceGeneration !== realtimeFeedInstanceGeneration) return;
+      if (frame && frame.type === 'feed-status' && frame.feed === 'kiwoom-real') {
+        const generation = Number(frame.upstreamGeneration);
+        const revision = Number(frame.revision);
+        const connectionEpoch = Number(feedMeta.connectionEpoch);
+        if (!Number.isInteger(generation) || !Number.isInteger(revision)
+            || !Number.isInteger(connectionEpoch) || connectionEpoch < upstreamStatusConnectionEpoch
+            || (connectionEpoch === upstreamStatusConnectionEpoch
+              && (generation < upstreamFeedGeneration
+                || (generation === upstreamFeedGeneration && revision <= upstreamFeedRevision)))) return;
+        upstreamStatusConnectionEpoch = connectionEpoch;
+        upstreamFeedGeneration = generation;
+        upstreamFeedRevision = revision;
+        void ensureRealtimeFallbackCoordinator().handleFeedStatus(frame);
+        return;
+      }
       if (!shellWin || shellWin.isDestroyed()) return;
       // 거래일은 체결 시각(HHMMSS)에 날짜가 없어서 필요하다. 자정을 넘긴
       // 시간외 체결은 다음 날로 접히지만, 정규장 진행봉에는 영향이 없다.
       const ticks = chartRealtime.parseRealFrame(frame, chartRealtime.kstTradingDate());
-      if (ticks.length) shellWin.webContents.send('athena:chart-ticks', ticks);
+      if (ticks.length) {
+        shellWin.webContents.send('athena:chart-ticks', ticks);
+        if (typeof orbWin !== 'undefined' && orbWin && !orbWin.isDestroyed()) {
+          orbWin.webContents.send('athena:chart-ticks', ticks);
+        }
+      }
       const bookTicks = orderbookRealtime.parseQuoteBookFrame(frame);
       if (bookTicks.length) shellWin.webContents.send('athena:orderbook-ticks', bookTicks);
       if (integratedCardRealtimeManager) {
@@ -1039,7 +1158,18 @@ function ensureRealtimeFeed(backendAccountAlias) {
           Math.max(Number(feedMeta.connectionEpoch) || 0, realtimeFeedEpoch),
         );
         if (integratedTicks.length) {
-          shellWin.webContents.send('athena:integrated-card-realtime-ticks', integratedTicks);
+          const bySender = new Map();
+          for (const tick of integratedTicks) {
+            const sender = integratedRealtimeLeaseSenders.get(tick.leaseId)
+              || (shellWin && !shellWin.isDestroyed() ? shellWin.webContents : null);
+            if (!sender || (typeof sender.isDestroyed === 'function' && sender.isDestroyed())) continue;
+            const bucket = bySender.get(sender) || [];
+            bucket.push(tick);
+            bySender.set(sender, bucket);
+          }
+          for (const [sender, ticksForSender] of bySender) {
+            sender.send('athena:integrated-card-realtime-ticks', ticksForSender);
+          }
         }
       }
     },
@@ -1051,19 +1181,27 @@ function ensureRealtimeFeed(backendAccountAlias) {
         realtimeFeedEpoch = Number(s.connectionEpoch);
       }
       const feedState = String((s && s.state) || '');
+      directFeedState = feedState;
+      if (['retrying', 'disconnected', 'unsupported'].includes(feedState)) {
+        void ensureRealtimeFallbackCoordinator().handleFeedStatus({ state: 'unavailable' });
+      }
       if (feedState === 'disconnected' || feedState === 'retrying') {
         directFeedNeedsReregister = true;
       }
+      if (feedState !== 'open' && feedState !== 'connected') clearDirectRegistrarRetries();
       const directStatus = {
         connecting: 'reconnecting',
         retrying: 'reconnecting',
         disconnected: 'reconnecting',
         unsupported: 'error',
       }[feedState];
-      if (directStatus && shellWin && !shellWin.isDestroyed()) {
+      if (directStatus) {
         for (const [leaseToken, lease] of rendererRealtimeLeases) {
-          if (lease.kind !== 'orderbook' || lease.generation !== realtimeAccountGeneration) continue;
-          shellWin.webContents.send('athena:renderer-realtime-state', {
+          if (!['quote', 'orderbook'].includes(lease.kind)
+              || lease.generation !== realtimeAccountGeneration) continue;
+          const sender = rendererForRealtimeLease(lease);
+          if (!sender) continue;
+          sender.send('athena:renderer-realtime-state', {
             leaseToken,
             kind: lease.kind,
             symbol: lease.symbol,
@@ -1072,34 +1210,35 @@ function ensureRealtimeFeed(backendAccountAlias) {
           });
         }
       }
+      const directRegistrars = [
+        { kind: 'quote', registrar: chartRealtimeRegistrar },
+        { kind: 'orderbook', registrar: orderbookRealtimeRegistrar },
+      ].filter(({ registrar }) => registrar);
       if ((feedState === 'open' || feedState === 'connected')
-        && directFeedNeedsReregister && orderbookRealtimeRegistrar) {
+        && directFeedNeedsReregister && directRegistrars.length) {
         directFeedNeedsReregister = false;
-        const reconnectRegistrar = orderbookRealtimeRegistrar;
         const reconnectAccountGeneration = realtimeAccountGeneration;
         const reconnectFeedGeneration = feedInstanceGeneration;
         const connectionGeneration = Number((s && s.connectionEpoch) || realtimeFeedEpoch);
-        void reconnectRegistrar.reRegisterActive().then((results) => {
-          if (reconnectFeedGeneration !== realtimeFeedInstanceGeneration
-            || reconnectAccountGeneration !== realtimeAccountGeneration
-            || reconnectRegistrar !== orderbookRealtimeRegistrar
-            || statusRevision !== directFeedStatusRevision
-            || !shellWin || shellWin.isDestroyed()) return;
-          const resultBySymbol = new Map(results.map((result) => [result.symbol, result.ok]));
-          for (const [leaseToken, lease] of rendererRealtimeLeases) {
-            if (lease.kind !== 'orderbook' || lease.generation !== reconnectAccountGeneration
-              || lease.registrar !== reconnectRegistrar) continue;
-            shellWin.webContents.send('athena:renderer-realtime-state', {
-              leaseToken,
-              kind: lease.kind,
-              symbol: lease.symbol,
-              status: resultBySymbol.get(lease.symbol) ? 'active' : 'error',
-              connectionGeneration,
-            });
-          }
-        }).catch((error) => {
-          mdlog(`호가 REAL 재등록 예외: ${String((error && error.message) || error)}`);
-        });
+        for (const { kind, registrar: reconnectRegistrar } of directRegistrars) {
+          if (reconnectFeedGeneration !== realtimeFeedInstanceGeneration) continue;
+          runDirectRegistrarReregister(
+            kind,
+            reconnectRegistrar,
+            reconnectAccountGeneration,
+            connectionGeneration,
+            statusRevision,
+          );
+        }
+      }
+      if (feedState === 'open' || feedState === 'connected') {
+        for (const [panelId, binding] of chartRealtimePanelSymbols) {
+          if (binding.generation !== realtimeAccountGeneration || binding.acquired || binding.acquirePromise) continue;
+          void ensureChartRealtime({
+            accountId: binding.accountId,
+            chartBody: { stock: binding.code },
+          }, panelId);
+        }
       }
       if (integratedCardRealtimeManager) {
         integratedCardRealtimeManager.handleFeedStatus(s, realtimeFeedEpoch).catch((error) => {
@@ -1108,6 +1247,10 @@ function ensureRealtimeFeed(backendAccountAlias) {
       }
     },
   });
+  chartRealtimeFeed.stopRealtimeRetries = () => {
+    directFeedState = 'stopped';
+    clearDirectRegistrarRetries();
+  };
   chartRealtimeFeed.start();
   return true;
 }
@@ -1166,8 +1309,10 @@ function ensureIntegratedCardRealtimeManager() {
     }),
     onState: (state) => {
       if (managerAccountGeneration !== realtimeAccountGeneration) return;
-      if (shellWin && !shellWin.isDestroyed()) {
-        shellWin.webContents.send('athena:integrated-card-realtime-state', state);
+      const sender = integratedRealtimeLeaseSenders.get(state.leaseId)
+        || (shellWin && !shellWin.isDestroyed() ? shellWin.webContents : null);
+      if (sender && !(typeof sender.isDestroyed === 'function' && sender.isDestroyed())) {
+        sender.send('athena:integrated-card-realtime-state', state);
       }
     },
   });
@@ -1230,7 +1375,7 @@ async function ensureRealtimeForSymbol(code, requestedAccountId) {
 
 const rendererRealtimeLeases = new Map();
 
-async function acquireRendererRealtimeLease(kind, code) {
+async function acquireRendererRealtimeLease(kind, code, ownerId = null) {
   if (process.env.ATHENA_CANVAS_SOURCE === 'fixture') {
     return { ok: true, status: 'fixture-disabled', leaseToken: null };
   }
@@ -1254,25 +1399,40 @@ async function acquireRendererRealtimeLease(kind, code) {
       if (kind === 'quote') chartRealtimeRegistrar = registrar;
       else orderbookRealtimeRegistrar = registrar;
     }
-    const acquired = await registrar.acquire(trimmed);
+    let timedOut = false;
+    const acquisition = Promise.resolve().then(() => registrar.acquire(trimmed));
+    const timeout = new Promise((resolve) => {
+      const timer = setTimeout(() => { timedOut = true; resolve(false); }, 5_000);
+      if (timer && typeof timer.unref === 'function') timer.unref();
+      acquisition.finally(() => clearTimeout(timer)).catch(() => {});
+    });
+    const acquired = await Promise.race([acquisition, timeout]);
     const currentRegistrar = kind === 'quote' ? chartRealtimeRegistrar : orderbookRealtimeRegistrar;
-    if (!acquired) return { ok: false, error: `${registrarName} 등록에 실패했다` };
+    if (!acquired) {
+      if (timedOut) {
+        acquisition.then((lateAcquired) => {
+          if (lateAcquired) return registrar.release(trimmed);
+          return false;
+        }).catch((error) => mdlog(`${kind} 늦은 REAL 등록 정리 예외: ${String((error && error.message) || error)}`));
+      }
+      return { ok: false, error: timedOut ? `${registrarName} 등록 응답 시간이 초과됐다` : `${registrarName} 등록에 실패했다` };
+    }
     if (generation !== realtimeAccountGeneration || registrar !== currentRegistrar) {
       await registrar.release(trimmed);
       return { ok: false, error: '활성 계좌가 변경되어 실시간 요청을 중단했다' };
     }
     const leaseToken = `rtl_${crypto.randomUUID()}`;
-    rendererRealtimeLeases.set(leaseToken, { kind, symbol: trimmed, registrar, generation });
+    rendererRealtimeLeases.set(leaseToken, { kind, symbol: trimmed, registrar, generation, ownerId });
     return { ok: true, leaseToken };
   });
   return bound.ok ? bound.value : { ok: false, error: bound.error };
 }
 
-async function releaseRendererRealtimeLease(kind, leaseToken) {
+async function releaseRendererRealtimeLease(kind, leaseToken, ownerId = null) {
   if (process.env.ATHENA_CANVAS_SOURCE === 'fixture') return true;
   const token = String(leaseToken || '').trim();
   const lease = rendererRealtimeLeases.get(token);
-  if (!lease || lease.kind !== kind) return false;
+  if (!lease || lease.kind !== kind || (ownerId !== null && lease.ownerId !== ownerId)) return false;
   if (lease.releasePromise) return lease.releasePromise;
   lease.releasePromise = (async () => {
     try {
@@ -1316,18 +1476,89 @@ function releaseRealtimeForSymbol(code) {
 // 카드 수명에 묶는다. 이 함수는 main이 panelId로 원 종목을 보존하는 AITS 전용이다.
 const chartRealtimePanelSymbols = new Map(); // panelId -> { code, accountId }
 
+function relayChartRealtimeFallbackStatus(panelId, status) {
+  const normalizedPanelId = String(panelId || '').trim();
+  if (!normalizedPanelId) return;
+  for (const [ownerId, owner] of realtimeFallbackOwners) {
+    if (owner.kind !== 'chart' || owner.panelId !== normalizedPanelId
+        || owner.accountGeneration !== realtimeAccountGeneration) continue;
+    void ensureRealtimeFallbackCoordinator().handleOwnerStatus(ownerId, status);
+  }
+}
+
 function ensureChartRealtime(authority, panelId) {
   if (authority && authority.chartBody && authority.chartBody.target === 'gold') return;
   const stock = authority && authority.chartBody && authority.chartBody.stock;
   const code = stock || (authority && authority.operationArgs && authority.operationArgs.stk_cd);
   const trimmed = String(code || '').trim();
   if (!trimmed) return;
-  if (!panelId || chartRealtimePanelSymbols.has(panelId)) return;
-  chartRealtimePanelSymbols.set(panelId, { code: trimmed, accountId: authority && authority.accountId });
-  void ensureRealtimeForSymbol(trimmed, authority && authority.accountId);
+  if (!panelId) return;
+  const accountId = authority && authority.accountId;
+  let binding = chartRealtimePanelSymbols.get(panelId);
+  if (binding) {
+    if (binding.code !== trimmed || binding.accountId !== accountId) return Promise.resolve(false);
+    if (binding.acquired) return Promise.resolve(true);
+    if (binding.acquirePromise) return binding.acquirePromise;
+    if (binding.retryTimer !== null) {
+      clearTimeout(binding.retryTimer);
+      binding.retryTimer = null;
+    }
+  } else {
+    binding = {
+      code: trimmed,
+      accountId,
+      generation: realtimeAccountGeneration,
+      acquired: false,
+      acquirePromise: null,
+      retryAttempt: 0,
+      retryTimer: null,
+    };
+    chartRealtimePanelSymbols.set(panelId, binding);
+  }
+  const acquirePromise = ensureRealtimeForSymbol(trimmed, accountId).then((ok) => {
+    const stillOwned = chartRealtimePanelSymbols.get(panelId) === binding
+      && binding.generation === realtimeAccountGeneration;
+    if (ok && stillOwned) {
+      binding.acquired = true;
+      binding.retryAttempt = 0;
+      binding.fallbackStatus = 'active';
+      relayChartRealtimeFallbackStatus(panelId, binding.fallbackStatus);
+    } else if (ok && binding.generation === realtimeAccountGeneration) {
+      const acquiredRegistrar = chartRealtimeRegistrar;
+      if (acquiredRegistrar) void acquiredRegistrar.release(trimmed);
+    } else if (stillOwned && binding.retryTimer === null) {
+      binding.fallbackStatus = 'registration-failed';
+      relayChartRealtimeFallbackStatus(panelId, binding.fallbackStatus);
+      const delay = Math.min(250 * (2 ** binding.retryAttempt), 5000);
+      binding.retryAttempt += 1;
+      binding.retryTimer = setTimeout(() => {
+        binding.retryTimer = null;
+        if (chartRealtimePanelSymbols.get(panelId) !== binding
+          || binding.generation !== realtimeAccountGeneration) return;
+        void ensureChartRealtime({
+          accountId: binding.accountId,
+          chartBody: { stock: binding.code },
+        }, panelId);
+      }, delay);
+      if (binding.retryTimer && typeof binding.retryTimer.unref === 'function') binding.retryTimer.unref();
+    }
+    return Boolean(ok && stillOwned);
+  }).finally(() => {
+    if (binding.acquirePromise === acquirePromise) binding.acquirePromise = null;
+  });
+  binding.acquirePromise = acquirePromise;
+  return acquirePromise;
 }
 
-app.on('will-quit', () => { if (chartRealtimeFeed) chartRealtimeFeed.stop(); });
+app.on('will-quit', () => {
+  for (const binding of chartRealtimePanelSymbols.values()) {
+    if (binding.retryTimer !== null) clearTimeout(binding.retryTimer);
+  }
+  if (chartRealtimeFeed) {
+    if (typeof chartRealtimeFeed.stopRealtimeRetries === 'function') chartRealtimeFeed.stopRealtimeRetries();
+    chartRealtimeFeed.stop();
+  }
+});
 
 // ---------- 캔버스 사이드 채널 — 백엔드 WS 구독 → 카드 직접 렌더 (데이터 지름길) ----------
 // render_canvas(plan_token) 경로에서 게이트웨이가 채운 봉투는 모델 스트림(툴 결과)
@@ -2445,6 +2676,277 @@ ipcMain.on('athena:highlight-canvas', (e, type) => {
 const restPaintWaiters = new Map();
 const restReceiptWaiters = new Map();
 
+const REALTIME_FALLBACK_INTERVALS = Object.freeze({
+  quote: 15_000,
+  'orb-quote': 15_000,
+  orderbook: 15_000,
+  chart: 15_000,
+  'integrated-board': 30_000,
+  semantic: 30_000,
+});
+
+function stableRealtimeFallbackValue(value) {
+  if (Array.isArray(value)) return value.map(stableRealtimeFallbackValue);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stableRealtimeFallbackValue(value[key])]));
+  }
+  return value === undefined ? null : value;
+}
+
+function rememberRealtimeFallbackAuthority(payload = {}) {
+  const correlation = payload.envelope && payload.envelope.correlation;
+  const key = restCorrelationKey(correlation);
+  if (!key) return;
+  const operationRef = String(payload.operationRef || '').trim();
+  const operationArgs = payload.operationArgs && typeof payload.operationArgs === 'object'
+    && !Array.isArray(payload.operationArgs) ? { ...payload.operationArgs } : {};
+  const dataset = {
+    datasetId: `fallback-authority-${crypto.randomUUID()}`,
+    question: operationRef,
+    items: [{ itemId: 'snapshot', ordinal: 1, operationRef, args: operationArgs }],
+  };
+  if (!isQueryOnlyRetryDataset(dataset)) return;
+  const surfaceContract = payload.envelope && payload.envelope.surface_contract;
+  const boardId = String(surfaceContract && surfaceContract.board_id || '').trim();
+  const boardHydrateAuthority = boardId
+    ? Object.freeze({ boardId, target: Object.freeze({ ...operationArgs }) })
+    : null;
+  realtimeFallbackAuthorities.delete(key);
+  realtimeFallbackAuthorities.set(key, Object.freeze({
+    key,
+    operationRef,
+    operationArgs: Object.freeze(operationArgs),
+    accountId: payload.accountId == null ? activeRestAccountId() : String(payload.accountId),
+    envelope: payload.envelope,
+    canvasType: payload.canvasType,
+    accountGeneration: realtimeAccountGeneration,
+    ...(boardHydrateAuthority ? { boardHydrate: boardHydrateAuthority } : {}),
+  }));
+  while (realtimeFallbackAuthorities.size > 128) {
+    realtimeFallbackAuthorities.delete(realtimeFallbackAuthorities.keys().next().value);
+  }
+}
+
+function rememberLiveRealtimeFallbackAuthority(result = {}) {
+  const envelope = result && result.envelope;
+  if (!envelope || !['success', 'pushed'].includes(String(result.status || ''))) return;
+  const sources = Array.isArray(envelope.source_operations) ? envelope.source_operations : [];
+  const source = sources.find((entry) => entry && typeof entry === 'object'
+    && (entry.source_operation_ref || entry.operation_ref)
+    && entry.operation_args && typeof entry.operation_args === 'object');
+  const operationRef = envelope.operation_ref
+    || (source && (source.source_operation_ref || source.operation_ref));
+  const operationArgs = envelope.operation_args || (source && source.operation_args);
+  rememberRealtimeFallbackAuthority({
+    envelope,
+    operationRef,
+    operationArgs,
+    canvasType: envelope.canvas_type,
+    accountId: activeRestAccountId(),
+  });
+}
+
+function fallbackAllowedSlotIds(authority) {
+  const contract = authority && authority.envelope && authority.envelope.surface_contract;
+  const allowed = new Set();
+  const values = contract && contract.slot_values;
+  if (Array.isArray(values)) {
+    for (const entry of values) {
+      const slotId = String(entry && entry.slot_id || '').trim();
+      if (slotId) allowed.add(slotId);
+    }
+  } else if (values && typeof values === 'object') {
+    for (const slotId of Object.keys(values)) if (String(slotId).trim()) allowed.add(String(slotId));
+  }
+  return allowed;
+}
+
+function latestFallbackCandle(envelope) {
+  const chart = envelope && envelope.data && envelope.data.chart;
+  const candidates = chart && [chart.candles, chart.series, chart.rows].find(Array.isArray);
+  return candidates && candidates.length ? candidates[candidates.length - 1] : null;
+}
+
+function projectRealtimeFallbackResult(descriptor, result) {
+  const envelope = result && result.envelope;
+  if (descriptor.kind === 'chart') {
+    const chart = envelope && envelope.data && envelope.data.chart;
+    const latestCandle = latestFallbackCandle(envelope);
+    if (!latestCandle) return { ok: false, error: '차트 최신 봉을 확인할 수 없다' };
+    return {
+      ok: true,
+      mode: 'replace-latest',
+      panelId: descriptor.panelId,
+      symbol: chart && (chart.stock || chart.target) || descriptor.target,
+      period: chart && chart.period || descriptor.period || null,
+      interval: chart && (chart.interval || chart.tic_scope) || descriptor.interval || null,
+      latestCandle,
+    };
+  }
+  if (descriptor.kind === 'integrated-board') {
+    const contract = result.surfaceContract || (envelope && envelope.surface_contract);
+    const raw = result.slotValues || (contract && contract.slot_values);
+    const requested = new Set(descriptor.slotIds || []);
+    const slotValues = Array.isArray(raw)
+      ? raw.filter((entry) => requested.has(String(entry && entry.slot_id || '')))
+      : Object.fromEntries(Object.entries(raw || {}).filter(([slotId]) => requested.has(slotId)));
+    const filled = Array.isArray(slotValues) ? slotValues.length : Object.keys(slotValues).length;
+    if (!filled) return { ok: false, error: '요청한 보드 슬롯의 API 대체 값이 없다' };
+    return {
+      ok: true,
+      mode: 'slot-patch',
+      boardId: descriptor.boardId,
+      slotValues,
+      surfaceContract: contract || null,
+    };
+  }
+  return { ok: true, envelope };
+}
+
+async function refreshRealtimeFallback(descriptor, { signal } = {}) {
+  if (!descriptor || descriptor.accountGeneration !== realtimeAccountGeneration) {
+    return { ok: false, error: '활성 계좌가 변경됐다' };
+  }
+  const authority = realtimeFallbackAuthorities.get(descriptor.authorityKey);
+  if (!authority || authority.accountGeneration !== realtimeAccountGeneration) {
+    return { ok: false, error: '현재 카드의 조회 권위가 만료됐다' };
+  }
+  if (descriptor.kind === 'integrated-board') {
+    const hydrate = authority.boardHydrate;
+    if (!hydrate) return { ok: false, error: '보드 대체 조회 권위가 없다' };
+    const reply = await hydrateCanvasBoardForActiveAccount({
+      accountId: authority.accountId,
+      boardId: hydrate.boardId,
+      target: hydrate.target,
+      slotIds: descriptor.slotIds,
+      signal,
+    });
+    if (realtimeFallbackAuthorities.get(descriptor.authorityKey) !== authority) {
+      return { ok: false, error: '카드 조회 조건이 바뀌어 이전 API 응답을 버렸다' };
+    }
+    if (!reply || reply.ok !== true) return { ok: false, error: reply && reply.error || '보드 API 대체 조회에 실패했다' };
+    return { ok: true, slotValues: reply.slot_values, surfaceContract: reply.surface_contract, boardId: hydrate.boardId };
+  }
+  let captured = null;
+  const dataset = {
+    datasetId: `realtime-fallback-${crypto.randomUUID()}`,
+    question: authority.operationRef,
+    firstCanvasDeadlineMs: DIRECT_DATASET_SETTLE_TIMEOUT_MS,
+    items: [{ itemId: 'snapshot', ordinal: 1, operationRef: authority.operationRef, args: authority.operationArgs }],
+  };
+  const result = await restDatasetRunner.runRestDataset({
+    dataset,
+    backendBase: BACKEND_HTTP_BASE,
+    backendAccountAlias: descriptor.backendAccountAlias,
+    fetchImpl: fetch,
+    signal,
+    hardSignal: signal,
+    emitCanvas: async (payload) => {
+      captured = payload && payload.envelope;
+      return { verifiedVisible: true, visiblePaintAt: performance.now() };
+    },
+  });
+  if (realtimeFallbackAuthorities.get(descriptor.authorityKey) !== authority) {
+    return { ok: false, error: '카드 조회 조건이 바뀌어 이전 API 응답을 버렸다' };
+  }
+  if (!result.ok || !captured) return { ok: false, error: result.error || 'API 대체 조회 결과가 없다' };
+  return { ok: true, envelope: captured };
+}
+
+function sendRealtimeFallbackEvent(channel, event) {
+  const owner = realtimeFallbackOwners.get(event.ownerId);
+  if (!owner || owner.accountGeneration !== event.accountGeneration
+      || !owner.sender || (typeof owner.sender.isDestroyed === 'function' && owner.sender.isDestroyed())) return;
+  owner.sender.send(channel, { ...event, ownerId: owner.publicOwnerId });
+}
+
+function ensureRealtimeFallbackCoordinator() {
+  if (realtimeFallbackCoordinator) return realtimeFallbackCoordinator;
+  realtimeFallbackCoordinator = createRealtimeFallbackCoordinator({
+    refresh: refreshRealtimeFallback,
+    project: (result, descriptor) => projectRealtimeFallbackResult(descriptor, result),
+    onState: (event) => sendRealtimeFallbackEvent('athena:realtime-fallback-state', event),
+    onData: (event) => sendRealtimeFallbackEvent('athena:realtime-fallback-data', event),
+    getAccountGeneration: () => realtimeAccountGeneration,
+  });
+  return realtimeFallbackCoordinator;
+}
+
+function isRealtimeFallbackRenderer(event) {
+  return Boolean((shellWin && !shellWin.isDestroyed() && event.sender === shellWin.webContents)
+    || (orbWin && !orbWin.isDestroyed() && event.sender === orbWin.webContents));
+}
+
+function releaseDestroyedRendererLease(leaseToken, lease, attempt = 0) {
+  void releaseRendererRealtimeLease(lease.kind, leaseToken, lease.ownerId).then((released) => {
+    if (released || rendererRealtimeLeases.get(leaseToken) !== lease || attempt >= 5 || isQuitting) return;
+    const timer = setTimeout(() => releaseDestroyedRendererLease(leaseToken, lease, attempt + 1),
+      Math.min(250 * (2 ** attempt), 5_000));
+    if (timer && typeof timer.unref === 'function') timer.unref();
+  }).catch((error) => {
+    if (rendererRealtimeLeases.get(leaseToken) === lease && attempt < 5 && !isQuitting) {
+      const timer = setTimeout(() => releaseDestroyedRendererLease(leaseToken, lease, attempt + 1),
+        Math.min(250 * (2 ** attempt), 5_000));
+      if (timer && typeof timer.unref === 'function') timer.unref();
+      return;
+    }
+    mdlog(`renderer 종료 후 ${lease.kind} REAL 해제 예외: ${String((error && error.message) || error)}`);
+  });
+}
+
+function releaseDestroyedIntegratedRealtimeLease(leaseId, sender, attempt = 0) {
+  if (!integratedCardRealtimeManager || integratedRealtimeLeaseSenders.get(leaseId) !== sender) return;
+  void integratedCardRealtimeManager.unmount(leaseId).then((result) => {
+    if (result && result.ok === true && result.status === 'unmounted') {
+      if (integratedRealtimeLeaseSenders.get(leaseId) === sender) {
+        integratedRealtimeLeaseSenders.delete(leaseId);
+      }
+      return;
+    }
+    if (attempt >= 5 || isQuitting) {
+      mdlog(`renderer 종료 후 통합 카드 REAL 해제 미완료: ${leaseId}`);
+      return;
+    }
+    const timer = setTimeout(
+      () => releaseDestroyedIntegratedRealtimeLease(leaseId, sender, attempt + 1),
+      Math.min(250 * (2 ** attempt), 5_000),
+    );
+    if (timer && typeof timer.unref === 'function') timer.unref();
+  }).catch((error) => {
+    if (attempt < 5 && !isQuitting) {
+      const timer = setTimeout(
+        () => releaseDestroyedIntegratedRealtimeLease(leaseId, sender, attempt + 1),
+        Math.min(250 * (2 ** attempt), 5_000),
+      );
+      if (timer && typeof timer.unref === 'function') timer.unref();
+      return;
+    }
+    mdlog(`renderer 종료 후 통합 카드 REAL 해제 예외: ${String((error && error.message) || error)}`);
+  });
+}
+
+function bindRealtimeFallbackSenderCleanup(sender) {
+  if (!sender || realtimeFallbackSenderCleanup.has(sender.id)) return;
+  realtimeFallbackSenderCleanup.add(sender.id);
+  if (typeof sender.once !== 'function') return;
+  sender.once('destroyed', () => {
+    realtimeFallbackSenderCleanup.delete(sender.id);
+    for (const [ownerId, owner] of realtimeFallbackOwners) {
+      if (owner.sender !== sender) continue;
+      if (realtimeFallbackCoordinator) realtimeFallbackCoordinator.unregister(ownerId);
+      realtimeFallbackOwners.delete(ownerId);
+    }
+    for (const [leaseToken, lease] of rendererRealtimeLeases) {
+      if (lease.ownerId !== sender.id) continue;
+      releaseDestroyedRendererLease(leaseToken, lease);
+    }
+    for (const [leaseId, leaseSender] of integratedRealtimeLeaseSenders) {
+      if (leaseSender !== sender) continue;
+      releaseDestroyedIntegratedRealtimeLease(leaseId, sender);
+    }
+  });
+}
+
 ipcMain.on('athena:rest-canvas-painted', (event, payload = {}) => {
   if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) return;
   const key = restCorrelationKey({
@@ -2512,25 +3014,153 @@ ipcMain.on('athena:chart-panel-destroyed', (event, payload = {}) => {
   const binding = chartRealtimePanelSymbols.get(payload.panelId);
   if (binding) {
     chartRealtimePanelSymbols.delete(payload.panelId);
-    releaseRealtimeForSymbol(binding.code);
+    if (binding.retryTimer !== null) clearTimeout(binding.retryTimer);
+    if (binding.acquired) releaseRealtimeForSymbol(binding.code);
   }
 });
 
 // 표/시세 카드의 opaque lease는 acquire 때의 registrar와 계좌 세대에 묶인다.
 // reset 뒤 도착한 이전 카드 release는 새 registrar를 선택할 수 없다.
 ipcMain.handle('athena:realtime-acquire', async (event, payload = {}) => {
-  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) return;
-  return acquireRendererRealtimeLease('quote', payload.symbol);
+  const senderId = event.sender && event.sender.id;
+  const allowed = Boolean((shellWin && !shellWin.isDestroyed() && event.sender === shellWin.webContents)
+    || (orbWin && !orbWin.isDestroyed() && event.sender === orbWin.webContents));
+  if (!allowed) return;
+  bindRealtimeFallbackSenderCleanup(event.sender);
+  const result = await acquireRendererRealtimeLease('quote', payload.symbol, senderId);
+  return { ...result, accountGeneration: realtimeAccountGeneration };
 });
+ipcMain.handle('athena:realtime-generation', (event) => (
+  isRealtimeFallbackRenderer(event)
+    ? { ok: true, accountGeneration: realtimeAccountGeneration }
+    : { ok: false, error: 'invalid renderer' }
+));
 ipcMain.handle('athena:realtime-release', (event, payload = {}) => {
-  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) return false;
-  return releaseRendererRealtimeLease('quote', payload.leaseToken);
+  const senderId = event.sender && event.sender.id;
+  const allowed = Boolean((shellWin && !shellWin.isDestroyed() && event.sender === shellWin.webContents)
+    || (orbWin && !orbWin.isDestroyed() && event.sender === orbWin.webContents));
+  if (!allowed) return false;
+  return releaseRendererRealtimeLease('quote', payload.leaseToken, senderId);
+});
+
+ipcMain.handle('athena:realtime-fallback-register', async (event, payload = {}) => {
+  if (!isRealtimeFallbackRenderer(event)) return { ok: false, error: 'invalid renderer' };
+  const publicOwnerId = String(payload.ownerId || '').trim();
+  const kind = String(payload.kind || '').trim();
+  const correlationKey = restCorrelationKey(payload.correlation || {});
+  const authority = correlationKey && realtimeFallbackAuthorities.get(correlationKey);
+  if (!publicOwnerId || !authority || authority.accountGeneration !== realtimeAccountGeneration
+      || Number(payload.accountGeneration) !== realtimeAccountGeneration) {
+    return { ok: false, error: '현재 카드의 조회 권위를 확인할 수 없다' };
+  }
+  const requestedSlotIds = Array.isArray(payload.slotIds)
+    ? [...new Set(payload.slotIds.map((value) => String(value || '').trim()).filter(Boolean))].sort()
+    : [];
+  if (kind === 'integrated-board') {
+    const allowed = fallbackAllowedSlotIds(authority);
+    if (!requestedSlotIds.length || requestedSlotIds.some((slotId) => !allowed.has(slotId))) {
+      return { ok: false, error: '대체 조회할 보드 슬롯 권위를 확인할 수 없다' };
+    }
+  }
+  const account = await createActiveBackendAccountInvoker(
+    ({ backendAccountAlias }) => ({ backendAccountAlias }),
+    authority.accountId,
+  );
+  if (!account.ok) return { ok: false, error: account.error };
+  const accountValue = await account.run();
+  if (authority.accountGeneration !== realtimeAccountGeneration) {
+    return { ok: false, error: '활성 계좌가 변경됐다' };
+  }
+  const backendAccountAlias = accountValue.backendAccountAlias;
+  const boardHydrateAuthority = authority.boardHydrate;
+  const stableAuthority = JSON.stringify(stableRealtimeFallbackValue({
+    accountGeneration: realtimeAccountGeneration,
+    backendAccountAlias,
+    authorityKey: correlationKey,
+    operationRef: kind === 'integrated-board' ? null : authority.operationRef,
+    operationArgs: kind === 'integrated-board' ? null : authority.operationArgs,
+    boardId: kind === 'integrated-board' && boardHydrateAuthority ? boardHydrateAuthority.boardId : null,
+    boardTarget: kind === 'integrated-board' && boardHydrateAuthority ? boardHydrateAuthority.target : null,
+    target: authority.operationArgs.stk_cd || authority.operationArgs.idx_cd || payload.target || null,
+    slotIds: kind === 'integrated-board' ? requestedSlotIds : null,
+  }));
+  const physicalKey = crypto.createHash('sha256').update(stableAuthority).digest('hex');
+  const internalOwnerId = `${event.sender.id}:${publicOwnerId}`;
+  bindRealtimeFallbackSenderCleanup(event.sender);
+  realtimeFallbackOwners.set(internalOwnerId, {
+    sender: event.sender,
+    publicOwnerId,
+    kind,
+    panelId: payload.panelId == null ? null : String(payload.panelId),
+    accountGeneration: realtimeAccountGeneration,
+  });
+  const registered = ensureRealtimeFallbackCoordinator().register({
+    ownerId: internalOwnerId,
+    kind,
+    physicalKey,
+    accountGeneration: realtimeAccountGeneration,
+    refreshIntervalMs: REALTIME_FALLBACK_INTERVALS[kind],
+    intent: 'query',
+    verifiedQueryOnly: true,
+    backendAccountAlias,
+    operationRef: authority.operationRef,
+    operationArgs: authority.operationArgs,
+    panelId: payload.panelId == null ? null : String(payload.panelId),
+    target: authority.operationArgs.stk_cd || authority.operationArgs.idx_cd || payload.target || null,
+    period: payload.period == null ? null : String(payload.period),
+    interval: payload.interval == null ? null : String(payload.interval),
+    boardId: authority.envelope && authority.envelope.surface_contract
+      ? authority.envelope.surface_contract.board_id : null,
+    slotIds: requestedSlotIds,
+    visible: payload.visible !== false,
+  });
+  if (!registered.ok) {
+    realtimeFallbackOwners.delete(internalOwnerId);
+    return registered;
+  }
+  if (kind === 'chart') {
+    const binding = chartRealtimePanelSymbols.get(String(payload.panelId || ''));
+    if (binding && binding.generation === realtimeAccountGeneration && binding.fallbackStatus) {
+      void ensureRealtimeFallbackCoordinator().handleOwnerStatus(internalOwnerId, binding.fallbackStatus);
+    }
+  }
+  return { ...registered, ownerId: publicOwnerId };
+});
+
+ipcMain.handle('athena:realtime-fallback-unregister', (event, payload = {}) => {
+  if (!isRealtimeFallbackRenderer(event)) return false;
+  const publicOwnerId = String(payload.ownerId || '').trim();
+  const internalOwnerId = `${event.sender.id}:${publicOwnerId}`;
+  const owner = realtimeFallbackOwners.get(internalOwnerId);
+  if (!owner || owner.sender !== event.sender) return false;
+  const removed = ensureRealtimeFallbackCoordinator().unregister(internalOwnerId);
+  if (removed) realtimeFallbackOwners.delete(internalOwnerId);
+  return removed;
+});
+
+ipcMain.handle('athena:realtime-fallback-status', (event, payload = {}) => {
+  if (!isRealtimeFallbackRenderer(event)) return false;
+  const internalOwnerId = `${event.sender.id}:${String(payload.ownerId || '').trim()}`;
+  const owner = realtimeFallbackOwners.get(internalOwnerId);
+  if (!owner || owner.sender !== event.sender) return false;
+  void ensureRealtimeFallbackCoordinator().handleOwnerStatus(internalOwnerId, payload.state);
+  return true;
+});
+
+ipcMain.handle('athena:realtime-fallback-visibility', (event, payload = {}) => {
+  if (!isRealtimeFallbackRenderer(event)) return false;
+  const internalOwnerId = `${event.sender.id}:${String(payload.ownerId || '').trim()}`;
+  const owner = realtimeFallbackOwners.get(internalOwnerId);
+  if (!owner || owner.sender !== event.sender) return false;
+  return ensureRealtimeFallbackCoordinator().setOwnerVisible(internalOwnerId, payload.visible === true);
 });
 
 // 호가잔량(0D) acquire/release — 0B와 달리 카드가 직접 열고 닫는다.
 ipcMain.handle('athena:orderbook-realtime-acquire', async (event, payload = {}) => {
   if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) return;
-  return acquireRendererRealtimeLease('orderbook', payload.symbol);
+  bindRealtimeFallbackSenderCleanup(event.sender);
+  const result = await acquireRendererRealtimeLease('orderbook', payload.symbol);
+  return { ...result, accountGeneration: realtimeAccountGeneration };
 });
 ipcMain.handle('athena:orderbook-realtime-release', (event, payload = {}) => {
   if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) return false;
@@ -2542,7 +3172,7 @@ ipcMain.handle('athena:orderbook-realtime-release', (event, payload = {}) => {
 // REG/REMOVE와 refcount 판단은 main의 CardLeaseManager가 소유한다. 이 경로는
 // WebSocket 구독 제어만 허용하며 주문 mutation API에는 접근하지 않는다.
 ipcMain.handle('athena:integrated-card-realtime-policy', (event) => {
-  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) {
+  if (!isRealtimeFallbackRenderer(event)) {
     return { ok: false, error: 'invalid renderer' };
   }
   return {
@@ -2591,33 +3221,62 @@ async function commandIntegratedCardRealtime(payload = {}) {
 }
 
 ipcMain.handle('athena:integrated-card-realtime-mount', async (event, payload = {}) => {
-  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) {
+  if (!isRealtimeFallbackRenderer(event)) {
     return { ok: false, status: 'error', error: 'invalid renderer' };
   }
   if (process.env.ATHENA_CANVAS_SOURCE === 'fixture') {
     return { ok: true, status: 'fixture-disabled', leaseId: String(payload.leaseId || '') };
   }
-  return mountIntegratedCardRealtime(payload);
+  const leaseId = String(payload.leaseId || '');
+  const existingOwner = integratedRealtimeLeaseSenders.get(leaseId);
+  if (existingOwner && existingOwner !== event.sender) {
+    return { ok: false, status: 'error', error: 'invalid realtime owner' };
+  }
+  if (!leaseId) return { ok: false, status: 'error', error: 'leaseId is required' };
+  const reserved = !existingOwner;
+  if (reserved) integratedRealtimeLeaseSenders.set(leaseId, event.sender);
+  bindRealtimeFallbackSenderCleanup(event.sender);
+  try {
+    const result = await mountIntegratedCardRealtime(payload);
+    const retained = integratedCardRealtimeManager && integratedCardRealtimeManager.status(leaseId);
+    if (reserved && !retained && (!result || !result.leaseId)) {
+      integratedRealtimeLeaseSenders.delete(leaseId);
+    }
+    return { ...result, accountGeneration: realtimeAccountGeneration };
+  } catch (error) {
+    const retained = integratedCardRealtimeManager && integratedCardRealtimeManager.status(leaseId);
+    if (reserved && !retained) integratedRealtimeLeaseSenders.delete(leaseId);
+    throw error;
+  }
 });
 
 ipcMain.handle('athena:integrated-card-realtime-update', async (event, payload = {}) => {
-  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) {
+  if (!isRealtimeFallbackRenderer(event)) {
     return { ok: false, status: 'error', error: 'invalid renderer' };
   }
   if (process.env.ATHENA_CANVAS_SOURCE === 'fixture') {
     return { ok: true, status: 'fixture-disabled', leaseId: String(payload.leaseId || '') };
   }
-  return updateIntegratedCardRealtime(payload);
+  const owner = integratedRealtimeLeaseSenders.get(String(payload.leaseId || ''));
+  if (owner !== event.sender) return { ok: false, status: 'error', error: 'invalid realtime owner' };
+  const result = await updateIntegratedCardRealtime(payload);
+  if (result && result.leaseId) integratedRealtimeLeaseSenders.set(result.leaseId, event.sender);
+  return { ...result, accountGeneration: realtimeAccountGeneration };
 });
 
 ipcMain.handle('athena:integrated-card-realtime-unmount', async (event, payload = {}) => {
-  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) {
+  if (!isRealtimeFallbackRenderer(event)) {
     return { ok: false, status: 'error', error: 'invalid renderer' };
   }
   if (!integratedCardRealtimeManager) {
     return { ok: true, status: 'unmounted', leaseId: String(payload.leaseId || '') };
   }
-  return integratedCardRealtimeManager.unmount(payload.leaseId);
+  const leaseId = String(payload.leaseId || '');
+  const owner = integratedRealtimeLeaseSenders.get(leaseId);
+  if (owner !== event.sender) return { ok: false, status: 'error', error: 'invalid realtime owner' };
+  const result = await integratedCardRealtimeManager.unmount(leaseId);
+  if (result && result.status === 'unmounted') integratedRealtimeLeaseSenders.delete(leaseId);
+  return result;
 });
 
 ipcMain.handle('athena:integrated-card-realtime-release-all', async (event) => {
@@ -2629,9 +3288,11 @@ ipcMain.handle('athena:integrated-card-realtime-release-all', async (event) => {
 });
 
 ipcMain.handle('athena:integrated-card-realtime-status', (event, payload = {}) => {
-  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) {
+  if (!isRealtimeFallbackRenderer(event)) {
     return { ok: false, error: 'invalid renderer' };
   }
+  const owner = integratedRealtimeLeaseSenders.get(String(payload.leaseId || ''));
+  if (owner !== event.sender) return { ok: false, error: 'invalid realtime owner' };
   const state = integratedCardRealtimeManager
     ? integratedCardRealtimeManager.status(payload.leaseId)
     : null;
@@ -2675,7 +3336,10 @@ async function hydrateCanvasBoardForActiveAccount(payload = {}) {
 // 때만 렌더러가 부른다. 엔드포인트가 없거나 조회가 실패하면 상태를 그대로 돌려
 // 렌더러가 로딩 오류와 재시도를 표시한다.
 ipcMain.handle('athena:canvas-board-hydrate', async (event, payload = {}) => {
-  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) {
+  const isShellSender = Boolean(shellWin && !shellWin.isDestroyed() && event.sender === shellWin.webContents);
+  const isOrbSender = Boolean(typeof orbWin !== 'undefined'
+    && orbWin && !orbWin.isDestroyed() && event.sender === orbWin.webContents);
+  if (!isShellSender && !isOrbSender) {
     return { ok: false, status: 'error', error: 'invalid renderer' };
   }
   if (process.env.ATHENA_CANVAS_SOURCE === 'fixture') {
@@ -2686,6 +3350,27 @@ ipcMain.handle('athena:canvas-board-hydrate', async (event, payload = {}) => {
   const correlation = payload.correlation && typeof payload.correlation === 'object'
     ? payload.correlation : {};
   const key = restCorrelationKey(correlation);
+  const fallbackAuthority = key && realtimeFallbackAuthorities.get(key);
+  if (fallbackAuthority && reply && reply.ok === true && reply.surface_contract) {
+    const boardId = String(reply.board_id || payload.boardId || payload.board_id || '').trim();
+    const originalBoardId = String(fallbackAuthority.envelope
+      && fallbackAuthority.envelope.surface_contract
+      && fallbackAuthority.envelope.surface_contract.board_id || '').trim();
+    if (boardId && (!originalBoardId || boardId === originalBoardId)) {
+      realtimeFallbackAuthorities.set(key, Object.freeze({
+        ...fallbackAuthority,
+        envelope: Object.freeze({
+          ...fallbackAuthority.envelope,
+          surface_contract: reply.surface_contract,
+        }),
+        boardHydrate: Object.freeze({
+          boardId,
+          target: payload.target && typeof payload.target === 'object'
+            ? Object.freeze({ ...payload.target }) : Object.freeze({}),
+        }),
+      }));
+    }
+  }
   const waiter = key && restPaintWaiters.get(key);
   if (waiter && primary) {
     const authority = boardHydrate.primaryReloadAuthority(
@@ -2731,6 +3416,18 @@ function emitRestReceiptAndWaitForPaint(text, {
 async function resetAccountBoundRealtime() {
   realtimeAccountGeneration += 1;
   realtimeFeedInstanceGeneration += 1;
+  if (realtimeFallbackCoordinator) realtimeFallbackCoordinator.resetAccount();
+  realtimeFallbackOwners.clear();
+  realtimeFallbackAuthorities.clear();
+  if (shellWin && !shellWin.isDestroyed()) {
+    shellWin.webContents.send('athena:realtime-account-reset', { generation: realtimeAccountGeneration });
+  }
+  if (typeof orbWin !== 'undefined' && orbWin && !orbWin.isDestroyed()) {
+    orbWin.webContents.send('athena:realtime-account-reset', { generation: realtimeAccountGeneration });
+  }
+  for (const binding of chartRealtimePanelSymbols.values()) {
+    if (binding.retryTimer !== null) clearTimeout(binding.retryTimer);
+  }
   const previousFeed = chartRealtimeFeed;
   const previousManager = integratedCardRealtimeManager;
   const previousChartRegistrar = chartRealtimeRegistrar;
@@ -2744,7 +3441,11 @@ async function resetAccountBoundRealtime() {
   realtimeBackendAccountAlias = null;
   chartRealtimePanelSymbols.clear();
   rendererRealtimeLeases.clear();
-  if (previousFeed) previousFeed.stop();
+  integratedRealtimeLeaseSenders.clear();
+  if (previousFeed) {
+    if (typeof previousFeed.stopRealtimeRetries === 'function') previousFeed.stopRealtimeRetries();
+    previousFeed.stop();
+  }
   const completions = [];
   for (const resource of [previousManager, previousChartRegistrar, previousOrderbookRegistrar]) {
     if (!resource) continue;
@@ -2779,6 +3480,7 @@ async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs
   const key = restCorrelationKey(correlation);
   if (!key) throw new Error('REST 카드 correlation이 완전하지 않다');
   if (restPaintWaiters.has(key)) throw new Error('같은 REST 카드 paint ack가 이미 대기 중이다');
+  rememberRealtimeFallbackAuthority(payload);
   return new Promise((resolve, reject) => {
     let timer = null;
     let pendingTimer = null;
@@ -2826,6 +3528,7 @@ async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs
       operationArgs: payload.operationArgs,
       canvasType: payload.canvasType,
       retryCardId: payload.retryCardId,
+      sessionCardId: payload.sessionCardId,
       conversationId,
     });
   });
@@ -3047,14 +3750,19 @@ function noteLiveQueryProvider(providerId) {
 // 캔버스 결과 하나(stream-json-parser.classifyCanvasBlock의 출력)를 캔버스
 // 창으로 보낸다. 렌더러(canvas.js)가 status별로 카드를 그리거나 안내를 띄운다.
 function sendLiveCanvasResult(result, metadata = null) {
-  const payload = metadata ? { ...result, ...metadata } : result;
+  rememberLiveRealtimeFallbackAuthority(result);
+  const sessionCardId = result && result.envelope
+    && (result.status === 'success' || result.status === 'fallback') ? crypto.randomUUID() : null;
+  const payload = metadata
+    ? { ...result, ...metadata, ...(sessionCardId ? { sessionCardId } : {}) }
+    : sessionCardId ? { ...result, sessionCardId } : result;
   const conversationId = metadata && typeof metadata.conversationId === 'string' ? metadata.conversationId : null;
   if (conversationId && conversationId !== historyConversationId()) {
     // 화면에 없는 대화의 카드(다중 대화, 2026-09-08) — 지금 보이는 캔버스에 그리지 않고 그
     // 대화의 세션 카드로 적어 둔다(셸 창이 없어도). 돌아오면 athena:session-replay-cards가 같은 채널로 그린다.
-    persistBackgroundCanvasCard(conversationId, result);
+    persistBackgroundCanvasCard(conversationId, result, sessionCardId);
   } else {
-    if (!shellWin || shellWin.isDestroyed()) return;
+    if (!shellWin || shellWin.isDestroyed()) return sessionCardId;
     shellWin.webContents.send('athena:add-canvas-live', payload);
   }
   // 채팅 영역의 3상태 표시가 실제 진행을 보여줄 수 있도록 카드 하나가 뜰 때마다
@@ -3062,6 +3770,7 @@ function sendLiveCanvasResult(result, metadata = null) {
   // 두 채널은 같은 렌더러의 서로 다른 영역이 받는다(shell.html — 캔버스 영역은
   // canvas.js가, 채팅 영역은 chat.js가 구독한다). conversationId로 턴 구독이 자기 것만 센다.
   if (shellWin && !shellWin.isDestroyed()) shellWin.webContents.send('athena:live-canvas-added', { status: result.status, conversationId });
+  return sessionCardId;
 }
 
 // 답변 텍스트 조각(claude-runner.js의 onTextDelta) — 채팅 버블에 실시간으로
@@ -3776,35 +4485,32 @@ function broadcastConversationActive(conversationId) {
 }
 
 // 배경 대화(화면에 없는 대화)의 카드 — 그리지 않고 그 대화의 세션 카드 스택에 바로 적는다.
-// 돌아오면 athena:session-replay-cards가 같은 페인트 채널로 다시 그린다. 스택은 메모리에
-// 누적한다 — 브리지 디바운스(200/600ms) 사이에 온 카드가 서로를 덮지 않게.
-const backgroundCanvasCards = new Map();
-function persistBackgroundCanvasCard(conversationId, result) {
-  if (!result || !result.envelope) return;
-  if (result.status !== 'success' && result.status !== 'fallback') return;
+// 돌아오면 athena:session-replay-cards가 같은 페인트 채널로 다시 그린다. 추가 직전에
+// 브리지 대기분을 확정하고 최신 스택을 다시 읽어 renderer 보고와 서로 덮지 않게 한다.
+function persistBackgroundCanvasCard(conversationId, result, cardId = crypto.randomUUID()) {
+  if (!result || !result.envelope) return null;
+  if (result.status !== 'success' && result.status !== 'fallback') return null;
   const bridge = ensureSessionRecord(conversationId);
-  if (!bridge) return;
-  let stack = backgroundCanvasCards.get(conversationId);
-  if (!stack) {
-    // 디바운스 대기 중인 카드 보고를 먼저 적어야 저장본이 최신이다 — 안 그러면 방금 보던 카드를 덮는다.
-    try { bridge.flush(conversationId); } catch { /* 대기분이 없으면 no-op */ }
-  }
-  if (!stack) {
-    const snapshot = bridge.load(conversationId);
-    const stored = snapshot && Array.isArray(snapshot.canvasCards) ? snapshot.canvasCards : [];
-    stack = stored.map((card) => ({
-      cardId: card.cardId, kind: card.kind || null, channel: card.channel, envelope: card.envelope || null, protected: !!card.protected,
-    }));
-    backgroundCanvasCards.set(conversationId, stack);
-  }
-  stack.push({
-    cardId: crypto.randomUUID(),
+  if (!bridge) return null;
+  try { bridge.flush(conversationId); } catch { /* 대기분이 없으면 no-op */ }
+  const snapshot = bridge.load(conversationId);
+  const stored = snapshot && Array.isArray(snapshot.canvasCards) ? snapshot.canvasCards : [];
+  const stack = stored.map((card) => ({
+    cardId: card.cardId, kind: card.kind || null, channel: card.channel,
+    envelope: card.envelope || null, protected: !!card.protected,
+  }));
+  const next = {
+    cardId,
     kind: (result.envelope && result.envelope.canvas_type) || null,
     channel: 'live',
     envelope: result.envelope,
     protected: false,
-  });
+  };
+  const existing = stack.findIndex((card) => card.cardId === cardId);
+  if (existing >= 0) stack[existing] = next;
+  else stack.push(next);
   bridge.saveCards({ sessionId: conversationId, cards: stack.slice() });
+  return cardId;
 }
 
 // 배경 대화의 턴이 만든 채팅 전용 카드·캔버스 액션(말걸기 가드·플러그인 제안·그래프/백테스트
@@ -3973,6 +4679,7 @@ function emitProviderOrderDraft(conversationId, payload) {
 }
 
 function handlePersistentCanvasResult(result) {
+  rememberLiveRealtimeFallbackAuthority(result);
   const context = persistentTurnContexts.get(result.clientSubmitId);
   if (!context) return;
   if (result.status === 'needs_confirmation') {
@@ -3998,7 +4705,10 @@ function handlePersistentCanvasResult(result) {
     // pushed 카드는 shell 전용 사이드채널로 이미 그려졌지만 오브 창에는 오지
     // 않는다. 오브에서 시작한 질의일 때만 같은 봉투를 한 번 전달한다.
     if (context.origin === 'orb' && orbWin && !orbWin.isDestroyed()) {
-      orbWin.webContents.send('athena:orb-canvas-result', { ...result, ...metadata });
+      const sessionCardId = persistBackgroundCanvasCard(
+        context.conversationId, { ...result, status: 'success' },
+      );
+      orbWin.webContents.send('athena:orb-canvas-result', { ...result, ...metadata, sessionCardId });
     }
     return;
   }
@@ -4006,9 +4716,9 @@ function handlePersistentCanvasResult(result) {
     context.expandTriggered = true;
     revealShell({ focus: false });
   }
-  sendLiveCanvasResult(result, metadata);
+  const sessionCardId = sendLiveCanvasResult(result, metadata);
   if (context.origin === 'orb' && orbWin && !orbWin.isDestroyed()) {
-    orbWin.webContents.send('athena:orb-canvas-result', { ...result, ...metadata });
+    orbWin.webContents.send('athena:orb-canvas-result', { ...result, ...metadata, sessionCardId });
   }
   if (result.envelope && result.envelope.canvas_type) context.canvasTypesSeen.push(result.envelope.canvas_type);
   if (label) context.canvasCaptionsSeen.push(label);
@@ -4361,8 +5071,23 @@ async function rotatePersistentProviderInner(reason, options = {}) {
       gatewayEpochRevision: capabilityContext.stamp.epochRevision,
     }));
   } catch (error) {
+    runtime.blockNewTurns('provider_activation_failed');
     capabilityContext.dispose();
     providerEpochStore.invalidate(providerSecurityGeneration);
+    currentProviderSelection = Object.freeze({
+      activeAccount,
+      desiredState: null,
+      disabled: Object.freeze({
+        ok: false,
+        type: 'action-needed',
+        provider: activeAccount.providerId,
+        code: 'PROVIDER_ACTIVATION_FAILED',
+      }),
+    });
+    await providerControllerLifecycle.stopAndDiscard(
+      'provider_desired_state_failed', runtime,
+    ).catch(() => {});
+    providerRuntimeReady = false;
     throw error;
   }
   if (selection.disabled) {
@@ -4427,7 +5152,6 @@ const providerConversationRotationQueue = createConversationRotationQueue({
   createConversationId: () => crypto.randomUUID(),
   publishConversationId: (conversationId) => {
     historyActiveConversationId = conversationId;
-    backgroundCanvasCards.delete(conversationId);
     broadcastConversationActive(conversationId);
   },
   beginConversation: ({ id, projectId, mode }) => conversations.begin({ id, projectId, mode }),
@@ -4718,7 +5442,7 @@ async function runLiveQuery(query, expand, origin = 'shell', turnConversationId 
   try {
     return await runLiveQueryInner(query, expand, origin, turnConversationId);
   } finally {
-    liveSubmitContexts.delete(turnConversationId);
+    activeCardQna.deleteSubmitContextIfSame(liveSubmitContexts, turnConversationId, submit);
     runtime.busyDepth -= 1;
     liveQueryBusyDepth -= 1;
     if (runtime.busyDepth === 0) broadcastLiveQueryBusy(false, turnConversationId);
@@ -4740,10 +5464,17 @@ async function runLiveQueryInner(query, expand, origin, turnConversationId) {
   });
 }
 
-async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, sessionAssistantId) {
+async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, sessionAssistantId, continuation = null) {
   const queryStartedAt = performance.now();
   const submit = liveSubmitContexts.get(turnConversationId) || {};
   const runtime = liveRuntimes.get(turnConversationId);
+  if (continuation && continuation.submitIdentity !== submit) {
+    return {
+      ok: false, source: 'live', error: '새 질문이 표시된 카드 설명을 대체했습니다.',
+      answerText: null, canvasTypes: continuation.initialResult.canvasTypes || [],
+      canvasCaptions: continuation.initialResult.canvasCaptions || [],
+    };
+  }
   // Selector 단일 dispatch도 새 질의가 선점한다. fetch 구현이 abort를 늦게
   // 관찰하더라도 run identity를 함께 검사해 이전 카드/주문 초안은 표시하지 않는다.
   if (runtime.activeSelectorFastRun) {
@@ -4759,7 +5490,65 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   // 턴 프리픽스(live-prompt.js)가 무력화된다. 그래프 모드는 이유가 하나 더 있다: 그 모드의
   // 모든 질문은 그래프 질문이라(사용자 확정) 시세 경로가 가로채면 접두가 실릴 기회조차 없다.
   const modePromptRequired = ['backtest', 'graph', 'agent', 'plugin'].includes(submit.canvasMode);
-  if (!modePromptRequired) {
+  const domesticMarketDatasetCandidate = modePromptRequired || continuation
+    ? null
+    : restDatasetRunner.buildDomesticMarketSnapshotDataset(query, {
+      idFactory: () => `rest-${crypto.randomUUID()}`,
+    });
+  const providerAnswerRequired = !!continuation || (!modePromptRequired
+    && activeCardQna.requiresGroundedCardAnswer(query, submit.cardContext, {
+      closedDatasetMatched: !!domesticMarketDatasetCandidate,
+    }));
+  let activeCardContext = continuation && continuation.activeCardContext;
+  if (providerAnswerRequired && !activeCardContext) {
+    const sessionBridge = getSessionBridge();
+    try {
+      // 렌더러의 카드 보고는 디바운스된다. 질문 직전까지 온 보고를 먼저 확정해야
+      // 방금 띄운 카드가 이전 저장본에 가려지지 않는다.
+      if (sessionBridge) sessionBridge.flush(turnConversationId);
+      const snapshot = sessionBridge && sessionBridge.load(turnConversationId);
+      activeCardContext = activeCardQna.buildActiveCardContext({
+        cards: snapshot && snapshot.canvasCards,
+        requested: submit.cardContext,
+        now: new Date().toISOString(),
+      });
+    } catch (error) {
+      mdlog(`현재 카드 근거 준비 보류: ${String((error && error.message) || error)}`);
+      activeCardContext = activeCardQna.buildActiveCardContext({ requested: submit.cardContext });
+    }
+  }
+  const cardFirstLookupRequired = !continuation && providerAnswerRequired
+    && activeCardQna.shouldAttemptCardFirstLookup(query, submit.cardContext, activeCardContext);
+  const cardRetrievalBlocked = modePromptRequired
+    || (providerAnswerRequired && !cardFirstLookupRequired);
+  const finishCardProducingResult = async (result, cards) => {
+    return activeCardQna.finishDisplayedCardResult({
+      result,
+      cards,
+      requested: submit.cardContext,
+      now: new Date().toISOString(),
+      isCurrent: () => liveSubmitContexts.get(turnConversationId) === submit,
+      providerRequest: {
+        query, expand, origin, turnConversationId, sessionAssistantId, submitIdentity: submit,
+      },
+      runProvider: (request) => runLiveQueryInnerBody(
+        request.query, request.expand, request.origin, request.turnConversationId,
+        request.sessionAssistantId,
+        {
+          activeCardContext: request.activeCardContext,
+          initialResult: request.initialResult,
+          submitIdentity: request.submitIdentity,
+        },
+      ),
+      persistReceipt: (answerText) => {
+        historySink.saveChatMessage(
+          { conversationId: turnConversationId, text: answerText, role: 'assistant' },
+          { onSaveFailed: emitHistorySaveFailed, mdlog },
+        );
+      },
+    });
+  };
+  if (!(modePromptRequired || providerAnswerRequired)) {
     if (!runtime.goldOrderContextInitialized) {
       runtime.goldOrderContextInitialized = true;
       runtime.pendingGoldOrder = null;
@@ -4802,7 +5591,8 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     }
     if (goldQuote.routeQuery) query = goldQuote.routeQuery;
   }
-  const chartFollowup = modePromptRequired ? null : chartFollowupTracker.answer(query);
+  const chartFollowup = (modePromptRequired || providerAnswerRequired)
+    ? null : chartFollowupTracker.answer(query);
   if (chartFollowup) {
     historySink.saveChatMessage(
       { conversationId: turnConversationId, text: chartFollowup.answerText, role: 'assistant' },
@@ -4821,23 +5611,21 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   }
   chartFollowupTracker.invalidateForQuery(query);
 
-  const domesticMarketDataset = modePromptRequired
-    ? null
-    : restDatasetRunner.buildDomesticMarketSnapshotDataset(query, {
-      idFactory: () => `rest-${crypto.randomUUID()}`,
-    });
+  const domesticMarketDataset = providerAnswerRequired ? null : domesticMarketDatasetCandidate;
   if (domesticMarketDataset) {
     mdlog('국내 시장 스냅샷 REST 직결 — 종목 검색/Selector/모델 무호출');
-    return runDirectRestDataset(domesticMarketDataset, expand, {
+    const result = await runDirectRestDataset(domesticMarketDataset, expand, {
       allowRetry: true,
       conversationId: turnConversationId,
       userAlreadyPersisted: true,
+      skipHistory: true,
       origin,
     });
+    return finishCardProducingResult(result, (result.canvases || []).filter((card) => card.isDataCanvas));
   }
 
   let stockResolution = { ready: false, instrument: null };
-  if (!modePromptRequired) {
+  if (!cardRetrievalBlocked) {
     try {
       stockResolution = await stockMasterClient.resolveCurrentStockMasterQuery(query, {
         runtime,
@@ -4857,7 +5645,8 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     stockResolution,
   );
 
-  const simpleChartRoute = modePromptRequired ? { handled: false } : await simpleChartFastPath.runSimpleChartFastPath({
+  const simpleChartRoute = cardRetrievalBlocked
+    ? { handled: false } : await simpleChartFastPath.runSimpleChartFastPath({
     query,
     index: queryStockEntityIndex,
     ensureReady: async () => stockResolution.ready,
@@ -4868,26 +5657,25 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       allowRetry: true,
       conversationId: turnConversationId,
       userAlreadyPersisted: true,
+      skipHistory: true,
       origin,
     }),
   });
   if (simpleChartRoute.handled) {
     if (!simpleChartRoute.dataset) {
-      historySink.saveChatMessage(
-        { conversationId: turnConversationId, text: simpleChartRoute.result.answerText, role: 'assistant' },
-        { onSaveFailed: emitHistorySaveFailed, mdlog },
-      );
       mdlog(simpleChartRoute.result.source === 'stock-index-not-ready'
         ? '단순 일봉 차트 대기 한도 초과 — Selector/Claude 폴백 차단'
         : '단순 일봉 차트 종목 확인 필요 — Selector/Claude 폴백 차단');
     } else {
       mdlog('단순 일봉 차트 REST 직결 — Selector/Claude 무호출');
     }
-    return simpleChartRoute.result;
+    return finishCardProducingResult(simpleChartRoute.result,
+      (simpleChartRoute.result.canvases || []).filter((card) => card.isDataCanvas));
   }
   // 정형 질의 모델 우회 확장(2026-08-26 속도 레버) — 순서는 의미 없다(각자
   // 닫힌 문법이라 서로 안 겹친다, rest-dataset-runner.js 테스트로 고정).
-  const directDataset = modePromptRequired ? null : restDatasetRunner.buildCompoundScreenDataset(query, queryStockEntityIndex, {
+  const directDataset = cardRetrievalBlocked
+    ? null : restDatasetRunner.buildCompoundScreenDataset(query, queryStockEntityIndex, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
   }) || restDatasetRunner.buildQuoteDataset(query, queryStockEntityIndex, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
@@ -4906,23 +5694,26 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   });
   if (directDataset) {
     mdlog('Kiwoom REST 직결 화면 경로 선택 — 모델/MCP/WS 무호출');
-    return runDirectRestDataset(directDataset, expand, {
+    const result = await runDirectRestDataset(directDataset, expand, {
       allowRetry: true,
       conversationId: turnConversationId,
       userAlreadyPersisted: true,
+      skipHistory: true,
       origin,
     });
+    return finishCardProducingResult(result, (result.canvases || []).filter((card) => card.isDataCanvas));
   }
 
   // 닫힌 7개 문법이 놓친 조회는 백엔드 Selector가 한 번에 선택·호출·inline
   // render까지 끝낸다. 애매함/인자 부족/비조회 응답만 기존 Claude 경로로 넘긴다.
   // 단순 시장가 주문은 별도 닫힌 문법에서만 intent=order로 보내고, 실행하지 않은
   // guarded 초안을 채팅 주문확인 UI에 전달한다.
+  const selectorDisplayedCards = [];
   const orderDraft = selectorFastPath.buildMarketOrderDraft(query, queryStockEntityIndex);
   const selectorController = new AbortController();
   runtime.activeSelectorFastRun = selectorController;
   try {
-    const selectorAccount = modePromptRequired
+    const selectorAccount = cardRetrievalBlocked
       ? null
       : await accountBoundDataset.createAccountBoundInvoker({
         getActiveAccountId: activeRestAccountId,
@@ -4945,8 +5736,8 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         durationMs: Math.max(0, performance.now() - queryStartedAt),
       }, turnConversationId);
     }
-    const selectorResult = modePromptRequired
-      ? { handled: false, reason: '모드 전용 채팅 — 모델 경로로 넘긴다' }
+    const selectorResult = cardRetrievalBlocked
+      ? { handled: false, reason: '대화 답변이 필요한 질문 — 모델 경로로 넘긴다' }
       : selectorAccount.ok ? await selectorAccount.run({
       question: query,
       backendBase: BACKEND_HTTP_BASE,
@@ -4958,15 +5749,21 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         : selectorFastPath.DEFAULT_DEADLINE_MS,
       signal: selectorController.signal,
       isCurrent: () => runtime.activeSelectorFastRun === selectorController,
-      emitCanvas: (payload) => {
+      emitCanvas: async (payload) => {
         if (runtime.activeSelectorFastRun !== selectorController) {
           throw new Error('교체된 Selector fast path의 늦은 카드는 표시하지 않는다');
         }
-        return emitRestCanvasForOrigin({ ...payload, accountId: selectorAccount.accountId }, {
+        const paint = await emitRestCanvasForOrigin({ ...payload, accountId: selectorAccount.accountId }, {
           expand,
           origin, conversationId: turnConversationId,
           timeoutMs: Math.max(1, payload.paintDeadlineAt - performance.now()),
         });
+        selectorDisplayedCards.push({
+          envelope: payload.envelope,
+          verifiedVisible: !!paint && paint.verifiedVisible !== false,
+          isDataCanvas: payload.canvasType !== 'event',
+        });
+        return paint;
       },
       emitOrderDraft: (payload) => {
         if (runtime.activeSelectorFastRun !== selectorController) {
@@ -4978,15 +5775,13 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         shellForConversation(turnConversationId).send('athena:selector-order-draft', payload);
       },
       persistTurn: ({ question, answerText }) => {
-        historySink.saveChatMessage(
-          { conversationId: turnConversationId, text: answerText, role: 'assistant' },
-          { onSaveFailed: emitHistorySaveFailed, mdlog },
-        );
+        void question;
+        void answerText;
       },
     }) : { handled: false, reason: 'backend_account_unavailable' };
     if (selectorResult.handled) {
       mdlog(`Selector 단일 dispatch 적중 — ${selectorResult.durationMs}ms (모델 무호출)`);
-      return selectorResult;
+      return finishCardProducingResult(selectorResult, selectorDisplayedCards);
     }
     if (orderDraft) {
       mdlog(`주문 초안 Selector 처리 실패 — 모델 폴백 차단: ${selectorResult.reason || 'unknown'}`);
@@ -5030,27 +5825,31 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
           detailGroup: proposal.detail_group,
           signal: selectorController.signal,
           isCurrent: () => runtime.activeSelectorFastRun === selectorController,
-          emitCanvas: (payload) => {
+          emitCanvas: async (payload) => {
             if (runtime.activeSelectorFastRun !== selectorController) {
               throw new Error('교체된 Selector cold path의 늦은 카드는 표시하지 않는다');
             }
-            return emitRestCanvasForOrigin({ ...payload, accountId: selectorAccount.accountId }, {
+            const paint = await emitRestCanvasForOrigin({ ...payload, accountId: selectorAccount.accountId }, {
               expand,
               origin, conversationId: turnConversationId,
               timeoutMs: Math.max(1, payload.paintDeadlineAt - performance.now()),
             });
+            selectorDisplayedCards.push({
+              envelope: payload.envelope,
+              verifiedVisible: !!paint && paint.verifiedVisible !== false,
+              isDataCanvas: payload.canvasType !== 'event',
+            });
+            return paint;
           },
           persistTurn: ({ question, answerText }) => {
-            historySink.saveChatMessage(
-              { conversationId: turnConversationId, text: answerText, role: 'assistant' },
-              { onSaveFailed: emitHistorySaveFailed, mdlog },
-            );
+            void question;
+            void answerText;
           },
         }),
       });
       if (coldResult.handled) {
         mdlog(`Selector 병렬 분류 적중 — ${coldResult.operationRef || coldResult.classifiedOperationRef} (모델 2회, dispatch 1회)`);
-        return coldResult;
+        return finishCardProducingResult(coldResult, selectorDisplayedCards);
       }
       mdlog(`Selector 병렬 분류 폴백 — ${coldResult.reason}`);
     }
@@ -5097,7 +5896,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   // 모드 전용 채팅은 리플레이를 건너뛴다 — 리플레이는 모델을 안 부르고 카드를 밀며
   // 정형 답을 돌려주므로, "카드를 올리지 않는다"는 모드 규율과 설계 대화가 함께 깨진다
   // (캐시 키는 원문 query 그대로 둔다).
-  const cachedJudgment = modePromptRequired ? null : liveQueryCache.get(query);
+  const cachedJudgment = (modePromptRequired || providerAnswerRequired) ? null : liveQueryCache.get(query);
   if (cachedJudgment) {
     const replay = await fastPath.runCachedReplay({
       judgment: cachedJudgment,
@@ -5143,11 +5942,14 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   // 질의가 카드를 하나도 만들지 않고 텍스트 답변만으로 끝나는 경우가 실배선에서는
   // 실제로 가능하다 — 그때 빈 유리창을 열어두지 않는다.
   let expandTriggered = false;
-  const canvasTypesSeen = [];
+  const initialResult = continuation && continuation.initialResult;
+  const canvasTypesSeen = initialResult && Array.isArray(initialResult.canvasTypes)
+    ? initialResult.canvasTypes.slice() : [];
   // 결과물 도크(단계 8, board 25Q-0 "④ 결과물·출처 도크")용 — 카드별 표시
   // 이름(card_title 있으면 그거, 없으면 caption)을 턴 등장 순서 그대로 모은다.
   // 새 라벨을 짓지 않는다 — 이미 canvas.js가 카드 제목에 쓰는 값 그대로다.
-  const canvasCaptionsSeen = [];
+  const canvasCaptionsSeen = initialResult && Array.isArray(initialResult.canvasCaptions)
+    ? initialResult.canvasCaptions.slice() : [];
   // 판정 캡처(시맨틱 캐시 재료) — tool_use_id로 resolve 결과 토큰과 render 입력
   // 토큰을 상관시킨다. 마지막 입력끼리 우연히 결합하지 않는다.
   const replayTurnCapture = new ReplayTurnCapture();
@@ -5181,6 +5983,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       project: activeAgentProject(),
     },
     pluginContext: submit.pluginContext,
+    activeCardContext,
     today: todayYyyymmdd(),
     providerId: liveProviderId,
   };
@@ -5191,8 +5994,8 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       source: 'live',
       error: 'Codex 대화 연결은 현재 사용할 수 없습니다. 계정 설정에서 Claude 또는 Grok을 선택해 주세요.',
       answerText: null,
-      canvasTypes: [],
-      canvasCaptions: [],
+      canvasTypes: [...new Set(canvasTypesSeen)],
+      canvasCaptions: canvasCaptionsSeen,
     };
   }
   if (providerRuntimeEnabled && liveProviderId === 'claude') {
@@ -5268,6 +6071,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       if (bridge) bridge.journalDelta({ sessionId: turnConversationId, messageId: sessionAssistantId, text });
     },
     onCanvasResult: (r) => {
+      rememberLiveRealtimeFallbackAuthority(r);
       if (r.status === 'needs_confirmation') {
         presentProviderOrderTicket({
           confirmation: r,
@@ -5285,7 +6089,10 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         if (r.envelope && r.envelope.canvas_type) canvasTypesSeen.push(r.envelope.canvas_type);
         if (label) canvasCaptionsSeen.push(label);
         if (origin === 'orb' && orbWin && !orbWin.isDestroyed()) {
-          orbWin.webContents.send('athena:orb-canvas-result', r);
+          const sessionCardId = persistBackgroundCanvasCard(
+            turnConversationId, { ...r, status: 'success' },
+          );
+          orbWin.webContents.send('athena:orb-canvas-result', { ...r, sessionCardId });
         }
         return;
       }
@@ -5299,11 +6106,11 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       // 가기 → 메인 방 그대로 이어진다"(board-34) 계약이 셸·오브가 하나의
       // 캔버스 히스토리를 공유한다는 뜻이라, 오브 기원 질의라고 셸 캔버스
       // 적재를 건너뛰면 셸을 다시 열었을 때 오브에서 나온 카드가 빠진다.
-      sendLiveCanvasResult(r, { conversationId: turnConversationId });
+      const sessionCardId = sendLiveCanvasResult(r, { conversationId: turnConversationId });
       // board-33③④ 선행 — 오브 기원 질의일 때만 같은 엔벌로프를 오브 창에도
       // 추가로 relay한다(오브의 표/차트 축약 카드 렌더러가 구독, Step 9b/9c).
       if (origin === 'orb' && orbWin && !orbWin.isDestroyed()) {
-        orbWin.webContents.send('athena:orb-canvas-result', r);
+        orbWin.webContents.send('athena:orb-canvas-result', { ...r, sessionCardId });
       }
       if (r.envelope && r.envelope.canvas_type) canvasTypesSeen.push(r.envelope.canvas_type);
       if (label) canvasCaptionsSeen.push(label);
@@ -5631,6 +6438,8 @@ ipcMain.handle('athena__render_canvas', async (e, payload = {}) => {
       ? payload.agentContext : null,
     pluginContext: payload.pluginContext && typeof payload.pluginContext === 'object'
       ? payload.pluginContext : null,
+    cardContext: payload.cardContext && typeof payload.cardContext === 'object'
+      ? payload.cardContext : null,
   });
 });
 
@@ -5671,6 +6480,8 @@ ipcMain.handle('athena:orb-chat-submit', async (e, payload = {}) => {
     clientSubmitId: payload.clientSubmitId,
     rendererSubmittedAt: payload.rendererSubmittedAt,
     expectedRendererId: e.sender.id,
+    cardContext: payload.cardContext && typeof payload.cardContext === 'object'
+      ? payload.cardContext : null,
   });
   // 오브 대화는 이력에 별도 행으로 남는다(세션·이력 저장은 runLiveQuery가 끝냈다). 셸이 지금 그
   // 대화를 보고 있을 때만 DOM 표시를 뒤늦게 채운다 — 다른 대화를 보고 있으면 섞지 않는다.
@@ -5686,14 +6497,14 @@ ipcMain.handle('athena:orb-chat-submit', async (e, payload = {}) => {
 async function fetchBrainJson(path, { params, signal, method, payload } = {}) {
   const token = historySink.getBearerToken();
   if (!token) return { ok: false, error: '로컬 베어러 토큰이 설정되지 않았습니다' };
-  const url = new URL(path, historySink.getBackendUrl());
-  if (params) {
-    for (const [k, v] of Object.entries(params)) {
-      if (v !== null && v !== undefined) url.searchParams.set(k, String(v));
-    }
-  }
   let res;
   try {
+    const url = new URL(path, historySink.getBackendUrl());
+    if (params) {
+      for (const [k, v] of Object.entries(params)) {
+        if (v !== null && v !== undefined) url.searchParams.set(k, String(v));
+      }
+    }
     const headers = { Authorization: `Bearer ${token}` };
     if (payload !== undefined) headers['Content-Type'] = 'application/json';
     res = await fetch(url, {
@@ -6167,8 +6978,26 @@ async function handleModelSet(e, payload = {}) {
     // 요청에서 저장된 커서를 사용하므로 답변 중인 다른 대화를 끊지 않는다.
   }
   broadcastModelChanged(state);
-  prepareLiveChatPool();
-  if (providerRuntimeEnabled) await rotatePersistentProvider('model_settings_changed');
+  try {
+    prepareLiveChatPool();
+  } catch (error) {
+    mdlog(`모델 설정 저장 후 대화 예열 실패: ${String((error && error.message) || error)}`);
+  }
+  if (providerRuntimeEnabled) {
+    try {
+      await rotatePersistentProvider('model_settings_changed');
+    } catch (error) {
+      mdlog(`모델 설정 저장 후 프로바이더 회전 실패: ${String((error && error.message) || error)}`);
+      return {
+        ok: false,
+        persisted: true,
+        code: 'PROVIDER_ACTIVATION_FAILED',
+        error: '모델 설정은 저장했지만 대화 모델을 활성화하지 못했습니다. 백엔드 연결을 확인한 뒤 다시 시도해 주세요.',
+        state,
+        ...(selectorActivation ? { selectorActivation } : {}),
+      };
+    }
+  }
   return selectorActivation ? { ok: true, state, selectorActivation } : { ok: true, state };
 }
 
@@ -6455,9 +7284,7 @@ ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
     }
     replayed += 1;
   }
-  // 그 대화로 돌아왔다(다중 대화, 2026-09-08) — 배경에서 쌓아 둔 카드 스택은 렌더러가 다시
-  // 보고하므로 비우고, 미뤄 둔 채팅 전용 카드·캔버스 액션을 이제 흘린다.
-  backgroundCanvasCards.delete(id);
+  // 그 대화로 돌아왔다(다중 대화, 2026-09-08) — 미뤄 둔 채팅 전용 카드·캔버스 액션을 이제 흘린다.
   flushDeferredShellEvents(id);
   return { replayed };
 });
@@ -6740,7 +7567,7 @@ async function notifyConversationGraphRefreshFailure(error) {
   };
   await Promise.allSettled([
     sendRendererStartupNotification(shellWin, payload),
-    showStartupOsNotification(Notification, payload),
+    showStartupOsNotification(Notification, payload, { icon: APP_ICON }),
   ]);
 }
 
@@ -6821,6 +7648,10 @@ function stopConversationGraphObserver() {
 }
 
 app.on('will-quit', () => {
+  if (realtimeFallbackCoordinator) realtimeFallbackCoordinator.close();
+  realtimeFallbackOwners.clear();
+  realtimeFallbackSenderCleanup.clear();
+  realtimeFallbackAuthorities.clear();
   stopHourlyConversationGraphRefresh();
   stopConversationGraphObserver();
   historySink.closeChatHistoryStore();
@@ -6883,6 +7714,18 @@ function emitRestCanvasForOrigin(
   payload,
   { expand = true, timeoutMs = 3000, origin = 'shell', conversationId = null } = {},
 ) {
+  const orbSessionCardId = origin === 'orb' && payload && payload.envelope
+    ? crypto.randomUUID() : null;
+  const authoritativeEnvelope = payload && payload.envelope
+    ? Object.assign({}, payload.envelope, {
+      operation_ref: payload.operationRef,
+      operation_args: payload.operationArgs,
+    }) : null;
+  if (orbSessionCardId && conversationId) {
+    persistBackgroundCanvasCard(conversationId, {
+      status: 'success', envelope: authoritativeEnvelope,
+    }, orbSessionCardId);
+  }
   // REST·Selector의 inline 응답은 WS 사이드 채널을 거치지 않는다. 따라서
   // 오브에서 시작한 턴은 메인 캔버스의 기존 paint 계약을 그대로 수행하면서,
   // 같은 권위 봉투를 오브에도 한 번 전달해야 카드미니가 빠지지 않는다.
@@ -6890,19 +7733,22 @@ function emitRestCanvasForOrigin(
       && payload && payload.envelope) {
     orbWin.webContents.send('athena:orb-canvas-result', {
       status: 'success',
-      envelope: payload.envelope,
+      envelope: authoritativeEnvelope,
+      sessionCardId: orbSessionCardId,
     });
   }
   if (conversationId && conversationId !== historyConversationId()) {
     // 배경 대화의 REST·Selector 카드(다중 대화, 2026-09-08) — 지금 보이는 캔버스에 그리지 않고 그
     // 대화의 세션 카드로 적는다. canvas.js가 그릴 때와 같은 봉투 모양(operation_ref/args 병합)이다.
-    persistBackgroundCanvasCard(conversationId, {
-      status: 'success',
-      envelope: Object.assign({}, payload.envelope, { operation_ref: payload.operationRef, operation_args: payload.operationArgs }),
+    if (!orbSessionCardId) persistBackgroundCanvasCard(conversationId, {
+      status: 'success', envelope: authoritativeEnvelope,
     });
     return Promise.resolve({ verifiedVisible: false, background: true, visiblePaintAt: performance.now(), rect: null });
   }
-  return emitRestCanvasAndWaitForPaint(payload, { expand, timeoutMs, conversationId });
+  return emitRestCanvasAndWaitForPaint(
+    { ...payload, ...(orbSessionCardId ? { sessionCardId: orbSessionCardId } : {}) },
+    { expand, timeoutMs, conversationId },
+  );
 }
 
 async function notifyStartupFailuresAfterExpansion(snapshot) {
@@ -6910,7 +7756,7 @@ async function notifyStartupFailuresAfterExpansion(snapshot) {
   const result = await startupFailureNotifier.notify(snapshot, {
     shell: (payload) => sendRendererStartupNotification(shellWin, payload),
     orb: (payload) => sendRendererStartupNotification(orbWin, payload),
-    os: (payload) => showStartupOsNotification(Notification, payload),
+    os: (payload) => showStartupOsNotification(Notification, payload, { icon: APP_ICON }),
   });
   startupFailureNotificationResult = result;
   return result;
@@ -7342,6 +8188,7 @@ if (!process.env.ATHENA_NO_AUTOSTART) {
     void backendLauncher.ensureBackend({ mdlog });
   });
   app.whenReady().then(() => {
+    if (APP_ICON && app.dock && typeof app.dock.setIcon === 'function') app.dock.setIcon(APP_ICON);
     // 2026-08-22 팔레트 반전(사용자 지시 "애플 Liquid Glass 형태 그대로"):
     // Windows의 acrylic/mica는 **앱 테마**를 따라 렌더된다. 다크로 두면 재질 자체가
     // 어두워 무슨 값을 써도 검정으로 수렴한다(실측 3회 — acrylic·mica 모두).

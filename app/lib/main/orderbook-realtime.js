@@ -3,6 +3,12 @@
 'use strict';
 
 const REAL_TR_ID = '0D';
+const normalizeSecurityTarget = typeof require === 'function'
+  ? require('./chart-realtime').normalizeSecurityTarget
+  : (value) => {
+      const target = String(value == null ? '' : value).trim();
+      return /^[AJQ]\d{6}$/.test(target) ? target.slice(1) : target;
+    };
 
 const F_TIME = '21';
 const F_EXPECTED_EXECUTION_PRICE = '23';
@@ -31,7 +37,7 @@ function toText(value) {
 
 function parseQuoteBookTick(row) {
   if (!row || typeof row !== 'object' || String(row.type) !== REAL_TR_ID) return null;
-  const symbol = String(row.item || '').trim();
+  const symbol = normalizeSecurityTarget(row.item);
   if (!symbol) return null;
   const values = row.values && typeof row.values === 'object' ? row.values : {};
 

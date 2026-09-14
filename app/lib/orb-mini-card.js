@@ -60,6 +60,163 @@ function slotValueMap(surfaceContract) {
   return new Map();
 }
 
+// 차트 선(base:ka10081)과 헤더 값(detail:ka10001)은 서로 다른 조회에서 온다.
+// 캔들의 마지막 종가를 현재가로 바꾸어 쓰지 않고, Kiumi가 고른 헤더 슬롯 중
+// 실제로 비어 있는 것만 본체 카드와 같은 하이드레이션 경로에 요청한다.
+function kiumiChartHydrationRequest(envelope) {
+  const surfaceContract = envelope && (envelope.surface_contract || envelope.surfaceContract);
+  const spec = surfaceContract && surfaceContract.kiumi;
+  if (!spec || spec.version !== 1 || spec.fixed !== true || spec.grammar !== 'chart'
+    || !Array.isArray(spec.elements) || !surfaceContract.board_id || !boardFormat) return null;
+  const values = slotValueMap(surfaceContract);
+  const slotIds = spec.elements.flatMap((element) => {
+    const slotId = String((element && element.source_slot_id) || '').trim();
+    if (!slotId) return [];
+    const entry = values.get(slotId);
+    const format = (element.format && typeof element.format === 'object')
+      ? element.format
+      : ((entry && entry.format) || {});
+    return boardFormat.formatSlot(format, entry ? entry.value : undefined).missing ? [slotId] : [];
+  });
+  if (!slotIds.length) return null;
+  const args = (envelope.operation_args || envelope.operationArgs || envelope.arguments) || {};
+  const target = args && typeof args === 'object' && !Array.isArray(args) ? { ...args } : {};
+  const stockCode = envelope.stk_cd || envelope.symbol || target.stk_cd || target.symbol;
+  if (stockCode) target.stk_cd = stockCode;
+  const account = envelope.account_id || envelope.account_no || target.account_id
+    || target.account_no || target.acnt_no || '';
+  return {
+    boardId: String(surfaceContract.board_id),
+    slotIds: [...new Set(slotIds)],
+    target,
+    account,
+    correlation: envelope.correlation,
+  };
+}
+
+// main이 현재 활성 계좌로 확인해 돌려준 슬롯만 초기 봉투에 덧댄다. 실패·빈 응답은
+// 원본 봉투를 그대로 돌려 `미제공`을 보존하고, 캔들 값이나 0을 만들지 않는다.
+function withKiumiHydration(envelope, reply) {
+  if (!envelope || !reply || reply.ok !== true || !reply.slot_values
+    || typeof reply.slot_values !== 'object' || Array.isArray(reply.slot_values)) return envelope;
+  const filled = Object.entries(reply.slot_values);
+  if (!filled.length) return envelope;
+  const contractKey = envelope.surface_contract ? 'surface_contract' : 'surfaceContract';
+  const surfaceContract = envelope[contractKey];
+  if (!surfaceContract || typeof surfaceContract !== 'object') return envelope;
+  const raw = surfaceContract.slot_values || surfaceContract.slotValues;
+  let slotValues;
+  if (Array.isArray(raw)) {
+    const filledIds = new Set(filled.map(([slotId]) => slotId));
+    slotValues = raw.filter((entry) => !entry || !filledIds.has(String(entry.slot_id || '')));
+    slotValues.push(...filled.map(([slotId, value]) => ({ slot_id: slotId, value })));
+  } else {
+    slotValues = { ...((raw && typeof raw === 'object') ? raw : {}), ...reply.slot_values };
+  }
+  return {
+    ...envelope,
+    [contractKey]: {
+      ...surfaceContract,
+      slot_values: slotValues,
+    },
+  };
+}
+
+// 같은 0B 체결 프레임에서 직접 확인된 현재가(FID 10)·전일대비(FID 11)·
+// 등락률(FID 12)만 Kiumi 헤더 표기로 바꾼다. 일부 필드가 없으면 기존 스냅샷과
+// 섞지 않고 그 슬롯 갱신을 건너뛴다.
+function kiumiChartLiveUpdates(surfaceContract, tick) {
+  const spec = surfaceContract && surfaceContract.kiumi;
+  if (!spec || spec.grammar !== 'chart' || String(surfaceContract.board_id || '') !== '137X-2'
+    || !Array.isArray(spec.elements) || !tick || !boardFormat) return [];
+  const values = slotValueMap(surfaceContract);
+  const updates = [];
+  for (const element of spec.elements) {
+    const slotId = String((element && element.source_slot_id) || '').trim();
+    if (!slotId) continue;
+    let formatted = null;
+    let authoritativeValue;
+    if (element.role === 'primary' && Number.isFinite(tick.price) && tick.price > 0) {
+      authoritativeValue = tick.price;
+      formatted = boardFormat.formatSlot(element.format || {}, authoritativeValue);
+    } else if (element.role === 'change' && Number.isFinite(tick.change)
+      && Number.isFinite(tick.changeRate)) {
+      const entry = values.get(slotId);
+      const raw = entry && entry.value;
+      const composite = raw && raw.composite;
+      const existingParts = composite && Array.isArray(composite.parts) ? composite.parts : null;
+      // s006 값이 아직 하이드레이션되지 않았어도 chart/change 요소 자체가 고정
+      // 템플릿 권위다. 값은 같은 WS 프레임의 FID 11·12만 넣고, 캔들/0을 쓰지 않는다.
+      const parts = existingParts
+        && existingParts.some((part) => part && part.f === 'pred_pre')
+        && existingParts.some((part) => part && part.f === 'flu_rt')
+        ? existingParts
+        : [
+          { mapping_id: 'detail:ka10001:current_trading', f: 'pred_pre', format: { kind: 'number', sign: true } },
+          { mapping_id: 'detail:ka10001:current_trading', f: 'flu_rt', format: {
+            kind: 'percent', sign: true, precision: 2,
+          } },
+        ];
+      authoritativeValue = {
+        ...((raw && typeof raw === 'object') ? raw : {}),
+        composite: {
+          ...((composite && typeof composite === 'object') ? composite : {}),
+          separator: (composite && typeof composite.separator === 'string') ? composite.separator : ' · ',
+          parts: parts.map((part) => ({
+            ...part,
+            value: part.f === 'pred_pre' ? tick.change
+              : (part.f === 'flu_rt' ? tick.changeRate : part.value),
+          })),
+        },
+      };
+      formatted = boardFormat.formatSlot(element.format || {}, authoritativeValue);
+    }
+    if (formatted && !formatted.missing) updates.push({ slotId, ...formatted, value: authoritativeValue });
+  }
+  return updates;
+}
+
+function applyKiumiChartLiveUpdates(card, updates) {
+  if (!card || typeof card.querySelectorAll !== 'function' || !Array.isArray(updates)) return 0;
+  const updatesBySlot = new Map(updates.map((update) => [String(update.slotId || ''), update]));
+  let applied = 0;
+  for (const node of card.querySelectorAll('[data-kiumi-slot-id]')) {
+    const update = updatesBySlot.get(String(node.dataset && node.dataset.kiumiSlotId || ''));
+    if (!update) continue;
+    node.textContent = update.text;
+    node.classList.toggle('is-missing', false);
+    node.classList.toggle('is-up', update.tone === 'up');
+    node.classList.toggle('is-down', update.tone === 'down');
+    node.classList.toggle('is-flat', update.tone === 'flat');
+    applied += 1;
+  }
+  return applied;
+}
+
+function applyRevisionedKiumiUpdates(card, updates) {
+  const validUpdates = Array.isArray(updates) ? updates.filter((update) => !update.missing) : [];
+  if (!card || typeof card.querySelectorAll !== 'function' || !validUpdates.length) return [];
+  const presentSlots = new Set(Array.from(card.querySelectorAll('[data-kiumi-slot-id]'))
+    .map((node) => String((node.dataset && node.dataset.kiumiSlotId) || '')));
+  const appliedSlotIds = [...new Set(validUpdates
+    .map((update) => String(update.slotId || ''))
+    .filter((slotId) => slotId && presentSlots.has(slotId)))];
+  if (!appliedSlotIds.length || !applyKiumiChartLiveUpdates(card, validUpdates)) return [];
+  const revisions = card.__athenaOrbLiveSlotRevisions || new Map();
+  for (const slotId of appliedSlotIds) revisions.set(slotId, (revisions.get(slotId) || 0) + 1);
+  card.__athenaOrbLiveSlotRevisions = revisions;
+  return appliedSlotIds;
+}
+
+function kiumiHydrationUpdates(planElements, revisionsAtStart, liveRevisions) {
+  const before = revisionsAtStart instanceof Map ? revisionsAtStart : new Map();
+  const current = liveRevisions instanceof Map ? liveRevisions : new Map();
+  return (Array.isArray(planElements) ? planElements : []).filter((element) => {
+    const slotId = String((element && element.slotId) || '');
+    return (current.get(slotId) || 0) === (before.get(slotId) || 0);
+  });
+}
+
 /**
  * 백엔드 표면 계약에서 카드별 고정 표시 계획을 만든다. ``paper_text``는 승인 증거일
  * 뿐 런타임 값으로 쓰지 않는다. 선택 슬롯이 이번 응답에 없으면 반드시 ``미제공``을
@@ -255,6 +412,12 @@ const __exports = {
   streamSource,
   foldNote,
   buildKiumiPlan,
+  kiumiChartHydrationRequest,
+  withKiumiHydration,
+  kiumiChartLiveUpdates,
+  applyKiumiChartLiveUpdates,
+  applyRevisionedKiumiUpdates,
+  kiumiHydrationUpdates,
 };
 
 // UMD 각주 — facts-card.js와 같은 패턴(렌더러 격리).

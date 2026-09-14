@@ -78,10 +78,16 @@ function normalizeText(value) {
     .replace(/[^0-9a-z가-힣]+/g, '');
 }
 
+const MARKET_ORDER_GRAMMAR_RE = /^(.+?)\s+(\d{1,9})\s*주(?:를|을)?\s*시장가(?:로)?\s*(매수|매도)(?:\s*(?:해\s*줘|해주세요|해줘|해\s*주세요|부탁해|부탁해요|주문해줘|주문해주세요))?[.!?]?$/u;
+
+function matchesMarketOrderGrammar(question) {
+  return MARKET_ORDER_GRAMMAR_RE.test(String(question || '').normalize('NFKC').trim());
+}
+
 function buildMarketOrderDraft(question, stockEntityIndex) {
   if (!stockEntityIndex || typeof stockEntityIndex.resolveQuery !== 'function') return null;
   const text = String(question || '').normalize('NFKC').trim();
-  const match = text.match(/^(.+?)\s+(\d{1,9})\s*주(?:를|을)?\s*시장가(?:로)?\s*(매수|매도)(?:\s*(?:해\s*줘|해주세요|해줘|해\s*주세요|부탁해|부탁해요|주문해줘|주문해주세요))?[.!?]?$/u);
+  const match = text.match(MARKET_ORDER_GRAMMAR_RE);
   if (!match) return null;
 
   const entityText = match[1].trim();
@@ -439,6 +445,7 @@ module.exports = {
   DEFAULT_GUARDED_ORDER_DEADLINE_MS,
   SelectorFastPathError,
   buildMarketOrderDraft,
+  matchesMarketOrderGrammar,
   runSelectorFastPath,
   verifyAcknowledgedWebsocket,
   recentThreeMonthStart,

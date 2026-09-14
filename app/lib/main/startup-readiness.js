@@ -203,7 +203,7 @@ class StartupFailureNotifier {
   }
 }
 
-function showStartupOsNotification(NotificationCtor, payload, { timeoutMs = 2000 } = {}) {
+function showStartupOsNotification(NotificationCtor, payload, { timeoutMs = 2000, icon = null } = {}) {
   if (typeof NotificationCtor !== 'function'
     || (typeof NotificationCtor.isSupported === 'function' && !NotificationCtor.isSupported())) {
     return Promise.resolve(false);
@@ -219,7 +219,11 @@ function showStartupOsNotification(NotificationCtor, payload, { timeoutMs = 2000
       resolve(shown);
     };
     try {
-      notification = new NotificationCtor({ title: payload.title, body: payload.body });
+      notification = new NotificationCtor({
+        title: payload.title,
+        body: payload.body,
+        ...(icon ? { icon } : {}),
+      });
       notification.once('show', () => settle(true));
       notification.once('failed', () => settle(false));
       timer = setTimeout(() => settle(false), timeoutMs);

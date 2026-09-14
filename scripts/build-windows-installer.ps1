@@ -65,13 +65,17 @@ $AppSource = Join-Path $RepoRoot 'app'
 $BackendSource = Join-Path $RepoRoot 'backend'
 $ConfigPath = Join-Path $PSScriptRoot 'windows-installer.config.cjs'
 
+$packagePath = Join-Path $AppSource 'package.json'
+$package = Get-Content -LiteralPath $packagePath -Raw | ConvertFrom-Json
+$SourceVersion = [string]$package.version
 if ([string]::IsNullOrWhiteSpace($Version)) {
-  $packagePath = Join-Path $AppSource 'package.json'
-  $package = Get-Content -LiteralPath $packagePath -Raw | ConvertFrom-Json
-  $Version = [string]$package.version
+  $Version = $SourceVersion
 }
 if ($Version -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
   throw "Version must be X.Y.Z or X.Y.Z-prerelease. Got: $Version"
+}
+if ($Version -ne $SourceVersion) {
+  throw "Installer version $Version does not match source version $SourceVersion"
 }
 
 foreach ($command in @('git', 'node', 'npm', 'npx', 'uv')) {
@@ -79,6 +83,9 @@ foreach ($command in @('git', 'node', 'npm', 'npx', 'uv')) {
     throw "Required command is unavailable: $command"
   }
 }
+
+Invoke-Native node @('scripts/release/check-version.mjs') $RepoRoot
+Invoke-Native node @('scripts/release/check-installer-sources.mjs') $RepoRoot
 
 & git -C $RepoRoot diff --quiet --ignore-submodules --
 $gitDiffExit = $LASTEXITCODE
@@ -140,7 +147,7 @@ $nonRuntimeAppFiles = @(
 )
 $appFiles = @($tracked | Where-Object {
   $_ -in $runtimeRootFiles -or
-  ($_ -match '^app/(lib|data|styles)/' -and $_ -notin $nonRuntimeAppFiles -and $_ -notmatch '(?:^|/)(?:__pycache__|node_modules)/' -and $_ -notmatch '\.test\.js$') -or
+  ($_ -match '^app/(lib|data|styles)/' -and $_ -notin $nonRuntimeAppFiles -and $_ -notmatch '(?:^|/)(?:__pycache__|node_modules)/' -and $_ -notmatch '\.test\.[cm]?js$') -or
   $_ -eq 'app/test-fixtures/provider-contract/decision.json'
 })
 $backendFiles = @($tracked | Where-Object {
