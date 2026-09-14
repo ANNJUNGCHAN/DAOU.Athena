@@ -338,6 +338,36 @@ function createCliAccounts({
     });
   }
 
+  function confirmDetachedLaunch(child) {
+    return new Promise((resolve) => {
+      let settled = false;
+      const cleanup = () => {
+        child.removeListener('spawn', onSpawn);
+        child.removeListener('error', onError);
+        child.removeListener('exit', onExit);
+      };
+      const finish = (launched) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve(launched);
+      };
+      const onSpawn = () => {
+        try {
+          child.unref();
+          finish(true);
+        } catch {
+          finish(false);
+        }
+      };
+      const onError = () => finish(false);
+      const onExit = () => finish(false);
+      child.once('spawn', onSpawn);
+      child.once('error', onError);
+      child.once('exit', onExit);
+    });
+  }
+
   async function login(providerId) {
     const cfg = LOGIN_COMMANDS[providerId];
     const name = PROVIDER_NAMES[providerId];
@@ -371,7 +401,9 @@ function createCliAccounts({
           ['/c', 'start', `"Athena · ${name} 로그인"`, 'cmd', '/k', command, ...cfg.args],
           { detached: true, stdio: 'ignore', windowsHide: false, windowsVerbatimArguments: true },
         );
-      child.unref();
+      if (!await confirmDetachedLaunch(child)) {
+        return { ok: false, launched: false, message: '로그인 창을 열지 못했다' };
+      }
       return { ok: true, launched: true, message: cfg.message };
     } catch {
       return { ok: false, launched: false, message: '로그인 창을 열지 못했다' };
