@@ -49,9 +49,9 @@ const ControlTurn = isNode
 // — 6단계 pause/resume 엔드포인트를 이 화면에 배선). 예약(schedule) 항목은
 // 백엔드가 이제 같은 전이를 지원하지만(store.transition은 mode를 안 가린다),
 // 이 화면에 그 배선을 잇는 건 F1 최소선(3단계) 스코프 밖이라 항상 비활성으로
-// 남겨둔다(P5 — 스코프 규율, 다음 스코프로 이연). 상세 패널의 "최근 실행"
-// 로그는 여전히 fixture다(ledger API 라이브 연결은 10단계 몫 — 예약도 watch와
-// 마찬가지로 이 화면에선 아직 라이브 붙이지 않는다).
+// 남겨둔다(P5 — 스코프 규율, 다음 스코프로 이연). 상세 패널에는 최근 실행
+// 로그가 연결되지 않아 샘플 기록을 표시하지 않는다. 감시는 전체 이력 보기로
+// 실제 기록을 확인할 수 있고, 예약은 이 화면의 미연결 상태를 안내한다.
 //
 // 9단계(알람 센터·라이브 관제, Paper 보드 40) — 헤더에 뷰 탭이 생긴다(작업/알람/
 // 라이브; 11단계에서 제안이 더해져 지금 4종). "작업" 뷰는 위 39번 화면 그대로(통계·리스트+상세·제안).
@@ -1544,7 +1544,7 @@ function createAgentCanvas(deps) {
   // 참고) — 이 패널 자체엔 값을 바꾸는 버튼을 두지 않는다(죽은 버튼 금지, P3).
   const nudgeGuard = el('div', 'agent-nudge-guard');
   const nudgeGuardCaption = el('div', 'agent-panel-caption');
-  nudgeGuardCaption.textContent = '말걸기 가드';
+  nudgeGuardCaption.textContent = '저장된 말걸기 설정';
   nudgeGuard.appendChild(nudgeGuardCaption);
   const nudgeGuardTags = el('div', 'agent-nudge-guard-tags');
   nudgeGuard.appendChild(nudgeGuardTags);
@@ -1560,7 +1560,7 @@ function createAgentCanvas(deps) {
       `하루 최대 ${settings.max_daily_nudges}회`,
       `조용 시간 ${qh.start || '?'}–${qh.end || '?'}`,
       settings.show_rationale ? '근거 표시 항상' : '근거 표시 끔',
-      settings.learn_from_dismissals ? '거절 반영 성향으로 학습' : '거절 학습 끔',
+      settings.learn_from_dismissals ? '거절 학습 설정 켬' : '거절 학습 설정 끔',
     ];
   }
 
@@ -1579,7 +1579,7 @@ function createAgentCanvas(deps) {
       tag.textContent = label;
       nudgeGuardTags.appendChild(tag);
     }
-    nudgeGuardNote.textContent = '제안은 그래프 보강 15 이상일 때만 · 거절한 제안은 반복되지 않는다 → 발화 자체는 오른쪽 채팅에 도착';
+    nudgeGuardNote.textContent = '위 설정은 저장되지만 아직 제안 표시·발화에 적용되지 않습니다. 제안은 조회된 성향을 보여주며, 보류한 제안은 앱을 다시 실행하면 다시 표시됩니다.';
   }
   renderNudgeGuard(); // 초기 페인트 — 라이브 데이터 도착 전엔 "불러오는 중"으로 정직하게 보인다.
 
@@ -1649,8 +1649,8 @@ function createAgentCanvas(deps) {
         onControlResult(ControlTurn.buildControlResultTurn({
           kind: 'reject',
           badge: '제안 채택',
-          lead: '보류 — 목록 유지',
-          fact: `${entry.entity_name || entry.entity_id} · 보류함 ${heldSuggestionIds.size}건`,
+          lead: '이번 실행에서 제안 숨김',
+          fact: `${entry.entity_name || entry.entity_id} · 앱을 다시 실행하면 다시 표시됩니다`,
         }));
       }
       renderProactiveCards();
@@ -1841,16 +1841,6 @@ function createAgentCanvas(deps) {
     if (r.expires_at) fields.push(['만료', formatDateTime(r.expires_at)]);
     if (r.created_at) fields.push(['생성', formatDateTime(r.created_at)]);
     return fields;
-  }
-
-  // ledger API 라이브 연결은 10단계 몫 — 이 단계는 감시/예약 어느 쪽이든
-  // fixture 로그다(Paper 보드 39 실측 예시).
-  function fixtureLogs() {
-    return [
-      { time: '오늘 07:30', ok: true, text: '브리핑 카드 생성 — 캔버스 2' },
-      { time: '어제 07:30', ok: true, text: '긴급 항목 없음' },
-      { time: '금 07:30', ok: false, text: 'DART 응답 지연 — 소스 2개로 실행' },
-    ];
   }
 
   // ---------- 코드 알람 상세(Step 7, Paper 보드 10·11·12) ----------
@@ -2613,7 +2603,6 @@ function createAgentCanvas(deps) {
       const logsCaptionRow = el('div', 'agent-panel-caption-row');
       const logsCaption = el('span', 'agent-panel-caption');
       logsCaption.textContent = '최근 실행';
-      logsCaption.appendChild(fixtureMark());
       logsCaptionRow.appendChild(logsCaption);
       // 드릴인(10단계)은 감시(watch)만 연다 — schedule도 3단계부터 실제
       // 라우틴이라 ledger에 대응 행이 생길 수 있지만, 이 화면에 그 배선을
@@ -2627,20 +2616,11 @@ function createAgentCanvas(deps) {
       }
       detailCol.appendChild(logsCaptionRow);
       const logsWrap = el('div', 'agent-detail-logs');
-      logsWrap.setAttribute('data-source', 'fixture');
-      for (const log of fixtureLogs()) {
-        const logRow = el('div', 'agent-detail-log');
-        const t = el('span', 'agent-detail-log-time');
-        t.textContent = log.time;
-        const mark = el('span', log.ok ? 'agent-detail-log-mark is-ok' : 'agent-detail-log-mark is-warn');
-        mark.textContent = log.ok ? '✓' : '⚠';
-        const text = el('span', 'agent-detail-log-text');
-        text.textContent = log.text;
-        logRow.appendChild(t);
-        logRow.appendChild(mark);
-        logRow.appendChild(text);
-        logsWrap.appendChild(logRow);
-      }
+      const unavailable = el('div', 'agent-list-empty');
+      unavailable.textContent = item.kind === 'watch'
+        ? '실제 실행 기록은 전체 이력 보기에서 확인할 수 있습니다.'
+        : '이 화면에는 최근 실행 기록이 연결되어 있지 않습니다.';
+      logsWrap.appendChild(unavailable);
       detailCol.appendChild(logsWrap);
 
       // F-fix1(본편 이월 갭, Paper 39번 실측 AAG-0) — "채팅에서 열기 ↗".
