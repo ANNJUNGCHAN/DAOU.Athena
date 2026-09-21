@@ -147,6 +147,16 @@ function inventoryToolNames(tools) {
   return [];
 }
 
+// JSON object key order is not part of the MCP env map contract. Compare
+// exact keys and string values without relaxing command, args, or env policy.
+function sameEnvMap(actual, expected) {
+  const isMap = (value) => value && typeof value === 'object' && !Array.isArray(value);
+  if (!isMap(actual) || !isMap(expected)) return false;
+  const keys = Object.keys(expected).sort();
+  return JSON.stringify(Object.keys(actual).sort()) === JSON.stringify(keys)
+    && keys.every((key) => typeof actual[key] === 'string' && actual[key] === expected[key]);
+}
+
 function createMcpAudit(allowedTools, gateway = null) {
   const toolPolicy = normalizeAllowedTools(allowedTools);
   const requiredTools = Object.freeze(
@@ -170,7 +180,7 @@ function createMcpAudit(allowedTools, gateway = null) {
         const effectiveTools = effective.enabled_tools ?? effective.enabledTools;
         if (effective.command !== gateway.command
           || JSON.stringify(effectiveArgs) !== JSON.stringify(gateway.args)
-          || JSON.stringify(effectiveEnv) !== JSON.stringify(gateway.env ?? {})
+          || !sameEnvMap(effectiveEnv, gateway.env ?? {})
           || JSON.stringify([...(effective.env_vars ?? [])].sort())
             !== JSON.stringify([...(gateway.env_vars ?? [])].sort())
           || effective.startup_timeout_sec !== MCP_STARTUP_TIMEOUT_SEC

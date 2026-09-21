@@ -97,3 +97,26 @@ test('gateway startup allows upstream initialization and audits the effective de
     assert.throws(() => audit.validate(input), { code: 'CODEX_MCP_CONFIG_MISMATCH' });
   }
 });
+
+
+test('actual config/read reordered env keys preserve policy while value changes fail', () => {
+  const expected = { ...gateway, env: {
+    PYTHONPATH: 'fixture-backend', ATHENA_BACKEND_URL: 'http://127.0.0.1:18000',
+  } };
+  const audit = createMcpAudit(allowedTools, expected);
+  const input = auditInput();
+  input.configAudit.config.mcp_servers.athena.env = {
+    ATHENA_BACKEND_URL: 'http://127.0.0.1:18000', PYTHONPATH: 'fixture-backend',
+  };
+  assert.equal(audit.validate(input), true);
+  for (const env of [
+    { ...expected.env, PYTHONPATH: 'different-backend' },
+    { ...expected.env, EXTRA: 'unexpected' },
+    { PYTHONPATH: 'fixture-backend' },
+    { ...expected.env, PYTHONPATH: 1 },
+    [],
+  ]) {
+    input.configAudit.config.mcp_servers.athena.env = env;
+    assert.throws(() => audit.validate(input), { code: 'CODEX_MCP_CONFIG_MISMATCH' });
+  }
+});
