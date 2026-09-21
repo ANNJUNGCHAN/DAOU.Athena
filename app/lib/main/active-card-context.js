@@ -216,12 +216,14 @@ function compactValue(value, depth = 0, budget = createBudget(), options = {}) {
   }
   if (Array.isArray(value)) {
     const start = Math.max(0, value.length - MAX_ARRAY_ITEMS);
+    // Chart candles are oldest first. Spend the shared budget on the latest
+    // bars first, then restore display order; ordinary table arrays keep theirs.
+    const latestFirst = value.length > 0 && value.slice(start).every((item) => item
+      && typeof item === 'object' && ['time', 'open', 'high', 'low', 'close']
+        .every((key) => Object.hasOwn(item, key)));
     const items = [];
-    if (start > 0) {
-      budget.truncated = true;
-      items.push(`[${start} earlier items omitted]`);
-    }
-    for (let index = start; index < value.length; index += 1) {
+    for (let offset = 0; offset < value.length - start; offset += 1) {
+      const index = latestFirst ? value.length - 1 - offset : start + offset;
       if (budget.remainingNodes <= 0 || budget.remainingBytes <= 0) {
         budget.truncated = true;
         items.push(TRUNCATED);
@@ -238,6 +240,11 @@ function compactValue(value, depth = 0, budget = createBudget(), options = {}) {
           redactSlotValue,
           ...(options.rowIndexes ? { redactIndices: options.rowIndexes } : {}),
         }));
+    }
+    if (latestFirst) items.reverse();
+    if (start > 0) {
+      budget.truncated = true;
+      items.unshift(`[${start} earlier items omitted]`);
     }
     return items;
   }

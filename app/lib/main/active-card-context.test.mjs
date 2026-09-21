@@ -179,6 +179,29 @@ test('explicit selection searches every current card before the unselected six-c
   assert.equal(context.selection.value.stk_cd, '000001');
 });
 
+test('budget-limited chart context retains complete latest candles in chronological order', () => {
+  const candles = Array.from({ length: 300 }, (_, index) => ({
+    time: String(index), open: index, high: index + 2, low: index - 1,
+    close: index + 1, volume: 1000,
+  }));
+  for (const requested of [undefined, {
+    selectedCardId: 'chart-daou', selectedComponent: { path: 'data.chart', label: '차트' },
+  }]) {
+    const context = buildActiveCardContext({
+      cards: [chartCard({ envelope: { data: { chart: { candles } } } })], requested,
+    });
+    const retained = requested ? context.selection.value.candles
+      : context.cards[0].envelope.data.chart.candles;
+    assert.equal(context.truncated, true);
+    assert.deepEqual(retained.slice(-20), candles.slice(-20));
+    const complete = retained.filter((bar) => bar && typeof bar === 'object'
+      && typeof bar.volume === 'number');
+    assert.deepEqual(complete, candles.slice(-complete.length));
+    assert.ok(Buffer.byteLength(JSON.stringify(context), 'utf8') <= 96 * 1024);
+    assert.equal(candles[0].time, '0');
+  }
+});
+
 test('active card context has one bounded serialized budget with explicit truncation metadata', () => {
   const huge = Array.from({ length: 400 }, (_, index) => ({
     index,
