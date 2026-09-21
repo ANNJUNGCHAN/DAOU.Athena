@@ -59,7 +59,7 @@ def _next_fire_at(spec: Any, *, now: datetime | None = None) -> str | None:
 def _missed_since(spec: Any, *, now: datetime | None = None) -> datetime | None:
     """예약(schedule.daily) 스펙의 직전 예약 발생 시각 — _next_fire_at과 대칭인
     순수 함수(과거 방향 탐색). "놓쳤는가" 판정은 호출부가 ledger의 최신 fired
-    시각과 비교해 내린다 — 이 함수는 벽시계 계산만 한다."""
+    시각과 비교해 내린다. 생성·승인 전의 예약은 놓친 실행이 아니다."""
     if spec.mode != "scheduled":
         return None
     parsed = parse_schedule_value(spec.condition.value)
@@ -68,6 +68,7 @@ def _missed_since(spec: Any, *, now: datetime | None = None) -> datetime | None:
     days, hhmm = parsed
     hour, minute = int(hhmm[:2]), int(hhmm[3:])
     base = (now or datetime.now(_KST)).astimezone(_KST)
+    eligible_since = max(spec.created_at, spec.approved_at or spec.created_at)
     for offset in range(8):  # 오늘 포함 최대 7일 전까지 탐색
         candidate_date = base.date() - timedelta(days=offset)
         if days is not None and candidate_date.isoweekday() not in days:
@@ -81,7 +82,7 @@ def _missed_since(spec: Any, *, now: datetime | None = None) -> datetime | None:
             tzinfo=_KST,
         )
         if candidate <= base:
-            return candidate
+            return candidate if candidate >= eligible_since else None
     return None
 
 
