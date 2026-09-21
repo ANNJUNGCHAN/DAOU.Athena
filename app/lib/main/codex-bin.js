@@ -43,10 +43,14 @@ function resolveCodexExecutable({
     : [];
   if (platform !== 'win32') return discovered.find((candidate) => existsSync(candidate)) || 'codex';
 
-  const direct = discovered.find((candidate) => /\.exe$/i.test(candidate) && existsSync(candidate));
-  if (direct) return direct;
-  for (const wrapper of discovered) {
-    const candidate = nativeWindowsCandidate(path.dirname(wrapper));
+  // Preserve PATH precedence: an npm shim resolves to its native binary at the
+  // same position, before a later executable from another Codex installation.
+  for (const entry of discovered) {
+    if (/\.exe$/i.test(entry)) {
+      if (existsSync(entry)) return entry;
+      continue;
+    }
+    const candidate = nativeWindowsCandidate(path.dirname(entry));
     if (existsSync(candidate)) return candidate;
   }
   if (env.APPDATA) {

@@ -14,7 +14,6 @@ const DISABLED_FEATURES = Object.freeze([
   'browser_use',
   'browser_use_external',
   'browser_use_full_cdp_access',
-  'code_mode_host',
   'collaboration_modes',
   'computer_use',
   'goals',
@@ -98,6 +97,9 @@ function buildCodexAppServerArgs({ gateway, allowedTools }) {
     'required = true',
   ].join(', ');
   const result = ['app-server', '--strict-config', '--listen', 'stdio://'];
+  // Code-mode models invoke the approved MCP tools through exec. Disabling
+  // this host leaves the inventory visible but makes every invocation fail.
+  result.push('--enable', 'code_mode_host');
   for (const feature of DISABLED_FEATURES) result.push('--disable', feature);
   result.push('-c', 'web_search="disabled"');
   // Replaces the complete MCP map for this process. A private-home config cannot
@@ -165,6 +167,11 @@ function createMcpAudit(allowedTools, gateway = null) {
       }
       const config = configAudit.config;
       const features = config.features ?? {};
+      if (features.code_mode_host !== true) {
+        const error = new Error('Codex code-mode host is required for Athena MCP tool execution');
+        error.code = 'CODEX_BUILTIN_POLICY_MISMATCH';
+        throw error;
+      }
       if (config.web_search !== 'disabled' && config.webSearch !== 'disabled') {
         const error = new Error('Codex effective web search policy is not disabled');
         error.code = 'CODEX_BUILTIN_POLICY_MISMATCH';

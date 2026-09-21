@@ -249,7 +249,7 @@ function syncDisplayedTurn() {
   if (state !== 'idle') {
     remoteQueryBusy = false;
     setDot(state === 'calling' ? 'calling' : 'judging');
-    setLocked(true, 'Claude에게 물어보는 중 — 수십 초 걸릴 수 있다');
+    setLocked(true, '답변을 준비하는 중 — 수십 초 걸릴 수 있다');
   } else {
     setDot(null);
     applyRemoteLock();
@@ -1247,7 +1247,7 @@ async function runQueryLive(text) {
 
   setTurnState(rec, 'judging');
   setDot('judging');
-  setLocked(true, 'Claude에게 물어보는 중 — 수십 초 걸릴 수 있다');
+  setLocked(true, '답변을 준비하는 중 — 수십 초 걸릴 수 있다');
   // 진행 상태 텍스트는 하단 잠금 힌트(setLocked) 한 곳에만 쓴다(2026-08-27
   // 사용자 지적 — 버블 안 중복 표시 제거). 이 progress 요소는 툴 스텝 전용.
   const progress = document.createElement('div');
@@ -2812,6 +2812,14 @@ const PILL_GROK_EFFORT_CHIPS = [
   { value: 'high', label: 'high' },
   { value: 'xhigh', label: 'xhigh' },
 ];
+const PILL_CODEX_EFFORT_CHIPS = [
+  { value: null, label: '기본' },
+  { value: 'minimal', label: 'minimal' },
+  { value: 'low', label: 'low' },
+  { value: 'medium', label: 'medium' },
+  { value: 'high', label: 'high' },
+  { value: 'xhigh', label: 'xhigh' },
+];
 
 let modelStateCache = null;
 // 활성 계정과 공급자 연결 여부(athena:cli-list — 설정 모델 카드가 읽는 그 채널).
@@ -2855,6 +2863,11 @@ function composerChoiceLabel(chips, value, fallback) {
 // active) — 실행기·오브 컨트롤 스트립이 읽는 바로 그 값이라 툴바가 다른 이름을 말하지 않는다.
 function renderComposerModel() {
   const s = (modelStateCache && modelStateCache.active) || { provider: 'claude', model: null, effort: null };
+  if (s.provider === 'codex') {
+    $modelBtn.textContent = s.model || 'Codex';
+    $effortBtn.textContent = composerChoiceLabel(PILL_CODEX_EFFORT_CHIPS, s.effort, '기본');
+    return;
+  }
   const grok = s.provider === 'grok';
   $modelBtn.textContent = composerChoiceLabel(
     grok ? PILL_GROK_MODEL_CHIPS : PILL_MODEL_CHIPS, s.model, grok ? 'Grok' : 'Claude');
@@ -2916,6 +2929,47 @@ function renderModelPopover() {
   grokEffortSep.className = 'mp-sep';
   $modelPopover.appendChild(grokEffortSep);
   popoverSection('Grok 사고 강도', PILL_GROK_EFFORT_CHIPS, g.effort, 'effort', 'grok', grokLocked);
+  const d = (modelStateCache && modelStateCache.codex) || { model: null, effort: null };
+  const codexLocked = !providerConnected('codex');
+  const codexSep = document.createElement('div');
+  codexSep.className = 'mp-sep';
+  $modelPopover.appendChild(codexSep);
+  const codexTitle = document.createElement('div');
+  codexTitle.className = 'mp-title';
+  codexTitle.textContent = codexLocked ? 'Codex 모델 · 연결 후 사용' : 'Codex 모델';
+  $modelPopover.appendChild(codexTitle);
+  const modelInput = document.createElement('input');
+  modelInput.type = 'text';
+  modelInput.className = 'uk-input uk-input-mono';
+  modelInput.placeholder = '모델 이름';
+  modelInput.setAttribute('aria-label', 'Codex 모델');
+  modelInput.autocomplete = 'off';
+  modelInput.value = d.model || '';
+  modelInput.disabled = codexLocked;
+  let committing = false;
+  const commitCodexModel = async () => {
+    const model = modelInput.value.trim() || null;
+    if (codexLocked || committing || model === d.model) return;
+    committing = true;
+    try {
+      const res = await window.athena.invoke('athena:model-set', { provider: 'codex', patch: { model } });
+      if (!res || res.ok === false) {
+        codexTitle.textContent = 'Codex 모델 · 저장하지 못했습니다';
+        return;
+      }
+      await refreshModelState();
+    } catch {
+      codexTitle.textContent = 'Codex 모델 · 저장하지 못했습니다';
+    } finally {
+      committing = false;
+    }
+  };
+  modelInput.addEventListener('blur', commitCodexModel);
+  modelInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') { event.preventDefault(); void commitCodexModel(); }
+  });
+  $modelPopover.appendChild(modelInput);
+  popoverSection('Codex 사고 강도', PILL_CODEX_EFFORT_CHIPS, d.effort, 'effort', 'codex', codexLocked);
 }
 
 function closeModelPopover() { $modelPopover.hidden = true; }

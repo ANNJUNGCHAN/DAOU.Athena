@@ -19,11 +19,32 @@ class CodexSessionError extends Error {
     this.name = 'CodexSessionError';
     this.code = code;
     if (options.providerStatus !== undefined) this.providerStatus = options.providerStatus;
+    if (options.safeMessage !== undefined) this.safeMessage = options.safeMessage;
+    if (options.actionNeeded !== undefined) this.actionNeeded = options.actionNeeded === true;
+    if (options.retryable !== undefined) this.retryable = options.retryable === true;
     const source = options.cause;
     if (source?.actionNeeded !== undefined) this.actionNeeded = source.actionNeeded === true;
     if (source?.retryable !== undefined) this.retryable = source.retryable === true;
     if (source?.runtimeHome !== undefined) this.runtimeHome = source.runtimeHome;
   }
+}
+
+function turnFailure(status, params) {
+  const providerError = params?.turn?.error ?? params?.error;
+  let message = typeof providerError?.message === 'string' ? providerError.message : '';
+  // Some app-server versions wrap the upstream HTTP error as JSON in message.
+  // Inspect it only for classification; never forward arbitrary provider text.
+  try {
+    const parsed = JSON.parse(message);
+    if (typeof parsed?.error?.message === 'string') message = parsed.error.message;
+  } catch { /* Plain provider messages need no decoding. */ }
+  if (/model requires a newer version of Codex\b/i.test(message)) {
+    const safeMessage = '선택한 모델을 사용하려면 Athena가 실행하는 Codex CLI를 최신 버전으로 업데이트해야 합니다.';
+    return new CodexSessionError('CODEX_UPGRADE_REQUIRED', safeMessage, {
+      providerStatus: status, safeMessage, actionNeeded: true, retryable: false,
+    });
+  }
+  return new CodexSessionError('CODEX_TURN_FAILED', 'Codex turn failed', { providerStatus: status });
 }
 
 function deferred() {
@@ -797,11 +818,7 @@ class CodexAppServerSession {
       active.terminal.resolve(result);
       return;
     }
-    this._failActive(active, new CodexSessionError(
-      'CODEX_TURN_FAILED',
-      'Codex turn failed',
-      { providerStatus: status },
-    ));
+    this._failActive(active, turnFailure(status, params));
   }
 
   _failActive(active, error) {
@@ -811,8 +828,9 @@ class CodexAppServerSession {
     active.providerStarted.reject(error);
     this._emitActive(active, 'turn_failed', {
       code: error?.code || 'CODEX_TURN_FAILED',
-      retryable: error?.code === 'CODEX_PROCESS_EXITED' || error?.code === 'CODEX_REQUEST_TIMEOUT',
-      safeMessage: 'Codex turn failed.',
+      retryable: error?.retryable ?? (error?.code === 'CODEX_PROCESS_EXITED' || error?.code === 'CODEX_REQUEST_TIMEOUT'),
+      ...(error?.actionNeeded === true ? { actionNeeded: true } : {}),
+      safeMessage: error?.safeMessage || 'Codex turn failed.',
     }, active.providerTurnId);
     this._cleanupActive(active);
     active.terminal.reject(error);
