@@ -105,6 +105,7 @@ function createCliAccounts({
         runtimeHome,
         codexExecutable,
         spawnImpl,
+        fsImpl,
       });
     }
     return codexRuntime;
@@ -405,8 +406,9 @@ function createCliAccounts({
         return { ok: false, launched: false, message: '로그인 창을 열지 못했다' };
       }
       return { ok: true, launched: true, message: cfg.message };
-    } catch {
-      return { ok: false, launched: false, message: '로그인 창을 열지 못했다' };
+    } catch (error) {
+      return { ok: false, launched: false, message: error?.code === 'CODEX_RUNTIME_HOME_UNAVAILABLE'
+        ? error.message : '로그인 창을 열지 못했다' };
     }
   }
 

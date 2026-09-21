@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('node:path');
+const fs = require('node:fs');
 const { spawn } = require('node:child_process');
 
 const APP_SERVER_ARGV = Object.freeze(['app-server', '--stdio']);
@@ -46,12 +47,23 @@ function createCodexRuntime({
   runtimeHome,
   codexExecutable,
   spawnImpl = spawn,
+  fsImpl = fs,
   platform = process.platform,
 }) {
   const resolvedRuntimeHome = requireNonEmptyString(runtimeHome, 'runtimeHome');
   const resolvedCodexExecutable = requireNonEmptyString(codexExecutable, 'codexExecutable');
   if (typeof spawnImpl !== 'function') {
     throw new TypeError('spawnImpl must be a function');
+  }
+
+  function ensureRuntimeHome() {
+    try {
+      fsImpl.mkdirSync(resolvedRuntimeHome, { recursive: true });
+    } catch (cause) {
+      throw Object.assign(new Error('Athena 전용 Codex 로그인 폴더를 만들 수 없습니다. 폴더 접근 권한을 확인해 주세요.', { cause }), {
+        code: 'CODEX_RUNTIME_HOME_UNAVAILABLE',
+      });
+    }
   }
 
   function spawnPrivateHomeCommand(argv, { timeoutMs, stdio } = {}) {
@@ -71,12 +83,15 @@ function createCodexRuntime({
     }
     if (stdio !== undefined) spawnOptions.stdio = stdio;
 
-    return spawnImpl(resolvedCodexExecutable, requireArgv(argv), spawnOptions);
+    const resolvedArgv = requireArgv(argv);
+    ensureRuntimeHome();
+    return spawnImpl(resolvedCodexExecutable, resolvedArgv, spawnOptions);
   }
 
   function spawnPrivateHomeInteractiveCommand(argv, { title = 'Athena · Codex 로그인' } = {}) {
     const resolvedArgv = requireArgv(argv);
     const resolvedTitle = requireNonEmptyString(title, 'title');
+    ensureRuntimeHome();
     const privateEnv = {
       ...process.env,
       CODEX_HOME: resolvedRuntimeHome,
@@ -126,6 +141,7 @@ function createCodexRuntime({
     };
     spawnContext.assertCurrent();
 
+    ensureRuntimeHome();
     const child = spawnImpl(resolvedCodexExecutable, [...APP_SERVER_ARGV], {
       shell: false,
       windowsHide: true,

@@ -1456,7 +1456,7 @@ async function refreshModelCard(card, head, body) {
   body.appendChild(buildModelSection({
     title: 'Codex',
     provider: codexProvider,
-    description: 'Codex 로그인은 Athena 전용 홈에 따로 보관된다 — 이 컴퓨터의 다른 Codex 로그인과 섞이지 않는다. 연결하지 않아도 질의는 Claude로 실행된다.',
+    description: 'Codex 로그인은 Athena 전용 홈에 따로 보관된다. 연결 후 활성 계정으로 선택하면 Codex로 대화한다.',
     accountsHint: 'Athena 전용 홈에 보관된 Codex 로그인이다. 새 계정은 여기에 추가된다.',
     sourceLabel: () => 'Athena 전용 로그인',
     optional: true,
@@ -1472,7 +1472,7 @@ async function refreshModelCard(card, head, body) {
   body.appendChild(errBox);
 
   const note = el('div', 'uk-settings-note');
-  note.appendChild(el('div', null, '활성 계정이 Claude면 claude CLI, Grok이면 grok CLI로 질의가 실행된다. Codex 설정은 $CODEX_HOME/config.toml에 반영되지만 질의 실행은 아직 Codex를 쓰지 않는다.'));
+  note.appendChild(el('div', null, '질의는 활성 계정의 Claude·Grok·Codex로 실행된다. Codex 모델·사고 강도 설정은 $CODEX_HOME/config.toml에도 반영된다.'));
   note.appendChild(el('div', null, 'Claude·Grok CLI는 자격증명이 파일 하나다 — 목록의 활성 행은 지금 로그인된 계정이 아니면 전환되지 않고, 다른 계정은 계정 추가로 다시 로그인한다.'));
   note.appendChild(el('div', null, '모델 접근 권한은 활성 계정의 플랜을 따른다 — 접근 불가 모델이면 질의가 오류로 표면화된다.'));
   body.appendChild(note);
