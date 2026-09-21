@@ -131,3 +131,38 @@ test('Enter clears persisted draft before submission and cancels pending draft d
     { submit: 'submitted prompt' },
   ]);
 });
+
+
+test('Metis to saved Agora restores controller context and unlocked input hint together', async () => {
+  const { createGraphModeController } = require('./graph-mode/controller.js');
+  const store = require('./graph-mode/graph-mode-store.js');
+  const input = { dataset: {}, disabled: false, value: '' };
+  const element = () => ({ dataset: {}, hidden: false, textContent: '' });
+  const elements = {
+    chatInput: input, chatHead: element(), chatHeadTitle: element(),
+    chatHeadSub: element(), summary: element(), graph: element(),
+  };
+  const controller = createGraphModeController({
+    store, elements, fetchClusterMap: async () => ({ nodes: [], edges: [], revision: 0 }),
+  });
+  await controller.setView('graph');
+  assert.equal(input.placeholder, '그래프에 대해 물어보세요');
+  input.disabled = true;
+  const ctx = context({
+    $history: fakeNode('history'), $input: input,
+    $lockHint: element(), $stopBtn: element(), $lockText: element(), $lockTime: element(),
+    mountStoredPane: () => false, autoGrowInput() {}, scrollHistoryToBottom() {},
+    stickToBottom: true,
+  });
+  ctx.window.AthenaCanvasMode = controller;
+  ctx.window.AthenaLib.SessionSnapshot = require('./session-snapshot.js');
+  vm.runInContext(declaration('setLocked') + '\n' + declaration('pastMessageTurn')
+    + '\n' + declaration('restoreConversation'), ctx);
+  ctx.restoreConversation({ activeMode: 'chat' }, [], { workspace: { kind: 'chat' } });
+  assert.equal(controller.state.view, 'summary');
+  assert.equal(elements.summary.hidden, false);
+  assert.equal(elements.chatHead.hidden, true);
+  assert.equal(input.disabled, false);
+  assert.equal(input.dataset.idlePlaceholder, '무엇이든 물어보세요');
+  assert.equal(input.placeholder, input.dataset.idlePlaceholder);
+});

@@ -30,6 +30,32 @@ function validateQuestions(params) {
 function createCodexUserInputDialog({ dialog, getWindow }) {
   return (params, { signal } = {}) => {
     const run = async () => {
+      if (params?.mode !== undefined) {
+        // CLI 0.155.1 requests MCP call approval as an empty standard form.
+        // Other forms (including credentials, URLs and device verification) need
+        // dedicated controls; never silently accept fields we cannot display.
+        const schema = params.requestedSchema;
+        if (params.serverName !== 'athena' || params.mode !== 'form'
+          || typeof params.message !== 'string' || !params.message.trim()
+          || !schema || schema.type !== 'object'
+          || (schema.properties !== undefined && (!schema.properties || Array.isArray(schema.properties)
+            || typeof schema.properties !== 'object' || Object.keys(schema.properties).length !== 0))
+          || (schema.required !== undefined && (!Array.isArray(schema.required) || schema.required.length !== 0))) {
+          throw new Error('Unsupported Codex MCP approval form');
+        }
+        const window = getWindow();
+        if (signal?.aborted || !window || window.isDestroyed()) throw new Error('Codex prompt cancelled');
+        const result = await dialog.showMessageBox(window, {
+          type: 'question', title: 'Athena · 도구 실행 확인',
+          message: 'Codex가 Athena 도구 실행 승인을 요청했습니다.',
+          detail: params.message,
+          buttons: ['이번 호출 허용', '거절', '취소'], defaultId: 2, cancelId: 2,
+          noLink: true, signal,
+        });
+        if (signal?.aborted) throw new Error('Codex prompt cancelled');
+        const action = result.response === 0 ? 'accept' : result.response === 1 ? 'decline' : 'cancel';
+        return { action, content: action === 'accept' ? {} : null };
+      }
       const questions = validateQuestions(params);
       const answers = Object.create(null);
       for (const question of questions) {

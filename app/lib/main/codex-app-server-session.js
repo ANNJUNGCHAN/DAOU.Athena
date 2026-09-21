@@ -715,7 +715,9 @@ class CodexAppServerSession {
     });
     const params = request.params || {};
     const active = this._activeByThread.get(params.threadId);
-    if (request.method !== 'item/tool/requestUserInput' || !this._requestUserInput
+    const userInput = request.method === 'item/tool/requestUserInput';
+    const mcpApproval = request.method === 'mcpServer/elicitation/request' && params.serverName === 'athena';
+    if ((!userInput && !mcpApproval) || !this._requestUserInput
       || !active || active.completed || active.approvalCancelled
       || active.providerTurnId !== params.turnId) {
       try { deny(); } catch { /* A closed generation cannot receive responses. */ }

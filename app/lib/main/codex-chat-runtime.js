@@ -77,6 +77,15 @@ function localToolName(tool) {
   return tool.slice(prefix.length);
 }
 
+// Codex stdio MCP filters inherited env. Forward Athena credential variable
+// names explicitly; values remain only in the child environment, never argv.
+function gatewayEnvVarNames(overrides = {}, inherited = {}) {
+  return [...new Set([...Object.keys(overrides), ...Object.keys(inherited)])]
+    .filter((name) => name.startsWith('ATHENA_MCP_ENV__')
+      || name === 'ATHENA_MCP_REGISTRY_PATH')
+    .sort();
+}
+
 function buildCodexAppServerArgs({ gateway, allowedTools }) {
   if (!gateway || typeof gateway !== 'object' || Array.isArray(gateway)) {
     throw new TypeError('gateway must be an object');
@@ -93,6 +102,7 @@ function buildCodexAppServerArgs({ gateway, allowedTools }) {
     `command = ${tomlString(command)}`,
     `args = ${tomlArray(args)}`,
     `env = ${tomlTable(env)}`,
+    `env_vars = ${tomlArray(stringArray(gateway.env_vars ?? [], 'gateway.env_vars'))}`,
     ...(toolPolicy.gatewayAll ? [] : [`enabled_tools = ${tomlArray(toolPolicy.localTools)}`]),
     'required = true',
   ].join(', ');
@@ -156,6 +166,8 @@ function createMcpAudit(allowedTools, gateway = null) {
         if (effective.command !== gateway.command
           || JSON.stringify(effectiveArgs) !== JSON.stringify(gateway.args)
           || JSON.stringify(effectiveEnv) !== JSON.stringify(gateway.env ?? {})
+          || JSON.stringify([...(effective.env_vars ?? [])].sort())
+            !== JSON.stringify([...(gateway.env_vars ?? [])].sort())
           || effective.required !== true
           || (toolPolicy.gatewayAll
             ? effectiveTools !== undefined && effectiveTools !== null
@@ -224,8 +236,13 @@ function createCodexChatRuntime({
   const codexExecutable = resolveCodexExecutable({
     env, platform, existsSync: fsImpl.existsSync.bind(fsImpl), spawnSyncImpl,
   });
-  const appServerArgs = Object.freeze(buildCodexAppServerArgs({ gateway, allowedTools }));
-  const mcpAudit = createMcpAudit(allowedTools, gateway);
+  const overrides = envOverridesFn();
+  if (!overrides || typeof overrides !== 'object' || Array.isArray(overrides)) {
+    throw new TypeError('envOverridesFn must return an object');
+  }
+  const runtimeGateway = { ...gateway, env_vars: gatewayEnvVarNames(overrides, env) };
+  const appServerArgs = Object.freeze(buildCodexAppServerArgs({ gateway: runtimeGateway, allowedTools }));
+  const mcpAudit = createMcpAudit(allowedTools, runtimeGateway);
 
   function generationContextFactory(input = {}) {
     let current = true;
@@ -329,6 +346,7 @@ module.exports = {
   DISABLED_FEATURES,
   buildCodexAppServerArgs,
   createCodexChatRuntime,
+  gatewayEnvVarNames,
   createMcpAudit,
   createPrivateAuthRequiredError,
   resolveCodexExecutable,

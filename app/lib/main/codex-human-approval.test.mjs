@@ -13,6 +13,10 @@ const params = () => ({ threadId: 'thread-1', turnId: 'turn-1', itemId: 'item-1'
   ] }],
 });
 const request = () => ({ id: 7, method: 'item/tool/requestUserInput', params: params() });
+const mcpRequest = () => ({ id: 8, method: 'mcpServer/elicitation/request', params: {
+  threadId: 'thread-1', turnId: 'turn-1', serverName: 'athena', mode: 'form',
+  message: 'Allow the read-only fixture tool call?', requestedSchema: { type: 'object', properties: {} },
+} });
 const tick = () => new Promise(resolve => setImmediate(resolve));
 
 test('server requests have their own ID space and responses are sent at most once', async () => {
@@ -130,6 +134,51 @@ test('an old connection cannot answer or cancel a request on the replacement con
   assert.equal(calls, 0);
   assert.deepEqual(f.responses, []);
   assert.deepEqual(f.forgotten, []);
+});
+
+test('actual CLI empty-form MCP approval reaches the native dialog and returns the human decision', async () => {
+  for (const [response, action] of [[0, 'accept'], [1, 'decline'], [2, 'cancel']]) {
+    let finish, options;
+    const handler = createCodexUserInputDialog({ getWindow: () => ({ isDestroyed: () => false }), dialog: {
+      showMessageBox(_window, value) { options = value; return new Promise(resolve => { finish = resolve; }); },
+    } });
+    const f = fixture(handler);
+    const pending = f.session._handleServerRequest(mcpRequest(), 1);
+    await tick();
+    assert.equal(f.responses.length, 0, 'no response before the person chooses');
+    assert.equal(options.detail, mcpRequest().params.message);
+    assert.equal(options.defaultId, 2);
+    assert.equal(options.cancelId, 2);
+    finish({ response }); await pending;
+    assert.deepEqual(f.responses, [[8, { action, content: action === 'accept' ? {} : null }]]);
+  }
+});
+
+test('MCP forms with fields, URLs, unrelated servers and absent turn correlation remain denied', async () => {
+  let dialogs = 0;
+  const handler = createCodexUserInputDialog({ getWindow: () => ({ isDestroyed: () => false }), dialog: {
+    async showMessageBox() { dialogs++; return { response: 0 }; },
+  } });
+  for (const patch of [
+    { requestedSchema: { type: 'object', properties: { token: { type: 'string' } } } },
+    { mode: 'url' }, { serverName: 'other' }, { turnId: null },
+  ]) {
+    const f = fixture(handler);
+    const r = mcpRequest(); Object.assign(r.params, patch);
+    await f.session._handleServerRequest(r, 1);
+    assert.equal(f.responses[0][2].code, -32601);
+  }
+  assert.equal(dialogs, 0);
+});
+
+test('MCP approval cancelled by turn completion cannot deliver a late accept', async () => {
+  let finish;
+  const f = fixture(() => new Promise(resolve => { finish = resolve; }));
+  const pending = f.session._handleServerRequest(mcpRequest(), 1);
+  f.active.completed = true;
+  f.session._cancelUserInputs(f.active);
+  finish({ action: 'accept', content: {} }); await pending;
+  assert.deepEqual(f.responses, []);
 });
 
 test('on-request is opt-in and read-only sandbox remains unchanged', () => {

@@ -7,7 +7,7 @@ const envModulePath = require.resolve('./mcp-env');
 const previousEnvModule = require.cache[envModulePath];
 require.cache[envModulePath] = { id: envModulePath, filename: envModulePath, loaded: true,
   exports: { buildEnvOverrides() { throw new Error('Policy tests must not read runtime secrets'); } } };
-const { DISABLED_FEATURES, buildCodexAppServerArgs, createMcpAudit } = require('./codex-chat-runtime');
+const { DISABLED_FEATURES, buildCodexAppServerArgs, createMcpAudit, gatewayEnvVarNames } = require('./codex-chat-runtime');
 if (previousEnvModule) require.cache[envModulePath] = previousEnvModule;
 else delete require.cache[envModulePath];
 const gateway = { command: 'fixture-gateway', args: ['serve'], env: {} };
@@ -56,4 +56,30 @@ test('enabling code-mode does not weaken shell or external-server restrictions',
   const external = auditInput();
   external.configAudit.config.mcp_servers.other = { command: 'external' };
   assert.throws(() => audit.validate(external), { code: 'CODEX_MCP_CONFIG_MISMATCH' });
+});
+
+
+test('upstream credentials cross the MCP subprocess boundary by name, never value', () => {
+  const overrides = {
+    ATHENA_MCP_ENV__naver_news__NCP_APIGW_API_KEY: 'fixture-private-value',
+    ATHENA_MCP_ENV__discord__DISCORD_TOKEN: 'fixture-discord-value',
+    UNRELATED_SECRET: 'must-not-forward',
+  };
+  const names = gatewayEnvVarNames(overrides, { ATHENA_MCP_REGISTRY_PATH: 'fixture-registry', PATH: 'system-path' });
+  assert.deepEqual(names, ['ATHENA_MCP_ENV__discord__DISCORD_TOKEN',
+    'ATHENA_MCP_ENV__naver_news__NCP_APIGW_API_KEY', 'ATHENA_MCP_REGISTRY_PATH']);
+  const configured = { ...gateway, env_vars: names };
+  const args = buildCodexAppServerArgs({ gateway: configured, allowedTools });
+  const text = args.join(' ');
+  assert.ok(text.includes('env_vars = ['));
+  for (const name of names) assert.ok(text.includes(name));
+  for (const value of Object.values(overrides)) assert.ok(!text.includes(value));
+  const input = auditInput();
+  input.configAudit.config.mcp_servers.athena.env_vars = names;
+  const audit = createMcpAudit(allowedTools, configured);
+  assert.equal(audit.validate(input), true);
+  input.configAudit.config.mcp_servers.athena.env_vars = [];
+  assert.throws(() => audit.validate(input), { code: 'CODEX_MCP_CONFIG_MISMATCH' });
+  input.configAudit.config.mcp_servers.athena.env_vars = [...names, 'UNRELATED_SECRET'];
+  assert.throws(() => audit.validate(input), { code: 'CODEX_MCP_CONFIG_MISMATCH' });
 });
