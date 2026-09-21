@@ -66,7 +66,7 @@ ATHENA는 대화, 차트, 투자 기록, 외부 도구와 전략 검증을 하�
 
 ## Windows에 설치
 
-[ATHENA v0.1.0 설치 파일 다운로드](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.0/Athena-Setup-0.1.0-x64.exe)
+[ATHENA v0.1.2 설치 파일 다운로드](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.2/Athena-Setup-0.1.2-x64.exe)
 
 Windows x64용 설치 프로그램은 Electron 앱과 로컬 Python 백엔드를 포함합니다. 설치 후 ATHENA를 실행하고 사용할 모델 공급자에 로그인하세요. 키움 데이터 조회에는 별도의 API 자격 증명 연결이 필요합니다.
 

@@ -34,6 +34,8 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "CLAUDE.md",
   "backend/verification/test_ws_feed_status.py",
   "backend/verification/test_index_realtime_semantics.py",
+  "backend/verification/test_scheduled_catchup_lifetime.py",
+  "backend/verification/test_aegis_runtime.py",
 ]);
 
 const RUNTIME_ROOT = new Set(RUNTIME_ROOT_FILES);

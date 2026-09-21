@@ -11,7 +11,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Request
 
 from athena_api.routines.main_card import MainCardValidationError, validate_main_card
-from athena_api.routines.models import SOURCES, parse_schedule_value, source_spec
+from athena_api.routines.models import SOURCES, parse_once_value, parse_schedule_value, source_spec
 from athena_api.routines.revisions import (
     WatchRevision,
     fix_cycle,
@@ -22,6 +22,7 @@ from athena_api.routines.revisions import (
 from athena_api.routines.rules import validate_draft
 from athena_api.routines.runtime import RoutinesRuntime, resolve_watch_file
 from athena_api.routines.scheduler import record_scheduled_fire
+from athena_api.routines.guard_settings import in_quiet_hours
 
 router = APIRouter(prefix="/api/v1/routines", tags=["routines"])
 
@@ -33,6 +34,11 @@ def _next_fire_at(spec: Any, *, now: datetime | None = None) -> str | None:
     """예약(schedule.daily) 스펙의 다음 발화 시각 — 순수 함수, 저장하지 않는다."""
     if spec.mode != "scheduled":
         return None
+    if spec.status not in ("active", "paused", "draft"):
+        return None
+    if spec.condition.source == "schedule.once":
+        occurrence = parse_once_value(str(spec.condition.value))
+        return occurrence.isoformat() if occurrence and occurrence >= (now or datetime.now(_KST)) else None
     parsed = parse_schedule_value(spec.condition.value)
     if parsed is None:
         return None
@@ -62,6 +68,10 @@ def _missed_since(spec: Any, *, now: datetime | None = None) -> datetime | None:
     시각과 비교해 내린다. 생성·승인 전의 예약은 놓친 실행이 아니다."""
     if spec.mode != "scheduled":
         return None
+    if spec.condition.source == "schedule.once":
+        occurrence = parse_once_value(str(spec.condition.value))
+        eligible = max(spec.created_at, spec.approved_at or spec.created_at)
+        return occurrence if occurrence and eligible <= occurrence <= (now or datetime.now(_KST)) else None
     parsed = parse_schedule_value(spec.condition.value)
     if parsed is None:
         return None
@@ -284,7 +294,9 @@ async def briefing_budget(request: Request) -> dict[str, Any]:
     """자동 브리핑 하루 예산 — limit은 가드 설정, used_today는 오늘(KST)
     "briefed" engagement 카운트. main의 러너가 실행 전에 조회한다."""
     runtime = _runtime(request)
-    limit = request.app.state.nudge_guard_store.get().max_daily_briefings
+    guards = request.app.state.nudge_guard_store.get()
+    limit = guards.max_daily_briefings
+    quiet = in_quiet_hours(guards, datetime.now(_KST))
     today = datetime.now(_KST).date()
     used_today = 0
     for row in runtime.engagement.read_all():
@@ -300,7 +312,9 @@ async def briefing_budget(request: Request) -> dict[str, Any]:
     return {
         "limit": limit,
         "used_today": used_today,
-        "remaining": max(0, limit - used_today),
+        "remaining": 0 if quiet else max(0, limit - used_today),
+        "blocked_reason": "quiet_hours" if quiet else None,
+        "scope": "automatic_briefings",
     }
 
 
@@ -612,8 +626,8 @@ async def update_routine(request: Request, routine_id: str, body: dict[str, Any]
     spec = runtime.store.get(routine_id)
     if spec is None:
         raise HTTPException(status_code=404, detail="루틴이 존재하지 않는다")
-    if spec.status == "cancelled":
-        raise HTTPException(status_code=409, detail="취소된 작업 — 수정 불가")
+    if spec.status in ("cancelled", "completed"):
+        raise HTTPException(status_code=409, detail="종료된 작업 — 수정 불가")
     if spec.condition.source not in SOURCES:
         # 레거시 소스는 새 조건 검증을 통과할 수 없다 — 편집이 아니라 재생성이다.
         raise HTTPException(status_code=409, detail="지원하지 않는 조건 — 취소 후 새로 만들기")
@@ -747,6 +761,9 @@ async def pause_routine(request: Request, routine_id: str) -> dict[str, Any]:
     if spec is None:
         raise HTTPException(status_code=404, detail="루틴이 존재하지 않는다")
     spec = runtime.store.transition(routine_id, "paused")
+    runtime.ledger.record("suppressed", routine_id=spec.id, symbol=spec.symbol,
+                          source=spec.condition.source, observed=None, threshold=None,
+                          reason="사용자가 일시중지")
     if spec.mode == "realtime-ws":
         await runtime.release_realtime_subscription(spec.symbol)
     return _view(spec, runtime)
@@ -769,6 +786,9 @@ async def resume_routine(request: Request, routine_id: str) -> dict[str, Any]:
         except Exception as exc:
             raise HTTPException(status_code=502, detail="실시간 구독 등록에 실패했다") from exc
     spec = runtime.store.transition(routine_id, "active")
+    runtime.ledger.record("suppressed", routine_id=spec.id, symbol=spec.symbol,
+                          source=spec.condition.source, observed=None, threshold=None,
+                          reason="사용자가 재개 — 조건 확인 대기")
     return _view(spec, runtime)
 
 
@@ -779,6 +799,9 @@ async def cancel_routine(request: Request, routine_id: str) -> dict[str, Any]:
     if spec is None:
         raise HTTPException(status_code=404, detail="루틴이 존재하지 않는다")
     spec = runtime.store.transition(routine_id, "cancelled")
+    runtime.ledger.record("suppressed", routine_id=spec.id, symbol=spec.symbol,
+                          source=spec.condition.source, observed=None, threshold=None,
+                          reason="사용자가 취소")
     await runtime.scheduler.clear_near(spec)  # 유령 watch 방지 — CP3-1
     if spec.mode == "realtime-ws":
         await runtime.release_realtime_subscription(spec.symbol)
@@ -871,7 +894,10 @@ async def catchup_fire(request: Request, routine_id: str) -> dict[str, Any]:
         runtime.ledger,
         now.strftime("%H:%M"),
         reason="놓친 예약 캐치업(사용자 승인)",
+        scheduled_for=missed_at.isoformat(),
     )
+    if spec.condition.source == "schedule.once":
+        runtime.store.transition(spec.id, "completed")
     return {"fired_at": row["ts"]}
 
 

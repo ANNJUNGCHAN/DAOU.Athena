@@ -1,6 +1,6 @@
 'use strict';
 
-const VALID_KINDS = new Set(['gate', 'continuous']);
+const VALID_KINDS = new Set(['gate', 'continuous', 'background']);
 const VALID_STATES = new Set([
   'pending', 'running', 'retrying', 'succeeded', 'failed', 'disabled',
 ]);

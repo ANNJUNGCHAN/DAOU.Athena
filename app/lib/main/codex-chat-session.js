@@ -67,6 +67,7 @@ class CodexChatSession {
     requiredMcpServer,
     mcpAudit,
     appVersion = '0.1.0',
+    requestUserInput = null,
     timeoutMs = DEFAULT_TIMEOUT_MS,
     nowFn = Date.now,
     uuidFn = crypto.randomUUID,
@@ -87,6 +88,7 @@ class CodexChatSession {
     this._requiredMcpServer = requiredMcpServer;
     this._mcpAudit = mcpAudit;
     this._appVersion = appVersion;
+    this._requestUserInput = requestUserInput;
     this._timeoutMs = timeoutMs;
     this._now = nowFn;
     this._uuid = uuidFn;
@@ -190,7 +192,7 @@ class CodexChatSession {
       requiredMcpServer: this._requiredMcpServer,
       mcpAudit: this._mcpAudit,
     };
-    this._session = this._sessionFactory({ runtime: this._runtime, appVersion: this._appVersion });
+    this._session = this._sessionFactory({ runtime: this._runtime, appVersion: this._appVersion, requestUserInput: this._requestUserInput });
     this._config = config;
     this._lastSessionId = resumeSessionId;
     this._blankWarm = false;
@@ -303,11 +305,14 @@ class CodexChatSession {
     const finalResult = {
       type: 'result', subtype: 'success', is_error: false,
       result: finalText, session_id: threadId, usage: outcome.result.usage,
+      taskOutcome: outcome.result.taskOutcome || 'completed',
+      toolFailures: outcome.result.toolFailures || [], safeMessage: outcome.result.safeMessage || null,
     };
     onEvent?.(finalResult);
     return {
       ok: true, submitted: true, exitCode: null, timedOut: false, aborted: false,
       stdoutCapped: false, error: null, finalResult, stderr: '', diagnostics: null,
+      taskOutcome: finalResult.taskOutcome, toolFailures: finalResult.toolFailures, safeMessage: finalResult.safeMessage,
       firstEventMs, firstTextMs, totalMs: Math.max(0, this._now() - startedAt), spawnedFresh,
       metrics: { firstEventMs, firstTextMs, totalMs: Math.max(0, this._now() - startedAt), spawnedFresh },
     };

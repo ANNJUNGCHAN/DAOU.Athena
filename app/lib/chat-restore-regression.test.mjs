@@ -15,7 +15,11 @@ function declaration(name) {
 }
 function context(extra = {}) {
   const document = {
-    createElement: fakeNode,
+    createElement(tag) {
+      const node = fakeNode(tag);
+      node.append = (...children) => children.forEach((child) => node.appendChild(child));
+      return node;
+    },
     createTextNode(text) { const node = fakeNode('#text'); node.textContent = text; return node; },
   };
   const ctx = vm.createContext({ document, window: { AthenaLib: {} }, ...extra });
@@ -63,6 +67,16 @@ test('opening saved Aegis conversation refreshes tasks after workspace restorati
   calls.length = 0;
   ctx.restoreConversation({ activeMode: 'summary' }, [], { workspace: {} });
   assert.deepEqual(calls, ['view:summary', 'restore']);
+});
+
+test('restored failed tool work retains the answer and its failure notice', () => {
+  const ctx = context();
+  vm.runInContext(declaration('renderFailureBubble') + '\n' + declaration('pastMessageTurn'), ctx);
+  const line = ctx.pastMessageTurn({ role: 'assistant', text: '**부분 응답**', error: '조회가 차단되었습니다.' });
+  assert.equal(line.children[0].textContent, '부분 응답');
+  assert.equal(line.children[1].className, 'turn-fail-card');
+  assert.ok(line.children[1].textContent.includes('작업 미완료'));
+  assert.ok(line.children[1].textContent.includes('조회가 차단되었습니다.'));
 });
 
 test('conversation roundtrip replaces shared input with destination draft, including empty or missing', () => {

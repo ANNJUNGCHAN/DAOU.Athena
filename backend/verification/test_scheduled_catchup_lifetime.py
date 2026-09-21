@@ -17,7 +17,7 @@ def spec_for(value: str, created: datetime, approved: datetime | None = None):
         id="scheduled-test",
         mode="scheduled",
         status="active",
-        condition=SimpleNamespace(value=value),
+        condition=SimpleNamespace(source="schedule.daily", value=value),
         created_at=created,
         approved_at=approved,
     )

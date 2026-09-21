@@ -389,6 +389,7 @@ function createGraphModeController(deps) {
   // 브레인 상태를 아직 모르는 부팅 초반엔 "못 씀"으로 가정한다 — setAvailable(true)가
   // 오기 전에 그래프 모드로 들어오면 renderUnavailable()의 정직한 안내를 보여준다.
   let available = false;
+  let availabilityMessage = '';
   // 군집 지도는 **라이브 렌더러 하나뿐이다**(2026-09-02 결정). 잠깐 정적 SVG와
   // 토글로 공존시켰지만, 만져 본 뒤 라이브를 채택하고 정적을 폐기했다.
   let liveMap = null; // 처음 그릴 때 만든다.
@@ -519,7 +520,7 @@ function createGraphModeController(deps) {
     if (!message && elements.summaryMain) {
       const summaryNote = document.createElement('div');
       summaryNote.className = 'graph-mode-unavailable';
-      summaryNote.textContent = BRAIN_UNAVAILABLE_COPY;
+      summaryNote.textContent = availabilityMessage || BRAIN_UNAVAILABLE_COPY;
       elements.summaryMain.appendChild(summaryNote);
       if (elements.summaryMain.dataset) elements.summaryMain.dataset.unavailable = 'true';
     }
@@ -527,7 +528,7 @@ function createGraphModeController(deps) {
     while (elements.graphBody.firstChild) elements.graphBody.removeChild(elements.graphBody.firstChild);
     const note = document.createElement('div');
     note.className = 'graph-mode-unavailable';
-    note.textContent = message || BRAIN_UNAVAILABLE_COPY;
+    note.textContent = message || availabilityMessage || BRAIN_UNAVAILABLE_COPY;
     elements.graphBody.appendChild(note);
     renderMapLegend(false);
     lastDrawnRevision = null; // available해지면 실제 그림으로 다시 그리게 한다.
@@ -1413,8 +1414,9 @@ function createGraphModeController(deps) {
     // 모드 칩은 상시 보인다(Paper 보드 05) — 브레인 꺼짐은 칩을 숨기는 대신
     // 그래프 화면 안에서 renderUnavailable()로 정직하게 알린다. 그래프 모드
     // 자체는 브레인 상태와 무관하게 항상 열 수 있다.
-    setAvailable(nextAvailable) {
+    setAvailable(nextAvailable, message = '') {
       available = Boolean(nextAvailable);
+      availabilityMessage = available ? '' : String(message);
       // 요약 표면의 안내는 그래프 뷰 밖에서도 남아 있을 수 있다(모드를 나갔다가
       // 브레인이 켜진 뒤 다시 들어오는 경로) — 뷰 판정보다 먼저 지운다.
       if (available) clearSummaryNotice();

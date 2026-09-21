@@ -49,6 +49,7 @@ class CodexAppServerProtocol {
   constructor({
     writeLine,
     onNotification = () => {},
+    onServerRequest = null,
     beforeWrite = () => {},
     maxJsonlLineBytes = DEFAULT_LIMITS.maxJsonlLineBytes,
     maxTurnOutputBytes = DEFAULT_LIMITS.maxTurnOutputBytes,
@@ -63,6 +64,8 @@ class CodexAppServerProtocol {
     if (typeof beforeWrite !== 'function') throw new TypeError('beforeWrite must be a function');
     this._writeLine = writeLine;
     this._onNotification = onNotification;
+    this._onServerRequest = onServerRequest;
+    this._serverRequests = new Set();
     this._beforeWrite = beforeWrite;
     this._maxJsonlLineBytes = requirePositiveInteger(maxJsonlLineBytes, 'maxJsonlLineBytes');
     this._maxTurnOutputBytes = requirePositiveInteger(maxTurnOutputBytes, 'maxTurnOutputBytes');
@@ -145,6 +148,16 @@ class CodexAppServerProtocol {
     this._sendEnvelope(envelope);
   }
 
+  respond(id, result, error) {
+    if (!this._serverRequests.delete(id)) return false;
+    this._sendEnvelope(error ? { id, error } : { id, result });
+    return true;
+  }
+
+  forgetServerRequest(id) {
+    this._serverRequests.delete(id);
+  }
+
   acceptStdoutChunk(chunk) {
     if (this._ended) return;
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk), 'utf8');
@@ -188,6 +201,7 @@ class CodexAppServerProtocol {
   }
 
   failPending(code, message, options = {}) {
+    this._serverRequests.clear();
     const pending = [...this._pending.entries()];
     this._pending.clear();
     for (const [, entry] of pending) {
@@ -239,6 +253,15 @@ class CodexAppServerProtocol {
     }
     validateEnvelope(envelope);
     if (Object.prototype.hasOwnProperty.call(envelope, 'id')) {
+      if (typeof envelope.method === 'string') {
+        if (this._serverRequests.has(envelope.id)) {
+          throw new CodexProtocolError('CODEX_DUPLICATE_SERVER_REQUEST', 'Duplicate Codex server request');
+        }
+        this._serverRequests.add(envelope.id);
+        if (this._onServerRequest) this._onServerRequest(envelope);
+        else this.respond(envelope.id, null, { code: -32601, message: 'Server request not supported' });
+        return;
+      }
       this._acceptResponse(envelope);
       return;
     }

@@ -1166,7 +1166,7 @@ function foldExecutionRecord(toolSteps, startedAt, { aborted = false, steps = nu
 // 닷·"질의 실패" 라벨이 상태를 말해주므로 본문엔 "실패 — " 접두사 없이 원문만
 // 넣는다. runQueryLive의 정상 실패 경로와 orb-turn-committed(오브에서 오간 턴의
 // 뒤늦은 반영) 둘 다 이 함수 하나로 그린다(라벨 두 벌 방지).
-function renderFailureBubble(aLine, errorText) {
+function renderFailureBubble(aLine, errorText, title = '질의 실패') {
   const card = document.createElement('div');
   card.className = 'turn-fail-card';
   const head = document.createElement('div');
@@ -1175,7 +1175,7 @@ function renderFailureBubble(aLine, errorText) {
   dot.className = 'turn-fail-dot';
   const label = document.createElement('span');
   label.className = 'turn-fail-label';
-  label.textContent = '질의 실패';
+  label.textContent = title;
   head.append(dot, label);
   const body = document.createElement('div');
   body.className = 'turn-fail-body';
@@ -1660,7 +1660,8 @@ async function runQueryLive(text) {
   if (!mine()) return;
 
   // 오브 "완료" 실신호 — 성공한 턴에만 붙인다(result ok). 실패는 웃을 일이 아니다.
-  if (result && result.ok) {
+  const taskIncomplete = result && (result.taskOutcome === 'blocked' || result.taskOutcome === 'incomplete');
+  if (result && result.ok && !taskIncomplete) {
     window.athena.send('athena:orb-signal', { signal: 'done', active: true });
   }
 
@@ -1697,9 +1698,13 @@ async function runQueryLive(text) {
       aText,
       result && result.answerText
         ? result.answerText
-        : `완료 — 카드 ${cardCount}개, 답변 텍스트 없음`,
+        : taskIncomplete ? '요청한 작업을 모두 완료하지 못했습니다.' : `완료 — 카드 ${cardCount}개, 답변 텍스트 없음`,
     );
     if (!streamALine && !(result && result.answerPaintedByMain)) aLine.appendChild(aText);
+    if (taskIncomplete) {
+      renderFailureBubble(aLine, result.safeMessage || '요청한 도구 작업을 모두 완료하지 못했습니다.',
+        result.taskOutcome === 'blocked' ? '작업 차단' : '일부 작업 미완료');
+    }
   }
 
   const meta = document.createElement('div');
@@ -2422,6 +2427,9 @@ function pastMessageTurn(message) {
   if (message.role === 'assistant') window.AthenaLib.Markdown.render(body, text);
   else body.textContent = text;
   line.appendChild(body);
+  if (message.role === 'assistant' && message.error) {
+    renderFailureBubble(line, String(message.error), message.interrupted ? '작업 중단' : '작업 미완료');
+  }
   return line;
 }
 

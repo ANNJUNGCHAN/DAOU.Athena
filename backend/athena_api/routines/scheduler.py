@@ -16,11 +16,12 @@ import time
 from collections.abc import Awaitable, Callable
 from contextlib import suppress
 from dataclasses import dataclass, field, replace
-from datetime import UTC, date, datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 from typing import Any
 
 from athena_api.routines.ledger import RoutineLedger
-from athena_api.routines.models import RoutineSpec, parse_schedule_value
+from athena_api.routines.models import RoutineSpec, parse_once_value, parse_schedule_value
+from athena_api.routines.guard_settings import GuardSettings, in_quiet_hours
 from athena_api.routines.store import RoutineStore
 from athena_api.routines.triggers import TriggerEngine
 
@@ -82,6 +83,8 @@ def record_scheduled_fire(
     *,
     reason: str = "예약 시각 도달",
     threshold: float | bool | str | None = None,
+    ts: datetime | None = None,
+    scheduled_for: str | None = None,
 ) -> dict[str, Any]:
     """schedule.daily 발화를 ledger에 기록한다 — 정시 발화(run_schedule_once)와
     캐치업 발화(catchup-fire 엔드포인트) 둘 다 이 헬퍼를 거친다(P4, 판정 조립
@@ -97,6 +100,8 @@ def record_scheduled_fire(
         observed=hhmm,
         threshold=threshold if threshold is not None else spec.condition.value,
         reason=reason,
+        ts=ts,
+        scheduled_for=scheduled_for,
     )
 
 
@@ -149,6 +154,7 @@ class RoutineScheduler:
     on_expire: Callable[[RoutineSpec], Awaitable[None]] | None = None
     schedule_poll_interval_s: float = 20.0
     now_kst: Callable[[], datetime] = lambda: datetime.now(_KST)
+    get_guard_settings: Callable[[], GuardSettings] | None = None
     # 90일 아카이브 롤오버(R3) — 일일 주기, 기존 3루프와 동형 패턴.
     run_archive_once: Callable[[], None] | None = None
     archive_poll_interval_s: float = 86400.0
@@ -175,11 +181,6 @@ class RoutineScheduler:
     # routine_id → 근접(near) 진행 중 여부. 진입·이탈 각 1회만 notify하기 위한
     # 프로세스 로컬 상태(영속 안 함) — TriggerEngine._states와 같은 성격.
     _near_active: dict[str, bool] = field(default_factory=dict)
-    # 프로세스 로컬(영속 안 함, TriggerState와 동일한 트레이드오프) — 재기동하면
-    # 이 딕셔너리가 빈 상태로 시작돼 "오늘 이미 발화했다"는 사실을 잊는다.
-    # 그래서 재기동 직후 같은 날 한 번 더 발화할 수 있다 — 버그가 아니라 허용된
-    # 기존 한계다(계획 문서 Rev.3 "실행 시 참고" 참고).
-    _last_fired_date: dict[str, date] = field(default_factory=dict)
     # routine_id → 마지막으로 본 단조 시각. 루프의 전역 tick(code_poll_interval_s)은
     # 그대로 두고, 알람마다 제 poll_interval_s가 찰 때만 본다(프로세스 로컬).
     _code_last_checked: dict[str, float] = field(default_factory=dict)
@@ -298,7 +299,7 @@ class RoutineScheduler:
 
     async def _expire_pass(self) -> None:
         for spec in self.store.list_active():
-            if spec.is_expired():
+            if spec.is_expired(self.now_kst()):
                 self.store.transition(spec.id, "expired")
                 await self.clear_near(spec)
                 await self.notify(
@@ -349,44 +350,86 @@ class RoutineScheduler:
             await self.run_schedule_once()
 
     async def run_schedule_once(self) -> None:
-        """벽시계 매치 1회분 — 테스트가 직접 부른다. TriggerEngine 미경유(§8) —
-        벽시계 트리거엔 near/suppressed 개념이 없다, 하루 1회는
-        `_last_fired_date`(프로세스 로컬, `TriggerState`와 동일한 트레이드오프)로
-        보장한다."""
+        """Evaluate wall-clock occurrences, retaining quiet delays across midnight/restart."""
         await self._expire_pass()
         now = self.now_kst()
-        today = now.date()
-        hhmm = now.strftime("%H:%M")
-        weekday = now.isoweekday()  # 1=월 .. 7=일
         for spec in self.store.list_active():
-            if spec.mode != "scheduled":
+            # A prior notification awaits external work: refresh status and ledger
+            # before deciding this occurrence, with no await before its record.
+            spec = self.store.get(spec.id)
+            if spec is None or spec.status != "active" or spec.mode != "scheduled":
                 continue
-            if self._last_fired_date.get(spec.id) == today:
+            rows = [row for row in self.engine.ledger.read_all()
+                    if row.get("routine_id") == spec.id]
+            fired = [row for row in rows if row.get("verdict") == "fired"]
+            one_shot = spec.condition.source == "schedule.once"
+            if one_shot and fired:
+                self.store.transition(spec.id, "completed")
                 continue
-            parsed = parse_schedule_value(spec.condition.value)
-            if parsed is None:
-                # rules.py가 draft 시점에 막았어야 한다 — 여기 도달하면 저장된
-                # 값이 손상된 것이다. 조용히 넘기지 않고 사유를 남긴다(프리모템 1).
-                self.last_error = (
-                    f"루틴 {spec.id}의 예약 형식이 올바르지 않다: {spec.condition.value!r}"
-                )
+            if one_shot:
+                occurrence = parse_once_value(str(spec.condition.value))
+                if occurrence is None or now < occurrence:
+                    continue
+            else:
+                parsed = parse_schedule_value(spec.condition.value)
+                if parsed is None:
+                    self.last_error = f"루틴 {spec.id}의 예약 형식이 올바르지 않다"
+                    continue
+                days, target_hhmm = parsed
+                hour, minute = map(int, target_hhmm.split(":"))
+                candidate = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+                eligible = max(spec.created_at, spec.approved_at or spec.created_at)
+                candidates = []
+                if (days is None or now.isoweekday() in days) and now.strftime("%H:%M") == target_hhmm:
+                    candidates.append(candidate)
+                # Delayed occurrences carry their own timestamp, so a morning
+                # delivery cannot consume that evening's distinct occurrence.
+                for row in rows:
+                    if row.get("reason") != "조용 시간: 예약 알림 보류" or row.get("threshold") != spec.condition.value:
+                        continue
+                    try:
+                        due = datetime.fromisoformat(row.get("scheduled_for") or row["ts"]).astimezone(_KST)
+                        if not row.get("scheduled_for"):
+                            due = due.replace(hour=hour, minute=minute, second=0, microsecond=0)
+                        if eligible <= due <= now:
+                            candidates.append(due)
+                    except (ValueError, TypeError):
+                        continue
+                occurrence = None
+                for due in sorted(set(candidates)):
+                    if due < eligible:
+                        continue
+                    already_fired = any(
+                        (datetime.fromisoformat(row["scheduled_for"]) == due
+                         if row.get("scheduled_for") else
+                         datetime.fromisoformat(row["ts"]).astimezone(_KST).date() == due.date())
+                        for row in fired
+                    )
+                    if not already_fired:
+                        occurrence = due
+                        break
+                if occurrence is None:
+                    continue
+            occurrence_key = occurrence.isoformat()
+            if self.get_guard_settings and in_quiet_hours(self.get_guard_settings(), now):
+                if not any(row.get("verdict") == "suppressed"
+                           and row.get("scheduled_for") == occurrence_key
+                           for row in rows):
+                    self.engine.ledger.record(
+                        "suppressed", routine_id=spec.id, symbol=spec.symbol,
+                        source=spec.condition.source, observed=now.strftime("%H:%M"),
+                        threshold=spec.condition.value, reason="조용 시간: 예약 알림 보류",
+                        ts=now, scheduled_for=occurrence_key,
+                    )
                 continue
-            days, target_hhmm = parsed
-            if target_hhmm != hhmm:
-                continue
-            if days is not None and weekday not in days:
-                continue
-            self._last_fired_date[spec.id] = today
             row = record_scheduled_fire(
-                spec,
-                self.engine.ledger,
-                hhmm,
-                reason=f"예약 시각 도달({target_hhmm})",
-                threshold=spec.condition.value,
+                spec, self.engine.ledger, now.strftime("%H:%M"),
+                reason="예약 시각 도달",
+                threshold=spec.condition.value, ts=now, scheduled_for=occurrence_key,
             )
-            # ledger에 실제로 쓴 ts를 그대로 이벤트에 싣는다 — 브리핑 보고·/runs
-            # 병합의 상관 키(위 _fire 독스트링, 캐치업 경로와 동일 원칙).
-            await self._fire(spec, hhmm, fired_at=row["ts"])
+            if one_shot:
+                self.store.transition(spec.id, "completed")
+            await self._fire(spec, now.strftime("%H:%M"), fired_at=row["ts"])
 
     # ---------- code (감시 함수, 장중) ----------
 

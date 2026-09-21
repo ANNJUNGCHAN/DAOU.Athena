@@ -18,6 +18,7 @@ import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 MIN_MAX_DAILY_NUDGES = 0
@@ -30,6 +31,15 @@ _DEFAULT_QUIET_START = "22:00"
 _DEFAULT_QUIET_END = "07:00"
 
 _HHMM_RE = re.compile(r"^([01]\d|2[0-3]):([0-5]\d)$")
+KST = timezone(timedelta(hours=9))
+
+
+def in_quiet_hours(settings: GuardSettings, now: datetime) -> bool:
+    clock = now.astimezone(KST).strftime("%H:%M")
+    start, end = settings.quiet_hours.start, settings.quiet_hours.end
+    if start == end:
+        return False
+    return start <= clock < end if start < end else clock >= start or clock < end
 
 
 class GuardSettingsError(ValueError):

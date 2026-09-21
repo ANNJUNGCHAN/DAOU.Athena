@@ -31,6 +31,7 @@ const { runClaudeQuery } = require('./lib/main/claude-runner');
 const { runGrokQuery } = require('./lib/main/grok-runner');
 const { createGrokAcpSession } = require('./lib/main/grok-acp-session');
 const { createCodexChatSession } = require('./lib/main/codex-chat-session');
+const { createCodexUserInputDialog } = require('./lib/main/codex-user-input-dialog');
 const { createCodexChatRuntime } = require('./lib/main/codex-chat-runtime');
 const { createConversationSessionPool } = require('./lib/main/conversation-session-pool');
 const { runConversationSessionTurn } = require('./lib/main/conversation-session-turn');
@@ -1868,6 +1869,29 @@ async function callBacktestBridge(call, body = {}) {
 ipcMain.handle('athena:backtest-presets', async () => {
   return callBacktestBridge(backtestBridge.fetchPresets);
 });
+
+for (const [channel, method, suffix] of [
+  ['athena:suggestion-state', 'GET', ''],
+  ['athena:suggestion-present', 'POST', '/present'],
+  ['athena:suggestion-hold', 'POST', '/hold'],
+]) {
+  ipcMain.handle(channel, async (_event, body) => {
+    try {
+      const res = await fetch(`${BACKEND_HTTP_BASE}/api/v1/nudge-guard/suggestions${suffix}`, {
+        method,
+        ...(method === 'POST' ? {
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body || {}),
+        } : {}),
+      });
+      const data = await res.json().catch(() => ({}));
+      return res.ok ? { ok: true, data }
+        : { ok: false, status: res.status, error: data.detail || `HTTP ${res.status}` };
+    } catch (error) {
+      return { ok: false, error: String(error?.message || error) };
+    }
+  });
+}
 ipcMain.handle('athena:backtest-indicators', async () => {
   return callBacktestBridge(backtestBridge.fetchIndicators);
 });
@@ -3616,6 +3640,7 @@ function createLiveCodexChatSession() {
   });
   return createCodexChatSession({
     ...built.sessionOptions, developerInstructions: buildLiveSystemPrompt('codex'),
+    requestUserInput: createCodexUserInputDialog({ dialog, getWindow: () => shellWin }),
   });
 }
 
@@ -6238,7 +6263,9 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   // 거르는 그때그때의 필터일 뿐, 저장하는 판정 객체에는 담지 않는다 — 카드
   // 종류는 이제 operation_ref의 순수 함수라(P5, canvas_push.py) 재생 시점에
   // 백엔드가 다시 정하므로 캐싱이 불필요하다(fast-path.js가 응답값을 쓴다).
-  const replayJudgment = result.ok
+  const taskIncomplete = result.taskOutcome === 'blocked' || result.taskOutcome === 'incomplete';
+  const taskError = taskIncomplete ? (result.safeMessage || '요청한 도구 작업을 모두 완료하지 못했습니다.') : null;
+  const replayJudgment = result.ok && !taskIncomplete
     ? replayTurnCapture.buildJudgment(canvasTypesSeen)
     : null;
   if (replayJudgment) liveQueryCache.set(query, replayJudgment);
@@ -6255,7 +6282,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         messageId: sessionAssistantId,
         text: answerText === null ? undefined : answerText,
         usage: result.finalResult && result.finalResult.usage ? result.finalResult.usage : null,
-        error: result.ok ? null : String(result.error || ''),
+        error: result.ok ? taskError : String(result.error || ''),
         interrupted: !result.ok,
       });
     }
@@ -6276,6 +6303,9 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     error: result.ok ? null : (result.error || `${liveProviderId} 종료 코드 ${result.exitCode}`),
     code: result.code || null,
     type: result.actionNeeded ? 'action-needed' : undefined,
+    taskOutcome: result.taskOutcome || (result.ok ? 'completed' : 'blocked'),
+    safeMessage: taskError,
+    toolFailures: result.toolFailures || [],
     answerText,
     canvasTypes: [...new Set(canvasTypesSeen)],
     canvasCaptions: canvasCaptionsSeen,
@@ -7669,15 +7699,16 @@ app.on('will-quit', () => {
 // 타이핑 애니메이션은 최소 1.92초를 보장하지만, 실제 셸 진입은 이 원장의 gate가
 // 모두 성공(또는 fixture에서 명시적으로 disabled)한 뒤에만 가능하다. selector 풀과
 // 장기 재연결 루프는 시작 여부만 기록하고 종료를 기다리지 않는다.
+// 분석·이력 투영은 셸 진입 후 진행하며 개별 상태를 계속 원장에 발행한다.
 const BOOT_TASKS = [
   { id: 'mcp-env', label: '보안 환경 확인', kind: 'gate' },
   { id: 'account-token', label: '계좌 인증 토큰 발급', kind: 'gate' },
   { id: 'provider-warm', label: '대화 연결 준비', kind: 'gate' },
   { id: 'backend', label: 'ATHENA 서비스 연결', kind: 'gate' },
   { id: 'stock-index', label: '종목 검색 데이터 준비', kind: 'gate' },
-  { id: 'brain-ingestion', label: '대화 분석기 준비', kind: 'gate' },
-  { id: 'chat-history-flush', label: '대화 이력 SQLite 반영', kind: 'gate' },
-  { id: 'graph-projection', label: '대화 성향 그래프·군집 구성', kind: 'gate' },
+  { id: 'brain-ingestion', label: '대화 분석기 준비', kind: 'background' },
+  { id: 'chat-history-flush', label: '대화 이력 SQLite 반영', kind: 'background' },
+  { id: 'graph-projection', label: '대화 성향 그래프·군집 구성', kind: 'background' },
   { id: 'alarm-bootstrap', label: '알람·루틴 복원 및 놓친 일정 확인', kind: 'gate' },
   { id: 'routine-feed', label: '알람 실시간 연결', kind: 'gate' },
   { id: 'canvas-feed', label: '그래프·캔버스 실시간 연결', kind: 'gate' },
@@ -8094,17 +8125,26 @@ async function startLiveBoot(createWindowsPromise) {
     dependencyTaskChains: [['mcp-env', 'provider-warm']],
     dependencyTaskId: 'backend',
     dependentTaskIds: ['stock-index', 'alarm-bootstrap', 'routine-feed', 'canvas-feed'],
-    sequentialDependentTaskIds: ['brain-ingestion', 'chat-history-flush', 'graph-projection'],
     continuousTaskIds: ['background-loops'],
   });
   const backendTask = bootSnapshot.tasks.find((task) => task.id === 'backend');
   if (!backendTask || backendTask.state !== 'succeeded') {
+    for (const id of ['brain-ingestion', 'chat-history-flush', 'graph-projection']) {
+      startupReadiness.disable(id, '백엔드 endpoint 준비 실패로 시작하지 않음');
+    }
     mdlog('대화 그래프 갱신 예약 건너뜀 — 백엔드 endpoint 준비 실패');
     return bootSnapshot;
   }
-  startHourlyConversationGraphRefresh();
-  startConversationGraphObserver();
-  mdlog(`대화 그래프 갱신 예약 — 1시간 action + 60초 read-only observer · owner=${conversationGraphScheduleOwner || 'unknown'}`);
+  // 게이트 완료를 기다린 뒤 순서대로 실행하지만 셸 진입은 기다리지 않는다.
+  // 주기 갱신은 최초 투영 이후 시작하여 초기 수집/투영과 경쟁하지 않게 한다.
+  void (async () => {
+    for (const id of ['brain-ingestion', 'chat-history-flush', 'graph-projection']) {
+      await startupReadiness.start(id);
+    }
+    startHourlyConversationGraphRefresh();
+    startConversationGraphObserver();
+    mdlog(`대화 그래프 갱신 예약 — 1시간 action + 60초 read-only observer · owner=${conversationGraphScheduleOwner || 'unknown'}`);
+  })().catch((error) => mdlog(`백그라운드 시작 작업 오류: ${error.message}`));
   return bootSnapshot;
 }
 

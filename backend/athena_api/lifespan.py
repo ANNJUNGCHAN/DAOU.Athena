@@ -898,6 +898,7 @@ def build_lifespan(settings: Settings | None = None, *, ws_connect=None):
                     ),
                 )
                 _publish_routines(app, routines)
+                routines.scheduler.get_guard_settings = app.state.nudge_guard_store.get
         except BaseException as primary_error:
             await _cleanup_lifespan_resources(
                 app,

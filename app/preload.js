@@ -81,6 +81,9 @@ const INVOKE_CHANNELS = new Set([
   // 말걸기 가드 설정 REST(F-stage9) — GET/POST /api/v1/nudge-guard.
   'athena:nudge-guard-get',
   'athena:nudge-guard-set',
+  'athena:suggestion-state',
+  'athena:suggestion-present',
+  'athena:suggestion-hold',
   'athena:order-execute',
   // 수량 칩 매수여력·보유 조회 — 주문 TR이 아니다.
   'athena:ticket-capacity',

@@ -96,6 +96,10 @@ const VERDICT_ICON = {
 function statusBadgeText(status) {
   if (status === 'paused') return '일시중지';
   if (status === 'draft') return '초안';
+  if (status === 'completed') return '실행 완료';
+  if (status === 'cancelled') return '취소';
+  if (status === 'expired') return '만료';
+  if (status === 'failed') return '실패';
   return '활성';
 }
 
@@ -111,8 +115,7 @@ function fixtureMark() {
 // suggestionsCache)을 재사용한다 — 39번 좌측 미니 목록과 42번 전체 화면이
 // 서로 다른 데이터를 보여주면 "두 개의 진실"이 생긴다(sidebar.js 머리말과
 // 같은 원칙). 칩 "루틴으로"는 7단계 "추가"와 같은 seedChatInput 경로,
-// "보류"는 세션 동안만 그 카드를 숨긴다(백엔드 저장이 없다 — 재시작하면
-// 다시 보인다, 지어낸 영속성을 암시하지 않는다, P3). 말걸기 가드 패널은
+// "보류"는 서버에 저장되고 설정에 따라 7~28일간 재노출을 제한한다. 말걸기 가드 패널은
 // F-stage9부터 GET /api/v1/nudge-guard 라이브다 — 이 패널 자체엔 여전히
 // 값을 바꾸는 버튼이 없다(편집은 채팅 확인 카드로만, 아래 참고, 죽은 버튼
 // 금지 원칙은 유지). "그래프 모드에서 근거 보기 →"는
@@ -275,10 +278,9 @@ function settingsFormModel(detail, routine) {
         ? [{ value: 'true', label: '예' }, { value: 'false', label: '아니오' }] : null,
       value: String(cond.value),
       unit: VALUE_UNIT[cond.source] || '',
-      // schedule.daily 가지는 지금 제품에서 드릴인이 안 열린다(「전체 이력 보기 →」가
-      // 감시·코드 알람에만 붙는다) — 단위 테스트만 도는 가지다.
       hint: spec.value_type === 'number' ? '숫자'
-        : (cond.source === 'schedule.daily' ? '요일@시각 표기' : ''),
+        : (cond.source === 'schedule.daily' ? '요일@시각 표기'
+          : (cond.source === 'schedule.once' ? '시간대를 포함한 ISO 날짜와 시각' : '')),
     });
     if (spec.transport === 'ws') {
       fields.push({
@@ -352,6 +354,7 @@ function createAgentCanvas(deps) {
     fetchAlerts, markAllAlertsRead, getWsConnected,
     fetchRuns, fetchAvgDuration, fetchEngagement,
     fetchNudgeGuard,
+    holdSuggestion, presentSuggestions,
     onOpenGraph,
     onOpenInChat,
     onEditInChat,
@@ -391,7 +394,7 @@ function createAgentCanvas(deps) {
   let alertsCache = [];
   let historyItem = null; // 드릴인 중인 항목(10단계) — null이면 드릴인이 아니다.
   let historyTab = 'runs'; // 드릴인 세그먼트(Paper 보드 03) — 이력 | 설정.
-  let heldSuggestionIds = new Set(); // "보류"한 제안(11단계) — 세션 동안만, 저장 안 됨.
+  let heldSuggestionIds = new Set(); // 서버의 영속 보류 상태를 반영하는 화면 캐시.
   let historyRequestId = 0; // 위와 같은 이유 — 별개 요청이라 별개 가드를 쓴다.
   let historyRunsCache = []; // 최신 30건(정렬 완료) — 접기/펼치기가 같은 배열을 다시 그린다.
   let historyRunsLoadState = 'not_requested';
@@ -683,7 +686,7 @@ function createAgentCanvas(deps) {
     textWrap.appendChild(title);
     const rationale = el('span', 'agent-suggest-rationale');
     rationale.textContent = `${entry.relation_kind} 성향 ${entry.reinforcement}회 보강` + (entry.rationale ? ` — ${entry.rationale}` : '');
-    textWrap.appendChild(rationale);
+    if (!entry.hideRationale) textWrap.appendChild(rationale);
     row.appendChild(textWrap);
     const addBtn = el('button', 'agent-suggest-add');
     addBtn.type = 'button';
@@ -698,7 +701,7 @@ function createAgentCanvas(deps) {
   function renderSuggestions() {
     while (suggestList.firstChild) suggestList.removeChild(suggestList.firstChild);
     suggestSection.hidden = suggestionsCache.length === 0;
-    for (const entry of suggestionsCache) suggestList.appendChild(makeSuggestionRow(entry));
+    for (const entry of suggestionsCache.filter((entry) => !heldSuggestionIds.has(entry.entity_id))) suggestList.appendChild(makeSuggestionRow(entry));
     renderProactiveView(); // 11단계 — 같은 캐시를 쓰는 "제안" 뷰도 함께 갱신한다(위 머리말).
     renderStats(); // 3단계 — "성향 제안" 통계 타일도 같은 캐시를 쓴다(위와 같은 이유).
   }
@@ -706,11 +709,22 @@ function createAgentCanvas(deps) {
   // GET /api/v1/brain/profile-summary 실데이터 — requestId로 낡은 응답을 버린다
   // (routine 목록과 같은 이유·같은 패턴, 별개 요청이라 별개 카운터를 쓴다).
   async function refreshSuggestions() {
+    if (typeof container.getClientRects === 'function' && !container.getClientRects().length) return;
     const rid = ++suggestRequestId;
     let entries = [];
     try {
       entries = (typeof fetchProfileSummary === 'function') ? await fetchProfileSummary() : [];
       if (!Array.isArray(entries)) entries = [];
+      if (typeof presentSuggestions !== 'function') entries = [];
+      else {
+        const policy = await presentSuggestions(entries.map((entry) => String(entry.entity_id)));
+        if (rid !== suggestRequestId) return;
+        heldSuggestionIds.clear();
+        for (const id of policy.held_ids || []) heldSuggestionIds.add(id);
+        const visible = new Set(policy.visible_ids || []);
+        entries = entries.filter((entry) => visible.has(String(entry.entity_id)));
+        if (policy.show_rationale === false) entries = entries.map((entry) => ({ ...entry, rationale: '', hideRationale: true }));
+      }
     } catch {
       entries = [];
     }
@@ -1483,7 +1497,7 @@ function createAgentCanvas(deps) {
     breadcrumb.hidden = false;
     breadcrumbTitle.textContent = item.title;
     breadcrumbBadge.className = `agent-breadcrumb-badge is-${item.status}`;
-    breadcrumbBadge.textContent = item.status === 'paused' ? '일시중지' : '활성';
+    breadcrumbBadge.textContent = statusBadgeText(item.status);
     renderHistoryOutput([]);
     renderHistoryStats();
     renderHistoryRuns();
@@ -1579,7 +1593,7 @@ function createAgentCanvas(deps) {
       tag.textContent = label;
       nudgeGuardTags.appendChild(tag);
     }
-    nudgeGuardNote.textContent = '위 설정은 저장되지만 아직 제안 표시·발화에 적용되지 않습니다. 제안은 조회된 성향을 보여주며, 보류한 제안은 앱을 다시 실행하면 다시 표시됩니다.';
+    nudgeGuardNote.textContent = '하루 횟수와 조용 시간은 새 제안 노출에 적용됩니다. 조용 시간에는 예약 알림도 보류됩니다. 보류는 최소 7일 저장되며, 거절 학습을 켜면 반복 보류를 최대 28일까지 늘립니다. 직접 요청한 조회와 기존 이력은 제한하지 않습니다.';
   }
   renderNudgeGuard(); // 초기 페인트 — 라이브 데이터 도착 전엔 "불러오는 중"으로 정직하게 보인다.
 
@@ -1641,16 +1655,21 @@ function createAgentCanvas(deps) {
     const holdBtn = el('button', 'agent-proactive-chip');
     holdBtn.type = 'button';
     holdBtn.textContent = '보류';
-    holdBtn.addEventListener('click', () => {
-      // 세션 동안만 숨긴다 — 저장 백엔드가 없어 재시작하면 다시 보인다(위 머리말, P3).
+    holdBtn.disabled = typeof holdSuggestion !== 'function';
+    holdBtn.addEventListener('click', async () => {
+      holdBtn.disabled = true;
+      let result;
+      try { result = await holdSuggestion(String(entry.entity_id)); }
+      catch { holdBtn.disabled = false; holdBtn.textContent = '보류 저장 실패 · 다시 시도'; return; }
+      if (!result || !result.held_until) { holdBtn.disabled = false; holdBtn.textContent = '보류 저장 실패'; return; }
       heldSuggestionIds.add(entry.entity_id);
-      // 보류는 서버 상태를 바꾸지 않는다 — 빈 변경이 정상이라고 결과 턴이 말한다(4380-1).
+      // 저장 응답 뒤에만 숨긴다. 실패하면 재시도할 수 있게 그대로 남긴다.
       if (typeof onControlResult === 'function') {
         onControlResult(ControlTurn.buildControlResultTurn({
           kind: 'reject',
           badge: '제안 채택',
-          lead: '이번 실행에서 제안 숨김',
-          fact: `${entry.entity_name || entry.entity_id} · 앱을 다시 실행하면 다시 표시됩니다`,
+          lead: '제안 보류 저장됨',
+          fact: `${entry.entity_name || entry.entity_id} · ${new Date(result.held_until).toLocaleDateString('ko-KR')}까지 보류`,
         }));
       }
       renderProactiveCards();
@@ -1669,7 +1688,7 @@ function createAgentCanvas(deps) {
     }
     const rationale = el('div', 'agent-proactive-card-rationale');
     rationale.textContent = `근거: ${entry.relation_kind} 성향 ${entry.reinforcement}회 보강`;
-    card.appendChild(rationale);
+    if (!entry.hideRationale) card.appendChild(rationale);
     return card;
   }
 
@@ -1770,7 +1789,7 @@ function createAgentCanvas(deps) {
       .map(toWatchItem);
     const draftItems = routinesCache.filter((r) => r.status === 'draft').map(toDraftItem);
     const scheduleItems = routinesCache
-      .filter((r) => (r.status === 'active' || r.status === 'paused') && r.mode === 'scheduled')
+      .filter((r) => r.status !== 'draft' && r.mode === 'scheduled')
       .map(toScheduleItem);
     return watchItems.concat(draftItems).concat(scheduleItems);
   }
@@ -2523,8 +2542,8 @@ function createAgentCanvas(deps) {
       const headActions = el('span', 'agent-detail-head-actions');
       const pauseBtn = el('button', 'agent-pause-btn');
       pauseBtn.type = 'button';
-      if (item.kind === 'watch') {
-        // 감시(watch, live)만 pause/resume 엔드포인트가 있다 — 위 머리말 참고.
+      if (item.status === 'active' || item.status === 'paused') {
+        // 감시와 예약 모두 동일한 서버 상태 전이를 사용한다.
         const willPause = item.status !== 'paused';
         pauseBtn.textContent = willPause ? '❚❚ 일시중지' : '▶ 재개';
         pauseBtn.disabled = false;
@@ -2539,15 +2558,22 @@ function createAgentCanvas(deps) {
           await refresh();
         });
       } else {
-        // 예약(schedule)은 백엔드가 이제 같은 pause/resume 전이를 지원하지만
-        // (store.transition은 mode를 안 가린다), 이 화면에 그 배선을 잇는 건
-        // F1 최소선(3단계) 스코프 밖이다 — 항상 비활성으로 남겨둔다(P5, 다음
-        // 스코프로 이연. "백엔드에 없다"는 옛 사유는 더 이상 사실이 아니다).
-        pauseBtn.textContent = '❚❚ 일시중지';
+        pauseBtn.textContent = statusBadgeText(item.status);
         pauseBtn.disabled = true;
-        pauseBtn.title = '예약 항목의 일시중지 제어는 이번 스코프 밖입니다';
       }
       headActions.appendChild(pauseBtn);
+      if ((item.status === 'active' || item.status === 'paused') && typeof cancelRoutine === 'function') {
+        const cancelBtn = el('button', 'agent-pause-btn');
+        cancelBtn.type = 'button';
+        cancelBtn.textContent = '취소';
+        cancelBtn.addEventListener('click', async () => {
+          cancelBtn.disabled = true;
+          await runControl(cancelRoutine, '취소', item, '취소됨');
+          await refresh();
+        });
+        headActions.appendChild(cancelBtn);
+      }
+
       headRow.appendChild(headActions);
     }
     detailCol.appendChild(headRow);
@@ -2604,22 +2630,15 @@ function createAgentCanvas(deps) {
       const logsCaption = el('span', 'agent-panel-caption');
       logsCaption.textContent = '최근 실행';
       logsCaptionRow.appendChild(logsCaption);
-      // 드릴인(10단계)은 감시(watch)만 연다 — schedule도 3단계부터 실제
-      // 라우틴이라 ledger에 대응 행이 생길 수 있지만, 이 화면에 그 배선을
-      // 잇는 건 F1 최소선 스코프 밖이다(위 머리말, P5 — 다음 스코프로 이연).
-      if (item.kind === 'watch') {
-        const openHistoryBtn = el('button', 'agent-history-open');
-        openHistoryBtn.type = 'button';
-        openHistoryBtn.textContent = '전체 이력 보기 →';
-        openHistoryBtn.addEventListener('click', () => openHistory(item));
-        logsCaptionRow.appendChild(openHistoryBtn);
-      }
+      const openHistoryBtn = el('button', 'agent-history-open');
+      openHistoryBtn.type = 'button';
+      openHistoryBtn.textContent = '전체 이력 보기 →';
+      openHistoryBtn.addEventListener('click', () => openHistory(item));
+      logsCaptionRow.appendChild(openHistoryBtn);
       detailCol.appendChild(logsCaptionRow);
       const logsWrap = el('div', 'agent-detail-logs');
       const unavailable = el('div', 'agent-list-empty');
-      unavailable.textContent = item.kind === 'watch'
-        ? '실제 실행 기록은 전체 이력 보기에서 확인할 수 있습니다.'
-        : '이 화면에는 최근 실행 기록이 연결되어 있지 않습니다.';
+      unavailable.textContent = '실제 발화·억제·브리핑 기록은 전체 이력 보기에서 확인할 수 있습니다.';
       logsWrap.appendChild(unavailable);
       detailCol.appendChild(logsWrap);
 
@@ -2720,7 +2739,21 @@ function createAgentCanvas(deps) {
     if (isProactive) renderProactiveView();
   }
 
+  let refreshTimer = null;
+  let refreshBusy = false;
+  function destroy() {
+    if (refreshTimer !== null) clearInterval(refreshTimer);
+    refreshTimer = null;
+  }
   function mount() {
+    destroy();
+    refreshTimer = setInterval(() => {
+      if (!container.isConnected) { destroy(); return; }
+      if (container.hidden || refreshBusy || (typeof container.getClientRects === 'function' && !container.getClientRects().length)) return;
+      refreshBusy = true;
+      refresh().finally(() => { refreshBusy = false; });
+    }, 15000);
+    refreshTimer?.unref?.();
     while (container.firstChild) container.removeChild(container.firstChild);
     container.appendChild(head);
     container.appendChild(tasksHead);
@@ -2835,7 +2868,7 @@ function createAgentCanvas(deps) {
     };
   }
 
-  return { mount, refresh, setActiveTab, selectRow, setActiveView, setHistoryTab, updateWsStatus: renderWsStatus, getContext };
+  return { mount, refresh, destroy, setActiveTab, selectRow, setActiveView, setHistoryTab, updateWsStatus: renderWsStatus, getContext };
 }
 
 const __exports = { createAgentCanvas, settingsSummaryLines, settingsFormModel, settingsUpdateBody };

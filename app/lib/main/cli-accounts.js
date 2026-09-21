@@ -9,6 +9,7 @@ const electron = require('electron');
 const { getClaudeBin, claudeBinCandidates } = require('./claude-bin');
 const { getGrokBin, grokBinCandidates } = require('./grok-bin');
 const { resolveCodexExecutable } = require('./codex-bin');
+const { probeCodexVersion, connectionDiagnostics } = require('./codex-connection-diagnostics');
 const { resolveCodexRuntimeHome, createCodexRuntime } = require('./codex-runtime-home');
 
 const PROVIDER_ORDER = Object.freeze(['claude', 'grok', 'codex']);
@@ -312,7 +313,14 @@ function createCliAccounts({
     return selectActiveAccount({ accounts: state.accounts, activeId: state.activeId });
   }
 
-  const list = async () => selectList(await reconcileCodexRuntimeAccount());
+  const list = async () => {
+    const snapshot = await reconcileCodexRuntimeAccount();
+    const result = selectList(snapshot);
+    let version = { cliStatus: 'unavailable', cliVersion: null };
+    try { version = await probeCodexVersion(refreshCodexRuntime(), statusTimeoutMs); } catch { /* Diagnostic only. */ }
+    result.providers.find(provider => provider.id === 'codex').diagnostics = connectionDiagnostics(version, snapshot.codexStatus);
+    return result;
+  };
   const getActiveAccount = async () => selectActiveAccount(await reconcileCodexRuntimeAccount());
 
   // 절대경로는 파일 존재로 판정한다 — `where`는 PATH만 뒤지므로 PATH 밖에

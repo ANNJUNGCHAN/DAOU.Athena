@@ -1196,15 +1196,25 @@ function buildModelSection(opts) {
   const connected = accounts.length > 0;
   const s = modelState || {};
 
+  const codex = provider?.id === 'codex';
+  const diagnostics = provider?.diagnostics;
+  const connectionLabel = codex
+    ? (diagnostics?.authentication === 'unknown' ? '인증 확인 불가' : connected ? '인증됨' : '인증 필요')
+    : (connected ? '연결됨' : '미연결');
   const wrap = el('div', 'uk-model-section');
   const headRow = row('uk-model-section-head', [
-    statusDot(connected, `${title} ${connected ? '연결됨' : '미연결'}`),
+    statusDot(connected, `${title} ${connectionLabel}`),
     el('span', 'uk-settings-name', title),
-    pill(connected ? '연결됨' : '미연결', connected ? 'ok' : 'dim'),
+    pill(connectionLabel, connected ? 'ok' : 'dim'),
   ]);
   if (optional) headRow.appendChild(pill('선택 사항', 'dim'));
   wrap.appendChild(headRow);
   wrap.appendChild(el('div', 'uk-provider-desc', description));
+  if (codex) {
+    const cliText = diagnostics?.cliStatus === 'available'
+      ? `CLI 실행 확인 · ${diagnostics.cliVersion}` : 'CLI 실행을 확인하지 못했습니다.';
+    wrap.appendChild(el('div', 'uk-provider-desc', `${cliText} 이 연결 확인에서는 모델 응답·MCP 실행을 검사하지 않습니다.`));
+  }
 
   async function doSwitch(acc) {
     clear(errBox);

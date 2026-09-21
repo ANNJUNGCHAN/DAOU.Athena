@@ -206,7 +206,7 @@ function isProtocolOverload(error) {
 function buildThreadStartParams(desired) {
   const params = {
     cwd: requireNonEmptyString(desired.cwd, 'desired.cwd'),
-    approvalPolicy: 'never',
+    approvalPolicy: desired.humanApprovalEnabled === true ? 'on-request' : 'never',
     sandbox: 'read-only',
     developerInstructions: String(desired.systemPrompt ?? desired.developerInstructions ?? ''),
     serviceName: 'athena',
@@ -228,7 +228,7 @@ function buildTurnStartParams(turn, threadId, desired, includeOverrides) {
   const params = {
     ...base,
     cwd: requireNonEmptyString(desired.cwd, 'desired.cwd'),
-    approvalPolicy: 'never',
+    approvalPolicy: desired.humanApprovalEnabled === true ? 'on-request' : 'never',
     sandboxPolicy: {
       type: 'readOnly',
       networkAccess: false,
@@ -251,6 +251,7 @@ class CodexAppServerSession {
     maxGenerationOutputBytes = DEFAULT_LIMITS.maxGenerationOutputBytes,
     maxStderrRingBytes = DEFAULT_LIMITS.maxStderrRingBytes,
     appVersion = '0.1.0',
+    requestUserInput = null,
   }) {
     if (!runtime || typeof runtime.spawnGenerationAppServer !== 'function') {
       throw new TypeError('runtime.spawnGenerationAppServer must be a function');
@@ -258,6 +259,8 @@ class CodexAppServerSession {
     if (typeof random !== 'function') throw new TypeError('random must be a function');
     if (typeof sleep !== 'function') throw new TypeError('sleep must be a function');
     this._runtime = runtime;
+    this._requestUserInput = typeof requestUserInput === 'function' ? requestUserInput : null;
+    this._userInputRequests = new Map();
     this._random = random;
     this._sleep = sleep;
     this._requestTimeoutMs = requestTimeoutMs;
@@ -294,7 +297,7 @@ class CodexAppServerSession {
       throw new TypeError('generationContext.spawnContext.assertCurrent is required');
     }
     this._state = 'starting';
-    this._desired = Object.freeze({ ...desired });
+    this._desired = Object.freeze({ ...desired, humanApprovalEnabled: Boolean(this._requestUserInput) });
     this._generationContext = generationContext;
     this._seedConversationThreads(desired?.conversationThreads);
     generationContext.spawnContext.assertCurrent();
@@ -324,6 +327,7 @@ class CodexAppServerSession {
         }
       },
       beforeWrite: () => generationContext.spawnContext.assertCurrent(),
+      onServerRequest: (request) => { void this._handleServerRequest(request, connectionSerial); },
       onNotification: (notification) => this._handleNotification(notification, connectionSerial),
       requestTimeoutMs: this._requestTimeoutMs,
       ...this._limits,
@@ -403,6 +407,8 @@ class CodexAppServerSession {
   async interrupt(athenaTurnId, reason = 'user') {
     const active = this._activeByAthenaTurn.get(athenaTurnId);
     if (!active) return null;
+    active.approvalCancelled = true;
+    this._cancelUserInputs(active);
     const providerTurnId = active.providerTurnId || await active.providerStarted.promise;
     if (active.completed) return active.terminal.promise;
     try {
@@ -469,7 +475,7 @@ class CodexAppServerSession {
         title: 'Athena',
         version: this._appVersion,
       },
-      capabilities: { experimentalApi: false },
+      capabilities: { experimentalApi: Boolean(this._requestUserInput) },
     }, { timeoutMs: this._startupTimeoutMs });
     this._protocol.notify('initialized');
     return result;
@@ -660,6 +666,8 @@ class CodexAppServerSession {
       started: false,
       completed: false,
       finalText: '',
+      toolCalls: new Map(),
+      toolOutcomes: new Map(),
       usage: {},
     };
     this._activeByAthenaTurn.set(turn.turnId, active);
@@ -683,6 +691,57 @@ class CodexAppServerSession {
     }
   }
 
+  _cancelUserInputs(active) {
+    for (const [id, pending] of this._userInputRequests) {
+      if (pending.active !== active) continue;
+      pending.controller.abort();
+      this._userInputRequests.delete(id);
+      this._protocol?.forgetServerRequest(id);
+    }
+  }
+
+  async _handleServerRequest(request, connectionSerial) {
+    if (connectionSerial !== this._connectionSerial || this._state !== 'ready') return;
+    try { this._assertCurrent(); } catch { return; }
+    const protocol = this._protocol;
+    const deny = () => protocol.respond(request.id, null, {
+      code: -32601, message: 'This request is not supported by Athena',
+    });
+    const params = request.params || {};
+    const active = this._activeByThread.get(params.threadId);
+    if (request.method !== 'item/tool/requestUserInput' || !this._requestUserInput
+      || !active || active.completed || active.approvalCancelled
+      || active.providerTurnId !== params.turnId) {
+      try { deny(); } catch { /* A closed generation cannot receive responses. */ }
+      return;
+    }
+    const controller = new AbortController();
+    this._userInputRequests.set(request.id, { active, controller });
+    const current = () => {
+      if (controller.signal.aborted || active.completed || active.approvalCancelled
+        || connectionSerial !== this._connectionSerial || this._state !== 'ready'
+        || this._userInputRequests.get(request.id)?.controller !== controller
+        || this._activeByThread.get(params.threadId) !== active) return false;
+      this._assertCurrent();
+      active.turnContext.assertCurrent?.();
+      return true;
+    };
+    try {
+      if (!current()) return;
+      const result = await this._requestUserInput(params, { signal: controller.signal });
+      if (current()) protocol.respond(request.id, result);
+    } catch {
+      if (!controller.signal.aborted && connectionSerial === this._connectionSerial) {
+        try { deny(); } catch { /* The provider may have exited while the dialog was open. */ }
+      }
+    } finally {
+      if (this._userInputRequests.get(request.id)?.controller === controller) {
+        this._userInputRequests.delete(request.id);
+        protocol.forgetServerRequest(request.id);
+      }
+    }
+  }
+
   _handleNotification(notification, connectionSerial) {
     if (connectionSerial !== this._connectionSerial || this._state === 'stopped') return;
     try {
@@ -691,6 +750,15 @@ class CodexAppServerSession {
       return;
     }
     const params = notification.params || {};
+    if (notification.method === 'serverRequest/resolved') {
+      const pending = this._userInputRequests.get(params.requestId);
+      if (pending && pending.active.threadId === params.threadId) {
+        pending.controller.abort();
+        this._userInputRequests.delete(params.requestId);
+        this._protocol?.forgetServerRequest(params.requestId);
+      }
+      return;
+    }
     const providerTurnId = extractTurnId(params);
     const threadId = params?.turn?.threadId ?? params.threadId ?? null;
     const active = (providerTurnId && this._activeByProviderTurn.get(providerTurnId))
@@ -742,17 +810,34 @@ class CodexAppServerSession {
     const itemType = String(item.type || '');
     if (itemType === 'mcpToolCall' || itemType === 'mcp_tool_call') {
       const toolUseId = String(item.id || '');
-      const providerToolName = String(item.name ?? item.toolName ?? '');
+      const providerToolName = item.tool && item.server
+        ? `mcp__${item.server}__${item.tool}` : String(item.tool ?? item.name ?? item.toolName ?? '');
       if (!toolUseId || !providerToolName) return;
+      active.toolCalls ||= new Map();
+      active.toolOutcomes ||= new Map();
+      const previous = active.toolCalls.get(toolUseId);
+      const input = item.arguments ?? item.input ?? previous?.input;
+      // Missing arguments cannot safely establish that a later call retried the same operation.
+      const operationKey = input === undefined ? `${providerToolName}:${toolUseId}`
+        : `${providerToolName}:${JSON.stringify(stableNormalize(input))}`;
+      const status = String(item.status || '').toLowerCase();
+      const isError = Boolean(item.error) || item.result?.isError === true
+        || ['failed', 'declined', 'cancelled', 'canceled'].includes(status);
+      active.toolCalls.set(toolUseId, { input, operationKey, completed });
       if (completed) {
+        active.toolOutcomes.set(operationKey, {
+          toolName: canonicalToolName(providerToolName),
+          kind: ['declined', 'cancelled', 'canceled'].includes(status) ? 'approval-denied' : 'tool-error',
+          failed: isError,
+        });
         const content = toolResultContent(item);
         this._emitActive(active, 'tool_completed', {
           toolUseId,
           canonicalToolName: canonicalToolName(providerToolName),
-          isError: Boolean(item.error),
+          isError,
           content,
         }, providerTurnId);
-        if (!item.error && isRenderCanvasToolName(providerToolName)) {
+        if (!isError && isRenderCanvasToolName(providerToolName)) {
           const canvas = classifyCanvasBlock({ toolUseId, content, isError: false, meta: null });
           if (canvas.envelope) this._emitActive(active, 'canvas_result', canvas, providerTurnId);
         }
@@ -788,8 +873,16 @@ class CodexAppServerSession {
       active.conversation.lastSuccessfulTurnId = active.providerTurnId;
       active.conversation.needsRecovery = false;
       const checkpoint = { provider: 'codex', turnId: active.providerTurnId };
+      const outcomes = [...(active.toolOutcomes?.values() || [])];
+      const toolFailures = outcomes.filter(entry => entry.failed).map(({ toolName, kind }) => ({ toolName, kind }));
+      const pendingTools = [...(active.toolCalls?.values() || [])].some(entry => !entry.completed);
+      const taskOutcome = toolFailures.length
+        ? (outcomes.some(entry => !entry.failed) ? 'incomplete' : 'blocked')
+        : (pendingTools ? 'incomplete' : 'completed');
+      const safeMessage = taskOutcome === 'blocked' ? '도구 실행이 완료되지 않아 요청한 결과를 확인하지 못했습니다.'
+        : taskOutcome === 'incomplete' ? '일부 도구 실행이 완료되지 않아 결과가 불완전할 수 있습니다.' : null;
       const result = {
-        status: 'completed',
+        status: 'completed', taskOutcome, toolFailures, safeMessage,
         providerBinding: binding,
         continuationCheckpoint: checkpoint,
         finalText: active.finalText || String(params?.turn?.summary ?? params.summary ?? ''),
@@ -800,6 +893,7 @@ class CodexAppServerSession {
         continuationCheckpoint: checkpoint,
         finalText: result.finalText,
         usage: result.usage,
+        taskOutcome, toolFailures, safeMessage,
       }, active.providerTurnId);
       this._cleanupActive(active);
       active.terminal.resolve(result);
@@ -837,6 +931,7 @@ class CodexAppServerSession {
   }
 
   _cleanupActive(active) {
+    this._cancelUserInputs(active);
     this._protocol?.endTurn(active.athenaTurnId);
     this._activeByAthenaTurn.delete(active.athenaTurnId);
     if (active.providerTurnId) this._activeByProviderTurn.delete(active.providerTurnId);

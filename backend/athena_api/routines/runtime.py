@@ -21,7 +21,7 @@ from athena_api.routines.archive import rollover_jsonl
 from athena_api.routines.briefings import BriefingStore
 from athena_api.routines.engagement import EngagementStore
 from athena_api.routines.ledger import RoutineLedger
-from athena_api.routines.models import LEGACY_DISABLED_SOURCES, RoutineSpec
+from athena_api.routines.models import LEGACY_DISABLED_SOURCES, RoutineSpec, parse_once_value
 from athena_api.routines.read_marks import ReadMarksStore
 from athena_api.routines.scheduler import RoutineScheduler
 from athena_api.routines.store import RoutineStore
@@ -151,6 +151,12 @@ class RoutinesRuntime:
         """
         if spec.condition.source in LEGACY_DISABLED_SOURCES:
             return "이 외부 데이터 source는 앱 플러그인 전용이라 백엔드에서 활성화할 수 없다"
+        if spec.is_expired():
+            return "만료된 루틴은 재개할 수 없다 — 새 예약을 만들어 주세요"
+        if spec.condition.source == "schedule.once" and spec.approved_at is None:
+            occurrence = parse_once_value(str(spec.condition.value))
+            if occurrence is None or occurrence <= datetime.now(UTC):
+                return "일회 예약 시각이 지났다 — 미래 시각으로 수정한 뒤 승인해 주세요"
         if spec.mode == "realtime-ws":
             if self.ws_client is None:
                 return "키움 WS 미가용 — 실시간 감시를 켤 수 없다"

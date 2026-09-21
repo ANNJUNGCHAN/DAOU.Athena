@@ -28,6 +28,7 @@ from athena_api.routines.models import (
     RoutineSpec,
     WatchSpec,
     parse_schedule_value,
+    parse_once_value,
 )
 
 
@@ -105,6 +106,8 @@ def validate_condition(raw: Any) -> Condition:
                 "예약 시각은 '<요일>@<HH:MM>' 형식이어야 한다"
                 "(요일: ALL 또는 1~7 콤마열, 1=월..7=일)"
             )
+        if source == "schedule.once" and parse_once_value(value) is None:
+            _fail("일회 예약은 시간대가 포함된 ISO8601 시각이어야 한다")
     else:
         # dict·list·None 등 — 중첩 조건·표현식 흉내는 전부 여기서 죽는다.
         _fail("value는 숫자·불리언·문자열 리터럴만 허용된다")
@@ -252,6 +255,10 @@ def validate_draft(raw: Any, *, now: datetime | None = None) -> RoutineSpec:
         _fail("expires_days는 정수여야 한다")
     if not 1 <= expires_days <= MAX_EXPIRY.days:
         _fail(f"expires_days는 1~{MAX_EXPIRY.days} 범위다")
+    if condition.source == "schedule.once":
+        occurrence = parse_once_value(str(condition.value))
+        if occurrence is None or not now < occurrence < now + timedelta(days=expires_days):
+            _fail("일회 예약 시각은 현재 이후이며 만료 시각 이전이어야 한다")
 
     note = raw.get("note", "")
     if not isinstance(note, str) or len(note) > 200:

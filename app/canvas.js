@@ -5195,6 +5195,21 @@ const agentCanvas = window.AthenaLib.AgentCanvas.createAgentCanvas({
     if (!res || !res.ok) throw new Error((res && res.error) || '성향 신호를 받지 못했다');
     return Array.isArray(res.entries) ? res.entries : [];
   },
+  fetchSuggestionState: async () => {
+    const res = await window.athena.invoke('athena:suggestion-state');
+    if (!res?.ok) throw new Error(res?.error || '제안 상태를 불러오지 못했습니다');
+    return res.data;
+  },
+  presentSuggestions: async (entityIds) => {
+    const res = await window.athena.invoke('athena:suggestion-present', { entity_ids: entityIds });
+    if (!res?.ok) throw new Error(res?.error || '제안 표시 상태를 확인하지 못했습니다');
+    return res.data;
+  },
+  holdSuggestion: async (entityId) => {
+    const res = await window.athena.invoke('athena:suggestion-hold', { entity_id: entityId });
+    if (!res?.ok) throw new Error(res?.error || '제안 보류를 저장하지 못했습니다');
+    return res.data;
+  },
   // 제안 채택은 완성된 초안 생성을 바로 요청한다. 채팅의 idle 게이트를 함께 쓴다.
   onAddSuggestion: (text) => {
     document.dispatchEvent(new CustomEvent('athena:chat-submit', { detail: { text } }));
@@ -5792,6 +5807,7 @@ function markGraphBrainReady() {
 }
 
 if (window.athena && typeof window.athena.on === 'function') {
+  window.athena.on('athena:boot-readiness', applyGraphReadiness);
   window.athena.on('athena:brain-graph-updated', () => {
     markGraphBrainReady();
     void refreshConversationGraphSurfaces();
@@ -5799,25 +5815,27 @@ if (window.athena && typeof window.athena.on === 'function') {
   });
 }
 
-// 모드 칩은 항상 보이지만, 컨트롤러는 아직 "못 씀"으로 가정한 채 태어난다
-// (controller.js 기본값) — 이 프로브가 브레인 상태를 확인해 바로잡는다. 프로브 전에
-// 사람이 그래프 모드로 들어와도 renderUnavailable()의 정직한 안내가 뜨지, 막히지 않는다.
-(async () => {
-  try {
-    let ready = false;
-    for (let i = 0; i < 12 && !ready; i += 1) {
-      try {
-        const status = await window.athena.invoke('athena:brain-status');
-        ready = Boolean(status && status.ok && status.ready);
-      } catch (err) {
-        console.warn('[graph-mode] brain-status 실패 — 못 씀으로 둔다', err);
-      }
-      if (!ready) await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-    if (ready) markGraphBrainReady();
-    else graphMode.setAvailable(false);
-  } catch (err) {
-    console.warn('[graph-mode] brain-status 실패 — 못 씀으로 둔다', err);
-    graphMode.setAvailable(false);
+function applyGraphReadiness(snapshot) {
+  if (graphBrainReady) return;
+  const tasks = snapshot && Array.isArray(snapshot.tasks) ? snapshot.tasks : [];
+  const projection = tasks.find((task) => task.id === 'graph-projection');
+  if (projection && projection.state === 'succeeded') {
+    markGraphBrainReady();
+    return;
   }
-})();
+  const failed = tasks.find((task) => ['brain-ingestion', 'chat-history-flush', 'graph-projection'].includes(task.id)
+    && task.state === 'failed');
+  const disabled = projection && projection.state === 'disabled';
+  graphMode.setAvailable(false, failed
+    ? '대화 성향을 준비하지 못했습니다. 다른 기능은 계속 사용할 수 있으며, 앱을 다시 시작해 재시도할 수 있습니다.'
+    : disabled ? '현재 대화 성향 기능을 사용할 수 없습니다. 앱을 다시 시작해 준비 상태를 확인해 주세요.'
+      : '이전 대화와 관심 종목을 연결하고 있습니다. 준비되는 동안 다른 기능을 사용할 수 있습니다.');
+}
+
+// 백엔드 프로세스 생존과 그래프 준비 완료를 구분한다. 느린 분석도 상태 이벤트로 따라간다.
+function graphReadinessUnavailable() {
+  if (!graphBrainReady) {
+    graphMode.setAvailable(false, '대화 성향 준비 상태를 확인하지 못했습니다. 잠시 후 다시 열어 주세요.');
+  }
+}
+window.athena.invoke('athena:boot-readiness:get').then(applyGraphReadiness).catch(graphReadinessUnavailable);

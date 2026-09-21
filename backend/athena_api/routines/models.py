@@ -50,6 +50,7 @@ SOURCES: dict[str, SourceSpec] = {
     ),
     "vi.triggered": SourceSpec("ws", "bool", _EQ_OPS, "VI 발동"),
     "schedule.daily": SourceSpec("clock", "string", _AT_OPS, "예약 시각(요일 지정)"),
+    "schedule.once": SourceSpec("clock", "string", _AT_OPS, "일회 예약 시각(시간대 포함)"),
     # 코드 감시 — 관측값은 감시 함수의 마지막 행 판정(bool) 하나뿐이다.
     # 조건에는 코드가 들어가지 않는다: 코드는 프로젝트 폴더의 파일이고
     # 스펙은 WatchSpec으로 그 파일을 가리키기만 한다(R5).
@@ -64,16 +65,17 @@ LEGACY_DISABLED_SOURCES: dict[str, SourceSpec] = {
     ),
 }
 
-RoutineStatus = Literal["draft", "active", "paused", "expired", "cancelled", "failed"]
+RoutineStatus = Literal["draft", "active", "paused", "expired", "cancelled", "failed", "completed"]
 
 # 상태 전이 화이트리스트 — 이 표 밖의 전이는 전부 거부한다.
 ALLOWED_TRANSITIONS: dict[str, tuple[str, ...]] = {
     "draft": ("active", "cancelled"),
-    "active": ("paused", "cancelled", "expired", "failed"),
+    "active": ("paused", "cancelled", "expired", "failed", "completed"),
     "paused": ("active", "cancelled", "expired"),
     "expired": (),
     "cancelled": (),
     "failed": ("active", "cancelled"),
+    "completed": (),
 }
 
 
@@ -114,6 +116,15 @@ def source_spec(source: str) -> SourceSpec:
     if source in SOURCES:
         return SOURCES[source]
     return LEGACY_DISABLED_SOURCES[source]
+
+
+def parse_once_value(value: str) -> datetime | None:
+    """An explicit occurrence requires an ISO timestamp with timezone."""
+    try:
+        result = datetime.fromisoformat(value)
+        return result if result.tzinfo is not None else None
+    except (ValueError, TypeError):
+        return None
 
 
 def parse_schedule_value(value: str) -> tuple[frozenset[int] | None, str] | None:
