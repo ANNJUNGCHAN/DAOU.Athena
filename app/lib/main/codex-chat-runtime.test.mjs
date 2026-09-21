@@ -7,7 +7,7 @@ const envModulePath = require.resolve('./mcp-env');
 const previousEnvModule = require.cache[envModulePath];
 require.cache[envModulePath] = { id: envModulePath, filename: envModulePath, loaded: true,
   exports: { buildEnvOverrides() { throw new Error('Policy tests must not read runtime secrets'); } } };
-const { DISABLED_FEATURES, buildCodexAppServerArgs, createMcpAudit, gatewayEnvVarNames } = require('./codex-chat-runtime');
+const { DISABLED_FEATURES, MCP_STARTUP_TIMEOUT_SEC, buildCodexAppServerArgs, createMcpAudit, gatewayEnvVarNames } = require('./codex-chat-runtime');
 if (previousEnvModule) require.cache[envModulePath] = previousEnvModule;
 else delete require.cache[envModulePath];
 const gateway = { command: 'fixture-gateway', args: ['serve'], env: {} };
@@ -18,7 +18,7 @@ function auditInput() {
     configAudit: { config: {
       web_search: 'disabled',
       features: { ...Object.fromEntries(DISABLED_FEATURES.map(name => [name, false])), code_mode_host: true },
-      mcp_servers: { athena: { ...gateway, required: true, enabled_tools: ['athena_call', 'athena_search'] } },
+      mcp_servers: { athena: { ...gateway, required: true, startup_timeout_sec: MCP_STARTUP_TIMEOUT_SEC, enabled_tools: ['athena_call', 'athena_search'] } },
     } },
     servers: [{ name: 'athena', tools: [{ name: 'athena_search' }, { name: 'athena_call' }] }],
   };
@@ -82,4 +82,18 @@ test('upstream credentials cross the MCP subprocess boundary by name, never valu
   assert.throws(() => audit.validate(input), { code: 'CODEX_MCP_CONFIG_MISMATCH' });
   input.configAudit.config.mcp_servers.athena.env_vars = [...names, 'UNRELATED_SECRET'];
   assert.throws(() => audit.validate(input), { code: 'CODEX_MCP_CONFIG_MISMATCH' });
+});
+
+
+test('gateway startup allows upstream initialization and audits the effective deadline', () => {
+  assert.equal(MCP_STARTUP_TIMEOUT_SEC, 120);
+  const args = buildCodexAppServerArgs({ gateway, allowedTools });
+  assert.ok(args.some((arg) => arg.includes('startup_timeout_sec = 120')));
+  const audit = createMcpAudit(allowedTools, gateway);
+  assert.equal(audit.validate(auditInput()), true);
+  for (const deadline of [undefined, 30, 300]) {
+    const input = auditInput();
+    input.configAudit.config.mcp_servers.athena.startup_timeout_sec = deadline;
+    assert.throws(() => audit.validate(input), { code: 'CODEX_MCP_CONFIG_MISMATCH' });
+  }
 });

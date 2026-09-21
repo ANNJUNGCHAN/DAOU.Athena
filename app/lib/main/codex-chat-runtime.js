@@ -8,6 +8,10 @@ const { resolveCodexExecutable } = require('./codex-bin');
 const { resolveCodexRuntimeHome } = require('./codex-runtime-home');
 const { terminateTree } = require('./proc-utils');
 
+// The gateway waits up to 30s for approved upstreams; Codex must allow
+// additional initialization time rather than timing out at the same boundary.
+const MCP_STARTUP_TIMEOUT_SEC = 120;
+
 const DISABLED_FEATURES = Object.freeze([
   'apply_patch_freeform',
   'apps',
@@ -104,6 +108,7 @@ function buildCodexAppServerArgs({ gateway, allowedTools }) {
     `env = ${tomlTable(env)}`,
     `env_vars = ${tomlArray(stringArray(gateway.env_vars ?? [], 'gateway.env_vars'))}`,
     ...(toolPolicy.gatewayAll ? [] : [`enabled_tools = ${tomlArray(toolPolicy.localTools)}`]),
+    `startup_timeout_sec = ${MCP_STARTUP_TIMEOUT_SEC}`,
     'required = true',
   ].join(', ');
   const result = ['app-server', '--strict-config', '--listen', 'stdio://'];
@@ -168,6 +173,7 @@ function createMcpAudit(allowedTools, gateway = null) {
           || JSON.stringify(effectiveEnv) !== JSON.stringify(gateway.env ?? {})
           || JSON.stringify([...(effective.env_vars ?? [])].sort())
             !== JSON.stringify([...(gateway.env_vars ?? [])].sort())
+          || effective.startup_timeout_sec !== MCP_STARTUP_TIMEOUT_SEC
           || effective.required !== true
           || (toolPolicy.gatewayAll
             ? effectiveTools !== undefined && effectiveTools !== null
@@ -344,6 +350,7 @@ function createCodexChatRuntime({
 
 module.exports = {
   DISABLED_FEATURES,
+  MCP_STARTUP_TIMEOUT_SEC,
   buildCodexAppServerArgs,
   createCodexChatRuntime,
   gatewayEnvVarNames,
