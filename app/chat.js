@@ -920,14 +920,16 @@ function reportChatViewport() {
   }, 400);
 }
 let chatDraftTimer = null;
-function reportChatDraft() {
+function reportChatDraft({ immediate = false } = {}) {
   if (chatDraftTimer) clearTimeout(chatDraftTimer);
-  chatDraftTimer = setTimeout(() => {
+  const sendDraft = () => {
     chatDraftTimer = null;
     try {
       window.athena.send('athena:session-workspace', { patch: { draft: { text: $input.value } } });
     } catch { /* 채널이 없는 하네스 */ }
-  }, 300);
+  };
+  if (immediate) sendDraft();
+  else chatDraftTimer = setTimeout(sendDraft, 300);
 }
 
 function scrollHistoryToBottom(force) {
@@ -2416,7 +2418,9 @@ function pastMessageTurn(message) {
   // 사용자/모델 말풍선은 살아 있는 턴과 같은 클래스를 쓴다 — 복원된 대화라고
   // 다른 모양으로 그리면 같은 대화가 두 얼굴을 갖는다.
   body.className = message.role === 'user' ? 'turn-q' : 'turn-a';
-  body.textContent = String((message && message.text) || '');
+  const text = String((message && message.text) || '');
+  if (message.role === 'assistant') window.AthenaLib.Markdown.render(body, text);
+  else body.textContent = text;
   line.appendChild(body);
   return line;
 }
@@ -2457,13 +2461,11 @@ function restoreConversation(switched, messages, snapshot, { stored = false, con
     for (const message of messages) $history.appendChild(pastMessageTurn(message));
   }
   setLocked(false);
-  // 초안과 스크롤도 그 대화의 것이다. 초안은 지금 입력이 비어 있을 때만 채운다 —
-  // 사용자가 치던 글자를 저장본이 덮으면 안 된다. 스크롤은 저장된 자리로, 바닥이었으면 바닥으로.
+  // 입력란은 공유 DOM이므로 목적지 초안으로 항상 바꾼다. 빈 초안도 복원해야
+  // 앞 대화의 입력이 따라오지 않는다. 스크롤은 저장된 자리로, 바닥이었으면 바닥으로.
   const ws = snapshot && snapshot.workspace;
-  if (ws && ws.draft && typeof ws.draft.text === 'string' && !$input.value) {
-    $input.value = ws.draft.text;
-    autoGrowInput();
-  }
+  $input.value = ws && ws.draft && typeof ws.draft.text === 'string' ? ws.draft.text : '';
+  autoGrowInput();
   const vp = snapshot && snapshot.viewport && snapshot.viewport.chat;
   if (vp && vp.atBottom === false && typeof vp.scrollTop === 'number') {
     stickToBottom = false;
@@ -2478,6 +2480,9 @@ function restoreConversation(switched, messages, snapshot, { stored = false, con
   if (window.AthenaSessionWorkspace) {
     window.AthenaSessionWorkspace.clear();
     if (ws) window.AthenaSessionWorkspace.restore(ws);
+  }
+  if (view === 'agent' && window.AthenaAgentCanvas) {
+    void window.AthenaAgentCanvas.refresh();
   }
 }
 
@@ -2706,6 +2711,7 @@ $input.addEventListener('keydown', (e) => {
   // 참조 칩(보드 21)도 같은 자리에서 접힌다 — 둘 다 눈에 보이는 질문은 건드리지 않는다.
   const text = consumeReferences(consumeAttachments($input.value));
   $input.value = '';
+  reportChatDraft({ immediate: true });
   autoGrowInput();
   dispatchUserQuery(text);
 });
