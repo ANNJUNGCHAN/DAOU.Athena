@@ -50,3 +50,14 @@ test('unknown or malformed upstream errors remain generic and do not leak their 
     assert.doesNotMatch(JSON.stringify(result.emitted), /fixture-secret|auth\.json/);
   }
 });
+
+test('unsupported model for ChatGPT login is actionable without exposing provider error text', () => {
+  const result = failTurn({ message: JSON.stringify({ error: {
+    message: "The 'fixture-model' model is not supported when using Codex with a ChatGPT account. fixture-private-value",
+  } }) });
+  assert.equal(result.error.code, 'CODEX_MODEL_UNSUPPORTED');
+  assert.equal(result.error.actionNeeded, true);
+  assert.equal(result.error.retryable, false);
+  assert.match(result.error.safeMessage, /지원되지 않습니다/);
+  assert.doesNotMatch(JSON.stringify(result.emitted), /fixture-model|fixture-private-value/);
+});

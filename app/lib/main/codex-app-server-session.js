@@ -44,6 +44,12 @@ function turnFailure(status, params) {
       providerStatus: status, safeMessage, actionNeeded: true, retryable: false,
     });
   }
+  if (/model.*not supported when using Codex.*ChatGPT account/i.test(message)) {
+    const safeMessage = '선택한 모델은 현재 Codex 로그인에서 지원되지 않습니다. 설정에서 지원되는 Codex 모델을 선택해 주세요.';
+    return new CodexSessionError('CODEX_MODEL_UNSUPPORTED', safeMessage, {
+      providerStatus: status, safeMessage, actionNeeded: true, retryable: false,
+    });
+  }
   return new CodexSessionError('CODEX_TURN_FAILED', 'Codex turn failed', { providerStatus: status });
 }
 

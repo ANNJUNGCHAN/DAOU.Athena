@@ -2946,18 +2946,34 @@ function renderModelPopover() {
   codexTitle.className = 'mp-title';
   codexTitle.textContent = codexLocked ? 'Codex 모델 · 연결 후 사용' : 'Codex 모델';
   $modelPopover.appendChild(codexTitle);
-  const modelInput = document.createElement('input');
-  modelInput.type = 'text';
+  const modelInput = document.createElement('select');
   modelInput.className = 'uk-input uk-input-mono';
-  modelInput.placeholder = '모델 이름';
   modelInput.setAttribute('aria-label', 'Codex 모델');
-  modelInput.autocomplete = 'off';
+  const models = Array.isArray(d.modelCatalog?.models) ? d.modelCatalog.models : [];
+  if (!models.includes(d.model)) {
+    const current = document.createElement('option');
+    current.value = d.model || '';
+    current.textContent = d.model ? `${d.model} · 현재 값 (목록에 없음)` : '현재 기본 설정';
+    current.disabled = true;
+    modelInput.appendChild(current);
+  }
+  for (const model of models) {
+    const option = document.createElement('option');
+    option.value = model; option.textContent = model;
+    modelInput.appendChild(option);
+  }
   modelInput.value = d.model || '';
-  modelInput.disabled = codexLocked;
+  modelInput.disabled = codexLocked || models.length === 0;
+  const catalogNote = document.createElement('div');
+  catalogNote.className = 'mp-title';
+  catalogNote.textContent = models.length
+    ? 'CLI 저장 목록 · 계정 변경 후 지원 여부는 달라질 수 있습니다.'
+    : '모델 목록 갱신 필요 · Codex 로그인·네트워크를 확인하고 앱을 다시 시작해 주세요.';
+  $modelPopover.appendChild(catalogNote);
   let committing = false;
   const commitCodexModel = async () => {
     const model = modelInput.value.trim() || null;
-    if (codexLocked || committing || model === d.model) return;
+    if (codexLocked || committing || model === d.model || !models.includes(model)) return;
     committing = true;
     try {
       const res = await window.athena.invoke('athena:model-set', { provider: 'codex', patch: { model } });
@@ -2972,10 +2988,7 @@ function renderModelPopover() {
       committing = false;
     }
   };
-  modelInput.addEventListener('blur', commitCodexModel);
-  modelInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') { event.preventDefault(); void commitCodexModel(); }
-  });
+  modelInput.addEventListener('change', commitCodexModel);
   $modelPopover.appendChild(modelInput);
   popoverSection('Codex 사고 강도', PILL_CODEX_EFFORT_CHIPS, d.effort, 'effort', 'codex', codexLocked);
 }

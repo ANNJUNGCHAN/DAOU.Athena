@@ -6990,7 +6990,7 @@ ipcMain.handle('athena:settings:expose-to-model:set', async (_e, { enabled } = {
 function handleModelGet() {
   const { claude, grok } = modelPrefs.get();
   const { model, effort } = codexConfig.readModelSettings();
-  return { claude, grok, codex: { model, effort }, active: resolveActiveModelSelection({ claude, grok }) };
+  return { claude, grok, codex: { model, effort, modelCatalog: codexConfig.readModelCatalog() }, active: resolveActiveModelSelection({ claude, grok }) };
 }
 
 async function handleModelSet(e, payload = {}) {

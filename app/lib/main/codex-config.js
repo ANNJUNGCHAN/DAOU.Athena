@@ -1,17 +1,6 @@
-// Codex 모델·추론강도 설정 — 이 앱 밖(userData)이 아니라 Codex 본인의 설정
-// 파일에 직접 쓴다. 팀리드 지시(2026-08-18, 공식 문서 조사 근거): Codex 사용자
-// 설정은 `$CODEX_HOME/config.toml`(CODEX_HOME 미설정 시 `~/.codex`)이고, 최상위
-// 키 `model`(string) · `model_reasoning_effort`("minimal"|"low"|"medium"|
-// "high"|"xhigh")를 쓴다. `codexHome()`은 cli-accounts.js의 detectCodex()와
-// 같은 규칙(CODEX_HOME env 우선, 폴백 os.homedir()/.codex)이다 — 둘이 다른
-// 디렉토리를 보면 "연결 표시는 됐는데 모델 설정은 딴 곳에 쓰인다"는 불일치가
-// 생긴다.
-//
-// 외부 프로그램(Codex CLI)이 관리하는 파일이라 전체 TOML 재직렬화는 하지 않는다
-// — 알려진 두 키만 라인 단위로 in-place 패치하고, 주석·미지 키·[섹션]은 바이트
-// 그대로 보존한다. 최상위(top-level, 첫 `[section]` 헤더 이전)의 키만 대상으로
-// 삼는다 — `[profile.default]` 아래 동명 `model` 키를 오독하면 사용자가 설정한
-// 프로필별 값을 엉뚱하게 덮어쓴다.
+// Codex 인증과 모델 설정은 모두 Athena 전용 codex-runtime 홈에 보관한다.
+// 최초 설정 파일이 없을 때만 기존 공용 설정의 모델·강도 두 키를 가져온다.
+// 공용 파일은 수정하지 않으며 private 파일의 주석·다른 설정은 보존한다.
 'use strict';
 
 const fs = require('fs');
@@ -28,8 +17,11 @@ function isValidCodexEffort(effort) {
   return typeof effort === 'string' && CODEX_EFFORTS.has(effort);
 }
 
+function createCodexConfig({ fsImpl = fs, osImpl = os, env = process.env, userDataPath } = {}) {
+const fs = fsImpl;
 function codexHome() {
-  return process.env.CODEX_HOME || path.join(os.homedir(), '.codex');
+  const dataPath = userDataPath || require('electron').app.getPath('userData');
+  return path.join(dataPath, 'codex-runtime');
 }
 
 function configPath() {
@@ -60,12 +52,8 @@ function isKeyLine(trimmedLine, key) {
   return re.test(trimmedLine);
 }
 
-// athena:model-get의 codex 절 → { model, effort, exists }. exists:false면
-// config.toml 자체가 없다는 뜻(model/effort는 null) — Codex를 아직 한 번도
-// 설정하지 않은 상태와 파일이 있는데 두 키가 없는 상태를 UI가 구분하고 싶어지면
-// exists로 가른다.
-function readModelSettings() {
-  const p = configPath();
+// 지정한 파일의 최상위 모델·강도만 읽는다. 읽을 수 없으면 exists:false다.
+function readSettingsFile(p) {
   let raw;
   try {
     raw = fs.readFileSync(p, 'utf-8');
@@ -91,6 +79,39 @@ function readModelSettings() {
   return { model, effort, exists: true };
 }
 
+// This is the private CLI's last fetched picker list, not proof of current account access.
+// Account changes can make it stale; actual provider failures remain authoritative.
+function readModelCatalog() {
+  try {
+    const cached = JSON.parse(fs.readFileSync(path.join(codexHome(), 'models_cache.json'), 'utf8'));
+    const models = [...new Set((Array.isArray(cached.models) ? cached.models : [])
+      .filter(item => item?.visibility === 'list' && isValidModel(item.slug))
+      .map(item => item.slug))];
+    return { status: models.length ? 'cached' : 'unavailable', models };
+  } catch { return { status: 'unavailable', models: [] }; }
+}
+
+function ensurePrivateConfig() {
+  const target = configPath();
+  if (fs.existsSync(target)) return;
+  const legacy = readSettingsFile(path.join(env.CODEX_HOME || path.join(osImpl.homedir(), '.codex'), 'config.toml'));
+  const lines = [];
+  if (legacy.model && isValidModel(legacy.model)) lines.push(`model = ${JSON.stringify(legacy.model)}`);
+  if (isValidCodexEffort(legacy.effort)) lines.push(`model_reasoning_effort = ${JSON.stringify(legacy.effort)}`);
+  fs.mkdirSync(codexHome(), { recursive: true });
+  try {
+    // Exclusive creation preserves another settings writer's first selection.
+    fs.writeFileSync(target, lines.length ? `${lines.join('\n')}\n` : '', { encoding: 'utf8', flag: 'wx' });
+  } catch (error) {
+    if (error.code !== 'EEXIST') throw error;
+  }
+}
+
+function readModelSettings() {
+  ensurePrivateConfig();
+  return readSettingsFile(configPath());
+}
+
 // athena:model-set({provider:'codex', patch}) → { ok:true, model, effort } |
 // { ok:false, error }. patch.model/patch.effort가 null이면 그 라인을 제거한다
 // (기본값으로 되돌림 = codex CLI 자체 기본값을 쓰겠다는 뜻). patch에 없는 키는
@@ -103,6 +124,16 @@ function writeModelSettings(patch = {}) {
     return { ok: false, error: 'invalid-effort' };
   }
 
+  if (patch.model != null) {
+    const current = readSettingsFile(configPath());
+    const catalog = readModelCatalog();
+    if (patch.model !== current.model && !catalog.models.includes(patch.model)) {
+      return { ok: false, error: catalog.models.length
+        ? 'Codex CLI 저장 목록에 없는 모델입니다. 목록에서 모델을 선택해 주세요.'
+        : 'Codex 모델 목록을 확인하지 못했습니다. Codex 로그인·네트워크를 확인하고 앱을 다시 시작해 주세요.' };
+    }
+  }
+  ensurePrivateConfig();
   const p = configPath();
   let raw = '';
   try {
@@ -167,4 +198,8 @@ function writeModelSettings(patch = {}) {
   return { ok: true, ...readModelSettings() };
 }
 
-module.exports = { codexHome, configPath, readModelSettings, writeModelSettings, isValidCodexEffort };
+return { codexHome, configPath, readModelSettings, writeModelSettings, readModelCatalog };
+}
+
+const defaultConfig = createCodexConfig();
+module.exports = { ...defaultConfig, createCodexConfig, isValidCodexEffort };

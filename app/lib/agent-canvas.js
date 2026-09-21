@@ -248,6 +248,13 @@ function settingsSummaryLines(routine) {
 
 // detail은 GET /{id}(조건 원문·source_spec), routine은 목록 행(생성·다음 실행 —
 // 상세 응답에는 없는 값이다). 둘 다 실데이터라 지어낸 칸은 없다.
+// Only an authoritative fired timestamp establishes that a routine produced an alert.
+// Active status, a future schedule, or a suppressed run do not establish a firing.
+function recordedFireTime(item) {
+  const value = item && item.raw && item.raw.last_fired_at;
+  return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null;
+}
+
 function settingsFormModel(detail, routine) {
   if (!detail || !detail.condition || !detail.source_spec) return null;
   const spec = detail.source_spec;
@@ -2642,25 +2649,22 @@ function createAgentCanvas(deps) {
       logsWrap.appendChild(unavailable);
       detailCol.appendChild(logsWrap);
 
-      // F-fix1(본편 이월 갭, Paper 39번 실측 AAG-0) — "채팅에서 열기 ↗".
-      // watch·schedule 둘 다 대상이다(둘 다 능동 턴을 만들 수 있다, 3단계) —
-      // draft만 위 가드로 이미 제외돼 있다. sidebar.js가 소유한 알림 방이
-      // 있으면 selectNotifyRoom과 완전히 같은 경로(ack·opened 계측 자동
-      // 정합, window.AthenaNotify.selectRoom 다리)를 타고, 없으면(이 세션에서
-      // 아직 안 뜬 발화) 채팅 입력 포커스로 폴백한다 — 죽은 버튼을 만들지
-      // 않는다(P3).
-      const openInChatRow = el('div', 'agent-detail-open-chat');
-      const openInChatCaption = el('span', 'agent-detail-open-chat-caption');
-      openInChatCaption.textContent = '루틴 발화 — 묻지 않은 턴입니다';
-      openInChatRow.appendChild(openInChatCaption);
-      const openInChatBtn = el('button', 'agent-detail-open-chat-btn');
-      openInChatBtn.type = 'button';
-      openInChatBtn.textContent = '채팅에서 열기 ↗';
-      openInChatBtn.addEventListener('click', () => {
-        if (typeof onOpenInChat === 'function') onOpenInChat(item.id);
-      });
-      openInChatRow.appendChild(openInChatBtn);
-      detailCol.appendChild(openInChatRow);
+      // Show this shortcut only after an actual ledger firing. A saved active
+      // schedule is not evidence that an alert has arrived.
+      if (recordedFireTime(item) && typeof onOpenInChat === 'function') {
+        const openInChatRow = el('div', 'agent-detail-open-chat');
+        const openInChatCaption = el('span', 'agent-detail-open-chat-caption');
+        openInChatCaption.textContent = '최근 발화 기록의 대화';
+        openInChatRow.appendChild(openInChatCaption);
+        const openInChatBtn = el('button', 'agent-detail-open-chat-btn');
+        openInChatBtn.type = 'button';
+        openInChatBtn.textContent = '채팅에서 열기 ↗';
+        openInChatBtn.addEventListener('click', () => {
+          if (typeof onOpenInChat === 'function') onOpenInChat(item.id);
+        });
+        openInChatRow.appendChild(openInChatBtn);
+        detailCol.appendChild(openInChatRow);
+      }
     }
   }
 
@@ -2871,7 +2875,7 @@ function createAgentCanvas(deps) {
   return { mount, refresh, destroy, setActiveTab, selectRow, setActiveView, setHistoryTab, updateWsStatus: renderWsStatus, getContext };
 }
 
-const __exports = { createAgentCanvas, settingsSummaryLines, settingsFormModel, settingsUpdateBody };
+const __exports = { createAgentCanvas, settingsSummaryLines, settingsFormModel, settingsUpdateBody, recordedFireTime };
 
 // UMD 각주(2026-08-18 렌더러 격리) — column-fold.js와 같은 패턴.
 if (typeof module !== 'undefined' && module.exports) {

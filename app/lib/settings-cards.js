@@ -1302,7 +1302,32 @@ function buildModelSection(opts) {
     return input;
   }
 
-  if (modelChips) {
+  if (codex) {
+    controlsWrap.appendChild(el('div', 'uk-field-label', '모델'));
+    const select = document.createElement('select');
+    select.className = 'uk-input uk-input-mono uk-model-custom-input';
+    select.setAttribute('aria-label', 'Codex 모델');
+    const models = Array.isArray(s.modelCatalog?.models) ? s.modelCatalog.models : [];
+    if (!models.includes(modelValue)) {
+      const current = el('option', '', modelValue ? `${modelValue} · 현재 값 (목록에 없음)` : '현재 기본 설정');
+      current.value = modelValue || ''; current.disabled = true;
+      select.appendChild(current);
+    }
+    for (const model of models) {
+      const option = el('option', '', model); option.value = model; select.appendChild(option);
+    }
+    select.value = modelValue || '';
+    select.disabled = disabled || models.length === 0;
+    select.addEventListener('change', () => {
+      if (!select.disabled && models.includes(select.value) && select.value !== modelValue) {
+        onModelChange({ model: select.value });
+      }
+    });
+    controlsWrap.appendChild(select);
+    controlsWrap.appendChild(el('div', 'uk-provider-desc', models.length
+      ? 'CLI 저장 목록입니다. 계정 변경 후 지원 여부는 달라질 수 있습니다.'
+      : '모델 목록 갱신이 필요합니다. Codex 로그인·네트워크를 확인하고 앱을 다시 시작해 주세요.'));
+  } else if (modelChips) {
     controlsWrap.appendChild(el('div', 'uk-field-label', '모델'));
     const chipRow = row('uk-chip-row', []);
     for (const c of modelChips) {
@@ -1482,7 +1507,7 @@ async function refreshModelCard(card, head, body) {
   body.appendChild(errBox);
 
   const note = el('div', 'uk-settings-note');
-  note.appendChild(el('div', null, '질의는 활성 계정의 Claude·Grok·Codex로 실행된다. Codex 모델·사고 강도 설정은 $CODEX_HOME/config.toml에도 반영된다.'));
+  note.appendChild(el('div', null, '질의는 활성 계정의 Claude·Grok·Codex로 실행된다. Codex 모델·사고 강도는 Athena 전용 설정에 저장된다.'));
   note.appendChild(el('div', null, 'Claude·Grok CLI는 자격증명이 파일 하나다 — 목록의 활성 행은 지금 로그인된 계정이 아니면 전환되지 않고, 다른 계정은 계정 추가로 다시 로그인한다.'));
   note.appendChild(el('div', null, '모델 접근 권한은 활성 계정의 플랜을 따른다 — 접근 불가 모델이면 질의가 오류로 표면화된다.'));
   body.appendChild(note);
