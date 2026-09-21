@@ -879,6 +879,28 @@ function targetFromYaml(yamlText) {
   return out;
 }
 
+async function loadCompletedHistoryRun(runId, deps, isCurrent) {
+  if (!deps.result || !deps.trades) throw new Error('결과를 다시 여는 연결이 없습니다');
+  const result = await deps.result({ run_id: runId });
+  if (!isCurrent()) return null;
+  if (!result || result.status !== 'done') throw new Error('완료된 실행 결과를 읽지 못했습니다');
+  const trades = await deps.trades({ run_id: runId });
+  if (!isCurrent()) return null;
+  if (!Array.isArray(trades)) throw new Error('체결 내역을 읽지 못했습니다');
+  return { runId, result, trades };
+}
+
+function renderCompletedHistoryRun(loaded, renderers) {
+  const wrap = el('div', 'backtest-result');
+  wrap.appendChild(el('div', 'backtest-card-title', `저장된 실행 ${loaded.runId} · 읽기 전용`));
+  wrap.appendChild(renderers.metrics(loaded.result.metrics || null));
+  wrap.appendChild(renderers.equity(loaded.result, loaded.trades));
+  wrap.appendChild(renderers.stdout(loaded.result.stdout || ''));
+  wrap.appendChild(renderers.trades(loaded.trades));
+  wrap.appendChild(renderers.assumptions(loaded.result));
+  return wrap;
+}
+
 function createBacktestCanvas(options) {
   const deps = options || {};
   const container = deps.container;
@@ -987,6 +1009,8 @@ function createBacktestCanvas(options) {
   // 여기서 가른다.
   let lastReportJson = null;
   let workspaceGeneration = 0;
+  let historyResultRequest = 0;
+  let historyPreview = null;
   let workspaceCleared = false;
   let pollTimer = null;
   let loadRequestId = 0;
@@ -4839,6 +4863,8 @@ function createBacktestCanvas(options) {
 
   // 되살린 것이 더는 화면의 것이 아닐 때 표식을 거둔다(새 기법을 고르는 순간).
   function clearRestoreMarks() {
+    historyPreview = null;
+    historyResultRequest += 1;
     restoreSealed = null;
     restoreApplied = null;
     restoredLog = '';
@@ -4850,6 +4876,8 @@ function createBacktestCanvas(options) {
   // 안내를 거두는 문이 따로 있어야 한다. 없으면 아무것도 되살린 적 없는 화면에
   // 「복원 6/6」·「일부만 복원했습니다」가 그대로 선다.
   function clearWorkspace() {
+    historyPreview = null;
+    historyResultRequest += 1;
     workspaceGeneration += 1;
     workspaceCleared = true;
     if (workspaceReportTimer != null && clearTimeoutImpl) clearTimeoutImpl(workspaceReportTimer);
@@ -5052,9 +5080,8 @@ function createBacktestCanvas(options) {
     return wrap;
   }
 
-  function renderMetricTiles() {
+  function renderMetricTiles(metrics = state.result && state.result.metrics) {
     const grid = el('div', 'backtest-metric-tiles');
-    const metrics = state.result && state.result.metrics;
     METRIC_TILES.forEach((tile) => {
       const card = el('div', 'backtest-metric-tile');
       card.appendChild(el('div', 'backtest-metric-label', tile.label));
@@ -5066,7 +5093,7 @@ function createBacktestCanvas(options) {
     return grid;
   }
 
-  function renderEquity() {
+  function renderEquity(result = state.result, trades = state.trades) {
     const wrap = el('div', 'backtest-equity');
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-card-title', '자산곡선'));
@@ -5083,19 +5110,18 @@ function createBacktestCanvas(options) {
     // 이 파일의 검증 대상은 상태 전이이지 SVG 그리기가 아니다(그건 equity-chart 테스트).
     if (typeof document.createElementNS === 'function') {
       EquityChart.renderEquityChart(host, {
-        equity: (state.result && state.result.equity) || [],
+        equity: (result && result.equity) || [],
         // 매수보유 곡선은 실행 결과가 들고 온다(GET /runs/{id}의 top-level benchmark) —
         // 첫 종가 대비 배수라 차트가 한 번 더 정규화해도 값이 그대로다.
-        closes: (state.result && state.result.benchmark) || [],
-        trades: state.trades || [],
+        closes: (result && result.benchmark) || [],
+        trades: trades || [],
       });
     }
     wrap.appendChild(host);
     return wrap;
   }
 
-  function renderStdout() {
-    const text = (state.result && state.result.stdout) || restoredLog || '';
+  function renderStdout(text = (state.result && state.result.stdout) || restoredLog || '') {
     const wrap = el('div', 'backtest-stdout');
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-card-title', '코드 출력'));
@@ -5105,8 +5131,8 @@ function createBacktestCanvas(options) {
     return wrap;
   }
 
-  function renderTradesTable() {
-    const trades = Array.isArray(state.trades) ? state.trades : [];
+  function renderTradesTable(items = state.trades) {
+    const trades = Array.isArray(items) ? items : [];
     const wrap = el('div', 'backtest-trades');
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-trades-title', `체결 ${formatNumeric(trades.length)}건`));
@@ -5139,11 +5165,10 @@ function createBacktestCanvas(options) {
     return wrap;
   }
 
-  function renderAssumptions() {
+  function renderAssumptions(result = state.result || {}) {
     const wrap = el('div', 'backtest-assumptions');
     wrap.appendChild(el('div', 'backtest-assumptions-title', '체결 가정'));
     wrap.appendChild(el('div', 'backtest-assumptions-text', ASSUMPTIONS_TEXT));
-    const result = state.result || {};
     const flags = Array.isArray(result.flags)
       ? result.flags
       : (result.metrics && Array.isArray(result.metrics.flags) ? result.metrics.flags : []);
@@ -5155,6 +5180,26 @@ function createBacktestCanvas(options) {
 
   // ── 보드 05 · 이력 · 비교 ─────────────────────────────────────────────────
 
+  async function openHistoryResult(run) {
+    if (run.status !== 'done') return;
+    const request = ++historyResultRequest;
+    const generation = workspaceGeneration;
+    const owner = spec;
+    const isCurrent = () => request === historyResultRequest
+      && generation === workspaceGeneration && spec === owner && state.tab === 'history';
+    setState({ historyError: null });
+    try {
+      const loaded = await loadCompletedHistoryRun(run.run_id, deps, isCurrent);
+      if (!loaded || !isCurrent()) return;
+      // Global history is independent of the currently edited strategy. Never
+      // bind this run to its spec, version, saved workspace, or restored log.
+      historyPreview = loaded;
+      render();
+    } catch (err) {
+      if (isCurrent()) setState({ historyError: String((err && err.message) || err) });
+    }
+  }
+
   function renderHistory() {
     const wrap = el('div', 'backtest-history');
     const runs = Array.isArray(state.runs) ? state.runs : [];
@@ -5164,6 +5209,20 @@ function createBacktestCanvas(options) {
     wrap.appendChild(head);
     // 저장된 버전은 실행과 다른 축이다 — 되열기가 있는 쪽이 여기다(US-010).
     wrap.appendChild(renderVersionList());
+    if (state.historyError) {
+      wrap.appendChild(el('div', 'backtest-design-error-line', state.historyError));
+    }
+    if (historyPreview) {
+      wrap.appendChild(button('backtest-version-activate', '결과 닫기', () => {
+        historyPreview = null;
+        historyResultRequest += 1;
+        render();
+      }));
+      wrap.appendChild(renderCompletedHistoryRun(historyPreview, {
+        metrics: renderMetricTiles, equity: renderEquity, stdout: renderStdout,
+        trades: renderTradesTable, assumptions: renderAssumptions,
+      }));
+    }
 
     if (!runs.length) {
       wrap.appendChild(el('div', 'backtest-card-empty', '아직 실행 이력이 없습니다'));
@@ -5191,6 +5250,11 @@ function createBacktestCanvas(options) {
         run.status === 'done' ? formatPercentValue(total) : '—',
       ));
       wrap.appendChild(row);
+      if (run.status === 'done') {
+        const open = button('backtest-version-activate', '결과 보기', () => { void openHistoryResult(run); });
+        open.setAttribute('aria-label', `${String(run.run_id).slice(0, 8)} 결과 보기`);
+        wrap.appendChild(open);
+      }
     });
 
     if (selected.length === 2) {
@@ -5242,9 +5306,6 @@ function createBacktestCanvas(options) {
       }
       wrap.appendChild(line);
     });
-    if (state.historyError) {
-      wrap.appendChild(el('div', 'backtest-design-error-line', state.historyError));
-    }
     return wrap;
   }
 
@@ -5694,6 +5755,8 @@ function createBacktestCanvas(options) {
 
 const __exports = {
   createBacktestCanvas,
+  loadCompletedHistoryRun,
+  renderCompletedHistoryRun,
   // 순수 계산 — node --test 대상(card-primitives.js와 같은 노출 원칙)
   formatPercentValue,
   formatRatioValue,
