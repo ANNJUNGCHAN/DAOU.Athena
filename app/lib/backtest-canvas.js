@@ -879,6 +879,15 @@ function targetFromYaml(yamlText) {
   return out;
 }
 
+async function openRegisteredTechnique(ide, entry, bind) {
+  const path = String(entry.path).replace(/\\/g, '/');
+  const rootPath = path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '';
+  // Keep the technique identity while the IDE asynchronously loads its tree.
+  // The registration stores a project-relative file, not a project-root strategy.
+  bind({ projectId: entry.project_id, rootPath, path, name: entry.name });
+  return ide.openAt(entry.project_id, path, { rootPath });
+}
+
 async function loadCompletedHistoryRun(runId, deps, isCurrent) {
   if (!deps.result || !deps.trades) throw new Error('결과를 다시 여는 연결이 없습니다');
   const result = await deps.result({ run_id: runId });
@@ -1358,7 +1367,7 @@ function createBacktestCanvas(options) {
       view: 'design', tab: 'design', formErrors: [], codeErrors: [], designTab: 'code',
       mapVersion: 1, fileDraft: null,
     });
-    const opened = await ide.openAt(entry.project_id, entry.path);
+    const opened = await openRegisteredTechnique(ide, entry, setTechnique);
     if (generation !== workspaceGeneration) return;
     // 못 열었으면 이유는 IDE가 자기 자리에 적었다 — 폼에도 한 줄 남긴다. 폼만 보고 있는
     // 사람에게는 코드 탭의 문장이 보이지 않는다.
@@ -5755,6 +5764,7 @@ function createBacktestCanvas(options) {
 
 const __exports = {
   createBacktestCanvas,
+  openRegisteredTechnique,
   loadCompletedHistoryRun,
   renderCompletedHistoryRun,
   // 순수 계산 — node --test 대상(card-primitives.js와 같은 노출 원칙)
