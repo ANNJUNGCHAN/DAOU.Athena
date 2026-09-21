@@ -1,6 +1,7 @@
 'use strict';
 
 const { performance } = require('node:perf_hooks');
+const { recentThreeMonthStart, withRequestedChartViewport } = require('./selector-fast-path');
 
 const MAX_ITEMS = 6;
 const MAX_CONCURRENCY = 3;
@@ -104,11 +105,12 @@ function matchesStandaloneQuoteGrammar(query, index, entity) {
 function matchesStandaloneChartGrammar(query, index, entity) {
   if (!index || !entity) return false;
   const text = String(query || '').normalize('NFKC').toLocaleLowerCase('ko-KR').trim();
+  if (/최근\s*3\s*개월/u.test(text) && !recentThreeMonthStart(text, new Date())) return false;
   const aliases = index.aliasesForEntity(entity);
   return aliases.some((alias) => {
     const aliasPattern = flexibleExactAliasPattern(alias);
     const koreanEntity = `${aliasPattern}(?:의|은|는|이|가|을|를)?`;
-    const pattern = `${GRAMMAR_EDGE}${koreanEntity}\\s*${KOREAN_CHART_CORE}${KOREAN_CHART_COURTESY}${GRAMMAR_EDGE}`;
+    const pattern = `${GRAMMAR_EDGE}${koreanEntity}\\s*(?:최근\\s*3\\s*개월\\s+)?${KOREAN_CHART_CORE}${KOREAN_CHART_COURTESY}${GRAMMAR_EDGE}`;
     return new RegExp(`^${pattern}$`, 'iu').test(text);
   });
 }
@@ -547,6 +549,7 @@ async function runRestDataset({
   clock = () => performance.now(),
   onEvent = () => {},
   retryIdFactory = defaultRetryDatasetId,
+  calendarNow = () => new Date(),
 } = {}) {
   let dataset;
   try {
@@ -587,6 +590,7 @@ async function runRestDataset({
   if (typeof emitCanvas !== 'function') throw new TypeError('emitCanvas가 필요하다');
 
   const startedAt = clock();
+  const requestCalendarNow = calendarNow();
   const controller = new AbortController();
   let cancelRequested = false;
   const abortFromParent = () => {
@@ -700,6 +704,9 @@ async function runRestDataset({
       }
       const baseBody = await shared;
       const body = cloneInlineResponse(baseBody, item, dataset.datasetId);
+      if (body.status === 'rendered' && item.operationRef === 'base:ka10081') {
+        body.envelope = withRequestedChartViewport(body.envelope, dataset.question, requestCalendarNow);
+      }
       if (controller.signal.aborted) {
         lateCanvases += 1;
         throw abortError(controller.signal);

@@ -12,7 +12,7 @@ const FALLTHROUGH_STATUSES = new Set([
   'missing_arguments',
   'arguments_required',
 ]);
-const RECENT_MONTH_CHART_QUERY_RE = /^(?:[가-힣A-Za-z0-9][가-힣A-Za-z0-9._&()·-]{0,39}\s+)?최근\s*(\d+)\s*개월\s+(?:일봉\s+)?차트(?:와\s*거래량)?(?:\s*(?:보여\s*줘|보여\s*주세요|보여줘요))?[.!?]?$/u;
+const RECENT_MONTH_CHART_QUERY_RE = /^(?:[가-힣A-Za-z0-9][가-힣A-Za-z0-9._&()·-]{0,39}\s+)?최근\s*(\d+)\s*개월\s+(?:일봉\s+)?차트(?:와\s*거래량)?(?:를|은|는)?(?:\s*(?:보여\s*줘|보여\s*주세요|보여줘요))?[.!?]?$/u;
 
 function kstDateParts(date) {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -449,4 +449,5 @@ module.exports = {
   runSelectorFastPath,
   verifyAcknowledgedWebsocket,
   recentThreeMonthStart,
+  withRequestedChartViewport,
 };
