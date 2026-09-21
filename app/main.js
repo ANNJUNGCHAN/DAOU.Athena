@@ -17,6 +17,7 @@ const { computeShellPlacement, clampCenterToWorkArea } = require('./lib/main/win
 // 알림 오브 창(2026-08-24 리프 1.3.1) — 창 기하·옵션은 전부 저 모듈이 진다.
 const orbWindow = require('./lib/main/orb-window');
 const mcpCli = require('./lib/main/mcp-cli');
+const { stripKnownMcpMentions } = require('./lib/main/mcp-routing-query');
 const mcpEnv = require('./lib/main/mcp-env');
 // 플러그인 제안 — 판정부와 승인 실행부는 electron 없는 순수 모듈이 진다.
 const pluginProposalForward = require('./lib/main/plugin-proposal-forward');
@@ -5624,10 +5625,16 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     return finishCardProducingResult(result, (result.canvases || []).filter((card) => card.isDataCanvas));
   }
 
+  let routingQuery = query;
+  if (String(query).includes('@')) {
+    try {
+      routingQuery = stripKnownMcpMentions(query, mcpCli.list().servers.map((server) => server.alias));
+    } catch { /* Registry unavailable: retain the original query. */ }
+  }
   let stockResolution = { ready: false, instrument: null };
   if (!cardRetrievalBlocked) {
     try {
-      stockResolution = await stockMasterClient.resolveCurrentStockMasterQuery(query, {
+      stockResolution = await stockMasterClient.resolveCurrentStockMasterQuery(routingQuery, {
         runtime,
         backendBase: BACKEND_HTTP_BASE,
         fetchImpl: fetch,
@@ -5647,7 +5654,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
 
   const simpleChartRoute = cardRetrievalBlocked
     ? { handled: false } : await simpleChartFastPath.runSimpleChartFastPath({
-    query,
+    query: routingQuery,
     index: queryStockEntityIndex,
     ensureReady: async () => stockResolution.ready,
     buildDataset: (question, index) => restDatasetRunner.buildChartDataset(question, index, {
@@ -5675,21 +5682,21 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   // 정형 질의 모델 우회 확장(2026-08-26 속도 레버) — 순서는 의미 없다(각자
   // 닫힌 문법이라 서로 안 겹친다, rest-dataset-runner.js 테스트로 고정).
   const directDataset = cardRetrievalBlocked
-    ? null : restDatasetRunner.buildCompoundScreenDataset(query, queryStockEntityIndex, {
+    ? null : restDatasetRunner.buildCompoundScreenDataset(routingQuery, queryStockEntityIndex, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
-  }) || restDatasetRunner.buildQuoteDataset(query, queryStockEntityIndex, {
+  }) || restDatasetRunner.buildQuoteDataset(routingQuery, queryStockEntityIndex, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
-  }) || restDatasetRunner.buildChartDataset(query, queryStockEntityIndex, {
+  }) || restDatasetRunner.buildChartDataset(routingQuery, queryStockEntityIndex, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
-  }) || restDatasetRunner.buildOrderBookDataset(query, queryStockEntityIndex, {
+  }) || restDatasetRunner.buildOrderBookDataset(routingQuery, queryStockEntityIndex, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
-  }) || restDatasetRunner.buildInvestorFlowDataset(query, queryStockEntityIndex, {
+  }) || restDatasetRunner.buildInvestorFlowDataset(routingQuery, queryStockEntityIndex, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
-  }) || restDatasetRunner.buildTradingSourceDataset(query, queryStockEntityIndex, {
+  }) || restDatasetRunner.buildTradingSourceDataset(routingQuery, queryStockEntityIndex, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
-  }) || restDatasetRunner.buildStockInfoDataset(query, queryStockEntityIndex, {
+  }) || restDatasetRunner.buildStockInfoDataset(routingQuery, queryStockEntityIndex, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
-  }) || restDatasetRunner.buildProgramTradeDataset(query, {
+  }) || restDatasetRunner.buildProgramTradeDataset(routingQuery, {
     idFactory: () => `rest-${crypto.randomUUID()}`,
   });
   if (directDataset) {
@@ -5709,7 +5716,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   // 단순 시장가 주문은 별도 닫힌 문법에서만 intent=order로 보내고, 실행하지 않은
   // guarded 초안을 채팅 주문확인 UI에 전달한다.
   const selectorDisplayedCards = [];
-  const orderDraft = selectorFastPath.buildMarketOrderDraft(query, queryStockEntityIndex);
+  const orderDraft = selectorFastPath.buildMarketOrderDraft(routingQuery, queryStockEntityIndex);
   const selectorController = new AbortController();
   runtime.activeSelectorFastRun = selectorController;
   try {
@@ -5739,7 +5746,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     const selectorResult = cardRetrievalBlocked
       ? { handled: false, reason: '대화 답변이 필요한 질문 — 모델 경로로 넘긴다' }
       : selectorAccount.ok ? await selectorAccount.run({
-      question: query,
+      question: routingQuery,
       backendBase: BACKEND_HTTP_BASE,
       intent: orderDraft ? orderDraft.intent : 'auto',
       arguments: orderDraft ? orderDraft.arguments : {},
@@ -5804,7 +5811,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     }
     if (selectorResult.preflight) {
       const coldResult = await selectorColdHedge.runSelectorColdHedge({
-        question: query,
+        question: routingQuery,
         preflight: selectorResult.preflight,
         signal: selectorController.signal,
         isCurrent: () => runtime.activeSelectorFastRun === selectorController,
@@ -5816,7 +5823,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         // 두 분류기는 읽기 전용이다. 첫 유효안이 정해진 뒤에만 단 하나의
         // proposal을 순차 dispatch하여 조회 외 operation의 중복 효과를 막는다.
         dispatchProposal: (proposal) => selectorAccount.run({
-          question: query,
+          question: routingQuery,
           backendBase: BACKEND_HTTP_BASE,
           intent: proposal.intent,
           arguments: proposal.arguments,
