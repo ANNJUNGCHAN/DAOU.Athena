@@ -35,7 +35,7 @@ const SAMPLE_INSTALLED = Object.freeze([
     id: 'fetch',
     name: '웹 문서 읽기',
     description: '공시·리서치 웹 페이지를 마크다운으로 읽습니다',
-    source: '연결 확인됨',
+    source: '최근 확인 성공',
     enabled: true,
     featureCount: 1,
     features: [
@@ -46,7 +46,7 @@ const SAMPLE_INSTALLED = Object.freeze([
     id: 'time',
     name: '시간·시간대',
     description: '현재 시각과 시간대 변환을 정확히 계산합니다',
-    source: '연결 확인됨',
+    source: '최근 확인 성공',
     enabled: false,
     featureCount: 2,
     features: [
@@ -782,8 +782,8 @@ function createPluginCanvas(options) {
   }
 
   // Paper 플러그인 01 — 기능 허용. 배지 넷은 설치 상태 · 기능 수 · 허용 수 ·
-  // 연결 상태다. 마지막 자리에 고정 문구를 넣지 않는 이유: 이 화면에서 사람이
-  // 실제로 알아야 하는 건 "지금 이 서버가 붙었는가"이고, 그건 probe만 안다.
+  // 최근 검사 상태다. 저장된 probe 결과와 현재 AI 대화의 도구 연결은
+  // 별개이므로 이 배지를 현재 연결 보장으로 설명하지 않는다.
   function renderPermissionView(permissionSheet) {
     const sheet = permissionSheet || activeSheet;
     const plugin = sheet.plugin;
@@ -804,7 +804,7 @@ function createPluginCanvas(options) {
     panel.appendChild(el(
       'p',
       'plugin-canvas-description',
-      `기능 허용은 ${plugin.name} 플러그인에만 적용됩니다. Athena 내장 API는 이 목록에 나타나지 않습니다.`,
+      `기능 허용은 ${plugin.name} 플러그인에만 적용됩니다. Athena 내장 API는 이 목록에 나타나지 않습니다. 최근 확인은 플러그인 자체 검사 결과이며, 선택한 AI의 현재 대화에서 사용할 수 있음을 보장하지 않습니다.`,
     ));
 
     // probe가 실패하면 기능 목록은 비거나 옛 캐시다. 그 사실을 숨기고 토글만

@@ -4638,8 +4638,10 @@ const pluginProbeErrors = new Map();
 
 function pluginHealthLabel(server) {
   if (!server.approved) return '꺼짐 — 대화에서 쓰이지 않습니다';
-  if (server.health === 'ok') return '연결 확인됨';
-  if (server.health === 'warning') return '연결됨 · 인코딩 경고';
+  // Stored probe metadata is not the current provider conversation's inventory.
+  if (pluginProbeErrors.has(server.alias)) return '최근 확인 실패';
+  if (server.health === 'ok') return '최근 확인 성공';
+  if (server.health === 'warning') return '최근 확인 · 인코딩 경고';
   // probe를 한 번도 안 한 상태다. 임의로 "정상"이라고 쓰지 않는다.
   return '연결 미확인 — 권한 화면을 열면 확인한다';
 }
