@@ -2829,6 +2829,7 @@ const PILL_CODEX_EFFORT_CHIPS = [
   { value: 'xhigh', label: 'xhigh' },
 ];
 
+let renderedModelPopoverKey = null;
 let modelStateCache = null;
 // 활성 계정과 공급자 연결 여부(athena:cli-list — 설정 모델 카드가 읽는 그 채널).
 // 툴바 라벨이 어느 공급자의 값을 말할지, Grok 섹션을 잠글지가 여기서 갈린다.
@@ -2920,6 +2921,14 @@ function popoverSection(title, chips, currentValue, key, provider, locked) {
 }
 
 function renderModelPopover() {
+  // Account refresh notifications may repeat while a native select is open.
+  // Keep the existing controls unless their displayed state actually changes.
+  const renderKey = JSON.stringify([
+    modelStateCache?.claude, modelStateCache?.grok, modelStateCache?.codex,
+    providerConnected('grok'), providerConnected('codex'),
+  ]);
+  if (renderedModelPopoverKey === renderKey) return;
+  renderedModelPopoverKey = renderKey;
   const c = (modelStateCache && modelStateCache.claude) || { model: null, effort: null };
   const g = (modelStateCache && modelStateCache.grok) || { model: null, effort: null };
   const grokLocked = !providerConnected('grok');
@@ -2993,7 +3002,7 @@ function renderModelPopover() {
   popoverSection('Codex 사고 강도', PILL_CODEX_EFFORT_CHIPS, d.effort, 'effort', 'codex', codexLocked);
 }
 
-function closeModelPopover() { $modelPopover.hidden = true; }
+function closeModelPopover() { $modelPopover.hidden = true; renderedModelPopoverKey = null; }
 
 // 모델 팝오버는 키우미 메뉴 '모델 설정'이 연다(보드 45 v5) — 필은 사라졌다.
 // 바깥 클릭으로 닫는다(키우미 메뉴 항목 클릭은 메뉴가 먼저 닫혀 겹치지 않는다).
