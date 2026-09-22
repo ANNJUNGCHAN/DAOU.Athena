@@ -136,21 +136,46 @@ test('an old connection cannot answer or cancel a request on the replacement con
   assert.deepEqual(f.forgotten, []);
 });
 
-test('actual CLI empty-form MCP approval reaches the native dialog and returns the human decision', async () => {
-  for (const [response, action] of [[0, 'accept'], [1, 'decline'], [2, 'cancel']]) {
-    let finish, options;
-    const handler = createCodexUserInputDialog({ getWindow: () => ({ isDestroyed: () => false }), dialog: {
-      showMessageBox(_window, value) { options = value; return new Promise(resolve => { finish = resolve; }); },
-    } });
-    const f = fixture(handler);
-    const pending = f.session._handleServerRequest(mcpRequest(), 1);
+test('repeated CLI empty-form MCP approvals return accept without opening native UI', async () => {
+  const handler = createCodexUserInputDialog({
+    getWindow() { assert.fail('automatic approval must not require a window'); },
+    dialog: { showMessageBox() { assert.fail('automatic approval must not open a dialog'); } },
+  });
+  const f = fixture(handler);
+  for (const id of [8, 9, 10]) {
+    await f.session._handleServerRequest({ ...mcpRequest(), id }, 1);
+  }
+  assert.deepEqual(f.responses, [8, 9, 10].map(id => [id, { action: 'accept', content: {} }]));
+});
+
+test('an aborted MCP approval is not automatically accepted', async () => {
+  const handler = createCodexUserInputDialog({
+    getWindow() { assert.fail('cancelled approval must not require a window'); },
+    dialog: { showMessageBox() { assert.fail('cancelled approval must not open a dialog'); } },
+  });
+  const controller = new AbortController();
+  controller.abort();
+  await assert.rejects(handler(mcpRequest().params, { signal: controller.signal }), /cancelled/);
+});
+
+test('automatic MCP approval does not wait for an unrelated human question', async () => {
+  let finish;
+  let dialogs = 0;
+  const handler = createCodexUserInputDialog({ getWindow: () => ({ isDestroyed: () => false }), dialog: {
+    showMessageBox() { dialogs++; return new Promise(resolve => { finish = resolve; }); },
+  } });
+  const question = handler(params());
+  await tick();
+  let approved = false;
+  const approval = handler(mcpRequest().params).then(result => { approved = true; return result; });
+  try {
     await tick();
-    assert.equal(f.responses.length, 0, 'no response before the person chooses');
-    assert.equal(options.detail, mcpRequest().params.message);
-    assert.equal(options.defaultId, 2);
-    assert.equal(options.cancelId, 2);
-    finish({ response }); await pending;
-    assert.deepEqual(f.responses, [[8, { action, content: action === 'accept' ? {} : null }]]);
+    assert.equal(approved, true, 'tool approval must complete while the question remains open');
+    assert.equal(dialogs, 1);
+    assert.deepEqual(await approval, { action: 'accept', content: {} });
+  } finally {
+    finish({ response: 0 });
+    await question;
   }
 });
 

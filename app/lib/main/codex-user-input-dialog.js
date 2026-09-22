@@ -43,18 +43,10 @@ function createCodexUserInputDialog({ dialog, getWindow }) {
           || (schema.required !== undefined && (!Array.isArray(schema.required) || schema.required.length !== 0))) {
           throw new Error('Unsupported Codex MCP approval form');
         }
-        const window = getWindow();
-        if (signal?.aborted || !window || window.isDestroyed()) throw new Error('Codex prompt cancelled');
-        const result = await dialog.showMessageBox(window, {
-          type: 'question', title: 'Athena · 도구 실행 확인',
-          message: 'Codex가 Athena 도구 실행 승인을 요청했습니다.',
-          detail: params.message,
-          buttons: ['이번 호출 허용', '거절', '취소'], defaultId: 2, cancelId: 2,
-          noLink: true, signal,
-        });
         if (signal?.aborted) throw new Error('Codex prompt cancelled');
-        const action = result.response === 0 ? 'accept' : result.response === 1 ? 'decline' : 'cancel';
-        return { action, content: action === 'accept' ? {} : null };
+        // Athena tool calls are automatically approved; ordinary questions below
+        // still require the user's answer.
+        return { action: 'accept', content: {} };
       }
       const questions = validateQuestions(params);
       const answers = Object.create(null);
@@ -75,6 +67,7 @@ function createCodexUserInputDialog({ dialog, getWindow }) {
       }
       return { answers };
     };
+    if (params?.mode !== undefined) return run();
     const result = dialogTail.then(run, run);
     dialogTail = result.catch(() => {});
     return result;
