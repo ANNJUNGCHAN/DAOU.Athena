@@ -272,10 +272,39 @@ async function refreshScreenCard(card, head, body) {
   actions.appendChild(cardCloseButton(card));
   head.appendChild(actions);
 
+  let saving = false;
+  const saveError = el('div', 'uk-screen-save-error');
+  body.appendChild(saveError);
+
+  function showSavedPrefs() {
+    expandToggle.setChecked(data.autoExpandCanvas);
+    growToggle.setChecked(data.autoGrowChat);
+    for (const { btn, value } of fontChips) {
+      btn.classList.toggle('is-pressed', value === (data.fontSize || 'md'));
+    }
+  }
+
   async function setPref(key, value) {
+    if (saving) { showSavedPrefs(); return; }
+    saving = true;
+    const controls = [expandToggle, growToggle, ...fontChips.map(({ btn }) => btn)];
+    controls.forEach(control => { control.disabled = true; });
+    showSavedPrefs();
+    clear(saveError);
     try {
-      await window.athena.invoke('athena:settings:prefs:set', { [key]: value });
-    } catch { /* 핸들러 부재 — 로컬 토글 표시만 유지, 다음 새로고침에서 다시 기본값으로 보인다 */ }
+      const saved = await window.athena.invoke('athena:settings:prefs:set', { [key]: value });
+      const valid = saved && (key === 'fontSize'
+        ? FONT_SIZE_CHIPS.some(option => option.value === saved[key])
+        : typeof saved[key] === 'boolean');
+      if (!valid) throw new Error('invalid preference response');
+      data = { ...data, [key]: saved[key] };
+    } catch {
+      saveError.appendChild(errorNote('설정을 저장하지 못했습니다. 다시 시도해 주세요.'));
+    } finally {
+      showSavedPrefs();
+      saving = false;
+      controls.forEach(control => { control.disabled = false; });
+    }
   }
 
   const expandLabelCol = el('div');
@@ -313,10 +342,7 @@ async function refreshScreenCard(card, head, body) {
   const fontChips = [];
   for (const c of FONT_SIZE_CHIPS) {
     const b = button('ghost', c.label, {
-      onClick: async () => {
-        await setPref('fontSize', c.value);
-        for (const { btn, value } of fontChips) btn.classList.toggle('is-pressed', value === c.value);
-      },
+      onClick: () => setPref('fontSize', c.value),
     });
     b.classList.add('uk-chip');
     if (c.value === currentFont) b.classList.add('is-pressed');
