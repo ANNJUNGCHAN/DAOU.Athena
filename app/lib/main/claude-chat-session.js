@@ -87,6 +87,13 @@ function errorText(reason, fallback) {
   return fallback;
 }
 
+function processErrorText(error, fallback) {
+  if (error && error.code === 'ENOENT') {
+    return 'Claude Code 실행 파일을 찾을 수 없습니다. Claude Code를 설치한 뒤 Athena를 다시 시작하고, 설정에서 Claude 계정을 연결해 주세요.';
+  }
+  return errorText(error, fallback);
+}
+
 class ClaudeChatSession {
   constructor({
     cwd,
@@ -269,7 +276,7 @@ class ClaudeChatSession {
           error: this._lastSpawnError || 'claude 상주 세션 스폰에 실패했다',
           errorCode: this._lastSpawnErrorCode || null,
           stderr: '',
-          diagnostics: null,
+          diagnostics: { processError: this._lastSpawnErrorDetail },
         });
       }
     }
@@ -369,13 +376,9 @@ class ClaudeChatSession {
         shell: false,
       });
     } catch (error) {
-      // runClaudeQuery의 ENOENT 안내와 같은 메시지 계약 — .cmd 래퍼 함정 참고.
       const code = error && error.code;
-      this._lastSpawnError = code === 'ENOENT'
-        ? `'${this._claudeBin}' 실행 파일을 PATH에서 못 찾았다. `
-          + 'ATHENA_CLAUDE_BIN 환경변수로 실행 파일 절대경로를 지정하라 '
-          + '(Windows: `where claude`, 그 외: `which claude`).'
-        : String((error && error.message) || error);
+      this._lastSpawnError = processErrorText(error);
+      this._lastSpawnErrorDetail = errorText(error);
       this._lastSpawnErrorCode = code || null;
       this._failureStreak += 1;
       return null;
@@ -544,10 +547,14 @@ class ClaudeChatSession {
       timedOut: false,
       aborted: false,
       stdoutCapped: false,
-      error: errorText(error, `claude 상주 세션 종료 코드 ${code}`),
+      error: processErrorText(error, `claude 상주 세션 종료 코드 ${code}`),
+      errorCode: error && error.code || null,
       finalResult: turn ? turn.session.finalResult() : null,
       stderr: turn ? turn.stderr : '',
-      diagnostics: turn ? turn.session.diagnostics() : null,
+      diagnostics: {
+        ...(turn ? turn.session.diagnostics() : {}),
+        processError: error ? errorText(error) : null,
+      },
       firstEventMs: turn ? turn.firstEventMs : null,
       spawnedFresh: turn ? turn.spawnedFresh : false,
     };
