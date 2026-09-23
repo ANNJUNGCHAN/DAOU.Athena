@@ -4866,13 +4866,60 @@ function createBacktestCanvas(options) {
   async function retryRestore() {
     if (!restoreSealed || !restoreApplied) return false;
     const generation = workspaceGeneration;
+    const saved = restoreSealed;
     const applied = Object.assign({}, restoreApplied);
-    if (!applied.result && restoreSealed.run && restoreSealed.run.runId) {
-      applied.result = await restoreRunResult(restoreSealed.run.runId, generation);
-      if (generation !== workspaceGeneration) return false;
+    const isCurrent = () => generation === workspaceGeneration && restoreSealed === saved;
+    const binding = saved.technique;
+    let recoveredTechnique = false;
+    if (!applied.technique && binding) {
+      let registered = !binding.userStrategyId;
+      if (binding.userStrategyId) {
+        let registry = userStrategies;
+        if (deps.userStrategies) {
+          try { registry = await deps.userStrategies(); } catch { registry = []; }
+          if (!isCurrent()) return false;
+          userStrategies = Array.isArray(registry) ? registry : [];
+          registry = userStrategies;
+        }
+        registered = registry.some((item) => item
+          && String(item.id) === binding.userStrategyId
+          && String(item.project_id) === binding.projectId
+          && String(item.path) === binding.path);
+      }
+      // 복원 뒤 사람이 고친 단일 버퍼를 디스크의 편집기로 바꾸지 않는다.
+      const unchangedCode = !saved.code || codeSource === saved.code.source;
+      if (registered && unchangedCode) {
+        const ide = ensureProjectIde();
+        if (ide) {
+          await loadProjectFiles(binding.projectId, binding.rootPath, generation);
+          if (!isCurrent()) return false;
+          // 트리를 기다리는 동안 생긴 편집도 그대로 둔다.
+          if (!saved.code || codeSource === saved.code.source) {
+            const canOpen = () => isCurrent() && (!saved.code || codeSource === saved.code.source);
+            const opened = await ide.openAt(binding.projectId, binding.path, {
+              rootPath: binding.rootPath, shouldContinue: canOpen,
+            });
+            if (!isCurrent()) return false;
+            ideOwnsCode = !!opened;
+            applied.technique = !!opened;
+            recoveredTechnique = !!opened;
+            if (opened && binding.userStrategyId) userStrategyId = binding.userStrategyId;
+            const active = opened ? activeProjectFile() : null;
+            if (runPath === 'code' && active && typeof active.text === 'string') codeSource = active.text;
+          }
+        }
+      }
+    }
+    if (!applied.result && saved.run && saved.run.runId) {
+      applied.result = await restoreRunResult(saved.run.runId, generation);
+      if (!isCurrent()) return false;
     }
     restoreApplied = applied;
-    setState({ restore: SessionRestore.restoreReport(restoreSealed, applied) });
+    setState({ restore: SessionRestore.restoreReport(saved, applied) });
+    if (!isCurrent()) return false;
+    if (recoveredTechnique && techniqueDraft && runPath === 'code' && codeSource) {
+      void runTechniqueCheck({ auto: false });
+    }
     return true;
   }
 

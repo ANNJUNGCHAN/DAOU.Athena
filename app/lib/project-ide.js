@@ -255,7 +255,8 @@ function createProjectIde(options) {
     return true;
   }
 
-  async function selectProject(next, nextRootPath) {
+  async function selectProject(next, nextRootPath, shouldContinue = () => true) {
+    if (!shouldContinue()) return false;
     const requestedRoot = String(nextRootPath == null ? '' : nextRootPath);
     if (suspended && project && next && project.id === next.id && rootPath === requestedRoot) {
       resumeWorkspace();
@@ -264,8 +265,9 @@ function createProjectIde(options) {
     }
     if (project && (project.id !== (next && next.id) || rootPath !== requestedRoot)) {
       const saved = await saveAllDirty();
-      if (!saved) return false;
+      if (!saved || !shouldContinue()) return false;
     }
+    const previous = { project, rootPath, tabs, activePath, closing, suspended, entries, truncated };
     const generation = ++workspaceGeneration;
     fileRequestGeneration += 1;
     suspended = false;
@@ -275,6 +277,12 @@ function createProjectIde(options) {
     activePath = null;
     closing = null;
     if (!await loadTree(project, rootPath, generation)) return false;
+    if (!shouldContinue()) {
+      if (generation === workspaceGeneration) {
+        ({ project, rootPath, tabs, activePath, closing, suspended, entries, truncated } = previous);
+      }
+      return false;
+    }
     paint();
     // 폴더가 정해지면 코드 탭의 구성이 바뀐다(단일 편집기 ↔ 폴더 편집기) — 그 판단은
     // 캔버스가 하므로 여기서 한 번 알린다.
@@ -282,7 +290,8 @@ function createProjectIde(options) {
     return true;
   }
 
-  async function openFile(pathText) {
+  async function openFile(pathText, shouldContinue = () => true) {
+    if (!shouldContinue()) return;
     const generation = workspaceGeneration;
     const requestGeneration = ++fileRequestGeneration;
     const already = findTab(pathText);
@@ -290,7 +299,7 @@ function createProjectIde(options) {
     if (!deps.readFile || !project) return;
     try {
       const res = await deps.readFile(project.id, pathText);
-      if (generation !== workspaceGeneration || requestGeneration !== fileRequestGeneration) return;
+      if (generation !== workspaceGeneration || requestGeneration !== fileRequestGeneration || !shouldContinue()) return;
       const binary = !!(res && (res.binary || res.kind === 'binary'));
       const text = binary ? '' : String((res && res.text) || '');
       tabs = tabs.concat([{
@@ -307,7 +316,7 @@ function createProjectIde(options) {
       resumeWorkspace();
       say(null);
     } catch (err) {
-      if (generation !== workspaceGeneration || requestGeneration !== fileRequestGeneration) return;
+      if (generation !== workspaceGeneration || requestGeneration !== fileRequestGeneration || !shouldContinue()) return;
       fail(err);
     }
     paint();
@@ -383,12 +392,15 @@ function createProjectIde(options) {
   // 밖에서 "이 폴더를 열어라" — 목록을 안 읽었거나 찾는 id가 없으면 한 번 다시 읽는다.
   // 이 세션에서 만든 폴더(등록 뒤 열기)는 처음 그린 목록에 없기 때문이다(프로브 M10~M13 실측).
   async function openFolder(projectId, options_) {
+    const shouldContinue = options_ && typeof options_.shouldContinue === 'function'
+      ? options_.shouldContinue : () => true;
+    if (!shouldContinue()) return false;
     const nextRootPath = typeof options_ === 'string'
       ? options_
       : String((options_ && options_.rootPath) || '');
     const requestGeneration = ++folderRequestGeneration;
     if (!projects.length || !projects.some((p) => p.id === projectId)) await loadProjects();
-    if (requestGeneration !== folderRequestGeneration) return false;
+    if (requestGeneration !== folderRequestGeneration || !shouldContinue()) return false;
     const next = projects.find((p) => p.id === projectId);
     if (!next) {
       say('그 폴더가 프로젝트 목록에 없습니다', true);
@@ -396,7 +408,7 @@ function createProjectIde(options) {
       return false;
     }
     if (!project || project.id !== projectId || rootPath !== nextRootPath) {
-      if (!await selectProject(next, nextRootPath)) return false;
+      if (!await selectProject(next, nextRootPath, shouldContinue)) return false;
     }
     return requestGeneration === folderRequestGeneration;
   }
@@ -407,8 +419,11 @@ function createProjectIde(options) {
   // 부른 쪽이 "열었다"고 말하기 전에 정말 열렸는지 알아야 한다(등록부의 파일은 지워졌을 수 있다).
   async function openAt(projectId, pathText, options_) {
     if (!await openFolder(projectId, options_)) return false;
-    await openFile(pathText);
-    return activePath === pathText;
+    const shouldContinue = options_ && typeof options_.shouldContinue === 'function'
+      ? options_.shouldContinue : () => true;
+    if (!shouldContinue()) return false;
+    await openFile(pathText, shouldContinue);
+    return shouldContinue() && activePath === pathText;
   }
 
   // 밖에서 이 파일을 디스크에 썼다(채팅이 낸 코드를 캔버스가 자동 수락한 자리) — 열어둔
