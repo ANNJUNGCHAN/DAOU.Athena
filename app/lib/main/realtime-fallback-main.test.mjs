@@ -24,7 +24,7 @@ const fallbackSource = sourceSlice(
   'async function hydrateCanvasBoardForActiveAccount',
 );
 const liveRelaySource = sourceSlice(
-  'function sendLiveCanvasResult(',
+  'const pendingCanvasCards = new Map();',
   'function sendLiveTextDelta(',
 );
 
@@ -197,7 +197,7 @@ function createHarness() {
     liveRelaySource,
     'this.testApi = { rememberRealtimeFallbackAuthority, rememberLiveRealtimeFallbackAuthority,',
     '  fallbackAllowedSlotIds, projectRealtimeFallbackResult, refreshRealtimeFallback,',
-    '  ensureRealtimeFallbackCoordinator, sendLiveCanvasResult, chartRealtimePanelSymbols };',
+    '  ensureRealtimeFallbackCoordinator, sendLiveCanvasResult, mergePendingCanvasCards, chartRealtimePanelSymbols };',
   ].join('\n'), context);
 
   return {
@@ -265,6 +265,12 @@ test('provider canvas relay stores trusted query metadata before renderer fallba
   };
 
   h.api.sendLiveCanvasResult(providerCard, { conversationId: 'conversation-A' });
+  const sentCard = h.shellSender.sent.find(({ channel }) => channel === 'athena:add-canvas-live').payload;
+  const pendingCards = h.api.mergePendingCanvasCards('conversation-A', []);
+  assert.equal(pendingCards.length, 1);
+  assert.equal(pendingCards[0].cardId, sentCard.sessionCardId);
+  assert.equal(pendingCards[0].envelope, providerCard.envelope);
+  assert.equal(h.api.mergePendingCanvasCards('conversation-B', []).length, 0);
   const result = await h.handlers.get('athena:realtime-fallback-register')(
     { sender: h.shellSender },
     { ownerId: 'provider-card', kind: 'quote', correlation, accountGeneration: 7 },
