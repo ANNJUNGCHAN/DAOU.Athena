@@ -185,6 +185,7 @@ let remoteQueryBusy = false;
 // 클로저는 자기 대화의 기록(turnRecordFor)만 보고, 화면 반영은 자기 대화가 보일 때만 한다.
 let displayedConversationId = null;
 let switchingConversation = false;
+let conversationSelectionRevision = 0;
 const turnRecords = new Map(); // conversationId -> { conversationId, token, state, progressEl }
 // 화면에서 내려간 대화의 말풍선 DOM — 갈아탈 때 통째로 떼어 보관하고 돌아오면 다시 붙인다.
 // 진행 중 턴의 스트림은 떼어진 노드에 계속 이어붙으므로 돌아왔을 때 그대로 보인다.
@@ -228,6 +229,7 @@ function setRemoteLock(locked, text) {
   setLocked(locked, text);
 }
 function applyRemoteLock() {
+  if (displayedConversationId !== null) $conversationRetry.hidden = true;
   if (state !== 'idle') { remoteQueryBusy = false; return; }
   if (displayedConversationId === null) {
     // 새 대화의 id를 아직 못 받았다(athena:conversation-active 대기) — 이 틈에 보낸 질문은 어느
@@ -875,9 +877,45 @@ function maybeShowCoachmark() {
 }
 
 // ---------- 초기 정보 수신 ----------
+const $conversationRetry = document.createElement('button');
+$conversationRetry.type = 'button';
+$conversationRetry.className = 'composer-text';
+$conversationRetry.textContent = '다시 시도';
+$conversationRetry.hidden = true;
+$conversationRetry.addEventListener('click', () => { void hydrateInitialConversation(); });
+$lockHint.appendChild($conversationRetry);
+
+// init 방송을 놓친 렌더러도 첫 질문 전에 main의 대화 경계를 확인한다.
+// 응답을 기다리는 동안 새 대화/이력 전환이 시작되면 그 선택을 덮지 않는다.
+async function hydrateInitialConversation() {
+  if (displayedConversationId !== null || switchingConversation) return;
+  const revision = ++conversationSelectionRevision;
+  $conversationRetry.hidden = true;
+  applyRemoteLock();
+  $stopBtn.hidden = true;
+  try {
+    const listed = await window.athena.invoke('athena:conversations-list');
+    if (revision !== conversationSelectionRevision || displayedConversationId !== null || switchingConversation) return;
+    if (!listed || !listed.activeId) throw new Error('active conversation unavailable');
+    displayedConversationId = listed.activeId;
+    syncDisplayedTurn();
+  } catch {
+    if (revision !== conversationSelectionRevision || displayedConversationId !== null || switchingConversation) return;
+    setRemoteLock(true, '대화를 열지 못했습니다');
+    $stopBtn.hidden = true;
+    $conversationRetry.hidden = false;
+  }
+}
+void hydrateInitialConversation();
+
 window.athena.on('athena:init', (payload) => {
   canvasSource = (payload && payload.canvasSource) || 'live';
-  if (payload && payload.conversationId) displayedConversationId = payload.conversationId;
+  if (payload && payload.conversationId && conversationSelectionRevision === 1
+      && displayedConversationId === null && !switchingConversation) {
+    conversationSelectionRevision += 1;
+    displayedConversationId = payload.conversationId;
+    syncDisplayedTurn();
+  }
 });
 
 // ---------- 창 표면의 유리 두께 ----------
@@ -2503,6 +2541,7 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
   // 갈아타기 전에 이 세션의 지연 보고를 흘린다 — main은 받은 시점의 세션에 적으므로
   // 전환 뒤에 도착한 보고는 앞 세션의 작업공간을 다음 세션 기록에 적는다.
   switchingConversation = true;
+  conversationSelectionRevision += 1;
   try {
     const editor = window.AthenaBacktestCanvas;
     if (editor && typeof editor.flushEditor === 'function' && !(await editor.flushEditor())) return false;
@@ -2510,7 +2549,7 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
     const switched = await window.athena.invoke('athena:conversations-set-active', { id: conv.id })
       .catch(() => null);
     if (!switched || !switched.restorable) return false;
-    if (switched.isCurrent) return true;
+    if (switched.isCurrent && displayedConversationId === conv.id) return true;
     // 메시지의 원본은 세션 스토어다(42번 보드). 스냅샷의 currentId 경로만 그린다 — 분기가
     // 있어도 한 줄로 보인다. 스토어에 없으면(이 배선 전에 만든 대화) 브레인 이력으로 폴백.
     const snapshot = await window.athena.invoke('athena:session-load', { id: conv.id }).catch(() => null);
@@ -2535,6 +2574,7 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
     return true;
   } finally {
     switchingConversation = false;
+    if (displayedConversationId === null) void hydrateInitialConversation();
   }
 });
 
@@ -2738,6 +2778,7 @@ window.athena.on('athena:live-query-state', ({ busy, busyConversationIds } = {})
 // 대화가 없을 때 그 id를 받는다.
 window.athena.on('athena:conversation-active', ({ conversationId } = {}) => {
   if (!conversationId || switchingConversation || displayedConversationId === conversationId) return;
+  conversationSelectionRevision += 1;
   if (displayedConversationId !== null) stashDisplayedPane();
   closeOrderTicketForConversationChange(conversationId);
   displayedConversationId = conversationId;
@@ -3362,6 +3403,8 @@ window.athena.invoke('athena:cli-list').then(applyCliState, () => {});
 // 보관하고 빈 화면으로 넘어간다. 새 기록 id는 main의 athena:conversation-active 방송으로 온다.
 // sidebar.js가 새 기록 id를 요청하기 직전에 이 이벤트를 보낸다.
 window.addEventListener('athena:new-conversation', () => {
+  conversationSelectionRevision += 1;
+  $conversationRetry.hidden = true;
   // 새 기록 id를 받기 전에 흘린다 — 이력 행 클릭과 같은 이유다(전환 뒤에 터진 보고는
   // 앞 세션의 작업공간을 새 대화의 기록에 적는다). 흘린 뒤 앞 세션의 복원 표식을 거둔다:
   // 새 대화에는 되살릴 봉투가 없으니 restore()가 거둘 기회 자체가 없다.
