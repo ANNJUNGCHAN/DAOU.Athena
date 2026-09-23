@@ -941,11 +941,9 @@
     return btn;
   }
 
-  // 43번 "새 작업은 채팅에서" 원칙과 합치시킨다(전체 자연어 플로우는 8단계 몫) —
-  // 여기서는 그 방향의 가장 얕은 형태로 채팅 입력에 포커스만 옮긴다. 시트·모달을
-  // 새로 만들지 않는다(43 원칙 위반 방지, P3 — 없는 기능을 암시하지 않는다).
-  function selectRoutineItem() {
-    if ($input) $input.focus();
+  // Existing sidebar routines open their saved details in the agent canvas.
+  function selectRoutineItem(row) {
+    return openRoutineInAgent(row.id);
   }
 
   function makeRoutineItem(row) {
@@ -1192,7 +1190,7 @@
         await window.AthenaAgentCanvas.refresh();
       }
       if (typeof window.AthenaAgentCanvas.selectRow === 'function') {
-        window.AthenaAgentCanvas.selectRow(id);
+        window.AthenaAgentCanvas.selectRow(id, { reveal: true });
       }
     }
   }

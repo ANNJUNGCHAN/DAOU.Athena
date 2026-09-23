@@ -2681,9 +2681,16 @@ function createAgentCanvas(deps) {
     }
   }
 
-  function selectRow(id) {
+  function selectRow(id, { reveal = false } = {}) {
+    // Explicit navigation from outside the list must reveal its target even
+    // when the current status/search filters would hide it.
+    if (reveal) {
+      searchQuery = '';
+      searchInput.value = '';
+      setActiveTab('all');
+    }
     userSelected = true;
-    if (id === selectedId) return;
+    if (id === selectedId && !reveal) return;
     // 다른 항목으로 옮기면 코드 알람의 칸 선택·코드 펼침·멈춤 확인은 초기화한다
     // (앞 항목에서 고른 칸이 다음 항목에 남아 있으면 거짓말이 된다).
     selectedNodeFn = null;
