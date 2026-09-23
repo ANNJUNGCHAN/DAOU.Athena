@@ -36,6 +36,8 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "backend/verification/test_index_realtime_semantics.py",
   "backend/verification/test_scheduled_catchup_lifetime.py",
   "backend/verification/test_aegis_runtime.py",
+  "backend/verification/test_mcp_runtime.py",
+  "backend/verification/verify_mcp_bundled_runtime.py",
 ]);
 
 const RUNTIME_ROOT = new Set(RUNTIME_ROOT_FILES);

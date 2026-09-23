@@ -15,6 +15,7 @@ if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
 
 const projectDir = requiredEnvironmentPath('ATHENA_INSTALLER_PROJECT_DIR');
 const backendDir = requiredEnvironmentPath('ATHENA_INSTALLER_BACKEND_DIR');
+const mcpRuntimeDir = requiredEnvironmentPath('ATHENA_INSTALLER_MCP_RUNTIME_DIR');
 const outputDir = requiredEnvironmentPath('ATHENA_INSTALLER_OUTPUT_DIR');
 const electronDist = String(process.env.ATHENA_ELECTRON_DIST || '').trim();
 const appIcon = path.join(projectDir, 'data', 'athena-icon.ico');
@@ -38,6 +39,11 @@ module.exports = {
     '**/*',
   ],
   extraResources: [
+    {
+      from: mcpRuntimeDir,
+      to: 'mcp-runtime',
+      filter: ['**/*'],
+    },
     {
       from: backendDir,
       to: 'backend',

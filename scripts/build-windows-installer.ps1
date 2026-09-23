@@ -116,6 +116,7 @@ if (Test-Path -LiteralPath $BuildRoot) {
 $StageRoot = Join-Path $BuildRoot 'stage'
 $StageApp = Join-Path $StageRoot 'app'
 $StageBackend = Join-Path $StageRoot 'backend'
+$StageMcpRuntime = Join-Path $StageRoot 'mcp-runtime'
 $RuntimeRoot = Join-Path $StageBackend '.venv/Scripts'
 $DependencyDir = Join-Path $BuildRoot 'dependencies'
 $DistDir = Join-Path $BuildRoot 'dist'
@@ -166,6 +167,10 @@ foreach ($file in $appFiles + $backendFiles) {
 
 Invoke-Native npm @('ci', '--omit=dev', '--ignore-scripts') $StageApp
 
+& (Join-Path $PSScriptRoot 'release/stage-windows-mcp-runtimes.ps1') `
+  -Destination $StageMcpRuntime -DownloadDirectory (Join-Path $DependencyDir 'mcp-runtimes')
+$mcpRuntimeManifest = Get-Content -LiteralPath (Join-Path $StageMcpRuntime 'versions.json') -Raw | ConvertFrom-Json
+
 $pythonPath = @(Invoke-NativeCapture uv @('python', 'find', '--managed-python', '3.12.11') $RepoRoot)[-1].Trim()
 if (-not (Test-Path -LiteralPath $pythonPath -PathType Leaf)) {
   throw "uv did not return a usable Python executable: $pythonPath"
@@ -215,6 +220,7 @@ if ((Test-Path -LiteralPath $localElectronPackage -PathType Leaf) -and (Test-Pat
 $env:ATHENA_INSTALLER_VERSION = $Version
 $env:ATHENA_INSTALLER_PROJECT_DIR = $StageApp
 $env:ATHENA_INSTALLER_BACKEND_DIR = $StageBackend
+$env:ATHENA_INSTALLER_MCP_RUNTIME_DIR = $StageMcpRuntime
 $env:ATHENA_INSTALLER_OUTPUT_DIR = $DistDir
 $env:ATHENA_ELECTRON_DIST = $electronDist
 Invoke-Native npx @(
@@ -241,6 +247,7 @@ $buildInfo = [ordered]@{
   runtimes = [ordered]@{
     electron = '43.4.0'
     python = '3.12.11'
+    bundledMcp = $mcpRuntimeManifest
     node = (@(Invoke-NativeCapture node @('--version') $RepoRoot) -join '').Trim()
     npm = (@(Invoke-NativeCapture npm @('--version') $RepoRoot) -join '').Trim()
     uv = (@(Invoke-NativeCapture uv @('--version') $RepoRoot) -join '').Trim()

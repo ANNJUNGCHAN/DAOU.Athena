@@ -124,6 +124,10 @@ git push origin v0.1.0
 
 Windows 설치 파일은 CI가 만들지 않습니다. 로컬에서 같은 버전으로 빌드한 뒤 선택적으로 올립니다. `-Version`을 생략하면 `app/package.json` 버전을 씁니다.
 
+0.1.3 소스부터 설치 파일에는 MCP 서버 실행용 Node.js·npm/npx와 uv/uvx도 포함합니다. 아테나는 포함된 실행 환경을 우선 사용하므로, 시작 메뉴에서 실행했을 때 터미널 전용 PATH 설정이 없어도 MCP를 시작할 수 있습니다. 사용자 PATH나 기존 MCP 자격 증명·허용 설정을 변경하지 않습니다. MCP 패키지를 처음 받는 데에는 인터넷 연결이 필요합니다. 위의 공개 다운로드 링크는 실제 배포된 버전을 가리키며, 소스 버전 변경만으로 설치 파일이 갱신되지는 않습니다.
+
+MCP 번들만 검증하려면 `scripts/release/stage-windows-mcp-runtimes.ps1`에 새 `-Destination`과 `-DownloadDirectory`를 지정합니다. 이후 `backend` 폴더에서 `.venv/Scripts/python.exe -m verification.verify_mcp_bundled_runtime <번들 경로>`를 실행하면 시스템 Node·uv 경로 없이 MCP 초기화·도구 조회·호출을 검사합니다. `--python <설치본 python.exe 경로>`로 설치본 Python을 지정할 수 있습니다. 검증은 별도 임시 캐시를 사용하며 등록된 사용자 MCP 서버나 자격 증명을 사용하지 않습니다.
+
 ```powershell
 pwsh -NoProfile -File scripts/build-windows-installer.ps1
 gh release upload v0.1.0 .omc/artifacts/windows-installer/0.1.0/dist/Athena-Setup-0.1.0-x64.exe

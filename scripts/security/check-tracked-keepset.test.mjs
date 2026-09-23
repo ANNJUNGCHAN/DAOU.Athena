@@ -53,6 +53,12 @@ test("backend runtime packages stay; tests and scripts do not", () => {
   assert.equal(isKeepPath("backend/scripts/seed_long_term_etf_persona.py"), false);
 });
 
+test("MCP runtime verification is narrowly kept", () => {
+  assert.equal(isKeepPath("backend/verification/test_mcp_runtime.py"), true);
+  assert.equal(isKeepPath("backend/verification/verify_mcp_bundled_runtime.py"), true);
+  assert.equal(isKeepPath("backend/verification/private-mcp-probe.py"), false);
+});
+
 test("handoff, datasets, paper ledgers, and prompt dumps are outside the keep-set", () => {
   assert.equal(isKeepPath("docs/handoff/README.md"), false);
   assert.equal(isKeepPath("datasets/앱-검증-200.jsonl"), false);

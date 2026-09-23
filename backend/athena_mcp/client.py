@@ -28,13 +28,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from mcp import ClientSession, StdioServerParameters
+from mcp import ClientSession
 from mcp.client.stdio import stdio_client
 from mcp.shared.session import ProgressFnT
 from mcp.types import CallToolResult, InitializeResult, ListToolsResult, Tool
 
 from athena_mcp.consent import ConsentStore
 from athena_mcp.registry import ServerEntry, resolve_secret_env
+from athena_mcp.runtime import server_parameters
 
 DEFAULT_MAX_RESPONSE_CHARS = 5_000_000
 
@@ -290,10 +291,10 @@ class UpstreamServerHandle:
             errlog = os.fdopen(stderr_write_fd, "wb")
             stderr_pump_task = asyncio.create_task(self._pump_stderr(stderr_read_fd))
             stderr_read_fd = None  # 소유권이 pump 태스크로 넘어갔다 — 직접 닫지 않는다
-            params = StdioServerParameters(
+            params = server_parameters(
                 command=self.entry.command,
                 args=list(self.entry.args),
-                env=resolve_secret_env(self.alias, self.entry.env) or None,
+                env=resolve_secret_env(self.alias, self.entry.env),
             )
             async with (
                 stdio_client(params, errlog=errlog) as (read, write),
