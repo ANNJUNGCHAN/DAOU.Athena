@@ -3360,7 +3360,7 @@ async function hydrateCanvasBoardForActiveAccount(payload = {}) {
     account: options.backendAccountAlias,
     slotIds: payload.slotIds || payload.slot_ids,
   }), requestedAccountId);
-  if (!bound.ok) return { ok: false, status: 'error', error: bound.error };
+  if (!bound.ok) return { ok: false, status: 'error', errorCode: 'backend_account_unavailable', error: bound.error };
   if (generation !== realtimeAccountGeneration || bound.accountId !== activeRestAccountId()) {
     return { ok: false, status: 'error', error: '활성 계좌가 변경되어 보드 조회를 중단했다' };
   }

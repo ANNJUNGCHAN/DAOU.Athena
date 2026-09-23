@@ -1822,6 +1822,22 @@ const RETRYABLE_BOARD_HYDRATE_REASONS = new Set([
   'upstream_error', 'upstream_business_result', 'primary_transform_error', 'hydration_timeout',
 ]);
 
+// 오류 원문에는 서버 주소나 인증 정보가 섞일 수 있다. 알려진 상태만 안내로 바꾼다.
+function boardHydrationError(reply) {
+  if (reply && reply.errorCode === 'backend_account_unavailable') {
+    const error = new Error('조회에 사용할 계좌가 연결되지 않았습니다. 설정의 계좌 화면에서 계좌를 추가하거나 연결 상태를 확인한 뒤 다시 시도해 주세요.');
+    error.action = 'accounts';
+    return error;
+  }
+  if (reply && (reply.httpStatus === 401 || reply.httpStatus === 403)) {
+    return new Error('앱의 데이터 조회 인증을 확인하지 못했습니다. 앱을 다시 시작한 뒤 조회해 주세요.');
+  }
+  if (reply && reply.status === 'unavailable') {
+    return new Error('데이터 조회 서비스에 연결하지 못했습니다. 잠시 후 다시 시도하고, 계속 실패하면 앱을 다시 시작해 주세요.');
+  }
+  return new Error('카드 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+}
+
 // 봉투가 못 채운 슬롯을 마운트 뒤에 한 번 더 채운다. 조회 자체가 실패하면 결측값을
 // 완성 화면처럼 보이지 않고 로딩 오류로 돌려 재시도할 수 있게 한다.
 async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true) {
@@ -1837,16 +1853,22 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     throw new Error('카드 데이터 조회 연결을 사용할 수 없습니다.');
   }
   const boardId = state.boardId;
-  const reply = await window.athena.invoke('athena:canvas-board-hydrate', {
-    boardId,
-    slotIds: pending,
-    target: boardHydrateTarget(envelope, host),
-    account: boardHydrateAccount(envelope),
-    correlation: envelope && envelope.correlation,
-  });
+  let reply;
+  try {
+    reply = await window.athena.invoke('athena:canvas-board-hydrate', {
+      boardId,
+      slotIds: pending,
+      target: boardHydrateTarget(envelope, host),
+      account: boardHydrateAccount(envelope),
+      correlation: envelope && envelope.correlation,
+    });
+  } catch {
+    if (!isCurrent() || state.boardId !== boardId) return mounted;
+    throw boardHydrationError({ status: 'unavailable' });
+  }
   if (!isCurrent() || state.boardId !== boardId) return mounted;
   if (!reply || !reply.ok) {
-    throw new Error('카드 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    throw boardHydrationError(reply);
   }
   const failures = (Array.isArray(reply.operations) ? reply.operations : [])
     .filter((op) => op && op.status !== 'bound' && RETRYABLE_BOARD_HYDRATE_REASONS.has(op.reason));
@@ -1953,6 +1975,14 @@ function showBoardLoadError(state, host, error, retry) {
   const failure = emptyState('정보를 불러오지 못했습니다.', String((error && error.message) || error));
   failure.classList.add('board-surface-load-state', 'is-error');
   failure.setAttribute('role', 'alert');
+  if (error && error.action === 'accounts'
+      && window.AthenaShell && typeof window.AthenaShell.openSettings === 'function') {
+    failure.appendChild(button('ghost', '계좌 설정', { onClick: () => {
+      window.AthenaShell.openSettings();
+      const accountsNav = document.querySelector('.settings-nav-item[data-key="accounts"]');
+      if (accountsNav) accountsNav.click();
+    } }));
+  }
   failure.appendChild(button('ghost', '다시 시도', { onClick: retry }));
   boardLoadAnchor(state, host).insertBefore(failure, host);
   state.loadNode = failure;
