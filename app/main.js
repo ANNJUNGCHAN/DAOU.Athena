@@ -7338,6 +7338,7 @@ ipcMain.on('athena:session-viewport', (_e, payload = {}) => {
 // 렌더러가 다시 보고하고, 같은 스택이 그대로 저장된다.
 ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
   const id = payload && typeof payload.id === 'string' ? payload.id : '';
+  if (id !== historyConversationId()) return { replayed: 0 };
   const bridge = getSessionBridge();
   if (!id || !bridge || !shellWin || shellWin.isDestroyed()) return { replayed: 0 };
   bridge.flush(id);
@@ -7347,7 +7348,7 @@ ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
   for (const card of cards) {
     if (!card || !card.envelope) continue;
     if (card.channel === 'fixture') {
-      shellWin.webContents.send('athena:add-canvas', { type: card.envelope.type || card.kind, sessionCardId: card.cardId });
+      shellWin.webContents.send('athena:add-canvas', { type: card.envelope.type || card.kind, sessionCardId: card.cardId, conversationId: id });
     } else if (card.envelope.data && card.envelope.data.chart
       && card.envelope.data.chart_meta && card.envelope.operation_ref
       && card.envelope.operation_args && restCorrelationKey(card.envelope.correlation)) {
@@ -7368,7 +7369,7 @@ ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
       }, { expand: false, conversationId: id, timeoutMs: 30_000 })
         .catch(() => { mdlog('저장된 차트 표시 확인 실패 — 재조회 권위를 복원하지 않음'); });
     } else {
-      shellWin.webContents.send('athena:add-canvas-live', { status: 'success', envelope: card.envelope, sessionCardId: card.cardId });
+      shellWin.webContents.send('athena:add-canvas-live', { status: 'success', envelope: card.envelope, sessionCardId: card.cardId, conversationId: id });
     }
     replayed += 1;
   }

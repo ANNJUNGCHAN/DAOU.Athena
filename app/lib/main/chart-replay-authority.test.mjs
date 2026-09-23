@@ -32,13 +32,14 @@ function harness(cards) {
   let replaySequence = 0;
   const bridge = { flush() {}, load() { return { canvasCards: cards }; } };
   Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents',
-    'restCorrelationKey', 'emitRestCanvasAndWaitForPaint', 'activeRestAccountId', 'mdlog', 'crypto', handlerSource)(
+    'restCorrelationKey', 'emitRestCanvasAndWaitForPaint', 'activeRestAccountId', 'mdlog', 'crypto', 'historyConversationId', handlerSource)(
     { handle: (_, callback) => { replay = callback; } }, () => bridge,
     { isDestroyed: () => false, webContents: { send: (channel, value) => sends.push({ channel, value }) } },
     () => {}, (value) => value?.dataset_id && value.item_id && value.ordinal ? 'correlation' : null,
     (payload, options) => new Promise((resolve, reject) => { paintRequests.push({ payload, options, resolve, reject }); }),
     () => 'qa-account', (message) => logs.push(message),
     { randomUUID: () => `replay-${++replaySequence}` },
+    () => 'saved-conversation',
   );
   return { replay, paintRequests, sends, logs };
 }

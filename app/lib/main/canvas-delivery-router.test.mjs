@@ -98,12 +98,48 @@ test('returning immediately after a background card flushes its pending save bef
   };
   const start = source.indexOf("ipcMain.handle('athena:session-replay-cards',");
   const code = source.slice(start, source.indexOf('\n});', start) + 4);
-  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', code)(
+  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', code)(
     { handle: (_name, handler) => { replay = handler; } }, () => bridge,
     { isDestroyed: () => false, webContents: { send: (channel, payload) => sent.push({ channel, payload }) } },
-    () => {},
+    () => {}, () => 'original',
   );
   assert.equal(replay(null, { id: 'original' }).replayed, 1);
   assert.equal(sent[0].payload.envelope.canvas_type, 'chart');
   assert.equal(sent[0].payload.sessionCardId, 'saved-card');
+  assert.equal(sent[0].payload.conversationId, 'original');
+});
+
+test('late replay requests cannot paint or flush deferred actions after another conversation becomes active', () => {
+  let replay;
+  let active = 'A';
+  let loads = 0;
+  const sent = [];
+  const deferred = [];
+  const start = source.indexOf("ipcMain.handle('athena:session-replay-cards',");
+  const code = source.slice(start, source.indexOf('\n});', start) + 4);
+  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', code)(
+    { handle: (_name, handler) => { replay = handler; } },
+    () => ({ flush() {}, load(id) {
+      loads++;
+      return { canvasCards: [
+        { cardId: `${id}-table`, channel: 'live', envelope: { canvas_type: 'table' } },
+        { cardId: `${id}-fixture`, channel: 'fixture', envelope: { type: 'facts' } },
+      ] };
+    } }),
+    { isDestroyed: () => false, webContents: { send: (channel, payload) => sent.push({ channel, payload }) } },
+    (id) => deferred.push(id), () => active,
+  );
+  // Simulate the old renderer's queued A request arriving after main switches to B.
+  active = 'B';
+  assert.equal(replay(null, { id: 'A' }).replayed, 0);
+  assert.equal(loads, 0);
+  assert.equal(sent.length, 0);
+  assert.equal(deferred.length, 0);
+  assert.equal(replay(null, { id: 'B' }).replayed, 2);
+  assert.ok(sent.every(({ payload }) => payload.conversationId === 'B'));
+  assert.deepEqual(deferred, ['B']);
+  active = 'A';
+  assert.equal(replay(null, { id: 'B' }).replayed, 0);
+  assert.equal(replay(null, { id: 'A' }).replayed, 2);
+  assert.ok(sent.slice(2).every(({ payload }) => payload.conversationId === 'A'));
 });
