@@ -7867,12 +7867,12 @@ function emitRestCanvasForOrigin(
   );
 }
 
-async function notifyStartupFailuresAfterExpansion(snapshot) {
+async function notifyStartupFailuresAfterExpansion(snapshot, notificationPayload = null) {
   if (!shellExpansionAcknowledged) return { notified: false, delivered: [] };
   const result = await startupFailureNotifier.notify(snapshot, {
-    shell: (payload) => sendRendererStartupNotification(shellWin, payload),
-    orb: (payload) => sendRendererStartupNotification(orbWin, payload),
-    os: (payload) => showStartupOsNotification(Notification, payload, { icon: APP_ICON }),
+    shell: (payload) => sendRendererStartupNotification(shellWin, notificationPayload || payload),
+    orb: (payload) => sendRendererStartupNotification(orbWin, notificationPayload || payload),
+    os: (payload) => showStartupOsNotification(Notification, notificationPayload || payload, { icon: APP_ICON }),
   });
   startupFailureNotificationResult = result;
   return result;
@@ -7946,9 +7946,50 @@ async function ensureBackendStrict(context) {
   }
   if (result.reason === 'no-venv') throw new Error('백엔드 가상환경이 설치되지 않음');
   if (result.ready === false) throw new Error('백엔드 lifespan 준비를 아직 확인하지 못함');
+  if (isQuitting) throw new Error('앱 종료 중 백엔드 복구를 취소함');
   applyBackendEndpoint(result.backendUrl || backendEndpoint.requireBackendUrl());
   configureConversationGraphPipeline();
   return { detail: result.spawned ? '백엔드 기동 및 lifespan 확인 완료' : '실행 중인 백엔드 확인 완료' };
+}
+
+let backendRecoveryPromise = null;
+let backendRecoverySequence = 0;
+
+function recoverOwnedBackend({ code, signal, summary } = {}) {
+  if (isQuitting) return Promise.resolve();
+  if (backendRecoveryPromise) return backendRecoveryPromise;
+  const recoveryId = ++backendRecoverySequence;
+  mdlog(`ensureBackend: 소유 백엔드가 예기치 않게 종료됨 — code=${code} signal=${signal}${summary ? ` — ${summary}` : ''} — 재기동한다`);
+  // 초기 기동 중 죽은 대체 프로세스는 exit 알림을 내지 않는다. 준비 runner의
+  // 실패를 직접 확인하고, launcher의 실패 보존 시간 뒤 딱 한 번 더 시도한다.
+  backendRecoveryPromise = Promise.resolve().then(async () => {
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      if (isQuitting) return;
+      const snapshot = await startupReadiness.start('backend');
+      if (isQuitting) return;
+      const backend = snapshot.tasks.find((task) => task.id === 'backend');
+      if (backend && backend.state === 'succeeded') return;
+      if (attempt === 1) {
+        startupReadiness.update('backend', {
+          state: 'retrying', detail: '백엔드 복구 실패 · 60초 후 마지막 자동 재시도',
+        });
+        await waitMs(backendLauncher.STARTUP_HARD_TIMEOUT_MS);
+      }
+    }
+    startupReadiness.update('backend', {
+      state: 'failed', detail: '백엔드 자동 복구 실패 · 앱을 종료한 뒤 다시 실행해 주세요',
+    });
+    const snapshot = startupReadiness.snapshot();
+    await notifyStartupFailuresAfterExpansion({
+      ...snapshot, runId: `${snapshot.runId}:backend-recovery:${recoveryId}`,
+    }, {
+      title: 'ATHENA 서비스를 복구하지 못했어요',
+      body: '백엔드 자동 복구가 두 번 실패했습니다. 앱을 종료한 뒤 다시 실행해 주세요.',
+    });
+  }).catch((error) => {
+    mdlog(`백엔드 복구 처리 실패: ${String((error && error.message) || error)}`);
+  }).finally(() => { backendRecoveryPromise = null; });
+  return backendRecoveryPromise;
 }
 
 function waitMs(ms) {
@@ -8307,11 +8348,7 @@ ipcMain.on('athena:shell-handoff-ready', (event) => {
 });
 
 if (!process.env.ATHENA_NO_AUTOSTART) {
-  backendLauncher.setOwnedChildExitListener(({ code, signal, summary }) => {
-    if (isQuitting) return;
-    mdlog(`ensureBackend: 소유 백엔드가 예기치 않게 종료됨 — code=${code} signal=${signal}${summary ? ` — ${summary}` : ''} — 재기동한다`);
-    void backendLauncher.ensureBackend({ mdlog });
-  });
+  backendLauncher.setOwnedChildExitListener(recoverOwnedBackend);
   app.whenReady().then(() => {
     if (APP_ICON && app.dock && typeof app.dock.setIcon === 'function') app.dock.setIcon(APP_ICON);
     // 2026-08-22 팔레트 반전(사용자 지시 "애플 Liquid Glass 형태 그대로"):
