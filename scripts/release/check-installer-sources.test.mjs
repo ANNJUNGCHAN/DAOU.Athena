@@ -60,7 +60,7 @@ test("installer source gate passes when only tracked and ignored files exist", (
   }
 });
 
-test("Windows installer invokes the untracked source gate before git ls-files staging", () => {
+test("Windows installer invokes the untracked source gate before commit snapshot staging", () => {
   const script = readFileSync(join(root, "scripts", "build-windows-installer.ps1"), "utf8");
   const gateAt = script.indexOf("scripts/release/check-installer-sources.mjs");
   const stagingAt = script.indexOf("$tracked = @(");

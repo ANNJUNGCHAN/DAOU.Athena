@@ -45,12 +45,19 @@ function Invoke-NativeCapture {
   }
 }
 
+function Export-SourceSnapshot {
+  param([string]$Root, [string]$Commit, [string]$Destination)
+  $archive = "$Destination.zip"
+  Invoke-Native git @('-C', $Root, 'archive', '--format=zip', "--output=$archive", $Commit, '--', 'app', 'backend', 'scripts') $Root
+  Expand-Archive -LiteralPath $archive -DestinationPath $Destination
+}
+
 function Copy-TrackedFile {
   param(
     [Parameter(Mandatory)] [string]$RelativePath,
     [Parameter(Mandatory)] [string]$DestinationRoot
   )
-  $source = Join-Path $script:RepoRoot $RelativePath
+  $source = Join-Path $script:SnapshotRoot $RelativePath
   if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
     throw "Tracked source is missing: $RelativePath"
   }
@@ -61,9 +68,8 @@ function Copy-TrackedFile {
 }
 
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+$SourceCommit = (@(Invoke-NativeCapture git @('-C', $RepoRoot, 'rev-parse', 'HEAD') $RepoRoot) -join '').Trim()
 $AppSource = Join-Path $RepoRoot 'app'
-$BackendSource = Join-Path $RepoRoot 'backend'
-$ConfigPath = Join-Path $PSScriptRoot 'windows-installer.config.cjs'
 
 $packagePath = Join-Path $AppSource 'package.json'
 $package = Get-Content -LiteralPath $packagePath -Raw | ConvertFrom-Json
@@ -122,7 +128,15 @@ $DependencyDir = Join-Path $BuildRoot 'dependencies'
 $DistDir = Join-Path $BuildRoot 'dist'
 [void](New-Item -ItemType Directory -Path $StageApp, $StageBackend, $RuntimeRoot, $DependencyDir, $DistDir)
 
-$tracked = @(Invoke-NativeCapture git @('-C', $RepoRoot, '-c', 'core.quotepath=false', 'ls-files', '--', 'app', 'backend') $RepoRoot)
+$SnapshotRoot = Join-Path $BuildRoot 'source'
+Export-SourceSnapshot $RepoRoot $SourceCommit $SnapshotRoot
+Invoke-Native node @('scripts/release/check-version.mjs') $SnapshotRoot
+$snapshotVersion = (Get-Content -LiteralPath (Join-Path $SnapshotRoot 'app/package.json') -Raw | ConvertFrom-Json).version
+if ($snapshotVersion -ne $Version) {
+  throw "Captured commit version $snapshotVersion does not match installer version $Version"
+}
+$ConfigPath = Join-Path $SnapshotRoot 'scripts/windows-installer.config.cjs'
+$tracked = @(Invoke-NativeCapture git @('-C', $RepoRoot, '-c', 'core.quotepath=false', 'ls-tree', '-r', '--name-only', $SourceCommit, '--', 'app', 'backend') $RepoRoot)
 $runtimeRootFiles = @(
   'app/main.js',
   'app/preload.js',
@@ -167,7 +181,7 @@ foreach ($file in $appFiles + $backendFiles) {
 
 Invoke-Native npm @('ci', '--omit=dev', '--ignore-scripts') $StageApp
 
-& (Join-Path $PSScriptRoot 'release/stage-windows-mcp-runtimes.ps1') `
+& (Join-Path $SnapshotRoot 'scripts/release/stage-windows-mcp-runtimes.ps1') `
   -Destination $StageMcpRuntime -DownloadDirectory (Join-Path $DependencyDir 'mcp-runtimes')
 $mcpRuntimeManifest = Get-Content -LiteralPath (Join-Path $StageMcpRuntime 'versions.json') -Raw | ConvertFrom-Json
 
@@ -195,17 +209,17 @@ foreach ($requiredRuntimeDirectory in @('Lib', 'DLLs')) {
 }
 
 $RequirementsPath = Join-Path $DependencyDir 'backend-requirements.txt'
-Invoke-Native uv @('export', '--frozen', '--no-dev', '--no-emit-project', '--output-file', $RequirementsPath) $BackendSource
+Invoke-Native uv @('export', '--frozen', '--no-dev', '--no-emit-project', '--output-file', $RequirementsPath) $StageBackend
 [void](New-Item -ItemType Directory -Path (Join-Path $RuntimeRoot 'Lib/site-packages') -Force)
 Invoke-Native uv @(
   'pip', 'install',
   '--target', (Join-Path $RuntimeRoot 'Lib/site-packages'),
   '--python', (Join-Path $RuntimeRoot 'python.exe'),
   '--requirement', $RequirementsPath
-) $BackendSource
+) $StageBackend
 
-Copy-Item -LiteralPath (Join-Path $AppSource 'package-lock.json') -Destination (Join-Path $DependencyDir 'app-package-lock.json')
-Copy-Item -LiteralPath (Join-Path $BackendSource 'uv.lock') -Destination (Join-Path $DependencyDir 'backend-uv.lock')
+Copy-Item -LiteralPath (Join-Path $StageApp 'package-lock.json') -Destination (Join-Path $DependencyDir 'app-package-lock.json')
+Copy-Item -LiteralPath (Join-Path $StageBackend 'uv.lock') -Destination (Join-Path $DependencyDir 'backend-uv.lock')
 
 $electronDist = ''
 $localElectronPackage = Join-Path $AppSource 'node_modules/electron/package.json'
@@ -241,7 +255,7 @@ if (-not (Test-Path -LiteralPath $ArtifactPath -PathType Leaf)) {
 $buildInfo = [ordered]@{
   productName = 'Athena'
   version = $Version
-  commit = (@(Invoke-NativeCapture git @('-C', $RepoRoot, 'rev-parse', 'HEAD') $RepoRoot) -join '').Trim()
+  commit = $SourceCommit
   builtAtUtc = [DateTime]::UtcNow.ToString('o')
   target = [ordered]@{ platform = 'windows'; arch = 'x64'; installer = 'nsis-per-user-assisted'; signed = $false }
   runtimes = [ordered]@{
