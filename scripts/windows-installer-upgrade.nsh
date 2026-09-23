@@ -1,9 +1,11 @@
 !include "FileFunc.nsh"
 !define ATHENA_UPGRADE_SCRIPT "${__FILEDIR__}\windows-installer-upgrade.ps1"
-Var AthenaOldInstallRoot
-Var AthenaKeepOldShortcuts
-Var AthenaHadDesktopShortcut
-Var AthenaHadStartShortcut
+!ifndef BUILD_UNINSTALLER
+  Var AthenaOldInstallRoot
+  Var AthenaKeepOldShortcuts
+  Var AthenaHadDesktopShortcut
+  Var AthenaHadStartShortcut
+!endif
 
 !macro AthenaUpgradeFailure
   ReadEnvStr $R8 ATHENA_UPGRADE_BACKUP

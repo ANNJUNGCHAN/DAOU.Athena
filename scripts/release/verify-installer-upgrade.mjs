@@ -85,7 +85,9 @@ LangString uninstallFailed 1033 "Synthetic uninstall failed"
 const compile = (name, contents) => {
   const path = join(root, name + '.nsi');
   writeFileSync(path, contents);
-  execFileSync(compiler, ['/V2', path], { encoding: 'utf8', stdio: 'pipe' });
+  // Match electron-builder's production warnings-as-errors policy in both
+  // installer and BUILD_UNINSTALLER compilation contexts.
+  execFileSync(compiler, ['/WX', '/V2', path], { encoding: 'utf8', stdio: 'pipe' });
 };
 async function withLock(target, mode, action) {
   const ready = join(root, 'lock-ready');
