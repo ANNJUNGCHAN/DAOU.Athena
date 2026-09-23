@@ -36,6 +36,13 @@ RequestExecutionLevel user
 !define UNINSTALL_FILENAME "Uninstall Athena.exe"
 !include "${quote(include)}"
 !insertmacro customHeader
+!macroundef AthenaInspectUpgrade
+!macro AthenaInspectUpgrade
+  StrCpy $AthenaOldInstallRoot ""
+!macroend
+!macroundef AthenaPerformUpgrade
+!macro AthenaPerformUpgrade
+!macroend
 !macroundef AthenaCheckProcesses
 !macro AthenaCheckProcesses
   SetErrorLevel 73

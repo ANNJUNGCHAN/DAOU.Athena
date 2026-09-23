@@ -71,6 +71,8 @@ datasets/eval-runs/
 !/scripts/windows-installer.nsh
 !/scripts/windows-installer-processes.nsh
 !/scripts/windows-installer-processes.ps1
+!/scripts/windows-installer-upgrade.nsh
+!/scripts/windows-installer-upgrade.ps1
 !/app/
 /app/*
 !/app/main.js

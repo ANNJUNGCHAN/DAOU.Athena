@@ -2,6 +2,7 @@
 ; runs the previous uninstaller. customInit is too early (directory page),
 ; and customInstall is too late (the previous version is already removed).
 !include "${__FILEDIR__}\windows-installer-processes.nsh"
+!include "${__FILEDIR__}\windows-installer-upgrade.nsh"
 !ifndef BUILD_UNINSTALLER
 
   !macro AthenaRejectDataDirectory ROOT
@@ -87,6 +88,9 @@
 
       athena_existing:
         ReadRegStr $1 SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" InstallLocation
+        ${If} $1 == ""
+          StrCpy $1 $AthenaOldInstallRoot
+        ${EndIf}
         StrCmp $1 "" athena_invalid
         System::Call 'kernel32::GetFullPathNameW(w r1, i ${NSIS_MAX_STRLEN}, w .r1, p 0)i.r2'
         IntCmp $2 0 athena_invalid
@@ -115,7 +119,12 @@
 !endif
 
 !macro customCheckAppRunning
+  StrCpy $AthenaPowerShell "$SYSDIR\WindowsPowerShell\v1.0\powershell.exe"
+  ; A 32-bit NSIS process must inspect Athena's 64-bit executable modules.
+  IfFileExists "$WINDIR\Sysnative\WindowsPowerShell\v1.0\powershell.exe" 0 +2
+    StrCpy $AthenaPowerShell "$WINDIR\Sysnative\WindowsPowerShell\v1.0\powershell.exe"
   !ifndef BUILD_UNINSTALLER
+    !insertmacro AthenaInspectUpgrade
     Call AthenaValidateInstallDirectory
     Pop $R0
     ${If} $R0 != 1
@@ -124,10 +133,11 @@
       SetErrorLevel 2
       Quit
     ${EndIf}
+  !else
+    !insertmacro AthenaValidateUpgradeUninstallerRoot
   !endif
-  StrCpy $AthenaPowerShell "$SYSDIR\WindowsPowerShell\v1.0\powershell.exe"
-  ; A 32-bit NSIS process must inspect Athena's 64-bit executable modules.
-  IfFileExists "$WINDIR\Sysnative\WindowsPowerShell\v1.0\powershell.exe" 0 +2
-    StrCpy $AthenaPowerShell "$WINDIR\Sysnative\WindowsPowerShell\v1.0\powershell.exe"
   !insertmacro AthenaCheckProcesses
+  !ifndef BUILD_UNINSTALLER
+    !insertmacro AthenaPerformUpgrade
+  !endif
 !macroend

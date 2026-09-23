@@ -158,7 +158,15 @@ SectionEnd
   assert.ok(alive(peer.pid) && alive(neighbor.pid));
   writeFileSync(nsis, readFileSync(nsis, 'utf8').replace('!define BUILD_UNINSTALLER', `!define INSTALL_REGISTRY_KEY "Software\\AthenaProcessHarnessUnused"
 !define APP_EXECUTABLE_FILENAME "Athena.exe"
-!define UNINSTALL_FILENAME "Uninstall Athena.exe"`).replace('LangString appRunning', '!insertmacro customHeader\nLangString appRunning'));
+!define UNINSTALL_FILENAME "Uninstall Athena.exe"`).replace('LangString appRunning', `!insertmacro customHeader
+!macroundef AthenaInspectUpgrade
+!macro AthenaInspectUpgrade
+  StrCpy $AthenaOldInstallRoot ""
+!macroend
+!macroundef AthenaPerformUpgrade
+!macro AthenaPerformUpgrade
+!macroend
+LangString appRunning`));
   execFileSync(compiler, ['/V2', nsis], { stdio: 'pipe' });
   const freshInstall = join(root, 'fresh-install');
   const freshResult = spawnSync(hookExe, ['/S'], { env: { ...process.env, ATHENA_TEST_DESTINATION: freshInstall }, timeout: 10000 });
