@@ -11,6 +11,8 @@ from typing import Literal, Self
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from athena_api import __version__
+
 KIWOOM_MOCK_BASE_URL = "https://mockapi.kiwoom.com"
 LEGACY_ACCOUNT_ALIAS = "default"
 ACCOUNT_ALIAS_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_-]{0,31}$")
@@ -86,7 +88,7 @@ class Settings(BaseSettings):
     )
 
     app_name: str = "DAOU Athena API"
-    app_version: str = "0.1.0"
+    app_version: str = __version__
     kiwoom_accounts: list[KiwoomAccount] = []
     kiwoom_default_account: str | None = None
     # Single-account shorthand. Synthesized into a one-entry pool aliased "default".

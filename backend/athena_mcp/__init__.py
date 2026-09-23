@@ -1,2 +1,2 @@
 
-__version__ = "0.1.0"
+from athena_api import __version__ as __version__

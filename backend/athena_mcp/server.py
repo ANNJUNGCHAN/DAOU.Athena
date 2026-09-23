@@ -34,6 +34,7 @@ import mcp.types as types
 from mcp.server.lowlevel import Server
 
 from athena_mcp import (
+    __version__,
     backtest_tools,
     brain_tools,
     canvas_data,
@@ -813,7 +814,7 @@ def _unique_grok_wire_names(internal_names: list[str]) -> dict[str, str]:
 
 def build_mcp_server(gateway: AthenaGateway) -> Server:
     """`AthenaGateway`를 실제 `mcp.server.lowlevel.Server`에 연결한다."""
-    server: Server = Server("athena", version="0.1.0")
+    server: Server = Server("athena", version=__version__)
     grok_wire_names = os.environ.get(_TOOL_NAME_STYLE_ENV) == _GROK_TOOL_NAME_STYLE
     wire_to_internal: dict[str, str] = {}
 
