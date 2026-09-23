@@ -69,6 +69,8 @@ datasets/eval-runs/
 !/scripts/build-windows-installer.ps1
 !/scripts/windows-installer.config.cjs
 !/scripts/windows-installer.nsh
+!/scripts/windows-installer-processes.nsh
+!/scripts/windows-installer-processes.ps1
 !/app/
 /app/*
 !/app/main.js

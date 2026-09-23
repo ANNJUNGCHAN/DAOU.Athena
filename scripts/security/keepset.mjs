@@ -29,6 +29,8 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "scripts/build-windows-installer.ps1",
   "scripts/windows-installer.config.cjs",
   "scripts/windows-installer.nsh",
+  "scripts/windows-installer-processes.nsh",
+  "scripts/windows-installer-processes.ps1",
   "README.md",
   "GROK.md",
   "AGENTS.md",

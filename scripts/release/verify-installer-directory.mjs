@@ -36,9 +36,8 @@ RequestExecutionLevel user
 !define UNINSTALL_FILENAME "Uninstall Athena.exe"
 !include "${quote(include)}"
 !insertmacro customHeader
-!macro IS_POWERSHELL_AVAILABLE
-!macroend
-!macro _CHECK_APP_RUNNING
+!macroundef AthenaCheckProcesses
+!macro AthenaCheckProcesses
   SetErrorLevel 73
   Quit
 !macroend

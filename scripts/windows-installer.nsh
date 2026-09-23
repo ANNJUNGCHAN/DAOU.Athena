@@ -1,10 +1,8 @@
 ; Validate the final destination before electron-builder closes processes or
 ; runs the previous uninstaller. customInit is too early (directory page),
 ; and customInstall is too late (the previous version is already removed).
+!include "${__FILEDIR__}\windows-installer-processes.nsh"
 !ifndef BUILD_UNINSTALLER
-  !include "LogicLib.nsh"
-  !include "getProcessInfo.nsh"
-  Var pid
 
   !macro AthenaRejectDataDirectory ROOT
     System::Call 'kernel32::GetFullPathNameW(w "${ROOT}", i ${NSIS_MAX_STRLEN}, w .r2, p 0)i.r3'
@@ -114,7 +112,10 @@
     FunctionEnd
   !macroend
 
-  !macro customCheckAppRunning
+!endif
+
+!macro customCheckAppRunning
+  !ifndef BUILD_UNINSTALLER
     Call AthenaValidateInstallDirectory
     Pop $R0
     ${If} $R0 != 1
@@ -123,8 +124,10 @@
       SetErrorLevel 2
       Quit
     ${EndIf}
-    ; Preserve electron-builder 26.15.3's existing process-closing behavior.
-    !insertmacro IS_POWERSHELL_AVAILABLE
-    !insertmacro _CHECK_APP_RUNNING
-  !macroend
-!endif
+  !endif
+  StrCpy $AthenaPowerShell "$SYSDIR\WindowsPowerShell\v1.0\powershell.exe"
+  ; A 32-bit NSIS process must inspect Athena's 64-bit executable modules.
+  IfFileExists "$WINDIR\Sysnative\WindowsPowerShell\v1.0\powershell.exe" 0 +2
+    StrCpy $AthenaPowerShell "$WINDIR\Sysnative\WindowsPowerShell\v1.0\powershell.exe"
+  !insertmacro AthenaCheckProcesses
+!macroend
