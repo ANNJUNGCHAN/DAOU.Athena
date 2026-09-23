@@ -244,6 +244,8 @@ function applyRemoteLock() {
 }
 // 지금 보이는 대화의 거울(state/liveProgressEl/abortToken)과 입력 잠금을 그 대화의 기록으로 맞춘다.
 function syncDisplayedTurn() {
+  // 결과물 바는 최신 실시간 턴의 메타데이터다. 다른 대화의 출처로 남기지 않는다.
+  updateResultDock(0, [], []);
   const rec = turnRecordFor(displayedConversationId);
   state = rec.state;
   liveProgressEl = rec.progressEl;
@@ -3403,6 +3405,7 @@ window.athena.invoke('athena:cli-list').then(applyCliState, () => {});
 // 보관하고 빈 화면으로 넘어간다. 새 기록 id는 main의 athena:conversation-active 방송으로 온다.
 // sidebar.js가 새 기록 id를 요청하기 직전에 이 이벤트를 보낸다.
 window.addEventListener('athena:new-conversation', () => {
+  updateResultDock(0, [], []);
   conversationSelectionRevision += 1;
   $conversationRetry.hidden = true;
   // 새 기록 id를 받기 전에 흘린다 — 이력 행 클릭과 같은 이유다(전환 뒤에 터진 보고는
