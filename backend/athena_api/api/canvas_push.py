@@ -1690,6 +1690,21 @@ def _correlation(
     }
 
 
+def _chart_reload_metadata(
+    canvas_kind: str, payload: RenderPlanRequest, verified_arguments: dict[str, Any]
+) -> dict[str, Any]:
+    if canvas_kind != "chart":
+        return {}
+    metadata: dict[str, Any] = {"operation_args": dict(verified_arguments)}
+    if payload.dataset_id is None and payload.delivery_id is not None:
+        metadata["correlation"] = {
+            "dataset_id": payload.delivery_id,
+            "item_id": "chart",
+            "ordinal": 1,
+        }
+    return metadata
+
+
 def _resolve_request(payload: SelectorDispatchRequest) -> ResolveRequest:
     return ResolveRequest.model_validate(
         payload.model_dump(
@@ -2593,6 +2608,9 @@ async def canvas_render_plan(
         "raw_data": call_payload.get("data"),
         "source_data": _lossless_source_data(call_payload),
         **card_contract,
+        **_chart_reload_metadata(
+            canvas_kind, payload, getattr(verified_plan, "arguments", None) or {}
+        ),
     }
     if target_label is not None:
         envelope["target_label"] = target_label

@@ -3803,7 +3803,21 @@ function sendLiveCanvasResult(result, metadata = null) {
     persistBackgroundCanvasCard(conversationId, result, sessionCardId);
   } else {
     if (!shellWin || shellWin.isDestroyed()) return sessionCardId;
-    shellWin.webContents.send('athena:add-canvas-live', payload);
+    const envelope = result && result.envelope;
+    if (envelope && envelope.data && envelope.data.chart && envelope.data.chart_meta
+      && envelope.operation_ref && envelope.operation_args && restCorrelationKey(envelope.correlation)) {
+      void emitRestCanvasAndWaitForPaint({
+        envelope,
+        operationRef: envelope.operation_ref,
+        operationArgs: envelope.operation_args,
+        canvasType: envelope.canvas_type,
+        accountId: activeRestAccountId(),
+        sessionCardId,
+      }, { expand: false, conversationId: conversationId || historyConversationId(), timeoutMs: 30_000 })
+        .catch(() => { mdlog('차트 표시 확인 실패 — 재조회 권위를 등록하지 않음'); });
+    } else {
+      shellWin.webContents.send('athena:add-canvas-live', payload);
+    }
   }
   // 채팅 영역의 3상태 표시가 실제 진행을 보여줄 수 있도록 카드 하나가 뜰 때마다
   // 알린다 — 43초짜리 왕복 동안 조용히 멈춘 것처럼 보이면 안 된다(오케스트레이터 지시).
@@ -7334,6 +7348,25 @@ ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
     if (!card || !card.envelope) continue;
     if (card.channel === 'fixture') {
       shellWin.webContents.send('athena:add-canvas', { type: card.envelope.type || card.kind, sessionCardId: card.cardId });
+    } else if (card.envelope.data && card.envelope.data.chart
+      && card.envelope.data.chart_meta && card.envelope.operation_ref
+      && card.envelope.operation_args && restCorrelationKey(card.envelope.correlation)) {
+      // 복원된 차트도 실제 paint ack를 거쳐 조회 권위를 다시 세운다. 앱 재시작
+      // 뒤에는 저장된 봉만 그리는 것으로 주기 전환 권위가 복구되지 않는다.
+      // 이전 복원의 ack가 대기 중이어도 새 복원을 막거나 잘못 확정하지 않는다.
+      const replayEnvelope = {
+        ...card.envelope,
+        correlation: { ...card.envelope.correlation, dataset_id: crypto.randomUUID() },
+      };
+      void emitRestCanvasAndWaitForPaint({
+        envelope: replayEnvelope,
+        operationRef: card.envelope.operation_ref,
+        operationArgs: card.envelope.operation_args,
+        canvasType: card.envelope.canvas_type,
+        accountId: activeRestAccountId(),
+        sessionCardId: card.cardId,
+      }, { expand: false, conversationId: id, timeoutMs: 30_000 })
+        .catch(() => { mdlog('저장된 차트 표시 확인 실패 — 재조회 권위를 복원하지 않음'); });
     } else {
       shellWin.webContents.send('athena:add-canvas-live', { status: 'success', envelope: card.envelope, sessionCardId: card.cardId });
     }

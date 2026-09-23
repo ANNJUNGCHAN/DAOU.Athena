@@ -4,7 +4,12 @@ import httpx
 import pytest
 from pydantic import ValidationError
 
-from athena_api.api.canvas_push import RenderPlanRequest, _display_receipt
+from athena_api.api.canvas_push import (
+    RenderPlanRequest,
+    _chart_reload_metadata,
+    _correlation,
+    _display_receipt,
+)
 from athena_mcp.canvas_data import render_with_plan
 
 
@@ -25,6 +30,7 @@ async def test_mcp_generates_delivery_identity_and_returns_only_matching_control
         )
         # An unrelated extra backend value must never enter the model receipt.
         receipt["data"] = {"fixture": "renderer only"}
+        receipt["operation_args"] = {"stk_cd": "fixture-only"}
         return httpx.Response(200, json={
             "queued": True, "delivery": "side_channel", "status": "queued",
             "canvas_type": "chart", "envelope": None, "receipt": receipt,
@@ -44,6 +50,7 @@ async def test_mcp_generates_delivery_identity_and_returns_only_matching_control
         assert result.structuredContent["delivery_id"] == payload["delivery_id"]
         assert "data" not in result.structuredContent
         assert "plan_token" not in result.structuredContent
+        assert "operation_args" not in result.structuredContent
 
 
 @pytest.mark.asyncio
@@ -74,3 +81,36 @@ def test_uncorrelated_callers_remain_supported_and_arbitrary_delivery_keys_are_r
     )
     with pytest.raises(ValidationError):
         RenderPlanRequest(plan_token="fixture-plan", delivery_id="unbounded-model-input")
+
+
+def test_chart_reload_uses_verified_arguments_and_opaque_delivery_correlation():
+    arguments = {"stk_cd": "005930", "base_dt": "20260923", "upd_stkpc_tp": "1"}
+    payload = RenderPlanRequest(
+        plan_token="fixture-plan", delivery_id="b" * 32,
+        data={"operation_args": {"stk_cd": "wrong-symbol"}},
+    )
+    metadata = _chart_reload_metadata("chart", payload, arguments)
+    assert metadata["operation_args"] == arguments
+    assert metadata["operation_args"] is not arguments
+    assert metadata["correlation"] == {
+        "dataset_id": "b" * 32, "item_id": "chart", "ordinal": 1,
+    }
+    metadata["operation_args"]["stk_cd"] = "changed-in-renderer-copy"
+    assert arguments["stk_cd"] == "005930"
+    assert "plan_token" not in metadata
+
+
+def test_chart_reload_preserves_explicit_dataset_correlation_and_ignores_other_surfaces():
+    payload = RenderPlanRequest(
+        plan_token="fixture-plan", delivery_id="c" * 32,
+        dataset_id="existing-dataset", item_id="existing-chart", ordinal=2,
+    )
+    metadata = _chart_reload_metadata("chart", payload, {"stk_cd": "005930"})
+    assert "correlation" not in metadata
+    assert _correlation(payload) == {
+        "dataset_id": "existing-dataset", "item_id": "existing-chart", "ordinal": 2,
+    }
+    for kind in ("table", "facts", "compound", "event"):
+        assert _chart_reload_metadata(kind, payload, {"stk_cd": "005930"}) == {}
+    uncorrelated = RenderPlanRequest(plan_token="fixture-plan")
+    assert "correlation" not in _chart_reload_metadata("chart", uncorrelated, {})
