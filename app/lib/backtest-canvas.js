@@ -4411,6 +4411,7 @@ function createBacktestCanvas(options) {
 
   function renderCodeTab() {
     const wrap = el('div', 'backtest-code-tab');
+    wrap.appendChild(renderCodeErrors());
     const workspace = workspaceActive();
     // 기법 폴더 편집기(보드 20)는 기법 하나의 화면에서만 선다 — 목록에서 고른 내 기법의
     // 폴더이거나 [+ 새 기법 만들기]가 만든 폴더다. 프리셋(yaml)은 폴더가 없어 단일 편집기다.
@@ -4421,7 +4422,6 @@ function createBacktestCanvas(options) {
       wrap.appendChild(ide.element);
       ide.refreshSide();
       if (state.fileDraft) wrap.appendChild(renderFileDraft());
-      wrap.appendChild(renderCodeErrors());
       return wrap;
     }
 
@@ -4448,7 +4448,6 @@ function createBacktestCanvas(options) {
     }
     // 기법 하나의 화면에는 버튼이 없다(보드 20) — 검증은 자동이고 저장은 폴더의 일이다.
     if (workspace) {
-      wrap.appendChild(renderCodeErrors());
       return wrap;
     }
     const actions = el('div', 'backtest-code-actions');
@@ -4472,7 +4471,6 @@ function createBacktestCanvas(options) {
       } catch (err) { fail(err); }
     }));
     wrap.appendChild(actions);
-    wrap.appendChild(renderCodeErrors());
     wrap.appendChild(renderCodeBounds());
     return wrap;
   }

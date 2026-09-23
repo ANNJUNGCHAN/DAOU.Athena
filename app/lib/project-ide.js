@@ -822,7 +822,14 @@ function createProjectIde(options) {
     },
     runTerminal,
     recordTerminalResult,
-    openTerminal() { terminalOpen = true; paint(); },
+    openTerminal() {
+      terminalOpen = true;
+      paint();
+      const panel = root.querySelector('.project-ide-terminal');
+      if (panel && typeof panel.scrollIntoView === 'function') {
+        panel.scrollIntoView({ block: 'nearest' });
+      }
+    },
     terminalEntries() { return terminalRows.map((row) => Object.assign({}, row)); },
     handleKeydown,
   };
