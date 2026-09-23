@@ -62,7 +62,9 @@ function createTechniqueCreateDialog(options) {
     let created = null;
     let registration = null;
     let busy = false;
+    let loadingProjects = false;
     let finished = false;
+    const previousFocus = doc.activeElement;
 
     const node = (tag, className, text) => {
       const out = doc.createElement(tag);
@@ -76,6 +78,7 @@ function createTechniqueCreateDialog(options) {
     dialog.setAttribute('role', 'dialog');
     dialog.setAttribute('aria-modal', 'true');
     dialog.setAttribute('aria-labelledby', 'techniqueCreateTitle');
+    dialog.tabIndex = -1;
     const title = node('h2', 'technique-create-title', '새 기법 만들기');
     title.id = 'techniqueCreateTitle';
     const note = node('p', 'technique-create-note', '디스크의 어느 폴더든 고를 수 있습니다. 고른 폴더 안에 기법 이름이 새 폴더로 만들어집니다.');
@@ -128,12 +131,48 @@ function createTechniqueCreateDialog(options) {
     function close(result) {
       if (finished) return;
       finished = true;
+      doc.removeEventListener('keydown', onKeyDown, true);
+      doc.removeEventListener('focusin', onFocusIn);
       if (overlay.parentNode && typeof overlay.parentNode.removeChild === 'function') {
         overlay.parentNode.removeChild(overlay);
       } else if (typeof doc.body.removeChild === 'function') {
         try { doc.body.removeChild(overlay); } catch { /* 이미 닫힘 */ }
       }
+      if (!result && previousFocus && previousFocus.isConnected
+        && typeof previousFocus.focus === 'function') previousFocus.focus();
       resolve(result || null);
+    }
+
+    function canCancel() {
+      return !created && (!busy || loadingProjects);
+    }
+
+    function focusableControls() {
+      return [projectSelect, folderInput, folderButton, nameInput, cancel, submit]
+        .filter((control) => !control.disabled);
+    }
+
+    function onFocusIn(event) {
+      if (!finished && !dialog.contains(event.target)) {
+        (focusableControls()[0] || dialog).focus();
+      }
+    }
+
+    function onKeyDown(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (canCancel()) close(null);
+      } else if (event.key === 'Tab') {
+        const controls = focusableControls();
+        const index = controls.indexOf(doc.activeElement);
+        if (!controls.length || index < 0
+          || (event.shiftKey && index === 0)
+          || (!event.shiftKey && index === controls.length - 1)) {
+          event.preventDefault();
+          (controls[event.shiftKey ? controls.length - 1 : 0] || dialog).focus();
+        }
+      }
     }
 
     function setError(text) {
@@ -147,11 +186,14 @@ function createTechniqueCreateDialog(options) {
       folderInput.disabled = next || !!created;
       folderButton.disabled = next || !!created;
       nameInput.disabled = next || !!created;
-      cancel.disabled = next || !!created;
+      cancel.disabled = (next && !loadingProjects) || !!created;
       submit.disabled = next;
       submit.textContent = label || (
         !created ? '만들기' : (!registration ? '목록 등록 다시 시도' : '대화 다시 연결')
       );
+      if (dialog.contains(doc.activeElement) && doc.activeElement.disabled) {
+        (focusableControls()[0] || dialog).focus();
+      }
     }
 
     function fillProjects(list) {
@@ -235,10 +277,17 @@ function createTechniqueCreateDialog(options) {
         setError('새 기법 만들기 연결이 준비되지 않았습니다');
         return;
       }
+      loadingProjects = true;
       setBusy(true, '프로젝트 불러오는 중');
-      try { fillProjects(await deps.listProjects()); }
-      catch (err) { fillProjects([]); setError(messageOf(err)); }
-      finally { if (!created) setBusy(false); }
+      try {
+        const list = await deps.listProjects();
+        if (!finished) fillProjects(list);
+      } catch (err) {
+        if (!finished) { fillProjects([]); setError(messageOf(err)); }
+      } finally {
+        loadingProjects = false;
+        if (!finished && !created) setBusy(false);
+      }
     }
 
     projectSelect.addEventListener('change', () => {
@@ -271,10 +320,7 @@ function createTechniqueCreateDialog(options) {
       finally { setBusy(false); }
     });
     cancel.addEventListener('click', () => {
-      if (!busy && !created) close(null);
-    });
-    overlay.addEventListener('keydown', (event) => {
-      if (event && event.key === 'Escape' && !busy && !created) close(null);
+      if (canCancel()) close(null);
     });
     submit.addEventListener('click', async () => {
       if (busy) return;
@@ -333,6 +379,9 @@ function createTechniqueCreateDialog(options) {
     });
 
     doc.body.appendChild(overlay);
+    doc.addEventListener('keydown', onKeyDown, true);
+    doc.addEventListener('focusin', onFocusIn);
+    dialog.focus();
     void loadProjects().then(() => {
       if (!finished && projects.length && typeof nameInput.focus === 'function') nameInput.focus();
     });
