@@ -978,6 +978,7 @@ function createBacktestCanvas(options) {
   // 새 기법 만들기(보드 20·21) 상태. 화면 것은 state.technique 하나에 모으고, 타이머와
   // '한 번만' 깃발들만 여기 둔다.
   let techniqueCheckTimer = null;
+  let techniqueCheckRequest = 0;
   // 노드 창이 자동으로 열린 적이 있는가 — 자동 전환은 처음 한 번뿐이다(그 뒤에는 코드가
   // 바뀌어도 보고 있던 탭을 뺏지 않는다).
   let techniqueNodesShown = false;
@@ -3774,14 +3775,17 @@ function createBacktestCanvas(options) {
     }, TECHNIQUE_CHECK_DEBOUNCE_MS);
   }
 
-  async function runTechniqueCheck() {
+  async function runTechniqueCheck({ auto = true } = {}) {
     if (!deps.techniqueCheck || !codeSource) return null;
     const generation = workspaceGeneration;
     const source = codeSource;
+    const request = ++techniqueCheckRequest;
+    const isCurrent = () => generation === workspaceGeneration
+      && source === codeSource && request === techniqueCheckRequest;
     let data;
     try { data = await deps.techniqueCheck(Object.assign({ source }, techniqueCheckTarget())); }
     catch (err) {
-      if (generation !== workspaceGeneration) return null;
+      if (!isCurrent()) return null;
       const reason = String((err && err.message) || err);
       // 못 돌린 것과 실패한 것은 다르다 — 검사 줄을 지어내지 않고 명령창에만 적는다.
       setTechnique({
@@ -3795,7 +3799,7 @@ function createBacktestCanvas(options) {
       }
       return null;
     }
-    if (generation !== workspaceGeneration) return null;
+    if (!isCurrent()) return null;
     const checks = Array.isArray(data && data.checks) ? data.checks : [];
     // 통과 여부는 서버 값 그대로다. 여기서 checks.every(ok)로 다시 재면 경고(severity
     // 'warn') 하나에 노드 창이 닫힌다 — 무엇이 차단인지는 검사를 돌린 쪽이 안다.
@@ -3818,7 +3822,7 @@ function createBacktestCanvas(options) {
     // 통과 여부가 뒤집힌 순간에만 카드를 낸다 — 한 글자마다 카드를 내면 대화가 검사
     // 로그로 덮인다. remember()는 하지 않는다: 검사는 아무것도 바꾸지 않았고, 여기서
     // lastChange를 덮으면 모델이 방금 자기가 낸 코드 변경을 잃는다.
-    if (passed !== techniqueLastCardPassed) {
+    if (auto && passed !== techniqueLastCardPassed) {
       techniqueLastCardPassed = passed;
       emitTechniqueStep({
         icon: 'check',
@@ -3830,24 +3834,24 @@ function createBacktestCanvas(options) {
         action: { label_ko: '출력 보기', open: 'terminal', ref: null },
       });
     }
-    if (passed) await loadTechniqueNodes(source, true);
+    if (passed) await loadTechniqueNodes(source, auto, isCurrent);
     return data;
   }
 
   // 코드를 노드로 자른다. 자르는 규칙은 백엔드가 정한다(함수 단위가 원칙이고, signals()
   // 하나뿐이면 4단계). 화면은 받은 것을 그대로 그린다 — granularity가 'stage'로 와도
   // 정직하게 그렇게 적는다.
-  async function loadTechniqueNodes(source, auto) {
+  async function loadTechniqueNodes(source, auto, isCurrent = () => true) {
     if (!deps.techniqueNodes || !source) return null;
     const generation = workspaceGeneration;
     techniqueNodesSource = source;
     let data;
     try { data = await deps.techniqueNodes({ source }); }
     catch (err) {
-      if (generation !== workspaceGeneration) return null;
+      if (generation !== workspaceGeneration || !isCurrent()) return null;
       return failTechniqueNodes(String((err && err.message) || err));
     }
-    if (generation !== workspaceGeneration) return null;
+    if (generation !== workspaceGeneration || !isCurrent()) return null;
     if (data && data.error) {
       const detail = data.error;
       return failTechniqueNodes(String((detail && detail.message) || detail));
@@ -4850,6 +4854,10 @@ function createBacktestCanvas(options) {
       applied.result = await restoreRunResult(saved.run.runId, generation);
       if (generation !== workspaceGeneration) return false;
       setState({ restore: SessionRestore.restoreReport(saved, applied) });
+    }
+    if (generation === workspaceGeneration && techniqueDraft && runPath === 'code'
+      && applied.technique && codeSource) {
+      void runTechniqueCheck({ auto: false });
     }
     return true;
   }
