@@ -14,7 +14,7 @@ test("installer snapshots the captured commit despite later commits and working-
     git("init", "--quiet");
     git("config", "core.autocrlf", "false");
     for (const dir of ["app", "backend", "scripts"]) mkdirSync(join(root, dir));
-    const files = ["app/main.js", "app/package-lock.json", "backend/uv.lock", "scripts/windows-installer.config.cjs"];
+    const files = ["app/main.js", "app/package-lock.json", "backend/uv.lock", "scripts/windows-installer.config.cjs", "scripts/windows-installer.nsh"];
     for (const file of files) writeFileSync(join(root, file), "captured\n");
     git("add", ".");
     git("-c", "user.name=QA", "-c", "user.email=qa@example.invalid", "commit", "--quiet", "-m", "captured");

@@ -57,6 +57,7 @@ module.exports = {
     signExecutable: false,
   },
   nsis: {
+    include: path.join(__dirname, 'windows-installer.nsh'),
     installerIcon: appIcon,
     uninstallerIcon: appIcon,
     oneClick: false,

@@ -28,6 +28,7 @@ export const DEST_CONTROL_FILES = Object.freeze([
   ".github/workflows/release.yml",
   "scripts/build-windows-installer.ps1",
   "scripts/windows-installer.config.cjs",
+  "scripts/windows-installer.nsh",
   "README.md",
   "GROK.md",
   "AGENTS.md",

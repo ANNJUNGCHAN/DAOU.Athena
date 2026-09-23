@@ -33,3 +33,15 @@ test("installer ships MCP runtimes beside the backend outside app resources", ()
   });
   assert.equal(resources.find((entry) => entry.to === "backend").from, resolve("fixture/backend"));
 });
+
+test("installer uses the repository-owned destination guard from its snapshot", () => {
+  const result = spawnSync(process.execPath, ["-e", "console.log(JSON.stringify(require(process.argv[1]).nsis))", configPath], {
+    env: { ...environment, ATHENA_INSTALLER_MCP_RUNTIME_DIR: "fixture/mcp-runtime" }, encoding: "utf8",
+  });
+  assert.equal(result.status, 0, result.stderr);
+  const nsis = JSON.parse(result.stdout);
+  assert.equal(nsis.include, resolve(dirname(configPath), "windows-installer.nsh"));
+  assert.equal(nsis.allowToChangeInstallationDirectory, true);
+  assert.equal(nsis.allowElevation, false);
+  assert.equal(nsis.perMachine, false);
+});
