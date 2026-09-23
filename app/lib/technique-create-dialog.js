@@ -144,7 +144,7 @@ function createTechniqueCreateDialog(options) {
     }
 
     function canCancel() {
-      return !created && (!busy || loadingProjects);
+      return !busy || loadingProjects;
     }
 
     function focusableControls() {
@@ -186,7 +186,8 @@ function createTechniqueCreateDialog(options) {
       folderInput.disabled = next || !!created;
       folderButton.disabled = next || !!created;
       nameInput.disabled = next || !!created;
-      cancel.disabled = (next && !loadingProjects) || !!created;
+      cancel.disabled = next && !loadingProjects;
+      cancel.textContent = created ? '닫기' : '취소';
       submit.disabled = next;
       submit.textContent = label || (
         !created ? '만들기' : (!registration ? '목록 등록 다시 시도' : '대화 다시 연결')
@@ -371,7 +372,7 @@ function createTechniqueCreateDialog(options) {
         if (!conversation) throw new Error('새 대화를 열지 못했습니다');
         close(Object.assign({}, created, { registration, conversation }));
       } catch (err) {
-        setError(messageOf(err));
+        setError(created ? `${messageOf(err)} · 만든 기법 폴더는 유지됩니다.` : messageOf(err));
         setBusy(false, !created ? '다시 시도' : (
           registration ? '대화 다시 연결' : '목록 등록 다시 시도'
         ));

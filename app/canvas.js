@@ -5090,10 +5090,18 @@ const backtestCanvas = window.AthenaLib.BacktestCanvas.createBacktestCanvas({
     return res.data;
   },
   openProject: async (folderPath) => {
-    const res = await window.athena.invoke('athena:project-add', { path: folderPath });
-    if (res && res.reason === 'folder_taken' && res.project) return res;
-    if (!res || !res.ok) throw new Error(projectError(res, '폴더를 프로젝트로 열지 못했습니다'));
-    return res;
+    // 기법 파일은 백엔드 프로젝트 안에 만든다. 오프라인 사이드바 ID는 사용할 수 없다.
+    const res = await window.athena.invoke('athena:project-open', { path: folderPath });
+    if (res && res.ok) return res.data;
+    if (res && res.status === 409) {
+      const listed = await window.athena.invoke('athena:project-list');
+      const normalize = (value) => String(value || '').replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+      const projects = listed && listed.ok && listed.data && listed.data.projects;
+      const project = Array.isArray(projects)
+        ? projects.find((entry) => normalize(entry.path) === normalize(folderPath)) : null;
+      if (project) return { project };
+    }
+    throw new Error(projectError(res, '폴더를 프로젝트로 열지 못했습니다'));
   },
   createTechnique: async (projectId, body) => {
     const res = await window.athena.invoke('athena:project-technique-create', { project_id: projectId, ...body });

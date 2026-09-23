@@ -150,3 +150,28 @@ test('Cancel remains usable while projects are loading and a late failure is ign
   assert.equal(h.doc.activeElement, h.launch);
   assert.equal(h.find('technique-create-overlay'), undefined);
 });
+
+test('failed registration can close without rollback, and retry never creates another folder', async () => {
+  let creates = 0;
+  let registrations = 0;
+  const h = harness({
+    createTechnique: async () => {
+      creates++;
+      return { project_id: 'project', technique: { name: '기법', path: '기법', strategy_path: '기법/strategy.py', test_path: '기법/tests/test_strategy.py' } };
+    },
+    registerUserStrategy: async () => { registrations++; throw new Error('등록 실패'); },
+  });
+  h.loading.resolve([{ id: 'project' }]);
+  await settle();
+  descendants(h.doc.body).filter((node) => node.tagName === 'input')[1].value = '기법';
+  await h.find('technique-create-submit').fire('click');
+  assert.equal(h.find('technique-create-cancel').disabled, false);
+  assert.equal(h.find('technique-create-cancel').textContent, '닫기');
+  assert.match(h.find('technique-create-error').textContent, /만든 기법 폴더는 유지/);
+  await h.find('technique-create-submit').fire('click');
+  assert.equal(creates, 1);
+  assert.equal(registrations, 2);
+  h.key('Escape');
+  assert.equal(await h.result, null);
+  assert.equal(h.doc.activeElement, h.launch);
+});

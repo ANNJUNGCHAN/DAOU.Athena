@@ -407,7 +407,7 @@ async def start_run(request: Request, body: dict[str, Any]) -> JSONResponse:
     python_exe: str | None = None
     allowed_imports: list[str] | None = None
     if code_source and project_id:
-        project_root = _project_root(project_id)
+        project_root = _project_root(project_id, request)
         if project_root is None:
             raise HTTPException(status_code=404, detail=f"프로젝트가 존재하지 않는다: {project_id}")
         interpreter = venv_python(project_root)
@@ -1354,21 +1354,12 @@ def _user_strategies(request: Request) -> user_strategies_mod.UserStrategyRegist
     return registry
 
 
-def _project_root(project_id: str) -> Path | None:
-    """프로젝트 폴더 해석은 `athena_api/projects`가 소유한다 — 아직 없을 수 있어서 함수
-    안에서 늦게 import하고, 없으면 503으로 말한다(조용히 빈 결과를 주지 않는다).
+def _project_root(project_id: str, request: Request) -> Path | None:
+    """Resolve against the same app-scoped registry used by the projects API."""
+    from athena_api.projects.store import ProjectStore
 
-    등록되지 않은 프로젝트(KeyError)는 None이다 — 목록은 그걸 exists=false로 보여주고,
-    등록은 404로 거절한다.
-    """
-    try:
-        from athena_api.projects.store import resolve_project_path
-    except ImportError as exc:
-        raise HTTPException(status_code=503, detail="프로젝트 저장소가 아직 없다") from exc
-    try:
-        return Path(resolve_project_path(project_id))
-    except KeyError:
-        return None
+    entry = ProjectStore(request.app.state.settings.projects_root).get(project_id)
+    return entry.path if entry is not None else None
 
 
 @router.post("/user-strategies")
@@ -1388,7 +1379,7 @@ async def register_user_strategy_route(request: Request, body: dict[str, Any]) -
         raise HTTPException(status_code=422, detail="path는 비어 있지 않은 문자열이어야 한다")
     if not isinstance(name, str) or not name.strip():
         raise HTTPException(status_code=422, detail="name은 비어 있지 않은 문자열이어야 한다")
-    root = _project_root(project_id)
+    root = _project_root(project_id, request)
     if root is None:
         raise HTTPException(status_code=404, detail=f"프로젝트가 존재하지 않는다: {project_id}")
     try:
@@ -1424,7 +1415,7 @@ async def list_user_strategies_route(request: Request) -> dict[str, Any]:
     registry = _user_strategies(request)
     items: list[dict[str, Any]] = []
     for entry in registry.list_all():
-        root = _project_root(entry.project_id)
+        root = _project_root(entry.project_id, request)
         target = None if root is None else root / entry.path
         exists = target is not None and target.is_file()
         params: dict[str, Any] = {}

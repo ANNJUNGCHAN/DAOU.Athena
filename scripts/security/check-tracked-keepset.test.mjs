@@ -97,3 +97,10 @@ test("forbiddenTrackedPaths returns only drop paths in input order", () => {
     ["docs/handoff/x.md", "app/lib/main/live-prompt.test.js"],
   );
 });
+
+
+test("backtest project scope regression is narrowly kept", () => {
+  assert.equal(isKeepPath("backend/verification/test_backtest_project_scope.py"), true);
+  assert.equal(isKeepPath("backend/verification/private-project-probe.py"), false);
+  assert.equal(isKeepPath("backend/verification/project-registry.json"), false);
+});
