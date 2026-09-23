@@ -411,6 +411,7 @@ function createAgentCanvas(deps) {
   let avgDurationCache = null; // GET /{id}/runs의 avg_duration_ms(5단계) — 드릴인 대상별로 갱신.
   let engagementCache = null; // GET /{id}/runs의 opened_rate/replied_count(F-stage5b-FE) — 드릴인 대상별로 갱신.
   let nudgeGuardCache = null; // GET /api/v1/nudge-guard(F-stage9) — 라이브.
+  let nudgeGuardLoadState = 'pending';
   let nudgeGuardRequestId = 0; // 위와 같은 이유 — 별개 요청이라 별개 가드를 쓴다.
 
   // ---------- 통계 카드 4장의 값 계산(3단계부터 3장이 라이브) ----------
@@ -744,6 +745,8 @@ function createAgentCanvas(deps) {
   // 무관한 독립 왕복이다(위 머리말 원칙).
   async function refreshNudgeGuard() {
     const rid = ++nudgeGuardRequestId;
+    nudgeGuardLoadState = 'pending';
+    renderNudgeGuard();
     let settings = null;
     try {
       settings = (typeof fetchNudgeGuard === 'function') ? await fetchNudgeGuard() : null;
@@ -752,6 +755,7 @@ function createAgentCanvas(deps) {
     }
     if (rid !== nudgeGuardRequestId) return;
     nudgeGuardCache = settings;
+    nudgeGuardLoadState = settings ? 'success' : 'error';
     renderNudgeGuard();
   }
 
@@ -1588,10 +1592,19 @@ function createAgentCanvas(deps) {
   function renderNudgeGuard() {
     while (nudgeGuardTags.firstChild) nudgeGuardTags.removeChild(nudgeGuardTags.firstChild);
     nudgeGuard.setAttribute('data-source', 'live'); // 8단계부터 라이브 — fixture 폴백 없음(지어내지 않는다, P3).
-    if (!nudgeGuardCache) {
+    if (nudgeGuardLoadState !== 'success') {
       const empty = el('div', 'agent-list-empty');
-      empty.textContent = '가드 설정을 불러오는 중입니다';
+      empty.textContent = nudgeGuardLoadState === 'pending'
+        ? '가드 설정을 불러오는 중입니다'
+        : '말걸기 설정을 불러오지 못했습니다';
       nudgeGuardTags.appendChild(empty);
+      if (nudgeGuardLoadState === 'error' && typeof fetchNudgeGuard === 'function') {
+        const retry = el('button', 'agent-proactive-chip');
+        retry.type = 'button';
+        retry.textContent = '다시 시도';
+        retry.addEventListener('click', refreshNudgeGuard);
+        nudgeGuardTags.appendChild(retry);
+      }
       nudgeGuardNote.textContent = '';
       return;
     }
