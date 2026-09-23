@@ -5,7 +5,7 @@
 // 툴 실행 단계 카드 — main.js가 tool_use/tool_result에서 뽑아 보내는 원시
 // step 이벤트({ id, label, done, elapsedMs })를 오브·셸 채팅 양쪽이 같은
 // 규칙으로 렌더링하게 만드는 순수 판정 모듈이다. main.js의 TOOL_STEP_LABELS가
-// 이미 정한 한국어 라벨을 그대로 받아쓸 뿐, 여기서 라벨을 다시 짓지 않는다.
+// 이미 정한 한국어 라벨을 받아 상태에 맞게 표시한다.
 // (2026-08-26 어드버서리얼 리뷰 결함 #3 — chat.js가 athena:live-tool-step을
 // 아예 안 구독해 board-04 "⑧ 실행 라인"이 셸 쪽에서만 비어 있었다. 오브가
 // 이미 갖고 있던 판정을 그대로 나눠 쓴다 — 두 벌로 다시 짓지 않는다.)
@@ -28,7 +28,8 @@ function applyToolStep(steps, step) {
   // 규칙). "실패"로 쓰면 사용자가 기능이 없는 줄 안다 — 실제로 그렇게 읽혔다.
   // 숨기지도 않는다: 무슨 일이 있었는지는 말한다.
   const retrying = !!step.retrying;
-  const label = error ? `${rawLabel} 실패` : (retrying ? `${rawLabel} — 서버 연결 대기` : rawLabel);
+  const successLabel = done && rawLabel === '카드 그리는 중' ? '카드 표시 완료' : rawLabel;
+  const label = error ? `${rawLabel} 실패` : (retrying ? `${rawLabel} — 서버 연결 대기` : successLabel);
   // 부제(2026-09-07, Paper 보드 10 「한미반도체 · 관계 7 · 이력 3」) — 무엇을 몇 개
   // 받았는지는 결과에만 있어서 라벨로는 못 만든다. 라벨과 같은 규율로 여기서만
   // 정한다: 안 보내는 호출자는 빈 문자열이고, 그러면 호출자가 그리지 않는다.
@@ -37,7 +38,8 @@ function applyToolStep(steps, step) {
     ? `${(step.elapsedMs / 1000).toFixed(1)}s`
     : (done ? '—' : '대기 중');
   steps.set(step.id, { label, done, elapsedMs: step.elapsedMs, error, retrying, note });
-  return { id: step.id, label, done, timeText, error, retrying, note };
+  // 카드 우선 텍스트 방출 판정은 표시 상태와 무관하게 원래 작업 라벨로 한다.
+  return { id: step.id, label, rawLabel, done, timeText, error, retrying, note };
 }
 
 const __exports = { applyToolStep };

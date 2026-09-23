@@ -118,7 +118,7 @@ function createTextReleaseLadder(deps) {
     onToolStep(step) {
       if (released || !step || step.id == null) return;
       stepDoneById.set(step.id, !!step.done);
-      if (step.label === RENDER_CANVAS_LABEL) renderCanvasSeen = true;
+      if ((step.rawLabel || step.label) === RENDER_CANVAS_LABEL) renderCanvasSeen = true;
       // 툴 활동이 하나라도 확인됐다 — 조건(c) "활동이 전혀 없었다"는 이번 턴에
       // 영원히 해당 없음이 됐으니 그 유예 타이머를 지운다(안 지워도 判定
       // 자체는 stepDoneById.size로 안전하지만, 안 쓸 타이머를 남겨 둘 이유가
