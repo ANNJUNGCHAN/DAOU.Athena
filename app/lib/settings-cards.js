@@ -1044,7 +1044,7 @@ function openOrderApiSheet(card, account, onDone) {
 // IPC 계약 그대로) — 그래서 buildModelSection이 accounts와 modelState를
 // 별개 인자로 받는다.
 // IPC 계약: athena:model-get → {claude, grok, codex} 각 {model,effort}
-// (null=기본) · athena:model-set {provider, patch} → 성공 시 전체 상태, 실패
+// (null=기본) · athena:model-set {provider, patch} → 성공 시 {ok:true,state}, 실패
 // 시 {ok:false, error} · on athena:model-changed.
 // =============================================================================
 
@@ -1323,7 +1323,7 @@ function buildModelSection(opts) {
     const commit = () => onCommit(input.value.trim());
     input.addEventListener('blur', commit);
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); commit(); input.blur(); }
+      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
     });
     return input;
   }
@@ -1344,9 +1344,12 @@ function buildModelSection(opts) {
     }
     select.value = modelValue || '';
     select.disabled = disabled || models.length === 0;
-    select.addEventListener('change', () => {
+    select.addEventListener('change', async () => {
       if (!select.disabled && models.includes(select.value) && select.value !== modelValue) {
-        onModelChange({ model: select.value });
+        select.disabled = true;
+        const saved = await onModelChange({ model: select.value });
+        if (!saved) select.value = modelValue || '';
+        select.disabled = false;
       }
     });
     controlsWrap.appendChild(select);
@@ -1459,14 +1462,17 @@ async function refreshModelCard(card, head, body) {
   // 보내는 꼴이다.
   async function applyChange(provider, patch) {
     clear(errBox);
+    let persisted = false;
     try {
       const res = await window.athena.invoke('athena:model-set', { provider, patch });
-      if (!res || res.ok === false) {
-        errBox.appendChild(errorNote((res && res.error) || '모델 설정을 저장하지 못했다'));
-      }
-    } catch (err) {
-      errBox.appendChild(errorNote('모델 설정 기능을 아직 사용할 수 없다 (athena:model-set 핸들러 없음)'));
-    }
+      if (res && res.ok === true) return true;
+      persisted = res?.persisted === true && res.code === 'PROVIDER_ACTIVATION_FAILED';
+    } catch { /* 저장 실패는 원인과 무관하게 안전한 안내로 표시한다. */ }
+    errBox.appendChild(errorNote(persisted
+      ? '모델 설정은 저장했지만 대화 모델을 활성화하지 못했습니다. 백엔드 연결을 확인한 뒤 다시 시도해 주세요.'
+      : '모델 설정을 저장하지 못했습니다. 다시 시도해 주세요.'));
+    errBox.scrollIntoView({ block: 'nearest' });
+    return persisted;
   }
 
   // 리드 — Paper 화면 18 상단. 카드 헤드 "모델"은 설정 카테고리, 이 리드가 패널의 제목이다.
