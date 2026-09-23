@@ -145,10 +145,11 @@ const crypto = require('crypto');
 const PROVIDER_RUNTIME_DEFAULT = false;
 const providerRuntimeEnabled = resolvePersistentChatEnabled(process.env, PROVIDER_RUNTIME_DEFAULT, 'ATHENA_PROVIDER_RUNTIME');
 
-const MDEBUGLOG = path.join(__dirname, 'captures', 'main-debug.log');
-function mdlog(msg) {
-  try { fs.appendFileSync(MDEBUGLOG, `${new Date().toISOString()} ${msg}\n`); } catch {}
-}
+const { createDiagnosticLog } = require('./lib/main/diagnostic-log');
+const mdlog = createDiagnosticLog({
+  userDataPath: () => app.getPath('userData'),
+  detailed: !app.isPackaged,
+});
 
 // Selector cold path의 claude CLI는 앱 수명 동안 8개를 상시 유지한다. 전역
 // 동시 분류 상한 4개 + 이미 warm인 예비 4개라서, 취소·장애로 처리 중 worker를
