@@ -43,8 +43,9 @@ class RoutineFeed {
     if (this._timer) { this._clearTimeout(this._timer); this._timer = null; }
     this._clearHandshakeTimer();
     if (this._ws) {
-      try { this._ws.close(); } catch { /* 이미 닫힘 */ }
+      const ws = this._ws;
       this._ws = null;
+      try { ws.close(); } catch { /* 이미 닫힘 */ }
     }
   }
 
@@ -60,7 +61,9 @@ class RoutineFeed {
     }
     const connectionEpoch = ++this._connectionEpoch;
     this._ws = ws;
+    const isCurrent = () => !this._stopped && this._ws === ws;
     ws.onopen = () => {
+      if (!isCurrent()) return;
       if (this._token) {
         ws.send(JSON.stringify({ type: 'auth', token: this._token }));
       }
@@ -84,6 +87,7 @@ class RoutineFeed {
       }
     };
     ws.onmessage = (msg) => {
+      if (!isCurrent()) return;
       let event;
       try {
         event = JSON.parse(typeof msg.data === 'string' ? msg.data : String(msg.data));
@@ -100,6 +104,7 @@ class RoutineFeed {
       this._onEvent(event, { connectionEpoch });
     };
     ws.onclose = () => {
+      if (!isCurrent()) return;
       this._clearHandshakeTimer();
       this._ws = null;
       this._onStatus({
