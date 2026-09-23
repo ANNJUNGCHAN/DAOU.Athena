@@ -562,7 +562,7 @@ function tagSessionCard(node, meta) {
   return node;
 }
 
-function reportSessionCards() {
+function reportSessionCards({ discardPending = false } = {}) {
   const cards = [];
   for (const node of grid.querySelectorAll('.card')) {
     const meta = node.__athenaSessionCard;
@@ -575,7 +575,7 @@ function reportSessionCards() {
       protected: node.dataset.protected === 'true',
     });
   }
-  try { window.athena.send('athena:session-cards', { cards, conversationId: canvasConversationId }); } catch { /* 채널이 없는 하네스 — 보고는 그림의 필요조건이 아니다 */ }
+  try { window.athena.send('athena:session-cards', { cards, conversationId: canvasConversationId, discardPending }); } catch { /* 채널이 없는 하네스 — 보고는 그림의 필요조건이 아니다 */ }
 }
 
 // 질문 제출 직전 chat.js가 현재 DOM 스택을 다시 보고한다. 같은 renderer에서
@@ -595,6 +595,7 @@ window.athena.on('athena:add-canvas', ({ type, sessionCardId }) => {
 // IPC로 보냈다. 두 영역이 같은 문서에 사는 지금은 IPC를 왕복할 이유가 없다:
 // chat.js의 Esc(유휴 상태)가 shell.js 버스를 통해 이 함수를 직접 부른다.
 function clearCanvases({ persist = true } = {}) {
+  canvasPaintRevision += 1;
   const shouldReportSessionCards = routineMainCardSessionClearGuard.shouldReportAfterClear()
     && persist;
   if (routineMainCardRenderer) routineMainCardRenderer.invalidate();
@@ -607,7 +608,7 @@ function clearCanvases({ persist = true } = {}) {
     discardCanvasTabDeck();
   }
   activeDatasetId = null;
-  if (shouldReportSessionCards) reportSessionCards();
+  if (shouldReportSessionCards) reportSessionCards({ discardPending: true });
 }
 
 window.AthenaShell.registerCanvasClear(clearCanvases);
@@ -618,12 +619,14 @@ window.athena.on('athena:add-rest-canvas', async (payload) => {
   if (!payload || !isValidCorrelation(correlation)) return;
   // 다중 대화(2026-09-08) — 다른 대화의 REST 카드가 늦게 도착하면 그리지 않는다(main이 그 대화의 세션에 적는다).
   if (payload.conversationId && canvasConversationId && payload.conversationId !== canvasConversationId) return;
+  const paintRevision = canvasPaintRevision;
   try {
     const envelope = Object.assign({}, payload.envelope, {
       operation_ref: payload.operationRef,
       operation_args: payload.operationArgs,
     });
     const card = await addLiveCard({ status: 'success', envelope });
+    if (paintRevision !== canvasPaintRevision) { if (card && card.classList) destroyCard(card); return; }
     const renderedCard = lastCardOr(card);
     tagSessionCard(renderedCard, {
       channel: 'rest', kind: envelope.canvas_type || null, envelope,
@@ -648,6 +651,7 @@ window.athena.on('athena:add-rest-canvas', async (payload) => {
     const chartImportReadyAt = card && card.dataset.chartImportReadyAt
       ? Number(card.dataset.chartImportReadyAt) : null;
     const paint = await waitForVisiblePaint(card);
+    if (paintRevision !== canvasPaintRevision) { if (card && card.classList) destroyCard(card); return; }
     // 차트·Paper는 껍질/로딩만 먼저 뜰 수 있다. 결과가 아직이면 pending으로 알리고, 결과가
     // 나오면 같은 correlation으로 최종 상태를 한 번 더 보낸다 — main은 그 값으로
     // 재조회 권위·실시간 등록·데이터 카드 집계를 결정한다.
@@ -687,6 +691,7 @@ window.athena.on('athena:add-rest-canvas', async (payload) => {
       // paint 실패로 뒤집지 않는다 — main은 한도가 지나면 'timeout'으로 맺는다.
       try {
         const settled = await renderSettled;
+        if (paintRevision !== canvasPaintRevision) { if (card && card.classList) destroyCard(card); return; }
         if (!card.isConnected) return;
         const mountedState = chartSettled
           ? settled
@@ -798,12 +803,20 @@ window.athena.on('athena:rest-retry-available', (payload = {}) => {
 // 다중 대화(2026-09-08) — 배경 대화의 카드는 main이 그 대화의 세션에 적어 두고 여기로 보내지 않지만,
 // 갈아타는 찰나에 늦게 도착한 카드까지 걸러야 다른 대화의 캔버스에 섞이지 않는다.
 let canvasConversationId = null;
+let canvasPaintRevision = 0;
 window.athena.on('athena:init', (payload) => { if (payload && payload.conversationId) canvasConversationId = payload.conversationId; });
-window.athena.on('athena:conversation-active', ({ conversationId } = {}) => { if (conversationId) canvasConversationId = conversationId; });
+window.athena.on('athena:conversation-active', ({ conversationId } = {}) => {
+  if (conversationId && conversationId !== canvasConversationId) {
+    canvasPaintRevision += 1;
+    canvasConversationId = conversationId;
+  }
+});
 window.athena.on('athena:add-canvas-live', async (result) => {
   if (result && result.conversationId && canvasConversationId && result.conversationId !== canvasConversationId) return;
   const rendererReceivedAt = performance.now();
+  const paintRevision = canvasPaintRevision;
   const node = await addLiveCard(result);
+  if (paintRevision !== canvasPaintRevision) { if (node && node.classList) destroyCard(node); return; }
   if (!node || !result || (result.status !== 'success' && result.status !== 'fallback')) return;
   tagSessionCard(lastCardOr(node), { channel: 'live', kind: result.envelope && result.envelope.canvas_type || null, envelope: result.envelope || null, cardId: result.sessionCardId || null });
   reportSessionCards();

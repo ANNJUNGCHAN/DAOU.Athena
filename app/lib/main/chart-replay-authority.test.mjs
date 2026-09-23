@@ -104,13 +104,13 @@ test('live model charts also establish paint authority while background charts o
   const sent = [];
   const send = Function('rememberLiveRealtimeFallbackAuthority', 'crypto', 'historyConversationId',
     'persistBackgroundCanvasCard', 'shellWin', 'restCorrelationKey',
-    'emitRestCanvasAndWaitForPaint', 'activeRestAccountId', 'mdlog',
+    'emitRestCanvasAndWaitForPaint', 'activeRestAccountId', 'mdlog', 'rememberPendingCanvasCard',
     `${functionSource}; return sendLiveCanvasResult;`)(
     () => {}, { randomUUID: () => 'live-card' }, () => 'current',
     (...args) => saved.push(args),
     { isDestroyed: () => false, webContents: { send: (channel) => sent.push(channel) } },
     () => 'correlation', (payload, options) => { paints.push({ payload, options }); return Promise.resolve(); },
-    () => 'qa-account', () => {},
+    () => 'qa-account', () => {}, () => {},
   );
   send({ status: 'success', envelope }, { conversationId: 'current' });
   assert.equal(paints.length, 1);
@@ -119,5 +119,5 @@ test('live model charts also establish paint authority while background charts o
   assert.equal(sent.includes('athena:add-canvas-live'), false);
   send({ status: 'success', envelope }, { conversationId: 'background' });
   assert.equal(paints.length, 1);
-  assert.equal(saved.length, 1);
+  assert.equal(saved.length, 2);
 });

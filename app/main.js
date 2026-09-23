@@ -3789,18 +3789,44 @@ function noteLiveQueryProvider(providerId) {
 
 // 캔버스 결과 하나(stream-json-parser.classifyCanvasBlock의 출력)를 캔버스
 // 창으로 보낸다. 렌더러(canvas.js)가 status별로 카드를 그리거나 안내를 띄운다.
+const pendingCanvasCards = new Map();
+function rememberPendingCanvasCard(conversationId, result, cardId) {
+  // Protect not-yet-mounted cards from partial viewport reports. Rendering or an
+  // explicit clear releases them; bound failed/coalesced mounts in long sessions.
+  if (pendingCanvasCards.size >= 256) pendingCanvasCards.delete(pendingCanvasCards.keys().next().value);
+  pendingCanvasCards.set(cardId, { conversationId, card: {
+    cardId, kind: result.envelope.canvas_type || null, channel: 'live',
+    envelope: result.envelope, protected: false,
+  } });
+}
+function mergePendingCanvasCards(conversationId, cards, discardPending = false) {
+  const merged = Array.isArray(cards) ? cards.slice() : [];
+  const reported = new Set(merged.map((card) => card.cardId));
+  for (const [id, pending] of pendingCanvasCards) {
+    if (pending.conversationId !== conversationId) continue;
+    if (discardPending || reported.has(id)) pendingCanvasCards.delete(id);
+    else merged.push(pending.card);
+  }
+  return merged;
+}
+
 function sendLiveCanvasResult(result, metadata = null) {
   rememberLiveRealtimeFallbackAuthority(result);
   const sessionCardId = result && result.envelope
     && (result.status === 'success' || result.status === 'fallback') ? crypto.randomUUID() : null;
+  const conversationId = metadata && typeof metadata.conversationId === 'string'
+    ? metadata.conversationId : historyConversationId();
+  metadata = { ...metadata, conversationId };
   const payload = metadata
     ? { ...result, ...metadata, ...(sessionCardId ? { sessionCardId } : {}) }
     : sessionCardId ? { ...result, sessionCardId } : result;
-  const conversationId = metadata && typeof metadata.conversationId === 'string' ? metadata.conversationId : null;
+  if (sessionCardId) {
+    persistBackgroundCanvasCard(conversationId, result, sessionCardId);
+    rememberPendingCanvasCard(conversationId, result, sessionCardId);
+  }
   if (conversationId && conversationId !== historyConversationId()) {
     // 화면에 없는 대화의 카드(다중 대화, 2026-09-08) — 지금 보이는 캔버스에 그리지 않고 그
     // 대화의 세션 카드로 적어 둔다(셸 창이 없어도). 돌아오면 athena:session-replay-cards가 같은 채널로 그린다.
-    persistBackgroundCanvasCard(conversationId, result, sessionCardId);
   } else {
     if (!shellWin || shellWin.isDestroyed()) return sessionCardId;
     const envelope = result && result.envelope;
@@ -7307,7 +7333,7 @@ ipcMain.on('athena:session-cards', (_e, payload = {}) => {
   const reported = payload && typeof payload.conversationId === 'string' && payload.conversationId ? payload.conversationId : null;
   const sessionId = reported && knownConversation(reported) ? reported : historyConversationId();
   const bridge = ensureSessionRecord(sessionId);
-  if (bridge && payload) bridge.saveCards({ sessionId, cards: payload.cards });
+  if (bridge && payload) bridge.saveCards({ sessionId, cards: mergePendingCanvasCards(sessionId, payload.cards, payload.discardPending === true) });
 });
 // 렌더러는 바뀐 조각(patch)만 보낸다 — 모드마다 다른 컨트롤러가 자기 조각만 알기 때문이다.
 // 병합과 kind(=그 대화의 모드) 도장은 여기서 한다. 통째로 온 workspace도 받는다(옛 계약).

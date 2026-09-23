@@ -1409,7 +1409,7 @@
       if (preserveSessionCards) {
         window.dispatchEvent(new Event('athena:routine-main-card-preserve-session'));
       }
-      window.AthenaShell.clearCanvases();
+      window.AthenaShell.clearCanvases({ persist: false });
     }
     while ($history.firstChild) $history.removeChild($history.firstChild);
     $roomBanner.hidden = true;

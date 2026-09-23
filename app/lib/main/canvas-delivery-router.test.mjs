@@ -19,12 +19,13 @@ function harness() {
   const painted = [];
   const saved = [];
   const send = Function('rememberLiveRealtimeFallbackAuthority', 'crypto', 'historyConversationId',
-    'persistBackgroundCanvasCard', 'shellWin', `${declaration('sendLiveCanvasResult')}; return sendLiveCanvasResult;`)(
+    'persistBackgroundCanvasCard', 'shellWin', 'rememberPendingCanvasCard', `${declaration('sendLiveCanvasResult')}; return sendLiveCanvasResult;`)(
     () => {}, { randomUUID: () => 'card-id' }, () => active,
     (conversationId, result, cardId) => saved.push({ conversationId, result, cardId }),
     { isDestroyed: () => false, webContents: { send: (channel, payload) => {
       if (channel === 'athena:add-canvas-live') painted.push(payload);
     } } },
+    () => {},
   );
   const router = createCanvasDeliveryRouter({ deliver: send });
   return { router, painted, saved, select(id) { active = id; } };
@@ -53,7 +54,7 @@ test('receipt before WS data paints after returning to the original conversation
   h.router.receiveReceipt({ delivery_id: first }, { conversationId: 'new-chat' });
   assert.equal(h.painted.length, 1);
   assert.equal(h.painted[0].conversationId, 'original');
-  assert.equal(h.saved.length, 0);
+  assert.equal(h.saved.length, 1);
 });
 
 test('interleaved conversations and unrelated broadcasts keep independent ownership', () => {
