@@ -277,9 +277,15 @@ test('detached card closes once and late mount completion cannot reactivate it',
 
 test('failed and rejected unmounts retry the same lease until success', async () => {
   const releases = [];
+  const retries = [];
   const session = realtime.createOrbIntegratedRealtimeSession({
     card: cardFor({}), envelope: envelope(), leaseId: 'orb:release-retry',
     releaseRetryBaseMs: 1, releaseRetryMaxMs: 1,
+    setTimer(callback, delay) {
+      const timer = { callback, delay };
+      retries.push(timer);
+      return timer;
+    },
     invoke: async (channel, payload) => {
       if (channel.endsWith('-mount')) return { ok: true, status: 'active', generation: 1, connectionGeneration: 1 };
       releases.push(payload.leaseId);
@@ -290,8 +296,18 @@ test('failed and rejected unmounts retry the same lease until success', async ()
   });
   await session.start();
   session.close();
-  await new Promise((resolve) => setTimeout(resolve, 30));
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(releases.length, 1);
+  for (const expectedAttempts of [2, 3]) {
+    assert.equal(retries.length, 1);
+    const timer = retries.shift();
+    assert.equal(timer.delay, 1);
+    timer.callback();
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(releases.length, expectedAttempts);
+  }
   assert.deepEqual(releases, ['orb:release-retry', 'orb:release-retry', 'orb:release-retry']);
+  assert.equal(retries.length, 0);
 });
 
 test('integrated fallback registers standby, fences epochs, and stops data after WS recovery', async () => {
