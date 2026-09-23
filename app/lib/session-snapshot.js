@@ -5,7 +5,7 @@
 (function () {
 'use strict';
 
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 const MODES = Object.freeze(['chat', 'graph', 'agent', 'plugin', 'backtest']);
 // 코드의 모드 어휘(graph-mode-store.js의 VIEW_*)는 대화 모드를 'summary'라 부르고
 // 세션 레코드는 'chat'이라 부른다. 두 이름의 다리는 여기 한 쌍뿐이다 — 다른 파일이
@@ -172,7 +172,7 @@ function normalizeSnapshot(raw) {
   const stamp = str(src.createdAt, null) || str(src.updatedAt, null) || nowIso();
   const title = titleFrom(src.title);
   return {
-    schemaVersion: SCHEMA_VERSION,
+    schemaVersion: src.schemaVersion === 1 ? 1 : SCHEMA_VERSION,
     id: str(src.id, ''),
     mode,
     projectId: str(src.projectId, 'default'),
@@ -207,6 +207,26 @@ function createSnapshot(options) {
     createdAt: at,
     updatedAt: at,
   });
+}
+
+// v1 SQLite append omitted every parent link. Recover only its linear alternating
+// user/assistant prefix in memory; explicit linked branches and v2 roots stay intact.
+function restoreLegacyMessageLinks(messages, currentId) {
+  const rows = Array.isArray(messages) ? messages : [];
+  const boundary = rows.findIndex((row) => row.parentId != null);
+  const count = boundary < 0 ? rows.length : boundary;
+  if (count < 2 || count % 2 !== 0) return rows;
+  if (boundary < 0 ? currentId !== rows[count - 1].id
+    : rows[boundary].parentId !== rows[count - 1].id) return rows;
+  const ids = new Set();
+  for (let i = 0; i < count; i += 1) {
+    const row = rows[i];
+    if (!row.id || ids.has(row.id) || row.done !== true
+      || row.role !== (i % 2 === 0 ? 'user' : 'assistant')) return rows;
+    ids.add(row.id);
+  }
+  return rows.map((row, index) => index > 0 && index < count
+    ? { ...row, parentId: rows[index - 1].id } : row);
 }
 
 function messagePath(messages, currentId) {
@@ -244,7 +264,7 @@ function appendMessage(snapshot, message) {
   const base = normalizeSnapshot(snapshot);
   const next = normalizeMessage(message);
   if (!next.id) return base;
-  const linked = { ...next, parentId: next.parentId || base.currentId };
+  const linked = { ...next, parentId: message.parentId === undefined ? base.currentId : next.parentId };
   return { ...base, messages: [...base.messages, linked], currentId: linked.id };
 }
 
@@ -330,6 +350,7 @@ const __exports = {
   normalizeMessage,
   normalizeCard,
   messagePath,
+  restoreLegacyMessageLinks,
   appendMessage,
   updateMessage,
   putCard,

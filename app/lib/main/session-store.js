@@ -13,6 +13,7 @@ const {
   createSnapshot,
   normalizeSnapshot,
   normalizeMessage,
+  restoreLegacyMessageLinks,
   normalizeCard,
   titleFrom,
 } = require('../session-snapshot');
@@ -280,7 +281,7 @@ class SessionStore {
       createdAt: row.created_at,
       updatedAt: row.updated_at,
       revision: row.revision,
-      messages,
+      messages: row.schema_version === 1 ? restoreLegacyMessageLinks(messages, row.current_id) : messages,
       currentId: row.current_id,
       canvasCards,
       workspace: parseJson(row.workspace_json, undefined),
@@ -316,6 +317,7 @@ class SessionStore {
     const row = this.#sessionRow(sessionId);
     if (!row) return null;
     const msg = normalizeMessage(message);
+    if (message.parentId === undefined) msg.parentId = row.current_id;
     const at = new Date().toISOString();
     const occurredAt = msg.occurredAt || at;
     return this.#tx(() => {
