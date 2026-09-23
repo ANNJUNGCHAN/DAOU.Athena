@@ -1638,6 +1638,7 @@ class RenderPlanRequest(BaseModel):
     data: dict[str, Any] = Field(default_factory=dict)
     caption: str | None = None
     delivery: Literal["side_channel", "inline"] = "side_channel"
+    delivery_id: str | None = Field(default=None, pattern="^[a-f0-9]{32}$")
     dataset_id: str | None = Field(default=None, min_length=1, max_length=64)
     item_id: str | None = Field(default=None, min_length=1, max_length=128)
     ordinal: int | None = Field(default=None, ge=1, le=6)
@@ -1880,6 +1881,7 @@ def _display_receipt(
     screen_id: str,
     meta: dict[str, Any],
     renderer_id: str | None = None,
+    delivery_id: str | None = None,
 ) -> dict[str, Any]:
     """Return control metadata only; never copy rows, fields, values, or preview data."""
     receipt = {
@@ -1895,6 +1897,8 @@ def _display_receipt(
     }
     if renderer_id is not None:
         receipt["renderer_id"] = renderer_id
+    if delivery_id is not None:
+        receipt["delivery_id"] = delivery_id
     return receipt
 
 
@@ -2638,6 +2642,8 @@ async def canvas_render_plan(
             }
         )
     delivery_start = time.perf_counter()
+    if payload.delivery_id is not None:
+        envelope["delivery_id"] = payload.delivery_id
     _enqueue_envelope(queue, envelope)
     delivery_ms = _elapsed_ms(delivery_start)
     return JSONResponse(
@@ -2657,6 +2663,7 @@ async def canvas_render_plan(
                 screen_id=screen_id,
                 meta=meta,
                 renderer_id=renderer_id,
+                delivery_id=payload.delivery_id,
             ),
             "timing": _timing(
                 total_start=total_start,

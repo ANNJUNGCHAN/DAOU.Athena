@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import uuid
 from typing import Any
 
 import httpx
@@ -171,6 +172,7 @@ async def render_with_plan(
     request_payload: dict[str, Any] = {
         "plan_token": plan_token,
         "delivery": "side_channel",
+        "delivery_id": uuid.uuid4().hex,
     }
     if "caption" in arguments:
         request_payload["caption"] = arguments["caption"]
@@ -256,6 +258,13 @@ async def render_with_plan(
         "renderer_id",
     )
     receipt = {key: raw_receipt[key] for key in allowed_keys if key in raw_receipt}
+    # Keep card data off the model stream. This opaque identifier joins the
+    # backend push to the caller's trusted conversation context in the app.
+    delivery_id = raw_receipt.get("delivery_id")
+    if delivery_id is not None:
+        if delivery_id != request_payload["delivery_id"]:
+            return _error("캔버스 표시 영수증 배달 식별자가 일치하지 않습니다")
+        receipt["delivery_id"] = delivery_id
     return types.CallToolResult(
         content=[types.TextContent(type="text", text=json.dumps(receipt, ensure_ascii=False))],
         structuredContent=receipt,

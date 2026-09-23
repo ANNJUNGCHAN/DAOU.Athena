@@ -39,6 +39,7 @@ const { assertSessionStopsSucceeded } = require('./lib/main/provider-session-shu
 // 툴 호출 진행 단계(board-33) 라벨링에 render_canvas 판정 하나만 빌려 쓴다 —
 // 파서 자체는 손대지 않는다(sendLiveToolStep 근처 주석 참고).
 const streamJsonParser = require('./lib/main/stream-json-parser');
+const { createCanvasDeliveryRouter } = require('./lib/main/canvas-delivery-router');
 const { ensureMcpConfig, createMcpRuntimeSnapshot, canonicalHash } = require('./lib/main/mcp-config');
 const {
   buildLivePrompt, buildLiveSystemPrompt, buildLiveTurnPrompt, selectActiveAgentProject,
@@ -766,6 +767,7 @@ function setBriefingClaudeRunnerForVerify(stub, backendOverrides) {
 }
 
 function runBriefingTurnWired(event) {
+  const briefingConversationId = historyConversationId();
   const { dir, configFile } = getLiveMcpConfig();
   // 툴 진행 표시는 사용자 턴과 같은 라벨 변환기를 쓰되 채널만 브리핑 전용이고,
   // 말걸기 가드 확인 카드는 전달하지 않는다(자동 턴에서 승인 카드 금지).
@@ -808,7 +810,10 @@ function runBriefingTurnWired(event) {
       rememberLiveRealtimeFallbackAuthority(r);
       // 카드 경로는 사용자 턴과 동일(athena:add-canvas-live) — 캔버스는 턴
       // 상태와 무관해 안전하다. pushed는 사이드 채널로 이미 도착한 카드다.
-      if (r.status === 'pushed') return;
+      if (r.status === 'pushed') {
+        canvasDeliveryRouter.receiveReceipt(r.envelope, { conversationId: briefingConversationId });
+        return;
+      }
       sendLiveCanvasResult(r);
     },
   });
@@ -1567,6 +1572,14 @@ app.on('will-quit', () => {
 // 대신 이 채널로 온다 — CLI 잘림 한도와 무관하고, 모델이 답을 쓰는 동안 카드가
 // 먼저 뜬다(2026-08-19 사용자 지시 "캔버스 우선 구성 → 필요 정보만 뽑아 답변").
 let canvasFeed = null;
+const canvasDeliveryRouter = createCanvasDeliveryRouter({
+  deliver(result, metadata) {
+    const sessionCardId = sendLiveCanvasResult(result, metadata);
+    if (metadata.origin === 'orb' && orbWin && !orbWin.isDestroyed()) {
+      orbWin.webContents.send('athena:orb-canvas-result', { ...result, ...metadata, sessionCardId });
+    }
+  },
+});
 
 function startCanvasFeed() {
   if (process.env.ATHENA_CANVAS_SOURCE === 'fixture') return; // 검증 결정론 보호
@@ -1577,6 +1590,7 @@ function startCanvasFeed() {
     token: LOCAL_BEARER_TOKEN,
     onEvent: (envelope) => {
       if (!envelope || !envelope.canvas_type) return;
+      if (canvasDeliveryRouter.receiveEnvelope(envelope)) return;
       // 옛 판은 여기서 캔버스 창을 열었다(expandCanvasWindow). 중앙 캔버스는 늘
       // 떠 있으므로 남는 의미는 "창을 앞으로"뿐이다 — 포커스는 뺏지 않는다.
       revealShell({ focus: false });
@@ -4719,6 +4733,7 @@ function handlePersistentCanvasResult(result) {
   }
   const metadata = {
     clientSubmitId: result.clientSubmitId,
+    conversationId: context.conversationId,
     turnId: result.turnId,
     sequence: result.sequence,
     origin: result.origin,
@@ -4728,6 +4743,7 @@ function handlePersistentCanvasResult(result) {
   if (result.status === 'pushed') {
     if (result.envelope && result.envelope.canvas_type) context.canvasTypesSeen.push(result.envelope.canvas_type);
     if (label) context.canvasCaptionsSeen.push(label);
+    if (canvasDeliveryRouter.receiveReceipt(result.envelope, { ...metadata, origin: context.origin })) return;
     // pushed 카드는 shell 전용 사이드채널로 이미 그려졌지만 오브 창에는 오지
     // 않는다. 오브에서 시작한 질의일 때만 같은 봉투를 한 번 전달한다.
     if (context.origin === 'orb' && orbWin && !orbWin.isDestroyed()) {
@@ -4738,7 +4754,7 @@ function handlePersistentCanvasResult(result) {
     }
     return;
   }
-  if (context.expand && !context.expandTriggered) {
+  if (context.expand && !context.expandTriggered && context.conversationId === historyConversationId()) {
     context.expandTriggered = true;
     revealShell({ focus: false });
   }
@@ -6120,6 +6136,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         // 오브 기원 질의는 그 사이드 채널을 구독하지 않으므로 오브에만 한 번 보낸다.
         if (r.envelope && r.envelope.canvas_type) canvasTypesSeen.push(r.envelope.canvas_type);
         if (label) canvasCaptionsSeen.push(label);
+        if (canvasDeliveryRouter.receiveReceipt(r.envelope, { conversationId: turnConversationId, origin })) return;
         if (origin === 'orb' && orbWin && !orbWin.isDestroyed()) {
           const sessionCardId = persistBackgroundCanvasCard(
             turnConversationId, { ...r, status: 'success' },
@@ -7309,6 +7326,7 @@ ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
   const id = payload && typeof payload.id === 'string' ? payload.id : '';
   const bridge = getSessionBridge();
   if (!id || !bridge || !shellWin || shellWin.isDestroyed()) return { replayed: 0 };
+  bridge.flush(id);
   const snapshot = bridge.load(id);
   const cards = snapshot && Array.isArray(snapshot.canvasCards) ? snapshot.canvasCards : [];
   let replayed = 0;

@@ -59,6 +59,17 @@ test("MCP runtime verification is narrowly kept", () => {
   assert.equal(isKeepPath("backend/verification/private-mcp-probe.py"), false);
 });
 
+test("canvas delivery regression is kept without allowing adjacent private artifacts", () => {
+  assert.equal(isKeepPath("backend/verification/test_canvas_delivery_correlation.py"), true);
+  for (const path of [
+    "backend/verification/private-canvas-probe.py",
+    "backend/verification/canvas-delivery.log",
+    "backend/verification/profile/Local Storage/leveldb/000003.log",
+    "backend/verification/.env",
+    "backend/verification/conversations.db",
+  ]) assert.equal(isKeepPath(path), false, path);
+});
+
 test("handoff, datasets, paper ledgers, and prompt dumps are outside the keep-set", () => {
   assert.equal(isKeepPath("docs/handoff/README.md"), false);
   assert.equal(isKeepPath("datasets/앱-검증-200.jsonl"), false);
