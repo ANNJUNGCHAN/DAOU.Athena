@@ -2695,15 +2695,14 @@ ipcMain.on('athena:close-windows', () => {
 
 // ---------- 줌(화면 확대/축소) — Ctrl+= / Ctrl+- / Ctrl+0 / Ctrl+휠 ----------
 // 창 크기는 그대로 두고 콘텐츠 배율만 바꾼다(브라우저 줌과 같은 문법).
-let uiZoom = 1;
-
 function applyUiZoom(dir) {
-  const next = dir === 'reset' ? 1 : uiZoom * (dir === 'in' ? 1.1 : 1 / 1.1);
-  uiZoom = Math.min(2, Math.max(0.5, Math.round(next * 100) / 100));
-  if (shellWin && !shellWin.isDestroyed()) {
-    shellWin.webContents.setZoomFactor(uiZoom);
-    shellWin.webContents.send('athena:zoom-changed', { zoom: uiZoom });
-  }
+  if (!shellWin || shellWin.isDestroyed()) return;
+  // Chromium restores zoom across restarts; calculate from the displayed value.
+  const currentZoom = shellWin.webContents.getZoomFactor();
+  const next = dir === 'reset' ? 1 : currentZoom * (dir === 'in' ? 1.1 : 1 / 1.1);
+  const zoom = Math.min(2, Math.max(0.5, Math.round(next * 100) / 100));
+  shellWin.webContents.setZoomFactor(zoom);
+  shellWin.webContents.send('athena:zoom-changed', { zoom });
 }
 
 ipcMain.on('athena:zoom', (e, { dir } = {}) => applyUiZoom(dir));
