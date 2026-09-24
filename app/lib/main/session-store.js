@@ -542,13 +542,22 @@ class SessionStore {
       .map(rowToJob);
   }
 
-  // 세션마다 대표 상태 하나(실행 중 > 대기 > 실패 > 완료). job이 없는 세션은 키가 없다 —
-  // 없는 "실행 중"을 있다고 그리지 않는다.
+  // 대화의 끝난 턴은 최신 결과만 대표한다. 과거 실패는 이력에 남기되 성공한
+  // 후속 답변을 영구 실패로 표시하지 않는다. 진행 중 턴과 비대화 작업은 기존
+  // 우선순위(실행 중 > 대기 > 실패 > 완료)를 유지한다.
   runStates() {
     const out = {};
-    for (const row of this.db.prepare('SELECT session_id, status FROM session_jobs').all()) {
+    const terminalChatSessions = new Set();
+    for (const row of this.db.prepare(`
+      SELECT session_id, kind, status FROM session_jobs
+      ORDER BY attached_at DESC, rowid DESC
+    `).all()) {
       const state = jobRunState(row.status);
       if (!state) continue;
+      if (row.kind === 'chat.turn' && (state === 'failed' || state === 'done')) {
+        if (terminalChatSessions.has(row.session_id)) continue;
+        terminalChatSessions.add(row.session_id);
+      }
       const prev = out[row.session_id];
       if (!prev || RUN_RANK[state] > RUN_RANK[prev]) out[row.session_id] = state;
     }
