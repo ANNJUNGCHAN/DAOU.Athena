@@ -7194,13 +7194,12 @@ ipcMain.handle('athena:cli-login', handleCliLogin);
 ipcMain.handle('athena:cli-set-active', handleCliSetActive);
 ipcMain.handle('athena:cli-remove', handleCliRemove);
 
-// 키우미 메뉴 › 파일/폴더 첨부(2026-08-27, Paper 보드 45) — 경로만 돌려준다.
-// 파일 내용은 여기서 읽지 않는다: 경로 텍스트가 입력줄에 붙고, 읽는 건 CLI의 몫.
+// Native picker selections are captured as bounded provider-neutral context.
 async function handlePickFiles(e, { directory } = {}) {
   const properties = directory ? ['openDirectory', 'multiSelections'] : ['openFile', 'multiSelections'];
   const res = await dialog.showOpenDialog(shellWin, { properties });
-  if (res.canceled) return { ok: false, paths: [] };
-  return { ok: true, paths: res.filePaths || [] };
+  if (res.canceled) return { ok: false, paths: [], attachments: [] };
+  return require('./lib/main/attachment-context').captureAttachments(res.filePaths || [], { directory: !!directory });
 }
 ipcMain.handle('athena:pick-files', handlePickFiles);
 

@@ -1,6 +1,9 @@
 'use strict';
 
 const { spawn } = require('child_process');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
 const { StreamJsonSession } = require('./stream-json-parser');
 const mcpEnv = require('./mcp-env');
 const { killTree } = require('./proc-utils');
@@ -38,9 +41,9 @@ function grokFailureMessage({ killedBy, timeoutMs, code, finalResult, stderrText
   return `grok 종료 코드 ${code}`;
 }
 
-function buildArgs({ prompt, resumeSessionId, model, effort, trustProjectFolder = false }) {
+function buildArgs({ prompt, promptFile, resumeSessionId, model, effort, trustProjectFolder = false }) {
   const args = [
-    '-p', prompt,
+    ...(promptFile ? ['--prompt-file', promptFile] : ['-p', prompt]),
     '--output-format', 'streaming-messages-json',
     '--include-partial-messages',
     '--yolo',
@@ -83,10 +86,27 @@ function runGrokQuery({
       return;
     }
 
-    const args = buildArgs({ prompt, resumeSessionId, model, effort, trustProjectFolder });
+    let promptDir;
+    let promptCleanupError = null;
+    const cleanupPrompt = () => {
+      if (!promptDir) return;
+      try {
+        fs.rmSync(promptDir, { recursive: true, force: true, maxRetries: 2, retryDelay: 25 });
+        promptDir = null;
+        promptCleanupError = null;
+      } catch (error) {
+        // File scanners can briefly hold the snapshot. Cleanup must never
+        // prevent the provider result from settling or crash the main process.
+        promptCleanupError = `임시 프롬프트 파일 정리 실패 (${error.code || 'unknown'})`;
+      }
+    };
     const session = new StreamJsonSession();
     let child;
     try {
+      promptDir = fs.mkdtempSync(path.join(os.tmpdir(), 'athena-grok-prompt-'));
+      const promptFile = path.join(promptDir, 'prompt.txt');
+      fs.writeFileSync(promptFile, String(prompt), { encoding: 'utf8', mode: 0o600 });
+      const args = buildArgs({ promptFile, resumeSessionId, model, effort, trustProjectFolder });
       child = spawn(grokBin, args, {
         cwd,
         stdio: ['ignore', 'pipe', 'pipe'],
@@ -95,7 +115,8 @@ function runGrokQuery({
         shell: false,
       });
     } catch (err) {
-      resolve({ ok: false, error: String((err && err.message) || err), diagnostics: null });
+      cleanupPrompt();
+      resolve({ ok: false, error: String((err && err.message) || err), diagnostics: null, promptCleanupError });
       return;
     }
 
@@ -138,6 +159,7 @@ function runGrokQuery({
     child.stderr.on('data', (c) => { stderrText += c; });
 
     child.on('error', (err) => {
+      cleanupPrompt();
       if (settled) return;
       settled = true;
       if (timer) clearTimeout(timer);
@@ -153,12 +175,14 @@ function runGrokQuery({
         ok: false,
         error: message,
         errorCode: code || null,
+        promptCleanupError,
         stderr: stderrText,
         diagnostics: session.diagnostics(),
       });
     });
 
     child.on('close', (code) => {
+      cleanupPrompt();
       if (settled) return;
       settled = true;
       if (timer) clearTimeout(timer);
@@ -172,6 +196,7 @@ function runGrokQuery({
         timedOut: killedBy === 'timeout',
         aborted: killedBy === 'abort',
         stdoutCapped: killedBy === 'stdout-cap',
+        promptCleanupError,
         error: isError ? grokFailureMessage({
           killedBy, timeoutMs, code, finalResult, stderrText,
         }) : null,

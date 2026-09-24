@@ -20,7 +20,7 @@ const MAX_STDOUT_BYTES = 5_000_000;
 
 function buildArgs({ prompt, configFile, allowedTools, resumeSessionId, model, effort, disableAllTools = false }) {
   const args = [
-    '-p', prompt,
+    '-p', '--input-format', 'text',
     '--output-format', 'stream-json',
     // 답변 텍스트가 텍스트 응답 완료 시점까지 통째로 안 오고 조각(text_delta)으로
     // 온다 — chat.js가 채팅 버블에 실시간으로 이어붙인다(2026-08-26). 카드
@@ -111,9 +111,8 @@ function runClaudeQuery({
     try {
       child = spawn(claudeBin, args, {
         cwd,
-        // stdin을 명시적으로 닫는다(S4 §1) — 안 닫으면 "no stdin data received
-        // in 3s" 경고로 3초를 버린다.
-        stdio: ['ignore', 'pipe', 'pipe'],
+        // Pipe prompt bytes, then close immediately; Windows argv has a 32K limit.
+        stdio: ['pipe', 'pipe', 'pipe'],
         env: { ...process.env, ...mcpEnv.buildEnvOverrides(), ...DISABLE_TOOL_SEARCH_ENV },
         windowsHide: true,
         shell: false,
@@ -217,6 +216,8 @@ function runClaudeQuery({
         diagnostics: session.diagnostics(),
       });
     });
+    child.stdin.on('error', (error) => { killTree(child); child.emit('error', error); });
+    child.stdin.end(String(prompt), 'utf8');
   });
 }
 

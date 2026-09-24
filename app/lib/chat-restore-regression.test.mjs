@@ -29,7 +29,7 @@ function context(extra = {}) {
 
 test('restored assistant Markdown uses safe DOM rendering; user input stays literal', () => {
   const ctx = context();
-  vm.runInContext(declaration('pastMessageTurn'), ctx);
+  vm.runInContext(declaration('attachmentDisplayText') + '\n' + declaration('pastMessageTurn'), ctx);
   const text = '# Heading\n\n**bold** <script>alert(1)</script>';
   const assistant = ctx.pastMessageTurn({ role: 'assistant', text });
   const body = assistant.children[0];
@@ -61,7 +61,7 @@ test('opening saved Aegis conversation refreshes tasks after workspace restorati
     AthenaAgentCanvas: { refresh() { calls.push('refresh'); return Promise.resolve(); } },
   });
   ctx.window.AthenaLib.SessionSnapshot = { modeToView: (mode) => mode };
-  vm.runInContext(declaration('pastMessageTurn') + '\n' + declaration('restoreConversation'), ctx);
+  vm.runInContext(declaration('attachmentDisplayText') + '\n' + declaration('pastMessageTurn') + '\n' + declaration('restoreConversation'), ctx);
   ctx.restoreConversation({ activeMode: 'agent' }, [], { workspace: {} });
   assert.deepEqual(calls, ['view:agent', 'restore', 'refresh']);
   calls.length = 0;
@@ -87,7 +87,7 @@ test('conversation roundtrip replaces shared input with destination draft, inclu
     scrollHistoryToBottom() {}, stickToBottom: true,
   });
   ctx.window.AthenaLib.SessionSnapshot = { modeToView: (mode) => mode };
-  vm.runInContext(declaration('pastMessageTurn') + '\n' + declaration('restoreConversation'), ctx);
+  vm.runInContext(declaration('attachmentDisplayText') + '\n' + declaration('pastMessageTurn') + '\n' + declaration('restoreConversation'), ctx);
   const restore = (snapshot) => ctx.restoreConversation({ activeMode: 'summary' }, [], snapshot);
   const dartSnapshot = { workspace: { draft: { text: 'DART company question' } } };
   const aegisSnapshot = { workspace: { draft: { text: '' } } };
