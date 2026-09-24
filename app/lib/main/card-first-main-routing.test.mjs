@@ -86,6 +86,7 @@ function createHarness({
   }
 
   const context = vm.createContext({
+    require: createRequire(path.join(here, '..', '..', 'main.js')),
     AbortController,
     Buffer,
     Date,

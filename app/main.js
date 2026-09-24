@@ -4501,7 +4501,11 @@ function beginSessionTurn(conversationId, text, userMessageId) {
       projectId: record ? record.projectId : listed.currentProjectId,
       title: text,
     });
-    bridge.recordUserMessage({ sessionId: conversationId, messageId: userMessageId || crypto.randomUUID(), text });
+    const providerId = resolveLiveQueryProviderId();
+    const account = currentProviderSelection.activeAccount || cliAccounts.peekActiveAccount() || {};
+    const ownerKey = canonicalHash({ providerId, accountId: account.accountId || account.id || null });
+    bridge.recordUserMessage({ sessionId: conversationId, messageId: userMessageId || crypto.randomUUID(), text,
+      attachments: require('./lib/main/attachment-recovery').attachmentOwnership(text, ownerKey) });
   } catch (error) {
     mdlog(`세션 저장 실패 — 턴을 시작하지 않는다: ${String((error && error.message) || error)}`);
     return '대화를 세션에 저장하지 못해 질문을 보내지 않았습니다.';
@@ -6061,8 +6065,17 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   // 그대로 넘기면 백테스트 설계 모드에서만 접두가 붙고(live-prompt.js
   // buildBacktestModePrefix), 그 외 모드는 문자열 호출과 바이트 동일하다. 캐시 키
   // (liveQueryCache)는 원문 query 그대로다.
+  let attachmentAwareQuery = query;
+  if (!resumeSessionId) {
+    const bridge = getSessionBridge();
+    const saved = bridge && bridge.load(turnConversationId);
+    attachmentAwareQuery = require('./lib/main/attachment-recovery').recoverAttachmentContext({
+      query, resumeSessionId, ownerKey: resumeOwnerKey,
+      messages: require('./lib/session-snapshot').messagePath(saved && saved.messages || [], saved && saved.currentId),
+    });
+  }
   const liveTurnInput = {
-    userText: query,
+    userText: attachmentAwareQuery,
     canvasMode: submit.canvasMode,
     backtestContext: submit.backtestContext,
     graphContext: submit.graphContext,
