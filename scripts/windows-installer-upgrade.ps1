@@ -1,6 +1,8 @@
 ﻿param([Parameter(Mandatory)][ValidateSet('Inspect', 'Preserve', 'VerifyRemoved')][string]$Action)
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$failureStage = 'context'
+$resultPath = $env:ATHENA_UPGRADE_RESULT
 
 function Read-InstallValue([string]$Key, [string]$Name) {
   if (-not $Key) { return '' }
@@ -76,7 +78,12 @@ try {
   # Athena's supported installer is per-user x64. Never inspect or mutate HKLM.
   $registry = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::CurrentUser, [Microsoft.Win32.RegistryView]::Registry64)
   try {
+    if ($Action -eq 'Inspect') {
+      $failureStage = 'inspect-result'
+      [IO.File]::Delete($resultPath + '.failure.ini')
+    }
     if ($Action -eq 'VerifyRemoved') {
+      $failureStage = 'verify-registration'
       foreach ($key in @($primaryKey, $secondaryKey, $installKey)) {
         if (-not $key) { continue }
         $entry = $registry.OpenSubKey($key)
@@ -84,14 +91,17 @@ try {
       }
       exit 0
     }
+    $failureStage = if ($Action -eq 'Inspect') { 'inspect-registration' } else { 'preserve-registration' }
     $root = Get-PreviousInstall
     if ($Action -eq 'Inspect') {
+      $failureStage = 'inspect-result'
       if ($root) {
         $backup = $root + '.Athena-upgrade-backup-' + [Guid]::NewGuid().ToString('N')
         Write-Result $root $backup ($backup + '.txt')
       } else { Write-Result '' }
       if ($root) { exit 0 } else { exit 1 }
     }
+    $failureStage = 'preserve-plan'
     if (-not $root -or -not $root.Equals($env:ATHENA_UPGRADE_EXPECTED_ROOT, $comparison)) { throw 'Previous installation changed' }
     $backup = $env:ATHENA_UPGRADE_BACKUP
     $backupPrefix = $root + '.Athena-upgrade-backup-'
@@ -100,13 +110,16 @@ try {
     if ([IO.Directory]::Exists($backup) -or [IO.File]::Exists($backup) -or [IO.File]::Exists($receipt)) { throw 'Backup collision' }
     # Moving the whole directory preserves mixed-use/nested files. Never infer
     # that unknown contents are disposable, and never automatically prune it.
+    $failureStage = 'preserve-move'
     [IO.Directory]::Move($root, $backup)
     try {
+      $failureStage = 'preserve-receipt'
       $stream = [IO.File]::Open($receipt, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write)
       $writer = [IO.StreamWriter]::new($stream, [Text.UTF8Encoding]::new($true))
       try {
         $writer.WriteLine("Athena 업데이트 백업`r`n이전 설치 위치: $root`r`n보존된 폴더: $backup`r`n`r`n기존 설치와 포함된 모든 사용자 파일을 위 폴더에 보존했습니다.`r`n이 백업은 자동으로 삭제되지 않습니다. 새 버전을 설치한 뒤에도 이전 설치 용량이 유지됩니다.`r`n새 설치가 실패하면 보존된 파일로 복구할 수 있습니다. 설치가 자동으로 복구된 것은 아닙니다.")
       } finally { $writer.Dispose() }
+      $failureStage = 'preserve-result'
       Write-Result $root $backup $receipt
     } catch {
       # Restore the old directory if receipt/result creation failed. If another
@@ -120,6 +133,20 @@ try {
   } finally { $registry.Dispose() }
   exit 0
 } catch {
+  # Only fixed diagnostic codes leave this boundary; exception messages can
+  # contain paths or contents. A separate file also survives a locked result.
+  $failure = $_.Exception
+  while ($failure.InnerException) { $failure = $failure.InnerException }
+  $category = if ($failure -is [UnauthorizedAccessException] -or $failure -is [Security.SecurityException]) { 'access-denied' }
+    elseif ($failure -is [IO.IOException]) { 'io' }
+    elseif ($failure -is [ArgumentException] -or $failure -is [FormatException]) { 'invalid-data' }
+    elseif ($failure -is [Management.Automation.RuntimeException]) { 'validation' }
+    else { 'unexpected' }
+  if ($resultPath) {
+    try {
+      [IO.File]::WriteAllText($resultPath + '.failure.ini', "[failure]`r`nStage=$failureStage`r`nCategory=$category`r`n", [Text.Encoding]::Unicode)
+    } catch { } # Diagnostic failure must not change the fail-closed exit code.
+  }
   [Console]::Error.WriteLine('Athena upgrade validation or preservation failed. Existing registration was not cleared by this helper.')
   exit 2
 }

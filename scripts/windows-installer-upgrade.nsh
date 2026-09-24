@@ -7,9 +7,27 @@
   Var AthenaHadStartShortcut
 !endif
 
-!macro AthenaUpgradeFailure
+!macro AthenaUpgradeFailure STAGE
+  ReadEnvStr $R5 ATHENA_UPGRADE_RESULT
+  StrCpy $R4 ""
+  StrCpy $R3 ""
+  ${If} $R5 != ""
+    ReadINIStr $R4 "$R5.failure.ini" failure Stage
+    ReadINIStr $R3 "$R5.failure.ini" failure Category
+  ${EndIf}
+  ${If} $R4 == ""
+    StrCpy $R4 "${STAGE}"
+    StrCpy $R3 "installer"
+    ${If} $R5 != ""
+      WriteINIStr "$R5.failure.ini" failure Stage "$R4"
+      WriteINIStr "$R5.failure.ini" failure Category "$R3"
+    ${EndIf}
+  ${EndIf}
   ReadEnvStr $R8 ATHENA_UPGRADE_BACKUP
-  StrCpy $R7 "기존 Athena 설치를 안전하게 확인하거나 보존하지 못했습니다. 설치를 중단합니다."
+  StrCpy $R7 "기존 Athena 설치를 안전하게 확인하거나 보존하지 못했습니다. 설치를 중단합니다.$\r$\n진단 코드: $R4 / $R3"
+  SetDetailsPrint both
+  DetailPrint "설치 중단 진단 코드: $R4 / $R3"
+  SetDetailsPrint lastused
   ${If} $R8 != ""
   ${AndIf} ${FileExists} "$R8\*"
     SetDetailsPrint both
@@ -64,10 +82,10 @@
       ReadINIStr $R2 "$PLUGINSDIR\athena-upgrade-result.ini" upgrade Backup
       System::Call 'kernel32::SetEnvironmentVariableW(w "ATHENA_UPGRADE_BACKUP", w "$R2")i'
       ${If} $AthenaOldInstallRoot == ""
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure inspect-result
       ${EndIf}
     ${ElseIf} $R0 != 1
-      !insertmacro AthenaUpgradeFailure
+      !insertmacro AthenaUpgradeFailure inspect-helper
     ${EndIf}
   !macroend
 
@@ -93,7 +111,7 @@
             ClearErrors
             CopyFiles /SILENT "$oldDesktopLink" "$PLUGINSDIR\athena-old-desktop.lnk"
             ${If} ${Errors}
-              !insertmacro AthenaUpgradeFailure
+              !insertmacro AthenaUpgradeFailure shortcut-save
             ${EndIf}
           ${EndIf}
           ${If} ${FileExists} "$oldStartMenuLink"
@@ -101,7 +119,7 @@
             ClearErrors
             CopyFiles /SILENT "$oldStartMenuLink" "$PLUGINSDIR\athena-old-start.lnk"
             ${If} ${Errors}
-              !insertmacro AthenaUpgradeFailure
+              !insertmacro AthenaUpgradeFailure shortcut-save
             ${EndIf}
           ${EndIf}
         ${EndIf}
@@ -111,21 +129,21 @@
       ClearErrors
       ExecWait '"$PLUGINSDIR\athena-safe-uninstaller.exe" $R2 _?=$AthenaOldInstallRoot' $R0
       ${If} ${Errors}
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure child-launch
       ${EndIf}
       ${If} $R0 != 0
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure child-exit
       ${EndIf}
       ; Fail before the stock fallback can execute any legacy binary.
       !insertmacro AthenaRunUpgradeHelper VerifyRemoved
       ${If} $R0 != 0
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure verify-helper
       ${EndIf}
       ReadINIStr $R2 "$PLUGINSDIR\athena-upgrade-result.ini" upgrade Backup
       ReadINIStr $R3 "$PLUGINSDIR\athena-upgrade-result.ini" upgrade Receipt
       ${If} $R2 == ""
       ${OrIf} $R3 == ""
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure preserve-result
       ${EndIf}
       SetDetailsPrint both
       DetailPrint "기존 설치와 모든 파일을 보존했습니다: $R2"
@@ -151,7 +169,7 @@
         ${EndIf}
       ${EndIf}
       ${If} ${Errors}
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure shortcut-restore
       ${EndIf}
       ClearErrors
       ${If} $AthenaHadStartShortcut == "true"
@@ -172,7 +190,7 @@
         ${EndIf}
       ${EndIf}
       ${If} ${Errors}
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure shortcut-restore
       ${EndIf}
     ${EndIf}
   !macroend
@@ -185,7 +203,7 @@
       ReadEnvStr $R2 ATHENA_UPGRADE_EXPECTED_ROOT
       ${If} $R2 == ""
       ${OrIf} $INSTDIR != $R2
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure child-root
       ${EndIf}
     ${EndIf}
   !macroend
@@ -199,7 +217,7 @@
       ; InstallLocation. The initial process check already validated this root.
       ReadEnvStr $INSTDIR ATHENA_UPGRADE_EXPECTED_ROOT
       ${If} $INSTDIR == ""
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure child-root
       ${EndIf}
     ${EndIf}
   !macroend
@@ -210,7 +228,7 @@
     ${GetOptions} $R0 "/ATHENA-PRESERVE-UPGRADE" $R1
     ${IfNot} ${Errors}
       ${IfNot} ${isUpdated}
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure child-flags
       ${EndIf}
       !insertmacro AthenaValidateUpgradeUninstallerRoot
       ; The executable runs from the parent's plugin directory. Move our CWD
@@ -220,7 +238,7 @@
       File /oname=$PLUGINSDIR\athena-upgrade.ps1 "${ATHENA_UPGRADE_SCRIPT}"
       !insertmacro AthenaRunUpgradeHelper Preserve
       ${If} $R0 != 0
-        !insertmacro AthenaUpgradeFailure
+        !insertmacro AthenaUpgradeFailure preserve-helper
       ${EndIf}
     ${Else}
       ; Preserve the pinned builder's normal direct-uninstall behavior.

@@ -34,6 +34,11 @@ const clearRegistration = () => spawnSync('reg.exe', ['delete', `HKCU\\${prefix}
 const reg = (key, name, value) => execFileSync('reg.exe', ['add', `HKCU\\${key}`, '/v', name, '/t', 'REG_SZ', '/d', value, '/f', '/reg:64'], { stdio: 'pipe' });
 const inspectResult = () => Object.fromEntries(readFileSync(resultFile, 'utf16le').replace(/^\uFEFF/, '').split(/\r?\n/)
   .filter((line) => line.includes('=')).map((line) => [line.slice(0, line.indexOf('=')), line.slice(line.indexOf('=') + 1)]));
+function diagnostic(stage, category) {
+  const bytes = readFileSync(resultFile + '.failure.ini');
+  const contents = bytes.toString(bytes[0] === 0xff ? 'utf16le' : 'utf8').replace(/^\uFEFF/, '').trim();
+  assert.equal(contents, `[failure]\r\nStage=${stage}\r\nCategory=${category}`);
+}
 let cases = 0;
 function helper(action, expected, extra = {}) {
   const result = spawnSync(ps, ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', join(scripts, 'windows-installer-upgrade.ps1'), '-Action', action], {
@@ -134,6 +139,25 @@ function preserved(previous) {
 }
 
 try {
+  const diagnosticExe = join(root, 'diagnostic.exe');
+  compile('diagnostic', `Unicode true
+Name "Synthetic diagnostic boundary"
+OutFile "${quote(diagnosticExe)}"
+RequestExecutionLevel user
+!include "LogicLib.nsh"
+!define BUILD_UNINSTALLER
+!include "${quote(join(scripts, 'windows-installer-upgrade.nsh'))}"
+Function .onInit
+ !insertmacro AthenaUpgradeFailure child-exit
+FunctionEnd
+Section
+SectionEnd`);
+  const reportFailure = () => {
+    const reported = spawnSync(diagnosticExe, ['/S'], { env: environment, timeout: 10000 });
+    assert.equal(reported.status, 2);
+  };
+  reportFailure();
+  diagnostic('child-exit', 'installer');
   compile('legacy', `Unicode true\nName "Harmless legacy execution marker"\nOutFile "${quote(legacyExe)}"\nRequestExecutionLevel user
 Function .onInit
  ReadEnvStr $0 ATHENA_TEST_LEGACY_MARKER
@@ -321,6 +345,9 @@ SectionEnd`);
   launch(join(root, 'residual-new'), 2, { ATHENA_TEST_RESIDUAL_REGISTRY: '1' });
   preserved(previous);
   helper('VerifyRemoved', 2);
+  diagnostic('verify-registration', 'validation');
+  reportFailure();
+  diagnostic('verify-registration', 'validation');
   previous = setup('later-extraction-failure');
   launch(join(root, 'late-new'), 6, { ATHENA_TEST_LATE_FAILURE: '1' });
   preserved(previous);
@@ -329,12 +356,15 @@ SectionEnd`);
   helper('Inspect', 0);
   let plan = inspectResult();
   await withLock(resultFile, 'file', () => helper('Preserve', 2, { ATHENA_UPGRADE_EXPECTED_ROOT: previous, ATHENA_UPGRADE_BACKUP: plan.Backup }));
+  diagnostic('preserve-result', 'io');
   assert.ok(existsSync(join(previous, 'resources/app/user-notes.txt')));
   assert.equal(existsSync(plan.Backup), false, 'result-write failure restores previous root');
   assert.equal(existsSync(plan.Receipt), false, 'rollback removes only its new receipt');
   helper('Inspect', 0);
+  assert.equal(existsSync(resultFile + '.failure.ini'), false, 'new inspection clears stale diagnostics');
   plan = inspectResult();
   await withLock(previous, 'cwd', () => helper('Preserve', 2, { ATHENA_UPGRADE_EXPECTED_ROOT: previous, ATHENA_UPGRADE_BACKUP: plan.Backup }));
+  diagnostic('preserve-move', 'io');
   assert.ok(existsSync(previous), 'rename failure leaves old install intact');
   helper('VerifyRemoved', 2);
 
@@ -376,6 +406,7 @@ SectionEnd`);
   previous = setup('invalid-tuple');
   reg(keys.install, 'InstallLocation', join(root, 'mismatched'));
   helper('Inspect', 2);
+  diagnostic('inspect-registration', 'validation');
   launch(join(root, 'invalid-new'), 2);
   assert.ok(existsSync(previous));
   reg(keys.install, 'InstallLocation', previous);
