@@ -29,6 +29,7 @@ function fixture() {
     turnRecordFor: () => ({ state: 'idle', progressEl: null, token: 0 }),
     applyRemoteLock() {}, setDot() {}, setLocked() {},
     stashDisplayedPane() {}, closeOrderTicketForConversationChange() {},
+    clearAttachmentsForConversationChange() {},
   });
   vm.runInContext([
     declaration('refreshResultDockVisibility'),

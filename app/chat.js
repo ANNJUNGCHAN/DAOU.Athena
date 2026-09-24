@@ -2568,6 +2568,7 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
     }
     stashDisplayedPane();
     closeOrderTicketForConversationChange(conv.id);
+    clearAttachmentsForConversationChange(conv.id);
     displayedConversationId = conv.id;
     restoreConversation(switched, messages, snapshot, { stored, conversationId: conv.id });
     syncDisplayedTurn();
@@ -2783,6 +2784,7 @@ window.athena.on('athena:conversation-active', ({ conversationId } = {}) => {
   conversationSelectionRevision += 1;
   if (displayedConversationId !== null) stashDisplayedPane();
   closeOrderTicketForConversationChange(conversationId);
+  clearAttachmentsForConversationChange(conversationId);
   displayedConversationId = conversationId;
   mountStoredPane(conversationId);
   syncDisplayedTurn();
@@ -3120,6 +3122,12 @@ function kiumiItem(iconKind, label, desc, onPick) {
 const $attachChips = document.getElementById('attachChips');
 let attachments = []; // { path, isDir }
 
+function clearAttachmentsForConversationChange(nextConversationId) {
+  if (nextConversationId && nextConversationId === displayedConversationId) return;
+  attachments = [];
+  renderAttachChips();
+}
+
 function renderAttachChips() {
   $attachChips.textContent = '';
   $attachChips.hidden = attachments.length === 0;
@@ -3151,8 +3159,11 @@ function renderAttachChips() {
 
 async function pickAttachments(directory) {
   closeKiumiMenu();
+  const conversationId = displayedConversationId;
+  const revision = conversationSelectionRevision;
   try {
     const res = await window.athena.invoke('athena:pick-files', { directory });
+    if (conversationId !== displayedConversationId || revision !== conversationSelectionRevision) return;
     if (res && res.ok && Array.isArray(res.paths)) {
       for (const p of res.paths) {
         if (!attachments.some((a) => a.path === p)) attachments.push({ path: p, isDir: !!directory });
@@ -3422,6 +3433,7 @@ window.addEventListener('athena:new-conversation', () => {
   }
   stashDisplayedPane();
   closeOrderTicketForConversationChange(null);
+  clearAttachmentsForConversationChange(null);
   displayedConversationId = null;
   state = 'idle';
   liveProgressEl = null;
