@@ -34,6 +34,7 @@ function setup(invoke = async () => ({ ok: true, attachments: [{ id: 'chosen', p
     + section('async function pickAttachments(', '// 참조 칩(보드 21,')
     + section("window.athena.on('athena:conversation-active'", '// 배경 대화의 턴이')
     + section('window.AthenaShell.registerOpenConversation(', '// Claude 데스크톱의 @')
+    + 'let pendingOrbConversationRefresh = null;\n' + section('async function refreshOrbConversation(', '// ---------- 루틴 승인 카드')
     + section("window.addEventListener('athena:new-conversation'", '// 실행 중 턴 중단'), context);
   return { context, listeners, renders: () => renders, errors };
 }

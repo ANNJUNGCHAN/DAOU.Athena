@@ -2506,12 +2506,13 @@ function routineEventToFactsEnvelope(event) {
 // 가져오고, 알림에서 왔으면 대표 카드도 중앙 캔버스에 쌓는다. **주문은 여기서도
 // 집행되지 않는다**(확정 결정 3) — 이 핸들러가 하는 일은 창을 올리고(+선택적으로
 // 카드를 그리고) 끝이다.
-// 2026-08-26 board-33/34 — event 없이도 부른다("대화창으로 가기"는 카드가 없다,
-// 대화는 이미 같은 셸 세션에 이어져 있으므로 창만 앞으로 가져오면 된다).
-ipcMain.on('athena:orb-open-shell', (e, { event } = {}) => {
+// 대화 이동은 오브의 별도 대화를 기존 이력 선택 경로로 연다. 알림 재열기({})는 창만 올린다.
+ipcMain.on('athena:orb-open-shell', (e, { event, openConversation } = {}) => {
   revealShell({ focus: true });
   if (event && typeof event === 'object') {
     sendLiveCanvasResult({ status: 'success', envelope: routineEventToFactsEnvelope(event) });
+  } else if (openConversation === true && orbConversationId && shellWin && !shellWin.isDestroyed()) {
+    shellWin.webContents.send('athena:conversation-open-requested', { conversationId: orbConversationId });
   }
 });
 
@@ -6596,10 +6597,9 @@ ipcMain.handle('athena:orb-chat-submit', async (e, payload = {}) => {
     cardContext: payload.cardContext && typeof payload.cardContext === 'object'
       ? payload.cardContext : null,
   });
-  // 오브 대화는 이력에 별도 행으로 남는다(세션·이력 저장은 runLiveQuery가 끝냈다). 셸이 지금 그
-  // 대화를 보고 있을 때만 DOM 표시를 뒤늦게 채운다 — 다른 대화를 보고 있으면 섞지 않는다.
-  if (shellWin && !shellWin.isDestroyed() && historyConversationId() === orbId) {
-    shellWin.webContents.send('athena:orb-turn-committed', { query, result });
+  // The shell refreshes this conversation or invalidates its cached pane after the saved turn settles.
+  if (shellWin && !shellWin.isDestroyed()) {
+    shellWin.webContents.send('athena:orb-turn-committed', { conversationId: orbId });
   }
   return result;
 });

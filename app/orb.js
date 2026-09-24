@@ -2957,7 +2957,7 @@
   $esc.addEventListener('click', () => abortChat());
   // 대화 이어짐(board-34 A→B) — 셸을 앞으로 가져온다, 새 방을 열지 않는다.
   $chatGo.addEventListener('click', () => {
-    window.athena.send('athena:orb-open-shell', {});
+    window.athena.send('athena:orb-open-shell', { openConversation: true });
   });
 
   // Esc: 답변을 기다리는 중이면 중단, 아니면 접는다(오브에는 닫을 모드가

@@ -185,6 +185,7 @@ let remoteQueryBusy = false;
 // 클로저는 자기 대화의 기록(turnRecordFor)만 보고, 화면 반영은 자기 대화가 보일 때만 한다.
 let displayedConversationId = null;
 let switchingConversation = false;
+let pendingOrbConversationRefresh = null;
 let conversationSelectionRevision = 0;
 const turnRecords = new Map(); // conversationId -> { conversationId, token, state, progressEl }
 // 화면에서 내려간 대화의 말풍선 DOM — 갈아탈 때 통째로 떼어 보관하고 돌아오면 다시 붙인다.
@@ -215,6 +216,10 @@ function paneRootFor(conversationId) {
 function setTurnState(rec, next) {
   rec.state = next;
   if (isDisplayedConversation(rec.conversationId)) state = next;
+  if (next === 'idle' && pendingOrbConversationRefresh === rec.conversationId) {
+    pendingOrbConversationRefresh = null;
+    void Promise.resolve().then(() => refreshOrbConversation(rec.conversationId));
+  }
 }
 function setTurnProgress(rec, el) {
   rec.progressEl = el;
@@ -2592,6 +2597,11 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
     return true;
   } finally {
     switchingConversation = false;
+    if (pendingOrbConversationRefresh) {
+      const pendingId = pendingOrbConversationRefresh;
+      pendingOrbConversationRefresh = null;
+      void refreshOrbConversation(pendingId);
+    }
     if (displayedConversationId === null) void hydrateInitialConversation();
   }
 });
@@ -3853,47 +3863,47 @@ window.athena.on('athena:routine-missed', ({ routines } = {}) => {
   for (const r of routines) renderMissedScheduleCard(r);
 });
 
-// ---------- 오브에서 오간 턴 반영(2026-08-26 board-33/34) ----------
-// 셸이 숨겨진 동안 오브 대화 모드가 돌린 턴은 chat.js가 그 순간에는 그릴 수
-// 없었다(창이 안 보였으니까) — main이 턴이 끝난 뒤 늦게 알려주면 여기서
-// $history에 채워 넣는다. "대화창으로 가기 → 메인 방 그대로 이어진다"(board-34)의
-// 시각적 절반 — 세션·이력 저장은 runLiveQuery가 이미 끝냈고, 이 핸들러는 DOM
-// 표시만 뒤늦게 맞춘다. 진행 중이던 셸 자신의 턴과 순서가 꼬이지 않게 idle일
-// 때만 붙인다(원리상 겹칠 수 없다 — 셸이 숨어야 오브가 말할 수 있으므로).
-window.athena.on('athena:orb-turn-committed', ({ query, result } = {}) => {
-  if (state !== 'idle' || !query) return;
-  const qLine = document.createElement('div');
-  qLine.className = 'turn';
-  const qText = document.createElement('div');
-  qText.className = 'turn-q';
-  qText.textContent = query;
-  qLine.appendChild(qText);
-  $history.appendChild(qLine);
-
-  const aLine = document.createElement('div');
-  aLine.className = 'turn';
-  if (result && !result.ok) {
-    renderFailureBubble(aLine, (result && result.error) || '알 수 없는 오류');
-  } else {
-    const aText = document.createElement('div');
-    aText.className = 'turn-a';
-    window.AthenaLib.Markdown.render(aText, (result && result.answerText) || '완료 — 답변 텍스트 없음');
-    aLine.appendChild(aText);
+// Orb completion reloads the saved message path instead of duplicating a restored partial turn.
+async function refreshOrbConversation(conversationId) {
+  if (!conversationId) return;
+  if (switchingConversation) {
+    pendingOrbConversationRefresh = conversationId;
+    return;
   }
-
-  const meta = document.createElement('div');
-  meta.className = 'turn-meta';
-  const canvasTypes = (result && result.canvasTypes) || [];
-  for (const t of canvasTypes) {
-    const chip = document.createElement('span');
-    chip.className = 'chip';
-    chip.textContent = canvasTypeLabel(t);
-    meta.appendChild(chip);
+  const localTurn = turnRecords.get(conversationId);
+  if (localTurn && localTurn.state !== 'idle') {
+    pendingOrbConversationRefresh = conversationId;
+    return;
   }
-  aLine.appendChild(meta);
-
-  $history.appendChild(aLine);
+  if (displayedConversationId !== conversationId) {
+    conversationPanes.delete(conversationId);
+    return;
+  }
+  if (state !== 'idle') {
+    pendingOrbConversationRefresh = conversationId;
+    return;
+  }
+  const turnToken = abortToken;
+  const revision = conversationSelectionRevision;
+  const snapshot = await window.athena.invoke('athena:session-load', { id: conversationId }).catch(() => null);
+  if (switchingConversation || displayedConversationId !== conversationId || revision !== conversationSelectionRevision) {
+    void refreshOrbConversation(conversationId);
+    return;
+  }
+  if (state !== 'idle' || turnToken !== abortToken) {
+    if (state === 'idle') void refreshOrbConversation(conversationId);
+    else pendingOrbConversationRefresh = conversationId;
+    return;
+  }
+  const snapshots = window.AthenaLib && window.AthenaLib.SessionSnapshot;
+  if (!snapshot || !snapshots) return;
+  const messages = snapshots.messagePath(snapshot.messages, snapshot.currentId);
+  while ($history.firstChild) $history.removeChild($history.firstChild);
+  for (const message of messages) $history.appendChild(pastMessageTurn(message));
   scrollAfterRender();
+}
+window.athena.on('athena:orb-turn-committed', ({ conversationId } = {}) => {
+  void refreshOrbConversation(conversationId);
 });
 
 // ---------- 루틴 승인 카드 (P3, 2026-08-19) ----------

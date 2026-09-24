@@ -1837,6 +1837,11 @@
   setInterval(loadAccount, 30000);
 
   if (window.athena && typeof window.athena.on === 'function') {
+    window.athena.on('athena:conversation-open-requested', async ({ conversationId } = {}) => {
+      if (!conversationId) return;
+      await selectConversation(conversationId);
+      await loadConversations();
+    });
     window.athena.on('athena:routine-event', handleRoutineEvent);
     window.athena.on('athena:session-run-state', handleSessionRunState);
     window.athena.on('athena:auth-token-changed', () => loadAccount());
