@@ -6708,45 +6708,27 @@ ipcMain.handle('athena:brain-conversations-count', async () => {
   return { ok: true, conversations: conversations.length };
 });
 
-// Paper 보드 32 「이력 내보내기」 — 로컬에 남은 대화를 파일 하나로 꺼낸다. 사본을
-// 따로 만들지 않고 브레인이 이미 소유한 원장을 그대로 읽는다(수집 경로 신설 0건).
-// 저장 위치는 사람이 고른다 — 앱이 조용히 어딘가에 떨구지 않는다.
+// Export local session transcripts and legacy Brain records in separate sections.
 ipcMain.handle('athena:history-export', async () => {
-  const listed = await fetchBrainJson('/api/v1/brain/conversations', {
-    params: { limit: BRAIN_HISTORY_PAGE_LIMIT },
+  const exported = await require('./lib/main/history-export').collectHistoryExport({
+    bridge: getSessionBridge(), fetchBrainJson, limit: BRAIN_HISTORY_PAGE_LIMIT,
   });
-  if (!listed.ok) return { ok: false, error: listed.error };
-  const summaries = (listed.body && listed.body.conversations) || [];
-  const conversations = [];
-  let messages = 0;
-  // 상한을 넘긴 이력은 조용히 사라지면 안 된다 — 이 버튼 바로 옆이 되돌릴 수 없는
-  // 「전체 삭제」라, 잘렸다는 사실을 카드가 말해야 내보내고 지운 사람이 잃지 않는다.
-  let truncated = summaries.length >= BRAIN_HISTORY_PAGE_LIMIT;
-  for (const summary of summaries) {
-    const chats = await fetchBrainJson('/api/v1/brain/chats', {
-      params: { conversation_id: summary.conversation_id, limit: BRAIN_HISTORY_PAGE_LIMIT },
-    });
-    if (!chats.ok) return { ok: false, error: chats.error };
-    const stored = (chats.body && chats.body.messages) || [];
-    if (stored.length < summary.message_count) truncated = true;
-    messages += stored.length;
-    conversations.push({ ...summary, messages: stored });
+  if (!exported.counts.uniqueConversations && exported.partial) {
+    return { ok: false, error: '내보낼 대화를 읽지 못했습니다. 저장소 연결을 확인해 주세요.' };
   }
-  const exportedAt = new Date().toISOString();
   const picked = await dialog.showSaveDialog(shellWin, {
     title: '대화 이력 내보내기',
-    defaultPath: path.join(app.getPath('downloads'), `athena-history-${exportedAt.slice(0, 10)}.json`),
+    defaultPath: path.join(app.getPath('downloads'), `athena-history-${exported.exportedAt.slice(0, 10)}.json`),
     filters: [{ name: 'JSON', extensions: ['json'] }],
   });
   if (picked.canceled || !picked.filePath) return { ok: true, canceled: true };
   try {
-    await fs.promises.writeFile(
-      picked.filePath, JSON.stringify({ exportedAt, conversations }, null, 2), 'utf-8',
-    );
+    await fs.promises.writeFile(picked.filePath, JSON.stringify(exported, null, 2), 'utf-8');
   } catch (err) {
     return { ok: false, error: `파일을 쓰지 못했습니다 — ${String((err && err.message) || err)}` };
   }
-  return { ok: true, path: picked.filePath, conversations: conversations.length, messages, truncated };
+  return { ok: true, path: picked.filePath, ...exported.counts, partial: exported.partial,
+    localStatus: exported.sources.local.status, brainStatus: exported.sources.brain.status };
 });
 
 // 캔버스 빈 상태(보드 05)의 "확인이 필요한 것 N건" 힌트 — 되물을 것들(불확실하다고

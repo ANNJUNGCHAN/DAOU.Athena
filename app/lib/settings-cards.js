@@ -1669,7 +1669,7 @@ function buildHistoryCardModel({ profileEntries, conversationCount, exposeToMode
       ? [['성향 반영', exposeToModel ? '켜짐 · 보유 종목·수량과 대화 원문 전달' : '꺼짐']]
       : [],
     storageRows: Number.isInteger(conversationCount) && conversationCount >= 0
-      ? [['보관 중', `대화 ${conversationCount}건`]]
+      ? [['브레인 보관', `대화 ${conversationCount}건`]]
       : [],
   };
 }
@@ -1700,7 +1700,7 @@ function refreshHistoryCard(card, head, body) {
 
   head.appendChild(row('uk-settings-title', [
     el('span', 'uk-settings-name', '성향·이력'),
-    el('span', 'uk-settings-count', '로컬 보관 · 언제든 내보내기 가능'),
+    el('span', 'uk-settings-count', '대화 내보내기 · 브레인 관리'),
   ]));
   const actions = row('uk-settings-actions', []);
   actions.appendChild(cardCloseButton(card));
@@ -1714,14 +1714,14 @@ function refreshHistoryCard(card, head, body) {
 
   const deleteRow = row('uk-btn-row-end', []);
   const exportBtn = button('ghost', '이력 내보내기', { onClick: () => onExportClick() });
-  const deleteBtn = button('ghost', '전체 삭제', { onClick: () => onDeleteClick() });
+  const deleteBtn = button('ghost', '브레인 기록 삭제', { onClick: () => onDeleteClick() });
   deleteBtn.classList.add('is-danger');
   deleteRow.appendChild(exportBtn);
   deleteRow.appendChild(deleteBtn);
   body.appendChild(deleteRow);
 
   const foot = el('div', 'uk-settings-note');
-  foot.appendChild(el('div', null, '삭제는 확인 단계를 한 번 더 거치며 되돌릴 수 없습니다'));
+  foot.appendChild(el('div', null, '내보내기는 이 앱의 로컬 대화와 브레인 이력을 출처별로 담습니다. 삭제는 브레인 기록·성향에만 적용되며 사이드바 대화는 남습니다.'));
   body.appendChild(foot);
 
   fillHistorySections();
@@ -1779,17 +1779,18 @@ function refreshHistoryCard(card, head, body) {
     }
     if (res.canceled) return;
     const note = el('div', 'uk-settings-note');
-    note.appendChild(el('div', null, `내보내기 완료 — 대화 ${res.conversations}건 · 메시지 ${res.messages}건`));
+    note.appendChild(el('div', null, `내보내기 ${res.partial ? '일부 완료' : '완료'} — 대화 ${res.uniqueConversations}건(출처 간 동일 ID 제외)`));
+    note.appendChild(el('div', null, `로컬 대화 ${res.localConversations}건 · 메시지 ${res.localMessages}건 / 브레인 대화 ${res.brainConversations}건 · 메시지 ${res.brainMessages}건`));
     note.appendChild(el('div', null, res.path));
     // 바로 옆이 되돌릴 수 없는 「전체 삭제」다 — 다 담기지 않았다면 지우기 전에 말한다.
-    if (res.truncated) note.appendChild(el('div', null, '이력이 많아 일부는 담기지 않았습니다'));
+    if (res.partial) note.appendChild(el('div', null, `일부 이력을 담지 못했습니다 — 로컬: ${res.localStatus === 'complete' ? '완료' : '불완전'}, 브레인: ${res.brainStatus === 'complete' ? '완료' : '불완전'}. 파일의 출처별 상태를 확인해 주세요.`));
     resultBox.appendChild(note);
   }
 
   function onDeleteClick() {
     clear(resultBox);
     const { bar, cancelBtn, confirmBtn } = deleteConfirmBar(
-      '채팅 이력과 투자 성향을 전부 삭제할까요? 되돌릴 수 없습니다.',
+      '브레인에 수집된 대화 이력과 투자 성향을 삭제할까요? 사이드바의 로컬 대화는 남으며, 삭제는 되돌릴 수 없습니다.',
     );
     resultBox.appendChild(bar);
     deleteBtn.disabled = true;

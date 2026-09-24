@@ -164,14 +164,14 @@ class SessionBridge {
     return this.#debounce('viewport', sessionId, viewport);
   }
 
-  flush(sessionId) {
+  flush(sessionId, { strict = false } = {}) {
     for (const [key, buf] of [...this.buffers]) {
       if (sessionId && buf.sessionId !== sessionId) continue;
-      this.#journal(key);
+      this.#journal(key, strict);
     }
     for (const [key, entry] of [...this.pending]) {
       if (sessionId && entry.sessionId !== sessionId) continue;
-      this.#commit(key);
+      this.#commit(key, strict);
     }
   }
 
@@ -232,19 +232,19 @@ class SessionBridge {
     return buf;
   }
 
-  #journal(key) {
+  #journal(key, strict = false) {
     const buf = this.buffers.get(key);
     if (!buf || buf.bytes === 0) return;
     if (buf.timer) {
       this.clearTimer(buf.timer);
       buf.timer = null;
     }
-    buf.bytes = 0;
     // 누적 전체를 같은 행에 다시 쓴다. 프로세스가 죽어도 마지막 저널까지는 남는다.
     this.#guard(() => this.store.updateMessage(buf.sessionId, buf.messageId, {
       text: buf.text,
       thinking: buf.thinking,
-    }));
+    }), strict);
+    buf.bytes = 0;
   }
 
   #debounce(kind, sessionId, payload) {
@@ -269,11 +269,10 @@ class SessionBridge {
     return true;
   }
 
-  #commit(key) {
+  #commit(key, strict = false) {
     const entry = this.pending.get(key);
     if (!entry) return;
     if (entry.timer) this.clearTimer(entry.timer);
-    this.pending.delete(key);
     this.#guard(() => {
       if (entry.kind === 'cards') return this.store.putCards(entry.sessionId, entry.payload);
       if (entry.kind === 'workspace') {
@@ -282,7 +281,8 @@ class SessionBridge {
         return result;
       }
       return this.store.saveViewport(entry.sessionId, entry.payload);
-    });
+    }, strict);
+    this.pending.delete(key);
   }
 
   #nowMs() {
@@ -290,10 +290,11 @@ class SessionBridge {
     return Number.isFinite(ms) ? ms : Date.now();
   }
 
-  #guard(run) {
+  #guard(run, strict = false) {
     try {
       return run();
     } catch (err) {
+      if (strict) throw err;
       // 저장 실패가 턴을 죽이면 안 되지만, 조용히 잃어서도 안 된다.
       this.log('session-bridge', err);
       return null;
