@@ -202,6 +202,7 @@ function createLiveMap(deps) {
   let signature = null;
   let host = null;
   let wheelHandler = null; // Ctrl+휠 가로채기 — destroy에서 반드시 떼야 누수가 없다.
+  let fitTimer = null;
 
   // 지금 **보이는 영역**을 그래프 좌표로 바꾼다.
   //
@@ -278,10 +279,18 @@ function createLiveMap(deps) {
     const hiddenPairs = (options && Array.isArray(options.hiddenPairs)) ? options.hiddenPairs : [];
     const certaintyById = (options && options.certaintyById instanceof Map) ? options.certaintyById : null;
     const next = signatureOf(payload, hiddenPairs, certaintyById);
-    if (network && next === signature) return true; // 같은 그래프 — 배치를 지키고 아무것도 안 한다.
-    signature = next;
+    if (network && next === signature) {
+      // 오류·빈 결과 안내가 호스트를 떼었어도 기존 배치를 복구한다.
+      if (host.parentNode !== container) {
+        while (container.firstChild) container.removeChild(container.firstChild);
+        container.appendChild(host);
+      }
+      return true;
+    }
 
     destroy();
+    signature = next;
+    while (container.firstChild) container.removeChild(container.firstChild);
     host = document.createElement('div');
     host.className = 'graph-live-map';
     container.appendChild(host);
@@ -321,13 +330,16 @@ function createLiveMap(deps) {
     // 사용자가 맞춰 둔 줌을 뺏는 것이라 하지 않는다 — Neo4j도 프레임 우하단의
     // 맞춤 버튼을 사람이 눌러야 다시 맞춘다.
     let fitted = false;
+    const fittingNetwork = network;
     const fitOnce = () => {
-      if (fitted || !network) return;
+      if (fitted || network !== fittingNetwork) return;
       fitted = true;
-      network.fit({ animation: { duration: 600 } });
+      clearTimeout(fitTimer);
+      fitTimer = null;
+      fittingNetwork.fit({ animation: { duration: 600 } });
     };
     network.on('stabilized', fitOnce);
-    setTimeout(fitOnce, 3500);
+    fitTimer = setTimeout(fitOnce, 3500);
 
     // 끌어다 놓은 노드는 그 자리에 둔다.
     //
@@ -405,6 +417,8 @@ function createLiveMap(deps) {
   }
 
   function destroy() {
+    clearTimeout(fitTimer);
+    fitTimer = null;
     if (host && wheelHandler) host.removeEventListener('wheel', wheelHandler, { capture: true });
     wheelHandler = null;
     if (network) { network.destroy(); network = null; }

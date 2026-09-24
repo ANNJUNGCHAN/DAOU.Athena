@@ -1360,9 +1360,7 @@ function createGraphModeController(deps) {
       renderFilteredEmpty();
       renderMapLegend(false);
     } else if (liveActive()) {
-      while (elements.graphBody && elements.graphBody.firstChild) {
-        elements.graphBody.removeChild(elements.graphBody.firstChild);
-      }
+      // 라이브 렌더러가 호스트를 소유한다. 같은 그래프면 캔버스와 배치를 유지한다.
       // 핑크 점선은 군집을 넘는 연결 전부가 아니라 요약의 “숨은 연관” 카드와
       // **같은 상위 3쌍**에만 붙는다(보드 2QCN-2 › 2QF8-2) — 그 셋을 고르는
       // topSurprising은 패널·관계 목록이 이미 쓰는 것과 같은 함수다.
