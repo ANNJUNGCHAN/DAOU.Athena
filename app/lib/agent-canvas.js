@@ -80,12 +80,9 @@ const ControlTurn = isNode
 // verdict가 없어 만들지 않는다(AC10). 통계 3타일("평균"(5단계)·"발화→열람"·
 // "이어진 대화", F-stage5b-FE)은 전부 라이브다 — 지표 정의가 끝내 확정되지
 // 않은 타일 1개는 3차 라운드(R2)에서 제거됐다(agent-mode-round3-plan.md
-// 1단계). "오늘 07:30 산출물" 카드는 ledger 스키마에
-// 근거가 없다(컬럼이 식별자·숫자·판정 사유뿐, ledger.py 머리말 참고) — 그래도
-// 생략하지 않는다: 사용자 확정 규칙1("Paper에 있는 요소는 전부 구현")의
-// 합의된 처리는 fixture+data-source="fixture" 표기이지 생략이 아니다(팀 리드
-// 정정, 2026-08-27). 산출물 카드의 버튼 2종("캔버스에서 열기"·"채팅으로")은
-// 뒷받침 데이터가 없어 비활성으로 둔다(기능 없는 버튼을 활성으로 두지 않는다, P3).
+// 1단계). 산출물은 runs의 저장된 briefing_content를 사용한다. "채팅으로"는
+// 저장 본문을 다시 표시하고 후속 질문의 자료로 붙인다. 원래 캔버스 카드의
+// 식별자·봉투가 없으므로 원 위치 복원은 지원하지 않는다고 명시한다.
 const VERDICT_ICON = {
   fired: { glyph: '●', colorVar: '--color-ok' },
   near: { glyph: '◐', colorVar: '--color-warn' },
@@ -365,6 +362,7 @@ function createAgentCanvas(deps) {
     onOpenGraph,
     onOpenInChat,
     onOpenDraft,
+    onOpenBriefing,
     onEditInChat,
     // 코드 알람(Step 7) — 상세 1회 조회, 취소, 승인, 초안 검사 1회. 넷 다 사람
     // 클릭 전용 경로이고 canvas.js가 기존 routine-* 채널과 같은 모양으로 잇는다.
@@ -1033,17 +1031,26 @@ function createAgentCanvas(deps) {
     }
     historyOutputCard.appendChild(bodyRow);
     const outputActions = el('div', 'agent-history-output-actions');
-    for (const label of ['캔버스에서 열기', '채팅으로']) {
-      const btn = el('button', 'agent-history-output-btn');
-      btn.type = 'button';
-      btn.textContent = label;
-      // 재기동 후에는 원 캔버스 카드·채팅 턴 DOM이 사라져 있어 "열기"를 안정적으로
-      // 구현할 방법이 없다 — 죽은 버튼을 활성으로 바꾸지 않는다(P3, ADR 후속 기록).
-      btn.disabled = true;
-      btn.title = '재기동 후 원 위치를 열 방법이 없어 아직 지원하지 않습니다';
-      outputActions.appendChild(btn);
-    }
+    const openChat = el('button', 'agent-history-output-btn');
+    openChat.type = 'button';
+    openChat.textContent = '채팅으로';
+    openChat.disabled = typeof onOpenBriefing !== 'function';
+    const savedOutput = {
+      routineId: latest.routine_id || (historyItem && historyItem.id),
+      firedAt: latest.ts, title: latest.briefing_title || '브리핑',
+      content: latest.briefing_content, truncated: latest.truncated === true,
+    };
+    openChat.addEventListener('click', () => {
+      const result = onOpenBriefing(savedOutput);
+      outputNotice.textContent = result && result.ok
+        ? '저장된 본문을 채팅에 열었습니다. 입력창에 질문을 적고 보내세요.'
+        : (result && result.error) || '채팅을 준비하는 중입니다. 다시 시도해 주세요.';
+    });
+    outputActions.appendChild(openChat);
+    const outputNotice = el('div', 'agent-history-output-item-sub');
+    outputNotice.textContent = '저장된 본문으로 대화를 이어갑니다. 원래 캔버스 카드 복원은 지원하지 않습니다.';
     historyOutputCard.appendChild(outputActions);
+    historyOutputCard.appendChild(outputNotice);
   }
 
   const historyStatsCaption = el('div', 'agent-panel-caption');

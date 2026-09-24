@@ -38,6 +38,7 @@ test('question submit reports the current card stack before invoking the live qu
     window,
     cardComponentTarget: { getContext: () => ({ selectedCardId: 'card-fresh' }), clearSelection() {} },
     text: '이 수치는 왜 바뀌었어?',
+    userText: '이 수치는 왜 바뀌었어?',
     prefs: { autoExpandCanvas: true },
     cid: 'conversation-1',
     clientSubmitId: null,

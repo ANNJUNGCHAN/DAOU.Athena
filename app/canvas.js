@@ -5275,6 +5275,9 @@ const agentCanvas = window.AthenaLib.AgentCanvas.createAgentCanvas({
   onOpenDraft: (id) => window.AthenaRoutineDrafts
     ? window.AthenaRoutineDrafts.openSaved(id)
     : { ok: false, error: '채팅을 준비하는 중입니다. 다시 시도해 주세요.' },
+  onOpenBriefing: (output) => window.AthenaSavedBriefings
+    ? window.AthenaSavedBriefings.open(output)
+    : { ok: false, error: '채팅을 준비하는 중입니다. 다시 시도해 주세요.' },
   // F-fix1 — 39번 상세 패널 "채팅에서 열기 ↗"(본편 이월 갭). 알림 방이 있으면
   // sidebar.js의 selectNotifyRoom과 완전히 같은 경로(ack·opened 계측 포함)를
   // 그 다리로 타고, 없으면 채팅 입력 포커스로 폴백한다(seedChatInput을 인자
