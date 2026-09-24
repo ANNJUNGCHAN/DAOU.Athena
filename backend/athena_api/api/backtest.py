@@ -344,6 +344,16 @@ async def start_run(request: Request, body: dict[str, Any]) -> JSONResponse:
     project_id = body.get("project_id")
     if project_id is not None and not isinstance(project_id, str):
         raise HTTPException(status_code=422, detail="project_id는 문자열이어야 한다")
+    registered = None
+    registration_id = body.get("user_strategy_id")
+    if registration_id is not None:
+        registered = next((entry for entry in _user_strategies(request).list_all()
+                           if entry.id == registration_id), None)
+        if registered is None:
+            raise HTTPException(status_code=404, detail="등록된 전략이 없습니다")
+        if (not code_source or project_id != registered.project_id
+                or body.get("strategy_path") != registered.path):
+            raise HTTPException(status_code=422, detail="등록된 전략의 프로젝트와 파일이 다릅니다")
 
     # 코드 경로에서는 폼의 진입/청산 조건이 읽히지 않는다 — 그 칸이 비었다고 실행을
     # 막으면 쓰지도 않는 규칙이 코드 전략을 가둔다(2026-09-02 실측). 완화는 조건 개수
@@ -421,19 +431,26 @@ async def start_run(request: Request, body: dict[str, Any]) -> JSONResponse:
             )
 
     now = datetime.now(UTC)
-    # POST /runs는 {yaml, params, source}만 받는다 — 저장된 전략 CRUD(§6.6의 strategies 라우트군)는
-    # 이 스코프 밖이다. 그래도 bt_run.strategy_version_id는 FK(NOT NULL)라 매 실행마다
-    # 익명 전략+버전 한 쌍을 즉석에서 만든다 — 재현성의 축(store.py 문서)은 지킨다.
-    strategy_id = str(uuid4())
+    # Registered files retain their version identity across app restarts. Other runs
+    # remain anonymous; do not infer ownership from a matching name or source.
+    strategy_id = registered.backend_strategy_id if registered else str(uuid4())
     version_id = str(uuid4())
     # 재현성의 축은 저장된 소스다 — 코드 경로면 실제로 돌린 파이썬을 버전으로 남긴다.
     # yaml만 남기면 나중에 그 실행을 다시 만들 수 없다(store.py 계약).
     kind = "python" if code_source else "yaml"
-    await store.create_strategy(strategy_id, spec.metadata.name, kind, created_at=now)
-    await store.add_version(
-        version_id, strategy_id, 1, code_source or yaml_text,
-        origin="human" if code_source else "form", created_at=now, active=True,
-    )
+    if registered:
+        try:
+            await store.add_registered_run_version(
+                strategy_id, version_id, spec.metadata.name, code_source, created_at=now,
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from None
+    else:
+        await store.create_strategy(strategy_id, spec.metadata.name, kind, created_at=now)
+        await store.add_version(
+            version_id, strategy_id, 1, code_source or yaml_text,
+            origin="human" if code_source else "form", created_at=now, active=True,
+        )
 
     run_id = str(uuid4())
     params_json = json.dumps(params or {}, ensure_ascii=False)
@@ -1455,6 +1472,9 @@ async def list_user_strategies_route(request: Request) -> dict[str, Any]:
     registry = _user_strategies(request)
     items: list[dict[str, Any]] = []
     for entry in registry.list_all():
+        stored = await _store(request).strategy(entry.backend_strategy_id)
+        active_version_id = (await _store(request).active_version_id(entry.backend_strategy_id)
+                             if stored is not None else None)
         root = _project_root(entry.project_id, request)
         target = None if root is None else root / entry.path
         exists = target is not None and target.is_file()
@@ -1480,6 +1500,8 @@ async def list_user_strategies_route(request: Request) -> dict[str, Any]:
                 "params": params,
                 "param_specs": param_specs,
                 "params_error": params_error,
+                "backend_strategy_id": entry.backend_strategy_id if stored is not None else None,
+                "active_version_id": active_version_id,
             }
         )
     return {"strategies": items}

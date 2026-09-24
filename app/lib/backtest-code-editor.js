@@ -367,6 +367,7 @@ function createCodeEditor(options) {
 
   // Tab이 포커스를 옮기면 파이썬 편집기로 쓸 수 없다 — 4칸 들여쓰기로 가로챈다.
   textarea.addEventListener('keydown', (event) => {
+    if (textarea.readOnly) return;
     if (event.key !== 'Tab') return;
     event.preventDefault();
     const start = textarea.selectionStart;

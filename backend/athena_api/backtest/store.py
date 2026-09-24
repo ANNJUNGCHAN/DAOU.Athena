@@ -632,6 +632,43 @@ class BacktestStore:
 
     # ── 전략 버전 ───────────────────────────────────────────────────────────
 
+    async def add_registered_run_version(
+        self, strategy_id: str, version_id: str, name: str, source: str, *, created_at: datetime,
+    ) -> str:
+        """Create the registered strategy and allocate its next run version atomically."""
+        def write() -> str:
+            connection = self._require()
+            with atomic(connection, _BACKTEST_WRITE):
+                connection.execute(
+                    "INSERT INTO bt_strategy(id, name, kind, created_at) VALUES(?,?,?,?)"
+                    " ON CONFLICT(id) DO NOTHING",
+                    (strategy_id, name, "python", _ts(created_at)),
+                )
+                row = connection.execute(
+                    "SELECT kind FROM bt_strategy WHERE id = ?", (strategy_id,),
+                ).fetchone()
+                if row["kind"] != "python":
+                    raise ValueError("등록된 전략의 저장 형식이 일치하지 않습니다")
+                version = connection.execute(
+                    "SELECT COALESCE(MAX(version), 0) + 1 FROM bt_strategy_version"
+                    " WHERE strategy_id = ?", (strategy_id,),
+                ).fetchone()[0]
+                connection.execute(
+                    "UPDATE bt_strategy_version SET active = 0"
+                    " WHERE strategy_id = ? AND active = 1",
+                    (strategy_id,),
+                )
+                connection.execute(
+                    "INSERT INTO bt_strategy_version"
+                    "(id, strategy_id, version, source, origin, created_at, active)"
+                    " VALUES(?,?,?,?,?,?,1)",
+                    (version_id, strategy_id, version, source, "human", _ts(created_at)),
+                )
+                if _active_version_id(connection, strategy_id) != version_id:
+                    raise RuntimeError("registered run version activation failed")
+            return version_id
+        return await self._owner.run(write)
+
     async def add_version(
         self,
         version_id: str,

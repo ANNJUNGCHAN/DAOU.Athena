@@ -4836,7 +4836,7 @@ const backtestCanvas = window.AthenaLib.BacktestCanvas.createBacktestCanvas({
   },
   // 409(캐시 부족)는 실패가 아니라 승인 화면 전환 신호다(backtest-bridge.js
   // 머리말과 같은 원칙) — blocked로 정규화해 돌려주고, 그 외 실패만 던진다.
-  run: async ({ yaml, params, allow_partial, source, project_id } = {}) => {
+  run: async ({ yaml, params, allow_partial, source, project_id, user_strategy_id, strategy_path } = {}) => {
     const body = { yaml };
     if (params !== undefined) body.params = params;
     // 코드 경로 실행 — 캔버스가 실을 때만 붙는다. 이걸 빠뜨리면 백엔드는 source가
@@ -4845,6 +4845,8 @@ const backtestCanvas = window.AthenaLib.BacktestCanvas.createBacktestCanvas({
     // 어느 폴더의 코드인가 — 백엔드가 그 폴더의 가상환경으로 돌린다(코드 경로에서만
     // 읽힌다). 빠뜨리면 사용자가 자기 폴더에 깐 패키지를 코드가 import하지 못한다.
     if (project_id) body.project_id = project_id;
+    if (user_strategy_id !== undefined) body.user_strategy_id = user_strategy_id;
+    if (strategy_path !== undefined) body.strategy_path = strategy_path;
     // 보유 구간만으로 실행(Paper 보드 04) — 휴장일을 from으로 준 경우의 영구 409
     // (계획서 §11-9)에서 빠져나오는 유일한 출구다. 사람이 그 버튼을 눌렀을 때만 붙는다.
     if (allow_partial) body.allow_partial = true;

@@ -1,4 +1,7 @@
+import asyncio
 import json
+import sqlite3
+from datetime import UTC, datetime
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -10,14 +13,15 @@ from athena_api.api.projects import TECHNIQUE_SEED_SOURCE
 from athena_api.backtest import flow, optimize, presets
 from athena_api.backtest.engine import DEFAULT_INITIAL_CASH, run_backtest
 from athena_api.backtest.metrics import compute_metrics
-from athena_api.backtest.runner import _align_signals, _run_code_signals
+from athena_api.backtest.runner import BacktestRunner, _align_signals, _run_code_signals
 from athena_api.backtest.schema import from_kis_yaml
-from athena_api.backtest.store import Candle, Coverage
+from athena_api.backtest.store import BacktestStore, Candle, Coverage
+from athena_api.brain.db import SqliteOwner
 from athena_api.projects.store import ProjectStore
 
 
 @pytest.mark.asyncio
-async def test_registration_and_listing_use_the_app_project_registry(tmp_path):
+async def test_registration_and_listing_use_the_app_project_registry(tmp_path, database):
     registry_root = tmp_path / "app-projects"
     folder = tmp_path / "technique"
     folder.mkdir()
@@ -27,7 +31,7 @@ async def test_registration_and_listing_use_the_app_project_registry(tmp_path):
         settings=SimpleNamespace(
             projects_root=registry_root, backtest_db_path=tmp_path / "backtest.sqlite3"
         ),
-        backtest_store=object(),
+        backtest_store=database[1],
     )
     request = SimpleNamespace(app=SimpleNamespace(state=state))
     with patch(
@@ -41,6 +45,16 @@ async def test_registration_and_listing_use_the_app_project_registry(tmp_path):
         listed = await backtest.list_user_strategies_route(request)
         assert listed["strategies"][0]["exists"] is True
         assert backtest._project_root("missing", request) is None
+
+
+@pytest.fixture
+async def database(tmp_path):
+    owner = SqliteOwner(tmp_path / "backtest.sqlite3")
+    await owner.open()
+    store = BacktestStore(owner)
+    await store.open()
+    yield owner, store
+    await owner.close()
 
 
 SOURCE = '''PARAMS = {
@@ -91,7 +105,7 @@ def test_declared_grid_has_all_thirty_valid_combinations():
 
 
 @pytest.mark.asyncio
-async def test_registered_api_preserves_ranges_from_current_file(tmp_path):
+async def test_registered_api_preserves_ranges_from_current_file(tmp_path, database):
     folder = tmp_path / "technique"
     folder.mkdir()
     strategy = folder / "strategy.py"
@@ -99,6 +113,7 @@ async def test_registered_api_preserves_ranges_from_current_file(tmp_path):
     projects_root = tmp_path / "registry"
     project = ProjectStore(projects_root).open_external(str(folder))
     req = request()
+    req.app.state.backtest_store = database[1]
     req.app.state.settings = SimpleNamespace(projects_root=projects_root,
                                              backtest_db_path=tmp_path / "bt.sqlite3")
     await backtest.register_user_strategy_route(req, dict(project_id=project.id,
@@ -222,3 +237,97 @@ async def test_large_declared_grid_api_returns_explicit_error_before_sandbox(mon
         ]))
     assert error.value.status_code == 422
     assert "1000" in error.value.detail
+
+
+@pytest.mark.asyncio
+async def test_registered_versions_survive_restart_without_merging_files(tmp_path, database):
+    owner, store = database
+    folder = tmp_path / "registered-folder"
+    folder.mkdir()
+    (folder / "strategy.py").write_text(SOURCE, encoding="utf-8")
+    (folder / "other.py").write_text(SOURCE, encoding="utf-8")
+    settings = SimpleNamespace(projects_root=tmp_path / "projects",
+                               backtest_db_path=tmp_path / "backtest.sqlite3")
+    project = ProjectStore(settings.projects_root).open_external(str(folder))
+    req = SimpleNamespace(app=SimpleNamespace(state=SimpleNamespace(settings=settings,
+        backtest_store=store, backtest_runner=BacktestRunner(store))))
+    first = await backtest.register_user_strategy_route(req, dict(project_id=project.id,
+        path="strategy.py", name="same display name"))
+    other = await backtest.register_user_strategy_route(req, dict(project_id=project.id,
+        path="other.py", name="same display name"))
+    await store.upsert_candles("005930", "day", True, await CachedStore().candles())
+    await store.upsert_coverage("005930", "day", True, first_dt="20260101",
+        last_dt="20260108", fetched_at=datetime.now(UTC), pages=1)
+    body = dict(yaml=yaml_spec(), source=SOURCE, project_id=project.id,
+                user_strategy_id=first["id"], strategy_path="strategy.py")
+    for patch_body in [{"project_id": "different-project"}, {"strategy_path": "other.py"}]:
+        with pytest.raises(HTTPException) as error:
+            await backtest.start_run(req, {**body, **patch_body})
+        assert error.value.status_code == 422
+    assert await store.strategies() == ()
+    concurrent = await asyncio.gather(backtest.start_run(req, body), backtest.start_run(req, body))
+    responses = [json.loads(item.body) for item in concurrent]
+    for item in responses:
+        await req.app.state.backtest_runner.get(item["run_id"]).task
+        assert req.app.state.backtest_runner.get(item["run_id"]).status == "done"
+    response = responses[0]
+    assert response["strategy_id"] == f'registered:{first["id"]}'
+    assert responses[1]["strategy_id"] == response["strategy_id"]
+    assert {v.version for v in await store.versions(response["strategy_id"])} == {1, 2}
+    active_before_restart = await store.active_version_id(response["strategy_id"])
+    anonymous_response = await backtest.start_run(req, dict(yaml=yaml_spec(), source=SOURCE))
+    anonymous = json.loads(anonymous_response.body)
+    await req.app.state.backtest_runner.get(anonymous["run_id"]).task
+    assert anonymous["strategy_id"] != response["strategy_id"]
+    await owner.close()
+    restarted_owner = SqliteOwner(settings.backtest_db_path)
+    await restarted_owner.open()
+    try:
+        restarted_store = BacktestStore(restarted_owner)
+        await restarted_store.open()
+        req.app.state.backtest_store = restarted_store
+        req.app.state.backtest_runner = BacktestRunner(restarted_store)
+        listed = (await backtest.list_user_strategies_route(req))["strategies"]
+        mapped = {item["id"]: item for item in listed}
+        assert mapped[first["id"]]["backend_strategy_id"] == response["strategy_id"]
+        assert mapped[first["id"]]["active_version_id"] == active_before_restart
+        assert mapped[other["id"]]["backend_strategy_id"] is None
+        version_list = await backtest.list_versions_route(req, response["strategy_id"])
+        assert len(version_list["versions"]) == 2
+        failing_source = SOURCE.replace(
+            'return df.assign', 'raise ValueError("synthetic failure")\n    return df.assign',
+        )
+        failed_responses = await asyncio.gather(*[
+            backtest.start_run(req, {**body, "source": failing_source}) for _ in range(2)
+        ])
+        failed_runs = [json.loads(item.body) for item in failed_responses]
+        for failed in failed_runs:
+            await req.app.state.backtest_runner.get(failed["run_id"]).task
+            assert req.app.state.backtest_runner.get(failed["run_id"]).status == "failed"
+        versions = await restarted_store.versions(response["strategy_id"])
+        assert {v.version for v in versions} == {1, 2, 3, 4}
+        assert next(v for v in versions if v.active).id in {r["version_id"] for r in failed_runs}
+        assert sum(v.active for v in versions) == 1
+        assert len(await restarted_store.versions(anonymous["strategy_id"])) == 1
+        assert await restarted_store.strategy(f'registered:{other["id"]}') is None
+    finally:
+        await restarted_owner.close()
+
+
+@pytest.mark.asyncio
+async def test_registered_version_insert_failure_rolls_back_identity_and_activation(database):
+    owner, store = database
+    now = datetime.now(UTC)
+    await store.add_registered_run_version(
+        "registered:existing", "v1", "QA", SOURCE, created_at=now,
+    )
+    await owner.run(lambda: owner.require().execute(
+        "CREATE TRIGGER fail_version BEFORE INSERT ON bt_strategy_version"
+        " BEGIN SELECT RAISE(FAIL, 'synthetic disk failure'); END"
+    ))
+    for strategy_id in ("registered:existing", "registered:new"):
+        with pytest.raises(sqlite3.IntegrityError, match="synthetic disk failure"):
+            await store.add_registered_run_version(strategy_id, "v2", "QA", SOURCE, created_at=now)
+    assert await store.strategy("registered:new") is None
+    assert len(await store.versions("registered:existing")) == 1
+    assert await store.active_version_id("registered:existing") == "v1"

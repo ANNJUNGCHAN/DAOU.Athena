@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import SpecModel from './backtest-spec.js';
+import backtestBridge from './main/backtest-bridge.js';
 
 const source = fs.readFileSync(new URL('./backtest-canvas.js', import.meta.url), 'utf8');
 const declared = {
@@ -34,7 +35,7 @@ function harness() {
 test('registered strategy selection preserves full declared metadata and its exact thirty-point search grid', async () => {
   const h = harness();
   // Run the actual registration-to-spec mapping, not a separately reimplemented mapping.
-  h.context.entry = { name: 'SMA-CROSS-GRID-30', params: { fast: 20, slow: 60 }, param_specs: declared };
+  h.context.entry = { id: 'registered', name: 'SMA-CROSS-GRID-30', params: { fast: 20, slow: 60 }, param_specs: declared };
   h.context.SpecModel = SpecModel;
   h.context.keptTarget = () => ({ symbols: ['005930'], fromDt: '20260101', toDt: '20260108' });
   const start = source.indexOf('    const params = {};', source.indexOf('async function selectUserStrategy'));
@@ -146,4 +147,70 @@ test('the result apply button updates visible sliders and next Python run overri
   await h.context.startRun(false);
   assert.deepEqual(JSON.parse(JSON.stringify(sent.params)), { fast: 15, slow: 40 });
   assert.equal(sent.source, 'saved file signals code');
+  assert.equal(sent.user_strategy_id, 'registered');
+  assert.equal(sent.strategy_path, 'nested/strategy.py');
+});
+
+test('freshly selecting a registered strategy restores persisted version ownership before loading history', async () => {
+  const h = harness();
+  h.context.entry = { id: 'registered', name: 'saved', params: { fast: 20, slow: 60 },
+    param_specs: declared, backend_strategy_id: 'registered:registered', active_version_id: 'v1' };
+  h.context.keptTarget = () => ({});
+  const start = source.indexOf('    const params = {};', source.indexOf('async function selectUserStrategy'));
+  const end = source.indexOf('    presetProject = null;', start);
+  vm.runInContext(source.slice(start, end), h.context);
+  assert.equal(h.context.strategyId, 'registered:registered');
+  assert.equal(h.context.activeVersionId, 'v1');
+  h.context.userStrategies = [h.context.entry];
+  const loaded = [];
+  h.context.deps.versions = async id => { loaded.push(id); return [{ id: 'v1', version: 1 }]; };
+  const loadStart = source.indexOf('  async function loadVersions()');
+  vm.runInContext(source.slice(loadStart, source.indexOf('\n  }', loadStart) + 4), h.context);
+  await h.context.loadVersions();
+  assert.deepEqual(loaded, ['registered:registered']);
+  assert.equal(h.states.at(-1).versions[0].id, 'v1');
+});
+
+test('registered ownership survives the real renderer adapter, main IPC and REST bridge', async () => {
+  const canvasSource = fs.readFileSync(new URL('../canvas.js', import.meta.url), 'utf8');
+  const mainSource = fs.readFileSync(new URL('../main.js', import.meta.url), 'utf8');
+  let handler;
+  const posted = [];
+  const main = vm.createContext({ backtestBridge,
+    backendEndpoint: { waitForBackendUrl: async () => 'http://synthetic-backend' },
+    backendLauncher: { STARTUP_HARD_TIMEOUT_MS: 100 },
+    fetch: async (url, options) => {
+      posted.push({ url, body: JSON.parse(options.body) });
+      return { ok: true, json: async () => ({ run_id: 'run', strategy_id: 'registered:registered', version_id: 'v1' }) };
+    },
+    ipcMain: { handle: (_channel, fn) => { handler = fn; } }, attachSessionJob() {},
+  });
+  const bridgeStart = mainSource.indexOf('async function callBacktestBridge(');
+  const bridgeEnd = mainSource.indexOf('\n}', bridgeStart) + 2;
+  const ipcStart = mainSource.indexOf("ipcMain.handle('athena:backtest-run'");
+  const ipcEnd = mainSource.indexOf('\n});', ipcStart) + 4;
+  vm.runInContext(mainSource.slice(bridgeStart, bridgeEnd) + '\n' + mainSource.slice(ipcStart, ipcEnd), main);
+  const adapter = vm.createContext({
+    window: { athena: { invoke: async (channel, body) => {
+      assert.equal(channel, 'athena:backtest-run');
+      return handler(null, body);
+    } } }, backtestError: () => 'unexpected adapter error',
+  });
+  const start = canvasSource.indexOf('  run: async ({ yaml, params, allow_partial, source, project_id');
+  const end = canvasSource.indexOf('\n  },', start) + 5;
+  const run = vm.runInContext(`({${canvasSource.slice(start, end)}}).run`, adapter);
+  const h = harness();
+  const runStart = source.indexOf('  async function startRun(allowPartial)');
+  vm.runInContext(source.slice(runStart, source.indexOf('  async function confirmBackfill()', runStart)), h.context);
+  h.context.deps.run = run;
+  h.context.pollRun = () => {};
+  await h.context.startRun(false);
+  assert.equal(posted[0].url, 'http://synthetic-backend/api/v1/backtest/runs');
+  assert.equal(posted[0].body.user_strategy_id, 'registered');
+  assert.equal(posted[0].body.strategy_path, 'nested/strategy.py');
+  assert.equal(posted[0].body.project_id, 'owner-project');
+  assert.equal(h.context.strategyId, 'registered:registered');
+  assert.equal(h.context.activeVersionId, 'v1');
+  await run({ yaml: 'yaml-only' });
+  assert.deepEqual(posted[1].body, { yaml: 'yaml-only' });
 });

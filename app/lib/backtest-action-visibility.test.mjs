@@ -19,13 +19,13 @@ test('invalid run does not call execution and renders its reason above the long 
   const ide = { element: element('div', 'long-editor'), currentProject: () => ({ id: 'p' }),
     isDirty: () => false, refreshSide() {} };
   const ctx = vm.createContext({
-    state: {}, runPath: 'code', projectIde: ide, ideOwnsCode: true,
+    state: {}, openedVersion: null, runPath: 'code', projectIde: ide, ideOwnsCode: true,
     currentWorkspaceProject: () => ({ id: 'p' }), workspaceActive: () => true,
     ensureProjectIde: () => ide, runErrors: () => ['종목을 하나 이상 고르세요'],
     el: element, startRun: async () => { runCalls++; },
     setState(patch) { ctx.state = { ...ctx.state, ...patch }; rendered = ctx.renderCodeTab(); },
   });
-  vm.runInContext([declaration('handleRun', true), declaration('renderCodeTab'), declaration('renderCodeErrors')].join('\n'), ctx);
+  vm.runInContext([declaration('versionPreviewActive'), declaration('handleRun', true), declaration('renderCodeTab'), declaration('renderCodeErrors')].join('\n'), ctx);
   await ctx.handleRun(false);
   assert.equal(runCalls, 0);
   assert.equal(rendered.children[0].className, 'backtest-design-error');

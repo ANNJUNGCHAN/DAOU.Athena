@@ -32,6 +32,11 @@ class UserStrategy:
     path: str
     created_at: str
 
+    @property
+    def backend_strategy_id(self) -> str:
+        # Separate from the UUID namespace used by anonymous runs.
+        return f"registered:{self.id}"
+
     def to_dict(self) -> dict[str, str]:
         return {
             "id": self.id,

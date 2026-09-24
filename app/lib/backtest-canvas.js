@@ -1054,6 +1054,7 @@ function createBacktestCanvas(options) {
   let presetProject = null;
   // 이력에서 다시 연 버전 — 그 버전의 원문이 코드 탭에 서고 머리에 배지가 붙는다.
   let openedVersion = null;
+  let versionReadRequest = 0;
 
   function setState(patch) {
     state = Object.assign({}, state, patch);
@@ -1358,6 +1359,8 @@ function createBacktestCanvas(options) {
       SpecModel.createSpec(null, { name: entry.name, params }), keptTarget(),
     );
     userStrategyId = entry.id;
+    strategyId = entry.backend_strategy_id || null;
+    activeVersionId = entry.active_version_id || null;
     presetProject = null;
     runPath = 'code';
     techniqueDraft = false;
@@ -1365,7 +1368,7 @@ function createBacktestCanvas(options) {
     lastError = null;
     // 기법 하나의 화면(보드 20)이다 — 첫 표면은 그 파일의 코드고 지도는 없다.
     setState({
-      view: 'design', tab: 'design', formErrors: [], codeErrors: entry.params_error ? [entry.params_error] : [], designTab: 'code',
+      view: 'design', tab: 'design', formErrors: [], codeErrors: entry.params_error ? [entry.params_error] : [], designTab: 'code', versions: [],
       mapVersion: 1, fileDraft: null,
     });
     const opened = await openRegisteredTechnique(ide, entry, setTechnique);
@@ -1679,6 +1682,10 @@ function createBacktestCanvas(options) {
   }
 
   async function handleRun(allowPartial) {
+    if (versionPreviewActive()) {
+      setState({ codeErrors: ['현재 파일로 돌아간 뒤 실행하세요 — 저장된 버전은 읽기 전용 미리보기입니다'] });
+      return;
+    }
     // 저장 안 한 편집으로 실행하면 화면의 코드와 도는 코드가 갈라진다 — 디스크가
     // 진실이라는 결정(D2)이 여기서 지켜진다.
     if (runPath === 'code' && currentWorkspaceProject()
@@ -1739,6 +1746,10 @@ function createBacktestCanvas(options) {
         if (project) body.project_id = project.id;
       } else if (runPath === 'code' && codeSource.trim()) body.source = codeSource;
       codeRun = !!body.source;
+      if (runsPickedStrategy(activeFile)) {
+        body.user_strategy_id = userStrategyId;
+        body.strategy_path = activeFile.path;
+      }
       // 내 전략의 슬라이더는 실제로 값을 바꿔야 한다 — 백엔드는 파일의 PARAMS 기본값이
       // 폼 yaml의 값을 덮으므로(runner.py `_run_code_signals`), 슬라이더 값은 그것보다
       // 센 자리인 params(override)로 실어야 화면과 실행이 같은 숫자를 쓴다. 단 지금 도는
@@ -2006,6 +2017,8 @@ function createBacktestCanvas(options) {
   // spec_yaml·해시가 버전에 붙어 있고 실행에는 없기 때문이다(US-010). 못 읽으면 빈
   // 목록이다: 부수 정보라 실행 이력까지 실패로 만들지 않는다.
   async function loadVersions() {
+    const entry = userStrategyId && userStrategies.find(item => item.id === userStrategyId);
+    if (entry && entry.backend_strategy_id) strategyId = entry.backend_strategy_id;
     if (!deps.versions || !strategyId) return;
     try { setState({ versions: await deps.versions(strategyId) }); }
     catch { setState({ versions: [] }); }
@@ -3158,7 +3171,7 @@ function createBacktestCanvas(options) {
     title.appendChild(el('span', 'backtest-head-folder-sub', parts.join(' · ')));
     head.appendChild(title);
     if (techniqueDraft) head.appendChild(renderTechniqueProgress());
-    head.appendChild(button('backtest-run-button', '실행', () => { void handleRun(false); }));
+    head.appendChild(renderRunButton());
     // [기법 목록]은 없다 — 빵조각의 첫 조각이 그 문이다(규칙 32-04). 초안의 [그만두기]는
     // 홈으로 가는 문이 아니라 **버리는** 문이라 남는다.
     if (techniqueDraft) {
@@ -3212,7 +3225,7 @@ function createBacktestCanvas(options) {
     head.appendChild(tabs);
     // 보드 19 목록 화면에는 실행이 없다 — 고른 뒤에만 선다.
     if (spec || techniqueDraft) {
-      head.appendChild(button('backtest-run-button', '실행', () => { void handleRun(false); }));
+      head.appendChild(renderRunButton());
     }
     return head;
   }
@@ -4439,6 +4452,16 @@ function createBacktestCanvas(options) {
   function renderCodeTab() {
     const wrap = el('div', 'backtest-code-tab');
     wrap.appendChild(renderCodeErrors());
+    if (openedVersion) {
+      const head = el('div', 'backtest-card-head');
+      head.appendChild(el('div', 'backtest-card-title', `저장된 버전 v${openedVersion.version} · 읽기 전용`));
+      head.appendChild(button('backtest-version-close', '현재 파일로 돌아가기', closeVersionPreview));
+      wrap.appendChild(head);
+      const host = el('div', 'backtest-code-host');
+      wrap.appendChild(host);
+      CodeEditor.createCodeEditor({ container: host, value: openedVersion.source, readOnly: true });
+      return wrap;
+    }
     const workspace = workspaceActive();
     // 기법 폴더 편집기(보드 20)는 기법 하나의 화면에서만 선다 — 목록에서 고른 내 기법의
     // 폴더이거나 [+ 새 기법 만들기]가 만든 폴더다. 프리셋(yaml)은 폴더가 없어 단일 편집기다.
@@ -4549,35 +4572,54 @@ function createBacktestCanvas(options) {
     return bounds;
   }
 
-  // 이력에서 버전 하나를 다시 연다 — 그 버전의 원문이 코드 탭에 서고, 무엇을 보고
-  // 있는지는 머리의 배지가 말한다. 저장된 spec_yaml이 있으면 폼도 그 버전의 것이다.
+  // 저장 버전은 현재 편집 중인 파일·폼을 바꾸지 않는 읽기 전용 미리보기다.
   async function openVersion(entry) {
     const generation = workspaceGeneration;
     if (!strategyId || !deps.versionDetail) {
       setState({ historyError: '이 화면에는 버전 되열기 배선이 없습니다' });
       return null;
     }
+    const ownerStrategyId = strategyId;
+    const requestId = ++versionReadRequest;
     let detail;
     try { detail = await deps.versionDetail(strategyId, entry.id); }
     catch (err) {
-      if (generation === workspaceGeneration) setState({ historyError: String((err && err.message) || err) });
+      if (generation === workspaceGeneration && requestId === versionReadRequest
+        && ownerStrategyId === strategyId) setState({ historyError: String((err && err.message) || err) });
       return null;
     }
-    if (generation !== workspaceGeneration) return null;
+    if (generation !== workspaceGeneration || requestId !== versionReadRequest
+      || ownerStrategyId !== strategyId) return null;
     if (!detail) { setState({ historyError: '버전을 읽지 못했습니다' }); return null; }
-    codeSource = String(detail.source || '');
     openedVersion = {
       id: entry.id,
+      source: String(detail.source || ''),
       version: detail.version != null ? detail.version : entry.version,
       origin: detail.origin || entry.origin || null,
       spec_yaml: detail.spec_yaml || null,
       hashes: detail.hashes || null,
     };
-    if (openedVersion.spec_yaml) adoptSpecYaml(openedVersion.spec_yaml);
     setState({
       view: 'design', tab: 'design', designTab: 'code', historyError: null,
     });
     return openedVersion;
+  }
+
+  function versionPreviewActive() {
+    return !!openedVersion && state.tab === 'design' && state.designTab === 'code';
+  }
+
+  function renderRunButton() {
+    const node = button('backtest-run-button', '실행', () => { void handleRun(false); });
+    node.disabled = versionPreviewActive();
+    if (node.disabled) node.setAttribute('title', '현재 파일로 돌아간 뒤 실행하세요');
+    return node;
+  }
+
+  function closeVersionPreview() {
+    versionReadRequest += 1;
+    openedVersion = null;
+    setState({ view: 'design', tab: 'design', designTab: 'code', codeErrors: [] });
   }
 
   // [이 버전 켜기] — 되열기·편집과 다른 축이다. 여기서 켠 버전이 다음 실행·배포의
