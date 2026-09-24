@@ -125,7 +125,7 @@ test('the result apply button updates visible sliders and next Python run overri
   for (const [start, end] of [
     ['function button(className, text, onClick)', '// ---------- 순수 계산'],
     ['  async function applyBestParams()', '  async function loadDeployments()'],
-    ['  function renderOptimizeResult(res)', '  function renderHeatmap(map)'],
+    ['  function renderOptimizeResult(res)', '  function renderHeatmap('],
     ['  function renderParamSlider(name, p)', '  function renderRiskCard()'],
     ['  async function startRun(allowPartial)', '  async function confirmBackfill()'],
   ]) {

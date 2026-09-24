@@ -2146,18 +2146,34 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
   font-family: var(--font-mono);
   font-size: var(--text-xs);
 }
-.backtest-heatmap-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
+.backtest-heatmap-scroll {
+  overflow: auto;
+  max-height: 420px;
   margin-top: 8px;
-  max-width: 460px;
+}
+.backtest-heatmap-grid {
+  display: grid;
+  width: max-content;
+  gap: 3px;
+}
+.backtest-heatmap-axis {
+  display: grid;
+  place-items: center;
+  color: var(--color-k-dim);
+  font-size: var(--text-xs);
 }
 .backtest-heatmap-cell {
-  width: 30px;
-  height: 26px;
+  display: grid;
+  place-items: center;
+  font-size: var(--text-xs);
+  color: var(--color-k-text);
   border-radius: 4px;
   background: var(--color-info);
+}
+.backtest-heatmap-cell.is-empty {
+  background: var(--color-k-panel2);
+  color: var(--color-k-faint);
+  border: 1px dashed var(--color-k-line);
 }
 
 /* 배포(보드 07) — 기본은 승인 모드다. 자동 주문은 사람이 한도를 정한 뒤에만. */

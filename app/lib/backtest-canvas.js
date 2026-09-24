@@ -5546,25 +5546,58 @@ function createBacktestCanvas(options) {
       ));
     }
 
-    if (res.heatmap) wrap.appendChild(renderHeatmap(res.heatmap));
+    if (res.heatmap) wrap.appendChild(renderHeatmap(res.heatmap, res.trials));
     return wrap;
   }
 
-  function renderHeatmap(map) {
+  function renderHeatmap(map, trials = []) {
     const wrap = el('div', 'backtest-heatmap');
     wrap.appendChild(el(
       'div', 'backtest-card-title',
       `Sharpe 히트맵 — ${map.x_axis} × ${map.y_axis}`,
     ));
-    const grid = el('div', 'backtest-heatmap-grid');
-    (map.cells || []).forEach((cell) => {
-      const box = el('div', 'backtest-heatmap-cell');
-      const t = heatIntensity(cell.sharpe, map.min_sharpe, map.max_sharpe);
-      box.setAttribute('style', `opacity:${(0.15 + t * 0.85).toFixed(2)}`);
-      box.setAttribute('title', `${map.x_axis} ${cell.x} · ${map.y_axis} ${cell.y} · Sharpe ${formatRatioValue(cell.sharpe)}`);
-      grid.appendChild(box);
+    const cells = new Map();
+    (trials || []).forEach((trial) => {
+      const x = trial.params && trial.params[map.x_axis];
+      const y = trial.params && trial.params[map.y_axis];
+      if (Number.isFinite(x) && Number.isFinite(y)) cells.set(`${x}:${y}`, { x, y, sharpe: trial.sharpe });
     });
-    wrap.appendChild(grid);
+    (map.cells || []).forEach((cell) => {
+      if (Number.isFinite(cell.x) && Number.isFinite(cell.y)) cells.set(`${cell.x}:${cell.y}`, cell);
+    });
+    const values = [...cells.values()];
+    const xs = [...new Set(values.map(cell => cell.x))].sort((a, b) => a - b);
+    const ys = [...new Set(values.map(cell => cell.y))].sort((a, b) => a - b);
+    if (!xs.length || !ys.length) {
+      wrap.appendChild(el('div', 'backtest-card-empty', '히트맵에 표시할 결과가 없습니다'));
+      return wrap;
+    }
+    const viewport = el('div', 'backtest-heatmap-scroll');
+    const grid = el('div', 'backtest-heatmap-grid');
+    grid.setAttribute('style', `grid-template-columns: minmax(100px, auto) repeat(${xs.length}, 42px); grid-template-rows: repeat(${ys.length + 1}, 30px)`);
+    const place = (node, col, row) => {
+      node.setAttribute('style', `grid-column:${col};grid-row:${row}`);
+      grid.appendChild(node);
+    };
+    place(el('div', 'backtest-heatmap-axis', `${map.y_axis} ↓ / ${map.x_axis} →`), 1, 1);
+    xs.forEach((x, i) => place(el('div', 'backtest-heatmap-axis', String(x)), i + 2, 1));
+    ys.forEach((y, i) => place(el('div', 'backtest-heatmap-axis', String(y)), 1, i + 2));
+    values.forEach((cell) => {
+      const scored = Number.isFinite(cell.sharpe);
+      const label = `${map.x_axis} ${cell.x} · ${map.y_axis} ${cell.y} · ${scored ? `Sharpe ${formatRatioValue(cell.sharpe)}` : '결과 없음'}`;
+      const box = el('div', `backtest-heatmap-cell${scored ? '' : ' is-empty'}`,
+        scored ? formatRatioValue(cell.sharpe) : '—');
+      place(box, xs.indexOf(cell.x) + 2, ys.indexOf(cell.y) + 2);
+      if (scored) {
+        const strength = 15 + heatIntensity(cell.sharpe, map.min_sharpe, map.max_sharpe) * 85;
+        box.style.backgroundColor = `color-mix(in srgb, var(--color-info) ${strength}%, var(--color-k-panel2))`;
+      }
+      box.setAttribute('title', label);
+      box.setAttribute('aria-label', label);
+    });
+    viewport.appendChild(grid);
+    wrap.appendChild(viewport);
+    wrap.appendChild(el('div', 'backtest-card-note', '숫자는 Sharpe · 빈 칸은 미탐색 · —는 계산 결과 없음'));
     return wrap;
   }
 
