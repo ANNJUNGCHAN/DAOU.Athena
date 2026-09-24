@@ -121,7 +121,7 @@ const CRUMB_SEP = '›';
 // 보드 19 목록 바닥의 한 줄 — 기법을 열면 화면이 통째로 바뀐다는 사실을 누르기 전에 적는다.
 const LIST_FOOTER_NOTE = '기법을 열면 전용 작업 화면으로 이동합니다. 다른 기법 선택과 새 기법 만들기는 홈에서 시작하세요.';
 // 폼 탭 파라미터 카드의 부제 — 내 기법은 범위를 화면이 잡았고, 처음 있던 기법은 yaml이 정했다.
-const USER_PARAMS_NOTE = '신호는 이 파일의 파이썬이 만듭니다 · 슬라이더 범위는 기본값에서 화면이 잡은 것입니다';
+const USER_PARAMS_NOTE = '신호는 이 파일의 파이썬이 만듭니다 · 범위는 파일의 PARAMS 선언을 따릅니다';
 const PRESET_PARAMS_NOTE = '신호는 이 폴더의 파이썬이 만듭니다 · 범위는 기법이 정한 값입니다';
 
 // 스펙의 필드가 지도의 어느 칸에서 읽히는가 — 대화가 무엇을 바꿨는지를 칸 번호로
@@ -491,9 +491,7 @@ function countLines(source) {
   return source ? String(source).split('\n').length : 0;
 }
 
-// 등록부가 주는 파라미터는 파일의 `PARAMS` 기본값뿐이다(백엔드 flow.params_defaults) —
-// 파일에는 범위가 없다. 슬라이더를 그리려면 범위가 필요해서 기본값을 기준으로 잡되,
-// 지어낸 범위라는 사실은 카드에 적어 숨기지 않는다(프리셋의 min/max는 전략이 정한 값이다).
+// param_specs를 아직 주지 않는 이전 백엔드의 기본값 전용 응답과 호환한다.
 function userParamSpec(raw) {
   const n = Number(raw);
   if (!Number.isFinite(n)) return null;
@@ -1336,7 +1334,7 @@ function createBacktestCanvas(options) {
   // 내 전략을 고르는 것은 프리셋을 고르는 것과 같은 동작이어야 한다 — 다른 점은 신호를
   // 만드는 것이 지표·조건이 아니라 그 파일의 파이썬이라는 것뿐이다. 그래서 여기서는
   // ① 폴더와 파일을 IDE로 실제로 열고(실행이 읽을 원문이 그 파일이다, D2)
-  // ② 실행경로를 코드로 돌리고 ③ 등록부가 준 PARAMS 기본값을 슬라이더로 세운다.
+  // ② 실행경로를 코드로 돌리고 ③ 등록부가 준 PARAMS 선언을 슬라이더로 세운다.
   async function selectUserStrategy(id) {
     const generation = workspaceGeneration;
     const entry = userStrategies.find((s) => s.id === id);
@@ -1351,7 +1349,9 @@ function createBacktestCanvas(options) {
     }
     const params = {};
     Object.keys(entry.params || {}).forEach((name) => {
-      const p = userParamSpec(entry.params[name]);
+      const p = entry.param_specs
+        ? entry.param_specs[name] && Object.assign({}, entry.param_specs[name])
+        : userParamSpec(entry.params[name]);
       if (p) params[name] = p;
     });
     spec = Object.assign(
@@ -1365,7 +1365,7 @@ function createBacktestCanvas(options) {
     lastError = null;
     // 기법 하나의 화면(보드 20)이다 — 첫 표면은 그 파일의 코드고 지도는 없다.
     setState({
-      view: 'design', tab: 'design', formErrors: [], codeErrors: [], designTab: 'code',
+      view: 'design', tab: 'design', formErrors: [], codeErrors: entry.params_error ? [entry.params_error] : [], designTab: 'code',
       mapVersion: 1, fileDraft: null,
     });
     const opened = await openRegisteredTechnique(ide, entry, setTechnique);
@@ -2033,18 +2033,39 @@ function createBacktestCanvas(options) {
   }
 
   async function runOptimize() {
+    const generation = workspaceGeneration;
+    const errors = spec ? runErrors() : ['최적화할 기법을 먼저 고르세요'];
+    if (errors.length) {
+      setState({ view: 'design', tab: 'design', designTab: 'form',
+        formErrors: ['최적화 전에 종목·기간과 실행 조건을 확인해 주세요.', ...errors],
+        optimizeBusy: false, optimizeError: '' });
+      return;
+    }
     const ranges = optimizeRanges();
     if (!ranges.length) { setState({ optimizeError: '훑을 파라미터가 없습니다' }); return; }
-    setState({ optimizeBusy: true, optimizeError: '' });
+    setState({ optimizeBusy: true, optimizeError: '', formErrors: [] });
     try {
-      const res = await deps.optimize({
+      const body = {
         yaml: currentYaml(),
         ranges,
         method: state.optimizeMethod || 'grid',
-        ascending: ranges.length >= 2 ? [ranges[0].name, ranges[1].name] : undefined,
-      });
+        ascending: runPath !== 'code' && ranges.length >= 2 ? [ranges[0].name, ranges[1].name] : undefined,
+      };
+      if (runPath === 'code') {
+        if (projectIde && projectIde.isDirty()) throw new Error('저장하고 최적화하세요 — 저장하지 않은 편집이 있습니다');
+        const activeFile = activeProjectFile();
+        if (userStrategyId && !runsPickedStrategy(activeFile)) throw new Error('등록한 전략 파일을 열고 최적화하세요');
+        body.source = activeFile ? await projectFileText(activeFile) : codeSource;
+        if (!body.source || !body.source.trim()) throw new Error('최적화할 전략 코드가 없습니다');
+        const project = projectIde ? projectIde.currentProject() : null;
+        if (project) body.project_id = project.id;
+      }
+      if (generation !== workspaceGeneration) return;
+      const res = await deps.optimize(body);
+      if (generation !== workspaceGeneration) return;
       setState({ optimizeBusy: false, optimizeResult: res });
     } catch (err) {
+      if (generation !== workspaceGeneration) return;
       setState({ optimizeBusy: false, optimizeError: String((err && err.message) || err) });
     }
   }
@@ -2052,12 +2073,15 @@ function createBacktestCanvas(options) {
   // 전략 파라미터를 그대로 서치 축으로 쓴다 — 사용자가 축을 새로 정의할 이유가 없다.
   function optimizeRanges() {
     if (!spec) return [];
-    return Object.keys(spec.params).slice(0, 2).map((name) => {
-      const p = spec.params[name];
+    const entry = userStrategyId && userStrategies.find((item) => item.id === userStrategyId);
+    // 복원된 workspace에는 이전 화면의 추정 범위가 남을 수 있다.
+    const params = runPath === 'code' && entry && entry.param_specs ? entry.param_specs : spec.params;
+    return Object.keys(params).slice(0, 2).map((name) => {
+      const p = params[name];
       const step = p.step || 1;
       // 조합 상한(1000)을 넘지 않도록 축마다 12칸 안쪽으로 성긴 격자를 만든다.
       const span = p.max - p.min;
-      const coarse = Math.max(step, Math.ceil(span / 11 / step) * step);
+      const coarse = runPath === 'code' ? step : Math.max(step, Math.ceil(span / 11 / step) * step);
       return {
         name, start: p.min, stop: p.max, step: coarse, is_int: p.type === 'int',
       };
@@ -4239,8 +4263,7 @@ function createBacktestCanvas(options) {
       note: envelopeNote(envelope), question,
     }));
   }
-  // 등록부가 주는 것은 파일의 PARAMS 기본값뿐이라 범위는 화면이 잡았다 — 그 사실을
-  // 부제에 적는다(프리셋의 min/max는 전략이 정한 값이고, 이것은 아니다).
+  // 등록한 파일의 PARAMS 선언이 슬라이더와 최적화 범위의 기준이다.
   function renderUserParamsCard() {
     const card = el('div', 'backtest-card');
     const head = el('div', 'backtest-card-head');

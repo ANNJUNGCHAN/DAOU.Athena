@@ -20,7 +20,6 @@ import math
 import random
 from collections.abc import Callable, Iterator, Sequence
 from dataclasses import dataclass, field
-from itertools import product
 from typing import Any, Literal
 
 import pandas as pd
@@ -52,18 +51,21 @@ class ParamRange:
     step: float
     is_int: bool = True
 
-    def values(self) -> tuple[float, ...]:
+    def value_count(self) -> int:
+        if not all(math.isfinite(v) for v in (self.start, self.stop, self.step)):
+            raise ValueError(f"파라미터 범위는 유한해야 한다: {self.name}")
         if self.step <= 0:
             raise ValueError(f"step은 0보다 커야 한다: {self.name}")
         if self.stop < self.start:
             raise ValueError(f"stop은 start보다 작을 수 없다: {self.name}")
-        out: list[float] = []
-        # 부동소수 누적 오차로 마지막 값이 빠지는 것을 막으려고 정수 인덱스로 센다.
-        count = int(math.floor((self.stop - self.start) / self.step)) + 1
-        for i in range(count):
-            v = self.start + i * self.step
-            out.append(int(round(v)) if self.is_int else round(v, 10))
-        return tuple(out)
+        return int(math.floor((self.stop - self.start) / self.step)) + 1
+
+    def value_at(self, index: int) -> float:
+        v = self.start + index * self.step
+        return int(round(v)) if self.is_int else round(v, 10)
+
+    def values(self) -> tuple[float, ...]:
+        return tuple(self.value_at(i) for i in range(self.value_count()))
 
 
 @dataclass(frozen=True, slots=True)
@@ -99,8 +101,17 @@ class OptimizeResult:
 
 def _combinations(ranges: Sequence[ParamRange]) -> Iterator[dict[str, float]]:
     names = [r.name for r in ranges]
-    for combo in product(*(r.values() for r in ranges)):
-        yield dict(zip(names, combo, strict=True))
+    counts = [r.value_count() for r in ranges]
+    for index in range(math.prod(counts)):
+        yield _combination_at(ranges, names, counts, index)
+
+
+def _combination_at(ranges, names, counts, index):
+    combo = {}
+    for r, name, count in zip(reversed(ranges), reversed(names), reversed(counts), strict=True):
+        index, position = divmod(index, count)
+        combo[name] = r.value_at(position)
+    return combo
 
 
 def count_combinations(
@@ -108,11 +119,11 @@ def count_combinations(
     constraint: Callable[[dict[str, float]], bool] | None = None,
 ) -> int:
     """실행 전에 화면이 보여줄 조합 수(보드 06 "조합 276개"). 제약을 통과한 것만 센다."""
+    total = math.prod(r.value_count() for r in ranges)
     if constraint is None:
-        total = 1
-        for r in ranges:
-            total *= len(r.values())
         return total
+    if total > MAX_COMBINATIONS:
+        raise ValueError(f"제약 탐색 격자가 상한 {MAX_COMBINATIONS}개를 넘습니다 — 범위를 줄이세요")
     return sum(1 for combo in _combinations(ranges) if constraint(combo))
 
 
@@ -205,16 +216,7 @@ def optimize(
     if not ranges:
         raise ValueError("최적화할 파라미터 범위가 없다")
 
-    combos = [c for c in _combinations(ranges) if constraint is None or constraint(c)]
-    if method == "random":
-        n = samples if samples is not None else min(len(combos), 100)
-        rng = random.Random(seed)
-        combos = rng.sample(combos, min(n, len(combos)))
-    if len(combos) > MAX_COMBINATIONS:
-        raise ValueError(
-            f"조합이 {len(combos)}개로 상한 {MAX_COMBINATIONS}개를 넘는다 — "
-            "step을 키우거나 랜덤 서치를 쓰세요"
-        )
+    combos = _search_combinations(ranges, method, samples, seed, constraint)
 
     trials: list[Trial] = []
     for i, combo in enumerate(combos, start=1):
@@ -222,6 +224,36 @@ def optimize(
         if on_progress is not None:
             on_progress(i, len(combos))
 
+    return _summarize(trials, ranges, method)
+
+
+def _search_combinations(ranges, method, samples, seed, constraint):
+    counts = [r.value_count() for r in ranges]
+    total = math.prod(counts)
+    if method == "random" and constraint is None:
+        n = samples if samples is not None else min(total, 100)
+        if not isinstance(n, int) or not 1 <= n <= MAX_COMBINATIONS:
+            raise ValueError(f"랜덤 표본 수는 1~{MAX_COMBINATIONS}이어야 합니다")
+        rng = random.Random(seed)
+        # Sample grid indices; never allocate every axis or Cartesian candidate.
+        selected = set()
+        while len(selected) < min(n, total):
+            selected.add(rng.randrange(total))
+        names = [r.name for r in ranges]
+        return [_combination_at(ranges, names, counts, index) for index in sorted(selected)]
+    if total > MAX_COMBINATIONS:
+        raise ValueError(
+            f"탐색 격자가 {total}개로 상한 {MAX_COMBINATIONS}개를 넘는다 — "
+            "범위를 줄이거나 step을 키우세요"
+        )
+    combos = [c for c in _combinations(ranges) if constraint is None or constraint(c)]
+    if method == "random":
+        n = samples if samples is not None else min(len(combos), 100)
+        combos = random.Random(seed).sample(combos, min(n, len(combos)))
+    return combos
+
+
+def _summarize(trials, ranges, method):
     scored = [t for t in trials if t.sharpe is not None]
     warnings: list[Warning_] = []
     if not scored:
@@ -263,6 +295,35 @@ def optimize(
         plateau=_plateau(scored, ranges, floor),
         warnings=tuple(warnings),
     )
+
+
+async def optimize_code(spec, df, ranges, *, source, method="grid", samples=None, seed=None,
+                        constraint=None, python_exe=None, allowed_imports=None):
+    # The same sandbox, signal alignment, execution costs and metrics as a single code run.
+    from athena_api.backtest.runner import _align_signals, _run_code_signals
+
+    combos = _search_combinations(ranges, method, samples, seed, constraint)
+    trials = []
+    for combo in combos:
+        try:
+            outcome = await _run_code_signals(
+                source, df, combo,
+                base_params={name: p.default for name, p in spec.strategy.params.items()},
+                python_exe=python_exe, allowed_imports=allowed_imports,
+            )
+            if not outcome["ok"]:
+                error = outcome["error"]
+                raise ValueError(f"{error['type']}: {error['message']}")
+            signals = _align_signals(outcome["signals_df"], df.index)
+            result = run_backtest(df, signals, spec.risk, spec.costs,
+                                  initial_cash=DEFAULT_INITIAL_CASH)
+            metrics = compute_metrics(result.equity, result.trades, df,
+                                      initial_cash=DEFAULT_INITIAL_CASH, warmup_bars=0)
+            trials.append(Trial(combo, metrics.sharpe, metrics.total_return,
+                                metrics.mdd, len(result.trades)))
+        except Exception as exc:
+            trials.append(Trial(combo, None, None, None, 0, error=str(exc)))
+    return _summarize(trials, ranges, method)
 
 
 def heatmap(result: OptimizeResult, x: str, y: str) -> dict[str, Any]:

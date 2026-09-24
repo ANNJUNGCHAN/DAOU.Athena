@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import ast
+import math
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
@@ -138,6 +139,38 @@ def _literal_default(entry: ast.Dict) -> int | float | None:
             return None if isinstance(value.value, bool) else value.value
         return None
     return None
+
+
+def params_specs(source: str) -> dict[str, dict[str, Any]]:
+    """Read literal search domains without executing strategy code."""
+    tree = ast.parse(source)
+    for stmt in tree.body:
+        if not (isinstance(stmt, ast.Assign) and "PARAMS" in _assigned_names(stmt)):
+            continue
+        try:
+            declared = ast.literal_eval(stmt.value)
+        except (ValueError, TypeError) as exc:
+            raise ValueError("PARAMS는 리터럴 딕셔너리여야 합니다") from exc
+        if not isinstance(declared, dict):
+            raise ValueError("PARAMS는 딕셔너리여야 합니다")
+        out = {}
+        for name, raw in declared.items():
+            if not isinstance(name, str) or not isinstance(raw, dict):
+                raise ValueError("PARAMS 항목은 이름과 범위 객체여야 합니다")
+            values = {key: raw.get(key) for key in ("default", "min", "max", "step")}
+            if any(isinstance(v, bool) or not isinstance(v, (int, float))
+                   or not math.isfinite(v) for v in values.values()):
+                raise ValueError(f"{name}: 유한한 default/min/max/step이 필요합니다")
+            kind = raw.get("type", "int" if isinstance(values["default"], int) else "float")
+            if kind not in ("int", "float") or (kind == "int" and any(
+                int(v) != v for v in values.values()
+            )):
+                raise ValueError(f"{name}: 파라미터 type과 값이 맞지 않습니다")
+            if values["step"] <= 0 or not values["min"] <= values["default"] <= values["max"]:
+                raise ValueError(f"{name}: 파라미터 범위 또는 step이 올바르지 않습니다")
+            out[name] = {**values, "type": kind}
+        return out
+    raise ValueError("최적화할 PARAMS 선언이 없습니다")
 
 
 def params_defaults(source: str) -> dict[str, int | float]:

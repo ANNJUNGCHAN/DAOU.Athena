@@ -15,6 +15,7 @@ import ast
 import difflib
 import hashlib
 import json
+import math
 import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -890,7 +891,7 @@ async def optimize_plan_route(body: dict[str, Any]) -> dict[str, Any]:
         "combinations": total,
         "max_combinations": optimize_mod.MAX_COMBINATIONS,
         "over_limit": total > optimize_mod.MAX_COMBINATIONS,
-        "values_per_param": {r.name: len(r.values()) for r in ranges},
+        "values_per_param": {r.name: r.value_count() for r in ranges},
     }
 
 
@@ -902,8 +903,11 @@ async def optimize_route(request: Request, body: dict[str, Any]) -> dict[str, An
     yaml_text = body.get("yaml")
     if not isinstance(yaml_text, str) or not yaml_text.strip():
         raise HTTPException(status_code=422, detail="yaml은 비어 있지 않은 문자열이어야 한다")
+    source = body.get("source")
+    if source is not None and (not isinstance(source, str) or not source.strip()):
+        raise HTTPException(status_code=422, detail="source는 비어 있지 않은 문자열이어야 한다")
     try:
-        spec = from_kis_yaml(yaml_text)
+        spec = from_kis_yaml(yaml_text, require_conditions=source is None)
     except Exception as exc:  # noqa: BLE001 — 사용자 입력 검증 결과를 그대로 옮긴다
         raise HTTPException(status_code=422, detail=str(exc)) from None
     if spec.data is None or len(spec.data.symbols) != 1:
@@ -913,6 +917,40 @@ async def optimize_route(request: Request, body: dict[str, Any]) -> dict[str, An
     unknown = [r.name for r in ranges if r.name not in spec.strategy.params]
     if unknown:
         raise HTTPException(status_code=422, detail=f"알 수 없는 전략 파라미터: {unknown}")
+    python_exe = None
+    allowed_imports = None
+    if source:
+        try:
+            declared = flow_mod.params_specs(source)
+            for r in ranges:
+                p = declared.get(r.name)
+                if p is None or r.is_int != (p["type"] == "int"):
+                    raise ValueError(f"{r.name}: 선언된 파라미터 이름/type과 다릅니다")
+                if (not all(math.isfinite(v) for v in (r.start, r.stop, r.step))
+                        or r.start < p["min"] or r.stop > p["max"]):
+                    raise ValueError(f"{r.name}: 선언된 파라미터 범위를 벗어났습니다")
+                for value in (r.start - p["min"], r.step):
+                    ratio = value / p["step"]
+                    if not math.isclose(ratio, round(ratio), abs_tol=1e-8):
+                        raise ValueError(f"{r.name}: 선언된 step과 맞지 않습니다")
+                r.value_count()
+        except (ValueError, SyntaxError) as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from None
+        project_id = body.get("project_id")
+        if project_id is not None:
+            if not isinstance(project_id, str):
+                raise HTTPException(status_code=422, detail="project_id는 문자열이어야 한다")
+            project_root = _project_root(project_id, request)
+            if project_root is None:
+                raise HTTPException(
+                    status_code=404, detail=f"프로젝트가 존재하지 않는다: {project_id}"
+                )
+            interpreter = venv_python(project_root)
+            if interpreter is not None:
+                python_exe = str(interpreter)
+                allowed_imports = sorted(
+                    set(venv_packages(project_root)) - BLOCKED_TOP_LEVEL_IMPORTS
+                )
 
     stk_cd = spec.data.symbols[0]
     coverage = await store.coverage(stk_cd, spec.data.period, spec.data.adjusted)
@@ -942,13 +980,15 @@ async def optimize_route(request: Request, body: dict[str, Any]) -> dict[str, An
     if method not in ("grid", "random"):
         raise HTTPException(status_code=422, detail="method는 grid 또는 random이어야 한다")
     try:
-        result = optimize_mod.optimize(
-            spec, df, ranges,
-            method=method,
-            samples=body.get("samples"),
-            seed=body.get("seed"),
-            constraint=constraint,
-        )
+        options = dict(method=method, samples=body.get("samples"),
+                       seed=body.get("seed"), constraint=constraint)
+        if source:
+            result = await optimize_mod.optimize_code(
+                spec, df, ranges, source=source, python_exe=python_exe,
+                allowed_imports=allowed_imports, **options,
+            )
+        else:
+            result = optimize_mod.optimize(spec, df, ranges, **options)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from None
 
@@ -1411,7 +1451,7 @@ async def register_user_strategy_route(request: Request, body: dict[str, Any]) -
 async def list_user_strategies_route(request: Request) -> dict[str, Any]:
     """`exists`도 `params`도 저장된 값이 아니라 지금 디스크를 본 결과다 — 파일이
     진실이라(D2) 등록부가 파일을 대신 말하면 안 된다. `params`는 프리셋과 같은 모양의
-    슬라이더를 그리라고 `PARAMS` 기본값을 읽어 주는 것이다."""
+    슬라이더 기본값이고 `param_specs`는 최적화에도 쓰는 선언 범위다."""
     registry = _user_strategies(request)
     items: list[dict[str, Any]] = []
     for entry in registry.list_all():
@@ -1419,9 +1459,15 @@ async def list_user_strategies_route(request: Request) -> dict[str, Any]:
         target = None if root is None else root / entry.path
         exists = target is not None and target.is_file()
         params: dict[str, Any] = {}
+        param_specs: dict[str, Any] = {}
+        params_error = None
         if exists and target is not None:
             try:
-                params = dict(flow_mod.params_defaults(target.read_text(encoding="utf-8")))
+                source = target.read_text(encoding="utf-8")
+                params = dict(flow_mod.params_defaults(source))
+                param_specs = flow_mod.params_specs(source)
+            except (ValueError, SyntaxError) as exc:
+                params_error = str(exc)
             except (OSError, UnicodeDecodeError):
                 params = {}
         items.append(
@@ -1432,6 +1478,8 @@ async def list_user_strategies_route(request: Request) -> dict[str, Any]:
                 "path": entry.path,
                 "exists": exists,
                 "params": params,
+                "param_specs": param_specs,
+                "params_error": params_error,
             }
         )
     return {"strategies": items}
