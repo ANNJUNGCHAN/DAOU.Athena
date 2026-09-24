@@ -145,7 +145,17 @@ async function refreshBrainReady(opts) {
 // exposeToModel 현재값을 backend 게이트에 민다(WP-I I4). prefs 조회가 안 되는
 // 환경(순수 node --test)이나 토큰 미설정 배포에서는 조용히 건너뛴다 — 밀 값이
 // 없거나 밀 방법이 없는 것이지 실패가 아니다.
-async function pushExposeToModel({ mdlog } = {}) {
+let exposureSyncPending = Promise.resolve();
+
+function pushExposeToModel(options = {}) {
+  // Startup/recovery and user changes share one queue. Read the preference only
+  // when this write starts, so a delayed startup write cannot overwrite newer off.
+  const pending = exposureSyncPending.then(() => pushSavedExposure(options));
+  exposureSyncPending = pending.catch(() => false);
+  return pending;
+}
+
+async function pushSavedExposure({ mdlog } = {}) {
   const token = getBearerToken();
   if (!token) return false;
   let enabled;
@@ -157,6 +167,7 @@ async function pushExposeToModel({ mdlog } = {}) {
   try {
     const res = await fetch(`${getBackendUrl()}/api/v1/settings/expose-to-model`, {
       method: 'POST',
+      signal: AbortSignal.timeout(5000),
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ enabled }),
     });

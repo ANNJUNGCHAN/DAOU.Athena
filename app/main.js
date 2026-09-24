@@ -5553,6 +5553,12 @@ async function runLiveQueryInner(query, expand, origin, turnConversationId) {
 async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, sessionAssistantId, continuation = null) {
   const queryStartedAt = performance.now();
   const submit = liveSubmitContexts.get(turnConversationId) || {};
+  const graphAccessError = await require('./lib/main/graph-model-access').checkGraphModelAccess(submit.canvasMode, {
+    readPreferences: () => prefs.get(),
+    getBackendUrl: historySink.getBackendUrl,
+    getBearerToken: historySink.getBearerToken,
+  });
+  if (graphAccessError) return graphAccessError;
   const runtime = liveRuntimes.get(turnConversationId);
   if (continuation && continuation.submitIdentity !== submit) {
     return {
@@ -7943,6 +7949,11 @@ async function ensureBackendStrict(context) {
   if (isQuitting) throw new Error('앱 종료 중 백엔드 복구를 취소함');
   applyBackendEndpoint(result.backendUrl || backendEndpoint.requireBackendUrl());
   configureConversationGraphPipeline();
+  // 기존 그래프 조회 권한은 새 대화 추출기의 준비 여부와 독립적이다.
+  // 저장된 선택을 backend 초기 false에 반영한 뒤 그래프 질의를 받는다.
+  if (!await historySink.pushExposeToModel({ mdlog })) {
+    mdlog('그래프 모델 전달 상태 동기화 실패 — 그래프 질문은 상태 확인 전까지 보류');
+  }
   return { detail: result.spawned ? '백엔드 기동 및 lifespan 확인 완료' : '실행 중인 백엔드 확인 완료' };
 }
 

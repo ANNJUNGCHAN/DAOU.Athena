@@ -34,6 +34,21 @@ class ExposeToModelResponse(BaseModel):
     enabled: bool = Field(description="갱신 후 게이트 상태.")
 
 
+@router.get(
+    "/expose-to-model",
+    summary="exposeToModel 유효 상태 조회",
+    operation_id="get_expose_to_model",
+    response_model=ExposeToModelResponse,
+    openapi_extra={"x-athena-llm-exposed": False},
+)
+async def get_expose_to_model(
+    request: Request,
+    authorization: Annotated[str, Header(alias="Authorization")],
+) -> ExposeToModelResponse:
+    require_local_bearer(request, authorization)
+    return ExposeToModelResponse(enabled=getattr(request.app.state, "expose_to_model", False))
+
+
 @router.post(
     "/expose-to-model",
     summary="exposeToModel 게이트 갱신",

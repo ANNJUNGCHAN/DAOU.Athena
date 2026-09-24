@@ -89,6 +89,7 @@ async function harness({ finalReplacementFails = false } = {}) {
     mdlog: () => {},
     applyBackendEndpoint: (url) => applied.push(url),
     configureConversationGraphPipeline: () => { configured += 1; },
+    historySink: { pushExposeToModel: async () => true },
     notifyStartupFailuresAfterExpansion: notify,
     waitMs: (ms) => {
       assert.equal(ms, 60_000);

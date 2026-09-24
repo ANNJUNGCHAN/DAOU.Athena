@@ -2,8 +2,12 @@ import tomllib
 from pathlib import Path
 from unittest.mock import patch
 
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+
 import athena_api
 import athena_mcp
+from athena_api.api.settings import router as settings_router
 from athena_api.config import Settings
 from athena_api.main import create_app
 from athena_mcp.server import build_mcp_server
@@ -40,3 +44,22 @@ def test_wheel_without_manifest_uses_installed_distribution_metadata(tmp_path):
     ):
         assert athena_api._project_version() == "9.3.0"
         metadata_version.assert_called_once_with("daou-athena-backend")
+
+
+def test_exposure_read_is_authenticated_read_only_and_not_model_exposed():
+    app = FastAPI()
+    app.state.local_bearer_token = "synthetic-test-token"
+    app.include_router(settings_router)
+    route = "/api/v1/settings/expose-to-model"
+    with TestClient(app) as client:
+        assert client.get(route, headers={"Authorization": "Bearer wrong"}).status_code == 401
+        headers = {"Authorization": "Bearer synthetic-test-token"}
+        assert client.get(route, headers=headers).json() == {"enabled": False}
+        assert not hasattr(app.state, "expose_to_model")
+        app.state.expose_to_model = True
+        assert client.get(route, headers=headers).json() == {"enabled": True}
+        assert app.state.expose_to_model is True
+        app.state.expose_to_model = False
+        assert client.get(route, headers=headers).json() == {"enabled": False}
+        assert app.state.expose_to_model is False
+    assert app.openapi()["paths"][route]["get"]["x-athena-llm-exposed"] is False

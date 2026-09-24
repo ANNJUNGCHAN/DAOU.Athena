@@ -1503,11 +1503,12 @@ function createGraphModeController(deps) {
           reinforcement: panel.reinforcement,
           confidence: panel.confidence,
           tier: panel.tier,
-          relations: Array.isArray(panel.relations)
-            ? panel.relations.slice(0, 15).map((r) => ({
-              label: r.label, name: r.name, count: r.count, hidden: r.hidden,
-            }))
-            : [],
+          relations: buildRelationships(state.selectedEntityId, panel.source === 'node')
+            .slice(0, 15).map((r) => ({
+              entityId: r.otherId, label: r.relationLabel, name: r.otherName,
+              count: r.reinforcement, hidden: r.isHidden,
+              confidence: r.confidence, tier: r.tier,
+            })),
         } : null,
       };
     },
