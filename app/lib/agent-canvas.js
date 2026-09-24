@@ -364,6 +364,7 @@ function createAgentCanvas(deps) {
     holdSuggestion, presentSuggestions,
     onOpenGraph,
     onOpenInChat,
+    onOpenDraft,
     onEditInChat,
     // 코드 알람(Step 7) — 상세 1회 조회, 취소, 승인, 초안 검사 1회. 넷 다 사람
     // 클릭 전용 경로이고 canvas.js가 기존 routine-* 채널과 같은 모양으로 잇는다.
@@ -2600,13 +2601,32 @@ function createAgentCanvas(deps) {
 
     const desc = el('div', 'agent-detail-desc');
     if (item.kind === 'draft') {
-      desc.textContent = '오른쪽 채팅의 "작업 요약·초안" 카드에서 바로 활성화하거나 고칠 수 있습니다.';
+      desc.textContent = '초안 카드를 열면 오른쪽 채팅에서 활성화하거나 고칠 수 있습니다.';
     } else {
       // watch·schedule 둘 다 3단계부터 raw가 live 라우틴이다 — 지어낸 설명문
       // 없이 실제 note만 쓴다(P3).
       desc.textContent = item.raw.note || '';
     }
     detailCol.appendChild(desc);
+
+    if (item.kind === 'draft' && typeof onOpenDraft === 'function') {
+      const openDraft = el('button', 'agent-pause-btn');
+      openDraft.type = 'button';
+      openDraft.textContent = '초안 카드 열기';
+      openDraft.addEventListener('click', async () => {
+        openDraft.disabled = true;
+        try {
+          const result = await onOpenDraft(item.id);
+          if (!result || !result.ok) desc.textContent = (result && result.error) || '초안 카드를 열지 못했습니다. 다시 시도해 주세요.';
+          else desc.textContent = '오른쪽 채팅의 "작업 요약·초안" 카드에서 활성화하거나 고칠 수 있습니다.';
+        } catch {
+          desc.textContent = '초안 카드를 열지 못했습니다. 다시 시도해 주세요.';
+        } finally {
+          openDraft.disabled = false;
+        }
+      });
+      detailCol.appendChild(openDraft);
+    }
 
     const fieldsCaption = el('div', 'agent-panel-caption');
     fieldsCaption.textContent = '세부 정보';

@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import agentCanvas from './agent-canvas.js';
 import { fakeNode } from './graph-mode/fake-dom.js';
 
-function setup(t) {
+function setup(t, deps = {}) {
   const previous = globalThis.document;
   const node = (tag) => Object.assign(fakeNode(tag), { style: {} });
   globalThis.document = { createElement: node, createElementNS: (_, tag) => node(tag) };
@@ -13,6 +13,7 @@ function setup(t) {
   const canvas = agentCanvas.createAgentCanvas({
     container,
     fetchRoutines: async () => [{ id: 'draft-1', status: 'draft', note: 'Saved draft' }],
+    ...deps,
   });
   canvas.mount();
   t.after(() => { canvas.destroy(); globalThis.document = previous; });
@@ -31,6 +32,22 @@ test('explicit routine navigation reveals a draft hidden by status and search fi
   assert.equal(canvas.getContext().selectedRoutineId, 'draft-1');
   assert.equal(search.value, '');
   assert.equal(container.querySelector('.agent-detail-title').textContent, 'Saved draft');
+});
+
+test('saved draft detail offers an explicit resume button and reports retryable failures', async (t) => {
+  const calls = [];
+  const { canvas, container } = setup(t, { onOpenDraft: async (id) => {
+    calls.push(id);
+    return { ok: false, error: 'Backend unavailable' };
+  } });
+  await canvas.refresh();
+  canvas.selectRow('draft-1', { reveal: true });
+  const button = container.querySelector('.agent-pause-btn');
+  assert.equal(button.textContent, '초안 카드 열기');
+  await button._listeners.click[0]();
+  assert.deepEqual(calls, ['draft-1']);
+  assert.equal(button.disabled, false);
+  assert.equal(container.querySelector('.agent-detail-desc').textContent, 'Backend unavailable');
 });
 
 test('ordinary refresh preserves status and search filters', async (t) => {

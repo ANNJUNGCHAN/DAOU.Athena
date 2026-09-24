@@ -3943,16 +3943,51 @@ async function refreshRoutineDrafts({ autoCheck = false, conversationId = displa
   }
 }
 
-function revealRoutineDraft(r, { autoCheck = false, conversationId = displayedConversationId } = {}) {
+function revealRoutineDraft(r, { autoCheck = false, conversationId = displayedConversationId, explicit = false } = {}) {
   if (!r || r.status !== 'draft' || typeof r.id !== 'string' || !r.id.trim()) return false;
   const signature = mainCardCandidateSignature(r);
-  if (firstSeenSignatureById.get(r.id) === signature) return false;
+  if (firstSeenSignatureById.get(r.id) === signature) {
+    if (!explicit) return false;
+  }
+  if (explicit) {
+    const views = routineDraftViewsById.get(r.id);
+    const mounted = views && Array.from(views).find((view) => view.originConversationId === conversationId
+      && view.line && view.line.isConnected);
+    if (mounted) {
+      if (mounted.renderedSnapshot === JSON.stringify(r)) {
+        mounted.line.scrollIntoView({ block: 'nearest' });
+        return true;
+      }
+      // 후보가 그대로여도 설명·차단 사유·조건은 바뀔 수 있다. 조회한 최신
+      // 초안으로 카드를 교체해 오래된 승인 버튼이나 문구를 남기지 않는다.
+      mounted.line.remove();
+    }
+  }
   if (firstSeenSignatureById.has(r.id)) retireRoutineDraftViews(r.id);
   if (!firstSeenAtById.has(r.id)) firstSeenAtById.set(r.id, new Date().toISOString());
   firstSeenSignatureById.set(r.id, signature);
   renderApprovalCard(r, { autoCheck, conversationId });
   return true;
 }
+
+async function openSavedRoutineDraft(id) {
+  const conversationId = displayedConversationId;
+  const revision = conversationSelectionRevision;
+  if (!conversationId) return { ok: false, error: '대화를 준비하는 중입니다. 다시 시도해 주세요.' };
+  let result;
+  try { result = await window.athena.invoke('athena:routine-detail', { id }); }
+  catch { return { ok: false, error: '초안을 불러오지 못했습니다. 다시 시도해 주세요.' }; }
+  if (conversationId !== displayedConversationId || revision !== conversationSelectionRevision) {
+    return { ok: false, error: '대화가 변경되어 초안 카드를 열지 않았습니다.' };
+  }
+  if (!result || !result.ok || !result.data || result.data.id !== id) {
+    return { ok: false, error: (result && result.error) || '초안을 불러오지 못했습니다.' };
+  }
+  if (result.data.status !== 'draft') return { ok: false, error: '이 작업은 더 이상 초안 상태가 아닙니다.' };
+  return { ok: revealRoutineDraft(result.data, { conversationId, explicit: true }) };
+}
+
+window.AthenaRoutineDrafts = { openSaved: openSavedRoutineDraft };
 
 // ---------- 코드 알람 검사 카드(Step 6, Paper 보드 10/446V-1) ----------
 // 초안 카드의 「검사」 칩과 그 결과 카드. 문구 계산은 lib/watch-check-card.js가
@@ -4757,6 +4792,9 @@ function renderApprovalCard(r, { autoCheck = false, conversationId = displayedCo
   card.appendChild(row);
 
   const activationView = {
+    originConversationId: conversationId,
+    line,
+    renderedSnapshot: JSON.stringify(r),
     routine: r,
     sync: syncActivate,
     retire() { activate.disabled = true; },
