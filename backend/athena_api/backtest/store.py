@@ -32,11 +32,15 @@ spec_hash · source_hash) 하나이며, 저장층은 그 결과를 다른 열들
 
 from __future__ import annotations
 
+import asyncio
+import json
 import sqlite3
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from threading import Event
 from typing import Any, Final
+from uuid import uuid4
 
 from athena_api.brain.db import SqliteOwner, atomic
 
@@ -81,6 +85,15 @@ CREATE TABLE IF NOT EXISTS bt_coverage (
     fetched_at TEXT NOT NULL,
     pages      INTEGER NOT NULL,
     PRIMARY KEY (stk_cd, period, adjusted)
+);
+CREATE TABLE IF NOT EXISTS bt_candle_refresh (
+    id TEXT PRIMARY KEY,
+    stk_cd TEXT NOT NULL,
+    period TEXT NOT NULL,
+    adjusted INTEGER NOT NULL,
+    created_at TEXT NOT NULL,
+    previous_snapshot_json TEXT NOT NULL,
+    replacement_snapshot_json TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS bt_strategy (
     id         TEXT PRIMARY KEY,
@@ -424,6 +437,20 @@ class EquityPoint:
     drawdown: float
 
 
+def _candle_snapshot(
+    connection: sqlite3.Connection, stk_cd: str, period: str, adjusted: bool,
+) -> dict[str, Any]:
+    key = (stk_cd, period, int(adjusted))
+    candles = connection.execute(
+        "SELECT dt, open, high, low, close, volume FROM bt_candle"
+        " WHERE stk_cd=? AND period=? AND adjusted=? ORDER BY dt", key,
+    ).fetchall()
+    coverage = connection.execute(
+        "SELECT * FROM bt_coverage WHERE stk_cd=? AND period=? AND adjusted=?", key,
+    ).fetchone()
+    return {"candles": [dict(row) for row in candles], "coverage": dict(coverage) if coverage else None}
+
+
 class BacktestStore:
     """캔들 캐시 · 전략 버전 · 실행 이력을 한 SQLite 파일에 올린다.
 
@@ -455,6 +482,64 @@ class BacktestStore:
         return await self._owner.schema_version("backtest")
 
     # ── 캔들 ────────────────────────────────────────────────────────────────
+
+    async def candle_snapshot(self, stk_cd: str, period: str, adjusted: bool) -> dict[str, Any]:
+        return await self._owner.run(lambda: _candle_snapshot(self._require(), stk_cd, period, adjusted))
+
+    async def replace_candle_snapshot(
+        self, stk_cd: str, period: str, adjusted: bool, *, expected: dict[str, Any],
+        candles: Sequence[Candle], first_dt: str, last_dt: str, fetched_at: datetime, pages: int,
+    ) -> str:
+        """검증된 전체 수집만 적용한다. 이전 자료 보존·CAS·교체는 한 트랜잭션이다."""
+        snapshot_id = str(uuid4())
+        key = (stk_cd, period, int(adjusted))
+        cancelled = Event()
+
+        def write() -> str:
+            connection = self._require()
+            with atomic(connection, _BACKTEST_WRITE):
+                if cancelled.is_set():
+                    raise asyncio.CancelledError
+                if _candle_snapshot(connection, stk_cd, period, adjusted) != expected:
+                    raise ValueError("수집 중 다른 작업이 캐시를 변경했습니다. 기존 데이터를 보존하고 다시 확인해 주세요.")
+                if not candles:
+                    raise ValueError("전체 재수집 결과가 비어 있어 기존 데이터를 유지합니다.")
+                connection.execute(
+                    "DELETE FROM bt_candle WHERE stk_cd=? AND period=? AND adjusted=?", key,
+                )
+                connection.executemany(
+                    "INSERT INTO bt_candle(stk_cd, period, adjusted, dt, open, high, low, close, volume)"
+                    " VALUES(?,?,?,?,?,?,?,?,?)",
+                    [(*key, c.dt, c.open, c.high, c.low, c.close, c.volume) for c in candles],
+                )
+                connection.execute(
+                    "INSERT INTO bt_coverage(stk_cd, period, adjusted, first_dt, last_dt, fetched_at, pages)"
+                    " VALUES(?,?,?,?,?,?,?) ON CONFLICT(stk_cd, period, adjusted) DO UPDATE SET"
+                    " first_dt=excluded.first_dt, last_dt=excluded.last_dt,"
+                    " fetched_at=excluded.fetched_at, pages=excluded.pages",
+                    (*key, first_dt, last_dt, _ts(fetched_at), pages),
+                )
+                connection.execute(
+                    "INSERT INTO bt_candle_refresh"
+                    "(id, stk_cd, period, adjusted, created_at, previous_snapshot_json, replacement_snapshot_json)"
+                    " VALUES(?,?,?,?,?,?,?)",
+                    (snapshot_id, *key, _ts(fetched_at), json.dumps(expected, allow_nan=False),
+                     json.dumps(_candle_snapshot(connection, stk_cd, period, adjusted), allow_nan=False)),
+                )
+                if cancelled.is_set():
+                    raise asyncio.CancelledError
+            return snapshot_id
+
+        # executor의 SQLite 쓰기는 await 취소만으로 멈추지 않는다. 취소를 작업에
+        # 전달하고 rollback/commit 결과까지 기다려, 저장 뒤 cancelled라고 보고하지 않는다.
+        applying = asyncio.create_task(self._owner.run(write))
+        while True:
+            try:
+                return await asyncio.shield(applying)
+            except asyncio.CancelledError:
+                cancelled.set()
+                if applying.done():
+                    return applying.result()
 
     async def upsert_candles(
         self, stk_cd: str, period: str, adjusted: bool, candles: Sequence[Candle]

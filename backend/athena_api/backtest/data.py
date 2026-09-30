@@ -18,12 +18,13 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from functools import lru_cache
-from math import ceil
+from math import ceil, isfinite
 from pathlib import Path
 from typing import Any, Final
 
@@ -157,11 +158,21 @@ class AdjustmentDetected(Exception):
         period: str,
         adjusted: bool,
         mismatches: list[tuple[str, float, float]],
+        *, from_dt: str, to_dt: str,
     ) -> None:
         self.stk_cd = stk_cd
         self.period = period
         self.adjusted = adjusted
         self.mismatches = mismatches
+        plan = compute_plan(
+            stk_cd=stk_cd, period=period, adjusted=adjusted, from_dt=from_dt, to_dt=to_dt, coverage=None,
+        )
+        self.recovery = {
+            "stk_cd": stk_cd, "period": period, "adjusted": adjusted,
+            "from_dt": from_dt, "to_dt": to_dt,
+            "mismatch_dates": [item[0] for item in mismatches],
+            "estimated_pages": plan.estimated_pages, "est_seconds": plan.estimated_seconds,
+        }
         super().__init__(
             f"adjustment detected: {stk_cd}/{period}/adjusted={adjusted}"
             f" at {len(mismatches)} overlapping dt(s)"
@@ -272,7 +283,12 @@ async def backfill(
         if first_page and existing:
             mismatches = detect_adjustment(existing, candles, overlap_check_n)
             if mismatches:
-                raise AdjustmentDetected(stk_cd, period, adjusted, mismatches)
+                coverage = await store.coverage(stk_cd, period, adjusted)
+                raise AdjustmentDetected(
+                    stk_cd, period, adjusted, mismatches,
+                    from_dt=min(from_dt, existing[0].dt, coverage.first_dt if coverage else from_dt),
+                    to_dt=max(base_dt, existing[-1].dt, coverage.last_dt if coverage else base_dt),
+                )
         first_page = False
 
         await store.upsert_candles(stk_cd, period, adjusted, candles)
@@ -297,6 +313,68 @@ async def backfill(
         stk_cd, period, adjusted, first_dt=first_dt, last_dt=last_dt, fetched_at=now(), pages=page
     )
     return page
+
+
+async def refresh_candles(
+    *, store: BacktestStore, fetch_page: FetchPage, stk_cd: str, period: str, adjusted: bool,
+    base_dt: str, from_dt: str, on_progress: OnProgress | None = None,
+    now: Callable[[], datetime] = lambda: datetime.now(UTC),
+) -> str:
+    """명시적으로 요청한 전체 재수집. 검증·수집이 모두 끝나기 전에는 기존 캐시에 쓰지 않는다."""
+    contract = contract_for(period)
+    expected = await store.candle_snapshot(stk_cd, period, adjusted)
+    old_dates = {row["dt"] for row in expected["candles"]}
+    coverage = expected["coverage"]
+    first_dt = min({from_dt, *(old_dates or {from_dt}), coverage["first_dt"] if coverage else from_dt})
+    last_dt = max({base_dt, *(old_dates or {base_dt}), coverage["last_dt"] if coverage else base_dt})
+    if _parse_yyyymmdd(first_dt) > _parse_yyyymmdd(last_dt):
+        raise ValueError("재수집 시작일이 종료일보다 늦습니다.")
+    body = _request_body(stk_cd, last_dt, adjusted)
+    collected: dict[str, Candle] = {}
+    cont_yn, next_key = "N", None
+    seen_keys: set[str] = set()
+    pages = 0
+    while True:
+        raw, cont_yn, next_key = await fetch_page(contract.tr_id, body, cont_yn, next_key)
+        rows = parse_page(raw, contract)
+        if not rows or len(rows) != len(raw.get(contract.container_alias, [])):
+            raise ValueError("전체 재수집 응답에 비어 있거나 잘못된 봉이 있어 기존 데이터를 유지합니다.")
+        for candle, item in zip(rows, raw[contract.container_alias], strict=True):
+            _parse_yyyymmdd(candle.dt)
+            prices = (candle.open, candle.high, candle.low, candle.close)
+            volume = _parse_ohlcv_number(item.get(contract.volume_alias))
+            if (len(candle.dt) != 8 or candle.dt > last_dt
+                or not all(isfinite(value) and value > 0 for value in prices)
+                or candle.low > min(candle.open, candle.close)
+                or candle.high < max(candle.open, candle.close)
+                or volume is None or not isfinite(volume) or volume < 0 or not volume.is_integer()):
+                raise ValueError("전체 재수집 봉의 날짜·OHLCV가 유효하지 않아 기존 데이터를 유지합니다.")
+            if candle.dt in collected and collected[candle.dt] != candle:
+                raise ValueError("전체 재수집 페이지의 같은 날짜 값이 달라 기존 데이터를 유지합니다.")
+            collected[candle.dt] = candle
+        pages += 1
+        oldest_dt = min(collected)
+        if on_progress:
+            on_progress(pages, len(rows), oldest_dt)
+        if oldest_dt <= first_dt:
+            break
+        if cont_yn == "N":
+            break
+        if cont_yn != "Y" or not next_key:
+            raise ValueError("전체 재수집 연속조회 정보가 불완전해 기존 데이터를 유지합니다.")
+        if next_key in seen_keys:
+            raise ValueError("전체 재수집 연속조회가 반복되어 기존 데이터를 유지합니다.")
+        seen_keys.add(next_key)
+
+    if not old_dates.issubset(collected):
+        raise ValueError("전체 재수집 결과가 요청·기존 범위를 채우지 못해 기존 데이터를 유지합니다.")
+    # 마지막 응답 직후 들어온 취소도 저장 전 반영한다.
+    await asyncio.sleep(0)
+    return await store.replace_candle_snapshot(
+        stk_cd, period, adjusted, expected=expected,
+        candles=[collected[dt] for dt in sorted(collected)],
+        first_dt=min(first_dt, min(collected)), last_dt=last_dt, fetched_at=now(), pages=pages,
+    )
 
 
 # ── 수집 계획 (§6.6 data/plan 화면용, §5.2 추정) ──────────────────────────────

@@ -277,12 +277,15 @@ async def start_backfill(
 ) -> JSONResponse:
     runner = _runner(request)
     stk_cd, period, adjusted, from_dt, to_dt = _parse_range_body(body)
+    full_refresh = body.get("full_refresh", False)
+    if not isinstance(full_refresh, bool):
+        raise HTTPException(status_code=422, detail="full_refresh는 명시적인 참/거짓 값이어야 합니다")
     job_id = str(uuid4())
     fetch_page = kiwoom_fetch_page(kiwoom_client)
     # base_dt=to_dt — backfill()은 base_dt에서 과거 방향으로 from_dt까지 채운다(§5.3).
     runner.start_backfill(
         job_id, fetch_page=fetch_page, stk_cd=stk_cd, period=period, adjusted=adjusted,
-        base_dt=to_dt, from_dt=from_dt,
+        base_dt=to_dt, from_dt=from_dt, full_refresh=full_refresh,
     )
     return JSONResponse(status_code=202, content={"job_id": job_id})
 
@@ -302,6 +305,9 @@ async def get_job(request: Request, job_id: str) -> dict[str, Any]:
         "status": job.status,
         "progress": progress,
         "error": job.error,
+        "error_code": job.error_code,
+        "recovery": job.recovery,
+        "refresh_snapshot_id": job.refresh_snapshot_id,
     }
 
 

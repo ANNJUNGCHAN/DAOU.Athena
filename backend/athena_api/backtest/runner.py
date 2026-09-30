@@ -36,7 +36,7 @@ from typing import Any, Literal
 import pandas as pd
 
 from athena_api.backtest.compile import compile_signals_with_warmup
-from athena_api.backtest.data import FetchPage
+from athena_api.backtest.data import AdjustmentDetected, FetchPage, refresh_candles
 from athena_api.backtest.data import backfill as run_backfill
 from athena_api.backtest.engine import DEFAULT_INITIAL_CASH, run_backtest
 from athena_api.backtest.flow import params_defaults
@@ -198,6 +198,9 @@ class Job:
     status: JobStatus = "running"
     progress: BackfillProgress | EnvProgress | None = None
     error: str | None = None
+    error_code: str | None = None
+    recovery: dict[str, Any] | None = None
+    refresh_snapshot_id: str | None = None
     task: asyncio.Task[Any] | None = field(default=None, repr=False)
 
 
@@ -239,6 +242,7 @@ class BacktestRunner:
         adjusted: bool,
         base_dt: str,
         from_dt: str,
+        full_refresh: bool = False,
     ) -> Job:
         job = Job(id=job_id, kind="backfill")
         self._jobs[job_id] = job
@@ -248,7 +252,7 @@ class BacktestRunner:
 
         async def run() -> None:
             try:
-                await run_backfill(
+                result = await (refresh_candles if full_refresh else run_backfill)(
                     store=self._store,
                     fetch_page=fetch_page,
                     stk_cd=stk_cd,
@@ -258,9 +262,16 @@ class BacktestRunner:
                     from_dt=from_dt,
                     on_progress=on_progress,
                 )
+                if full_refresh:
+                    job.refresh_snapshot_id = result
             except asyncio.CancelledError:
                 job.status = "cancelled"
                 raise
+            except AdjustmentDetected as exc:
+                job.status = "failed"
+                job.error_code = "ADJUSTMENT_DETECTED"
+                job.error = "저장된 종가와 새로 조회한 종가가 달라 수집을 중단했습니다. 기존 데이터는 보존되어 있습니다."
+                job.recovery = exc.recovery
             except Exception as exc:  # noqa: BLE001 — 잡 실패를 상태로 옮기는 경계
                 job.status = "failed"
                 job.error = str(exc)

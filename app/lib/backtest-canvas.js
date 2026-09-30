@@ -155,6 +155,7 @@ const OPTIMIZE_METHODS = [['grid', '그리드'], ['random', '랜덤']];
 const BACKTEST_DISABLED_TEXT = '백테스트 기능이 꺼져 있습니다 — 설정에서 백테스트를 켜야 합니다';
 const ERROR_BADGE_FAILED = '실패';
 const ERROR_BADGE_DISABLED = '비활성';
+const ADJUSTMENT_DETECTED_TEXT = '저장된 종가와 새로 조회한 종가가 달라 수집을 중단했습니다. 기존 데이터는 보존되어 있습니다.';
 
 function errorStateBadge(message) {
   return String(message || '').startsWith(BACKTEST_DISABLED_TEXT)
@@ -1079,7 +1080,7 @@ function createBacktestCanvas(options) {
   }
 
   function fail(err) {
-    setState({ view: 'error', message: String((err && err.message) || err) });
+    setState({ view: 'error', message: String((err && err.message) || err), adjustmentRecovery: null });
   }
 
   // ---------- 데이터 흐름 ----------
@@ -1725,7 +1726,7 @@ function createBacktestCanvas(options) {
 
   async function startRun(allowPartial) {
     const generation = workspaceGeneration;
-    setState({ view: 'running', progressText: '백테스트를 실행하는 중입니다…' });
+    setState({ view: 'running', progressText: '백테스트를 실행하는 중입니다…', adjustmentRecovery: null });
     let res;
     let codeRun = false;
     try {
@@ -1812,27 +1813,60 @@ function createBacktestCanvas(options) {
     });
   }
 
+  function backfillTarget() {
+    if (!spec || spec.symbols.length !== 1) return null;
+    return { stk_cd: spec.symbols[0], period: spec.period, adjusted: spec.adjusted,
+      from_dt: spec.fromDt, to_dt: spec.toDt };
+  }
+
+  function currentAdjustmentRecovery() {
+    const held = state.adjustmentRecovery;
+    const target = backfillTarget();
+    if (state.view !== 'error' || !held || !target || held.jobId !== state.jobId
+      || held.generation !== workspaceGeneration
+      || JSON.stringify(held.target) !== JSON.stringify(target)) return null;
+    const recovery = held.recovery;
+    if (!recovery || recovery.stk_cd !== target.stk_cd || recovery.period !== target.period
+      || recovery.adjusted !== target.adjusted || !/^\d{8}$/.test(recovery.from_dt)
+      || !/^\d{8}$/.test(recovery.to_dt) || recovery.from_dt > target.from_dt
+      || recovery.to_dt < target.to_dt || !Number.isInteger(recovery.estimated_pages)
+      || recovery.estimated_pages < 0 || !Number.isFinite(recovery.est_seconds)
+      || recovery.est_seconds < 0) return null;
+    return recovery;
+  }
+
+  async function confirmFullRefresh(recovery) {
+    if (!recovery || recovery !== currentAdjustmentRecovery()) return;
+    await startBackfill(recovery);
+  }
+
   async function confirmBackfill() {
+    await startBackfill();
+  }
+
+  async function startBackfill(recovery = null) {
     const generation = workspaceGeneration;
+    const target = backfillTarget();
+    const isCurrent = () => generation === workspaceGeneration && state.view === 'running'
+      && state.backfillTarget === target && JSON.stringify(target) === JSON.stringify(backfillTarget());
     // runId를 비운다 — 「수집 중」은 jobId && !runId로 읽히므로(resumePollingIfNeeded)
     // 앞 실행의 id가 남아 있으면 수집을 실행으로 오독한다.
     setState({
-      view: 'running', progressText: '데이터를 수집하는 중입니다…', runId: null,
+      view: 'running', progressText: recovery ? '전체 구간을 다시 수집하는 중입니다…' : '데이터를 수집하는 중입니다…',
+      runId: null, jobId: null, progress: null, adjustmentRecovery: null, backfillTarget: target,
+      ...(recovery ? { neededPages: recovery.estimated_pages, estSeconds: recovery.est_seconds } : {}),
     });
     let res;
     try {
       res = deps.backfill
-        ? await deps.backfill({
-          stk_cd: spec.symbols[0],
-          period: spec.period,
-          adjusted: spec.adjusted,
-          from_dt: spec.fromDt,
-          to_dt: spec.toDt,
-        })
+        ? await deps.backfill(recovery ? {
+          stk_cd: recovery.stk_cd, period: recovery.period, adjusted: recovery.adjusted,
+          from_dt: recovery.from_dt, to_dt: recovery.to_dt, full_refresh: true,
+        } : target)
         : null;
-      if (generation !== workspaceGeneration) return;
+      if (!isCurrent()) return;
       if (!res || !res.job_id) throw new Error('job_id를 받지 못했습니다');
-    } catch (err) { if (generation === workspaceGeneration) fail(err); return; }
+    } catch (err) { if (isCurrent()) fail(err); return; }
     setState({ jobId: res.job_id });
     pollJob();
   }
@@ -1841,16 +1875,20 @@ function createBacktestCanvas(options) {
     stopPolling();
     const generation = workspaceGeneration;
     const jobId = state.jobId;
+    // Keep the request's target even if the user leaves or edits while status is pending.
+    const target = state.backfillTarget || backfillTarget();
+    const isCurrent = () => generation === workspaceGeneration && !!jobId && state.jobId === jobId
+      && state.view === 'running' && JSON.stringify(target) === JSON.stringify(backfillTarget());
     const tick = async () => {
       pollTimer = null;
       // 「중단」은 예약된 타이머만 지운다 — 이미 status를 기다리고 있던 틱은 못 막는다.
       // 그 틱이 늦게 깨어나 폴링을 되살리거나 startRun을 부르면 사람이 멈춘 연쇄가 혼자
       // 이어진다. jobId가 비었으면(=중단했으면) 앞뒤 어느 지점에서든 여기서 끝낸다.
-      if (generation !== workspaceGeneration || !jobId || state.jobId !== jobId || !isVisible()) return;
+      if (!isCurrent() || !isVisible()) return;
       let job;
       try { job = deps.status ? await deps.status({ job_id: jobId }) : null; }
-      catch (err) { if (generation === workspaceGeneration && state.jobId === jobId) fail(err); return; }
-      if (generation !== workspaceGeneration || state.jobId !== jobId || !isVisible()) return;
+      catch (err) { if (isCurrent()) fail(err); return; }
+      if (!isCurrent() || !isVisible()) return;
       if (job && job.progress) {
         setState({
           progressText: `데이터를 수집하는 중입니다 · ${job.progress.page}페이지 · ${job.progress.rows}행`,
@@ -1859,7 +1897,13 @@ function createBacktestCanvas(options) {
       }
       if (job && job.status === 'done') { await startRun(false); return; }
       if (job && (job.status === 'failed' || job.status === 'cancelled')) {
-        setState({ view: 'error', message: job.error || '데이터 수집에 실패했습니다' });
+        const adjustment = job.status === 'failed' && job.error_code === 'ADJUSTMENT_DETECTED';
+        setState({
+          view: 'error', message: adjustment ? ADJUSTMENT_DETECTED_TEXT : (job.error || '데이터 수집에 실패했습니다'),
+          adjustmentRecovery: adjustment ? {
+            recovery: job.recovery, target, jobId, generation,
+          } : null,
+        });
         return;
       }
       schedulePoll(tick);
@@ -3032,6 +3076,8 @@ function createBacktestCanvas(options) {
       const panel = renderMessagePanel('backtest-canvas-error', message, badge);
       // 홈으로 가는 문은 오류 화면에도 선다(규칙 32-04) — 돌아갈 설계가 없는 자리에서
       // [기법으로 돌아가기]는 아무 데도 데려가지 못한다. 지금 기법은 버리지 않고 넣어 둔다.
+      const recovery = currentAdjustmentRecovery();
+      if (recovery) panel.appendChild(renderAdjustmentRecovery(recovery));
       panel.appendChild(button('backtest-error-home', CRUMB_HOME_LABEL, goHome));
       // 막다른 길 금지(보드 10) — 오류 화면에서 설계로 돌아갈 길이 없어 사용자가 갇혔다
       // (2026-09-02 실측 "뒤로가기가 없어"). 전략이 있으면 설계 폼으로, 없으면 프리셋부터.
@@ -5088,6 +5134,26 @@ function createBacktestCanvas(options) {
 
   // ── 보드 04 · 데이터 수집 승인 ────────────────────────────────────────────
 
+  function renderAdjustmentRecovery(recovery) {
+    const wrap = el('div', 'backtest-approval');
+    wrap.appendChild(el('div', 'backtest-approval-title', '가격 기준을 맞추려면 전체 구간을 다시 수집해야 합니다'));
+    wrap.appendChild(el('div', 'backtest-approval-note',
+      '가격 불일치의 원인은 아직 확인되지 않았습니다. 재수집과 검증이 끝나기 전에는 기존 데이터를 교체하지 않으며, 교체 전 원본도 별도로 보관합니다.'));
+    wrap.appendChild(el('div', 'backtest-approval-stat',
+      `전체 재수집 범위 · ${recovery.stk_cd} · ${draftValueText('period', recovery.period)} · 수정주가 ${recovery.adjusted ? '켬' : '끔'} · ${recovery.from_dt} ~ ${recovery.to_dt}`));
+    const dates = Array.isArray(recovery.mismatch_dates) ? recovery.mismatch_dates.filter(date => /^\d{8}$/.test(date)) : [];
+    if (dates.length) wrap.appendChild(el('div', 'backtest-approval-stat',
+      `종가 불일치 날짜 · ${dates.slice(0, 5).join(', ')}${dates.length > 5 ? ` 외 ${dates.length - 5}개` : ''}`));
+    wrap.appendChild(el('div', 'backtest-approval-stat',
+      `예상 API 호출 · ${formatNumeric(recovery.estimated_pages)}회 · 예상 소요 · ${formatNumeric(recovery.est_seconds)}초`));
+    wrap.appendChild(el('div', 'backtest-approval-note',
+      '기존 보유 구간도 다시 조회하므로 API 호출 한도를 추가로 사용합니다. 완료되면 선택한 기법의 원래 요청 기간으로 백테스트를 실행합니다.'));
+    wrap.appendChild(button('backtest-adjustment-refresh', '전체 구간 다시 수집하고 실행', () => {
+      void confirmFullRefresh(recovery);
+    }));
+    return wrap;
+  }
+
   function renderApproval() {
     const wrap = el('div', 'backtest-approval');
     const head = el('div', 'backtest-card-head');
@@ -5112,8 +5178,8 @@ function createBacktestCanvas(options) {
 
     wrap.appendChild(el(
       'div', 'backtest-approval-note',
-      '수정주가 기준으로 받습니다. 이어 붙일 때 최근 20봉 종가를 대조해 권리락이 감지되면 '
-      + '전체를 다시 받고, 그 사실을 결과에 남깁니다.',
+      '선택한 수정주가 설정으로 수집합니다. 저장된 종가와 새 종가가 다르면 기존 데이터를 보존하고 중단합니다. '
+      + '전체 구간 재수집은 범위와 예상 API 호출을 확인한 뒤 직접 승인할 수 있습니다.',
     ));
 
     const actions = el('div', 'backtest-approval-actions');

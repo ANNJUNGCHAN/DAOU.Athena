@@ -104,3 +104,14 @@ test("backtest project scope regression is narrowly kept", () => {
   assert.equal(isKeepPath("backend/verification/private-project-probe.py"), false);
   assert.equal(isKeepPath("backend/verification/project-registry.json"), false);
 });
+test("backtest refresh regression is kept without allowing adjacent private data", () => {
+  assert.equal(isKeepPath("backend/verification/test_backtest_refresh.py"), true);
+  for (const path of [
+    "backend/verification/private-refresh-probe.py",
+    "backend/verification/test_backtest_refresh.py.bak",
+    "backend/verification/refresh-cache.db",
+    "backend/verification/cache/prices.db",
+    "backend/verification/refresh-snapshot.json",
+    "backend/verification/.env",
+  ]) assert.equal(isKeepPath(path), false, path);
+});
