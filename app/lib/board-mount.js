@@ -6,6 +6,7 @@ const isCjs = typeof module !== 'undefined' && !!module.exports;
 const lib = (typeof window !== 'undefined' && window.AthenaLib) || {};
 const boardFormat = isCjs ? require('./board-format') : lib.BoardFormat;
 const registry = isCjs ? require('./board-template-registry') : lib.BoardTemplateRegistry;
+const displayPolicy = isCjs ? require('./board-display-policy') : lib.BoardDisplayPolicy;
 
 const ROLLUP_MARK = '▸';
 
@@ -204,6 +205,7 @@ function shouldBlankFixtureMarketStat(slot, text, identity) {
 }
 
 function mountPlan(contract, values, options = {}) {
+  ({ contract, values } = displayPolicy.prepareDisplayInput(contract, values));
   const pending = pendingSet(options);
   const identity = options.identity;
   const identitySlots = new Set();
@@ -452,45 +454,40 @@ function holdsValue(box, valued) {
   return false;
 }
 
-// 값이 한 줄도 없는 표의 열은 머리글까지 지운다(계약의 `empty_columns`). 줄 접기와
-// 같은 이유다 — 스무 줄 내리 결측어인 열은 「이번 응답에 그 필드가 없다」를 스무 번
-// 말하는 자리다. 열은 여러 줄에 흩어져 있으므로 공통 상자가 아니라 칸마다 감춘다.
-function collapseEmptyColumns(surface, emptyColumns) {
-  const columns = Array.isArray(emptyColumns) ? emptyColumns : [];
-  if (!columns.length || typeof surface.querySelectorAll !== 'function') return [];
-  const bySlot = slotElementIndex(surface);
-  const hidden = [];
-  for (const column of columns) {
-    const slotIds = Array.isArray(column && column.slot_ids) ? column.slot_ids : [];
-    // 표 전체가 빈 경우는 칸마다 감추지 않고 표를 담은 상자를 한 번에 감춘다 —
-    // 머리글만 남은 표를 화면에 남기지 않으려는 것이다.
-    if (column.whole_table) {
-      const elements = slotIds.map((slotId) => bySlot.get(slotId)).filter(Boolean);
-      const box = elements.length ? commonAncestor(elements) : null;
-      if (box && box !== surface) {
-        setHidden(box, true);
-        if (box.dataset) box.dataset.bsTableCollapsed = 'true';
-        hidden.push({ column: column.column, cells: elements.length });
-        continue;
-      }
-    }
-    let count = 0;
-    for (const slotId of slotIds) {
-      const el = bySlot.get(slotId);
-      if (!el) continue;
-      setHidden(el, true);
-      if (el.dataset) el.dataset.bsColumnCollapsed = 'true';
-      count += 1;
-    }
-    if (count) hidden.push({ column: column.column, cells: count });
+// 빈 열도 헤더와 자리를 유지한다. 셀을 숨기면 뒤 값이 다른 헤더 아래로 이동한다.
+// 이전 empty_columns 적용 흔적은 복원하고, 전체 빈 행 제거는 collapseEmptyRows가 맡는다.
+function collapseEmptyColumns(surface) {
+  if (typeof surface.querySelectorAll !== 'function') return [];
+  for (const el of surface.querySelectorAll('[data-bs-column-collapsed="true"], [data-bs-table-collapsed="true"]')) {
+    setHidden(el, false);
+    delete el.dataset.bsColumnCollapsed;
+    delete el.dataset.bsTableCollapsed;
   }
-  if (surface.dataset) surface.dataset.bsColumnsCollapsed = String(hidden.length);
-  return hidden;
+  if (surface.dataset) surface.dataset.bsColumnsCollapsed = '0';
+  return [];
+}
+
+function tableCellOf(el) {
+  if (!el || typeof el.closest !== 'function') return null;
+  const cell = el.closest('[data-col], [role="cell"], [role="columnheader"]');
+  return cell && cell.closest('[data-row], [role="row"]') ? cell : null;
 }
 
 function collapseEmptyRows(surface, emptyRows, options = {}) {
   const rows = Array.isArray(emptyRows) ? emptyRows : [];
-  if (!rows.length || typeof surface.querySelectorAll !== 'function') return [];
+  if (typeof surface.querySelectorAll !== 'function') return [];
+  // 다음 조회에 행이 채워질 수 있다. 이 함수가 접었던 행만 먼저 복원한다.
+  for (const row of surface.querySelectorAll('[data-bs-row-collapsed="true"]')) {
+    setHidden(row, false);
+    delete row.dataset.bsRowCollapsed;
+  }
+  if (!rows.length) {
+    if (surface.dataset) {
+      surface.dataset.bsRowsCollapsed = '0';
+      surface.dataset.bsRowsSkipped = '[]';
+    }
+    return [];
+  }
   const bySlot = slotElementIndex(surface);
   const valued = [];
   for (const el of bySlot.values()) {
@@ -551,11 +548,12 @@ function hideEmptyValueUnits(surface, plan) {
   for (const slotId of emptyIds) {
     const el = bySlot.get(slotId);
     if (!el) continue;
+    if (tableCellOf(el)) continue;
     let box = el.parentElement;
     while (box && box !== surface && box.children && box.children.length < 2) {
       box = box.parentElement;
     }
-    if (!box || box === surface) continue;
+    if (!box || box === surface || containsBoardChrome(box)) continue;
     const slots = [...box.querySelectorAll('[data-slot-id]')];
     const live = slots.some((node) => {
       const id = node.dataset ? node.dataset.slotId : '';
@@ -564,7 +562,10 @@ function hideEmptyValueUnits(surface, plan) {
       if (node.dataset && node.dataset.bsDesignText) return false;
       return String(node.textContent || '').trim() !== '';
     });
-    if (!live) setHidden(box, true);
+    if (!live) {
+      setHidden(box, true);
+      surface.__bsEmptyValueHidden.add(box);
+    }
   }
 }
 
@@ -581,8 +582,14 @@ function unitBoxForUnavailable(el, surface) {
   while (box && box !== surface && box.children && box.children.length < 2) {
     box = box.parentElement;
   }
-  if (!box || box === surface) return null;
+  if (!box || box === surface || containsBoardChrome(box)) return null;
   return box;
+}
+
+function containsBoardChrome(box) {
+  const selector = '.bs-header, .bs-strip, [data-state-control], [data-state-board]';
+  return (typeof box.closest === 'function' && !!box.closest(selector))
+    || (typeof box.querySelector === 'function' && !!box.querySelector(selector));
 }
 
 function unitHasLiveSlot(box) {
@@ -596,7 +603,7 @@ function unitHasLiveSlot(box) {
   });
 }
 
-// 렌더러가 찍은 `미제공`은 화면에 남기지 않는다. 칸을 감추고, 그 상자에 실값이
+// 표 안의 미제공은 자리를 유지한다. 그 밖의 칸은 감추고, 그 상자에 실값이
 // 하나도 없으면 라벨이 빈 채로 남는 행도 함께 접는다. `집계 전`·`해당 없음`은
 // 다른 결측 사유라서 그대로 둔다. 값이 오면 같은 자리의 display를 되돌린다.
 function hideUnavailableUnits(surface) {
@@ -610,13 +617,14 @@ function hideUnavailableUnits(surface) {
   };
   for (const el of surface.querySelectorAll('[data-slot-id]')) {
     if (!isUnavailableSlotEl(el)) continue;
+    if (tableCellOf(el)) continue;
     add(el);
     const box = unitBoxForUnavailable(el, surface);
     if (box && !unitHasLiveSlot(box)) add(box);
   }
   const prev = Array.isArray(surface.__bsUnavailableHidden) ? surface.__bsUnavailableHidden : [];
   for (const el of prev) {
-    if (seen.has(el)) continue;
+    if (seen.has(el) || surface.__bsEmptyValueHidden?.has(el) || el.dataset?.bsRowCollapsed === 'true') continue;
     setHidden(el, false);
     if (el.dataset) delete el.dataset.bsUnavailableHidden;
   }
@@ -629,6 +637,11 @@ function hideUnavailableUnits(surface) {
 
 // DOM 쓰기 층 — 텍스트 노드만 건드린다. 구조·인라인 스타일 원문은 손대지 않는다(D1).
 function applyPlan(root, plan, options = {}) {
+  if (!options.partial) {
+    // hydration 이전 빈 값 때문에 접은 묶음만 복원한다. 명시적인 빈 행 접기는 뒤에서 적용한다.
+    for (const box of root.__bsEmptyValueHidden || []) setHidden(box, false);
+    root.__bsEmptyValueHidden = new Set();
+  }
   const index = nodeIndex(root);
   const mirrors = pairedMirrorIndex(root);
   const unbound = [];
@@ -637,7 +650,7 @@ function applyPlan(root, plan, options = {}) {
     const el = index.get(assignment.node);
     if (!el) { unbound.push(assignment.slotId); continue; }
     if (elementChildCount(el) > 0) { containers.push(assignment.slotId); continue; }
-    el.textContent = assignment.text;
+    el.textContent = assignment.missing && assignment.text === boardFormat.missingText() && tableCellOf(el) ? '—' : assignment.text;
     setTone(el, assignment.tone, assignment.forceFlatTone);
     if (el.dataset) {
       el.dataset.slotId = assignment.slotId;
@@ -1466,6 +1479,238 @@ function applyResponsiveHooks(surface) {
   return hoisted;
 }
 
+// 실측으로 확인한 일곱 상태만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
+const READABLE_TABLES = {
+  '15J9-2': { node: '355R-0', rows: ['355S-0', '355Z-0', '356G-0', '356X-0'], widths: [166, 160, 126, 210, 180, 160], gap: 12, label: '주도 종목' },
+  '2SCE-1': { node: '375G-0', rows: ['375K-0', '379R-0', '37EU-0', '37FJ-0', '37G8-0', '37GX-0', '37HM-0', '37IB-0', '37J0-0'], widths: [168, 186, 144, 190, 222, 160], label: '보유종목' },
+  '3LGC-0': { node: '3LVJ-0', rows: ['3LVN-0', '3MHR-0', '3MI8-0', '3MIO-0', '3MJ5-0', '3MJL-0', '3MK3-0', '3MKJ-0', '3ML0-0', '3MLG-0'], widths: [112, 148, 390, 204, 216], label: '매매일지' },
+  '2R3M-1': { node: '3DFG-0', rows: ['3DG5-0', '3DGK-0', '3DGZ-0', '3DHE-0'], widths: [64, 80, 80, 80, 80, 96, 160, 144], label: '일별 시세', stack: false, compact: true },
+};
+const BASKET_ROWS = ['3ECU-0', '3EE8-0', '3EEF-0', '3EEM-0', '3EET-0'];
+const BASKET_SLOTS = [['s031', 's033'], ['s036', 's037'], ['s040', 's041'], ['s044', 's045'], ['s048', 's049']];
+
+function authoredNode(surface, id) {
+  return [...surface.querySelectorAll(`[data-node="${id}"]`)]
+    .find((node) => !node.closest('.bs-paired')) || null;
+}
+
+function layoutGroup(doc, className) {
+  const group = doc.createElement('div');
+  group.className = className;
+  return group;
+}
+
+function readableTable(surface, contract, config) {
+  const owner = authoredNode(surface, config.node);
+  const rows = config.rows.map((id) => authoredNode(surface, id));
+  if (!owner || rows.some((row) => !row)) return;
+  const doc = surface.ownerDocument;
+  const viewport = layoutGroup(doc, 'bs-readable-scroll');
+  viewport.tabIndex = 0;
+  viewport.setAttribute('role', 'region');
+  viewport.setAttribute('aria-label', `${config.label} 표, 좌우 방향키로 이동`);
+  const inner = layoutGroup(doc, 'bs-readable-table');
+  inner.setAttribute('role', 'table');
+  inner.setAttribute('aria-label', config.label);
+  inner.style.setProperty('--bs-table-width', `${config.widths.reduce((a, b) => a + b, 0) + (config.widths.length - 1) * (config.gap || 0)}px`);
+  inner.style.setProperty('--bs-table-gap', `${config.gap || 0}px`);
+  owner.insertBefore(viewport, rows[0]);
+  viewport.append(inner);
+  for (const [rowIndex, row] of rows.entries()) {
+    if (!row.dataset.row) row.dataset.row = rowIndex === 0 ? 'head' : String(rowIndex - 1);
+    // 병기 사본은 원본 열을 모두 유지하는 이 표에서는 필요 없다.
+    for (const mirror of row.querySelectorAll('.bs-paired')) mirror.remove();
+    let cells = [...row.querySelectorAll('[data-col]')]
+      .filter((cell) => cell.closest('[data-row]') === row);
+    if (!cells.length) cells = [...row.children];
+    if (contract.board_id === '2SCE-1' && cells.length === 7) {
+      cells[1].append(...cells[6].childNodes);
+      cells[6].remove();
+      cells.pop();
+    }
+    row.classList.add('bs-readable-row');
+    row.setAttribute('role', 'row');
+    row.style.removeProperty('gap');
+    row.style.removeProperty('padding-inline');
+    row.style.removeProperty('padding');
+    if (contract.board_id === '3LGC-0' && row.dataset.node === '3MHR-0') {
+      row.style.setProperty('border-left-width', '0');
+      row.style.setProperty('box-shadow', 'inset 2px 0 0 var(--color-brand)');
+    }
+    for (const [index, cell] of cells.entries()) {
+      cell.classList.add('bs-readable-cell');
+      cell.dataset.col = String(index);
+      cell.style.setProperty('--bs-cell-width', `${config.widths[index]}px`);
+      cell.setAttribute('role', rowIndex === 0 ? 'columnheader' : 'cell');
+      cell.style.removeProperty('justify-content');
+      cell.style.removeProperty('align-items');
+      for (const node of [cell, ...cell.querySelectorAll('*')]) {
+        if (!node.children.length) {
+          node.style.removeProperty('font-size');
+          node.style.removeProperty('line-height');
+          node.style.removeProperty('text-align');
+          node.dataset.bsTableText = 'true';
+        }
+      }
+    }
+    inner.append(row);
+  }
+  const hint = layoutGroup(doc, 'bs-readable-hint');
+  hint.textContent = '표를 좌우로 이동해 모든 열을 확인하세요';
+  viewport.after(hint);
+  owner.classList.add('bs-readable-owner');
+  if (config.compact) owner.classList.add('bs-readable-compact');
+}
+
+function applyReadableBoardLayout(surface, contract) {
+  const id = contract.board_id;
+  if (!READABLE_TABLES[id] && !['3D4I-0', '3EWN-0', '3JZ3-0', '3DZ1-0', '137X-2', '2VDA-0', '133H-2', '2SKU-1', '15N5-2'].includes(id)) return;
+  surface.dataset.bsLayout = id;
+  if (['2R3M-1', '2VDA-0', '133H-2', '15N5-2'].includes(id)) {
+    const rail = surface.querySelector('.bs-rail');
+    rail.style.setProperty('--bs-rail-direction', rail.style.getPropertyValue('flex-direction') || 'column');
+    rail.style.removeProperty('flex-direction');
+  }
+  if (READABLE_TABLES[id] && READABLE_TABLES[id].stack !== false) {
+    surface.querySelector('.bs-workspace').style.removeProperty('flex-direction');
+  }
+  if (READABLE_TABLES[id]) readableTable(surface, contract, READABLE_TABLES[id]);
+  if (id === '15N5-2') {
+    // 이 템플릿의 선·구성 막대는 응답에 연결되지 않은 고정 예시다. 앵커는 보존한다.
+    for (const [nodeId, message] of [
+      ['3D47-0', '가격·NAV 추이 데이터가 제공되지 않았습니다'],
+      ['3CWC-0', '구성종목 비중 데이터가 제공되지 않았습니다'],
+    ]) {
+      const owner = authoredNode(surface, nodeId);
+      owner.classList.add('bs-unavailable-graphic');
+      for (const child of owner.children) {
+        child.classList.add('bs-unavailable-graphic-source');
+        child.style.display = 'none';
+      }
+      const note = layoutGroup(surface.ownerDocument, 'bs-unavailable-graphic-message');
+      note.setAttribute('role', 'status');
+      note.textContent = message;
+      owner.append(note);
+    }
+    const legend = authoredNode(surface, '3CW5-0');
+    legend.classList.add('bs-unavailable-graphic-source');
+    legend.style.display = 'none';
+    const heading = authoredNode(surface, '3CWB-0');
+    const composition = layoutGroup(surface.ownerDocument, 'bs-unavailable-graphic-section');
+    heading.before(composition);
+    composition.append(heading, authoredNode(surface, '3CWC-0'));
+  }
+  if (id === '15J9-2') {
+    const doc = surface.ownerDocument;
+    const score = authoredNode(surface, '15JM-2');
+    score.style.removeProperty('flex-direction');
+    const summary = layoutGroup(doc, 'bs-theme-summary-details');
+    summary.append(authoredNode(surface, '15JN-2'), authoredNode(surface, '15JR-2'), authoredNode(surface, '15JU-2'));
+    score.append(summary);
+    const evidence = authoredNode(surface, '15KI-2');
+    const columns = layoutGroup(doc, 'bs-theme-evidence-columns');
+    const metrics = layoutGroup(doc, 'bs-theme-metrics');
+    metrics.append(authoredNode(surface, '3HJL-0'), authoredNode(surface, '32I4-0'));
+    columns.append(authoredNode(surface, '3HF8-0'), metrics);
+    evidence.append(columns);
+  }
+  if (id === '3D4I-0' || id === '3EWN-0') {
+    const rowIds = id === '3D4I-0' ? ['3EAY-0', '3EMO-0'] : ['3EZV-0', '3EY6-0'];
+    for (const rowId of rowIds) {
+      const row = authoredNode(surface, rowId);
+      row.classList.add('bs-detail-panels');
+      for (const panel of row.children) {
+        panel.classList.add('bs-detail-panel');
+        // 패널 내부의 고정 두 칸도 같은 비율로 줄여 숫자 칸의 최소 폭을 지킨다.
+        const widths = { 402: '100%', 191: 'calc((100% - 20px) / 2)', 170: 'calc((100% - 20px) / 2)', 62: '54px', 151: 'calc((100% - 54px) / 2)', 100: '80px' };
+        for (const node of panel.querySelectorAll('[data-bs-hoisted]')) {
+          const width = pxNumber(node.style.getPropertyValue('--bs-width'));
+          if (widths[width]) node.style.setProperty('--bs-width', widths[width]);
+        }
+      }
+    }
+  }
+  if (id === '3JZ3-0') {
+    const rows = ['3UC7-0', '3UCD-0', '3UCP-0'].map((node) => authoredNode(surface, node));
+    rows[0].parentElement.classList.add('bs-exchange-scroll');
+    rows[0].parentElement.tabIndex = 0;
+    rows[0].parentElement.setAttribute('role', 'region');
+    rows[0].parentElement.setAttribute('aria-label', '거래소 비교 표, 좌우 방향키로 이동');
+    for (const row of rows) {
+      row.classList.add('bs-exchange-row');
+      [...row.children].forEach((cell, index) => {
+        cell.classList.add('bs-exchange-cell');
+        cell.style.setProperty('--bs-cell-width', `${[36, 64, 66, 102, 102][index]}px`);
+      });
+    }
+  }
+  if (id === '137X-2') {
+    const sessions = authoredNode(surface, '38LB-0');
+    sessions.classList.add('bs-session-scroll');
+    sessions.tabIndex = 0;
+    sessions.setAttribute('role', 'region');
+    sessions.setAttribute('aria-label', '세션별 거래, 좌우 방향키로 이동');
+    for (const rowId of ['38LH-0', '38LP-0', '38LX-0', '38M5-0']) {
+      const row = authoredNode(surface, rowId);
+      row.classList.add('bs-session-row');
+      [...row.children].forEach((cell, index) => cell.style.setProperty('--bs-cell-width', `${[46, 162, 162][index]}px`));
+    }
+  }
+}
+
+function updateEmptyTableStates(surface) {
+  const tables = surface.dataset.bsLayout === '2R3M-1'
+    ? [['3CRW-0', '체결 내역']]
+    : surface.dataset.bsLayout === '2VDA-0' ? [['3HMX-0', '순위 종목'], ['3HXP-0', '최근 경신 내역']]
+      : surface.dataset.bsLayout === '133H-2' ? [['14UQ-2', '보유 종목']] : [];
+  let empty = false;
+  for (const [id, label] of tables) {
+    const table = authoredNode(surface, id);
+    if (!table) continue;
+    const rows = [...table.querySelectorAll('[data-row]')].filter((row) => row.dataset.row !== 'head');
+    // 서버 empty_rows로 접힌 행만 빈 목록의 근거로 쓴다. pending/hydration은 제외한다.
+    const allCollapsed = rows.length > 0 && rows.every((row) => row.dataset.bsRowCollapsed === 'true');
+    let message = table.__bsEmptyMessage;
+    if (allCollapsed && !message) {
+      message = layoutGroup(surface.ownerDocument, 'bs-empty-table-message');
+      message.setAttribute('role', 'status');
+      message.textContent = `표시할 ${label}이 없습니다`;
+      table.append(message);
+      table.__bsEmptyMessage = message;
+    }
+    if (message) message.hidden = !allCollapsed;
+    table.classList.toggle('bs-empty-table', allCollapsed);
+    empty = empty || allCollapsed;
+  }
+  surface.classList.toggle('bs-has-empty-table', empty);
+}
+
+// 결측 자료와 해당 없음은 다르다. 구성종목 이름과 비중 모두 명시적으로 해당 없음인
+// 행만 접는다. 다음 응답에 종목이 생기면 같은 DOM 행을 다시 드러낸다.
+function inapplicableBasketRows(contract, plan, values) {
+  if (!contract || contract.board_id !== '3DZ1-0') return [];
+  const texts = new Map(plan.assignments.map((item) => [item.slotId, String(item.text).replace(/\s/g, '')]));
+  // 런타임 계약은 mapping 필드를 제거하므로 검증된 원본 슬롯 쌍을 사용한다.
+  // 실제 응답에 두 값이 없으면 Paper의 라벨 fallback만 보고 숨기지 않는다.
+  return BASKET_ROWS.filter((row, index) => BASKET_SLOTS[index].every((slot) =>
+    values && Object.prototype.hasOwnProperty.call(values, slot) && texts.get(slot) === '해당없음'));
+}
+
+function updateBasketRows(surface, contract, plan, values) {
+  if (contract.board_id !== '3DZ1-0') return;
+  const hidden = new Set(inapplicableBasketRows(contract, plan, values));
+  for (const id of BASKET_ROWS) {
+    const row = authoredNode(surface, id);
+    if (!row) continue;
+    if (hidden.has(id)) {
+      if (!row.hidden) { setHidden(row, true); row.dataset.bsBasketHidden = 'true'; }
+    } else if (row.dataset.bsBasketHidden === 'true') {
+      setHidden(row, false);
+      delete row.dataset.bsBasketHidden;
+    }
+  }
+}
+
 // ---------- 마지막 처방: **재고 나서** 넘친 줄만 접는다 ----------
 //
 // 구조만 보고 미리 접으면 레이아웃이 정착하지 않는다(markWrapRow 위 주석의 실측).
@@ -1728,25 +1973,24 @@ function watchSurfaceWidth(surface) {
   // 배정한 border-box 폭만 리사이즈로 본다.
   const borderWidth = () => surface.getBoundingClientRect().width;
   let last = borderWidth();
-  // 콜백은 배치가 끝난 뒤에 온다 — 여기서 바로 재는 것이 맞다. rAF로 한 프레임
-  // 미루면 오클루전된 창에서 프레임이 눌려 알림이 한 단계씩 늦는다(실측: 전수
-  // 프로브가 폭을 네 번 바꾸는 동안 처방이 늘 한 단계 뒤에 걸렸다).
-  // 콜백 안에서 배치를 바꾸므로 관찰자가 다시 불린다 — 재진입을 막지 않으면
-  // 「ResizeObserver loop completed with undelivered notifications」가 뜬다(실측).
-  // 폭이 실제로 달라졌을 때만, 그리고 한 번에 하나만 돌린다.
+  // ResizeObserver 전달 중 높이를 바꾸면 같은 프레임에 새 알림이 생긴다.
+  // 다음 task에서 한 번만 보정한다. rAF와 달리 가려진 Electron 창에서도 실행된다.
   let running = false;
   const observer = new ResizeObserver(() => {
     if (running) return;
     const width = borderWidth();
     if (Math.abs(width - last) < 2) return;
-    last = width;
     running = true;
-    try {
-      relaxOverflowHeights(surface);
-      relaxOverflowRows(surface);
-    } finally {
-      running = false;
-    }
+    setTimeout(() => {
+      try {
+        if (surface.isConnected === false) return;
+        last = borderWidth();
+        relaxOverflowHeights(surface);
+        relaxOverflowRows(surface);
+      } finally {
+        running = false;
+      }
+    }, 0);
   });
   observer.observe(surface, { box: 'border-box' });
   surface.__bsWidthWatch = observer;
@@ -1865,7 +2109,7 @@ function boardIdentityFromEnvelope(envelope = {}, values = null) {
       ? (raw.find((slot) => slot.slot_id === 's001') || {}).value : raw.s001);
   }
   if (!name) name = nameFromBoundValues(values);
-  return { name, code };
+  return displayPolicy.correctBoardIdentity(envelope, values, { name, code });
 }
 
 function mountBoard(root, boardId, values, options = {}) {
@@ -1890,11 +2134,14 @@ function mountBoard(root, boardId, values, options = {}) {
     surface = surfaceRoot(root);
     if (!surface) throw new Error(`board.html에 보드 루트가 없다 — ${boardId}`);
     applyResponsiveHooks(surface);
+    applyReadableBoardLayout(surface, contract);
     scrubRawIdentityNames(surface);
     root.__bsSurface = surface;
     root.__bsBoardId = String(boardId);
   }
   const report = applyPlan(surface, plan, options);
+  updateBasketRows(surface, contract, plan, values);
+  updateEmptyTableStates(surface);
   // 값이 실린 뒤에 잰다 — 목업보다 긴 값이 들어오면 줄이 그때 넘친다. 폭이 바뀌면
   // 표면의 관찰자가 다시 잰다.
   relaxOverflowHeights(surface);
@@ -1983,6 +2230,7 @@ const __exports = {
   hoistLayout, hoistRigidBox, applyResponsiveHooks, surfaceRoot,
   primaryMountPoint, collapsePrimaryMockup, restorePrimaryMockup, mountBoard, mountBoardAsync,
   markPrimaryRows,
+  inapplicableBasketRows,
   boardIdentityFromEnvelope,
   createLatestBoardLoad, nextHydrationSlots,
   RAW_IDENTITY_NAME, scrubRawIdentityNames,

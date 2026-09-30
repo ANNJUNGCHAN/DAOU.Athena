@@ -507,3 +507,176 @@
  * 모자이크 통합 카드는 패널 여러 장을 세로로 쌓는 뼈대가 그대로 맞다. */
 .card[data-board-surface="true"] .integrated-card-panels { flex: 1 1 auto; min-height: 0; }
 .card[data-board-surface="true"] .integrated-card-panel { height: 100%; min-height: 0; }
+
+/* 집중 보기는 본문 높이만 사용한다. 고정 원본 폭도 스크롤바가 차지한 폭을 양보한다. */
+.canvas-tab-panel .board-surface[data-bs-hoisted] { min-height: 0; }
+@container board (min-width: 1280px) {
+  .canvas-tab-panel .board-surface .bs-workspace > .bs-primary { flex-shrink: 1; }
+}
+
+/* Paper 개선안: 세 표는 열을 접는 대신 읽을 수 있는 폭을 보존한다. */
+:is([data-bs-layout="15J9-2"], [data-bs-layout="2SCE-1"], [data-bs-layout="3LGC-0"]) .bs-workspace {
+  flex-direction: column;
+  height: auto;
+  min-height: 0;
+}
+:is([data-bs-layout="15J9-2"], [data-bs-layout="2SCE-1"], [data-bs-layout="3LGC-0"]) :is(.bs-primary, .bs-rail) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 auto;
+}
+.bs-readable-owner[data-bs-hoisted] { width: 100%; height: auto; min-height: 0; flex: 0 0 auto; container-type: inline-size; container-name: readable; }
+.bs-readable-scroll {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  flex: 0 0 auto;
+}
+.bs-readable-scroll:focus-visible, .bs-exchange-scroll:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: -2px;
+}
+.bs-readable-table { width: max(100%, var(--bs-table-width)); }
+.bs-readable-table .bs-col { display: contents; }
+.bs-readable-table .bs-readable-row {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: var(--bs-table-width);
+  max-width: none;
+  height: auto;
+  min-height: 70px;
+  flex: 0 0 auto;
+  gap: var(--bs-table-gap);
+}
+.bs-readable-table .bs-readable-row[data-row="head"] { min-height: 40px; }
+.bs-readable-table .bs-readable-cell {
+  width: var(--bs-cell-width);
+  min-width: var(--bs-cell-width);
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 var(--bs-cell-width);
+  padding: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: right;
+  font-size: 13px;
+  line-height: 18px;
+  box-sizing: border-box;
+}
+.bs-readable-cell[data-col="0"], [data-bs-layout="3LGC-0"] .bs-readable-cell[data-col="2"] {
+  align-items: flex-start;
+  text-align: left;
+}
+.bs-readable-table .bs-readable-cell [data-bs-hoisted] {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  flex-shrink: 0;
+}
+.bs-readable-table [data-bs-table-text="true"] { font-size: 13px; line-height: 18px; }
+.bs-readable-table [data-row="head"] [data-bs-table-text="true"],
+.bs-readable-cell > [data-bs-table-text="true"] ~ [data-bs-table-text="true"] { font-size: 12px; }
+.bs-readable-hint { display: none; color: var(--color-k-dim); font-size: 12px; line-height: 18px; padding-top: 6px; }
+@container readable (max-width: 1069px) { .bs-readable-hint { display: block; } }
+[data-bs-layout="2SCE-1"] [data-node="3890-0"] { flex-wrap: wrap; height: auto; min-height: 0; }
+[data-bs-layout="2SCE-1"] [data-node="3891-0"] { flex-shrink: 0; min-width: max-content; }
+
+/* 테마 요약 → 종목 표 → 확산 근거: 원본 정보를 넓은 행으로 나눈다. */
+[data-bs-layout="15J9-2"] :is([data-node="15JM-2"], [data-node="15KI-2"], [data-node="3HJL-0"], [data-node="32I4-0"]) {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 auto;
+}
+[data-bs-layout="15J9-2"] [data-node="15JM-2"] { flex-direction: row; gap: 28px; flex-wrap: wrap; align-items: center; }
+[data-bs-layout="15J9-2"] [data-node="15JQ-2"] { width: 220px; flex: 0 0 220px; }
+.bs-theme-summary-details { display: flex; flex-direction: column; gap: 20px; flex: 1 1 300px; min-width: 0; }
+.bs-theme-summary-details > [data-bs-hoisted] { width: 100%; height: auto; min-height: 0; }
+.bs-theme-evidence-columns { display: flex; flex-wrap: wrap; gap: 28px; width: 100%; }
+.bs-theme-evidence-columns > [data-bs-hoisted], .bs-theme-metrics { flex: 1 1 300px; width: 0; min-width: 0; }
+.bs-theme-metrics { display: flex; flex-direction: column; gap: 14px; }
+[data-bs-layout="15J9-2"] .bs-readable-cell { padding-inline: 0; }
+
+/* 펼친 종목의 두 패널은 본문 폭 안에서 균등 분할하고, 333px보다 작아지면 한 열. */
+:is([data-bs-layout="3D4I-0"], [data-bs-layout="3EWN-0"]) :is(.bs-workspace, .bs-primary, .bs-rail) {
+  height: auto;
+  min-height: 0;
+}
+.board-surface .bs-detail-panels {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.board-surface .bs-detail-panel {
+  width: auto;
+  min-width: min(100%, 333px);
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  flex: 1 1 333px;
+}
+.bs-detail-panel [data-bs-hoisted] { min-height: 0; }
+
+/* 거래소 비교의 머리글과 숫자에 동일한 370px 열 계약을 준다. */
+.bs-exchange-scroll { max-width: 100%; min-width: 0; overflow-x: auto; }
+.bs-exchange-scroll .bs-exchange-row { width: 370px; max-width: none; min-width: 370px; flex-wrap: nowrap; }
+.bs-exchange-row .bs-exchange-cell {
+  width: var(--bs-cell-width);
+  min-width: var(--bs-cell-width);
+  max-width: none;
+  flex: 0 0 var(--bs-cell-width);
+}
+.bs-exchange-cell [data-bs-hoisted] { width: 100%; min-height: 0; }
+.bs-exchange-cell { white-space: nowrap; }
+
+/* 실제 구성종목이 없는 자리만 접은 뒤 고정 표 높이도 함께 놓는다. */
+[data-bs-layout="3DZ1-0"] :is(.bs-workspace, .bs-primary, [data-node="3ECI-0"]) {
+  height: auto;
+  min-height: 0;
+}
+
+/* 실제 응답의 긴 수량도 셀 안에서 읽히도록 거래량과 비율을 두 줄로 둔다. */
+.bs-session-scroll { max-width: 100%; min-width: 0; overflow-x: auto; }
+.bs-session-scroll .bs-session-row { width: 370px; min-width: 370px; max-width: none; height: auto; min-height: 0; flex-wrap: nowrap; }
+.bs-session-row > [data-bs-hoisted] { width: var(--bs-cell-width); min-width: var(--bs-cell-width); max-width: none; height: auto; min-height: 0; flex: 0 0 var(--bs-cell-width); flex-direction: column; align-items: flex-end; }
+.bs-session-row > [data-bs-hoisted] [data-bs-hoisted] { width: auto; height: auto; min-height: 0; flex-shrink: 0; }
+.bs-readable-compact[data-bs-hoisted] { container-name: readable-quote; }
+.bs-readable-compact .bs-readable-row { min-height: 48px; }
+@container readable-quote (max-width: 783px) { .bs-readable-hint { display: block; } }
+
+/* 빈 응답에 고정 높이의 표 골격만 남기지 않는다. 데이터 대기 상태에는 적용하지 않는다. */
+.board-surface.bs-has-empty-table { min-height: 0; }
+.bs-has-empty-table :is(.bs-workspace, .bs-primary, .bs-rail),
+.board-surface .bs-empty-table { height: auto; min-height: 0; }
+.bs-empty-table-message { padding: 20px 0; color: var(--color-k-dim); font-size: 13px; line-height: 20px; }
+.bs-empty-table-message[hidden] { display: none; }
+:is([data-bs-layout="133H-2"], [data-bs-layout="2R3M-1"], [data-bs-layout="2VDA-0"]) .bs-rail { flex-direction: var(--bs-rail-direction, column); }
+.bs-has-empty-table .bs-workspace { flex-direction: column; }
+.bs-has-empty-table :is(.bs-primary, .bs-rail) { width: 100%; min-width: 0; flex: 0 0 auto; }
+.bs-has-empty-table .bs-rail { flex-direction: row; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.bs-has-empty-table .bs-rail > * { width: auto; min-width: min(100%, 320px); height: auto; min-height: 0; flex: 1 1 320px; }
+[data-bs-layout="2R3M-1"].bs-has-empty-table .bs-rail > * { min-width: min(100%, 480px); flex-basis: 480px; }
+
+/* 자료에 연결되지 않은 ETF 예시 그래프는 안내로 대체한다. 주변 통계는 유지한다. */
+[data-bs-layout="15N5-2"] :is(.bs-workspace, .bs-primary, .bs-rail, .bs-unavailable-graphic) { height: auto; min-height: 0; }
+[data-bs-layout="15N5-2"] .bs-workspace { flex-direction: column; }
+[data-bs-layout="15N5-2"] :is(.bs-primary, .bs-rail) { width: 100%; min-width: 0; flex: 0 0 auto; }
+[data-bs-layout="15N5-2"] .bs-rail { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 24px; }
+[data-bs-layout="15N5-2"] .bs-rail > * { width: auto; min-width: min(100%, 400px); height: auto; min-height: 0; flex: 1 1 400px; }
+.board-surface .bs-unavailable-graphic { width: 100%; padding: 18px 0; }
+.bs-unavailable-graphic-source { display: none; }
+.bs-unavailable-graphic-message { color: var(--color-k-dim); font-size: 13px; line-height: 20px; }
+.bs-unavailable-graphic-section { display: flex; flex-direction: column; }
+@container board (max-width: 479px) {
+  [data-bs-layout="2SKU-1"] [data-node="3A4F-0"] [data-col="1"] { min-width: 100px; }
+}
