@@ -7,6 +7,7 @@ const lib = (typeof window !== 'undefined' && window.AthenaLib) || {};
 const boardFormat = isCjs ? require('./board-format') : lib.BoardFormat;
 const registry = isCjs ? require('./board-template-registry') : lib.BoardTemplateRegistry;
 const displayPolicy = isCjs ? require('./board-display-policy') : lib.BoardDisplayPolicy;
+const staticGraphics = isCjs ? require('./board-static-graphics-data') : lib.BoardStaticGraphicsData;
 
 const ROLLUP_MARK = '▸';
 
@@ -279,6 +280,7 @@ function mountPlan(contract, values, options = {}) {
       designText: !override && staticText !== null,
       valueAtomic: slot.static !== true && slot.kind !== 'label'
         && slot.kind !== 'static' && isValueSlot(slot),
+      valueSlot: slot.kind === 'value' && !slot.static,
       pairedWith: slot.paired_with || null,
       expandedBoard: slot.expanded_board || null,
     });
@@ -481,13 +483,6 @@ function collapseEmptyRows(surface, emptyRows, options = {}) {
     setHidden(row, false);
     delete row.dataset.bsRowCollapsed;
   }
-  if (!rows.length) {
-    if (surface.dataset) {
-      surface.dataset.bsRowsCollapsed = '0';
-      surface.dataset.bsRowsSkipped = '[]';
-    }
-    return [];
-  }
   const bySlot = slotElementIndex(surface);
   const valued = [];
   for (const el of bySlot.values()) {
@@ -520,6 +515,7 @@ function collapseEmptyRows(surface, emptyRows, options = {}) {
       skipped.push({ row: row.row, why: 'box_is_surface' });
       continue;
     }
+    if (typeof box.closest === 'function' && box.closest('[data-bs-keep-empty-rows="true"]')) continue;
     if (holdsValue(box, valued)) {
       skipped.push({ row: row.row, why: 'box_holds_value' });
       continue;
@@ -527,6 +523,20 @@ function collapseEmptyRows(surface, emptyRows, options = {}) {
     setHidden(box, true);
     if (box.dataset) box.dataset.bsRowCollapsed = 'true';
     hidden.push({ row: row.row, node: (box.dataset && box.dataset.node) || '', slots: slotIds.length });
+  }
+  // empty_rows 메타가 없어도 실제 값 슬롯이 전부 미제공인 행은 비어 있다.
+  // 대기 중인 빈 문자열/집계 전, 식별값 또는 실제 0이 하나라도 있으면 유지한다.
+  for (const row of surface.querySelectorAll('[data-row]')) {
+    if (row.dataset.row === 'head' || row.dataset.bsRowCollapsed === 'true'
+      || typeof row.querySelectorAll !== 'function') continue;
+    if (row.closest('[data-bs-keep-empty-rows="true"]')) continue;
+    const values = [...row.querySelectorAll('[data-bs-value-slot="true"]')]
+      .filter((el) => el.closest('[data-row]') === row);
+    if (!values.length || values.some((el) => el.dataset.missing !== 'true'
+      || !el.textContent.trim() || el.textContent.trim() === boardFormat.missingText('pending'))) continue;
+    setHidden(row, true);
+    row.dataset.bsRowCollapsed = 'true';
+    hidden.push({ row: row.dataset.row, node: row.dataset.node || '', slots: values.length, source: 'all_values_missing' });
   }
   // 왜 못 접었는지는 리포트가 읽는다(프로브의 collapse 진단).
   if (surface.dataset) {
@@ -592,6 +602,16 @@ function containsBoardChrome(box) {
     || (typeof box.querySelector === 'function' && !!box.querySelector(selector));
 }
 
+function setStatusAppearance(el, receiving) {
+  if (!el || !el.style) return;
+  el.style.color = receiving ? 'var(--color-ok)' : 'var(--color-k-dim)';
+  const chip = el.parentElement;
+  if (chip && chip.children.length === 1 && chip.style.backgroundColor
+    && typeof chip.closest === 'function' && chip.closest('.bs-header')) {
+    chip.style.backgroundColor = receiving ? '#5FCE3F1F' : 'var(--color-k-panel3)';
+  }
+}
+
 function unitHasLiveSlot(box) {
   const slots = typeof box.querySelectorAll === 'function'
     ? [...box.querySelectorAll('[data-slot-id]')]
@@ -652,10 +672,13 @@ function applyPlan(root, plan, options = {}) {
     if (elementChildCount(el) > 0) { containers.push(assignment.slotId); continue; }
     el.textContent = assignment.missing && assignment.text === boardFormat.missingText() && tableCellOf(el) ? '—' : assignment.text;
     setTone(el, assignment.tone, assignment.forceFlatTone);
+    if (assignment.text === '상태 미확인') setStatusAppearance(el, false);
     if (el.dataset) {
       el.dataset.slotId = assignment.slotId;
       if (assignment.valueAtomic) el.dataset.bsValueAtomic = 'true';
       else delete el.dataset.bsValueAtomic;
+      if (assignment.valueSlot) el.dataset.bsValueSlot = 'true';
+      else delete el.dataset.bsValueSlot;
       if (assignment.missing) el.dataset.missing = 'true';
       else delete el.dataset.missing;
       // 디자인 문구(라벨·static)는 값이 아니다 — 빈 줄 접기가 이 표시를 보고
@@ -1479,8 +1502,9 @@ function applyResponsiveHooks(surface) {
   return hoisted;
 }
 
-// 실측으로 확인한 일곱 상태만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
+// 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  '3MTJ-0': { node: '3OP4-0', rows: ['3OP8-0', '3OPM-0', '3OQ2-0', '3OQJ-0'], widths: [112, 150, 150, 150, 150, 150, 150], label: '결제 예정' },
   '15J9-2': { node: '355R-0', rows: ['355S-0', '355Z-0', '356G-0', '356X-0'], widths: [166, 160, 126, 210, 180, 160], gap: 12, label: '주도 종목' },
   '2SCE-1': { node: '375G-0', rows: ['375K-0', '379R-0', '37EU-0', '37FJ-0', '37G8-0', '37GX-0', '37HM-0', '37IB-0', '37J0-0'], widths: [168, 186, 144, 190, 222, 160], label: '보유종목' },
   '3LGC-0': { node: '3LVJ-0', rows: ['3LVN-0', '3MHR-0', '3MI8-0', '3MIO-0', '3MJ5-0', '3MJL-0', '3MK3-0', '3MKJ-0', '3ML0-0', '3MLG-0'], widths: [112, 148, 390, 204, 216], label: '매매일지' },
@@ -1498,6 +1522,41 @@ function layoutGroup(doc, className) {
   const group = doc.createElement('div');
   group.className = className;
   return group;
+}
+
+function suppressStaticGraphics(surface, contract) {
+  const entry = staticGraphics[contract.board_id];
+  if (!entry) return;
+  const regions = new Set(entry.regions);
+  const anchors = new Set(slotList(contract).map(anchorOf));
+  for (const id of entry.shapes) {
+    const shape = authoredNode(surface, id);
+    if (!shape) continue;
+    shape.style.display = 'none';
+    shape.dataset.bsStaticGraphic = 'true';
+    const track = shape.parentElement;
+    if (track.children.length === 1 && !regions.has(track.dataset.node)
+      && !anchors.has(track.dataset.node) && !anchors.has(shape.dataset.node)) {
+      track.style.display = 'none';
+    }
+    for (let box = track; box && box !== surface; box = box.parentElement) {
+      if (regions.has(box.dataset.node)) {
+        for (let child = track; child && child !== box; child = child.parentElement) {
+          child.classList.add('bs-static-graphic-space');
+        }
+        break;
+      }
+    }
+  }
+  for (const id of regions) {
+    const region = authoredNode(surface, id);
+    if (!region) continue;
+    region.classList.add('bs-static-graphic-space');
+    const note = layoutGroup(surface.ownerDocument, 'bs-unavailable-graphic-message');
+    note.setAttribute('role', 'status');
+    note.textContent = '그래프 데이터가 제공되지 않았습니다';
+    region.append(note);
+  }
 }
 
 function readableTable(surface, contract, config) {
@@ -1533,7 +1592,8 @@ function readableTable(surface, contract, config) {
     row.style.removeProperty('gap');
     row.style.removeProperty('padding-inline');
     row.style.removeProperty('padding');
-    if (contract.board_id === '3LGC-0' && row.dataset.node === '3MHR-0') {
+    if ((contract.board_id === '3LGC-0' && row.dataset.node === '3MHR-0')
+      || (contract.board_id === '3MTJ-0' && row.dataset.node === '3OQJ-0')) {
       row.style.setProperty('border-left-width', '0');
       row.style.setProperty('box-shadow', 'inset 2px 0 0 var(--color-brand)');
     }
@@ -1564,9 +1624,9 @@ function readableTable(surface, contract, config) {
 
 function applyReadableBoardLayout(surface, contract) {
   const id = contract.board_id;
-  if (!READABLE_TABLES[id] && !['3D4I-0', '3EWN-0', '3JZ3-0', '3DZ1-0', '137X-2', '2VDA-0', '133H-2', '2SKU-1', '15N5-2'].includes(id)) return;
+  if (!READABLE_TABLES[id] && !['3D4I-0', '3EWN-0', '3JZ3-0', '3DZ1-0', '137X-2', '2VDA-0', '133H-2', '2SKU-1', '2SYW-1', '3MTJ-0', '15N5-2'].includes(id)) return;
   surface.dataset.bsLayout = id;
-  if (['2R3M-1', '2VDA-0', '133H-2', '15N5-2'].includes(id)) {
+  if (['2R3M-1', '2VDA-0', '133H-2', '2SKU-1', '15N5-2'].includes(id)) {
     const rail = surface.querySelector('.bs-rail');
     rail.style.setProperty('--bs-rail-direction', rail.style.getPropertyValue('flex-direction') || 'column');
     rail.style.removeProperty('flex-direction');
@@ -1575,6 +1635,7 @@ function applyReadableBoardLayout(surface, contract) {
     surface.querySelector('.bs-workspace').style.removeProperty('flex-direction');
   }
   if (READABLE_TABLES[id]) readableTable(surface, contract, READABLE_TABLES[id]);
+  if (id === '2SKU-1') authoredNode(surface, '39SW-0').dataset.bsKeepEmptyRows = 'true';
   if (id === '15N5-2') {
     // 이 템플릿의 선·구성 막대는 응답에 연결되지 않은 고정 예시다. 앵커는 보존한다.
     for (const [nodeId, message] of [
@@ -1662,27 +1723,45 @@ function updateEmptyTableStates(surface) {
   const tables = surface.dataset.bsLayout === '2R3M-1'
     ? [['3CRW-0', '체결 내역']]
     : surface.dataset.bsLayout === '2VDA-0' ? [['3HMX-0', '순위 종목'], ['3HXP-0', '최근 경신 내역']]
-      : surface.dataset.bsLayout === '133H-2' ? [['14UQ-2', '보유 종목']] : [];
+      : surface.dataset.bsLayout === '133H-2' ? [['14UQ-2', '보유 종목']]
+        : surface.dataset.bsLayout === '2SCE-1' ? [['375G-0', '보유 종목']]
+          : surface.dataset.bsLayout === '2SKU-1' ? [['3A4F-0', '입출금 내역']]
+            : surface.dataset.bsLayout === '2SYW-1' ? [['3Q8R-0', '주문·체결 내역']]
+              : surface.dataset.bsLayout === '3MTJ-0' ? [['3OP4-0', '결제 예정 내역']] : [];
+  const known = new Set(tables.map(([id]) => id));
+  for (const table of surface.querySelectorAll('.bs-table')) {
+    if (table.dataset.node && !known.has(table.dataset.node)) {
+      tables.push([table.dataset.node, '조회 내역']);
+      known.add(table.dataset.node);
+    }
+  }
   let empty = false;
+  let short = false;
   for (const [id, label] of tables) {
     const table = authoredNode(surface, id);
     if (!table) continue;
     const rows = [...table.querySelectorAll('[data-row]')].filter((row) => row.dataset.row !== 'head');
-    // 서버 empty_rows로 접힌 행만 빈 목록의 근거로 쓴다. pending/hydration은 제외한다.
+    // 명시적 빈 행 또는 모든 실제 값이 미제공인 행만 근거로 쓴다. pending/hydration은 제외한다.
     const allCollapsed = rows.length > 0 && rows.every((row) => row.dataset.bsRowCollapsed === 'true');
+    const someCollapsed = rows.some((row) => row.dataset.bsRowCollapsed === 'true');
     let message = table.__bsEmptyMessage;
     if (allCollapsed && !message) {
       message = layoutGroup(surface.ownerDocument, 'bs-empty-table-message');
       message.setAttribute('role', 'status');
       message.textContent = `표시할 ${label}이 없습니다`;
-      table.append(message);
+      let lastRow = rows[rows.length - 1];
+      while (lastRow.parentElement !== table) lastRow = lastRow.parentElement;
+      lastRow.after(message);
       table.__bsEmptyMessage = message;
     }
     if (message) message.hidden = !allCollapsed;
     table.classList.toggle('bs-empty-table', allCollapsed);
+    table.classList.toggle('bs-short-table', someCollapsed);
     empty = empty || allCollapsed;
+    short = short || someCollapsed;
   }
   surface.classList.toggle('bs-has-empty-table', empty);
+  surface.classList.toggle('bs-has-short-table', short);
 }
 
 // 결측 자료와 해당 없음은 다르다. 구성종목 이름과 비중 모두 명시적으로 해당 없음인
@@ -2135,6 +2214,7 @@ function mountBoard(root, boardId, values, options = {}) {
     if (!surface) throw new Error(`board.html에 보드 루트가 없다 — ${boardId}`);
     applyResponsiveHooks(surface);
     applyReadableBoardLayout(surface, contract);
+    suppressStaticGraphics(surface, contract);
     scrubRawIdentityNames(surface);
     root.__bsSurface = surface;
     root.__bsBoardId = String(boardId);
@@ -2220,7 +2300,7 @@ function nextHydrationSlots(pending, filled, surfaceContract) {
 const __exports = {
   ROLLUP_MARK, RESPONSIVE_REGIONS, HOISTED_PROPERTIES, CARD_SHELL_PROPERTIES, normalizeCardShell,
   isValueSlot, anchorOf, staticTextOf, collapsePlan, mountPlan, pairedGroups,
-  nodeIndex, elementChildCount, setHidden, applyPlan, collapseEmptyRows, collapseEmptyColumns,
+  nodeIndex, elementChildCount, setHidden, setStatusAppearance, applyPlan, collapseEmptyRows, collapseEmptyColumns,
   relaxOverflowRows, relaxOverflowHeights, isRelaxableRow, isRowShape, squeezedRow,
   reachesByScroll,
   scrollOverflowOwner,

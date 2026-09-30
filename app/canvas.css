@@ -1224,14 +1224,15 @@ table.fin-table { width: 100%; border-collapse: collapse; font-variant-numeric: 
 /* ---- 차트 툴바(CC-102) — spec §0: 좌 주기 탭 / 우 차트모양·보조지표·구분선·수정주가·전체화면 ---- */
 .chart-toolbar {
   flex-shrink: 0;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  min-width: 0;
   gap: 10px;
   padding-bottom: 8px;
   margin-bottom: 8px;
   border-bottom: 1px solid var(--color-k-line-soft);
   position: relative; /* 드롭다운 패널의 위치 기준 */
 }
-.chart-toolbar-left, .chart-toolbar-right { display: flex; align-items: center; gap: 6px; }
+.chart-toolbar-left, .chart-toolbar-right { display: flex; align-items: center; flex-wrap: wrap; min-width: 0; max-width: 100%; gap: 6px; }
 .chart-toolbar-tabs { display: flex; align-items: center; gap: 2px; }
 
 .chart-toolbar-tab {
@@ -1544,3 +1545,26 @@ table.common-table { min-width: 420px; font-size: 13px; line-height: 20px; }
 #canvasRegion[data-mode="graph"] .canvas-empty-chat { display: none; }
 /* 대화 상징 삽화(보드 46 v3) — 그래프 삽화(.canvas-empty-graph)와 같은 잉크. */
 .canvas-empty-art { color: var(--color-k-faint); display: flex; }
+.board-state-return {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.board-state-return button {
+  font: inherit;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--color-k-text);
+  background: var(--color-k-panel);
+  border: 1px solid var(--color-k-line);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.board-state-return button:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: 2px;
+}

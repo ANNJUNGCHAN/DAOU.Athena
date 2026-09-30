@@ -19,18 +19,25 @@ test('one actual workflow badge and a contextual footer replace specimen session
   }));
   const host = { __athenaBoard: { boardId: '137X-2' }, querySelector: (q) => nodes.get(q.match(/"([^"]+)"/)[1]) };
   const root = { querySelectorAll: () => [host] };
-  const context = vm.createContext({ integratedCardSurface });
+  const boardMount = { setStatusAppearance(node, receiving) { node.receiving = receiving; } };
+  const context = vm.createContext({ integratedCardSurface, boardMount });
   vm.runInContext(extract('function stampBoardRealtimeStatus(', 'function stampOrderbookRealtimeStatus('), context);
   context.stampBoardRealtimeStatus(root, 'active');
   assert.equal(nodes.get('s003').parentElement.hidden, true);
   assert.equal(nodes.get('s004').textContent, integratedCardSurface.workflowStateLabel('active'));
   assert.equal(nodes.get('s136').textContent, `차트 · ${integratedCardSurface.workflowStateLabel('active')}`);
+  assert.equal(nodes.get('s004').receiving, false);
+  assert.equal(nodes.get('s136').receiving, false);
   context.stampBoardRealtimeStatus(root, 'receiving');
   context.stampBoardRealtimeStatus(root, 'active');
   assert.equal(nodes.get('s004').textContent, integratedCardSurface.workflowStateLabel('receiving'));
+  assert.equal(nodes.get('s004').receiving, true);
+  assert.equal(nodes.get('s136').receiving, true);
   context.stampBoardRealtimeStatus(root, 'snapshot');
   context.stampBoardRealtimeStatus(root, 'active');
   assert.equal(nodes.get('s004').textContent, integratedCardSurface.workflowStateLabel('active'));
+  assert.equal(nodes.get('s004').receiving, false);
+  assert.equal(nodes.get('s136').receiving, false);
 });
 test('real connection failures explain the state in Korean and keep raw text in closed details', () => {
   const make = (tag) => ({ tag, children: [], style: {}, textContent: '',

@@ -64,3 +64,44 @@ test('full hydration restores only units hidden for empty values; partial ticks 
   assert.equal(surface.__bsEmptyValueHidden.size, 0);
   assert.equal(sourceGraphic.hidden, true);
 });
+
+function missingRowFixture(items, keepSchedule = false) {
+  const row = { dataset: { row: '0' }, style: { display: 'flex' }, hidden: false,
+    closest: () => keepSchedule ? {} : null, querySelectorAll: () => leaves };
+  const leaves = items.map((item, index) => ({ dataset: { slotId: `s${index}`, ...item.dataset },
+    textContent: item.text, closest: () => row }));
+  const surface = { dataset: {}, querySelectorAll(selector) {
+    if (selector === '[data-row]') return [row];
+    if (selector === '[data-slot-id]') return leaves;
+    return row.dataset.bsRowCollapsed === 'true' ? [row] : [];
+  } };
+  return { row, leaves, surface };
+}
+
+test('missing value rows collapse without metadata and restore after an identified zero holding arrives', () => {
+  const { row, leaves, surface } = missingRowFixture([
+    { text: '—', dataset: { missing: 'true' } }, { text: '—', dataset: { missing: 'true' } },
+  ]);
+  assert.equal(collapseEmptyRows(surface, []).length, 1);
+  assert.equal(row.hidden, true);
+  leaves[0].textContent = '관찰된 종목';
+  delete leaves[0].dataset.missing;
+  leaves[1].textContent = '0';
+  delete leaves[1].dataset.missing;
+  assert.equal(collapseEmptyRows(surface, []).length, 0);
+  assert.equal(row.hidden, false);
+});
+
+test('pending values and fixed settlement schedule rows stay visible', () => {
+  for (const pending of [
+    { text: '', dataset: { bsDesignText: 'true' } },
+    { text: '집계 전', dataset: { missing: 'true' } },
+  ]) {
+    const { row, surface } = missingRowFixture([pending, { text: '—', dataset: { missing: 'true' } }]);
+    assert.equal(collapseEmptyRows(surface, []).length, 0);
+    assert.equal(row.hidden, false);
+  }
+  const { row, surface } = missingRowFixture([{ text: '—', dataset: { missing: 'true' } }], true);
+  assert.equal(collapseEmptyRows(surface, []).length, 0);
+  assert.equal(row.hidden, false);
+});

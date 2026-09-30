@@ -1252,6 +1252,20 @@ function wireStateControls(host, envelope, mounted) {
   const surface = mounted && mounted.surface;
   if (!surface || !state.links.length) return 0;
   let wired = 0;
+  const navigation = state.links.filter(link => link.navigation);
+  if (navigation.length && !surface.querySelector('.board-state-return')) {
+    const rail = document.createElement('nav');
+    rail.className = 'board-state-return';
+    rail.setAttribute('aria-label', '카드 화면 탐색');
+    for (const link of navigation) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = link.control;
+      button.dataset.stateControl = link.control;
+      rail.appendChild(button);
+    }
+    surface.prepend(rail);
+  }
   for (const link of state.links) {
     const control = String(link.control || '').trim();
     if (!control) continue;
@@ -1261,7 +1275,7 @@ function wireStateControls(host, envelope, mounted) {
     const didWire = boardMount.wireStateControlActivation(
       node,
       () => switchStateBoard(host, link.board_id, envelope, control),
-      { keyboard: isResponsiveStateControl(node) },
+      { keyboard: boardTemplateRegistry.cardIdFor(state.boardId) === 'CC-01' || isResponsiveStateControl(node) },
     );
     if (!didWire) continue;
     // 표시는 CSS가 한다([data-state-board], board-surface.css) — 인라인 원문은 안 건드린다(D1).
@@ -2372,8 +2386,14 @@ function stampBoardRealtimeStatus(root, status) {
     }
     const badge = host.querySelector(`[data-slot-id="${display.status}"]`);
     const footer = host.querySelector(`[data-slot-id="${display.footer}"]`);
-    if (badge) badge.textContent = label;
-    if (footer) footer.textContent = `${display.context} · ${label}`;
+    if (badge) {
+      badge.textContent = label;
+      boardMount.setStatusAppearance(badge, effective === 'receiving');
+    }
+    if (footer) {
+      footer.textContent = `${display.context} · ${label}`;
+      boardMount.setStatusAppearance(footer, effective === 'receiving');
+    }
   }
 }
 

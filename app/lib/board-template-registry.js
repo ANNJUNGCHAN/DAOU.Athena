@@ -22,6 +22,20 @@ const STATE_GRAPH = (index && index.STATE_GRAPH) || {};
 const BOARD_PRIMARY = (index && index.BOARD_PRIMARY) || {};
 const CONTROL_LABELS = (index && index.CONTROL_LABELS) || {};
 
+// CC-01 repeats these seven authored navigation labels (s004–s010) in every
+// account surface. Expanded surfaces still need this same read-only navigation.
+// 증거금·담보 opens the authored "증거금 재원·담보 상세" surface; the separate
+// 증거금·보증금 구간별 expansion remains available through its existing control.
+const ACCOUNT_NAVIGATION = Object.freeze([
+  { control: '자산 종합', board_id: '133H-2' },
+  { control: '보유종목', board_id: '2SCE-1' },
+  { control: '예수금·결제', board_id: '2SKU-1' },
+  { control: '손익·성과', board_id: '2SRV-1' },
+  { control: '주문·체결', board_id: '2SYW-1' },
+  { control: '증거금·담보', board_id: '3IGR-0' },
+  { control: '금현물', board_id: '3ODO-0' },
+]);
+
 // 이 스크립트가 어디서 왔는지 — 청크도 같은 폴더에 있다. 문서 URL 기준 상대경로를
 // 쓰면 fixture HTML(app/*.html)처럼 다른 위치에서 부를 때 깨진다.
 const SELF_SRC = (typeof document !== 'undefined' && document.currentScript
@@ -175,20 +189,37 @@ function primaryRendererFor(boardId) {
 
 // 상태 보드 링크(어느 칩이 어느 보드를 여는가)의 정본은 이 색인이다. 봉투는 마운트한
 // 그 보드의 직계 자식만 나르는데, 자식 보드의 탭 레일은 부모 레일의 복제본이라 부모의
-// 링크가 없으면 갈아탄 뒤 레일이 통째로 죽는다. 그래서 제 자식 + 부모 레일 전부를 준다.
-// 되돌아가기는 부모 레일에 부모 자신을 여는 표식이 있을 때만 나온다(레일 주인) —
-// 없는 보드는 되돌아갈 칩을 지어내지 않는다.
+// 링크가 없으면 갈아탄 뒤 레일이 통째로 죽는다. 제 자식 + 모든 조상 레일을 준다.
+// 깊이 2인 펼침 화면도 루트의 탭으로 돌아갈 수 있어야 한다. 기존 탭 문구는
+// board-mount가 연결하고, navigation 링크는 canvas가 공통 복귀 버튼으로 만든다.
 function stateLinksFor(boardId) {
-  const entry = STATE_GRAPH[String(boardId || '')];
+  const id = String(boardId || '');
+  const entry = STATE_GRAPH[id];
   if (!entry) return [];
-  const parent = entry.parent ? STATE_GRAPH[entry.parent] : null;
   const links = [];
   const seen = new Set();
-  for (const link of (entry.links || []).concat((parent && parent.links) || [])) {
+  const visited = new Set();
+  let current = id;
+  const candidates = cardIdFor(id) === 'CC-01' ? ACCOUNT_NAVIGATION.slice() : [];
+  while (current && !visited.has(current)) {
+    visited.add(current);
+    const ancestor = STATE_GRAPH[current];
+    if (!ancestor) break;
+    candidates.push(...(ancestor.links || []));
+    current = ancestor.parent;
+  }
+  if (entry.parent && visited.has(entry.parent)) {
+    candidates.push({ control: '상위 화면으로', board_id: entry.parent, navigation: 'parent' });
+    const rootId = [...visited].at(-1);
+    if (rootId !== entry.parent && !STATE_GRAPH[rootId]?.parent) {
+      candidates.push({ control: '기본 화면으로', board_id: rootId, navigation: 'root' });
+    }
+  }
+  for (const link of candidates) {
     const key = `${link.board_id} ${link.control}`;
     if (seen.has(key)) continue;
     seen.add(key);
-    links.push({ control: link.control, board_id: link.board_id });
+    links.push({ control: link.control, board_id: link.board_id, ...(link.navigation ? { navigation: link.navigation } : {}) });
   }
   return links;
 }
@@ -221,6 +252,7 @@ function clearTemplateCache() {
 
 const __exports = {
   BOARD_CARD, boardIds, cardIds, hasBoard, cardIdFor, isLoaded,
+  ACCOUNT_NAVIGATION,
   chunkFileName, chunkUrl, loadChunk, loadBoard,
   boardHtml, boardSha256, contractFor, primaryRendererFor, stateLinksFor, controlLabels,
   templateFor, clearTemplateCache,
