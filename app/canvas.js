@@ -2,7 +2,6 @@ const { sanitize } = window.AthenaLib.Sanitize;
 const { renderMarkdownInto } = window.AthenaLib.Markdown;
 const { button, emptyState, errorNote, removeCard } = window.AthenaLib.UiKit;
 const { widthGradeFor, dropTargetsFor, exceedsHeightBudget, MIN_CARDS } = window.AthenaLib.CanvasLayout;
-const { foldColumns } = window.AthenaLib.ColumnFold;
 const { createChartCard } = window.AthenaLib.ChartCard;
 const { AITS_CHART_RENDERER_ID, createAitsChartPanelAdapter, fromAthenaChartData, parseAitsChartSnapshot, panelIdFor } = window.AthenaLib.AitsChartPanel;
 const { classifyCell, changeTone, formatNumeric, formatDatetime, groupFactsFields } = window.AthenaLib.FactsCard;
@@ -957,6 +956,7 @@ async function renderPrimaryEnvelope(envelope, options = {}) {
   if (envelope.canvas_type === 'event' && !envelope.fell_back) return renderEventCard(envelope);
   if (envelope.canvas_type === 'action' && !envelope.fell_back) return renderActionCard(envelope);
   if (envelope.canvas_type === 'status' && !envelope.fell_back) return renderStatusCard(envelope);
+  if (envelope.canvas_type === 'timeline' && !envelope.fell_back) return renderTimelineCard(envelope);
   return renderFreeCanvas(envelope);
 }
 
@@ -3414,31 +3414,33 @@ function renderMcpTable(envelope) {
   const header = (envelope.data && Array.isArray(envelope.data.header)) ? envelope.data.header : [];
 
   if (!rawCols.length || !rows.length) {
-    body.appendChild(errorNote('빈 테이블 — columns 또는 rows가 없다.'));
+    body.appendChild(errorNote('조회한 결과가 없습니다. 기간이나 조건을 바꿔 다시 조회해 주세요.'));
     return card;
   }
   if (header.length) body.appendChild(renderCompoundHeaderBand(header));
-  body.appendChild(buildFoldedTable(rawCols, rows));
+  body.appendChild(buildReadableTable(rawCols, rows));
   return card;
 }
 
-// table 카드와 compound 카드(P4)가 공유하는 표 빌더 — §5.3.1 컬럼 우선순위 흡수(2층):
-// columns는 이미 백엔드가 §5.3.1 규칙(식별 컬럼 고정 + 실측 alias 빈도 tie-break,
-// backend/scripts/generate_api.py의 column_priority_ranking)으로 정렬해 보낸다고
-// 가정한다 — 여기서는 그 순서 위에서 1560px 캔버스 폭 기준으로 접기만 한다
-// (app/lib/column-fold.js). ka10095(63컬럼) 같은 넓은 표가 스크롤 없이 fold되어
-// 보이는 게 이 단계의 목표다. 반환은 table 엘리먼트 하나 — 카드 뼈대(makeCard)는
-// 호출부가 짓는다.
-function buildFoldedTable(rawCols, rows) {
-  const { visible: cols, hidden } = foldColumns(rawCols);
-
+// 공통 표는 모든 열을 보존하고, 읽을 수 있는 최소 폭 아래에서는 표만 스크롤한다.
+function buildReadableTable(cols, rows) {
+  const scroll = document.createElement('div');
+  scroll.className = 'common-table-scroll';
+  scroll.tabIndex = 0;
+  scroll.setAttribute('role', 'region');
+  scroll.setAttribute('aria-label', '결과 표, 가로 스크롤 가능');
   const table = document.createElement('table');
-  table.className = 'fin-table';
+  table.className = 'fin-table common-table';
+  const numeric = cols.map((col) => rows.some((row) => row && row[col.key] != null)
+    && rows.every((row) => row == null || row[col.key] == null || row[col.key] === ''
+      || /^[+−-]?[\d,]+(?:\.\d+)?%?$/.test(String(row[col.key]).trim())));
   const thead = document.createElement('thead');
   const trh = document.createElement('tr');
-  for (const col of cols) {
+  for (const [index, col] of cols.entries()) {
     const th = document.createElement('th');
     th.textContent = col && col.label != null ? col.label : (col && col.key) || '';
+    th.scope = 'col';
+    if (numeric[index]) th.className = 'is-numeric';
     trh.appendChild(th);
   }
   thead.appendChild(trh);
@@ -3447,20 +3449,22 @@ function buildFoldedTable(rawCols, rows) {
   const tbody = document.createElement('tbody');
   for (const r of rows) {
     const tr = document.createElement('tr');
-    for (const col of cols) {
+    for (const [index, col] of cols.entries()) {
       const td = document.createElement('td');
       const v = r ? r[col.key] : undefined;
       td.textContent = v == null ? '—' : String(v);
+      if (numeric[index]) td.className = 'is-numeric';
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
 
-  table.dataset.totalColumns = String(rawCols.length);
+  table.dataset.totalColumns = String(cols.length);
   table.dataset.visibleColumns = String(cols.length);
-  table.dataset.hiddenColumns = String(hidden.length);
-  return table;
+  table.dataset.hiddenColumns = '0';
+  scroll.appendChild(table);
+  return scroll;
 }
 
 // ---------- 실배선 FactsCard/CompoundCard(P4) — MCP render_canvas의 facts/compound 응답 ----------
@@ -3501,6 +3505,7 @@ function renderFactsFieldGroup(fields) {
     // 시 쌍이 흩어진다).
     const row = document.createElement('div');
     row.className = 'facts-row';
+    if (dd.textContent.length > 60 || dt.textContent.length > 40) row.classList.add('is-long-text');
     row.appendChild(dt);
     row.appendChild(dd);
     dl.appendChild(row);
@@ -3541,7 +3546,7 @@ function renderFactsCard(envelope) {
   stampPaperScreen(card, envelope);
   const fields = (envelope.data && Array.isArray(envelope.data.fields)) ? envelope.data.fields : [];
   if (!fields.length) {
-    body.appendChild(errorNote('빈 facts — fields가 없다.'));
+    body.appendChild(errorNote('표시할 지표가 없습니다. 종목이나 조회 조건을 확인해 주세요.'));
     return card;
   }
   body.appendChild(renderFactsGrid(fields));
@@ -3551,7 +3556,7 @@ function renderFactsCard(envelope) {
 // CompoundCard 일반(C2, spec §3.3) — "이름과 달리 다중 표가 아니다": 스칼라 헤더 밴드
 // 하나 + 표 하나로 고정. 헤더는 facts와 같은 셀 프리미티브를 재사용하되 세로 그리드가
 // 아니라 가로 밴드(스칼라 2~9개, §3.3 실측이라 F2 2단 분할까지는 가지 않는다)로 편다.
-// 표는 buildFoldedTable을 그대로 재사용한다(mcp-table과 드리프트하지 않는다).
+// 표는 buildReadableTable을 그대로 재사용한다(mcp-table과 드리프트하지 않는다).
 function renderCompoundHeaderBand(fields) {
   const band = document.createElement('div');
   band.className = 'compound-header-band';
@@ -3590,11 +3595,11 @@ function renderCompoundCard(envelope) {
   const tableCols = table && Array.isArray(table.columns) ? table.columns : [];
   const tableRows = table && Array.isArray(table.rows) ? table.rows : [];
   if (!header.length || !tableCols.length || !tableRows.length) {
-    body.appendChild(errorNote('빈 compound — header 또는 table이 없다.'));
+    body.appendChild(errorNote('조회한 결과가 없습니다. 기간이나 조건을 바꿔 다시 조회해 주세요.'));
     return card;
   }
   body.appendChild(renderCompoundHeaderBand(header));
-  body.appendChild(buildFoldedTable(tableCols, tableRows));
+  body.appendChild(buildReadableTable(tableCols, tableRows));
   return card;
 }
 
@@ -3810,15 +3815,15 @@ function renderLiveReader(envelope) {
   const data = (envelope.data && typeof envelope.data === 'object') ? envelope.data : {};
   const { card, body } = makeCard('reader', data.title || envelope.caption || '리더 · 공시 원문', envelope.layout, envelope.correlation);
   if (data.error_state === 'not_found') {
-    body.appendChild(errorNote('문서를 찾을 수 없다 — not_found.'));
+    body.appendChild(errorNote('문서를 찾을 수 없습니다. 문서 제목이나 조회 기간을 확인해 주세요.'));
     return card;
   }
   if (data.error_state === 'processing_delayed') {
-    body.appendChild(errorNote('문서 처리가 지연되고 있다 — processing_delayed.'));
+    body.appendChild(errorNote('문서 처리가 지연되고 있습니다. 잠시 후 다시 조회해 주세요.'));
     return card;
   }
   if (!data.body_markdown) {
-    body.appendChild(errorNote('빈 리더 — body_markdown이 없다.'));
+    body.appendChild(errorNote('표시할 문서 내용이 없습니다. 다른 문서를 선택해 주세요.'));
     return card;
   }
   if (Array.isArray(data.highlights) && data.highlights.length) {
@@ -3907,12 +3912,19 @@ async function renderLiveChart(envelope, integratedRoot = null) {
   return card;
 }
 
+function renderTimelineCard(envelope) {
+  const { card, body } = makeCard('timeline', envelope.caption || '가격·사건 타임라인', envelope.layout, envelope.correlation);
+  body.appendChild(window.AthenaLib.TimelineCard.createTimeline(envelope.data));
+  card.dataset.renderState = body.querySelector('.timeline-chart, .timeline-event, .timeline-price-details') ? 'data' : 'empty';
+  return card;
+}
+
 function renderFreeCanvas(envelope) {
   const { card, body } = makeCard('free', envelope.caption || '자유 카드', envelope.layout, envelope.correlation, undefined, cardStkCd(envelope), envelope.screen_id);
   if (envelope.fell_back) {
     const note = document.createElement('div');
     note.className = 'fin-meta';
-    note.textContent = `table 카드로 못 그려 자유 카드로 폴백함 — ${envelope.fallback_reason || '사유 미상'}`;
+    note.textContent = '받은 정보를 항목별로 표시합니다.';
     body.appendChild(note);
   }
   body.appendChild(renderJsonTree(envelope.data));
@@ -4090,6 +4102,9 @@ function makeCard(type, title, layoutHint, correlation, subtitle, stkCd, screenI
   // 폭은 형상이 정하고(w-half/w-full), AI layout 힌트는 등급 승격·강등만 한다.
   // 순서는 도착순(appendChild) — canvas-taxonomy "배치·생애주기 규칙 (2026-08-18)".
   card.className = `card ${type} w-${widthGradeFor(type, layoutHint)}`;
+  if (['stream', 'reader', 'table', 'mcp-table', 'free', 'notice', 'facts', 'compound', 'event', 'action', 'status', 'timeline'].includes(type)) {
+    card.classList.add('common-card');
+  }
   if (isDatasetCard) {
     card.dataset.datasetId = correlation.dataset_id;
     card.dataset.itemId = correlation.item_id;

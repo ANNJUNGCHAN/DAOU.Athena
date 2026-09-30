@@ -25,6 +25,7 @@ const CARD_WIDTH_GRADE = {
   event: 'full',
   action: 'half',
   status: 'half',
+  timeline: 'full',
 };
 
 // 규칙 2 — AI 개입은 폭 등급 승격·강등만. 유효하지 않은 힌트는 조용히 문법
@@ -36,14 +37,13 @@ function widthGradeFor(type, layoutHint) {
 
 // 규칙 3 — 턴별 큐레이션의 드롭 대상. 봉투 drop_types(canvas_type 목록)를
 // 렌더러 카드 클래스로 푼다. 'table'은 픽스처 table과 실배선 mcp-table 둘 다.
-// timeline은 아직 카드 분기 자체가 없다(plan.md 다음 수 6) — 빈 목록.
 const DROP_TYPE_MAP = {
   stream: ['stream'],
   reader: ['reader'],
   table: ['table', 'mcp-table'],
   chart: ['chart'],
   free: ['free'],
-  timeline: [],
+  timeline: ['timeline'],
   facts: ['facts'],
   compound: ['compound'],
   event: ['event'],

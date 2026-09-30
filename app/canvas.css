@@ -1426,6 +1426,114 @@ table.fin-table { width: 100%; border-collapse: collapse; font-variant-numeric: 
 .free-tree-list { list-style: none; margin: 0 0 6px; padding: 0 0 0 14px; border-left: 1px solid var(--color-k-line-soft); display: flex; flex-direction: column; gap: 4px; }
 .free-tree-scalar { font-size: var(--text-base); color: var(--color-k-text); font-variant-numeric: tabular-nums; }
 
+/* Paper 공통 결과 개선. 통합 보드와 전용 시세·차트의 높이/본문 규칙은 유지한다. */
+.card.common-card:not(.integrated-card):not(.board-card):not([data-semantic-primary="specialized"]) {
+  min-height: 0;
+  max-height: none;
+  padding: 18px 20px;
+  container: common-card / inline-size;
+}
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) > .card-head {
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .card-titles { flex: 1 1 auto; }
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .card-title, .common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .card-subtitle {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .card-head-right { flex-shrink: 0; white-space: nowrap; }
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) > .card-body {
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
+  flex: 0 1 auto;
+}
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .facts-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 20px;
+}
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .facts-grid > .facts-group { display: contents; }
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .facts-row { gap: 6px; }
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .facts-row.is-long-text { grid-column: 1 / -1; }
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .facts-row.is-long-text .facts-value { font-size: 14px; line-height: 22px; }
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .facts-key { color: var(--color-k-dim); overflow-wrap: anywhere; }
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .facts-value {
+  font-size: 18px;
+  line-height: 26px;
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .compound-header-band .facts-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 16px 20px;
+}
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .compound-header-band .facts-row { flex-direction: column; align-items: stretch; }
+.common-table-scroll { min-width: 0; max-width: 100%; overflow-x: auto; }
+.common-table-scroll:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+table.common-table { min-width: 420px; font-size: 13px; line-height: 20px; }
+.common-table th, .common-table td {
+  padding: 10px 8px;
+  min-width: 96px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-k-line-soft);
+  overflow-wrap: anywhere;
+}
+.common-table th:first-child, .common-table td:first-child { min-width: 160px; padding-left: 0; }
+.common-table th:last-child, .common-table td:last-child { padding-right: 0; }
+.common-table .is-numeric { font-family: var(--font-mono); text-align: right; white-space: nowrap; overflow-wrap: normal; }
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .free-tree-dl { grid-template-columns: minmax(0, 0.35fr) minmax(0, 1fr); }
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .free-tree-dl dt, .common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .free-tree-dl dd, .common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .free-tree-scalar {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .stream-title { min-width: 0; overflow-wrap: anywhere; word-break: keep-all; }
+
+.timeline-content { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.timeline-summary { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 14px; }
+.timeline-latest { font: 24px/32px var(--font-mono); color: var(--color-k-text); }
+.timeline-muted { margin: 0; font-size: 12px; line-height: 20px; color: var(--color-k-dim); overflow-wrap: anywhere; }
+.timeline-chart { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) max-content; column-gap: 16px; height: 250px; padding: 8px 0 0 8px; }
+.timeline-plot { position: relative; height: 200px; }
+.timeline-plot > svg { position: absolute; inset: 0; width: 100%; height: 200px; overflow: visible; }
+.timeline-gridline { stroke: var(--color-k-line-soft); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.timeline-price-line { fill: none; stroke: var(--color-k-text); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.timeline-price-dot, .timeline-event-dot {
+  position: absolute; width: 8px; height: 8px; border-radius: 50%; transform: translate(-50%, -50%);
+  background: var(--color-k-text);
+}
+.timeline-event-dot { top: 190px; background: var(--color-brand); }
+.timeline-price-axis { display: grid; height: 200px; }
+.timeline-price-label { grid-area: 1 / 1; align-self: start; position: relative; transform: translateY(-50%); text-align: right; font: 12px/16px var(--font-mono); color: var(--color-k-dim); }
+.timeline-axis { position: absolute; top: 214px; left: 0; width: 100%; display: flex; justify-content: space-between; gap: 16px; font: 11px/16px var(--font-mono); color: var(--color-k-dim); }
+.timeline-axis > span { min-width: 0; overflow-wrap: anywhere; }
+.timeline-axis-end { text-align: right; }
+.timeline-axis-middle { margin: auto; text-align: center; }
+.timeline-chart.is-events-only { grid-template-columns: minmax(0, 1fr); column-gap: 0; height: 90px; padding-right: 8px; }
+.timeline-chart.is-events-only .timeline-plot { height: 40px; }
+.timeline-chart.is-events-only .timeline-event-dot { top: 20px; }
+.timeline-chart.is-events-only .timeline-axis { top: 44px; }
+.timeline-section-title { padding-top: 16px; border-top: 1px solid var(--color-k-line-soft); font-family: var(--font-strong); font-size: 13px; }
+.timeline-events { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.timeline-event { display: grid; grid-template-columns: 164px minmax(0, 1fr) auto; gap: 12px 16px; align-items: start; }
+.timeline-event-time { min-width: 0; overflow-wrap: anywhere; font: 12px/20px var(--font-mono); color: var(--color-k-dim); }
+.timeline-event-copy { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.timeline-event-title, .timeline-event-summary { font-size: 13px; line-height: 20px; overflow-wrap: anywhere; word-break: keep-all; }
+.timeline-event-link { font-size: 12px; line-height: 20px; color: var(--color-k-dim); white-space: nowrap; }
+.timeline-price-details { min-width: 0; border-top: 1px solid var(--color-k-line-soft); padding-top: 12px; }
+.timeline-price-details > summary { cursor: pointer; font-size: 12px; color: var(--color-k-dim); }
+@container common-card (max-width: 480px) {
+  .common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .free-tree-dl { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .common-card:not(.integrated-card):not([data-semantic-primary="specialized"]) .free-tree-dl dd { margin-bottom: 8px; }
+  .timeline-event { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .timeline-event-link { justify-self: start; }
+}
+
 
 /* .titlebar(창 크롬·이동 캡션)은 두 창 공용 — styles/ui-kit.css가 정의한다. */
 
