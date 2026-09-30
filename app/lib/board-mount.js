@@ -1635,6 +1635,11 @@ function applyReadableBoardLayout(surface, contract) {
     surface.querySelector('.bs-workspace').style.removeProperty('flex-direction');
   }
   if (READABLE_TABLES[id]) readableTable(surface, contract, READABLE_TABLES[id]);
+  if (id === '2SCE-1') {
+    const rail = surface.querySelector('.bs-rail');
+    rail.style.removeProperty('display');
+    rail.classList.add('bs-holdings-rail');
+  }
   if (id === '2SKU-1') authoredNode(surface, '39SW-0').dataset.bsKeepEmptyRows = 'true';
   if (id === '15N5-2') {
     // 이 템플릿의 선·구성 막대는 응답에 연결되지 않은 고정 예시다. 앵커는 보존한다.

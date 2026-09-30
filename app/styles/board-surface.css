@@ -707,3 +707,9 @@
 }
 .board-surface [data-node="3IFY-0"] [data-col="0"] { width: 112px; min-width: 112px; flex: 0 0 112px; }
 .board-surface [data-node="3KGF-0"] { min-width: 24px; }
+
+/* 넓어진 보유종목 표 아래의 보조 정보는 읽을 수 있는 두 열로 배치한다. */
+.bs-holdings-rail { display: flex; }
+@container board (min-width: 960px) {
+  .bs-holdings-rail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
