@@ -17,7 +17,7 @@ function render(map, trials) {
   const context = vm.createContext({ el, heatIntensity: canvas.heatIntensity,
     formatRatioValue: canvas.formatRatioValue, button: () => el('button'), MODE_TABS: [['design', '기법']] });
   const start = source.indexOf('  function renderOptimizeResult(res)');
-  vm.runInContext(source.slice(start, source.indexOf('  function renderDeploy()', start)), context);
+  vm.runInContext(source.slice(start, source.indexOf('  function mount()', start)), context);
   if (map) context.renderHeatmap(map, trials);
   else context.renderOptimizeResult({ trials: [{ params: { fast: 5 }, sharpe: 1 }], best: null });
   return nodes;

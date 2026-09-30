@@ -12,7 +12,6 @@ from fastapi import FastAPI
 
 from athena_api.account_sync import RuntimeAccountRegistry
 from athena_api.accounts import AccountRuntime
-from athena_api.backtest import deploy_runner
 from athena_api.backtest.runner import BacktestRunner
 from athena_api.backtest.store import BacktestStore
 from athena_api.brain import (
@@ -890,12 +889,9 @@ def build_lifespan(settings: Settings | None = None, *, ws_connect=None):
                     # The watch adapters keep this proxy and resolve the current default
                     # on every call, including when startup had no account at all.
                     kiwoom_client=_CurrentDefaultClient(app),
-                    # 러너는 부를 때 app.state를 읽는다 — 백테스트는 위에서 이미 열렸다.
-                    run_deployments_once=(
-                        deploy_runner.make_runner(app)
-                        if runtime_settings.backtest_enabled
-                        else None
-                    ),
+                    # 거래 실행은 제품 범위 밖이다. 기존 배포 기록은 보존하되 재시작 시
+                    # 자동 주문 러너를 연결하지 않는다. 일반 알림과 코드 감시는 유지한다.
+                    run_deployments_once=None,
                 )
                 _publish_routines(app, routines)
                 routines.scheduler.get_guard_settings = app.state.nudge_guard_store.get

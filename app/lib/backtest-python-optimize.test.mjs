@@ -125,7 +125,7 @@ test('the result apply button updates visible sliders and next Python run overri
   Object.assign(h.context, { el, MODE_TABS: [['design', '기법']], formatRatioValue: String });
   for (const [start, end] of [
     ['function button(className, text, onClick)', '// ---------- 순수 계산'],
-    ['  async function applyBestParams()', '  async function loadDeployments()'],
+    ['  async function applyBestParams()', '  function resumePollingIfNeeded()'],
     ['  function renderOptimizeResult(res)', '  function renderHeatmap('],
     ['  function renderParamSlider(name, p)', '  function renderRiskCard()'],
     ['  async function startRun(allowPartial)', '  async function confirmBackfill()'],

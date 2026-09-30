@@ -127,7 +127,9 @@ function proposalLead(envelope, context) {
     return `읽지 않은 알람 ${unread}건 — 모두 읽음`;
   }
   if (e.control === 'adopt') {
-    return [adoptSubject(e), '감시로 등록'].filter(Boolean).join(' — ');
+    const source = text(obj(obj(e.proposed).condition).source);
+    const action = source.startsWith('schedule.') ? '예약 초안 만들기' : '알림 초안 만들기';
+    return [adoptSubject(e), action].filter(Boolean).join(' — ');
   }
   if (e.control === 'view') return viewPath(e.view);
   if (e.control === 'fire') {

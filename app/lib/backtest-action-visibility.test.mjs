@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import canvas from './backtest-canvas.js';
 
 const source = fs.readFileSync(new URL('./backtest-canvas.js', import.meta.url), 'utf8');
 function declaration(name, async = false) {
@@ -49,4 +50,35 @@ test('output navigation scrolls the freshly painted terminal, including an alrea
     assert.equal(ctx.terminalOpen, true);
     assert.deepEqual(events, ['paint', 'nearest']);
   }
+});
+
+test('strategy tabs retain analysis surfaces and reject retired deployment navigation', () => {
+  assert.deepEqual(canvas.MODE_TABS.map(([key]) => key), ['design', 'result', 'history', 'optimize']);
+  const constants = source.slice(source.indexOf('const TECHNIQUE_DRAFT_TABS ='), source.indexOf('// 기법 하나의 화면(보드 20) 헤더'));
+  const ctx = vm.createContext({ state: { result: { metrics: {} } }, techniqueDraft: false,
+    MODE_TABS: canvas.MODE_TABS });
+  vm.runInContext(constants + '\n' + declaration('workspaceTabs') + '\n' + declaration('navigateAction'), ctx);
+  assert.deepEqual(Array.from(ctx.workspaceTabs(), ([key]) => key), ['code', 'nodes', 'form', 'result', 'history', 'optimize']);
+  assert.equal(ctx.navigateAction({ tab: 'deploy' }), null);
+  ctx.techniqueDraft = true;
+  assert.deepEqual(Array.from(ctx.workspaceTabs(), ([key]) => key), ['code', 'nodes', 'result']);
+});
+
+test('an old deployment workspace restores its code and falls back to the strategy editor', async () => {
+  const ctx = vm.createContext({
+    state: {}, workspaceGeneration: 0, workspaceCleared: true, userStrategies: [], deps: {},
+    SessionRestore: { sealTechniqueBinding: () => null, restoreReport: () => ({ partial: false }) },
+    techniqueDraft: false, runPath: 'form', codeSource: '', MODE_TABS: canvas.MODE_TABS,
+    workspaceTabs: () => [['code', '코드'], ['form', '폼']],
+    clearWorkspace() { ctx.workspaceGeneration++; ctx.state = {}; },
+    setState(patch) { ctx.state = { ...ctx.state, ...patch }; },
+  });
+  vm.runInContext(declaration('restoreWorkspace', true), ctx);
+  assert.equal(await ctx.restoreWorkspace({ tab: 'deploy', designTab: 'deploy',
+    code: { source: 'saved strategy', runPath: 'code', strategyId: 's', versionId: 'v' } }), true);
+  assert.equal(ctx.state.view, 'design');
+  assert.equal(ctx.state.tab, 'design');
+  assert.equal(ctx.state.designTab, 'code');
+  assert.equal(ctx.codeSource, 'saved strategy');
+  assert.equal(ctx.activeVersionId, 'v');
 });

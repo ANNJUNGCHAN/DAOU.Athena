@@ -3687,20 +3687,6 @@ function renderAgentTurn(event) {
     box.appendChild(body);
   }
 
-  // 발화 턴 → 주문 티켓 직행 경로(P4, LIV-066 시나리오의 정답 구조).
-  // 티켓을 여는 것뿐 — 주문은 티켓 안에서 사람이 실행한다.
-  // note: 보드 37 목업엔 이 버튼이 없다 — P4 기능 결정이 우선, Paper 역반영 후보.
-  if (model.kind === 'fired') {
-    const actions = document.createElement('div');
-    actions.className = 'routine-approval-actions';
-    const openBtn = _btn('주문 티켓 열기', 'routine-btn');
-    openBtn.addEventListener('click', () => {
-      openOrderTicket(orderTicketLib.buildPrefill(event));
-    });
-    actions.appendChild(openBtn);
-    box.appendChild(actions);
-  }
-
   if (model.sourceLabel && model.kind === 'fired') {
     const src = document.createElement('div');
     src.className = 'agent-source';
@@ -3713,16 +3699,6 @@ function renderAgentTurn(event) {
 
 window.athena.on('athena:routine-event', (event) => {
   renderAgentTurn(event);
-});
-
-// Fast Selector의 guarded order 결과는 기존 주문 확인 티켓에만 착지한다.
-// 이 이벤트 경로에서는 athena:order-execute를 호출하지 않는다 — 실행은 아래
-// 티켓 안의 사용자 클릭 핸들러 하나로 계속 제한된다.
-window.athena.on('athena:selector-order-draft', (payload, meta) => {
-  // 다중 대화 — 다른 대화의 초안은 main이 미뤄 두고 그 대화로 돌아올 때 흘린다. 혹시 늦게 온 것은 버린다.
-  if (meta && meta.conversationId && meta.conversationId !== displayedConversationId) return;
-  const prefill = orderTicketLib.buildSelectorOrderPrefill(payload);
-  if (prefill) openOrderTicket(prefill);
 });
 
 // ---------- 예약 자동 브리핑 턴(R1, 4단계) ----------
@@ -4817,7 +4793,7 @@ function renderApprovalCard(r, { autoCheck = false, conversationId = displayedCo
 
   const notice = document.createElement('div');
   notice.className = 'agent-source';
-  notice.textContent = '활성화해도 주문은 자동 집행되지 않습니다 — 조건 도달 시 알림이 옵니다.';
+  notice.textContent = '활성화하면 조건 도달 시 알림이 옵니다.';
   card.appendChild(notice);
 
   appendMainCardConfirmation(card, r, conversationId);
@@ -5118,8 +5094,12 @@ function unreadAlertCount() {
   try { return window.AthenaNotify.list().filter((room) => !room.read).length; } catch { return 0; }
 }
 
-function adoptSeedText(subject) {
-  return `"${subject}" 감시 루틴을 확인 주기와 쿨다운까지 알아서 정해 완성된 초안으로 만들고 자동 검사해줘. 승인은 하지 마.`;
+function adoptSeedText(turn) {
+  return `"${turn.subject}" 제안을 athena_routine action=draft로 완성해줘. `
+    + '아래 제안의 종목, 실행 내용, 조건, 모드, 예약 시각과 시간대, 반복 여부를 그대로 유지하고 부족한 필드만 채워줘. '
+    + 'schedule.once는 한 번 실행하는 예약이므로 반복 예약이나 코드 감시로 바꾸지 말고, 자동 검사도 요청하지 마. '
+    + '초안만 만들고 메인 카드 확정이나 활성화는 하지 마.\n제안값: '
+    + JSON.stringify(turn.proposed || {});
 }
 
 // 결과 턴은 캔버스 클릭과 같은 채널로 보낸다 — 마운트 지점은 그 구독 하나뿐이다.
@@ -5174,10 +5154,31 @@ async function acceptProposal(turn, conversationId) {
     return;
   }
   if (turn.control === 'adopt') {
-    // 제안 채택은 완결형 요청을 곧바로 보낸다. 일반 채팅 제출 버스를 쓰되,
-    // 사용자가 입력 중인 composer 내용은 덮어쓰지 않는다.
+    const proposed = turn.proposed || {};
+    const condition = proposed.condition || {};
+    const watch = proposed.watch || {};
+    const watchReady = condition.source !== 'code.watch'
+      || (watch.project_id && watch.path && watch.version_hash);
+    if (proposed.symbol && condition.source && condition.op
+      && Object.prototype.hasOwnProperty.call(condition, 'value')
+      && routineMainCardLib.normalizeDescriptor(proposed.main_card_candidate) && watchReady) {
+      // A complete proposal already is a draft. Keep its schedule and instructions
+      // intact; confirmation and activation stay on the returned approval card.
+      let res;
+      try { res = await window.athena.invoke('athena:routine-draft', { body: proposed }); }
+      catch (err) { res = { ok: false, error: String((err && err.message) || err) }; }
+      if (res && res.ok && res.data && res.data.status === 'draft') {
+        revealRoutineDraft(res.data, { autoCheck: res.data.mode === 'code-watch', conversationId, explicit: true });
+      } else {
+        emitControlResult({ kind: 'fail', badge: turn.badge,
+          reason: (res && res.error) || '제안에서 초안을 만들지 못했습니다' },
+        () => acceptProposal(turn, conversationId), conversationId);
+      }
+      return;
+    }
+    // Partial proposals still need drafting, without discarding their structured values.
     document.dispatchEvent(new CustomEvent('athena:chat-submit', {
-      detail: { text: adoptSeedText(turn.subject) },
+      detail: { text: adoptSeedText(turn) },
     }));
     return;
   }
@@ -5930,45 +5931,16 @@ document.addEventListener('athena:chat-insert', (event) => {
 // 않는다. 프리필은 AI(루틴
 // 발화)가, 방향·수량·실행은 사람만. 집행은 기존 3중 게이트 백엔드 라우트
 // 그대로(새 주문 경로 없음), IN_DOUBT(409)는 재전송하지 않는다.
-const orderTicketLib = window.AthenaLib.OrderTicket;
 const $order = document.getElementById('order');
 const $orderBody = document.getElementById('orderBody');
 let orderOpen = false;
 let orderTicketRevision = 0;
 let orderTicketOwner = null;
 
-function isCurrentOrderTicket(owner) {
-  return !!owner
-    && orderOpen
-    && orderTicketOwner === owner
-    && owner.conversationId === displayedConversationId
-    && owner.revision === orderTicketRevision;
-}
-
 function closeOrderTicketForConversationChange(nextConversationId) {
   if (nextConversationId !== displayedConversationId && (orderOpen || orderTicketOwner)) {
     closeOrderTicket();
   }
-}
-
-function openOrderTicket(prefill) {
-  if (!orderTicketLib.canPresentOrderTicket({
-    switchingConversation,
-    displayedConversationId,
-    settingsOpen,
-    onboardVisible: !$onboard.hidden,
-  })) return;
-  orderOpen = true;
-  orderTicketRevision += 1;
-  const owner = {
-    conversationId: displayedConversationId,
-    revision: orderTicketRevision,
-  };
-  orderTicketOwner = owner;
-  $shell.inert = true;
-  $order.hidden = false;
-  $order.focus();
-  renderOrderTicket(prefill, owner);
 }
 
 function closeOrderTicket(expectedOwner = null) {
@@ -5981,272 +5953,4 @@ function closeOrderTicket(expectedOwner = null) {
   $order.hidden = true;
   $shell.inert = false;
   $input.focus();
-}
-
-function _ticketRow(label, value) {
-  const row = document.createElement('div');
-  row.className = 'ticket-row';
-  const l = document.createElement('span');
-  l.className = 'ticket-label';
-  l.textContent = label;
-  const v = document.createElement('span');
-  v.className = 'ticket-value';
-  v.textContent = value;
-  row.append(l, v);
-  return row;
-}
-
-async function renderOrderTicket(prefill, owner) {
-  $orderBody.replaceChildren();
-  const ticket = orderTicketLib.createTicket(prefill || null);
-
-  const card = document.createElement('div');
-  card.className = 'ticket-card';
-  if (prefill) {
-    card.appendChild(_ticketRow('종목', prefill.productName || prefill.symbol || '상품 선택 필요'));
-    card.appendChild(_ticketRow('사유', prefill.reason || '-'));
-    if (prefill.observed != null) {
-      // 시점 정직성 — 프리필 값은 발화 시점 값임을 라벨로 드러낸다.
-      card.appendChild(
-        _ticketRow('발화 시점 관측값', `${prefill.observed} (집행 전 재확인 필요)`)
-      );
-    }
-  }
-
-  // Selector 초안은 방향·수량까지 채울 수 있지만 실행은 여전히 사람 클릭 전용이다.
-  const sideRow = document.createElement('div');
-  sideRow.className = 'ticket-row';
-  const sideLabel = document.createElement('span');
-  sideLabel.className = 'ticket-label';
-  sideLabel.textContent = '방향';
-  const buyBtn = _btn('구매', 'routine-btn');
-  const sellBtn = _btn('판매', 'routine-btn');
-  sideRow.append(sideLabel, buyBtn, sellBtn);
-  card.appendChild(sideRow);
-
-  // 가격 행 — 무엇이 실행되는지를 수량 라벨의 각주가 아니라 값으로 드러낸다.
-  // 지정가는 P4 1차 범위 밖이라 비활성 세그먼트다(buildOrderPayload는 trde_tp 3 고정).
-  const priceModel = orderTicketLib.priceRowModel(prefill);
-  const priceRow = document.createElement('div');
-  priceRow.className = 'ticket-row';
-  const priceLabel = document.createElement('span');
-  priceLabel.className = 'ticket-label';
-  priceLabel.textContent = '가격';
-  priceRow.appendChild(priceLabel);
-  for (const seg of priceModel.segments) {
-    const chip = document.createElement('span');
-    chip.className = seg === priceModel.selected
-      ? 'ticket-seg ticket-seg-on' : 'ticket-seg';
-    chip.textContent = seg;
-    priceRow.appendChild(chip);
-  }
-  const priceReadout = document.createElement('span');
-  priceReadout.className = 'ticket-readout';
-  priceReadout.textContent = priceModel.readout;
-  priceRow.appendChild(priceReadout);
-  card.appendChild(priceRow);
-
-  const qtyRow = document.createElement('div');
-  qtyRow.className = 'ticket-row';
-  const qtyLabel = document.createElement('span');
-  qtyLabel.className = 'ticket-label';
-  qtyLabel.textContent = '수량';
-  const qtyInput = document.createElement('input');
-  qtyInput.type = 'number';
-  qtyInput.min = '1';
-  qtyInput.className = 'ticket-qty';
-  if (ticket.qty) qtyInput.value = String(ticket.qty);
-  const qtyUnit = document.createElement('span');
-  qtyUnit.className = 'ticket-unit';
-  qtyUnit.textContent = prefill && prefill.unit || '주';
-  const qtyChips = document.createElement('div');
-  qtyChips.className = 'ticket-qty-chips';
-  qtyRow.append(qtyLabel, qtyInput, qtyUnit, qtyChips);
-  card.appendChild(qtyRow);
-
-  // 총액 추정 — 발화 시점 관측값 × 수량. 관측값이 없으면 행을 그리지 않는다.
-  const totalRow = document.createElement('div');
-  totalRow.className = 'ticket-total';
-  const totalLabel = document.createElement('span');
-  totalLabel.className = 'ticket-total-label';
-  const totalValue = document.createElement('span');
-  totalValue.className = 'ticket-total-value';
-  totalRow.append(totalLabel, totalValue);
-  card.appendChild(totalRow);
-  const syncTotal = () => {
-    const est = orderTicketLib.estimateOrderTotal({
-      qty: qtyInput.value,
-      observed: prefill ? prefill.observed : null,
-    });
-    totalRow.hidden = !est;
-    if (est) {
-      totalLabel.textContent = est.label;
-      totalValue.textContent = est.text;
-    }
-  };
-  syncTotal();
-
-  // 게이트 상태 — 활성 계좌의 주문 API 여부를 정직하게 보여준다.
-  const gateLine = document.createElement('div');
-  gateLine.className = 'agent-source';
-  card.appendChild(gateLine);
-  let gateBlocked = '계좌 확인 중…';
-  gateLine.textContent = gateBlocked;
-  $orderBody.appendChild(card);
-  try {
-    if (prefill && prefill.executionBlocker) {
-      gateBlocked = prefill.executionBlocker;
-    } else {
-      const res = await window.athena.invoke('athena:account-list');
-      if (!isCurrentOrderTicket(owner)) return;
-      const accounts = (res && res.accounts) || [];
-      const active = accounts.find((a) => a.active) || accounts[0] || null;
-      gateBlocked = orderTicketLib.gateBlocker(active);
-    }
-  } catch {
-    if (!isCurrentOrderTicket(owner)) return;
-    gateBlocked = (prefill && prefill.executionBlocker) || orderTicketLib.gateBlocker(null);
-  }
-  const lock = orderTicketLib.gateLockModel(gateBlocked);
-  if (lock.locked) {
-    gateLine.replaceChildren();
-    gateLine.className = 'ticket-lock';
-    const dot = document.createElement('span');
-    dot.className = 'turn-fail-dot';
-    const copy = document.createElement('div');
-    copy.className = 'ticket-lock-copy';
-    const label = document.createElement('div');
-    label.className = 'ticket-lock-label';
-    label.textContent = lock.label;
-    const reason = document.createElement('div');
-    reason.className = 'ticket-lock-reason';
-    reason.textContent = lock.reason;
-    copy.append(label, reason);
-    gateLine.append(dot, copy);
-  } else {
-    gateLine.className = 'agent-source';
-    gateLine.textContent = '주문 API 활성 (모의계좌)';
-  }
-
-  // Paper 22 9GG-0 — 카드 발치의 상시 각주. 게이트가 열렸든 막혔든 늘 서 있고,
-  // 앱이 실제로 그렇게 동작한다(집행 때마다 newIdempotencyKey()를 새로 만든다).
-  // 게이트가 열렸을 때의 위 한 줄에서 같은 말을 걷어낸 자리가 여기다.
-  const execNote = document.createElement('div');
-  execNote.className = 'agent-source';
-  execNote.textContent = '실행하면 확인 게이트와 멱등키가 적용됩니다 — 같은 멱등키로는 두 번 체결되지 않습니다.';
-
-  const status = document.createElement('div');
-  status.className = 'agent-body';
-
-  const execRow = document.createElement('div');
-  execRow.className = 'routine-approval-actions';
-  const execBtn = _btn('구매하기', 'routine-btn routine-btn-approve');
-  const closeBtn = _btn('닫기 (Esc)', 'routine-btn');
-  execRow.append(execBtn, closeBtn);
-  card.append(execRow, status, execNote);
-  $orderBody.appendChild(card);
-  if (orderOpen) qtyInput.focus();
-
-  const paintQtyChips = () => {
-    const model = orderTicketLib.qtyChipModel({
-      side: ticket.side,
-      observed: prefill && prefill.observed,
-      buyingPower: ticket.buyingPower,
-      holdings: ticket.holdings,
-    });
-    qtyChips.replaceChildren();
-    for (const chip of model.chips) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'ticket-seg';
-      btn.textContent = chip.label;
-      btn.disabled = !chip.enabled;
-      if (chip.reason) btn.title = chip.reason;
-      btn.addEventListener('click', () => {
-        if (!chip.enabled || chip.qty == null) return;
-        qtyInput.value = String(chip.qty);
-        ticket.qty = chip.qty;
-        syncExec();
-        syncTotal();
-      });
-      qtyChips.appendChild(btn);
-    }
-    const blocked = model.chips.find((chip) => chip.reason);
-    qtyChips.title = blocked ? blocked.reason : '';
-  };
-
-  const syncExec = () => {
-    // Paper 22 — 실행 버튼은 고른 방향을 그대로 말한다(「구매하기」).
-    execBtn.textContent = ticket.side === 'sell' ? '판매하기' : '구매하기';
-    execBtn.disabled = !!gateBlocked || !ticket.side || !Number(qtyInput.value)
-      || ticket.state === 'done' || ticket.state === 'in_doubt';
-  };
-  if (ticket.side === 'buy') buyBtn.classList.add('routine-btn-approve');
-  if (ticket.side === 'sell') sellBtn.classList.add('routine-btn-approve');
-  if (!(prefill && prefill.executionBlocker)) try {
-    const cap = await window.athena.invoke('athena:ticket-capacity', {
-      symbol: prefill && prefill.symbol,
-    });
-    if (!isCurrentOrderTicket(owner)) return;
-    if (cap && (cap.buyingPower != null || cap.holdings != null)) {
-      ticket.buyingPower = cap.buyingPower;
-      ticket.holdings = cap.holdings;
-    }
-  } catch {
-    if (!isCurrentOrderTicket(owner)) return;
-    // 조회 실패는 칩을 비활성으로 둔다. 잔고를 짓지 않는다.
-  }
-  paintQtyChips();
-  syncExec();
-
-  buyBtn.addEventListener('click', () => {
-    ticket.side = 'buy';
-    buyBtn.classList.add('routine-btn-approve');
-    sellBtn.classList.remove('routine-btn-approve');
-    paintQtyChips();
-    syncExec();
-  });
-  sellBtn.addEventListener('click', () => {
-    ticket.side = 'sell';
-    sellBtn.classList.add('routine-btn-approve');
-    buyBtn.classList.remove('routine-btn-approve');
-    paintQtyChips();
-    syncExec();
-  });
-  qtyInput.addEventListener('input', () => { syncExec(); syncTotal(); });
-  closeBtn.addEventListener('click', () => closeOrderTicket(owner));
-
-  execBtn.addEventListener('click', async () => {
-    if (execBtn.disabled) return;
-    let payload;
-    try {
-      ticket.qty = Number(qtyInput.value);
-      payload = orderTicketLib.buildOrderPayload(ticket);
-    } catch (err) {
-      status.className = 'ticket-status is-up';
-      status.textContent = `입력 오류: ${err.message}`;
-      return;
-    }
-    orderTicketLib.transition(ticket, 'executing');
-    execBtn.disabled = true;
-    status.textContent = '집행 중… (무재시도 — 응답을 기다립니다)';
-    if (!isCurrentOrderTicket(owner)) {
-      closeOrderTicket(owner);
-      return;
-    }
-    const res = await window.athena.invoke('athena:order-execute', {
-      trId: payload.tr_id,
-      body: payload.body,
-      idempotencyKey: orderTicketLib.newIdempotencyKey(),
-      conversationId: owner.conversationId,
-    });
-    const outcome = orderTicketLib.interpretExecuteStatus((res && res.status) || 0);
-    orderTicketLib.transition(ticket, orderTicketLib.ticketStateAfterExecute(outcome));
-    // 종결 상태의 표시 전용 action 카드는 main 주문 핸들러가 실행 당시 대화의
-    // 세션 카드 경로로 보존한다. 실행 버튼이 없는 영수증일 뿐, 이 티켓 패널이
-    // 유일한 실행 표면이라는 확정 결정 3 경계는 그대로다.
-    status.className = `ticket-status is-${orderTicketLib.executeOutcomeTone(outcome)}`;
-    status.textContent = orderTicketLib.executeOutcomeCopy(outcome, res);
-    if (outcome !== 'done' && outcome !== 'in_doubt') syncExec();
-  });
 }

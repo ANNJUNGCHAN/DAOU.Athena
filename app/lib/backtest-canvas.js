@@ -3,10 +3,10 @@
 // **P4 구현과의 차이(2026-09-01 전수 파리티 감사).** 이전 캔버스는 보드 01의 최소 입력
 // 5개, 보드 03의 타일·체결 표, 보드 04의 숫자 2개만 그렸다. 감사 결과 Paper 60개 항목 중
 // 41개가 화면에 없었다(docs/architecture/backtest-parity-audit.md). 이 파일은 그 41개를
-// 채운다 — 설계 폼 전체·코드 편집기·플로우 지도·오류 진단·자산곡선·이력 비교·최적화·배포.
+// 채운다 — 설계 폼 전체·코드 편집기·플로우 지도·오류 진단·자산곡선·이력 비교·최적화.
 //
 // **표면 구조.** 보드 19 첫 화면의 상단 탭은 기법·결과·이력 셋이다. 기법을 고른 뒤에만
-// 최적화·배포가 붙고, 설계 안의 지도/폼/코드는 고른 뒤에 선다. 승인(보드 04)·진행·
+// 최적화가 붙고, 설계 안의 지도/폼/코드는 고른 뒤에 선다. 승인(보드 04)·진행·
 // 오류 진단(보드 09)은 탭이 아니라 그때만 뜨는 상태다.
 //
 // **왜 상태가 하나의 객체인가.** 화면이 여덟 개로 늘었지만 동시에 두 개가 뜨는 경우는
@@ -22,7 +22,6 @@
 'use strict';
 
 const isNode = typeof module !== 'undefined' && module.exports;
-const GlauMascot = isNode ? require('./glau-mascot') : window.AthenaLib.GlauMascot;
 const FactsCard = isNode ? require('./facts-card') : window.AthenaLib.FactsCard;
 const SpecModel = isNode ? require('./backtest-spec') : window.AthenaLib.BacktestSpec;
 const CodeEditor = isNode ? require('./backtest-code-editor') : window.AthenaLib.BacktestCodeEditor;
@@ -91,7 +90,6 @@ const MODE_TABS = [
   ['result', '결과'],
   ['history', '이력'],
   ['optimize', '최적화'],
-  ['deploy', '실매매 적용'],
 ];
 const MODE_TABS_LIST = MODE_TABS.slice(0, 3);
 
@@ -102,13 +100,13 @@ const TECHNIQUE_DRAFT_TABS = [['code', '코드'], ['nodes', '노드·흐름']];
 // 목록에서 고른 내 기법(폴더가 있는 기법)의 하위 탭 — 초안과 같은 둘에, 대상·파라미터를
 // 손으로 잡는 폼 하나가 더 선다. 지도는 없다(요약 지도 폐기, 2026-09-03 사용자 확정).
 const USER_TECHNIQUE_TABS = [['code', '코드'], ['nodes', '노드·흐름'], ['form', '폼']];
-// 목록에 오른 기법의 뒷줄 하위 탭(보드 23, 규칙 32-04) — 이력·최적화·실매매는 모드 탭이
+// 목록에 오른 기법의 뒷줄 하위 탭(보드 23, 규칙 32-04) — 이력·최적화는 모드 탭이
 // 아니라 그 기법 화면 안의 자리다. 모드 탭으로만 닿으면 홈에서 기법 없이 열려 무엇의
 // 이력인지 말할 수 없는 화면이 된다. 초안에는 서지 않는다(승인이 먼저다).
-const WORKSPACE_EXTRA_TABS = [['history', '이력'], ['optimize', '최적화'], ['deploy', '실매매 적용']];
+const WORKSPACE_EXTRA_TABS = [['history', '이력'], ['optimize', '최적화']];
 // 하위 탭인데 state.designTab이 아니라 state.tab에 사는 것들 — 옛 모드 탭과 자리를
-// 공유하므로(loadHistory·loadDeployments가 tab을 쓴다) 어느 탭에 서 있는지는 여기로 가른다.
-const WORKSPACE_MODE_TABS = ['result', 'history', 'optimize', 'deploy'];
+// 공유하므로(loadHistory가 tab을 쓴다) 어느 탭에 서 있는지는 여기로 가른다.
+const WORKSPACE_MODE_TABS = ['result', 'history', 'optimize'];
 // 기법 하나의 화면(보드 20) 헤더 — 폴더 이름 옆의 한 줄과 목록으로 돌아가는 문.
 const WORKSPACE_SUB = '폴더 하나가 기법 하나 · 대화 하나';
 const WORKSPACE_NO_FOLDER = '폴더 없이 화면 버퍼로';
@@ -938,18 +936,6 @@ function createBacktestCanvas(options) {
   const showBuiltInTechniques = deps.showBuiltInTechniques === true;
   const showUnregisteredDrafts = deps.showUnregisteredDrafts === true;
 
-  // 배포 계약에 자동 매매가 붙으며 늘어난 두 손잡이(2026-09-04, 보드 23).
-  //   armDeployment(id, armed) → {armed}  · 사람 클릭 전용. 없으면 토글을 아예 안 그린다.
-  //   listSignals(id)          → [signal] · 오늘 로그가 읽는다.
-  // listSignals가 없으면 이전 이름(signals)을 그대로 받는다 — 배선 파일은 다른 사람이
-  // 쥐고 있고, 이름 하나 때문에 오늘 로그가 통째로 사라지면 안 된다.
-  const readSignals = deps.listSignals || deps.signals || null;
-  // 배포별 신호 목록 {배포id: [signal]} — 키가 없으면 "아직 못 읽었다"는 뜻이다.
-  let deploySignals = {};
-  // 무장이 거절당한 이유 {배포id: 문구}. 조용히 되돌리면 사람은 왜 안 켜지는지 모른 채
-  // "자동으로 사고팔린다"고 믿는다(409 = 멈춘 배포).
-  let armErrors = {};
-
   let presets = [];
   // GET /backtest/indicators가 준 실제 계산 파라미터 목록. compile.py도 이 레지스트리에
   // 선언된 키만 지표 함수에 넘기므로, 모델 제안의 $참조를 검사할 때 같은 계약을 쓴다.
@@ -1420,14 +1406,12 @@ function createBacktestCanvas(options) {
       codeSource,
       openedVersion,
       ideOwnsCode,
-      deploySignals,
       techniqueNodesShown,
       techniqueNodesSource,
       techniqueDiffOpen,
       technique: t,
       result: state.result,
-      deployments: state.deployments,
-      // 보고 있던 하위 탭은 두 자리에 나뉘어 산다 — 결과·이력·최적화·실매매는 state.tab,
+      // 보고 있던 하위 탭은 두 자리에 나뉘어 산다 — 결과·이력·최적화는 state.tab,
       // 코드·노드·폼은 state.designTab이다. 둘 다 넣어야 그 자리로 돌아온다.
       tab: state.tab,
       designTab: state.designTab,
@@ -1452,7 +1436,6 @@ function createBacktestCanvas(options) {
     codeSource = snap.codeSource;
     openedVersion = snap.openedVersion;
     ideOwnsCode = snap.ideOwnsCode;
-    deploySignals = snap.deploySignals;
     techniqueNodesShown = snap.techniqueNodesShown;
     techniqueNodesSource = snap.techniqueNodesSource;
     techniqueDiffOpen = snap.techniqueDiffOpen;
@@ -1462,7 +1445,7 @@ function createBacktestCanvas(options) {
       tab: snap.tab || 'design',
       designTab: snap.designTab,
       message: null,
-      technique: snap.technique, result: snap.result, deployments: snap.deployments,
+      technique: snap.technique, result: snap.result,
     });
     const ide = snap.projectId ? ensureProjectIde() : null;
     if (ide) {
@@ -2152,30 +2135,6 @@ function createBacktestCanvas(options) {
     setState({ view: 'design', tab: 'design', designTab: 'form' });
   }
 
-  async function loadDeployments() {
-    setState({ view: 'deploy', tab: 'deploy' });
-    if (!deps.deployments) return;
-    let list;
-    try { list = await deps.deployments(); }
-    catch (err) { fail(err); return; }
-    setState({ deployments: list });
-    await loadDeploySignals(Array.isArray(list) ? list : []);
-  }
-
-  // 오늘 로그가 읽을 신호를 배포 목록과 같은 새로고침에서 채운다. 못 읽은 배포는
-  // 아예 키를 두지 않는다 — 빈 배열로 두면 "오늘 아무 일도 없었다"는 거짓말이 된다.
-  async function loadDeploySignals(list) {
-    if (!readSignals) return;
-    const next = {};
-    for (const dep of list) {
-      if (!dep || !dep.id) continue;
-      try { next[dep.id] = await readSignals(dep.id); }
-      catch { /* 그 배포만 로그가 없다 — 배포 목록 전체를 오류 화면으로 바꾸지 않는다 */ }
-    }
-    deploySignals = next;
-    render();
-  }
-
   function resumePollingIfNeeded() {
     if (pollTimer != null) return;
     if (state.view !== 'running') return;
@@ -2784,7 +2743,6 @@ function createBacktestCanvas(options) {
     }
     if (designTab) setState({ designTab });
     if (tab === 'history') void loadHistory();
-    else if (tab === 'deploy') void loadDeployments();
     else {
       setState({ view: tab === 'result' && state.result ? 'result' : 'design', tab });
     }
@@ -3109,7 +3067,7 @@ function createBacktestCanvas(options) {
     // 스크롤 자리도 그 세션의 것이다(41번 보드 Rule 1) — 굴린 자리를 봉인하고 되돌린다.
     body.addEventListener('scroll', onBodyScroll);
     // 안내는 세션 전체를 두고 하는 말이라 어느 탭에서든 선다. 표식은 다르다 — Paper는
-    // 그 둘을 폼 카드와 코드 카드 머리에 붙였으니, 그 카드가 없는 결과·이력·배포 탭에서는
+    // 그 둘을 폼 카드와 코드 카드 머리에 붙였으니, 그 카드가 없는 결과·이력·최적화 탭에서는
     // 설 자리가 아니다. 카드 안까지 넣지 않는 이유는 앱의 설계 화면이 탭이기 때문이다:
     // 폼과 코드는 서로를 가려 한 번에 하나만 서는데, 41번 보드는 표식 둘이 함께 선다.
     if (state.restore) {
@@ -3122,7 +3080,7 @@ function createBacktestCanvas(options) {
     if (state.view === 'approval') body.appendChild(renderApproval());
     else if (state.view === 'running') body.appendChild(renderRunning());
     else if (state.view === 'diagnosis') body.appendChild(renderDiagnosisPanel());
-    // 기법 하나의 화면(보드 20)에는 모드 탭이 없다 — 결과·이력·최적화·실매매도 전부
+    // 기법 하나의 화면(보드 20)에는 모드 탭이 없다 — 결과·이력·최적화도 전부
     // 그 화면의 하위 탭이다(규칙 32-04). 옛 모드 탭 경로는 그대로 아래로 흐른다.
     else if (state.tab === 'design'
       || (workspaceActive() && WORKSPACE_MODE_TABS.indexOf(state.tab) >= 0)) {
@@ -3130,7 +3088,6 @@ function createBacktestCanvas(options) {
     } else if (state.tab === 'result') body.appendChild(renderResult());
     else if (state.tab === 'history') body.appendChild(renderHistory());
     else if (state.tab === 'optimize') body.appendChild(renderOptimize());
-    else if (state.tab === 'deploy') body.appendChild(renderDeploy());
     shell.appendChild(body);
     container.appendChild(shell);
     // 되돌린 자리는 한 프레임짜리가 아니다 — 되살린 뒤에도 setState 한 번이면 새 몸통이
@@ -3160,12 +3117,12 @@ function createBacktestCanvas(options) {
   }
 
   function visibleModeTabs() {
-    if (hasTechnique() || state.tab === 'optimize' || state.tab === 'deploy') return MODE_TABS;
+    if (hasTechnique() || state.tab === 'optimize') return MODE_TABS;
     return MODE_TABS_LIST;
   }
 
   // 기법 하나의 화면 하위 탭(보드 20~23) — 초안은 코드·노드뿐이고, 목록에 오른 기법은
-  // 폼 뒤로 이력·최적화·실매매까지 여기 선다(규칙 32-04). 결과는 돌려본 뒤에만 문이 열린다.
+  // 폼 뒤로 이력·최적화까지 여기 선다(규칙 32-04). 결과는 돌려본 뒤에만 문이 열린다.
   function workspaceTabs() {
     let tabs = techniqueDraft ? TECHNIQUE_DRAFT_TABS : USER_TECHNIQUE_TABS;
     if (state.result) tabs = tabs.concat([['result', '결과']]);
@@ -3253,7 +3210,7 @@ function createBacktestCanvas(options) {
     if (hasTechnique()) head.appendChild(button('backtest-head-home', WORKSPACE_HOME_LABEL, goHome));
 
     // 홈에는 모드 탭이 없다(규칙 32-01/02) — 기법을 여는 문은 목록의 카드뿐이고,
-    // 이력·최적화·실매매는 그 기법 화면 안의 하위 탭이다. 다른 탭에 서 있는 자리에서는
+    // 이력·최적화는 그 기법 화면 안의 하위 탭이다. 다른 탭에 서 있는 자리에서는
     // 그대로 세운다: 나갈 길까지 없애면 막다른 길이 된다.
     if (homeScreen) return head;
 
@@ -3262,7 +3219,6 @@ function createBacktestCanvas(options) {
       const isOn = state.tab === key;
       const tab = button(`backtest-tab${isOn ? ' is-on' : ''}`, label, () => {
         if (key === 'history') { void loadHistory(); return; }
-        if (key === 'deploy') { void loadDeployments(); return; }
         setState({ view: key === 'result' && state.result ? 'result' : 'design', tab: key });
       });
       tab.setAttribute('aria-pressed', String(isOn));
@@ -3286,7 +3242,7 @@ function createBacktestCanvas(options) {
     }
     const subtabs = el('div', 'backtest-subtabs');
     // 초안에서는 하위 탭이 둘뿐이다 — 폼도 아직 없다(보드 20). 목록에서 고른 내
-    // 기법은 폼과 이력·최적화·실매매까지 여기 선다(workspaceTabs). 결과는 어느 쪽이든
+    // 기법은 폼과 이력·최적화까지 여기 선다(workspaceTabs). 결과는 어느 쪽이든
     // 돌려본 뒤에만 하위 탭으로 선다(단계 카드의 [결과 보기]가 여는 자리 — 모드 탭이
     // 없으니 여기가 그 문이다).
     const tabs = workspaceTabs();
@@ -3295,7 +3251,6 @@ function createBacktestCanvas(options) {
       const isOn = designTab === key;
       const tab = button(`backtest-subtab${isOn ? ' is-on' : ''}`, label, () => {
         if (key === 'result') { setState({ view: 'result', tab: 'result' }); return; }
-        if (key === 'deploy') { void loadDeployments(); return; }
         if (key === 'history') { void loadHistory(); return; }
         if (key === 'optimize') { setState({ view: 'design', tab: 'optimize' }); return; }
         setState({ view: 'design', tab: 'design', designTab: key });
@@ -3309,7 +3264,6 @@ function createBacktestCanvas(options) {
 
     const closeDraft = () => wrap;
     if (designTab === 'result') { wrap.appendChild(renderResult()); return closeDraft(); }
-    if (designTab === 'deploy') { wrap.appendChild(renderDeploy()); return wrap; }
     // 이력·최적화도 그 기법 화면 안이다(규칙 32-04) — 모드 탭으로만 닿던 두 판이 여기 선다.
     if (designTab === 'history') { wrap.appendChild(renderHistory()); return wrap; }
     if (designTab === 'optimize') { wrap.appendChild(renderOptimize()); return wrap; }
@@ -4934,7 +4888,8 @@ function createBacktestCanvas(options) {
     restoreApplied = applied;
 
     // 결과·체결도 그 세션의 것이다 — 봉투의 run_id로 다시 읽기 전까지는 비어 있어야 한다.
-    const patch = { view: 'design', result: null, runId: null, trades: [] };
+    // Retired deployment tabs reopen in the strategy editor, including older saved sessions.
+    const patch = { view: 'design', tab: 'design', designTab: 'code', result: null, runId: null, trades: [] };
     if (MODE_TABS.some(([key]) => key === saved.tab)) patch.tab = saved.tab;
     if (workspaceTabs().some(([key]) => key === saved.designTab)) patch.designTab = saved.designTab;
     patch.restore = SessionRestore.restoreReport(saved, applied);
@@ -5707,226 +5662,6 @@ function createBacktestCanvas(options) {
     wrap.appendChild(viewport);
     wrap.appendChild(el('div', 'backtest-card-note', '숫자는 Sharpe · 빈 칸은 미탐색 · —는 계산 결과 없음'));
     return wrap;
-  }
-
-  // ── 보드 07 · 배포 ────────────────────────────────────────────────────────
-
-  function renderDeploy() {
-    const wrap = el('div', 'backtest-deploy');
-    const head = el('div', 'backtest-card-head');
-    head.appendChild(el('div', 'backtest-card-title', '전략 배포 · 실전 적용'));
-    // 2026-09-04부터 이 문장은 "신호까지만"이 아니다 — auto로 배포하고 무장하면 사람
-    // 클릭 없이 주문이 나간다(보드 23). 화면이 옛 약속을 계속 말하면 그것이 거짓말이다.
-    head.appendChild(el(
-      'div', 'backtest-card-note',
-      '글라우를 켜면 미리 정한 한도 안에서 주문까지 자동으로 나갑니다 — '
-      + '그 밖의 배포는 신호까지만 만듭니다',
-    ));
-    wrap.appendChild(head);
-
-    const list = Array.isArray(state.deployments) ? state.deployments : [];
-    if (!list.length) {
-      wrap.appendChild(el('div', 'backtest-card-empty', '아직 배포한 전략이 없습니다'));
-    }
-    list.forEach((dep) => {
-      const item = el('div', 'backtest-deploy-item');
-      const row = el('div', `backtest-deploy-row is-${dep.status}`);
-      row.appendChild(el('span', 'backtest-deploy-symbol', dep.stk_cd));
-      row.appendChild(el('span', 'backtest-deploy-mode', dep.mode_label || dep.mode));
-      // "지금 실제로 자동 집행되는가"는 서버가 셋(모드·무장·상태)을 합쳐 준 auto_armed
-      // 하나로만 읽는다 — 화면에서 다시 조합하면 규칙이 두 곳에 살게 된다.
-      if (dep.auto_armed) row.appendChild(el('span', 'backtest-deploy-auto', '자동'));
-      // 「유효기간이 지났다」도 서버가 준 한 값(expired)으로만 읽는다 — status가 active여도
-      // 그런 배포는 신호마다 막힌다(deploy.py blocked_reason='expired'). active만 그리면
-      // 화면이 켜져 있다고 거짓말한다. 다만 status를 덮어쓰지는 않는다 — 사람이 [배포 중지]로
-      // 멈춘 stopped까지 '만료'로 읽히면 멈춘 것이 사람이었다는 사실이 사라진다.
-      if (dep.expired) row.appendChild(el('span', 'backtest-deploy-expired', '만료'));
-      row.appendChild(el('span', 'backtest-deploy-status', dep.status));
-      row.appendChild(button('backtest-deploy-stop', '배포 중지', async () => {
-        if (!deps.stopDeployment) return;
-        try { await deps.stopDeployment(dep.id); await loadDeployments(); }
-        catch (err) { fail(err); }
-      }));
-      item.appendChild(row);
-      const arm = renderDeployArm(dep);
-      if (arm) item.appendChild(arm);
-      const log = renderDeployLog(dep);
-      if (log) item.appendChild(log);
-      wrap.appendChild(item);
-    });
-
-    wrap.appendChild(renderDeployForm());
-    wrap.appendChild(el(
-      'div', 'backtest-deploy-note',
-      '백테스트는 다음 봉 시가에 원하는 수량이 전부 체결된다고 가정하고, 실전은 그렇지 '
-      + '않습니다. 실전과 백테스트의 차이는 배포 후 신호 목록에서 그대로 보여드립니다.',
-    ));
-    return wrap;
-  }
-
-  // 키우미 줄(보드 23) — 이 스위치 하나가 "사람이 누른다"와 "혼자 나간다"를 가른다.
-  // 배선이 없는 구버전에서는 아예 그리지 않는다. 눌러도 아무 일 없는 토글은 사람에게
-  // 켜져 있다는 거짓말을 남긴다.
-  function renderDeployArm(dep) {
-    if (!deps.armDeployment) return null;
-    const on = Boolean(dep.armed);
-    const box = el('div', `backtest-deploy-arm${on ? ' is-on' : ''}`);
-    const mascot = el('div', 'backtest-deploy-arm-mark');
-    GlauMascot.render(mascot, 'idle');
-    box.appendChild(mascot);
-    const text = el('div', 'backtest-deploy-arm-text');
-    text.appendChild(el('div', 'backtest-deploy-arm-title', '글라우 켜짐 = 자동 매매'));
-    text.appendChild(el(
-      'div', 'backtest-deploy-arm-detail',
-      '신호가 나면 위 한도 안에서 주문까지 자동으로 나갑니다. 한도를 넘거나 '
-      + '연속 손절 3회·낙폭 15%에 닿으면 스스로 멈춥니다.',
-    ));
-    box.appendChild(text);
-
-    // 토글의 시각 상태는 서버가 준 armed다 — 누른 뒤 낙관적으로 뒤집지 않는다.
-    const toggle = button(`backtest-deploy-arm-toggle${on ? ' is-on' : ''}`, null, async () => {
-      try {
-        await deps.armDeployment(dep.id, !on);
-        delete armErrors[dep.id];
-        await loadDeployments();
-      } catch (err) {
-        armErrors[dep.id] = String((err && err.message) || err);
-        render();
-      }
-    });
-    toggle.setAttribute('aria-pressed', String(on));
-    toggle.setAttribute('aria-label', '글라우 자동 매매');
-    toggle.appendChild(el('span', 'backtest-deploy-arm-knob'));
-    box.appendChild(toggle);
-
-    const reason = armErrors[dep.id];
-    if (!reason) return box;
-    const wrap = el('div', 'backtest-deploy-arm-wrap');
-    wrap.appendChild(box);
-    wrap.appendChild(el('div', 'backtest-deploy-arm-error', `무장하지 못했습니다 — ${reason}`));
-    return wrap;
-  }
-
-  // 오늘 로그(보드 23) — 오늘 것만 센다. 신호를 아직 못 읽었으면 로그 자체를 안 그린다.
-  function renderDeployLog(dep) {
-    const signals = deploySignals[dep.id];
-    if (!signals) return null;
-    const today = SpecModel.todayYyyymmdd();
-    const rows = todaySignals(signals, today);
-
-    const box = el('div', 'backtest-deploy-log');
-    const head = el('div', 'backtest-deploy-log-head');
-    head.appendChild(el('span', 'backtest-deploy-log-title', '오늘 로그'));
-    head.appendChild(el(
-      'span', 'backtest-deploy-log-when',
-      `${today.slice(0, 4)}-${today.slice(4, 6)}-${today.slice(6, 8)} · 모의서버`,
-    ));
-    // 하루 한도를 모르면 분모를 지어내지 않는다 — 카운터를 통째로 뺀다.
-    const perDay = Number(dep.limits && dep.limits.max_orders_per_day);
-    if (Number.isFinite(perDay) && perDay > 0) {
-      head.appendChild(el(
-        'span', 'backtest-deploy-log-count',
-        `오늘 ${todayOrderCount(signals, today)} / ${perDay}건`,
-      ));
-    }
-    box.appendChild(head);
-
-    if (!rows.length) {
-      box.appendChild(el('div', 'backtest-deploy-log-empty', '오늘은 아직 신호가 없습니다'));
-      return box;
-    }
-    rows.forEach((sig) => {
-      const line = el('div', 'backtest-deploy-log-row');
-      const when = signalTimeText(sig);
-      if (when) line.appendChild(el('span', 'backtest-deploy-log-time', when));
-      line.appendChild(el('span', `backtest-deploy-log-stage is-${sig.stage}`,
-        signalStageLabel(sig.stage)));
-      line.appendChild(el('span', 'backtest-deploy-log-text',
-        signalLineText(sig, dep.stk_cd)));
-      // 주문번호는 있을 때만 싣는다 — 신호·차단 단계에는 없다.
-      if (sig.order_no) line.appendChild(el('span', 'backtest-deploy-log-order', sig.order_no));
-      box.appendChild(line);
-    });
-    return box;
-  }
-
-  function renderDeployForm() {
-    const card = el('div', 'backtest-card');
-    card.appendChild(el('div', 'backtest-card-title', '새 배포'));
-    if (!activeVersionId) {
-      card.appendChild(el(
-        'div', 'backtest-card-empty',
-        '먼저 코드를 한 번 실행하거나 코드 탭에서 저장해야 배포할 수 있습니다 — 배포는 저장된 버전에 묶입니다',
-      ));
-      return card;
-    }
-
-    const modes = el('div', 'backtest-deploy-modes');
-    DEPLOY_MODES.forEach(([value, label, detail]) => {
-      const isOn = (state.deployMode || 'approve') === value;
-      const item = button(`backtest-deploy-mode-item${isOn ? ' is-on' : ''}`, null, () => {
-        setState({ deployMode: value });
-      });
-      item.setAttribute('aria-pressed', String(isOn));
-      item.appendChild(el('div', 'backtest-deploy-mode-label', label));
-      item.appendChild(el('div', 'backtest-deploy-mode-detail', detail));
-      modes.appendChild(item);
-    });
-    card.appendChild(modes);
-
-    const limits = state.deployLimits || {
-      max_order_amount: 2000000, max_orders_per_day: 2,
-      valid_from: SpecModel.todayYyyymmdd(), valid_to: '',
-      stop_on_drawdown_pct: 15, stop_on_consecutive_losses: 3,
-    };
-    // Paper 42NE-1·42NF-1 — 한도가 무엇인지 말하고, 비워 둘 수 없다고 못 박는다.
-    card.appendChild(el('div', 'backtest-deploy-limits-head', '한도 — 미리 승인하는 범위'));
-    card.appendChild(el('div', 'backtest-deploy-limits-warning', DEPLOY_LIMITS_WARNING));
-    const gateLine = el('div', 'backtest-deploy-limits-gate');
-    const createBtn = button('backtest-deploy-create', '이 전략을 실전에 겁니다', async () => {
-      if (!deps.createDeployment) return;
-      // 버튼이 비활성이어도 여기서 한 번 더 본다 — 만드는 문은 하나여야 한다.
-      if (!deployLimitsGate(limits).ok) return;
-      try {
-        await deps.createDeployment({
-          strategy_version_id: activeVersionId,
-          stk_cd: spec.symbols[0],
-          period: spec.period,
-          adjusted: spec.adjusted,
-          mode: state.deployMode || 'approve',
-          params: {},
-          limits: {
-            max_order_amount: Number(limits.max_order_amount),
-            max_orders_per_day: Number(limits.max_orders_per_day),
-            valid_from: String(limits.valid_from),
-            valid_to: String(limits.valid_to),
-            stop_on_drawdown_pct: Number(limits.stop_on_drawdown_pct),
-            stop_on_consecutive_losses: Number(limits.stop_on_consecutive_losses),
-          },
-        });
-        await loadDeployments();
-      } catch (err) { fail(err); }
-    });
-    // 키입력마다 다시 그리면 포커스를 잃는다(textField 주석) — 버튼과 이유 줄만 갱신한다.
-    function syncLimitsGate() {
-      const gate = deployLimitsGate(limits);
-      createBtn.disabled = !gate.ok;
-      gateLine.textContent = gate.ok ? '' : `아직 비어 있음 · ${gate.missing.join(' · ')}`;
-    }
-    const row = el('div', 'backtest-field-row');
-    DEPLOY_LIMIT_FIELDS.forEach(([key, label]) => {
-      row.appendChild(textField(label, limits[key], '', (v) => {
-        limits[key] = v;
-        syncLimitsGate();
-      }));
-    });
-    card.appendChild(row);
-    state.deployLimits = limits;
-
-    syncLimitsGate();
-    card.appendChild(gateLine);
-    card.appendChild(createBtn);
-    return card;
   }
 
   function mount() {

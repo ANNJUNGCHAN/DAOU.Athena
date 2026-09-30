@@ -397,7 +397,7 @@ async function refreshScreenCard(card, head, body) {
 }
 
 // =============================================================================
-// 계좌 — AT-ST-001 (목록) · AT-ST-002 (등록 시트) · AT-ST-003 (주문 API 게이트)
+// 계좌 — AT-ST-001 (목록) · AT-ST-002 (등록 시트)
 // =============================================================================
 
 function renderAccounts(grid) {
@@ -438,11 +438,7 @@ async function refreshAccountsCard(card, head, body) {
   if (!accounts.length) {
     body.appendChild(emptyState('등록된 계좌가 없다', '+ 계좌 등록으로 첫 모의투자 계좌를 연결한다'));
   } else {
-    body.appendChild(buildAccountsTable(
-      accounts,
-      refresh,
-      (account) => openOrderApiSheet(card, account, refresh),
-    ));
+    body.appendChild(buildAccountsTable(accounts, refresh));
   }
 
   const note = el('div', 'uk-settings-note');
@@ -460,7 +456,7 @@ function acctStatusPill(a) {
 // canDelete === false는 "등록된 계좌가 이 하나뿐"이다(AT-ST-001 Desc 1.1
 // "마지막 하나는 삭제 불가"). 백엔드(accounts.remove())는 이 규칙을 강제하지
 // 않으므로 — 강제할 수 있는 유일한 자리인 UI에서 막는다.
-function buildAccountRow(a, refresh, openOrderApi, canDelete) {
+function buildAccountRow(a, refresh, canDelete) {
   const aliasCell = row('uk-col-alias', [
     el('span', 'uk-cell-strong', a.alias),
     badge(!!a.active, a.active ? '활성' : '비활성'),
@@ -468,16 +464,6 @@ function buildAccountRow(a, refresh, openOrderApi, canDelete) {
 
   const appkeyCell = el('div', 'uk-col-appkey');
   appkeyCell.appendChild(secretMask(a.appKeyChars));
-
-  const orderApiChip = pill(a.orderApi ? 'ON' : 'OFF', a.orderApi ? 'brand' : 'dim');
-  orderApiChip.classList.add('is-clickable');
-  orderApiChip.title = '눌러서 주문 API 게이트 열기';
-  orderApiChip.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openOrderApi(a);
-  });
-  const orderApiCell = el('div', 'uk-col-orderapi');
-  orderApiCell.appendChild(orderApiChip);
 
   const statusCell = el('div', 'uk-col-status');
   statusCell.appendChild(acctStatusPill(a));
@@ -516,7 +502,7 @@ function buildAccountRow(a, refresh, openOrderApi, canDelete) {
   actionsCell.appendChild(backendButton);
   actionsCell.appendChild(actionStatus);
 
-  const normalCells = [aliasCell, appkeyCell, orderApiCell, statusCell, lastCheckCell, actionsCell];
+  const normalCells = [aliasCell, appkeyCell, statusCell, lastCheckCell, actionsCell];
   const r = row('uk-row', normalCells);
   if (!a.active) {
     r.classList.add('is-clickable');
@@ -574,12 +560,11 @@ function buildAccountRow(a, refresh, openOrderApi, canDelete) {
   return r;
 }
 
-function buildAccountsTable(accounts, refresh, openOrderApi) {
+function buildAccountsTable(accounts, refresh) {
   const wrap = el('div');
   wrap.appendChild(row('uk-col-head', [
     el('span', 'uk-col-alias', '별칭'),
     el('span', 'uk-col-appkey', '앱키'),
-    el('span', 'uk-col-orderapi', '주문 API'),
     el('span', 'uk-col-status', '연결 상태'),
     el('span', 'uk-col-lastcheck', '마지막 검증'),
     el('span', 'uk-col-actions', ''),
@@ -587,7 +572,7 @@ function buildAccountsTable(accounts, refresh, openOrderApi) {
 
   const canDelete = accounts.length > 1;
   for (const a of accounts) {
-    wrap.appendChild(buildAccountRow(a, refresh, openOrderApi, canDelete));
+    wrap.appendChild(buildAccountRow(a, refresh, canDelete));
   }
   return wrap;
 }
@@ -886,142 +871,6 @@ function openAccountRegisterSheet(card, onDone) {
   applyState(sheetState);
   attachSheet(card, root);
   aliasInput.focus();
-}
-
-// ---- AT-ST-003: 주문 API 활성화 게이트 시트 ----
-function openOrderApiSheet(card, account, onDone) {
-  const { root, body, head } = sheet('주문 API 활성화', {
-    subtitle: account.alias,
-    onClose: () => detachSheet(card, root),
-  });
-  const closeBtn = head.querySelector('.uk-sheet-close');
-  const statusPill = pill(account.orderApi ? '현재 ON' : '현재 OFF', 'dim');
-  head.insertBefore(statusPill, closeBtn || null);
-
-  // 열리는 것 · 열리지 않는 것
-  const split = el('div', 'uk-split');
-  const openCol = el('div', 'uk-split-col');
-  openCol.appendChild(row('uk-split-head', [el('span', 'uk-dot-warn'), el('span', null, '열리는 것 · 12건 · 모의 계좌 대상')]));
-  const trRows = [
-    ['kt10000~10003', '국내주식', '매수 · 매도 · 정정 · 취소'],
-    ['kt10006~10009', '신용주문', '매수 · 매도 · 정정 · 취소'],
-    ['kt50000~50003', '금현물', '매수 · 매도 · 정정 · 취소'],
-  ];
-  for (const [code, name, actions] of trRows) {
-    openCol.appendChild(row('uk-tr-row', [
-      el('span', 'uk-tr-code', code),
-      el('span', 'uk-tr-name', name),
-      el('span', 'uk-tr-actions', actions),
-    ]));
-  }
-  openCol.appendChild(el('div', 'uk-tr-foot', '3계열 × 4동작 = 12건 — 신용주문 포함'));
-
-  const closedCol = el('div', 'uk-split-col');
-  closedCol.appendChild(el('div', 'uk-split-head', '열리지 않는 것'));
-  const closedItems = [
-    ['자동 매매 없음', '모든 주문은 대화 창에서 사용자가 직접 지시해야 실행된다'],
-    ['AI 단독 실행 없음', '제안은 AI가 하고, 실행 지시는 항상 사용자가 한다'],
-    ['실거래 계좌 접근 없음', '이 API는 모의 계좌 밖으로 나가지 않는다'],
-  ];
-  for (const [t, d] of closedItems) {
-    closedCol.appendChild(row('uk-closed-item', [
-      el('div', 'uk-closed-title', t),
-      el('div', 'uk-closed-desc', d),
-    ]));
-  }
-  split.appendChild(openCol);
-  split.appendChild(closedCol);
-  body.appendChild(split);
-
-  // 토글 행
-  let toggleState = !!account.orderApi;
-  const toggleLabelCol = el('div');
-  toggleLabelCol.appendChild(el('div', 'uk-toggle-label', 'AI가 이 계좌의 주문 API를 호출하도록 허용'));
-  const toggleEl = toggleSwitch(toggleState, async (next) => {
-    toggleState = next;
-    // Desc 5 "되돌리기": 이미 켜진 상태에서 끄는 것은 로컬에 즉시 반영하고
-    // 서버 확인 결과를 같은 시트에 명시한다.
-    // 켜는 것은 아래 "활성화" 버튼의 최종 확인을 반드시 거친다(Desc 2).
-    if (!next && account.orderApi) {
-      clear(errBox);
-      account.orderApi = false;
-      statusPill.textContent = '로컬 OFF · 서버 확인 중';
-      renderChecklist();
-      try {
-        const res = await window.athena.invoke('athena:order-api-set', { id: account.id, enabled: false });
-        if (res && res.ok) {
-          statusPill.textContent = '현재 OFF';
-        } else {
-          statusPill.textContent = '로컬 OFF · 서버 확인 필요';
-          errBox.appendChild(errorNote((res && res.error) || '서버의 주문 API OFF 상태를 확인하지 못했습니다'));
-        }
-      } catch (err) {
-        statusPill.textContent = '로컬 OFF · 서버 확인 필요';
-        errBox.appendChild(errorNote(String((err && err.message) || err)));
-      }
-    }
-    renderChecklist();
-  }, 'AI가 이 계좌의 주문 API를 호출하도록 허용');
-  body.appendChild(row('uk-toggle-row', [toggleLabelCol, toggleEl]));
-
-  const checklistWrap = el('div', 'uk-checklist');
-  body.appendChild(checklistWrap);
-  function renderChecklist(list) {
-    clear(checklistWrap);
-    const items = list || [
-      { key: 'orderApi', label: '주문 API 허용 (토글)', met: toggleState },
-      { key: 'token', label: '로컬 인증 토큰 설정', met: account.tokenState === 'ready' },
-    ];
-    for (const it of items) {
-      const metLabel = it.key === 'token' ? (it.met ? '설정됨' : '미설정') : (it.met ? 'ON' : 'OFF');
-      checklistWrap.appendChild(row('uk-checklist-row', [
-        row('uk-checklist-label', [el('span', 'uk-dot-dim'), el('span', null, it.label)]),
-        pill(metLabel, it.met ? 'ok' : 'dim'),
-      ]));
-    }
-  }
-  renderChecklist();
-
-  const errBox = el('div');
-  body.appendChild(errBox);
-
-  const btnRow = row('uk-btn-row-end', []);
-  btnRow.appendChild(button('ghost', '취소', { onClick: () => detachSheet(card, root) }));
-  const activateBtn = button('primary', '활성화', { onClick: onActivate });
-  btnRow.appendChild(activateBtn);
-  body.appendChild(btnRow);
-
-  body.appendChild(el('div', 'uk-revert-note',
-    '언제든 설정에서 OFF로 되돌릴 수 있다. OFF는 로컬에 즉시 적용되며 서버 확인 결과를 함께 표시한다.'));
-
-  async function onActivate() {
-    clear(errBox);
-    activateBtn.disabled = true;
-    try {
-      const res = await window.athena.invoke('athena:order-api-set', { id: account.id, enabled: toggleState });
-      if (res && res.orderApi === false) {
-        toggleState = false;
-        toggleEl.setChecked(false);
-        account.orderApi = false;
-        statusPill.textContent = '현재 OFF';
-      }
-      if (res && res.checklist) renderChecklist(res.checklist);
-      else renderChecklist();
-      if (res && res.ok) {
-        account.orderApi = toggleState;
-        detachSheet(card, root);
-        onDone();
-        return;
-      }
-      if (res && res.error) errBox.appendChild(errorNote(res.error));
-    } catch (err) {
-      errBox.appendChild(errorNote('주문 API 게이트를 아직 사용할 수 없다 (athena:order-api-set 핸들러 없음)'));
-    } finally {
-      activateBtn.disabled = false;
-    }
-  }
-
-  attachSheet(card, root);
 }
 
 // =============================================================================

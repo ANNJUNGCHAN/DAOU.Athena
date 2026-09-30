@@ -21,6 +21,8 @@
 
 ATHENA는 대화, 차트, 투자 기록, 외부 도구와 전략 검증을 하나의 작업 공간에 연결하는 Windows용 AI 투자 워크스페이스입니다. 질문에 필요한 자료를 Canvas에 펼치고, 사용자가 근거와 실행 조건을 확인한 뒤 다음 단계로 이어갈 수 있게 구성했습니다.
 
+개발 범위는 **투자 분석·알림·전략 작성·백테스트·결과 확인**입니다. 실매매, 증권사 주문 실행과 자동매매 배포는 제공하지 않습니다. 백테스트의 매수·매도 신호와 모의 체결은 과거 데이터에 대한 시뮬레이션으로 지원합니다.
+
 <p align="center">
   <img src="https://athena-homepage.athena-jcahn.workers.dev/screens/agora.png" alt="ATHENA Agora 대화형 투자 작업 공간" width="100%">
 </p>
@@ -34,7 +36,7 @@ ATHENA는 대화, 차트, 투자 기록, 외부 도구와 전략 검증을 하�
 | **Aegis · 아이기스** | 반복해서 확인할 조건과 일정을 검토하고 승인해 알림과 실행 이력으로 관리합니다. |
 | **Ergane · 에르가네** | 외부 도구를 등록하고 사용할 기능과 권한을 확인해 투자 환경에 연결합니다. |
 | **Pallas · 팔라스** | 투자 아이디어를 기법으로 구체화하고 설정과 가정을 확인한 뒤 과거 데이터로 검증합니다. |
-| **Glaux · 글로우** | 알림과 작은 대화 창을 제공하며, 주문은 종목과 수량을 확인한 뒤 사용자가 직접 실행합니다. |
+| **Glaux · 글로우** | 알림과 작은 대화 창에서 투자 자료를 확인하고 분석 대화를 이어갑니다. |
 
 <table>
   <tr>
@@ -66,7 +68,7 @@ ATHENA는 대화, 차트, 투자 기록, 외부 도구와 전략 검증을 하�
 
 ## Windows에 설치
 
-[ATHENA v0.1.3 설치 파일 다운로드](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.3/Athena-Setup-0.1.3-x64.exe)
+[ATHENA v0.1.4 설치 파일 다운로드](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.4/Athena-Setup-0.1.4-x64.exe)
 
 Windows x64용 설치 프로그램은 Electron 앱과 로컬 Python 백엔드를 포함합니다. 설치 후 ATHENA를 실행하고 사용할 모델 공급자에 로그인하세요. 키움 데이터 조회에는 별도의 API 자격 증명 연결이 필요합니다.
 
@@ -90,7 +92,7 @@ Pop-Location
 npm --prefix app start
 ```
 
-`npm --prefix app start`는 Electron 앱과 `backend/.venv/Scripts/python.exe`의 로컬 백엔드를 함께 시작합니다. 실제 키움 조회와 주문 기능은 발급받은 API 자격 증명을 연결해야 사용할 수 있으며, 주문 실행은 앱에서 사용자가 직접 확인해야 합니다.
+`npm --prefix app start`는 Electron 앱과 `backend/.venv/Scripts/python.exe`의 로컬 백엔드를 함께 시작합니다. 키움 시세·차트·계좌 자료 조회와 백테스트용 시세 수집에는 발급받은 API 자격 증명 연결이 필요합니다. 이 연결은 데이터 조회용이며 주문 실행을 활성화하지 않습니다.
 
 > 이 공개 저장소는 실행·재빌드 범위에 맞춰 구성되어 있습니다. 내부 검증 스크립트와 작업 기록은 공개 배포 대상에 포함되지 않습니다.
 

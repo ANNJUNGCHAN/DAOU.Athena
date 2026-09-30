@@ -79,3 +79,27 @@ test('invalid save response keeps the previously confirmed font and exposes retr
   assert.match(h.grid.textContent, /설정을 저장하지 못했습니다/);
   assert.equal(h.font('작음').disabled, false);
 });
+
+test('account settings retain read-only connection checks without an order API control', async () => {
+  const calls = [];
+  const window = { athena: { async invoke(channel) {
+    calls.push(channel);
+    if (channel === 'athena:account-list') return { accounts: [{ id: 'qa', alias: 'QA', active: true,
+      appKeyChars: 12, orderApi: true, backendConnected: true }] };
+    assert.equal(channel, 'athena:account-set-backend-alias');
+    return { ok: true, backendConnected: true };
+  } } };
+  const context = vm.createContext({ window, document: { createElement } });
+  for (const script of scripts) vm.runInContext(script, context);
+  const grid = fakeNode('div');
+  await window.AthenaLib.SettingsCards.renderAccounts(grid);
+  assert.match(grid.textContent, /QA/);
+  assert.match(grid.textContent, /마지막 연결 성공/);
+  assert.doesNotMatch(grid.textContent, /주문 API|현재 ON|현재 OFF/);
+  assert.equal(all(grid).some(node => node.className === 'uk-col-orderapi'), false);
+  const check = all(grid).find(node => node.nodeName === 'button' && node.textContent === '연결 확인');
+  assert.ok(check);
+  check.dispatchEvent({ type: 'click' });
+  await settle();
+  assert.deepEqual(calls, ['athena:account-list', 'athena:account-set-backend-alias', 'athena:account-list']);
+});

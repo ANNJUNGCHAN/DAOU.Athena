@@ -46,7 +46,6 @@
   const columnFold = window.AthenaLib.ColumnFold;
   const factsCard = window.AthenaLib.FactsCard;
   const cardPrimitives = window.AthenaLib.CardPrimitives;
-  const orderTicketLib = window.AthenaLib.OrderTicket;
   const orbMiniCard = window.AthenaLib.OrbMiniCard;
   const orbQuoteRealtime = window.AthenaLib.OrbQuoteRealtime;
   const orbIntegratedRealtime = window.AthenaLib.OrbIntegratedRealtime;
@@ -93,22 +92,6 @@
   });
   // 알림 전용 표면 — 대화 모드일 때 통째로 감춘다(applyMode).
   const ALERT_ONLY_ELS = [$badge, $mode, $relative, $body, $card, $foot];
-
-  // ── 미니 주문 티켓 DOM(board-33⑤, CP2 2026-08-27 사용자 승인) ──
-  const $ticket = document.getElementById('orbTicket');
-  const $ticketAccount = document.getElementById('orbTicketAccount');
-  const $ticketRowSymbol = document.getElementById('orbTicketRowSymbol');
-  const $ticketSymbol = document.getElementById('orbTicketSymbol');
-  const $ticketRowSide = document.getElementById('orbTicketRowSide');
-  const $ticketSide = document.getElementById('orbTicketSide');
-  const $ticketRowQty = document.getElementById('orbTicketRowQty');
-  const $ticketQty = document.getElementById('orbTicketQty');
-  const $ticketRowAmount = document.getElementById('orbTicketRowAmount');
-  const $ticketAmount = document.getElementById('orbTicketAmount');
-  const $ticketExec = document.getElementById('orbTicketExec');
-  const $ticketCancel = document.getElementById('orbTicketCancel');
-  const $ticketGate = document.getElementById('orbTicketGate');
-  const $ticketStatus = document.getElementById('orbTicketStatus');
 
   // 미확인 알림. 이 배열이 비어 있으면 오브는 무채색이고, 하나라도 있으면 얼굴이
   // 드러난다(renderPresence). 펼치면 도착 순서의 한 건만 보여주고 그 건만 확인한다.
@@ -1376,198 +1359,6 @@
   // 렌더로 분기한다 — 그 밖의 facts 엔벌로프는 지금처럼 오브에 카드가 없다.
   const ORDER_TICKET_TITLE = '주문 티켓';
 
-  // 실행 버튼이 실제로 쏘는 구조화 값 — 표시 문자열(예: "삼성전자 005930")과
-  // 별도다. buildOrderPayload(lib/order-ticket.js, chat.js가 이미 쓰는 바로 그
-  // 함수)가 기대하는 {symbol, side, qty} 모양 그대로 들고 있는다.
-  let activeTicketOrder = null;
-  // 상태기계 — 셸(chat.js ticket)과 같은 orderTicketLib.createTicket/transition을
-  // 그대로 쓴다(결함5, 2026-08-27 CP2 확장 승인). review → executing →
-  // done|in_doubt|failed, failed만 재시도 가능(라이브러리 전이표 그대로 — 새
-  // 상태기계를 짓지 않는다).
-  let activeTicket = null;
-  // 게이트 차단 사유(결함4) — null이면 실행 가능. 조회 중에는 자리표시자
-  // 문자열을 넣어 그 사이 실행을 막는다(계좌 확인 전 낙관적 실행 금지).
-  let ticketGateBlocked = null;
-  let ticketExecuting = false;
-  // 세대 번호 — 게이트 조회·주문 실행 응답이 비동기라, 그사이 티켓이 닫히거나
-  // 새 티켓으로 갈아끼워진 뒤 늦게 도착한 응답이 새 화면을 덮어쓰는 것을 막는다.
-  let ticketGeneration = 0;
-
-  function orbTicketFieldValue(fields, key) {
-    const f = fields.find((f) => f && f.key === key);
-    return f ? f.value : undefined;
-  }
-
-  // 실행 버튼 활성 조건 — 셸 syncExec()과 같은 규칙(chat.js:1516-1519): 필수값 +
-  // 게이트 통과 + 진행 중 아님 + 종결 상태(done/in_doubt) 아님. failed는
-  // 재시도를 허용한다(사람이 다시 누른 경우만, 새 멱등키).
-  function updateTicketExecDisabled() {
-    $ticketExec.disabled = !activeTicketOrder || !!ticketGateBlocked || ticketExecuting
-      || !activeTicket || activeTicket.state === 'done' || activeTicket.state === 'in_doubt';
-  }
-
-  // 게이트 조회(결함4) — 셸 renderOrderTicket()의 account-list 조회(chat.js:
-  // 1493-1503)와 같은 판정(orderTicketLib.gateBlocker)을 그대로 재사용한다.
-  // 새 방어 장치를 발명하지 않는다 — 이미 있는 판정을 오브에도 붙일 뿐이다.
-  async function refreshTicketGate(gen) {
-    ticketGateBlocked = '계좌 확인 중…';
-    updateTicketExecDisabled();
-    let blocked;
-    try {
-      const res = await window.athena.invoke('athena:account-list');
-      const accounts = (res && res.accounts) || [];
-      const active = accounts.find((a) => a.active) || accounts[0] || null;
-      blocked = orderTicketLib.gateBlocker(active);
-    } catch {
-      blocked = orderTicketLib.gateBlocker(null);
-    }
-    if (gen !== ticketGeneration) return; // 그사이 티켓이 닫히거나 갈렸다 — 낡은 응답을 버린다
-    ticketGateBlocked = blocked;
-    if (blocked) {
-      $ticketGate.textContent = `지금은 실행할 수 없음: ${blocked}`;
-      $ticketGate.hidden = false;
-    } else {
-      $ticketGate.hidden = true;
-      $ticketGate.textContent = '';
-    }
-    updateTicketExecDisabled();
-  }
-
-  /**
-   * 미니 주문 티켓 — 엔벌로프 값 1:1(LLM 0, 가격×수량 계산을 오브가 하지
-   * 않는다). 없는 필드는 행 자체를 감춘다("없는 필드 행 미생성", orb.js의
-   * renderCard()와 같은 원칙). 정적 라벨 4종은 orb.html이 이미 갖고 있다
-   * (Step 10b) — 여기서는 값만 채우고 행/티켓 표시 여부만 토글한다.
-   */
-  function renderOrbTicket(envelope) {
-    const fields = (envelope.data && Array.isArray(envelope.data.fields)) ? envelope.data.fields : [];
-    const symbol = orbTicketFieldValue(fields, 'symbol');
-    const symbolName = orbTicketFieldValue(fields, 'symbol_name');
-    const side = orbTicketFieldValue(fields, 'side');
-    const qty = orbTicketFieldValue(fields, 'qty');
-    const amount = orbTicketFieldValue(fields, 'estimated_amount');
-
-    $ticketAccount.textContent = envelope.caption != null ? String(envelope.caption) : '';
-
-    if (symbol != null && symbol !== '') {
-      $ticketSymbol.textContent = symbolName ? `${symbolName} ${symbol}` : String(symbol);
-      $ticketRowSymbol.hidden = false;
-    } else {
-      $ticketRowSymbol.hidden = true;
-    }
-
-    // 시장가 고정 — order-ticket.js buildOrderPayload와 같은 P4 1차 범위
-    // 제약(지정가는 후속)이라 "· 시장가"는 데이터가 아니라 그 제약의 표기다.
-    $ticketSide.classList.remove('is-buy', 'is-sell');
-    if (side === 'buy' || side === 'sell') {
-      $ticketSide.textContent = `${side === 'buy' ? '매수' : '매도'} · 시장가`;
-      $ticketSide.classList.add(side === 'buy' ? 'is-buy' : 'is-sell');
-      $ticketRowSide.hidden = false;
-    } else {
-      $ticketRowSide.hidden = true;
-    }
-
-    if (Number.isFinite(qty) && qty > 0) {
-      $ticketQty.textContent = `${qty}주`;
-      $ticketRowQty.hidden = false;
-    } else {
-      $ticketRowQty.hidden = true;
-    }
-
-    if (Number.isFinite(amount)) {
-      $ticketAmount.textContent = `${factsCard.formatNumeric(amount)}원`;
-      $ticketRowAmount.hidden = false;
-    } else {
-      $ticketRowAmount.hidden = true;
-    }
-
-    // 실행 가능 여부 — 세 필수값(종목·방향·수량)이 다 있어야 buildOrderPayload가
-    // 던지지 않는다. 방어 장치를 새로 두는 게 아니라 이미 있는 함수의 전제를
-    // 그대로 존중하는 것뿐이다.
-    activeTicketOrder = (symbol != null && symbol !== '' && (side === 'buy' || side === 'sell') && Number.isFinite(qty) && qty > 0)
-      ? { symbol: String(symbol), side, qty: Number(qty) }
-      : null;
-    // 새 티켓 — 상태기계를 review로 되돌리고(결함5), 이전 실행 결과 표시를
-    // 지운다. 게이트는 매 렌더마다 다시 조회한다(활성 계좌가 바뀌었을 수
-    // 있다 — 캐시하지 않는다).
-    activeTicket = activeTicketOrder ? orderTicketLib.createTicket(null) : null;
-    ticketExecuting = false;
-    $ticketStatus.hidden = true;
-    $ticketStatus.textContent = '';
-    $ticketStatus.classList.remove('is-failed', 'is-doubt');
-    const gen = ++ticketGeneration;
-    if (activeTicketOrder) {
-      refreshTicketGate(gen);
-    } else {
-      ticketGateBlocked = null;
-      $ticketGate.hidden = true;
-    }
-    updateTicketExecDisabled();
-
-    $ticket.hidden = false;
-    return $ticket;
-  }
-
-  function closeOrbTicket() {
-    $ticket.hidden = true;
-    activeTicketOrder = null;
-    activeTicket = null;
-    ticketExecuting = false;
-    ticketGateBlocked = null;
-    ticketGeneration++; // 대기 중이던 게이트 조회 응답을 무효화
-    $ticketGate.hidden = true;
-    $ticketStatus.hidden = true;
-  }
-
-  $ticketCancel.addEventListener('click', closeOrbTicket);
-
-  // 실행 — 셸(chat.js execBtn 핸들러)과 같은 페이로드·같은 IPC·같은 1회
-  // 확인 흐름이다: 새 파이프라인 0개(board-33⑤ 캡션 50G-0 — "방어 장치 없이
-  // 셸과 동일하게 1회 확인"). 이 클릭 자체가 그 1회 확인이다 — 실행 후 별도
-  // 확인 대화상자를 띄우지 않는다. 2026-08-27 CP2 확장 승인(결함4/5) — 게이트
-  // 확인과 결과 3갈래(done/in_doubt/failed)를 셸과 동등하게 이식한다(공유
-  // 라이브러리 재사용, 새 방어 장치 발명 금지).
-  $ticketExec.addEventListener('click', async () => {
-    if (!activeTicketOrder || !activeTicket || $ticketExec.disabled) return;
-    let payload;
-    try {
-      payload = orderTicketLib.buildOrderPayload(activeTicketOrder);
-    } catch {
-      return; // 값이 깨졌으면 조용히 무시 — 새 오류 UI를 짓지 않는다(방어 장치 0).
-    }
-    const ticket = activeTicket;
-    const gen = ticketGeneration;
-    orderTicketLib.transition(ticket, 'executing');
-    ticketExecuting = true;
-    $ticketStatus.hidden = true;
-    updateTicketExecDisabled();
-    const res = await window.athena.invoke('athena:order-execute', {
-      trId: payload.tr_id,
-      body: payload.body,
-      idempotencyKey: orderTicketLib.newIdempotencyKey(),
-    });
-    if (gen !== ticketGeneration) return; // 응답 도착 전 티켓이 닫히거나 갈렸다 — 낡은 응답을 버린다
-    ticketExecuting = false;
-    const outcome = orderTicketLib.interpretExecuteStatus((res && res.status) || 0);
-    orderTicketLib.transition(ticket, orderTicketLib.ticketStateAfterExecute(outcome));
-    $ticketStatus.textContent = orderTicketLib.executeOutcomeCopy(outcome, res);
-    $ticketStatus.hidden = false;
-    if (outcome === 'done') {
-      // 간결한 완료 표시 후 닫기 — DONE_HOLD(완료 웃음 유지 시간)와 같은
-      // 길이만큼 보여준 뒤 닫는다(별도 영수증 카드를 새로 만들지 않는다).
-      updateTicketExecDisabled();
-      setTimeout(() => { if (gen === ticketGeneration) closeOrbTicket(); }, DONE_HOLD);
-    } else if (outcome === 'in_doubt') {
-      $ticketStatus.classList.add('is-doubt');
-      updateTicketExecDisabled();
-    } else if (outcome === 'needs_confirm') {
-      updateTicketExecDisabled();
-    } else {
-      $ticketStatus.classList.add('is-failed');
-      updateTicketExecDisabled();
-    }
-  });
-
   // ---------- 미니 카드 확장(Paper 키우미 보드 09, 2026-09-01 전수검사) ----------
   // 보드 09가 캔버스 9종 → 미니 10종의 상한과 공통 규칙을 확정했다. 그 전까지는
   // table·chart·주문 티켓 셋만 카드가 되고 facts 일반·compound·event·action·
@@ -2049,14 +1840,8 @@
     const plan = orbMiniCard.buildKiumiPlan(surfaceContract, envelope);
     if (!plan) return null;
 
-    // 주문 기능은 기존 티켓의 계좌 게이트·상태기계·IPC를 그대로 사용한다.
-    if (plan.grammar === 'order_ticket') {
-      const ticket = renderOrbTicket(envelope);
-      ticket.classList.add('orb-kiumi-card', 'orb-kiumi-ticket');
-      ticket.dataset.kiumiGrammar = plan.grammar;
-      ticket.dataset.boardId = plan.boardId;
-      return ticket;
-    }
+    // Older saved order drafts are not an entry point into execution.
+    if (plan.grammar === 'order_ticket') return null;
 
     const card = orbKiumiShell(plan, envelope);
     const body = document.createElement('div');
@@ -2118,15 +1903,14 @@
     if (!r || (r.status !== 'success' && r.status !== 'fallback')) return null;
     const envelope = r.envelope;
     if (!envelope || envelope.fell_back) return null;
+    if (envelope.card_title === ORDER_TICKET_TITLE
+      || ((orbKiumiSurfaceContract(envelope) || {}).kiumi || {}).grammar === 'order_ticket') return null;
     const kiumiCard = buildOrbKiumiCard(envelope);
     if (kiumiCard) return kiumiCard;
     switch (envelope.canvas_type) {
       case 'table': return buildOrbTableCard(envelope);
       case 'chart': return buildOrbChartCard(envelope);
-      case 'facts':
-        return envelope.card_title === ORDER_TICKET_TITLE
-          ? renderOrbTicket(envelope)
-          : buildOrbFactsCard(envelope);
+      case 'facts': return buildOrbFactsCard(envelope);
       case 'compound': return buildOrbCompoundCard(envelope);
       case 'event': return buildOrbEventCard(envelope);
       case 'action': return buildOrbActionCard(envelope);

@@ -1,5 +1,9 @@
 # AGENTS.md
 
+## Product scope
+
+Live trading and real-money order execution are outside Athena's development scope, as confirmed by the user on 2026-09-30. Do not treat them as unfinished work, propose them as a next development phase, or include them in completion criteria. Simulated trades in backtests remain in scope.
+
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.

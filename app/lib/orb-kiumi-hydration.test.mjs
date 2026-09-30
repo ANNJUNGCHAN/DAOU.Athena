@@ -26,6 +26,29 @@ function sourceBetween(source, start, end) {
   return source.slice(from, to);
 }
 
+test('Glaux ignores legacy order tickets while still rendering read-only facts and charts', () => {
+  const orb = fs.readFileSync(path.join(appRoot, 'orb.js'), 'utf8');
+  const calls = [];
+  const context = vm.createContext({ ORDER_TICKET_TITLE: '주문 티켓',
+    buildOrbKiumiCard: () => null,
+    buildOrbFactsCard: value => { calls.push('facts'); return value; },
+    buildOrbChartCard: value => { calls.push('chart'); return value; },
+  });
+  vm.runInContext(sourceBetween(orb, '  function orbKiumiSurfaceContract(', '  function orbKiumiShell(')
+    + sourceBetween(orb, '  function buildOrbCanvasCard(', '  function tagOrbQuestionCard('), context);
+  const result = envelope => ({ status: 'success', envelope });
+  assert.equal(context.buildOrbCanvasCard(result({ canvas_type: 'facts', card_title: '주문 티켓' })), null);
+  for (const field of ['surface_contract', 'surfaceContract']) {
+    assert.equal(context.buildOrbCanvasCard(result({ canvas_type: 'facts', card_title: '매수 초안',
+      [field]: { kiumi: { grammar: 'order_ticket' } } })), null);
+  }
+  const facts = { canvas_type: 'facts', card_title: '계좌 정보' };
+  const chart = { canvas_type: 'chart', card_title: '주가' };
+  assert.equal(context.buildOrbCanvasCard(result(facts)), facts);
+  assert.equal(context.buildOrbCanvasCard(result(chart)), chart);
+  assert.deepEqual(calls, ['facts', 'chart']);
+});
+
 function chartEnvelope(slotValues = []) {
   return {
     canvas_type: 'chart',

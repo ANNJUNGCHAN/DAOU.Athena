@@ -85,13 +85,10 @@ const chartReload = require('./lib/main/chart-reload');
 const chartReloadAuthority = chartReload.createChartReloadAuthority();
 const ticketCapacity = require('./lib/main/ticket-capacity');
 const { appIconPath, appTrayIconPath } = require('./lib/main/app-icon');
-const orderTicket = require('./lib/order-ticket');
-const { presentProviderOrderTicket } = require('./lib/main/provider-order-ticket');
 const APP_ICON = appIconPath();
 const TRAY_ICON = appTrayIconPath();
 const goldOrderIntent = require('./lib/main/gold-order-intent');
 const goldQuoteIntent = require('./lib/main/gold-quote-intent');
-const protectedCards = require('./lib/protected-cards');
 const { createRoutineMainCardHandlers } = require('./lib/main/routine-main-card');
 
 function isQueryOnlyRetryDataset(dataset) {
@@ -1643,75 +1640,14 @@ const routineMainCardHandlers = createRoutineMainCardHandlers({
   now: () => performance.now(),
 });
 
-async function executeOrderRequest(payload, dependencies) {
-  const { trId, body, idempotencyKey, conversationId } = payload || {};
-  const deps = dependencies || {};
-  const fetchImpl = deps.fetchImpl || fetch;
-  const activeConversationId = deps.activeConversationId || historyConversationId;
-  const publishResult = deps.publishResult || sendLiveCanvasResult;
-  if (!/^kt1000[01]$/.test(String(trId))) {
-    return { ok: false, status: 0, error: '허용되지 않는 주문 TR' };
-  }
-  const executionConversationId = typeof conversationId === 'string' ? conversationId : '';
-  if (!executionConversationId || executionConversationId !== activeConversationId()) {
-    return { ok: false, status: 0, error: '대화가 바뀌어 주문을 실행하지 않았습니다.' };
-  }
-  let result;
-  try {
-    const res = await fetchImpl(`${BACKEND_HTTP_BASE}/api/v1/order/${trId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Athena-Confirm': 'true',
-        'Idempotency-Key': String(idempotencyKey || ''),
-        Authorization: `Bearer ${process.env.ATHENA_LOCAL_BEARER_TOKEN || ''}`,
-      },
-      body: JSON.stringify(body || {}),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      result = { ok: false, status: res.status, error: data.detail || `HTTP ${res.status}` };
-    } else {
-      const brokerCode = data && data.return_code != null
-        ? String(data.return_code).trim().replace(/[\u0000-\u001f\u007f]/g, '').slice(0, 64)
-        : '';
-      const brokerMessage = data && data.return_msg != null
-        ? String(data.return_msg).trim().replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 300)
-        : '';
-      const brokerRejected = brokerCode !== '' && !/^[+-]?0+$/.test(brokerCode);
-      const orderNo = data && data.ord_no != null ? String(data.ord_no).trim() : '';
-      if (brokerRejected) {
-        const log = deps.log || mdlog;
-        log(`주문 broker 거절 — tr=${trId} code=${brokerCode} message=${brokerMessage || '없음'}`);
-        result = {
-          ok: false,
-          status: 422,
-          upstreamStatus: res.status,
-          code: brokerCode,
-          error: brokerMessage || `주문이 거절되었습니다. (code ${brokerCode})`,
-        };
-      } else if (!orderNo) {
-        result = {
-          ok: false,
-          status: 409,
-          upstreamStatus: res.status,
-          code: 'ORDER_RESULT_UNKNOWN',
-          error: '주문번호가 없어 접수 여부를 확인할 수 없습니다.',
-        };
-      } else {
-        result = { ok: true, status: res.status, data };
-      }
-    }
-  } catch (e) {
-    result = { ok: false, status: 0, error: String((e && e.message) || e) };
-  }
-  publishResult(protectedCards.buildOrderActionCard({
-    trId,
-    body,
-    outcome: orderTicket.interpretExecuteStatus(result.status || 0),
-    response: result,
-  }), { conversationId: executionConversationId });
-  return result;
+const TRADING_OUT_OF_SCOPE_MESSAGE = 'Athena는 분석과 백테스트를 지원하며, 증권사 주문과 자동매매는 제공하지 않습니다.';
+
+function tradingOutOfScope() {
+  return { ok: false, status: 403, code: 'TRADING_OUT_OF_SCOPE', error: TRADING_OUT_OF_SCOPE_MESSAGE };
+}
+
+async function executeOrderRequest() {
+  return tradingOutOfScope();
 }
 
 ipcMain.handle('athena:order-execute', (_e, payload) => executeOrderRequest(payload));
@@ -1963,8 +1899,8 @@ ipcMain.handle('athena:backtest-backfill', async (_e, body = {}) => {
 
 // 2026-09-01 전수 파리티 — Paper 보드 02·05·06·07·08·09. 전부 같은 프록시 모양이라
 // 표 하나로 등록한다(핸들러마다 같은 try/catch를 스무 번 복사할 이유가 없다).
-// `athena:backtest-activate`·`-deployment-create`·`-deployment-stop`은 사람 클릭 전용
-// 경로다 — 모델의 MCP 툴에는 이 액션들이 없다(backtest_tools.py `_ALLOWED_ACTIONS`).
+// 전략 버전 활성화는 백테스트용이다. 과거 배포의 조회·중지는 유지하지만
+// 새 배포·무장·평가는 제품 범위 밖이라 IPC에서 끝낸다.
 const BACKTEST_EXTRA_CHANNELS = {
   'athena:backtest-validate': backtestBridge.validateBacktest,
   'athena:backtest-coverage': backtestBridge.fetchCoverage,
@@ -2007,11 +1943,11 @@ const BACKTEST_EXTRA_CHANNELS = {
   // 버전 하나의 묶음(그래프·소스맵·해시) — 이력에서 지난 시각 버전을 그대로 다시 연다(US-010).
   'athena:backtest-version-detail': backtestBridge.fetchVersionDetail,
   'athena:backtest-deployments': backtestBridge.fetchDeployments,
-  'athena:backtest-deployment-create': backtestBridge.createDeployment,
+  'athena:backtest-deployment-create': tradingOutOfScope,
   'athena:backtest-deployment-stop': backtestBridge.stopDeployment,
-  'athena:backtest-deployment-arm': backtestBridge.armDeployment,
+  'athena:backtest-deployment-arm': tradingOutOfScope,
   'athena:backtest-signals': backtestBridge.fetchSignals,
-  'athena:backtest-evaluate': backtestBridge.evaluateDeployment,
+  'athena:backtest-evaluate': tradingOutOfScope,
   // 2026-09-02 사용자 전략 등록부 — 등록·해제는 사람이 누르는 버튼이다(모델의 MCP
   // 툴에는 register_strategy만 있고 해제는 없다). 소스는 지나가지 않는다 — 등록부에
   // 남는 것은 {project_id, 상대경로, 이름}뿐이고 실행은 늘 그때의 파일을 다시 읽는다.
@@ -2022,6 +1958,7 @@ const BACKTEST_EXTRA_CHANNELS = {
 Object.keys(BACKTEST_EXTRA_CHANNELS).forEach((channel) => {
   const call = BACKTEST_EXTRA_CHANNELS[channel];
   ipcMain.handle(channel, async (_e, body = {}) => {
+    if (call === tradingOutOfScope) return tradingOutOfScope();
     return callBacktestBridge(call, body);
   });
 });
@@ -4774,23 +4711,13 @@ function markProviderFirstVisible(metadata) {
   }
 }
 
-function emitProviderOrderDraft(conversationId, payload) {
-  if (!shellWin || shellWin.isDestroyed()) return;
-  revealShell({ focus: false });
-  shellForConversation(conversationId).send('athena:selector-order-draft', payload);
-}
-
 function handlePersistentCanvasResult(result) {
   rememberLiveRealtimeFallbackAuthority(result);
   const context = persistentTurnContexts.get(result.clientSubmitId);
   if (!context) return;
   if (result.status === 'needs_confirmation') {
-    presentProviderOrderTicket({
-      confirmation: result,
-      sendDraft: (payload) => emitProviderOrderDraft(context.conversationId, payload),
-    });
-    context.terminalAnswerText = result.message;
-    persistentTerminalAnswers.set(context.conversationId, result.message);
+    context.terminalAnswerText = TRADING_OUT_OF_SCOPE_MESSAGE;
+    persistentTerminalAnswers.set(context.conversationId, TRADING_OUT_OF_SCOPE_MESSAGE);
     return;
   }
   const metadata = {
@@ -5670,34 +5597,11 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     });
   };
   if (!(modePromptRequired || providerAnswerRequired)) {
-    if (!runtime.goldOrderContextInitialized) {
-      runtime.goldOrderContextInitialized = true;
-      runtime.pendingGoldOrder = null;
-      try {
-        const bridge = getSessionBridge();
-        const snapshot = bridge && bridge.store.getSession(turnConversationId);
-        const previous = (snapshot && snapshot.messages || [])
-          .filter((message) => message.role === 'user').slice(-20);
-        if (previous.length && previous[previous.length - 1].text === query) previous.pop();
-        for (const message of previous) {
-          const recovered = goldOrderIntent.resolveGoldOrderTurn(message.text, runtime.pendingGoldOrder);
-          runtime.pendingGoldOrder = recovered.handled ? recovered.state : null;
-        }
-      } catch { /* a new conversation has no persisted order context */ }
-    }
-    const goldDraft = goldOrderIntent.resolveGoldOrderTurn(query, runtime.pendingGoldOrder);
-    runtime.pendingGoldOrder = goldDraft.handled ? goldDraft.state : null;
-    if (goldDraft.handled) {
-      runtime.pendingGoldQuote = null;
-      if (goldDraft.payload && goldDraft.status === 'ready') {
-        if (!shellWin || shellWin.isDestroyed()) throw new Error('주문 확인창을 열 셸이 준비되지 않았습니다');
-        if (expand && historyConversationId() === turnConversationId) revealShell({ focus: false });
-        shellForConversation(turnConversationId).send('athena:selector-order-draft', goldDraft.payload);
-      }
+    runtime.pendingGoldOrder = null;
+    if (goldOrderIntent.resolveGoldOrderTurn(query, null).handled) {
       return persistLocalLiveResult(query, {
-        ok: true, source: 'gold-order-draft', error: null,
-        answerText: goldDraft.answerText, canvasTypes: [], modelCalls: 0,
-        durationMs: Math.max(0, performance.now() - queryStartedAt),
+        ...tradingOutOfScope(), source: 'product-scope', answerText: TRADING_OUT_OF_SCOPE_MESSAGE,
+        canvasTypes: [], modelCalls: 0, durationMs: Math.max(0, performance.now() - queryStartedAt),
       }, turnConversationId);
     }
 
@@ -5833,10 +5737,14 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
 
   // 닫힌 7개 문법이 놓친 조회는 백엔드 Selector가 한 번에 선택·호출·inline
   // render까지 끝낸다. 애매함/인자 부족/비조회 응답만 기존 Claude 경로로 넘긴다.
-  // 단순 시장가 주문은 별도 닫힌 문법에서만 intent=order로 보내고, 실행하지 않은
-  // guarded 초안을 채팅 주문확인 UI에 전달한다.
+  // 과거 주문 문법은 범위 안내로 끝내고, Selector에는 조회 요청만 보낸다.
   const selectorDisplayedCards = [];
-  const orderDraft = selectorFastPath.buildMarketOrderDraft(routingQuery, queryStockEntityIndex);
+  if (selectorFastPath.buildMarketOrderDraft(routingQuery, queryStockEntityIndex)) {
+    return persistLocalLiveResult(query, {
+      ...tradingOutOfScope(), source: 'product-scope', answerText: TRADING_OUT_OF_SCOPE_MESSAGE,
+      canvasTypes: [], modelCalls: 0, durationMs: Math.max(0, performance.now() - queryStartedAt),
+    }, turnConversationId);
+  }
   const selectorController = new AbortController();
   runtime.activeSelectorFastRun = selectorController;
   try {
@@ -5852,28 +5760,13 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         },
         run: (options) => selectorFastPath.runSelectorFastPath(options),
       });
-    if (orderDraft && selectorAccount && !selectorAccount.ok) {
-      return persistLocalLiveResult(query, {
-        ok: false,
-        source: 'selector-fast',
-        error: selectorAccount.error || '조회에 사용할 서버 계좌를 확인할 수 없다',
-        answerText: '주문 내용을 만들기 전에 설정의 계좌 화면에서 조회에 사용할 서버 계좌를 연결해 주세요.',
-        canvasTypes: [],
-        modelCalls: 0,
-        durationMs: Math.max(0, performance.now() - queryStartedAt),
-      }, turnConversationId);
-    }
     const selectorResult = cardRetrievalBlocked
       ? { handled: false, reason: '대화 답변이 필요한 질문 — 모델 경로로 넘긴다' }
       : selectorAccount.ok ? await selectorAccount.run({
       question: routingQuery,
       backendBase: BACKEND_HTTP_BASE,
-      intent: orderDraft ? orderDraft.intent : 'auto',
-      arguments: orderDraft ? orderDraft.arguments : {},
-      orderDraft,
-      deadlineMs: orderDraft
-        ? selectorFastPath.DEFAULT_GUARDED_ORDER_DEADLINE_MS
-        : selectorFastPath.DEFAULT_DEADLINE_MS,
+      intent: 'auto',
+      deadlineMs: selectorFastPath.DEFAULT_DEADLINE_MS,
       signal: selectorController.signal,
       isCurrent: () => runtime.activeSelectorFastRun === selectorController,
       emitCanvas: async (payload) => {
@@ -5892,15 +5785,6 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         });
         return paint;
       },
-      emitOrderDraft: (payload) => {
-        if (runtime.activeSelectorFastRun !== selectorController) {
-          throw new Error('교체된 Selector fast path의 늦은 주문 초안은 표시하지 않는다');
-        }
-        if (!shellWin || shellWin.isDestroyed()) throw new Error('셸 창이 준비되지 않았다');
-        // 주문 초안은 그 대화의 것이다(다중 대화) — 배경 대화의 초안은 그 대화로 돌아올 때까지 미룬다.
-        if (expand && historyConversationId() === turnConversationId) revealShell({ focus: false });
-        shellForConversation(turnConversationId).send('athena:selector-order-draft', payload);
-      },
       persistTurn: ({ question, answerText }) => {
         void question;
         void answerText;
@@ -5909,18 +5793,6 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     if (selectorResult.handled) {
       mdlog(`Selector 단일 dispatch 적중 — ${selectorResult.durationMs}ms (모델 무호출)`);
       return finishCardProducingResult(selectorResult, selectorDisplayedCards);
-    }
-    if (orderDraft) {
-      mdlog(`주문 초안 Selector 처리 실패 — 모델 폴백 차단: ${selectorResult.reason || 'unknown'}`);
-      return persistLocalLiveResult(query, {
-        ok: false,
-        source: 'selector-fast',
-        error: selectorResult.reason || 'selector_dispatch_failed',
-        answerText: '주문 내용을 안전하게 확인하지 못해 초안을 만들지 않았습니다.',
-        canvasTypes: [],
-        modelCalls: 0,
-        durationMs: Math.max(0, performance.now() - queryStartedAt),
-      }, turnConversationId);
     }
     if (simpleChartRoute.inferenceFallback) {
       mdlog('종목 인덱스 준비 전 Selector 직접 처리 불가 — Claude 폴백 차단');
@@ -5996,18 +5868,6 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       mdlog(`종목 인덱스 준비 전 Selector 오류 — Claude 폴백 차단: ${String((error && error.message) || error)}`);
       return persistLocalLiveResult(query, {
         ...simpleChartRoute.inferenceFallback,
-        durationMs: Math.max(0, performance.now() - queryStartedAt),
-      }, turnConversationId);
-    }
-    if (orderDraft) {
-      mdlog(`주문 초안 Selector 오류 — 모델 폴백 차단: ${String((error && error.message) || error)}`);
-      return persistLocalLiveResult(query, {
-        ok: false,
-        source: 'selector-fast',
-        error: String((error && error.message) || error),
-        answerText: '주문 내용을 안전하게 확인하지 못해 초안을 만들지 않았습니다.',
-        canvasTypes: [],
-        modelCalls: 0,
         durationMs: Math.max(0, performance.now() - queryStartedAt),
       }, turnConversationId);
     }
@@ -6209,11 +6069,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     onCanvasResult: (r) => {
       rememberLiveRealtimeFallbackAuthority(r);
       if (r.status === 'needs_confirmation') {
-        presentProviderOrderTicket({
-          confirmation: r,
-          sendDraft: (payload) => emitProviderOrderDraft(turnConversationId, payload),
-        });
-        terminalAnswerText = r.message;
+        terminalAnswerText = TRADING_OUT_OF_SCOPE_MESSAGE;
         return;
       }
       const label = r.envelope && (r.envelope.card_title || r.envelope.caption);
@@ -7302,22 +7158,11 @@ async function handleAccountRemove(e, { id } = {}) {
 }
 
 async function handleOrderApiSet(e, { id, enabled } = {}) {
+  if (enabled) return { ...tradingOutOfScope(), orderApi: false };
   const result = accounts.orderApiSet(id, enabled);
   if (!result.ok) return result;
   const synced = await syncSelectedAccount(id);
   if (synced.ok) return result;
-  if (enabled) {
-    const localRollback = accounts.orderApiSet(id, false);
-    const rollback = await syncSelectedAccount(id);
-    return {
-      ...localRollback,
-      ok: false,
-      orderApi: false,
-      error: rollback.ok
-        ? '주문 허용을 적용하지 못해 OFF로 되돌렸습니다.'
-        : '주문 허용을 OFF로 되돌렸지만 서버 반영을 확인하지 못했습니다. 계좌 연결을 다시 확인해 주세요.',
-    };
-  }
   return { ...result, ok: false, orderApi: false, error: '주문은 앱에서 차단했지만 서버 반영을 확인하지 못했습니다. 계좌 연결을 다시 확인해 주세요.' };
 }
 

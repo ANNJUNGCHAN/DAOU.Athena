@@ -45,6 +45,7 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "backend/verification/test_canvas_delivery_correlation.py",
   "backend/verification/test_backtest_project_scope.py",
   "backend/verification/test_backtest_refresh.py",
+  "backend/verification/test_product_scope.py",
   "backend/verification/test_release_version.py",
   "backend/verification/verify_mcp_bundled_runtime.py",
 ]);

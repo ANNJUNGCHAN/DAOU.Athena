@@ -94,7 +94,7 @@ _TECHNIQUE_PATHS: dict[str, str] = {
 # 실행)와 `allow_partial`(캐시 부족 우회)은 사람 클릭 전용이라 여기서 걸러낸다.
 _RUN_FORWARDED_KEYS: frozenset[str] = frozenset({"yaml", "params"})
 
-_NAVIGATE_TABS: tuple[str, ...] = ("design", "result", "history", "optimize", "deploy")
+_NAVIGATE_TABS: tuple[str, ...] = ("design", "result", "history", "optimize")
 _NAVIGATE_DESIGN_TABS: tuple[str, ...] = ("form", "code", "nodes")
 _OPTIMIZE_METHODS: tuple[str, ...] = ("grid", "random")
 
@@ -138,7 +138,7 @@ _INPUT_SCHEMA: dict[str, Any] = {
                 "뜻하며 실제 반영 여부는 캔버스 영수증에서 확인한다. 반영되면 채팅에 변경 "
                 "내역과 [되돌리기]가 뜬다. 실행은 "
                 "사람이 채팅의 [실행]을 누른다. "
-                "navigate = 캔버스 탭을 옮긴다(design/result/history/optimize/deploy, "
+                "navigate = 캔버스 탭을 옮긴다(design/result/history/optimize, "
                 "designTab=form|code|flow). "
                 "propose_optimize = 최적화 탭에 방식을 준비한다 — [탐색 시작]은 사람이 누른다. "
                 "list_runs = 실행 이력 목록 조회(읽기 전용). "
@@ -168,9 +168,10 @@ _INPUT_SCHEMA: dict[str, Any] = {
                 "technique_question = 알고리즘을 정하는 질문 **하나**를 선택지와 함께 채팅 "
                 "카드로 띄운다 — 한 번에 여러 결정을 묶어 묻지 말고, 네가 대신 고르지 마라. "
                 "사용자가 고른 답이 채팅으로 돌아온 뒤에 코드를 쓴다. "
-                "실행·탐색 시작·수집·저장·활성화·배포는 전부 사람이 카드 버튼을 누른다. "
-                "backfill(대량 백필)·activate(전략 버전 활성화)·deploy(실전 배포)는 이 툴에 "
-                "없다 — 쿼터를 태우거나 돈이 나가는 경로라 사용자가 앱에서 직접 한다."
+                "실행·탐색 시작·수집·저장·활성화는 사람이 카드 버튼을 누른다. "
+                "backfill(대량 백필)·activate(전략 버전 활성화)는 이 툴에 없으며 사용자 "
+                "확인이 필요하다. 실매매·증권사 주문·자동매매 배포는 제공하지 않는다. "
+                "백테스트의 모의 체결과 결과 분석은 계속 지원한다."
             ),
         },
         "validate": {
@@ -684,8 +685,9 @@ _DESCRIPTION = (
     "돌리고, 통과하면 technique_nodes로 그 코드의 함수를 노드·흐름으로 보여준다. 셋 다 "
     "저장하지 않고 실행 이력도 만들지 않는다. 노드는 기법마다 다르다 — 범용 팔레트가 없다. "
     "실행·탐색 시작·수집·저장·"
-    "활성화·배포는 전부 사람이 카드 버튼을 누른다. 대량 백필(backfill)·전략 버전 "
-    "활성화(activate)·실전 배포(deploy)는 이 툴로 할 수 없다 — 셋 다 사람 클릭 전용이다."
+    "활성화는 사람이 카드 버튼을 누른다. 대량 백필(backfill)·전략 버전 "
+    "활성화(activate)는 이 툴로 할 수 없다. 실매매·증권사 주문·자동매매 배포는 제공하지 "
+    "않으며 백테스트의 모의 체결과 결과 분석만 지원한다."
 )
 
 
@@ -735,8 +737,8 @@ async def dispatch(
         # backfill·activate를 포함한 그 외 전부 — 사람 전용 행위임을 명시한다.
         return _blocked(
             f"허용되지 않는 action: {action!r}. 가능한 것은 "
-            f"{'/'.join(_ALLOWED_ACTIONS)}뿐이다 — 백필·전략 버전 활성화·실전 배포는 "
-            "사용자가 앱에서 직접 한다."
+            f"{'/'.join(_ALLOWED_ACTIONS)}뿐이다 — 백필·전략 버전 활성화는 사용자 확인이 "
+            "필요하며 실매매·증권사 주문·자동매매 배포는 제공하지 않는다."
         )
 
     if action in ("status", "result"):

@@ -3,7 +3,7 @@
 import secrets
 from typing import Annotated, Any
 
-from fastapi import Depends, Request
+from fastapi import Depends, HTTPException, Request
 from starlette.requests import HTTPConnection
 
 from athena_api.accounts import (
@@ -117,25 +117,15 @@ KiwoomClientDep = Annotated[KiwoomClient, Depends(require_kiwoom_client)]
 
 
 def get_order_kiwoom_client(request: Request) -> KiwoomClient | None:
-    settings = getattr(request.app.state, "settings", None)
-    if settings is None or not settings.enable_order_api or settings.local_bearer_token is None:
-        return None
-    runtime = get_account_runtime(request)
-    client = (
-        runtime.order_client
-        if runtime is not None
-        else getattr(request.app.state, "kiwoom_order_client", None)
-    )
-    if client is None or not client.is_ready:
-        return None
-    return client
+    """Keep selector reads available while withholding the excluded execution client."""
+    return None
 
 
 def require_order_kiwoom_client(request: Request) -> KiwoomClient:
-    client = get_order_kiwoom_client(request)
-    if client is None:
-        raise KiwoomNotReadyError("Kiwoom order service is not ready")
-    return client
+    raise HTTPException(
+        status_code=403,
+        detail="Athena는 분석과 백테스트를 지원하며 증권사 주문과 자동매매는 제공하지 않습니다.",
+    )
 
 
 OrderKiwoomClientDep = Annotated[KiwoomClient, Depends(require_order_kiwoom_client)]
