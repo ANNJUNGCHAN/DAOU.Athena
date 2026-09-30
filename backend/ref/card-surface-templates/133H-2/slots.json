@@ -634,18 +634,7 @@
       "table": null,
       "mapping_id": "detail:kt00004:cash_and_assets",
       "f": "aset_evlt_amt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "day_stk_asst",
-          "kor": "추정자산"
-        },
-        {
-          "mapping_id": "base:kt00003",
-          "f": "prsm_dpst_aset_amt",
-          "kor": "추정예탁자산"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "예탁자산평가액",
       "format": {
         "unit": "krw_ko",
@@ -686,10 +675,10 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
+      "mapping_id": "detail:kt00018:portfolio_summary",
       "f": "tot_prft_rt",
       "alt_mappings": null,
-      "kor": "수익률",
+      "kor": "총수익률(%)",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -738,10 +727,10 @@
         "field": "d2_pymn_alow_amt"
       },
       "table": null,
-      "mapping_id": "detail:kt00005:portfolio_summary",
-      "f": "tot_re_buy_alowa",
+      "mapping_id": "detail:kt00001:withdrawal_and_order_capacity",
+      "f": "ord_alow_amt",
       "alt_mappings": null,
-      "kor": "총재매수가능금액",
+      "kor": "주문가능금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
@@ -825,23 +814,7 @@
       "table": null,
       "mapping_id": "detail:kt00004:cash_and_assets",
       "f": "tot_est_amt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "tot_evlt_amt",
-          "kor": "총 평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00005:portfolio_summary",
-          "f": "evlt_amt_tot",
-          "kor": "평가금액합계"
-        },
-        {
-          "mapping_id": "detail:kt00018:portfolio_summary",
-          "f": "tot_evlt_amt",
-          "kor": "총평가금액"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "유가잔고평가액",
       "format": {
         "unit": "krw_ko",
@@ -940,16 +913,10 @@
         "field": "tot_evltv_prft"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_evltv_prft",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00018:portfolio_summary",
-          "f": "tot_evlt_pl",
-          "kor": "총평가손익금액"
-        }
-      ],
-      "kor": "총 평가손익",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_evlt_pl",
+      "alt_mappings": null,
+      "kor": "총평가손익금액",
       "format": {
         "unit": "krw_ko",
         "sign": true,
@@ -984,31 +951,10 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_buy_amt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "932",
-          "kor": "총매입가(당일누적)"
-        },
-        {
-          "mapping_id": "detail:kt00004:cash_and_assets",
-          "f": "tot_pur_amt",
-          "kor": "총매입금액"
-        },
-        {
-          "mapping_id": "detail:kt00005:portfolio_summary",
-          "f": "stk_buy_tot_amt",
-          "kor": "주식매수총액"
-        },
-        {
-          "mapping_id": "detail:kt00018:portfolio_summary",
-          "f": "tot_pur_amt",
-          "kor": "총매입금액"
-        }
-      ],
-      "kor": "총 매입가",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_pur_amt",
+      "alt_mappings": null,
+      "kor": "총매입금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,

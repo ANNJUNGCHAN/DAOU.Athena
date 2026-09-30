@@ -3248,6 +3248,26 @@ const policy = {
       "caption",
       "오늘"
     ],
+    "s048": [
+      "0",
+      "unavailable",
+      null
+    ],
+    "s049": [
+      "0",
+      "unavailable",
+      null
+    ],
+    "s050": [
+      "0",
+      "unavailable",
+      null
+    ],
+    "s051": [
+      "0",
+      "unavailable",
+      null
+    ],
     "s054": [
       "D+1 09/02",
       "caption",
@@ -3428,11 +3448,6 @@ const policy = {
       "bound-label",
       "io_tp"
     ],
-    "s190": [
-      "예탁자산 추이",
-      "bound-label",
-      "daly_prsm_dpst_aset_amt_prst"
-    ],
     "s198": [
       "● 예수금·결제 실시간 반영 중",
       "status",
@@ -3445,20 +3460,20 @@ const policy = {
       "status",
       null
     ],
-    "s026": [
-      "실현손익",
-      "bound-label",
-      "dt_stk_rlzt_pl"
-    ],
-    "s027": [
-      "매도 확정 기준 · 세후",
-      "bound-label",
-      "dt_rlzt_pl"
-    ],
     "s049": [
       "현금",
       "bound-label",
       "crd_tp"
+    ],
+    "s051": [
+      "매도손익 +1,107,000",
+      "unavailable",
+      null
+    ],
+    "s056": [
+      "거래세 -5,180 · 농특세 -15,540",
+      "unavailable",
+      null
     ],
     "s058": [
       "NAVER",
@@ -3470,6 +3485,16 @@ const policy = {
       "bound-label",
       "crd_tp"
     ],
+    "s062": [
+      "매도손익 -108,000",
+      "unavailable",
+      null
+    ],
+    "s067": [
+      "거래세 -5,280 · 농특세 -15,850",
+      "unavailable",
+      null
+    ],
     "s069": [
       "SK하이닉스",
       "bound-label",
@@ -3479,6 +3504,16 @@ const policy = {
       "현금",
       "bound-label",
       "crd_tp"
+    ],
+    "s073": [
+      "매도손익 +450,000",
+      "unavailable",
+      null
+    ],
+    "s078": [
+      "거래세 -7,960 · 농특세 -23,880",
+      "unavailable",
+      null
     ],
     "s080": [
       "삼성전자",
@@ -3490,6 +3525,16 @@ const policy = {
       "bound-label",
       "crd_tp"
     ],
+    "s084": [
+      "매도손익 +648,600",
+      "unavailable",
+      null
+    ],
+    "s089": [
+      "거래세 -14,350 · 농특세 -43,050",
+      "unavailable",
+      null
+    ],
     "s091": [
       "현대차",
       "bound-label",
@@ -3499,6 +3544,16 @@ const policy = {
       "현금",
       "bound-label",
       "crd_tp"
+    ],
+    "s095": [
+      "매도손익 +639,000",
+      "unavailable",
+      null
+    ],
+    "s100": [
+      "거래세 -8,350 · 농특세 -25,060",
+      "unavailable",
+      null
     ],
     "s102": [
       "삼성전자",
@@ -3510,10 +3565,30 @@ const policy = {
       "bound-label",
       "crd_tp"
     ],
+    "s106": [
+      "매도손익 +240,000",
+      "unavailable",
+      null
+    ],
+    "s111": [
+      "거래세 -6,010 · 농특세 -18,020",
+      "unavailable",
+      null
+    ],
     "s115": [
       "현금",
       "bound-label",
       "crd_tp"
+    ],
+    "s117": [
+      "매도손익 -24,000",
+      "unavailable",
+      null
+    ],
+    "s122": [
+      "거래세 -5,760 · 농특세 -17,280",
+      "unavailable",
+      null
     ],
     "s124": [
       "매도수수료 0.024% · 거래세 0.04% · 농특세 0.12% · 매수수수료 0.02%",
@@ -3524,11 +3599,6 @@ const policy = {
       "4승 1패",
       "unavailable",
       null
-    ],
-    "s138": [
-      "오늘 실현 상세",
-      "bound-label",
-      "tdy_rlzt_pl_dtl"
     ],
     "s143": [
       "NAVER",
@@ -13086,6 +13156,11 @@ const policy = {
       "bound-label",
       "for_netprps_stk_nm"
     ],
+    "s022": [
+      "08-31 확정",
+      "time",
+      null
+    ],
     "s023": [
       "09:42 조회",
       "time",
@@ -13259,6 +13334,11 @@ const policy = {
     "s163": [
       "-274억원",
       "unavailable",
+      null
+    ],
+    "s165": [
+      "08-31 확정",
+      "time",
       null
     ],
     "s167": [
@@ -15215,6 +15295,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s022": [
+      "08-31 확정",
+      "time",
+      null
     ],
     "s023": [
       "09:42 조회",
@@ -18687,10 +18772,15 @@ const policy = {
       "time",
       null
     ],
+    "s035": [
+      "오늘 09/01",
+      "caption",
+      "오늘"
+    ],
     "s036": [
       "화요일 · 당일",
-      "unavailable",
-      null
+      "caption",
+      ""
     ],
     "s037": [
       "0",
@@ -18712,15 +18802,30 @@ const policy = {
       "unavailable",
       null
     ],
+    "s043": [
+      "D+1 09/02",
+      "caption",
+      "D+1"
+    ],
     "s044": [
       "수요일",
-      "unavailable",
-      null
+      "caption",
+      ""
+    ],
+    "s052": [
+      "D+2 09/03",
+      "caption",
+      "D+2"
     ],
     "s053": [
       "목요일 · 선택",
-      "unavailable",
-      null
+      "caption",
+      ""
+    ],
+    "s064": [
+      "D+2 확정 자산",
+      "caption",
+      "D+2 자산"
     ],
     "s065": [
       "현재 대비 변동 없음 7건",
@@ -18729,8 +18834,8 @@ const policy = {
     ],
     "s067": [
       "D+2 금액",
-      "unavailable",
-      null
+      "caption",
+      "D+2 금액"
     ],
     "s093": [
       "카카오 매수",
@@ -18917,6 +19022,11 @@ const policy = {
       "HTS",
       "bound-label",
       "mdia_nm"
+    ],
+    "s088": [
+      "09월 01일 기준",
+      "time",
+      null
     ],
     "s114": [
       "해당 없음",

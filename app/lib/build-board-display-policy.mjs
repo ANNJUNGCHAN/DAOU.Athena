@@ -19,6 +19,9 @@ export function staticDisplayRole(slot) {
     typeof slot.static === 'string' ? slot.static : ''].filter(Boolean).join(' ');
   if (!text) return null;
   if (/^[▸▾▲▼→←…·]+$/.test(text)) return null;
+  // Specimen as-of dates remain unavailable even when authored as fixed prose.
+  if (/기준일|기준 시각|갱신 시각/.test(reason)
+    && /\d{1,2}(?:월|\/|-)\s*\d{1,2}/.test(text)) return 'time';
   // Fixed axes, selectors, units and section names are meaningful even without a feed.
   if (/고정 (?:문구|라벨)|컨트롤|버튼|단계 번호|라벨|이름|항목명|제목|정렬 기준|기준선|단위 설명|민감도 단위|선택 옵션/.test(reason)
     && !/시각|상태|집계|파생|목업|예시/.test(reason)) return null;
@@ -45,6 +48,8 @@ const UNANNOTATED = {
 const LABELS = {
   '2TZN-1': { s145: '선택 업종', s147: '지수', s149: '거래대금', s151: '구성 종목', s153: '시가', s155: '52주 최저' },
   '2SKU-1': { s047: '오늘', s054: 'D+1', s061: 'D+2' },
+  '3MTJ-0': { s035: '오늘', s043: 'D+1', s052: 'D+2', s036: '', s044: '', s053: '',
+    s064: 'D+2 자산', s067: 'D+2 금액' },
 };
 const FORMATS = {
   '2TZN-1': {
@@ -69,7 +74,7 @@ export function buildPolicy() {
     const slots = {};
     for (const slot of source.slots) {
       const caption = LABELS[entry.board_id]?.[slot.slot_id];
-      if (caption) { slots[slot.slot_id] = [slot.paper_text, 'caption', caption]; continue; }
+      if (caption !== undefined) { slots[slot.slot_id] = [slot.paper_text, 'caption', caption]; continue; }
       const format = FORMATS[entry.board_id]?.[slot.slot_id];
       if (format && slot.f === format[0] && hasBinding(slot)) {
         slots[slot.slot_id] = [slot.paper_text, 'bound-format', format[1]]; continue;

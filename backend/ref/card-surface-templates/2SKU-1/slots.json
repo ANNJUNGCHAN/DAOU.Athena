@@ -830,10 +830,10 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
+      "mapping_id": "detail:kt00018:portfolio_summary",
       "f": "tot_prft_rt",
       "alt_mappings": null,
-      "kor": "수익률",
+      "kor": "총수익률(%)",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -882,7 +882,7 @@
         "field": "d2_pymn_alow_amt"
       },
       "table": null,
-      "mapping_id": "base:kt50021",
+      "mapping_id": "detail:kt00001:withdrawal_and_order_capacity",
       "f": "ord_alow_amt",
       "alt_mappings": null,
       "kor": "주문가능금액",
@@ -894,7 +894,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "주문가능금액 KPI와 현금 주문 한도 상세의 동일 필드 재표시"
     },
     {
       "slot_id": "s016",
@@ -1049,10 +1051,10 @@
         "field": "tot_evltv_prft"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_evltv_prft",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_evlt_pl",
       "alt_mappings": null,
-      "kor": "총 평가손익",
+      "kor": "총평가손익금액",
       "format": {
         "unit": "krw_ko",
         "sign": true,
@@ -1080,10 +1082,10 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_buy_amt",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_pur_amt",
       "alt_mappings": null,
-      "kor": "총 매입가",
+      "kor": "총매입금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
@@ -1792,8 +1794,8 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:kt50021",
-      "f": "sell_exct_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도정산금",
       "format": {
@@ -1804,7 +1806,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "주식 당일 정산 요약 대응 필드 미제공 — 금현물·익일 또는 종목별 값을 대체하지 않는다"
     },
     {
       "slot_id": "s049",
@@ -1822,8 +1826,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:kt50021",
-      "f": "buy_exct_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수정산금",
       "format": {
@@ -1834,7 +1838,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "주식 당일 정산 요약 대응 필드 미제공 — 금현물·익일 또는 종목별 값을 대체하지 않는다"
     },
     {
       "slot_id": "s050",
@@ -1852,8 +1858,8 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:kt00008",
-      "f": "exct_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "정산금액",
       "format": {
@@ -1864,7 +1870,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "주식 당일 정산 요약 대응 필드 미제공 — 금현물·익일 또는 종목별 값을 대체하지 않는다"
     },
     {
       "slot_id": "s051",
@@ -1882,14 +1890,9 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "detail:kt00010:cash_and_withdrawal_capacity",
-      "f": "uncla",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00011:account_funding",
-          "f": "uncla"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": "미수금",
       "format": {
         "unit": "text",
@@ -1899,7 +1902,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "주식 당일 정산 요약 대응 필드 미제공 — 금현물·익일 또는 종목별 값을 대체하지 않는다"
     },
     {
       "slot_id": "s052",
@@ -1917,7 +1922,7 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:kt50021",
+      "mapping_id": "detail:kt00001:withdrawal_and_order_capacity",
       "f": "pymn_alow_amt",
       "alt_mappings": null,
       "kor": "출금가능금액",
@@ -1929,7 +1934,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "결제일 요약과 해당 일자 표 셀에 동일 금액을 재표시"
     },
     {
       "slot_id": "s053",
@@ -1947,22 +1954,9 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:kt00002",
+      "mapping_id": "detail:kt00001:cash_and_margin",
       "f": "entr",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00005:cash_and_capacity",
-          "f": "entr_d2"
-        },
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "d2entra"
-        },
-        {
-          "mapping_id": "detail:kt00017:d2_account_position",
-          "f": "d2_entra"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "예수금",
       "format": {
         "unit": "text",
@@ -1972,7 +1966,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "결제일 요약과 해당 일자 표 셀에 동일 금액을 재표시"
     },
     {
       "slot_id": "s054",
@@ -2171,23 +2167,10 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "detail:kt00005:cash_and_capacity",
-      "f": "entr_d1",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00005:cash_and_capacity",
-          "f": "entr_d2"
-        },
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "d2entra"
-        },
-        {
-          "mapping_id": "detail:kt00017:d2_account_position",
-          "f": "d2_entra"
-        }
-      ],
-      "kor": "예수금D+1",
+      "mapping_id": "detail:kt00001:settlement_forecast",
+      "f": "d1_entra",
+      "alt_mappings": null,
+      "kor": "D+1추정예수금",
       "format": {
         "unit": "text",
         "sign": false,
@@ -2196,7 +2179,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "결제일 요약과 해당 일자 표 셀에 동일 금액을 재표시"
     },
     {
       "slot_id": "s061",
@@ -2304,10 +2289,10 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:kt50021",
-      "f": "sell_buy_exct_amt",
+      "mapping_id": "detail:kt00001:settlement_forecast",
+      "f": "d2_slby_exct_amt",
       "alt_mappings": null,
-      "kor": "매도매수정산금",
+      "kor": "D+2매도매수정산금",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2316,7 +2301,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "결제일 요약과 해당 일자 표 셀에 동일 금액을 재표시"
     },
     {
       "slot_id": "s065",
@@ -2424,22 +2411,9 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "detail:kt00004:cash_and_assets",
+      "mapping_id": "detail:kt00001:settlement_forecast",
       "f": "d2_entra",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00005:cash_and_capacity",
-          "f": "entr_d2"
-        },
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "d2entra"
-        },
-        {
-          "mapping_id": "detail:kt00017:d2_account_position",
-          "f": "d2_entra"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "D+2추정예수금",
       "format": {
         "unit": "text",
@@ -2466,7 +2440,9 @@
           "f": "d2_entra",
           "sep": null
         }
-      ]
+      ],
+      "display_dup": true,
+      "dup_note": "결제일 요약과 해당 일자 표 셀에 동일 금액을 재표시"
     },
     {
       "slot_id": "s069",
@@ -2735,12 +2711,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "crd_tp",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분",
       "format": null,
       "paired_with": null,
@@ -2765,12 +2736,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "seq",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "일련번호",
       "format": {
         "unit": "text",
@@ -2802,16 +2768,8 @@
       "f": "stk_nm",
       "alt_mappings": [
         {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
           "mapping_id": "base:kt00015",
           "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
         }
       ],
       "kor": "종목명",
@@ -2860,20 +2818,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "loan_dt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "대출일",
       "format": null,
       "paired_with": "s080",
@@ -2898,12 +2843,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "sell_amt_sum",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "pur_exct_amt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매도정산합",
       "format": {
         "unit": "text",
@@ -3058,12 +2998,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "crd_tp",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분",
       "format": null,
       "paired_with": null,
@@ -3088,12 +3023,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "seq",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "일련번호",
       "format": {
         "unit": "text",
@@ -3165,20 +3095,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "loan_dt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "대출일",
       "format": null,
       "paired_with": "s089",
@@ -3203,12 +3120,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "buy_amt_sum",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "pur_exct_amt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매수정산합",
       "format": {
         "unit": "text",
@@ -3370,12 +3282,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "crd_tp",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분",
       "format": null,
       "paired_with": null,
@@ -3400,12 +3307,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "seq",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "일련번호",
       "format": {
         "unit": "text",
@@ -3435,20 +3337,7 @@
       },
       "mapping_id": "base:kt00015",
       "f": "rmrk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -3533,12 +3422,7 @@
       },
       "mapping_id": "base:kt00015",
       "f": "cmsn",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "pur_exct_amt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "수수료",
       "format": {
         "unit": "text",
@@ -3568,12 +3452,7 @@
       },
       "mapping_id": "detail:kt00017:daily_cash_and_trading_flows",
       "f": "tax",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "pur_exct_amt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "세금",
       "format": {
         "unit": "text",
@@ -3728,12 +3607,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "crd_tp",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분",
       "format": null,
       "paired_with": null,
@@ -3758,12 +3632,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "seq",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "일련번호",
       "format": {
         "unit": "text",
@@ -3793,20 +3662,7 @@
       },
       "mapping_id": "base:kt00015",
       "f": "rmrk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "shares",
@@ -3836,20 +3692,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "loan_dt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "대출일",
       "format": null,
       "paired_with": "s108",
@@ -3874,12 +3717,7 @@
       },
       "mapping_id": "base:kt00015",
       "f": "exct_amt",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "pur_exct_amt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "text",
@@ -4034,12 +3872,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "crd_tp",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분",
       "format": null,
       "paired_with": null,
@@ -4064,12 +3897,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "seq",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "일련번호",
       "format": {
         "unit": "text",
@@ -4099,20 +3927,7 @@
       },
       "mapping_id": "base:kt00015",
       "f": "rmrk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "shares",
@@ -4142,20 +3957,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "loan_dt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "대출일",
       "format": null,
       "paired_with": "s117",
@@ -4180,12 +3982,7 @@
       },
       "mapping_id": "base:kt00015",
       "f": "trde_amt",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "pur_exct_amt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래금액",
       "format": {
         "unit": "text",
@@ -4215,12 +4012,7 @@
       },
       "mapping_id": "base:kt00015",
       "f": "tax_sum_cmsn",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "pur_exct_amt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "세금수수료합",
       "format": {
         "unit": "text",
@@ -4370,12 +4162,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "crd_tp",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분",
       "format": null,
       "paired_with": null,
@@ -4400,12 +4187,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "seq",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "일련번호",
       "format": {
         "unit": "text",
@@ -4435,20 +4217,7 @@
       },
       "mapping_id": "base:kt00015",
       "f": "rmrk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -4473,20 +4242,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "loan_dt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "대출일",
       "format": null,
       "paired_with": null,
@@ -4511,12 +4267,7 @@
       },
       "mapping_id": "detail:kt00017:other_assets_and_income",
       "f": "dvida_amt",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "pur_exct_amt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "배당금액",
       "format": {
         "unit": "text",
@@ -4666,12 +4417,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "crd_tp",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분",
       "format": null,
       "paired_with": null,
@@ -4696,12 +4442,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "seq",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "sell_tp"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "일련번호",
       "format": {
         "unit": "text",
@@ -4731,20 +4472,7 @@
       },
       "mapping_id": "base:kt00015",
       "f": "rmrk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -4769,20 +4497,7 @@
       },
       "mapping_id": "base:kt00008",
       "f": "loan_dt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:kt00008",
-          "f": "qty"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:kt00015",
-          "f": "trde_qty_jwa_cnt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "대출일",
       "format": null,
       "paired_with": null,
@@ -4807,12 +4522,7 @@
       },
       "mapping_id": "detail:kt00017:daily_cash_and_trading_flows",
       "f": "ina_amt",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00010:purchase_settlement",
-          "f": "pur_exct_amt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "입금금액",
       "format": {
         "unit": "text",
@@ -5010,12 +4720,7 @@
       "table": null,
       "mapping_id": "detail:kt00012:account_and_receivable_capacity",
       "f": "min_amt",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00012:account_and_receivable_capacity",
-          "f": "min_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "미수불가금액",
       "format": {
         "unit": "shares",
@@ -5256,12 +4961,7 @@
       "table": null,
       "mapping_id": "detail:kt00005:receivables_and_margin",
       "f": "profa_ch",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00005:receivables_and_margin",
-          "f": "repl_profa"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "증거금현금",
       "format": {
         "unit": "krw_ko",
@@ -5368,16 +5068,8 @@
           "f": "profa_ch"
         },
         {
-          "mapping_id": "detail:kt00001:substitute_collateral",
-          "f": "profa_repl"
-        },
-        {
           "mapping_id": "detail:kt00013:cash_resources",
           "f": "ch_profa"
-        },
-        {
-          "mapping_id": "detail:kt00013:substitute_resources",
-          "f": "repl_profa"
         }
       ],
       "kor": "주식증거금현금",
@@ -5748,15 +5440,7 @@
       "alt_mappings": [
         {
           "mapping_id": "base:kt00015",
-          "f": "crnc_cd"
-        },
-        {
-          "mapping_id": "base:kt00015",
           "f": "fc_entra"
-        },
-        {
-          "mapping_id": "detail:kt00001:foreign_currency_deposits",
-          "f": "crnc_cd"
         }
       ],
       "kor": "외화예수금",
@@ -6324,14 +6008,16 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:kt00002",
-      "f": "daly_prsm_dpst_aset_amt_prst",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "일별추정예탁자산현황",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "고정 섹션 제목 — 조회 응답 값이 아니다"
     },
     {
       "slot_id": "s191",
@@ -6357,7 +6043,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s192",
@@ -6383,7 +6070,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s193",
@@ -6409,7 +6097,8 @@
       },
       "paired_with": "s192",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s194",
@@ -6423,7 +6112,7 @@
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka01690",
+      "mapping_id": "base:kt00002",
       "f": "dt",
       "alt_mappings": null,
       "kor": "일자",
@@ -6435,7 +6124,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s195",
@@ -6449,7 +6139,7 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "detail:kt00004:cash_and_assets",
+      "mapping_id": "base:kt00002",
       "f": "prsm_dpst_aset_amt",
       "alt_mappings": null,
       "kor": "추정예탁자산",
@@ -6461,7 +6151,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s196",
@@ -6475,7 +6166,7 @@
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10085",
+      "mapping_id": "base:kt00002",
       "f": "dt",
       "alt_mappings": null,
       "kor": "일자",
@@ -6487,7 +6178,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s197",
@@ -6501,7 +6193,7 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "detail:kt00018:portfolio_summary",
+      "mapping_id": "base:kt00002",
       "f": "prsm_dpst_aset_amt",
       "alt_mappings": null,
       "kor": "추정예탁자산",
@@ -6513,7 +6205,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s198",

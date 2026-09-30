@@ -772,10 +772,10 @@
         "field": "tot_evltv_prft"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_evltv_prft",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_evlt_pl",
       "alt_mappings": null,
-      "kor": "총 평가손익",
+      "kor": "총평가손익금액",
       "format": {
         "unit": "krw_ko",
         "sign": true,
@@ -804,10 +804,10 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_buy_amt",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_pur_amt",
       "alt_mappings": null,
-      "kor": "총 매입가",
+      "kor": "총매입금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,

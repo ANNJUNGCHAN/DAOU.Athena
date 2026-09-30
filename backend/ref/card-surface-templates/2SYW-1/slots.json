@@ -826,10 +826,10 @@
         "field": "tot_evlt_amt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "day_stk_asst",
+      "mapping_id": "detail:kt00004:cash_and_assets",
+      "f": "aset_evlt_amt",
       "alt_mappings": null,
-      "kor": "추정자산",
+      "kor": "예탁자산평가액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
@@ -858,10 +858,10 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
+      "mapping_id": "detail:kt00018:portfolio_summary",
       "f": "tot_prft_rt",
       "alt_mappings": null,
-      "kor": "수익률",
+      "kor": "총수익률(%)",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -911,7 +911,7 @@
         "field": "d2_pymn_alow_amt"
       },
       "table": null,
-      "mapping_id": "base:kt50021",
+      "mapping_id": "detail:kt00001:withdrawal_and_order_capacity",
       "f": "ord_alow_amt",
       "alt_mappings": null,
       "kor": "주문가능금액",
@@ -1081,10 +1081,10 @@
         "field": "tot_evltv_prft"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_evltv_prft",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_evlt_pl",
       "alt_mappings": null,
-      "kor": "총 평가손익",
+      "kor": "총평가손익금액",
       "format": {
         "unit": "krw_ko",
         "sign": true,
@@ -1113,10 +1113,10 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_buy_amt",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_pur_amt",
       "alt_mappings": null,
-      "kor": "총 매입가",
+      "kor": "총매입금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
@@ -1809,18 +1809,7 @@
       "table": null,
       "mapping_id": "base:00",
       "f": "938",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10075",
-          "f": "tdy_trde_tax",
-          "kor": "당일매매세금"
-        },
-        {
-          "mapping_id": "base:ka10076",
-          "f": "tdy_trde_tax",
-          "kor": "당일매매세금"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "당일매매수수료",
       "format": {
         "unit": "text",
@@ -4468,13 +4457,7 @@
       "table": null,
       "mapping_id": "base:ka10088",
       "f": "ord_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10088",
-          "f": "ord_pric",
-          "kor": "주문가격"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "주문수량",
       "format": {
         "unit": "shares",
@@ -4722,13 +4705,7 @@
       "table": null,
       "mapping_id": "base:00",
       "f": "27",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:00",
-          "f": "28",
-          "kor": "(최우선)매수호가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "(최우선)매도호가",
       "format": {
         "unit": "text",
@@ -5086,13 +5063,7 @@
       "table": null,
       "mapping_id": "base:ka10075",
       "f": "sel_bid",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10075",
-          "f": "buy_bid",
-          "kor": "매수호가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매도호가",
       "format": {
         "unit": "text",

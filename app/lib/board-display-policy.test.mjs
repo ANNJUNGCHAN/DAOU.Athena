@@ -127,6 +127,27 @@ test('identity accepts a real Samsung response and never promotes stock codes or
   assert.equal(correctBoardIdentity({ stk_nm: '조회한 종목' }, {}, { code: '123456' }).name, '조회한 종목');
 });
 
+test('settlement axes and unavailable gold-account as-of dates do not reuse specimen dates', () => {
+  const settlement = plan('3MTJ-0', {});
+  assert.deepEqual(['s035', 's043', 's052'].map(id => text(settlement, id)), ['오늘', 'D+1', 'D+2']);
+  assert.deepEqual(['s036', 's044', 's053'].map(id => text(settlement, id)), ['', '', '']);
+  assert.equal(text(settlement, 's064'), 'D+2 자산');
+  assert.equal(text(settlement, 's067'), 'D+2 금액');
+  assert.equal(text(plan('3ODO-0', {}), 's088'), '시각 미제공');
+});
+
+test('account generated display metadata agrees with the canonical slots', () => {
+  const ids = registry.boardIds().filter(id => registry.cardIdFor(id) === 'CC-01');
+  assert.equal(ids.length, 14);
+  for (const id of ids) {
+    const generated = new Map(registry.contractFor(id).slots.map(slot => [slot.slot_id, slot]));
+    for (const slot of source(id).slots) {
+      assert.equal(generated.get(slot.slot_id)?.kind, slot.kind, `${id}/${slot.slot_id}`);
+      assert.deepEqual(generated.get(slot.slot_id)?.format ?? null, slot.format ?? null, `${id}/${slot.slot_id}`);
+    }
+  }
+});
+
 test('preparation is immutable and requires exact source text provenance', () => {
   const contract = registry.contractFor('137X-2');
   const values = { s005: { value: '000000' }, s018: 0 };
