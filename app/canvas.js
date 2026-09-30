@@ -2343,7 +2343,7 @@ function stampBoardRealtimeStatus(root, status) {
     relayCardRealtimeFallbackStatus(root, status);
   }
   const normalized = String(status || 'snapshot').toLowerCase();
-  if (['registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error'].includes(normalized)) {
+  if (['snapshot', 'static', 'registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error'].includes(normalized)) {
     root.__athenaBoardRealtimeReceived = false;
   } else if (normalized === 'receiving') {
     root.__athenaBoardRealtimeReceived = true;
@@ -2354,16 +2354,26 @@ function stampBoardRealtimeStatus(root, status) {
     : normalized;
   const label = integratedCardSurface.workflowStateLabel(effective);
   const slotsByBoard = {
-    '137X-2': ['s003', 's004', 's136'],
-    '2R3M-1': ['s003', 's004', 's154', 's258'],
-    '1JPU-0': ['s005', 's262'],
+    '137X-2': { status: 's004', footer: 's136', context: '차트', session: ['s003'] },
+    '2R3M-1': { status: 's004', footer: 's258', context: '현재가·체결', session: ['s003', 's154'] },
+    '1JPU-0': { status: 's005', footer: 's262', context: '호가', session: [] },
   };
   for (const host of root.querySelectorAll('.board-surface-host')) {
     const boardId = String((host.__athenaBoard && host.__athenaBoard.boardId) || '');
-    for (const slotId of slotsByBoard[boardId] || []) {
+    const display = slotsByBoard[boardId];
+    if (!display) continue;
+    for (const slotId of display.session) {
       const node = host.querySelector(`[data-slot-id="${slotId}"]`);
-      if (node) node.textContent = label;
+      if (!node) continue;
+      // REG lifecycle cannot tell us which trading session is open.
+      const chip = node.parentElement && node.parentElement.children.length === 1 ? node.parentElement : node;
+      chip.hidden = true;
+      chip.style.display = 'none';
     }
+    const badge = host.querySelector(`[data-slot-id="${display.status}"]`);
+    const footer = host.querySelector(`[data-slot-id="${display.footer}"]`);
+    if (badge) badge.textContent = label;
+    if (footer) footer.textContent = `${display.context} · ${label}`;
   }
 }
 
@@ -2782,6 +2792,9 @@ function syncIntegratedRealtime(root, envelope) {
   if (typeof installCardRealtimeStatusRelay === 'function') installCardRealtimeStatusRelay(root);
   const payload = integratedRealtimePayload(root, envelope);
   const realtime = integratedRealtimeMeta(root);
+  const revision = (realtime.displayRevision || 0) + 1;
+  realtime.displayRevision = revision;
+  clearIntegratedRealtimeError(root);
   const accountGeneration = rendererRealtimeAccountGeneration;
   const failedStatus = ['registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error']
     .includes(String(realtime.status || ''));
@@ -2797,6 +2810,7 @@ function syncIntegratedRealtime(root, envelope) {
   }
   const prior = integratedRealtimeTasks.get(root) || Promise.resolve();
   const task = prior.catch(() => {}).then(async () => {
+    if (revision !== realtime.displayRevision) return { ok: false, status: 'stopped' };
     const boardId = String((surfaceContractOf(envelope) || {}).board_id || '');
     // 2RJ7-1의 국내 금현물 시세는 15초 ka50092 조회가 갱신한다. 통합 gold 정책의
     // 0I는 국제금환산가격이므로 이 보드에 연결하면 pred_pre만 다른 상품 값으로 섞인다.
@@ -2808,13 +2822,14 @@ function syncIntegratedRealtime(root, envelope) {
         realtime.mounted = false;
         realtime.mountAttempted = false;
       }
+      if (revision !== realtime.displayRevision) return { ok: false, status: 'stopped' };
       if (root.isConnected) realtime.status = 'snapshot';
       stampBoardRealtimeStatus(root, realtime.status);
       clearIntegratedRealtimeError(root);
       return { ok: true, status: 'snapshot' };
     }
     const policies = await realtimePolicies();
-    if (accountGeneration !== rendererRealtimeAccountGeneration) return { ok: false, status: 'stopped' };
+    if (accountGeneration !== rendererRealtimeAccountGeneration || revision !== realtime.displayRevision) return { ok: false, status: 'stopped' };
     if (!hasRealtimePolicy(policies, payload)) {
       root.__athenaRealtimeFallbackCapable = false;
       if (root.__athenaRealtimeFallback) unregisterRealtimeFallback(root.__athenaRealtimeFallback);
@@ -2823,6 +2838,7 @@ function syncIntegratedRealtime(root, envelope) {
         realtime.mounted = false;
         realtime.mountAttempted = false;
       }
+      if (revision !== realtime.displayRevision) return { ok: false, status: 'stopped' };
       if (root.isConnected) realtime.status = 'static';
       stampBoardRealtimeStatus(root, realtime.status);
       clearIntegratedRealtimeError(root);
@@ -2846,6 +2862,21 @@ function syncIntegratedRealtime(root, envelope) {
       realtime.mountAttempted = false;
       return state;
     }
+    if (revision !== realtime.displayRevision) return state;
+    // The broad card/mode policy can exist without a binding for this target.
+    // Keep the already received REST snapshot; this is not a failed connection.
+    if (state && state.ok === false && state.error === 'no realtime policy matched this card/mode/target') {
+      await window.athena.invoke('athena:integrated-card-realtime-unmount', { leaseId: payload.leaseId });
+      realtime.mounted = false;
+      realtime.mountAttempted = false;
+      root.__athenaRealtimeFallbackCapable = false;
+      if (root.__athenaRealtimeFallback) unregisterRealtimeFallback(root.__athenaRealtimeFallback);
+      if (revision !== realtime.displayRevision) return state;
+      realtime.status = 'snapshot';
+      stampBoardRealtimeStatus(root, realtime.status);
+      clearIntegratedRealtimeError(root);
+      return { ok: true, status: 'snapshot' };
+    }
     integratedCardSurface.requireRealtimeSuccess(state);
     realtime.status = String(state.status || 'active');
     realtime.mounted = true;
@@ -2859,7 +2890,7 @@ function syncIntegratedRealtime(root, envelope) {
     }
     return state;
   }).catch((error) => {
-    if (accountGeneration !== rendererRealtimeAccountGeneration) return;
+    if (accountGeneration !== rendererRealtimeAccountGeneration || revision !== realtime.displayRevision) return;
     if (root.isConnected) {
       realtime.status = 'error';
       stampBoardRealtimeStatus(root, realtime.status);
@@ -2881,13 +2912,22 @@ function showIntegratedRealtimeError(root, envelope, error) {
   note.className = 'integrated-realtime-error';
   note.setAttribute('role', 'alert');
   const text = document.createElement('span');
-  text.textContent = `실시간 연결 실패 — ${(error && error.message) || '정책을 불러오지 못했습니다.'}`;
+  text.textContent = '실시간 데이터를 연결하지 못했습니다. 조회한 데이터는 계속 표시합니다.';
+  const details = document.createElement('details');
+  const summary = document.createElement('summary');
+  summary.textContent = '오류 상세';
+  const diagnostic = document.createElement('pre');
+  diagnostic.textContent = (error && error.message) || '실시간 정책을 불러오지 못했습니다.';
+  diagnostic.style.whiteSpace = 'pre-wrap';
+  diagnostic.style.overflowWrap = 'anywhere';
+  details.append(summary, diagnostic);
   const retry = document.createElement('button');
   retry.type = 'button';
   retry.textContent = '다시 시도';
   retry.addEventListener('click', () => syncIntegratedRealtime(root, envelope));
   note.appendChild(text);
   note.appendChild(retry);
+  note.appendChild(details);
   const content = root.querySelector('.integrated-card-content');
   if (content) content.prepend(note);
 }
