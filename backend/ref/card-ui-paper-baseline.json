@@ -1,0 +1,1632 @@
+{
+  "schema": "athena.card-ui-paper-baseline.v1",
+  "paper_file_id": "01M3SB680J59QWZX6J4CGRVXT7",
+  "paper_file_url": "https://app.paper.design/file/01M3SB680J59QWZX6J4CGRVXT7",
+  "baseline_date": "2026-10-01",
+  "data_provenance": "Public repository static templates and deterministic synthetic chart fixture only. These drawings are not real account or live questionnaire evidence.",
+  "verification": {
+    "editable_drawings": 101,
+    "source_compared": 101,
+    "native_questionnaire": "not_run",
+    "product_changes": "not_started"
+  },
+  "cards": [
+    {
+      "board_id": "133H-2",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10 · 내 계좌 — 손익·결제·위험",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "B-0",
+      "page_id": "p-3-0",
+      "verification": "drawn-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "135M-2",
+      "card_id": "CC-02",
+      "name": "CC-02 / R11 · 삼성전자 10주 시장가 매수",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "HPU-0",
+      "page_id": "p-8-0",
+      "verification": "reviewed",
+      "execution_scope": "design_reference_only"
+    },
+    {
+      "board_id": "137X-2",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01 · 삼성전자 3개월 차트",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "A1-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "13BC-2",
+      "card_id": "CC-04",
+      "name": "CC-04 / R02 · 삼성전자 실시간 호가·체결",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "4JL-0",
+      "page_id": "p-7-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "13K0-2",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04 · 거래대금 상위 저평가 탐색",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "C-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "15J9-2",
+      "card_id": "CC-06",
+      "name": "CC-06 / R05 · 반도체 업종·AI 테마",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "234-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "15L8-2",
+      "card_id": "CC-06",
+      "name": "CC-06 / R06 · 관심종목·조건 신호",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "2VZ-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "15N5-2",
+      "card_id": "CC-03",
+      "name": "CC-03 / R07 · KODEX 200 ETF",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "5FO-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "15P5-2",
+      "card_id": "CC-03",
+      "name": "CC-03 / R08 · ELW 위험·만기",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "5FA-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "15R0-2",
+      "card_id": "CC-06",
+      "name": "CC-06 / R09 · 시장 체온·VI",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "36I-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "1JPU-0",
+      "card_id": "CC-04",
+      "name": "A04 · 호가 정본 — 실시간 통합 호가",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "5EX-0",
+      "page_id": "p-7-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "1JZW-0",
+      "card_id": "CC-04",
+      "name": "A02×A04 · 호가 주문 정본 — 시장가 매수",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "L2G-0",
+      "page_id": "p-7-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "design_reference_only"
+    },
+    {
+      "board_id": "1WOB-1",
+      "card_id": "CC-05",
+      "name": "A05 · 목록 펼침 검증 — 외국인 기간별 매매 상위",
+      "state": {
+        "kind": "default",
+        "parent_board": null,
+        "control": null,
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "LGO-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2QFO-2",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T1 · 수급 — 투자자별",
+      "state": {
+        "kind": "tab",
+        "parent_board": null,
+        "control": "투자자별",
+        "control_text": "투자자별",
+        "rail_owner": true,
+        "control_node": null
+      },
+      "artboard_id": "5KP-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2QM7-2",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T2 · 수급 — 거래원",
+      "state": {
+        "kind": "tab",
+        "parent_board": "2QFO-2",
+        "control": "거래원",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "7AX-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2QRP-1",
+      "card_id": "CC-04",
+      "name": "CC-04 / R02-T2 · 호가 — 시간외 단일가",
+      "state": {
+        "kind": "tab",
+        "parent_board": "13BC-2",
+        "control": "시간외",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "8DG-0",
+      "page_id": "p-7-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2QX1-1",
+      "card_id": "CC-04",
+      "name": "CC-04 / R02-T3 · 호가 — KRX 금현물",
+      "state": {
+        "kind": "tab",
+        "parent_board": "13BC-2",
+        "control": "금현물 · 5단",
+        "control_text": "금현물",
+        "control_node": null
+      },
+      "artboard_id": "8DM-0",
+      "page_id": "p-7-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2R3M-1",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T1 · 현재시세 — 체결·호가 문맥",
+      "state": {
+        "kind": "tab",
+        "parent_board": "137X-2",
+        "control": "현재시세",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "8E3-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2RBO-1",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T2 · 기업정보 — 개요·가치·실적",
+      "state": {
+        "kind": "tab",
+        "parent_board": "137X-2",
+        "control": "기업정보",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "CYR-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2RJ7-1",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T3 · 금현물 — KRX 금시장 차트·시세",
+      "state": {
+        "kind": "tab",
+        "parent_board": "137X-2",
+        "control": "금현물",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "L0W-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2ROJ-1",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T3 · 수급 — 프로그램",
+      "state": {
+        "kind": "tab",
+        "parent_board": "2QFO-2",
+        "control": "프로그램",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "9BJ-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2RWK-1",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T4 · 수급 — 신용·대차",
+      "state": {
+        "kind": "tab",
+        "parent_board": "2QFO-2",
+        "control": "신용·대차",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "AN2-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2S4E-1",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T5 · 수급 — 종목 동향",
+      "state": {
+        "kind": "tab",
+        "parent_board": "2QFO-2",
+        "control": "종목 동향",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "DQH-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2SCE-1",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T1 · 보유종목 — 종목별 평가·비중",
+      "state": {
+        "kind": "tab",
+        "parent_board": "133H-2",
+        "control": "보유종목",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "13S-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2SKU-1",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T2 · 예수금·결제 — 현금·결제 예정",
+      "state": {
+        "kind": "tab",
+        "parent_board": "133H-2",
+        "control": "예수금·결제",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "1PJ-0",
+      "page_id": "p-3-0",
+      "verification": "drawn-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2SRV-1",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T3 · 손익·성과 — 실현손익·수익률",
+      "state": {
+        "kind": "tab",
+        "parent_board": "133H-2",
+        "control": "손익·성과",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "2SC-0",
+      "page_id": "p-3-0",
+      "verification": "drawn-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2SYW-1",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T4 · 주문·체결 — 오늘 주문 현황",
+      "state": {
+        "kind": "tab",
+        "parent_board": "133H-2",
+        "control": "주문·체결",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "5EB-0",
+      "page_id": "p-3-0",
+      "verification": "drawn-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2T63-1",
+      "card_id": "CC-02",
+      "name": "CC-02 / R11-T1 · 현금 매도 — 삼성전자 10주 시장가 매도",
+      "state": {
+        "kind": "tab",
+        "parent_board": "135M-2",
+        "control": "현금 매도",
+        "control_text": "매도",
+        "control_node": null
+      },
+      "artboard_id": "HQF-0",
+      "page_id": "p-8-0",
+      "verification": "reviewed",
+      "execution_scope": "design_reference_only"
+    },
+    {
+      "board_id": "2TAG-1",
+      "card_id": "CC-02",
+      "name": "CC-02 / R11-T2 · 정정 — 삼성전자 지정가 정정",
+      "state": {
+        "kind": "tab",
+        "parent_board": "135M-2",
+        "control": "정정",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "HRB-0",
+      "page_id": "p-8-0",
+      "verification": "reviewed",
+      "execution_scope": "design_reference_only"
+    },
+    {
+      "board_id": "2TET-1",
+      "card_id": "CC-02",
+      "name": "CC-02 / R11-T3 · 취소 — 삼성전자 원주문 취소",
+      "state": {
+        "kind": "tab",
+        "parent_board": "135M-2",
+        "control": "취소",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "LGD-0",
+      "page_id": "p-8-0",
+      "verification": "reviewed",
+      "execution_scope": "design_reference_only"
+    },
+    {
+      "board_id": "2TJ6-1",
+      "card_id": "CC-02",
+      "name": "CC-02 / R11-T4 · 신용 매수 — 삼성전자 10주 시장가 신용융자",
+      "state": {
+        "kind": "tab",
+        "parent_board": "135M-2",
+        "control": "신용 · 매수",
+        "control_text": "신용",
+        "control_node": null
+      },
+      "artboard_id": "LGI-0",
+      "page_id": "p-8-0",
+      "verification": "reviewed",
+      "execution_scope": "design_reference_only"
+    },
+    {
+      "board_id": "2TNJ-1",
+      "card_id": "CC-02",
+      "name": "CC-02 / R11-T5 · 금현물 매수 — 금 99.99K 10g 시장가",
+      "state": {
+        "kind": "tab",
+        "parent_board": "135M-2",
+        "control": "금현물 · 매수",
+        "control_text": "금현물",
+        "control_node": null
+      },
+      "artboard_id": "LGN-0",
+      "page_id": "p-8-0",
+      "verification": "reviewed",
+      "execution_scope": "design_reference_only"
+    },
+    {
+      "board_id": "2TRW-1",
+      "card_id": "CC-04",
+      "name": "CC-04 / R02-T4 · 호가 — 정규장 5단",
+      "state": {
+        "kind": "tab",
+        "parent_board": "13BC-2",
+        "control": "정규장 · 5단",
+        "control_text": "5단",
+        "control_node": null
+      },
+      "artboard_id": "CYS-0",
+      "page_id": "p-7-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2TZN-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-T1 · 업종 — 업종 지수·등락 탐색",
+      "state": {
+        "kind": "tab",
+        "parent_board": "13K0-2",
+        "control": "업종",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "3LZ-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2U5L-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-T2 · 관심 — 관심종목 시세 보드",
+      "state": {
+        "kind": "tab",
+        "parent_board": "13K0-2",
+        "control": "관심종목 시세 보드",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "I0P-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2UBO-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-T3 · 테마 — 테마 등락·확산 탐색",
+      "state": {
+        "kind": "tab",
+        "parent_board": "13K0-2",
+        "control": "테마 등락·확산 탐색",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "J45-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2UHM-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-T4 · 시장·VI — 시장 상태와 VI 발동",
+      "state": {
+        "kind": "tab",
+        "parent_board": "13K0-2",
+        "control": "시장·VI",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "KFQ-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2UN6-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-T5 · 조건검색 — 저장 조건식과 결과",
+      "state": {
+        "kind": "tab",
+        "parent_board": "13K0-2",
+        "control": "조건검색",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "LA9-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2V71-0",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T6 · 수급 — 순위",
+      "state": {
+        "kind": "tab",
+        "parent_board": "2QFO-2",
+        "control": "순위",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "DQI-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2VDA-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4 · 순위 — 주식 신호·순위",
+      "state": {
+        "kind": "tab",
+        "parent_board": "137X-2",
+        "control": "순위",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "CYU-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2VIN-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T5 · 순위 — ETF 전체시세",
+      "state": {
+        "kind": "tab",
+        "parent_board": "2VDA-0",
+        "control": "ETF",
+        "control_node": "3HMJ-0",
+        "control_text": null
+      },
+      "artboard_id": "CYT-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2VO0-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T6 · 순위 — ELW 순위",
+      "state": {
+        "kind": "tab",
+        "parent_board": "2VDA-0",
+        "control": "ELW",
+        "control_node": "3HML-0",
+        "control_text": null
+      },
+      "artboard_id": "CZ0-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2WZK-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T5-2 · 순위 — ETF 기간 수익률",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VIN-0",
+        "control": "3달 수익률 높은 순",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "CYV-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2X5N-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S2 · 종목찾기 — 당일 거래량",
+      "state": {
+        "kind": "sort",
+        "parent_board": "13K0-2",
+        "control": "당일 거래량",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "AQ7-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2XA5-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T6-2 · 순위 — ELW 등락률",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VO0-0",
+        "control": "등락률",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "O9C-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2XG6-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S3 · 종목찾기 — 전일 거래량",
+      "state": {
+        "kind": "sort",
+        "parent_board": "13K0-2",
+        "control": "전일 거래량",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "B74-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2XKO-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S4 · 종목찾기 — 등락률",
+      "state": {
+        "kind": "sort",
+        "parent_board": "13K0-2",
+        "control": "등락률",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "BY5-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2XP6-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S5 · 종목찾기 — 예상체결 등락률",
+      "state": {
+        "kind": "sort",
+        "parent_board": "13K0-2",
+        "control": "예상체결 등락률",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "F5I-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2XTO-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S6 · 종목찾기 — 호가잔량 상위",
+      "state": {
+        "kind": "sort",
+        "parent_board": "13K0-2",
+        "control": "호가잔량 상위",
+        "control_text": "호가잔량",
+        "control_node": null
+      },
+      "artboard_id": "EDR-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2XY6-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T6-3 · 순위 — ELW 근접율",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VO0-0",
+        "control": "근접률",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "R1S-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2Y47-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T6-4 · 순위 — ELW 가격급등락",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VO0-0",
+        "control": "가격급등락",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "RGY-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2YA8-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S7 · 종목찾기 — 호가잔량 급증",
+      "state": {
+        "kind": "sort",
+        "parent_board": "13K0-2",
+        "control": "호가잔량 급증",
+        "control_text": "잔량 급증",
+        "control_node": null
+      },
+      "artboard_id": "CZJ-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2YEQ-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S8 · 종목찾기 — 잔량률 급증",
+      "state": {
+        "kind": "sort",
+        "parent_board": "13K0-2",
+        "control": "잔량률 급증",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "DYA-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2YJ8-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S9 · 종목찾기 — 거래량 급증",
+      "state": {
+        "kind": "sort",
+        "parent_board": "13K0-2",
+        "control": "거래량 급증",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "CMW-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2YNQ-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S10 · 종목찾기 — 시간외 등락률",
+      "state": {
+        "kind": "sort",
+        "parent_board": "13K0-2",
+        "control": "시간외 등락률",
+        "control_text": "시간외 단일가",
+        "control_node": null
+      },
+      "artboard_id": "G1F-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2YS8-0",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T6-2 · 순위 — 신용비율 상위",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2V71-0",
+        "control": "신용비율 높은 순",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "DQJ-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2YXS-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-2 · 순위 — 상하한가",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VDA-0",
+        "control": "상하한가",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QVS-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2Z49-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T6-5 · 순위 — ELW 거래원별 순매매",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VO0-0",
+        "control": "거래원별 순매매",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QV0-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2ZBB-0",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T6-3 · 순위 — 대차 상위",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2V71-0",
+        "control": "대차잔고 많은 순",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "INO-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2ZHC-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-3 · 순위 — 고저가근접",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VDA-0",
+        "control": "고저가근접",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QU7-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2ZN9-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T6-6 · 순위 — ELW 조건검색",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VO0-0",
+        "control": "조건검색",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QWX-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2ZTA-0",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T6-4 · 순위 — 한도소진율 증가",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2V71-0",
+        "control": "한도소진율 증가",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "IP3-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "2ZZ7-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-4 · 순위 — 가격급등락",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VDA-0",
+        "control": "가격급등락",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QU2-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3063-0",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T6-5 · 순위 — 장중 투자자 상위",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2V71-0",
+        "control": "장중 투자자 상위",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "IQ6-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "30C1-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-5 · 순위 — 거래량갱신",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VDA-0",
+        "control": "거래량갱신",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QUJ-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "30HY-0",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T6-6 · 순위 — 외국인·기관 상위",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2V71-0",
+        "control": "외국인·기관 상위",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "LH4-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "30O1-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-6 · 순위 — 매물대집중",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VDA-0",
+        "control": "매물대집중",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QTP-0",
+      "page_id": "p-6-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "30TY-0",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T6-7 · 순위 — 증권사별 상위",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2V71-0",
+        "control": "증권사별 상위",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "LHB-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "30ZW-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-7 · 순위 — 고저 PER",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VDA-0",
+        "control": "고저 PER",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QTM-0",
+      "page_id": "p-6-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "316O-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-8 · 순위 — 시가대비 등락",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VDA-0",
+        "control": "시가대비 등락",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QTU-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "31CL-0",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T6-8 · 순위 — 동일순매매",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2V71-0",
+        "control": "동일순매매",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "LIG-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "31II-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-9 · 순위 — VI 발동",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VDA-0",
+        "control": "VI 발동",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QTX-0",
+      "page_id": "p-6-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "31OF-0",
+      "card_id": "CC-05",
+      "name": "CC-05 / R03-T6-9 · 순위 — 신용융자 가능",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2V71-0",
+        "control": "신용융자 가능",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "LKD-0",
+      "page_id": "p-4-0",
+      "verification": "drawn_reviewed_baseline",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "31UD-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-10 · 순위 — 당일·전일 체결량",
+      "state": {
+        "kind": "sort",
+        "parent_board": "2VDA-0",
+        "control": "당일/전일 비율순",
+        "control_text": "당일·전일 체결량",
+        "control_node": null
+      },
+      "artboard_id": "QTT-0",
+      "page_id": "p-6-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "32S7-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T7 · 차트 — 업종 지수",
+      "state": {
+        "kind": "tab",
+        "parent_board": "137X-2",
+        "control": "차트",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "L21-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "32XM-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T8 · 순위 — 신주인수권 전체",
+      "state": {
+        "kind": "tab",
+        "parent_board": "137X-2",
+        "control": "순위",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "VNN-0",
+      "page_id": "p-6-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3BQB-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-T1-X · 업종 — 업종 목록 펼침",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2TZN-1",
+        "control": "업종 목록 펼침",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "MCB-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3D4I-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-T2-X · 관심 — 삼성전자 행 펼침",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2U5L-1",
+        "control": "삼성전자 행 펼침",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "P5L-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3DI2-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-X · 투자자 12주체",
+      "state": {
+        "kind": "expand",
+        "parent_board": "137X-2",
+        "control": "투자자 12주체",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "L1H-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3DZ1-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R08-X · ELW 바스켓·만기평가",
+      "state": {
+        "kind": "expand",
+        "parent_board": "15P5-2",
+        "control": "ELW 바스켓·만기평가",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "L4A-0",
+      "page_id": "p-6-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3EWN-0",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-T2-X2 · 관심 — ELW 행 펼침",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2U5L-1",
+        "control": "ELW 행 펼침",
+        "control_text": "ELW 관찰",
+        "control_node": null
+      },
+      "artboard_id": "MV0-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3FR6-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T1-X · 분봉 시세",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2R3M-1",
+        "control": "분봉 시세",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "VNR-0",
+      "page_id": "p-6-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3GRO-0",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T2-X1 · 증거금·보증금 구간별",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2SKU-1",
+        "control": "증거금·보증금 구간별",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "9I2-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3IGR-0",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T2-X2 · 증거금 재원·담보 상세",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2SKU-1",
+        "control": "증거금 재원·담보 상세",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "9ID-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3JT4-0",
+      "card_id": "CC-04",
+      "name": "CC-04 / R02-T2-X · 호가 — 시간외 단일가 단계별 낱값",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2QRP-1",
+        "control": "시간외 단일가 단계별 낱값",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "QTQ-0",
+      "page_id": "p-7-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3JZ3-0",
+      "card_id": "CC-04",
+      "name": "CC-04 / R02-X · 호가 — 단계별 낱값·거래소별",
+      "state": {
+        "kind": "expand",
+        "parent_board": "13BC-2",
+        "control": "단계별 낱값·거래소별",
+        "control_text": "호가 잔량",
+        "control_node": null
+      },
+      "artboard_id": "L2X-0",
+      "page_id": "p-7-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3K7K-0",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T3-X1 · 이달 기초·기말 구성",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2SRV-1",
+        "control": "이달 기초·기말 구성",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "9J2-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3LGC-0",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T2-X3 · 거래내역 상세",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2SKU-1",
+        "control": "거래내역 상세",
+        "control_text": "수표 입금·증권 입고·증권 출고",
+        "control_node": null
+      },
+      "artboard_id": "DA0-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3MTJ-0",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T2-X4 · D+2 정산 후 계좌",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2SKU-1",
+        "control": "D+2 정산 후 계좌",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "DA3-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3N4O-0",
+      "card_id": "CC-04",
+      "name": "A04-X · 호가 정본 — 단계별 낱값",
+      "state": {
+        "kind": "expand",
+        "parent_board": "1JPU-0",
+        "control": "단계별 낱값",
+        "control_text": "매도·매수 총잔량",
+        "control_node": null
+      },
+      "artboard_id": "QWR-0",
+      "page_id": "p-7-0",
+      "verification": "drawn_reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3NVG-0",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T2-X5 · 예수금 통화별·특수예수금",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2SKU-1",
+        "control": "예수금 통화별·특수예수금",
+        "control_text": "외화예수금",
+        "control_node": null
+      },
+      "artboard_id": "DAV-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3ODO-0",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-B-X1 · 금현물 잔고·거래내역",
+      "state": {
+        "kind": "expand",
+        "parent_board": "133H-2",
+        "control": "금현물 잔고·거래내역",
+        "control_text": "금현물",
+        "control_node": null
+      },
+      "artboard_id": "DAW-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3OIM-0",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-B-X2 · 금현물 주문·체결",
+      "state": {
+        "kind": "expand",
+        "parent_board": "3ODO-0",
+        "control": "금현물 주문·체결",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "DBT-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3TCO-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T4-9-X · VI 발동 전체 12건",
+      "state": {
+        "kind": "expand",
+        "parent_board": "31II-0",
+        "control": "VI 발동 전체 12건",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "VN7-0",
+      "page_id": "p-6-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3TOM-0",
+      "card_id": "CC-03",
+      "name": "CC-03 / R01-T6-5-X · ELW 거래원별 10창구 전체",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2Z49-0",
+        "control": "ELW 거래원별 10창구 전체",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "VME-0",
+      "page_id": "p-6-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "3UTA-0",
+      "card_id": "CC-01",
+      "name": "CC-01 / R10-T2-X6 · 부채·미수·연체 상세",
+      "state": {
+        "kind": "expand",
+        "parent_board": "2SKU-1",
+        "control": "부채·미수·연체 상세",
+        "control_text": null,
+        "control_node": null
+      },
+      "artboard_id": "7TR-0",
+      "page_id": "p-3-0",
+      "verification": "reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "4A9H-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S12 · 종목찾기 — 시장 고르기",
+      "state": {
+        "kind": "expand",
+        "parent_board": "13K0-2",
+        "control": "KOSPI",
+        "control_text": "KOSPI",
+        "control_node": null
+      },
+      "artboard_id": "4UW-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "4AGN-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S13 · 종목찾기 — 등락 고르기",
+      "state": {
+        "kind": "expand",
+        "parent_board": "13K0-2",
+        "control": "등락 전체",
+        "control_text": "등락 전체",
+        "control_node": null
+      },
+      "artboard_id": "5YQ-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "4ANS-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S14 · 종목찾기 — 시가총액 고르기",
+      "state": {
+        "kind": "expand",
+        "parent_board": "13K0-2",
+        "control": "시가총액 전체",
+        "control_text": "시가총액 전체",
+        "control_node": null
+      },
+      "artboard_id": "A0H-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "4AUX-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S15 · 종목찾기 — 유동성 고르기",
+      "state": {
+        "kind": "expand",
+        "parent_board": "13K0-2",
+        "control": "유동성 정상",
+        "control_text": "유동성 정상",
+        "control_node": null
+      },
+      "artboard_id": "AC2-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    },
+    {
+      "board_id": "4B22-1",
+      "card_id": "CC-06",
+      "name": "CC-06 / R04-S16 · 종목찾기 — 전체 100개 펼침",
+      "state": {
+        "kind": "expand",
+        "parent_board": "13K0-2",
+        "control": "더보기",
+        "control_text": "더보기",
+        "control_node": null
+      },
+      "artboard_id": "GS9-0",
+      "page_id": "p-5-0",
+      "verification": "source-compared-reviewed",
+      "execution_scope": "read_only_ui_test"
+    }
+  ]
+}
