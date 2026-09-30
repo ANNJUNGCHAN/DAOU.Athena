@@ -400,8 +400,13 @@ function visibleColumns(options) {
   return widthTier((options || {}).width) === 'xs' ? ['price', 'qty'] : [...FULL_COLUMNS];
 }
 
+function orderbookTitle(state, shown = state.depth) {
+  if (state.marketMode === 'after-hours-summary') return '시간외 호가 잔량';
+  return `${state.marketMode === 'regular' ? '실시간' : '시간외 단일가'} ${shown}단 호가`;
+}
+
 // 실제 폭에 맞춰 보이는 단수와 열 수를 맞춘다. 열 감추기는 CSS 컨테이너 쿼리가
-// 하고, 여기서는 사다리 행과 접근성 열 수만 손댄다.
+// 하고, 제목·바깥 배지도 같은 표시 단수를 따른다. 전체 수신 모델은 줄이지 않는다.
 function applyResponsiveShape(wrap) {
   const state = wrap.__athenaOrderbookState;
   const rows = wrap.__athenaOrderbookRows;
@@ -416,6 +421,20 @@ function applyResponsiveShape(wrap) {
   }
   const depthChip = wrap.querySelector('.card-kit-hoga-live-depth');
   if (depthChip) depthChip.textContent = `${shown}호가`;
+  const title = orderbookTitle(state, shown);
+  wrap.setAttribute('aria-label', title);
+  const heading = wrap.querySelector('.card-kit-hoga-live-title');
+  if (heading) heading.textContent = title;
+  const subtitle = wrap.querySelector('.card-kit-hoga-live-subtitle');
+  if (subtitle) {
+    const identity = [state.name, state.symbol].filter(Boolean).join(' · ')
+      || (state.marketMode === 'regular' ? '실시간 호가 데이터' : '시간외 호가 데이터');
+    subtitle.textContent = identity + (shown < state.depth ? ` · 전체 ${state.depth}단` : '');
+  }
+  // 정본 바깥 배지는 표시 깊이다. 다른 보드의 5/10단 전환 버튼은 건드리지 않는다.
+  const surface = wrap.closest('[data-node="1JPV-0"]');
+  const badge = surface && surface.querySelector('[data-node="1JQC-0"]');
+  if (badge) badge.textContent = `${shown}단 표시`;
   const table = wrap.querySelector('.card-kit-hoga-live-table');
   if (table) {
     table.setAttribute('aria-colcount', String(visibleColumns({ width }).length));
@@ -432,8 +451,7 @@ function observeWidth(wrap) {
 function buildIntegratedOrderbook(envelope, state) {
   const wrap = dom('section', 'card-kit-hoga-live');
   const isAfterHours = state.marketMode !== 'regular';
-  const isAfterHoursSummary = state.marketMode === 'after-hours-summary';
-  const title = isAfterHoursSummary ? '시간외 호가 잔량' : (isAfterHours ? '시간외 단일가 5단 호가' : '실시간 10단 호가');
+  const title = orderbookTitle(state);
   wrap.setAttribute('aria-label', title);
   wrap.__athenaOrderbookState = state;
   wrap.__athenaOrderbookRows = { ask: [], bid: [] };
@@ -577,6 +595,7 @@ const __exports = {
   supportsLive0D,
   visibleLevels,
   visibleColumns,
+  applyResponsiveShape,
   render호가,
   applyLiveTick,
 };
