@@ -799,6 +799,7 @@ function runBriefingTurnWired(event) {
     // 활성 계정이 Grok이면 러너가 grok CLI를 고른다 — verify 스텁이 꽂혀 있으면 그 스텁이
     // 양쪽 다 받는다(실 CLI를 스폰하지 않는 결정론 유지).
     grokRunner: briefingClaudeRunner ? { runGrokQuery: briefingClaudeRunner.runClaudeQuery } : { runGrokQuery },
+    codexRunner: briefingClaudeRunner ? { runCodexQuery: briefingClaudeRunner.runClaudeQuery } : { runCodexQuery: runIsolatedCodexBriefingQuery },
     // 브리핑 모델은 앱 모델 설정 하나 — 사용자 턴·셸 툴바·오브와 같은 함수다.
     resolveModelSelection: resolveActiveModelSelection,
     cwd: dir,
@@ -3594,7 +3595,7 @@ function createLiveGrokChatSession() {
     });
 }
 
-function createLiveCodexChatSession() {
+function createLiveCodexChatSession({ interactive = true } = {}) {
   const { dir, configPath } = getLiveMcpConfig();
   const gateway = JSON.parse(fs.readFileSync(configPath, 'utf8')).mcpServers.athena;
   const built = createCodexChatRuntime({
@@ -3609,8 +3610,32 @@ function createLiveCodexChatSession() {
   });
   return createCodexChatSession({
     ...built.sessionOptions, developerInstructions: buildLiveSystemPrompt('codex'),
-    requestUserInput: createCodexUserInputDialog({ dialog, getWindow: () => shellWin }),
+    requestUserInput: interactive ? createCodexUserInputDialog({ dialog, getWindow: () => shellWin }) : null,
   });
+}
+
+async function runIsolatedCodexBriefingQuery(options) {
+  if (process.env.ATHENA_CODEX_PERSISTENT_CHAT === '0') {
+    return { ok: false, error: 'Codex 대화 연결이 꺼져 있습니다.' };
+  }
+  const session = createLiveCodexChatSession({ interactive: false });
+  const controller = new AbortController();
+  let stopPromise;
+  const stop = () => (stopPromise || (stopPromise = session.stop()));
+  // Codex 초기화 전에 선점 핸들을 만든다. 사용자 턴이 들어오면 초기화 중에도 정리한다.
+  options.onSpawn?.({ pid: null, kill: () => {
+    controller.abort(new Error('사용자 대화가 브리핑을 선점했습니다.'));
+    void stop().catch(() => {});
+  } });
+  try {
+    return await session.run({
+      ...liveProviderWarmOptions('codex'), ...options,
+      resumeSessionId: null, signal: controller.signal,
+      onSpawn: (handle) => { if (controller.signal.aborted) handle.kill(); },
+    });
+  } finally {
+    await stop();
+  }
 }
 
 const liveChatPools = new Map();
