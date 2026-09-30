@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import canvas from './backtest-canvas.js';
 import bridge from './main/backtest-bridge.js';
+import accountBoundDataset from './main/account-bound-dataset.js';
 
 const source = fs.readFileSync(new URL('./backtest-canvas.js', import.meta.url), 'utf8');
 function declaration(name, async = false) {
@@ -18,6 +19,53 @@ function element(tag, className, text = '') {
 }
 function flatten(node) { return [node, ...node.children.flatMap(flatten)]; }
 const settle = () => new Promise(resolve => setImmediate(resolve));
+const mainSource = fs.readFileSync(new URL('../main.js', import.meta.url), 'utf8');
+function mainDeclaration(signature) {
+  const start = mainSource.indexOf(signature);
+  assert.notEqual(start, -1);
+  return mainSource.slice(start, mainSource.indexOf('\n}', start) + 2);
+}
+function mainBackfillHarness({ activeId = 'selected-account', waitForBackendUrl,
+  resolveBackendAlias, fetchImpl } = {}) {
+  const requests = [], resolutions = [], events = [];
+  let selected = activeId, activeReads = 0, handler;
+  const context = vm.createContext({
+    backtestBridge: bridge, accountBoundDataset, realtimeAccountGeneration: 1,
+    BACKEND_HTTP_BASE: 'http://stale-backend', backendAccountAuthorization: () => 'synthetic-authorization',
+    backendLauncher: { STARTUP_HARD_TIMEOUT_MS: 100 },
+    backendEndpoint: { waitForBackendUrl: async options => {
+      events.push('endpoint');
+      assert.equal(options.timeoutMs, 5100);
+      return waitForBackendUrl ? waitForBackendUrl() : 'http://synthetic-backend';
+    } },
+    accounts: {
+      list: () => { activeReads++; return { accounts: selected ? [{ id: selected, active: true }] : [] }; },
+      resolveBackendAlias: async options => {
+        events.push('sync'); resolutions.push(options);
+        return resolveBackendAlias ? resolveBackendAlias(options) : { ok: true, backendAlias: 'bound-account' };
+      },
+    },
+    fetch: async (url, options) => {
+      events.push('request');
+      requests.push({ url, options, body: options.body === undefined ? undefined : JSON.parse(options.body) });
+      return fetchImpl ? fetchImpl(url, options) : { ok: true, json: async () => ({ job_id: 'refresh-job' }) };
+    },
+    ipcMain: { handle: (channel, fn) => { assert.equal(channel, 'athena:backtest-backfill'); handler = fn; } },
+    attachSessionJob() {},
+  });
+  const ipcStart = mainSource.indexOf("ipcMain.handle('athena:backtest-backfill'");
+  const ipcEnd = mainSource.indexOf('\n});', ipcStart) + 4;
+  vm.runInContext([
+    mainDeclaration('async function callBacktestBridge('),
+    mainDeclaration('function activeRestAccountId('),
+    mainDeclaration('function createActiveBackendAccountInvoker('),
+    mainSource.slice(ipcStart, ipcEnd),
+  ].join('\n'), context);
+  return { context, requests, resolutions, events, invoke: body => handler(null, body),
+    get activeReads() { return activeReads; },
+    changeAccount(id) { selected = id; context.realtimeAccountGeneration++; } };
+}
+
 const recovery = () => ({ stk_cd: '005930', period: 'day', adjusted: true,
   from_dt: '20240101', to_dt: '20260930', mismatch_dates: ['20260929'], estimated_pages: 4, est_seconds: 2.4 });
 const mismatch = () => ({ status: 'failed', error: 'adjustment detected: raw diagnostic',
@@ -161,15 +209,12 @@ test('failed refresh preserves its error flow and never starts a backtest', asyn
   assert.equal(h.runs.length, 0);
 });
 
-test('full_refresh survives the actual renderer adapter and REST bridge', async () => {
+test('full_refresh survives the actual renderer adapter, main IPC, account binding and REST bridge', async () => {
   const adapterSource = fs.readFileSync(new URL('../canvas.js', import.meta.url), 'utf8');
-  const posted = [];
+  const main = mainBackfillHarness();
   const adapterContext = vm.createContext({ window: { athena: { invoke: async (channel, body) => {
     assert.equal(channel, 'athena:backtest-backfill');
-    return bridge.backfillBacktest({ backendBase: 'http://synthetic-backend', ...body,
-      fetchImpl: async (url, options) => { posted.push({ url, body: JSON.parse(options.body) });
-        return { ok: true, json: async () => ({ job_id: 'refresh-job' }) }; },
-    });
+    return main.invoke(body);
   } } }, backtestError: () => 'unexpected error' });
   const start = adapterSource.indexOf('  backfill: async (params) => {');
   const end = adapterSource.indexOf('\n  },', start) + 5;
@@ -178,9 +223,10 @@ test('full_refresh survives the actual renderer adapter and REST bridge', async 
   await h.failCollection();
   h.refreshButton().listeners.click();
   await settle();
-  assert.equal(posted[0].url, 'http://synthetic-backend/api/v1/backtest/data/backfill');
-  assert.deepEqual(posted[0].body, { stk_cd: '005930', period: 'day', adjusted: true,
+  assert.equal(main.requests[0].url, 'http://synthetic-backend/api/v1/backtest/data/backfill');
+  assert.deepEqual(main.requests[0].body, { stk_cd: '005930', period: 'day', adjusted: true,
     from_dt: '20240101', to_dt: '20260930', full_refresh: true });
+  assert.equal(main.requests[0].options.headers['X-Athena-Account'], 'bound-account');
 });
 
 test('initial approval describes stopping on mismatch and asks before full refresh', () => {
@@ -253,4 +299,96 @@ test('late backfill acknowledgement does not adopt a job after navigation or a t
     assert.equal(statusCalls, 0);
     assert.equal(h.runs.length, 0);
   }
+});
+
+
+test('first backfill waits for the endpoint and syncs the selected account before posting with its binding', async () => {
+  const h = mainBackfillHarness();
+  const result = await h.invoke({ stk_cd: '005930', full_refresh: true,
+    backendAccountAlias: 'renderer-supplied-account', backendBase: 'http://renderer-supplied', fetchImpl: 'ignored' });
+  assert.equal(result.ok, true);
+  assert.deepEqual(h.events, ['endpoint', 'sync', 'request']);
+  assert.equal(h.resolutions.length, 1);
+  assert.equal(h.resolutions[0].id, 'selected-account');
+  assert.equal(h.resolutions[0].backendBase, 'http://synthetic-backend', 'sync uses the ready endpoint, not stale global state');
+  assert.equal(h.resolutions[0].authorization, 'synthetic-authorization');
+  assert.equal(h.resolutions[0].fetchImpl, h.context.fetch);
+  assert.equal(h.requests[0].url, 'http://synthetic-backend/api/v1/backtest/data/backfill');
+  assert.equal(h.requests[0].options.headers['X-Athena-Account'], 'bound-account');
+  assert.deepEqual(h.requests[0].body, { stk_cd: '005930', full_refresh: true });
+});
+
+test('backfill fails closed without an active account or when its runtime sync fails', async () => {
+  const absent = mainBackfillHarness({ activeId: '' });
+  const missing = await absent.invoke({ stk_cd: '005930' });
+  assert.equal(missing.ok, false);
+  assert.equal(missing.status, 503);
+  assert.match(missing.error, /계좌.*선택/);
+  assert.equal(absent.resolutions.length + absent.requests.length, 0);
+  const h = mainBackfillHarness({ resolveBackendAlias: async () => ({ ok: false, error: '선택 계좌 연결 실패' }) });
+  const failed = await h.invoke({ stk_cd: '005930' });
+  assert.equal(failed.ok, false);
+  assert.equal(failed.status, 503);
+  assert.equal(failed.error, '선택 계좌 연결 실패');
+  assert.deepEqual(h.events, ['endpoint', 'sync']);
+  assert.equal(h.requests.length, 0);
+});
+
+test('account changes during endpoint readiness or runtime sync prevent the backfill POST', async () => {
+  for (const stage of ['endpoint', 'sync']) {
+    for (const returnToOriginal of [false, true]) {
+      let release;
+      const pause = () => new Promise(resolve => { release = resolve; });
+      const h = mainBackfillHarness(stage === 'endpoint'
+        ? { waitForBackendUrl: pause } : { resolveBackendAlias: pause });
+      const pending = h.invoke({ stk_cd: '005930' });
+      await settle();
+      h.changeAccount('other-account');
+      if (returnToOriginal) h.changeAccount('selected-account');
+      release(stage === 'endpoint' ? 'http://synthetic-backend' : { ok: true, backendAlias: 'old-account' });
+      const result = await pending;
+      assert.equal(result.ok, false);
+      assert.equal(result.status, 503);
+      assert.match(result.error, /계좌가 변경/);
+      assert.equal(h.requests.length, 0);
+      assert.equal(h.resolutions.length, stage === 'endpoint' ? 0 : 1);
+    }
+  }
+});
+
+test('cached backtest routes never read or sync accounts and preserve request failures', async () => {
+  const h = mainBackfillHarness({ activeId: '', resolveBackendAlias: () => { throw new Error('unexpected sync'); } });
+  for (const [call, body] of [
+    [bridge.fetchPresets, {}], [bridge.planBacktest, { stk_cd: '005930' }],
+    [bridge.runBacktest, { yaml: 'cached-strategy' }], [bridge.fetchJobStatus, { job_id: 'job' }],
+    [bridge.fetchRunResult, { run_id: 'run' }], [bridge.fetchRunTrades, { run_id: 'run' }], [bridge.fetchRuns, {}],
+  ]) assert.equal((await h.context.callBacktestBridge(call, body)).ok, true);
+  assert.equal(h.requests.length, 7);
+  assert.equal(h.activeReads + h.resolutions.length, 0);
+  for (const request of h.requests) assert.equal(request.options.headers?.['X-Athena-Account'], undefined);
+  const detail = { message: '캐시 부족', needed_pages: 2 };
+  const failure = mainBackfillHarness({ fetchImpl: async () => ({ ok: false, status: 409, json: async () => ({ detail }) }) });
+  const result = await failure.context.callBacktestBridge(bridge.runBacktest, {});
+  assert.equal(result.status, 409);
+  assert.equal(result.detail, detail);
+  assert.equal(result.error, detail.message);
+});
+
+test('backfill requires a valid bound alias and retains existing transport error envelopes', async () => {
+  for (const backendAccountAlias of [undefined, '', 'BAD ALIAS', 'a'.repeat(33)]) {
+    const result = await bridge.backfillBacktest({ backendBase: 'http://synthetic-backend', backendAccountAlias,
+      fetchImpl: async () => { assert.fail('invalid alias must not reach fetch'); } });
+    assert.equal(result.ok, false);
+    assert.equal(result.status, 503);
+  }
+  const failedEndpoint = mainBackfillHarness({ waitForBackendUrl: async () => { throw new Error('backend timeout'); } });
+  const endpointResult = await failedEndpoint.invoke({});
+  assert.equal(endpointResult.status, 0);
+  assert.equal(endpointResult.error, 'backend timeout');
+  assert.equal(failedEndpoint.resolutions.length + failedEndpoint.requests.length, 0);
+  const failedRequest = mainBackfillHarness({ fetchImpl: async () => { throw new Error('socket closed'); } });
+  const requestResult = await failedRequest.invoke({});
+  assert.equal(requestResult.status, 0);
+  assert.equal(requestResult.error, 'socket closed');
+  assert.deepEqual(failedRequest.events, ['endpoint', 'sync', 'request']);
 });

@@ -1872,9 +1872,26 @@ ipcMain.handle('athena:nudge-guard-set', async (_e, body) => {
 // (backtest-bridge.test.js) — routineHttp는 main.js 안에 있어 직접 테스트하지 못했다.
 async function callBacktestBridge(call, body = {}) {
   try {
+    const account = call === backtestBridge.backfillBacktest
+      ? { id: activeRestAccountId(), generation: realtimeAccountGeneration } : null;
+    if (account && !account.id) {
+      return { ok: false, status: 503, error: '수집에 사용할 계좌를 설정에서 선택해 주세요.' };
+    }
     const backendBase = await backendEndpoint.waitForBackendUrl({
       timeoutMs: backendLauncher.STARTUP_HARD_TIMEOUT_MS + 5_000,
     });
+    if (account) {
+      const isCurrent = () => account.generation === realtimeAccountGeneration
+        && account.id === activeRestAccountId();
+      const changed = { ok: false, status: 503, error: '선택 계좌가 변경되었습니다. 수집을 다시 요청해 주세요.' };
+      if (!isCurrent()) return changed;
+      const bound = await createActiveBackendAccountInvoker(call, account.id, backendBase);
+      if (!isCurrent()) return changed;
+      if (!bound.ok) {
+        return { ok: false, status: 503, error: bound.error || '수집에 사용할 계좌를 연결하지 못했습니다.' };
+      }
+      return await bound.run({ ...body, backendBase, fetchImpl: fetch });
+    }
     return await call({ ...body, backendBase, fetchImpl: fetch });
   } catch (e) {
     return { ok: false, status: 0, error: String((e && e.message) || e) };
@@ -4659,13 +4676,13 @@ function backendAccountAuthorization({ attachSettings = false } = {}) {
   return token ? `Bearer ${token}` : '';
 }
 
-function createActiveBackendAccountInvoker(run, requestedAccountId) {
+function createActiveBackendAccountInvoker(run, requestedAccountId, backendBase = BACKEND_HTTP_BASE) {
   return accountBoundDataset.createAccountBoundInvoker({
     requestedAccountId,
     getActiveAccountId: activeRestAccountId,
     resolveBackendAlias: (options) => accounts.resolveBackendAlias(options),
     resolveOptions: {
-      backendBase: BACKEND_HTTP_BASE,
+      backendBase,
       fetchImpl: fetch,
       authorization: backendAccountAuthorization(),
     },

@@ -13,11 +13,14 @@
 // 승인 카드를 띄운다." 그래서 409 응답의 detail을 봉투에 함께 싣는다 —
 // ok:false이지만 캔버스가 detail로 승인 상태를 구성할 수 있어야 한다.
 
-async function backtestHttp(method, path, jsonBody, { backendBase, fetchImpl }) {
+async function backtestHttp(method, path, jsonBody, { backendBase, fetchImpl, backendAccountAlias }) {
   const opts = { method };
   if (jsonBody !== undefined) {
     opts.headers = { 'Content-Type': 'application/json' };
     opts.body = JSON.stringify(jsonBody);
+  }
+  if (backendAccountAlias) {
+    opts.headers = { ...opts.headers, 'X-Athena-Account': backendAccountAlias };
   }
   let res;
   try {
@@ -58,8 +61,13 @@ function planBacktest({ backendBase, fetchImpl, ...body }) {
   return backtestHttp('POST', '/api/v1/backtest/data/plan', body, { backendBase, fetchImpl });
 }
 
-function backfillBacktest({ backendBase, fetchImpl, ...body }) {
-  return backtestHttp('POST', '/api/v1/backtest/data/backfill', body, { backendBase, fetchImpl });
+function backfillBacktest({ backendBase, fetchImpl, backendAccountAlias, ...body }) {
+  if (!/^[a-z0-9][a-z0-9_-]{0,31}$/.test(String(backendAccountAlias || ''))) {
+    return { ok: false, status: 503, error: '수집에 사용할 서버 계좌가 연결되지 않았습니다.' };
+  }
+  return backtestHttp('POST', '/api/v1/backtest/data/backfill', body, {
+    backendBase, fetchImpl, backendAccountAlias,
+  });
 }
 
 function runBacktest({ backendBase, fetchImpl, ...body }) {
