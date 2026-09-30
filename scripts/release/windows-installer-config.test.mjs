@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -44,4 +45,22 @@ test("installer uses the repository-owned destination guard from its snapshot", 
   assert.equal(nsis.allowToChangeInstallationDirectory, true);
   assert.equal(nsis.allowElevation, false);
   assert.equal(nsis.perMachine, false);
+});
+
+test("development dependency, installer, local runtime selection, and build receipt use the patched Electron pin", () => {
+  const version = "43.5.0";
+  const app = JSON.parse(readFileSync(new URL("../../app/package.json", import.meta.url), "utf8"));
+  const lock = JSON.parse(readFileSync(new URL("../../app/package-lock.json", import.meta.url), "utf8"));
+  assert.equal(app.devDependencies.electron, version);
+  assert.equal(lock.packages[""].devDependencies.electron, version);
+  assert.equal(lock.packages["node_modules/electron"].version, version);
+  assert.equal(lock.packages["node_modules/electron"].resolved, `https://registry.npmjs.org/electron/-/electron-${version}.tgz`);
+  const build = readFileSync(new URL("../build-windows-installer.ps1", import.meta.url), "utf8");
+  assert.match(build, new RegExp(`\\$localElectronVersion -eq '${version.replaceAll('.', '\\.')}\\x27`));
+  assert.match(build, new RegExp(`electron = '${version.replaceAll('.', '\\.')}\\x27`));
+  const result = spawnSync(process.execPath, ["-e", "console.log(require(process.argv[1]).electronVersion)", configPath], {
+    env: { ...environment, ATHENA_INSTALLER_MCP_RUNTIME_DIR: "fixture/mcp-runtime" }, encoding: "utf8",
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.stdout.trim(), version);
 });

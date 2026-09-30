@@ -23,7 +23,7 @@ const appIcon = path.join(projectDir, 'data', 'athena-icon.ico');
 module.exports = {
   appId: 'kr.co.daou.athena',
   productName: 'Athena',
-  electronVersion: '43.4.0',
+  electronVersion: '43.5.0',
   ...(electronDist ? { electronDist: path.resolve(electronDist) } : {}),
   extraMetadata: {
     version,

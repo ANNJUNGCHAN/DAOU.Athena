@@ -226,7 +226,7 @@ $localElectronPackage = Join-Path $AppSource 'node_modules/electron/package.json
 $localElectronDist = Join-Path $AppSource 'node_modules/electron/dist'
 if ((Test-Path -LiteralPath $localElectronPackage -PathType Leaf) -and (Test-Path -LiteralPath (Join-Path $localElectronDist 'electron.exe') -PathType Leaf)) {
   $localElectronVersion = (Get-Content -LiteralPath $localElectronPackage -Raw | ConvertFrom-Json).version
-  if ($localElectronVersion -eq '43.4.0') {
+  if ($localElectronVersion -eq '43.5.0') {
     $electronDist = $localElectronDist
   }
 }
@@ -259,7 +259,7 @@ $buildInfo = [ordered]@{
   builtAtUtc = [DateTime]::UtcNow.ToString('o')
   target = [ordered]@{ platform = 'windows'; arch = 'x64'; installer = 'nsis-per-user-assisted'; signed = $false }
   runtimes = [ordered]@{
-    electron = '43.4.0'
+    electron = '43.5.0'
     python = '3.12.11'
     bundledMcp = $mcpRuntimeManifest
     node = (@(Invoke-NativeCapture node @('--version') $RepoRoot) -join '').Trim()
