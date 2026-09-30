@@ -100,15 +100,17 @@ async function checkHealth(url = getHealthUrl(), timeoutMs = HEALTH_TIMEOUT_MS) 
 }
 
 async function waitUntilHealthy(timeoutMs, intervalMs, url = getHealthUrl()) {
-  const t0 = Date.now();
-  while (Date.now() - t0 < timeoutMs) {
-    if (await checkHealth(url)) return true;
-    await new Promise((r) => setTimeout(r, intervalMs));
+  const deadlineAt = Date.now() + timeoutMs;
+  while (Date.now() < deadlineAt) {
+    if (await checkHealth(url, Math.min(HEALTH_TIMEOUT_MS, deadlineAt - Date.now()))) return true;
+    const remainingMs = deadlineAt - Date.now();
+    if (remainingMs <= 0) break;
+    await new Promise((r) => setTimeout(r, Math.min(intervalMs, remainingMs)));
   }
   return false;
 }
 
-function waitForAnnouncedBackendUrl(child, timeoutMs = HEALTH_TIMEOUT_MS * 4) {
+function waitForAnnouncedBackendUrl(child, timeoutMs = STARTUP_HARD_TIMEOUT_MS) {
   return new Promise((resolve, reject) => {
     let buffered = '';
     let timer = null;
@@ -252,19 +254,8 @@ function watchBackendUntilHardDeadline({
     if (typeof onReady === 'function') onReady();
   };
 
-  const retireHungChild = async () => {
+  const retireHungChild = () => {
     if (!isCurrent()) return;
-    const healthy = await checkHealthFn();
-    if (!isCurrent()) {
-      if (backendReadinessWatch === watch) cancelBackendReadinessWatch(child);
-      return;
-    }
-    if (healthy) {
-      markReady();
-      cancelBackendReadinessWatch(child);
-      log(`ensureBackend: hard deadline 최종 readiness 확인 완료 — self-spawn 프로세스를 유지한다 (${nowFn() - spawnAt}ms)`);
-      return;
-    }
     cancelBackendReadinessWatch(child);
     if (backendChild !== child) return;
     backendEndpoint.markBackendUnavailable(backendChildUrl);
@@ -277,7 +268,12 @@ function watchBackendUntilHardDeadline({
 
   const poll = async () => {
     if (!isCurrent()) return;
-    const healthy = await checkHealthFn();
+    const healthBudgetMs = deadlineAt - nowFn();
+    if (healthBudgetMs <= 0) {
+      retireHungChild();
+      return;
+    }
+    const healthy = await checkHealthFn(Math.min(HEALTH_TIMEOUT_MS, healthBudgetMs));
     if (!isCurrent()) return;
     if (healthy) {
       markReady();
@@ -287,7 +283,7 @@ function watchBackendUntilHardDeadline({
     }
     const remainingMs = Math.max(0, deadlineAt - nowFn());
     if (remainingMs === 0) {
-      await retireHungChild();
+      retireHungChild();
       return;
     }
     watch.pollTimer = setTimeoutFn(poll, Math.min(pollIntervalMs, remainingMs));
@@ -300,7 +296,7 @@ function watchBackendUntilHardDeadline({
 
 // 앱 부팅 시 fire-and-forget으로 부른다(main.js — createWindows()를 막지 않는다).
 // mdlog는 main.js의 파일 로거(선택) — 없으면 조용히 무시한다.
-async function ensureBackend({ mdlog, _dependencies = {} } = {}) {
+async function ensureBackend({ mdlog, deadlineAt: requestedDeadlineAt, _dependencies = {} } = {}) {
   const log = typeof mdlog === 'function' ? mdlog : () => {};
   const checkHealthFn = _dependencies.checkHealthFn || checkHealth;
   const venvExistsFn = _dependencies.venvExistsFn || venvExists;
@@ -315,12 +311,23 @@ async function ensureBackend({ mdlog, _dependencies = {} } = {}) {
   const existingBackendCheckAttempts = _dependencies.existingBackendCheckAttempts
     || EXISTING_BACKEND_CHECK_ATTEMPTS;
   const t0 = nowFn();
+  const deadlineAt = Math.min(t0 + hardTimeoutMs, requestedDeadlineAt ?? Infinity);
+  const deadlineFailure = {
+    ok: false, ready: false, reason: 'readiness-hard-timeout', error: 'backend readiness hard timeout',
+  };
+  if (nowFn() >= deadlineAt) return deadlineFailure;
   let healthy = false;
   let healthAttempt = 0;
   const shouldCheckExisting = backendEndpoint.isExternalBackend() || backendChild !== null;
   while (shouldCheckExisting && !healthy && healthAttempt < existingBackendCheckAttempts) {
     healthAttempt += 1;
-    healthy = await checkHealthFn(getHealthUrl(backendChild ? backendChildUrl : undefined));
+    healthy = await checkHealthFn(
+      getHealthUrl(backendChild ? backendChildUrl : undefined),
+      Math.min(HEALTH_TIMEOUT_MS, deadlineAt - nowFn()),
+    );
+    // background deadline이 이 대기 중 child를 정리했어도 새 시작 예산으로
+    // 재스폰하지 않는다. 바깥 readiness loop의 절대 deadline을 공유한다.
+    if (nowFn() >= deadlineAt) return deadlineFailure;
     if (healthy) {
       lastStartupFailure = null;
       if (backendChild && backendChildUrl) {
@@ -362,6 +369,7 @@ async function ensureBackend({ mdlog, _dependencies = {} } = {}) {
   }
 
   const action = decideAction({ healthy, venvExists: venvExistsFn() });
+  if (nowFn() >= deadlineAt) return deadlineFailure;
 
   if (action === 'already-running') {
     if (backendChild) cancelBackendReadinessWatch(backendChild);
@@ -437,7 +445,9 @@ async function ensureBackend({ mdlog, _dependencies = {} } = {}) {
       || (_dependencies.spawnFn
         ? async () => _dependencies.announcedBackendUrl || 'http://127.0.0.1:49152'
         : waitForAnnouncedBackendUrl);
-    backendUrl = await waitForBackendUrlFn(child);
+    // 새 설치의 Python/import도 같은 시작 예산에 포함한다. 별도의 6초 한도는
+    // 파일 검사가 느린 첫 실행에서 정상 백엔드를 주소 발표 전에 종료시킨다.
+    backendUrl = await waitForBackendUrlFn(child, Math.max(1, deadlineAt - nowFn()));
     backendChildUrl = backendUrl;
   } catch (error) {
     if (backendChild === child) {
@@ -451,8 +461,9 @@ async function ensureBackend({ mdlog, _dependencies = {} } = {}) {
     return { ok: false, spawned: true, ready: false, reason: 'endpoint-unavailable', error: message };
   }
 
-  const ready = await waitUntilHealthyFn(
-    STARTUP_POLL_TIMEOUT_MS,
+  const healthBudgetMs = Math.max(0, Math.min(STARTUP_POLL_TIMEOUT_MS, deadlineAt - nowFn()));
+  const ready = healthBudgetMs > 0 && await waitUntilHealthyFn(
+    healthBudgetMs,
     STARTUP_POLL_INTERVAL_MS,
     getHealthUrl(backendUrl),
   );
@@ -463,14 +474,14 @@ async function ensureBackend({ mdlog, _dependencies = {} } = {}) {
     waitingForStartup = false;
     log(`ensureBackend: 기동 완료 — 준비까지 ${elapsedMs}ms (스폰→manifest 200: ${spawnToHealthyMs}ms)`);
   } else {
-    log(`ensureBackend: ${STARTUP_POLL_TIMEOUT_MS}ms 안에 준비 확인 실패 — self-spawn 프로세스는 계속 기동한다(elapsed=${elapsedMs}ms, 스폰 이후=${spawnToHealthyMs}ms)`);
+    log(`ensureBackend: ${healthBudgetMs}ms 안에 준비 확인 실패 — 남은 시작 예산 안에서 준비를 기다린다(elapsed=${elapsedMs}ms, 스폰 이후=${spawnToHealthyMs}ms)`);
     if (backendChild === child) {
       watchBackendUntilHardDeadline({
         child, spawnAt, log,
-        checkHealthFn: () => checkHealthFn(getHealthUrl(backendUrl)),
+        checkHealthFn: (timeoutMs) => checkHealthFn(getHealthUrl(backendUrl), timeoutMs),
         killTreeFn, nowFn,
         setTimeoutFn, clearTimeoutFn, pollIntervalMs, hardTimeoutMs,
-        deadlineAt: t0 + hardTimeoutMs,
+        deadlineAt,
         onReady: () => {
           backendEndpoint.setBackendUrl(backendUrl, { publishEnv: !_dependencies.spawnFn });
           waitingForStartup = false;
@@ -493,14 +504,15 @@ async function ensureBackendReady({ mdlog, onProgress, _dependencies = {} } = {}
   const hardTimeoutMs = _dependencies.hardTimeoutMs || STARTUP_HARD_TIMEOUT_MS;
   const pollIntervalMs = _dependencies.pollIntervalMs || STARTUP_POLL_INTERVAL_MS;
   const startedAt = nowFn();
+  const deadlineAt = startedAt + hardTimeoutMs;
   const startedGeneration = shutdownGeneration;
   let lastResult = null;
 
-  while (nowFn() - startedAt < hardTimeoutMs) {
+  while (nowFn() < deadlineAt) {
     if (shutdownGeneration !== startedGeneration) {
       return { ok: false, ready: false, reason: 'shutdown', error: 'backend startup cancelled during app shutdown' };
     }
-    lastResult = await ensureBackendFn({ mdlog });
+    lastResult = await ensureBackendFn({ mdlog, deadlineAt });
     if (shutdownGeneration !== startedGeneration) {
       return { ok: false, ready: false, reason: 'shutdown', error: 'backend startup cancelled during app shutdown' };
     }

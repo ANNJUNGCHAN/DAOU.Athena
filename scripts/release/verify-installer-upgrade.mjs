@@ -120,7 +120,7 @@ try {
   } finally { writeFileSync(release, 'release'); await exited; }
 }
 function launch(destination, expected, extra = {}) {
-  const result = spawnSync(launcher, ['/S'], { env: { ...environment, ATHENA_TEST_DESTINATION: destination, ATHENA_TEST_LEGACY_MARKER: legacyMarker, ...extra }, timeout: 30000, encoding: 'utf8' });
+  const result = spawnSync(launcher, extra.ATHENA_TEST_PROGRESS_FILE ? [] : ['/S'], { windowsHide: true, env: { ...environment, ATHENA_TEST_DESTINATION: destination, ATHENA_TEST_LEGACY_MARKER: legacyMarker, ...extra }, timeout: 30000, encoding: 'utf8' });
   assert.equal(result.status, expected, `${destination}: ${result.error || result.stderr}`);
   assert.equal(existsSync(legacyMarker), false, 'registered legacy binary must never execute');
   cases++;
@@ -229,8 +229,14 @@ Section "Uninstall"
  SetErrorLevel 0
 SectionEnd`);
   execFileSync(join(root, 'producer.exe'), ['/S'], { stdio: 'pipe' });
+  writeFileSync(join(root, 'progress-payload.txt'), 'synthetic progress payload');
   compile('launcher', `${header}
 Name "Safe synthetic upgrade boundary"
+Page instfiles "" HideTestPage
+ShowInstDetails hide
+Function HideTestPage
+ HideWindow
+FunctionEnd
 OutFile "${quote(launcher)}"
 !define UNINSTALLER_OUT_FILE "${quote(safeExe)}"
 Var installMode
@@ -250,7 +256,7 @@ Var TestNoDesktop
 !include "installUtil.nsh"
 ${shortcutMacros}
 ${languages}
-Function .onInit
+Section
  SetShellVarContext current
  SetRegView 64
  ReadEnvStr $INSTDIR ATHENA_TEST_DESTINATION
@@ -281,7 +287,27 @@ Function .onInit
  StrCmp $0 "1" 0 +3
    StrCpy $oldDesktopLink "$newDesktopLink.old.lnk"
    StrCpy $oldStartMenuLink "$newStartMenuLink.old.lnk"
+ ; Match the pinned template's initial suppressed status mode.
+ SetDetailsPrint none
  !insertmacro customCheckAppRunning
+ ReadEnvStr $7 ATHENA_TEST_PROGRESS_FILE
+ StrCmp $7 "" skip_progress_capture
+ FindWindow $4 "#32770" "" $HWNDPARENT
+ GetDlgItem $5 $4 1006
+ System::Call 'user32::GetWindowTextW(p r5, w .r8, i \${NSIS_MAX_STRLEN})'
+ FileOpen $6 "$7" w
+ FileWriteUTF16LE $6 "$8$\\r$\\n"
+ GetDlgItem $5 $4 1016
+ System::Call 'user32::GetWindowLongW(p r5, i -16)i.r8'
+ IntOp $8 $8 & 0x10000000
+ FileWriteUTF16LE $6 "$8$\\r$\\n"
+ SetOutPath $INSTDIR
+ File /oname=athena-progress-probe.txt "${quote(join(root, 'progress-payload.txt'))}"
+ GetDlgItem $5 $4 1006
+ System::Call 'user32::GetWindowTextW(p r5, w .r8, i \${NSIS_MAX_STRLEN})'
+ FileWriteUTF16LE $6 "$8$\\r$\\n"
+ FileClose $6
+ skip_progress_capture:
  ${shortcutDecision}
  ; Real pinned fallback: after safe cleanup this must never find/run legacy.
  !insertmacro uninstallOldVersion SHELL_CONTEXT
@@ -305,11 +331,21 @@ Function .onInit
  no_shortcut_fixture:
  SetErrorLevel 73
  Quit
-FunctionEnd
-Section
 SectionEnd`);
 
   helper('Inspect', 1);
+  for (const upgrade of [false, true]) {
+    const destination = upgrade ? setup('progress-upgrade') : join(root, 'progress-fresh');
+    const progressFile = join(root, upgrade ? 'upgrade-progress.txt' : 'fresh-progress.txt');
+    launch(destination, 73, { ATHENA_TEST_PROGRESS_FILE: progressFile });
+    const [phase, detailsVisible, extraction] = readFileSync(progressFile, 'utf16le').split(/\r?\n/);
+    assert.match(phase, /Athena 파일을 설치하고 있습니다/, 'backup status is replaced before extraction');
+    assert.match(phase, /진행률이 잠시 유지될 수 있습니다/, 'large file delay is explained');
+    assert.equal(detailsVisible, String(0x10000000), 'details list is expanded');
+    assert.match(extraction, /athena-progress-probe\.txt/, 'native file status replaces the phase message');
+    assert.equal(readFileSync(join(destination, 'athena-progress-probe.txt'), 'utf8'), 'synthetic progress payload');
+    if (upgrade) preserved(destination);
+  }
   let previous = setup("O'Brien 한글 same");
   helper('Inspect', 0);
   assert.equal(inspectResult().Root, previous);

@@ -126,6 +126,9 @@
       ${EndIf}
       ; The parent installer can also hold the old directory as its CWD.
       SetOutPath $TEMP
+      SetDetailsPrint both
+      DetailPrint "기존 Athena 설치 파일을 백업하고 있습니다."
+      SetDetailsPrint lastused
       ClearErrors
       ExecWait '"$PLUGINSDIR\athena-safe-uninstaller.exe" $R2 _?=$AthenaOldInstallRoot' $R0
       ${If} ${Errors}
@@ -145,7 +148,7 @@
       ${OrIf} $R3 == ""
         !insertmacro AthenaUpgradeFailure preserve-result
       ${EndIf}
-      SetDetailsPrint both
+      SetDetailsPrint listonly
       DetailPrint "기존 설치와 모든 파일을 보존했습니다: $R2"
       DetailPrint "백업은 자동 삭제되지 않으며 기존 설치 용량을 사용합니다. 안내 파일: $R3"
       SetDetailsPrint lastused

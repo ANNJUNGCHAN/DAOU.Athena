@@ -5505,6 +5505,17 @@ async function runLiveQuery(query, expand, origin = 'shell', turnConversationId 
       canvasTypes: [], canvasCaptions: [],
     };
   }
+  if (!backendEndpoint.getBackendUrl()) {
+    const backendTask = startupReadiness.snapshot().tasks.find((task) => task.id === 'backend');
+    const failed = backendTask && backendTask.state === 'failed';
+    return {
+      ok: false, type: 'action-needed', code: failed ? 'BACKEND_UNAVAILABLE' : 'BACKEND_STARTING', source: 'live',
+      error: failed
+        ? 'ATHENA 서비스를 시작하지 못했습니다. 앱을 종료한 뒤 다시 실행해 주세요.'
+        : 'ATHENA 서비스를 준비하거나 복구하는 중입니다. 잠시 후 다시 질문해 주세요.',
+      answerText: null, canvasTypes: [], canvasCaptions: [],
+    };
+  }
   // 어떤 빠른 경로가 선택되든 네트워크·Selector·모델보다 먼저 사용자 원문을
   // durable outbox에 넣는다. 이후 분기들은 assistant만 한 번 저장한다.
   const historyReceipt = historySink.saveChatMessage(

@@ -139,5 +139,10 @@
   !insertmacro AthenaCheckProcesses
   !ifndef BUILD_UNINSTALLER
     !insertmacro AthenaPerformUpgrade
+    ; The pinned builder starts this section with SetDetailsPrint none. Keep
+    ; native extraction/copy status visible after the backup step finishes.
+    SetDetailsView show
+    SetDetailsPrint both
+    DetailPrint "Athena 파일을 설치하고 있습니다. 큰 파일 처리 중에는 진행률이 잠시 유지될 수 있습니다."
   !endif
 !macroend
