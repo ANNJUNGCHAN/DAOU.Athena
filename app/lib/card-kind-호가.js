@@ -252,6 +252,21 @@ function formatNumber(value) {
   return Number.isFinite(value) ? Math.abs(value).toLocaleString('ko-KR') : '—';
 }
 
+function formatPrice(value) {
+  // A zero quote means no offered price; zero quantities remain valid counts.
+  return Number.isFinite(value) && value !== 0 ? formatNumber(value) : '—';
+}
+
+function formatQuoteTime(value) {
+  const text = String(value || '').trim();
+  if (!text) return '수신 대기';
+  if (/^0{6,14}$/.test(text)) return '시각 미제공';
+  if (/^(?:[01]\d|2[0-3])[0-5]\d[0-5]\d$/.test(text)) {
+    return `${text.slice(0, 2)}:${text.slice(2, 4)}:${text.slice(4, 6)}`;
+  }
+  return text;
+}
+
 function formatSigned(value) {
   if (!Number.isFinite(value)) return '—';
   return `${value > 0 ? '+' : ''}${value.toLocaleString('ko-KR')}`;
@@ -323,7 +338,7 @@ function updateLevelRow(wrap, side, level, model, maxQuantity, animate) {
   setCountOrLp(row.querySelector('[data-role="count"]'), model, animate);
   setNumber(row.querySelector('[data-role="quantity"]'), model.quantity, formatNumber, animate);
   setNumber(row.querySelector('[data-role="change"]'), model.change, formatSigned, animate);
-  setNumber(row.querySelector('[data-role="price"]'), model.price, formatNumber, animate);
+  setNumber(row.querySelector('[data-role="price"]'), model.price, formatPrice, animate);
   const bar = row.querySelector('[data-role="bar"]');
   const percentage = Number.isFinite(model.quantity) && maxQuantity > 0 ? Math.round((Math.abs(model.quantity) / maxQuantity) * 100) : 0;
   if (bar) {
@@ -339,7 +354,7 @@ function updateOrderbookDom(wrap, state, animate) {
     updateLevelRow(wrap, 'ask', level, state.asks[level - 1], maxQuantity, animate);
     updateLevelRow(wrap, 'bid', level, state.bids[level - 1], maxQuantity, animate);
   }
-  setNumber(wrap.querySelector('[data-role="current-price"]'), state.currentPrice, formatNumber, animate);
+  setNumber(wrap.querySelector('[data-role="current-price"]'), state.currentPrice, formatPrice, animate);
   const expectedExecution = wrap.querySelector('[data-role="expected-execution"]');
   if (expectedExecution) {
     const previous = expectedExecution.__athenaNumericValue;
@@ -347,7 +362,7 @@ function updateOrderbookDom(wrap, state, animate) {
       expectedExecution.textContent = 'REST 스냅샷';
     } else if (Number.isFinite(state.expectedExecutionPrice)) {
       const quantity = Number.isFinite(state.expectedExecutionQuantity) ? ` · ${formatNumber(state.expectedExecutionQuantity)}주` : '';
-      expectedExecution.textContent = `예상체결 ${formatNumber(state.expectedExecutionPrice)}${quantity}`;
+      expectedExecution.textContent = `예상체결 ${formatPrice(state.expectedExecutionPrice)}${quantity}`;
     } else {
       expectedExecution.textContent = '예상체결 수신 대기';
     }
@@ -357,7 +372,7 @@ function updateOrderbookDom(wrap, state, animate) {
   setNumber(wrap.querySelector('[data-role="sell-total"]'), state.sellTotal, formatNumber, animate);
   setNumber(wrap.querySelector('[data-role="buy-total"]'), state.buyTotal, formatNumber, animate);
   const time = wrap.querySelector('[data-role="time"]');
-  if (time) time.textContent = state.time || '수신 대기';
+  if (time) time.textContent = formatQuoteTime(state.time);
   const focus = wrap.querySelector('[data-role="focus"]');
   if (focus) focus.textContent = state.focus;
   const auxHeader = wrap.querySelector('[data-role="aux-header"]');
