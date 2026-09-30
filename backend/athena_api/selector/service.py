@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 import time
@@ -10,9 +11,10 @@ from collections.abc import Callable
 from typing import Any
 
 from fastapi import Request, Response
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ValidationError
 
-from athena_api.errors import KiwoomNotReadyError
+from athena_api.errors import KiwoomApiError, KiwoomNotReadyError
 from athena_api.generated.registry import SPLIT_BASE_TR_IDS
 from athena_api.generated.runtime import call_order_tr, call_typed_tr, call_websocket_tr
 from athena_api.routing_contract import BindingRole, EntityKind
@@ -1047,6 +1049,14 @@ class SelectorService:
             )
         upstream_ms = int((time.monotonic() - upstream_start) * 1000)
         logger.info("athena_call upstream tr=%s upstream_ms=%d", document.tr_id, upstream_ms)
+
+        # Typed REST routes retain nonzero business results as JSON responses.
+        # They are failures, not models or empty successful canvas data.
+        if isinstance(result, JSONResponse):
+            business_result = json.loads(result.body)
+            raise KiwoomApiError(
+                str(business_result.get("return_code", "")), "", result.status_code
+            )
 
         cont_yn = response.headers.get("cont-yn", "N")
         next_key = response.headers.get("next-key")
