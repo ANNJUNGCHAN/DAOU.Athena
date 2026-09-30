@@ -148,6 +148,31 @@ test('repeated CLI empty-form MCP approvals return accept without opening native
   assert.deepEqual(f.responses, [8, 9, 10].map(id => [id, { action: 'accept', content: {} }]));
 });
 
+test('background turns retain Athena MCP approvals but reject human questions without opening UI', async () => {
+  let dialogs = 0;
+  const handler = createCodexUserInputDialog({ interactive: false,
+    getWindow: () => ({ isDestroyed: () => false }),
+    dialog: { async showMessageBox() { dialogs++; return { response: 0 }; } },
+  });
+  const f = fixture(handler);
+  await f.session._handleServerRequest(mcpRequest(), 1);
+  assert.deepEqual(f.responses[0], [8, { action: 'accept', content: {} }]);
+  await f.session._handleServerRequest(request(), 1);
+  assert.equal(f.responses[1][1], null);
+  assert.equal(f.responses[1][2].code, -32601);
+  assert.equal(dialogs, 0);
+  for (const patch of [
+    { requestedSchema: { type: 'object', properties: { token: { type: 'string' } } } },
+    { mode: 'url' }, { serverName: 'other' }, { turnId: 'other' },
+  ]) {
+    const r = mcpRequest(); Object.assign(r.params, patch);
+    await f.session._handleServerRequest(r, 1);
+    assert.equal(f.responses.at(-1)[2].code, -32601);
+  }
+  const controller = new AbortController(); controller.abort();
+  await assert.rejects(handler(mcpRequest().params, { signal: controller.signal }), /cancelled/);
+});
+
 test('an aborted MCP approval is not automatically accepted', async () => {
   const handler = createCodexUserInputDialog({
     getWindow() { assert.fail('cancelled approval must not require a window'); },

@@ -3610,7 +3610,7 @@ function createLiveCodexChatSession({ interactive = true } = {}) {
   });
   return createCodexChatSession({
     ...built.sessionOptions, developerInstructions: buildLiveSystemPrompt('codex'),
-    requestUserInput: interactive ? createCodexUserInputDialog({ dialog, getWindow: () => shellWin }) : null,
+    requestUserInput: createCodexUserInputDialog({ dialog, getWindow: () => shellWin, interactive }),
   });
 }
 
@@ -7846,13 +7846,25 @@ async function ensureBackendStrict(context) {
   if (result.ready === false) throw new Error('백엔드 lifespan 준비를 아직 확인하지 못함');
   if (isQuitting) throw new Error('앱 종료 중 백엔드 복구를 취소함');
   applyBackendEndpoint(result.backendUrl || backendEndpoint.requireBackendUrl());
+  // 로컬 토큰 캐시는 새 backend의 계좌 런타임을 복원하지 않는다.
+  // 저장된 활성 계좌만 기존 연결 경로로 복원한 뒤 조회·예약 피드를 연다.
+  const selectedAccountId = activeRestAccountId();
+  let accountSyncFailed = false;
+  if (selectedAccountId) {
+    try {
+      const synced = await syncSelectedAccount(selectedAccountId);
+      accountSyncFailed = !synced || synced.ok !== true;
+    } catch { accountSyncFailed = true; }
+    if (accountSyncFailed) mdlog('활성 계좌의 서버 조회 연결 보류 — 계좌 설정에서 연결 상태를 확인해 주세요.');
+  }
   configureConversationGraphPipeline();
   // 기존 그래프 조회 권한은 새 대화 추출기의 준비 여부와 독립적이다.
   // 저장된 선택을 backend 초기 false에 반영한 뒤 그래프 질의를 받는다.
   if (!await historySink.pushExposeToModel({ mdlog })) {
     mdlog('그래프 모델 전달 상태 동기화 실패 — 그래프 질문은 상태 확인 전까지 보류');
   }
-  return { detail: result.spawned ? '백엔드 기동 및 lifespan 확인 완료' : '실행 중인 백엔드 확인 완료' };
+  const detail = result.spawned ? '백엔드 기동 및 lifespan 확인 완료' : '실행 중인 백엔드 확인 완료';
+  return { detail: accountSyncFailed ? `${detail} · 시세 연결 보류 — 계좌 설정 확인` : detail };
 }
 
 let backendRecoveryPromise = null;

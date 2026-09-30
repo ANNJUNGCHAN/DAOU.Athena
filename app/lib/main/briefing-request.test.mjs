@@ -158,7 +158,7 @@ test('Codex briefings create independent noninteractive sessions and always stop
     assert.equal(call.identityKey, 'synthetic-account');
   }
   assert.match(main, /codexRunner:.*runIsolatedCodexBriefingQuery/);
-  assert.match(main, /requestUserInput: interactive \? createCodexUserInputDialog.*: null/);
+  assert.match(main, /requestUserInput: createCodexUserInputDialog\(\{ dialog, getWindow: \(\) => shellWin, interactive \}\)/);
 });
 
 test('Codex briefing preemption works during initialization and cleanup happens once', async () => {

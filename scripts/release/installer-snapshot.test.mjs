@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve, sep } from "node:path";
 import test from "node:test";
 
 const script = readFileSync(new URL("../build-windows-installer.ps1", import.meta.url), "utf8");
@@ -53,3 +53,50 @@ test("installer records the captured commit and consumes snapshotted build input
   assert.match(script, /Join-Path \$SnapshotRoot 'scripts\/windows-installer.config.cjs'/);
   assert.match(script, /Join-Path \$SnapshotRoot 'scripts\/release\/stage-windows-mcp-runtimes.ps1'/);
 });
+
+const runtimeStage = readFileSync(new URL("./stage-windows-mcp-runtimes.ps1", import.meta.url), "utf8");
+const runtimeManifest = JSON.parse(readFileSync(new URL("./windows-mcp-runtimes.json", import.meta.url), "utf8"));
+
+test("vendored npm replacement pins the exact upstream package without changing Node", () => {
+  assert.equal(runtimeManifest.node.version, "22.23.2");
+  assert.deepEqual(runtimeManifest.node.npmIpAddress, {
+    fromVersion: "10.1.0", version: "10.7.2",
+    url: "https://registry.npmjs.org/ip-address/-/ip-address-10.7.2.tgz",
+    sha256: "4301746e43e8a85a6a41e268f02178b27e6ba58e78e6913ab105d3871618083b",
+  });
+  assert.match(runtimeStage, /semver\.satisfies\(version, socks\.dependencies\['ip-address'\]\)/);
+  assert.match(runtimeStage, /Copy-Item -LiteralPath \$manifestPath -Destination \(Join-Path \$Destination 'versions.json'\)/);
+});
+
+for (const [scenario, installedVersion, error] of [
+  ["corrupt cached archive", "10.1.0", /SHA256 mismatch for bundled npm ip-address/],
+  ["upstream package drift", "10.2.0", /changed; review its pinned replacement/],
+]) {
+  test(`vendored npm patch rejects ${scenario} before altering the staged package`, () => {
+    const root = mkdtempSync(join(tmpdir(), "athena-npm-patch-"));
+    const cache = join(root, "cache");
+    const runtime = join(root, "runtime");
+    const target = join(runtime, "node/node_modules/npm/node_modules/ip-address");
+    try {
+      mkdirSync(target, { recursive: true });
+      mkdirSync(cache);
+      writeFileSync(join(target, "package.json"), JSON.stringify({ name: "ip-address", version: installedVersion }));
+      writeFileSync(join(target, "sentinel.txt"), "preserved");
+      writeFileSync(join(cache, "ip-address-10.7.2.tgz"), "not an archive");
+      const from = runtimeStage.indexOf("function Update-BundledNpmIpAddress {");
+      const to = runtimeStage.indexOf("# Keep downloads pinned", from);
+      assert.ok(from >= 0 && to > from);
+      const harness = join(root, "harness.ps1");
+      writeFileSync(harness, `param($Root, $Cache)\n$ErrorActionPreference = 'Stop'\n${runtimeStage.slice(from, to)}
+$package = '${JSON.stringify(runtimeManifest.node.npmIpAddress)}' | ConvertFrom-Json
+Update-BundledNpmIpAddress -RuntimeRoot $Root -CacheDirectory $Cache -Package $package
+`);
+      assert.throws(() => execFileSync("pwsh", ["-NoProfile", "-File", harness, runtime, cache], { encoding: "utf8", stdio: "pipe" }), error);
+      assert.equal(readFileSync(join(target, "sentinel.txt"), "utf8"), "preserved");
+      assert.equal(JSON.parse(readFileSync(join(target, "package.json"), "utf8")).version, installedVersion);
+    } finally {
+      assert.ok(resolve(root).startsWith(resolve(tmpdir()) + sep));
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+}

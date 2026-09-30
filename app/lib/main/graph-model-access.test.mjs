@@ -75,6 +75,7 @@ test('backend readiness awaits exposure synchronization without requiring extrac
   const ctx = vm.createContext({
     backendLauncher: { ensureBackendReady: async () => ({ ok: true, ready: true, backendUrl: 'http://127.0.0.1:1' }) },
     isQuitting: false, mdlog: () => {},
+    activeRestAccountId: () => '',
     applyBackendEndpoint: () => calls.push('endpoint'),
     configureConversationGraphPipeline: () => calls.push('pipeline'),
     historySink: { pushExposeToModel: async () => { calls.push('exposure'); return synced; } },

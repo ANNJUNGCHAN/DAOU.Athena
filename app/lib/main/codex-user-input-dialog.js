@@ -27,7 +27,7 @@ function validateQuestions(params) {
   return questions;
 }
 
-function createCodexUserInputDialog({ dialog, getWindow }) {
+function createCodexUserInputDialog({ dialog, getWindow, interactive = true }) {
   return (params, { signal } = {}) => {
     const run = async () => {
       if (params?.mode !== undefined) {
@@ -48,6 +48,7 @@ function createCodexUserInputDialog({ dialog, getWindow }) {
         // still require the user's answer.
         return { action: 'accept', content: {} };
       }
+      if (!interactive) throw new Error('Codex background turns cannot request user input');
       const questions = validateQuestions(params);
       const answers = Object.create(null);
       for (const question of questions) {
@@ -67,7 +68,7 @@ function createCodexUserInputDialog({ dialog, getWindow }) {
       }
       return { answers };
     };
-    if (params?.mode !== undefined) return run();
+    if (params?.mode !== undefined || !interactive) return run();
     const result = dialogTail.then(run, run);
     dialogTail = result.catch(() => {});
     return result;

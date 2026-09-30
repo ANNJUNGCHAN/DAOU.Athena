@@ -33,6 +33,7 @@ async function harness({ finalReplacementFails = false } = {}) {
   const applied = [];
   const notifications = [];
   const payloads = [];
+  const accountBindings = [];
   let configured = 0;
   let now = 1_000;
   let releaseCooldown;
@@ -88,6 +89,8 @@ async function harness({ finalReplacementFails = false } = {}) {
     },
     mdlog: () => {},
     applyBackendEndpoint: (url) => applied.push(url),
+    activeRestAccountId: () => 'selected-fixture-account',
+    syncSelectedAccount: async (id) => { accountBindings.push(id); return { ok: true }; },
     configureConversationGraphPipeline: () => { configured += 1; },
     historySink: { pushExposeToModel: async () => true },
     notifyStartupFailuresAfterExpansion: notify,
@@ -112,7 +115,7 @@ async function harness({ finalReplacementFails = false } = {}) {
   const recovery = context.recoverOwnedBackend();
   await cooldown;
   return {
-    context, children, states, applied, notifications, payloads, readiness, recovery, endpoint,
+    context, children, states, applied, notifications, payloads, readiness, recovery, endpoint, accountBindings,
     configured: () => configured,
     release: () => releaseCooldown(),
     shutdown: () => { context.isQuitting = true; launcher.shutdownBackend({ killTreeFn: () => {} }); },
@@ -132,6 +135,7 @@ test('replacement startup exit is tracked, cooldown retry is deduplicated and re
   assert.equal(h.endpoint.getBackendUrl(), 'http://127.0.0.1:56897');
   assert.deepEqual(h.applied, ['http://127.0.0.1:56897', 'http://127.0.0.1:56897']);
   assert.equal(h.configured(), 2);
+  assert.deepEqual(h.accountBindings, ['selected-fixture-account', 'selected-fixture-account']);
   assert.ok(h.states.includes('failed'));
   assert.equal(h.notifications.length, 1);
 });
@@ -162,6 +166,50 @@ test('shutdown during cooldown prevents delayed spawn and later exit callbacks d
   assert.equal(h.children.length, 2);
   assert.equal(h.configured(), 1);
   assert.equal(h.notifications.length, 1);
+});
+
+function accountReadinessHarness(accountId, sync) {
+  const calls = [], logs = [];
+  const context = vm.createContext({
+    backendLauncher: { ensureBackendReady: async () => ({ ok: true, ready: true, backendUrl: 'http://127.0.0.1:2' }) },
+    isQuitting: false, mdlog: text => logs.push(text),
+    applyBackendEndpoint: () => calls.push('endpoint'),
+    activeRestAccountId: () => accountId,
+    syncSelectedAccount: async id => { calls.push(`bind:${id}`); return sync(id); },
+    configureConversationGraphPipeline: () => calls.push('pipeline'),
+    historySink: { pushExposeToModel: async () => true },
+  });
+  const start = source.indexOf('async function ensureBackendStrict(');
+  vm.runInContext(source.slice(start, source.indexOf('\nlet backendRecoveryPromise', start)), context);
+  return { calls, logs, run: () => context.ensureBackendStrict({ update() {} }) };
+}
+
+test('backend readiness restores the saved account after the new endpoint and waits for binding', async () => {
+  let release;
+  const binding = new Promise(resolve => { release = resolve; });
+  const h = accountReadinessHarness('selected-fixture-account', () => binding);
+  let finished = false;
+  const ready = h.run().then(() => { finished = true; });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(h.calls, ['endpoint', 'bind:selected-fixture-account']);
+  assert.equal(finished, false);
+  release({ ok: true });
+  await ready;
+  assert.equal(finished, true);
+  assert.deepEqual(h.calls, ['endpoint', 'bind:selected-fixture-account', 'pipeline']);
+});
+
+test('missing accounts and unavailable credentials do not block unrelated backend features', async () => {
+  const absent = accountReadinessHarness('', () => assert.fail('must not invent an account'));
+  assert.ok((await absent.run()).detail);
+  assert.deepEqual(absent.calls, ['endpoint', 'pipeline']);
+  for (const sync of [async () => ({ ok: false }), async () => { throw Error('synthetic unavailable credential'); }]) {
+    const h = accountReadinessHarness('selected-fixture-account', sync);
+    assert.match((await h.run()).detail, /시세 연결 보류/);
+    assert.equal(h.calls.at(-1), 'pipeline');
+    assert.equal(h.logs.length, 1);
+    assert.ok(!h.logs[0].includes('synthetic unavailable credential'));
+  }
 });
 
 test('recovery notification override reaches shell, orb and OS with restart guidance', async () => {
