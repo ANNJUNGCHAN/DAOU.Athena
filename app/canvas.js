@@ -1278,6 +1278,11 @@ function wireStateControls(host, envelope, mounted) {
       { keyboard: boardTemplateRegistry.cardIdFor(state.boardId) === 'CC-01' || isResponsiveStateControl(node) },
     );
     if (!didWire) continue;
+    const visibleControl = String(node.textContent || '').trim();
+    if (!visibleControl || /^[▸▶›»→▾▼⌄]+$/.test(visibleControl)) {
+      if (!node.getAttribute('aria-label')) node.setAttribute('aria-label', control);
+      if (!node.getAttribute('title')) node.setAttribute('title', control);
+    }
     // 표시는 CSS가 한다([data-state-board], board-surface.css) — 인라인 원문은 안 건드린다(D1).
     node.dataset.stateBoard = link.board_id;
     wired += 1;
