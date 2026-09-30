@@ -2,8 +2,8 @@
   "schema_version": 1,
   "title": "Athena 전체 카드 UI 질문지와 탐색 경로",
   "authored_date": "2026-09-30",
-  "verification_status": "not_run",
-  "purpose": "적은 채팅 입력으로 카드 계열을 호출한 뒤 같은 카드의 탭·정렬·펼침으로 모든 디자인을 점검한다. 이 파일은 실행 계획이며 성공 증거가 아니다.",
+  "verification_status": "in_progress",
+  "purpose": "적은 채팅 입력으로 카드 계열을 호출한 뒤 같은 카드의 탭·정렬·펼침으로 모든 디자인을 점검한다. 실제로 관측한 호출 결과와 UI 검토 결과를 구분해 기록하며, 미실행 경로는 성공으로 간주하지 않는다.",
   "scope": {
     "template_total": 101,
     "in_scope_templates": 94,
@@ -103,6 +103,15 @@
       "id": "data-dependent-states",
       "status": "unverified",
       "description": "ELW·조건검색·관심종목·루틴 발화·오류 상태에는 실제 데이터/권한/상태가 필요하다. 조건 미충족을 UI 성공으로 처리하지 않는다."
+    },
+    {
+      "id": "account-seed-routing-and-ui",
+      "status": "call_verified_ui_failed",
+      "description": "기존 질문 \"주식 계좌 평가 현황 보여줘\"와 보완 질문 \"계좌 전체 평가 요약. 총평가금액과 총평가손익을 보여줘\"는 조회 항목 모호성으로 카드 호출에 실패했다. \"예수금 포함 계좌 전체 자산 요약\"은 카드가 도착했으나 추가 도구 실패와 다른 탭 배치가 관측됐다. 검증된 대체 입력 \"계좌 평가 잔고\"는 새 대화에서 자산종합 카드를 한 번에 호출했지만, 표 라벨·행 정보 누락과 큰 빈 영역·가로 스크롤이 남아 UI 검토는 실패했다.",
+      "source": [
+        ".omc/artifacts/card-ui-audit/native/run.ndjson",
+        ".omc/artifacts/card-ui-audit/account-route-probe.json"
+      ]
     }
   ],
   "seeds": [
@@ -110,7 +119,7 @@
       "id": "seed-account",
       "channel": "chat",
       "workspace": "agora",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capability": "account",
       "target_template_id": "133H-2",
@@ -123,13 +132,21 @@
         "선택된 키움 데이터 조회 계좌와 필요한 권한",
         "종목 식별 목록 로드"
       ],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": [
         "backend/ref/card-surface-templates/index.json",
         "backend/athena_api/canvas_card_registry.py",
         "app/lib/main/live-prompt.js"
       ],
-      "notes": []
+      "notes": [
+        "2026-10-01 실제 앱 새 대화에서 이 단문으로 account 자산종합 카드가 도착했고 추가 도구 실패 안내는 없었다. 호출 성공과 UI 통과를 구분한다.",
+        "자산종합 배치는 133H-2와 일치했으나 화면에 실제 보드 ID가 노출되지 않아 observed_template_id는 미확정이다.",
+        "UI 검토는 실패: 표 라벨·행 정보 누락, 큰 빈 영역과 전체 가로 스크롤이 남아 있다. 연결된 14개 디자인의 후속 전환은 아직 미실행이다.",
+        "공개 질문·관측 메타 기록: .omc/artifacts/card-ui-audit/native/run.ndjson (short-independent). 실제 계좌 화면 이미지는 저장소에 포함하지 않는다."
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null
     },
     {
       "id": "seed-stock",
@@ -419,7 +436,7 @@
       "scope": "in_scope",
       "channel": "chat",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -1197,7 +1214,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -1251,7 +1268,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -1316,7 +1333,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -1363,7 +1380,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -3506,7 +3523,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -3557,7 +3574,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -3678,7 +3695,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -3728,7 +3745,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -3773,7 +3790,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -3844,7 +3861,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -3888,7 +3905,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -3923,7 +3940,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
@@ -4073,7 +4090,7 @@
       "scope": "in_scope",
       "channel": "ui-navigation",
       "seed_id": "seed-account",
-      "prompt": "주식 계좌 평가 현황 보여줘",
+      "prompt": "계좌 평가 잔고",
       "expected_card_kind": "account",
       "expected_capabilities": [
         "account"
