@@ -410,7 +410,7 @@ async function runSelectorFastPath({
     itemId,
     ordinal: 1,
     operationRef: verified.operation_ref,
-    operationArgs: verified.operation_args || {},
+    operationArgs: verified.envelope.operation_args || verified.operation_args || {},
     canvasType: verified.canvas_type,
     envelope: displayEnvelope,
     requestStartedAt: startedAt,
