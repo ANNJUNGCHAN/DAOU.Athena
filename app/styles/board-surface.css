@@ -599,6 +599,8 @@
 .board-surface .bs-session-quote-table [data-bs-hoisted] { height: auto; min-height: 0; max-height: none; }
 [data-bs-layout="30HY-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
 [data-bs-layout="3NVG-0"] [data-node="3PCB-0"] { overflow-wrap: anywhere; }
+[data-bs-layout="3NVG-0"] [data-node="3PAQ-0"] { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); height: auto; min-height: 0; }
+[data-bs-layout="3NVG-0"] [data-node="3PAQ-0"] > [data-node] { width: auto; min-width: 0; height: auto; }
 @container board (max-width: 719px) {
   [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] { flex-direction: column; }
   [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] > [data-node] { width: 100%; min-width: 0; flex: 0 0 auto; padding-inline: 0; }
@@ -1012,3 +1014,21 @@
 .board-surface[data-bs-board-id="13K0-2"] [data-node="33Z2-0"] .bs-readable-cell[data-col="0"] { display: none; }
 
 .bs-filter-compact-rail { height:auto!important; min-height:0!important; flex-basis:auto!important; align-self:start; }
+
+.bs-account-residual-empty { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.bs-account-residual-empty > :not(.bs-account-residual-note):not(.bs-account-detail-navigation) { display: none !important; }
+.bs-account-residual-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+.bs-account-detail-context { color: var(--color-k-text); font: 14px/1.5 var(--font-strong); }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3S9V-0"] { overflow-x: auto; flex-wrap: nowrap !important; max-width: 100%; }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3S9V-0"] > [data-node] { flex: 1 0 216px !important; min-width: 216px; }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3SAD-0"] { flex-wrap: wrap; }
+
+.board-surface[data-bs-board-id="3IGR-0"] [data-node="3U5H-0"] { height: auto; min-height: 0; flex-basis: auto; align-self: start; }
+
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3UR3-0"] > [data-node],
+.board-surface[data-bs-board-id="3LGC-0"] :is([data-node="3MML-0"], [data-node="3UQ7-0"]) > [data-node] { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 244px), 1fr)); height: auto; min-height: 32px; gap: 8px 16px !important; padding-block: 4px; }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3UR3-0"] > [data-node] > [data-node],
+.board-surface[data-bs-board-id="3LGC-0"] :is([data-node="3MML-0"], [data-node="3UQ7-0"]) > [data-node] > [data-node] { width: auto; min-width: 0; min-height: 24px; }
+
+/* ETF 전체 시세에는 scalar 순위가 제공되지 않는다. */
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="0"] { display: none; }

@@ -62,6 +62,7 @@ const UNANNOTATED = {
 // Observed native defects: captions described several specimen values while
 // their source mapping supplies only the named field below. Do not infer extras.
 const LABELS = {
+  '3LGC-0': { s026: '입출고 내역' },
   '137X-2': { s068: '일별 거래상세 · 순매수', s109: '장중', s122: '기간중 거래량' },
   '15L8-2': { s001: '조건검색 결과 종목', s003: '조건검색 결과', s005: '일회 검색 결과',
     s009: '등락률(계산)', s095: '첫 결과 · 누적거래량', s100: '', s106: '', s110: '', s111: '', s112: '' },
@@ -103,7 +104,7 @@ const LABELS = {
   '2TZN-1': { s145: '선택 업종', s147: '지수', s149: '거래대금', s151: '구성 종목', s153: '시가', s155: '52주 최저' },
   '2SKU-1': { s047: '오늘', s054: 'D+1', s061: 'D+2', s175: '기간 입금', s178: '기간 출금' },
   '3MTJ-0': { s026: '결제 예정', s035: '오늘', s043: 'D+1', s052: 'D+2', s036: '', s044: '', s053: '',
-    s064: 'D+2 자산', s067: 'D+2 금액' },
+    s064: 'D+2 자산', s067: 'D+2 금액', s106: '오늘', s108: 'D+1', s110: 'D+2' },
 };
 const FORMATS = {
   '2TZN-1': {

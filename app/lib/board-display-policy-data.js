@@ -27112,8 +27112,8 @@ const policy = {
     ],
     "s026": [
       "이달 거래 · 08/01 ~ 09/01",
-      "unavailable",
-      null
+      "caption",
+      "입출고 내역"
     ],
     "s027": [
       "최근 9건 · 09/01 09:42 기준",
@@ -27482,10 +27482,25 @@ const policy = {
       "unavailable",
       null
     ],
+    "s106": [
+      "오늘 09/01",
+      "caption",
+      "오늘"
+    ],
     "s107": [
       "0원",
       "unavailable",
       null
+    ],
+    "s108": [
+      "D+1 09/02",
+      "caption",
+      "D+1"
+    ],
+    "s110": [
+      "D+2 09/03",
+      "caption",
+      "D+2"
     ],
     "s113": [
       "D+2 기준",
@@ -27995,6 +28010,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s092": [
+      "미체결 주문 0000512",
+      "bound-identifier",
+      "ord_no"
+    ],
     "s094": [
       "해당 없음",
       "bound-label",
@@ -28014,6 +28034,11 @@ const policy = {
       "HTS",
       "bound-label",
       "comm_ord_tp"
+    ],
+    "s105": [
+      "당일 체결 0000508",
+      "bound-identifier",
+      "ord_no"
     ],
     "s113": [
       "해당 없음",

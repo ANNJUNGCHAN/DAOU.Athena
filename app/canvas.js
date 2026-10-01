@@ -1028,6 +1028,9 @@ function boardHydrateTarget(envelope, host) {
   if (state && state.boardId === '3D4I-0' && state.watchlistExpandedSymbol) {
     target.stk_cd = state.watchlistExpandedSymbol;
   }
+  if (state && state.boardId === '15N5-2' && state.etfDetailIdentity) {
+    target.stk_cd = state.etfDetailIdentity.code;
+  }
   if (state && state.boardId === '2WZK-0' && state.etfReturnPeriod !== undefined) {
     target.dt = state.etfReturnPeriod;
   }
@@ -1140,7 +1143,8 @@ function activateBoardState(state, boardId) {
 // 갖고 있다. 봉투는 값(slot_values)과 상태 보드 목록만 나른다.
 function boardMountOptions(host, envelope) {
   return {
-    identity: boardMount.boardIdentityFromEnvelope(envelope, boardStateOf(host).values),
+    identity: boardStateOf(host).boardId === '15N5-2' && boardStateOf(host).etfDetailIdentity
+      || boardMount.boardIdentityFromEnvelope(envelope, boardStateOf(host).values),
     operationRef: String((envelope && (envelope.operation_ref || envelope.operationRef)) || '').trim(),
     operationArgs: boardHydrateTarget(envelope, host),
     rankingResult: boardStateOf(host).boardId === '4B22-1' ? boardStateOf(host).rankingResult : null,
@@ -1270,7 +1274,15 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   const rowCode = watchlistExpansion && state.values.s029;
   const watchlistSymbol = String(rowCode && typeof rowCode === 'object'
     ? (!rowCode.missing ? rowCode.value || '' : '') : rowCode || '').trim();
-  const targetRequirement = watchlistExpansion
+  const etfDetail = state.boardId === '2VIN-0' && target === '15N5-2';
+  const etfCode = etfDetail && state.values.s387;
+  const etfValue = etfCode && typeof etfCode === 'object'
+    ? (!etfCode.missing ? etfCode.value : '') : etfCode;
+  const etfSymbol = (typeof etfValue === 'string' ? etfValue.trim() : '').replace(/_(AL|NX)$/, '');
+  const targetRequirement = etfDetail
+    ? (/^\d{6}$/.test(etfSymbol) && etfSymbol !== '000000'
+      ? '' : 'ETF 목록 첫 행의 종목코드가 제공된 뒤 상세를 열 수 있습니다.')
+    : watchlistExpansion
     && (!/^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(watchlistSymbol) || watchlistSymbol === '000000')
     ? '관심목록 첫 행의 종목코드가 제공된 뒤 펼칠 수 있습니다.'
     : boardTemplateRegistry.navigationTargetRequirement(target, envelope);
@@ -1286,6 +1298,18 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   if (state.navigationNoticeNode) {
     state.navigationNoticeNode.remove();
     state.navigationNoticeNode = null;
+  }
+  if (etfDetail) {
+    const rawName = state.values.s386;
+    const name = rawName && typeof rawName === 'object'
+      ? (!rawName.missing ? rawName.value : '') : rawName;
+    state.etfDetailIdentity = { code: etfSymbol, name: typeof name === 'string' ? name.trim() : '' };
+    // The list may have refreshed since an earlier detail visit. Its received
+    // first row owns this request, including the identity shown while loading.
+    for (const key of ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
+      'emptyRowsByBoard', 'emptyColumnsByBoard', 'emptyValueSlotsByBoard', 'deferredValueSlotsByBoard']) {
+      if (state[key]) state[key].delete(target);
+    }
   }
   if (watchlistExpansion) {
     state.watchlistExpandedSymbol = watchlistSymbol;
@@ -2041,7 +2065,9 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   }
   const failures = (Array.isArray(reply.operations) ? reply.operations : [])
     .filter((op) => op && op.status !== 'bound' && RETRYABLE_BOARD_HYDRATE_REASONS.has(op.reason));
-  const requiredRef = boardId === '4B22-1' ? expandedRankingOperation(state) : String((envelope && envelope.operation_ref) || '');
+  const requiredRef = boardId === '4B22-1' ? expandedRankingOperation(state)
+    : boardId === '15N5-2' && state.etfDetailIdentity ? 'base:ka40002'
+    : String((envelope && envelope.operation_ref) || '');
   if (failures.some((op) => op.operation_ref === requiredRef)) {
     throw new Error('요청한 종목 정보를 불러오지 못했습니다. 다시 시도해 주세요.');
   }

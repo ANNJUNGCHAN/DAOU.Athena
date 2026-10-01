@@ -90,7 +90,10 @@ function additionalStateLinks(boardId) {
   if (ELW_LIST_BOARDS.includes(boardId) && boardId !== '2Z49-0') {
     return [{ control: 'ELW 상세 열기', board_id: '15P5-2' }];
   }
-  if (boardId === '2VIN-0') return [{ control: '기간 수익률', board_id: '2WZK-0' }];
+  if (boardId === '2VIN-0') return [
+    { control: '기간 수익률', board_id: '2WZK-0' },
+    { control: 'ETF 상세 열기', board_id: '15N5-2' },
+  ];
   return [];
 }
 

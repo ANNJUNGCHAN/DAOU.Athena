@@ -710,6 +710,56 @@ function updateAccountDetailSections(surface) {
   }
 }
 
+function updateAccountResidualDetails(surface, plan) {
+  const id = surface.dataset?.bsBoardId;
+  if (!['2SYW-1', '3LGC-0', '3NVG-0', '3OIM-0'].includes(id)) return;
+  const states = surface.__bsAccountDetailStates || (surface.__bsAccountDetailStates = new Map());
+  for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  if (id === '3OIM-0') {
+    for (const [node, text] of [['3SWR-0', '미체결 주문'], ['3SXB-0', '당일 체결']]) {
+      const section = authoredNode(surface, node);
+      if (!section || section.querySelector(':scope > .bs-account-detail-context')) continue;
+      const heading = layoutGroup(surface.ownerDocument, 'bs-account-detail-context');
+      heading.textContent = text;
+      section.prepend(heading);
+    }
+  }
+  const groups = {
+    '2SYW-1': [
+      ['3UKP-0', ['s136','s137','s139','s140','s142','s143','s145','s147'], '미체결 주문 정보 미제공'],
+      ['3ULE-0', ['s149','s150','s152','s153','s155','s158','s160'], '주문 상세 정보 미제공'],
+      ['3UM3-0', ['s163','s164','s165','s166','s167','s168','s169','s170','s171','s172'], '체결 주문 정보 미제공'],
+      ['3UMP-0', ['s174','s176','s177','s179','s180','s182'], '주문 상태·경로 정보 미제공'],
+    ],
+    '3LGC-0': [['3UE1-0', ['s114','s116','s118','s120','s122','s124','s126','s128'], '외화 정산 정보 미제공']],
+    '3NVG-0': [
+      ['3PAQ-0', ['s049','s051','s053','s055'], '외화 예수금 정보 미제공'],
+      ['3PC2-0', ['s067','s069'], '원화 표시 정보 미제공'],
+    ],
+  }[id] || [];
+  const navigation = '[data-bs-account-navigation], [data-state-control], [data-state-board], button, [role="button"], a[href]';
+  for (const [node, slots, text] of groups) {
+    const section = authoredNode(surface, node);
+    if (!section) continue;
+    const empty = slots.every(slot => {
+      const state = states.get(slot);
+      return state && !state.pending && (state.empty || state.missing);
+    });
+    section.classList.toggle('bs-account-residual-empty', empty);
+    for (const child of section.children) {
+      child.classList.toggle('bs-account-detail-navigation',
+        child.matches(navigation) || !!child.querySelector(navigation));
+    }
+    let note = section.querySelector(':scope > .bs-account-residual-note');
+    if (empty && !note) {
+      note = layoutGroup(surface.ownerDocument, 'bs-account-empty-note bs-account-residual-note');
+      note.textContent = text;
+      section.append(note);
+    }
+    if (note) note.hidden = !empty;
+  }
+}
+
 function updateOrderbookKpi(surface, options) {
   if (registry.cardIdFor(surface.dataset?.bsBoardId) !== 'CC-04') return;
   if (!options.partial) surface.__bsKpiPending = new Set(options.deferredValueSlots || []);
@@ -756,8 +806,11 @@ function applyPlan(root, plan, options = {}) {
     const compactTime = assignment.missing && assignment.text === '시각 미제공'
       && typeof el.closest === 'function' && !!el.closest('.bs-kpi-cell, .bs-table');
     // 계좌 상세는 값이 없어도 라벨 옆 자리를 유지한다. 반복 빈 행은 별도로 접는다.
+    const nestedAccountDetail = (root.dataset?.bsBoardId === '3LGC-0'
+      && el.closest?.('[data-node="3UE1-0"]')) || (root.dataset?.bsBoardId === '3NVG-0'
+      && el.closest?.('[data-node="3PAQ-0"], [data-node="3PC2-0"]'));
     const accountDetail = registry.cardIdFor(root.dataset?.bsBoardId) === 'CC-01'
-      && assignment.valueSlot && (tableCellOf(el) || el.closest?.('.bs-rail'));
+      && assignment.valueSlot && (tableCellOf(el) || el.closest?.('.bs-rail') || nestedAccountDetail);
     if (accountDetail) el.dataset.bsKeepMissing = 'true';
     if (registry.cardIdFor(root.dataset?.bsBoardId) === 'CC-01' && assignment.expandedBoard) {
       el.dataset.bsAccountNavigation = 'true';
@@ -828,6 +881,7 @@ function applyPlan(root, plan, options = {}) {
   }
   hideUnavailableUnits(root);
   updateAccountDetailSections(root);
+  updateAccountResidualDetails(root, plan);
   updateOrderbookKpi(root, options);
   if (options.partial) {
     return { unbound, unmapped: [], containers, collapsedRows, collapsedColumns };
@@ -1636,7 +1690,7 @@ const READABLE_TABLES = {
   "2U5L-1": {"node":"3C0K-0","rows":["3C0L-0","3C5D-0","3CFR-0","3CGS-0","3CHT-0","3CNW-0","3COV-0","3CPU-0","3CQT-0"],"widths":[220,160,160,160,160,240,200],"label":"조회 상세 내역","stack":false,"compact":true},
   "2UBO-1": {"node":"34AI-0","rows":["34AM-0","34AT-0","34BA-0","34BR-0"],"widths":[220,160,140,200,200,200],"label":"조회 상세 내역","stack":false,"compact":true},
   "2UHM-1": {"node":"2ULF-1","rows":["359Q-0","359Y-0","35AN-0","35BC-0"],"widths":[120,220,180,140,160,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
-  "2VIN-0": {"node":"3QN3-0","rows":["3QN4-0","3QND-0","3QO4-0","3QOV-0","3QPM-0","3QQD-0","3QR4-0","3QRV-0","3QSM-0","3QTD-0","3QU4-0","3QUV-0","3QVM-0","3QWD-0","3QX4-0","3QXV-0","3QYM-0","3QZD-0","3R04-0","3R0V-0","3R1M-0"],"widths":[52,220,160,140,140,200,140,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2VIN-0": {"node":"3QN3-0","rows":["3QN4-0","3QND-0","3QO4-0","3QOV-0","3QPM-0","3QQD-0","3QR4-0","3QRV-0","3QSM-0","3QTD-0","3QU4-0","3QUV-0","3QVM-0","3QWD-0","3QX4-0","3QXV-0","3QYM-0","3QZD-0","3R04-0","3R0V-0","3R1M-0"],"widths":[0,220,160,140,140,200,140,120],"label":"ETF 전체 시세","stack":false,"compact":true},
   "2VO0-0": {"node":"38TO-0","rows":["38TP-0","38TY-0","38UH-0","38V0-0","38VJ-0","38W2-0","38WL-0","38X4-0","38XN-0","3GLC-0","3GLV-0","3GME-0","3GMX-0","3GNG-0","3GNZ-0","3GOI-0","3GP1-0","3GPK-0","3GQ3-0","3GQM-0","3GR5-0"],"widths":[52,220,160,200,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "2XA5-0": {"node":"39FH-0","rows":["39FI-0","39FR-0","39GA-0","39GT-0","39HC-0","39HV-0","39IE-0","39IX-0","39JG-0","3HZP-0","3I08-0","3I0R-0","3I1A-0","3I1T-0","3I2C-0","3I2V-0","3I3E-0","3I3X-0","3I4G-0","3I4Z-0","3I5I-0"],"widths":[52,220,160,140,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "2XY6-0": {"node":"39V5-0","rows":["39V6-0","39VF-0","39VY-0","39WH-0","39X0-0","39Y2-0","39YL-0","39Z4-0","3KGH-0","3KH0-0","39XJ-0","3KHJ-0","3KI2-0","3KIL-0","3KJ4-0","3KJN-0","3KK6-0","3KKP-0","3KL8-0","3KLR-0","3KMA-0"],"widths":[52,220,160,140,160,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
@@ -1911,6 +1965,7 @@ function applyReadableBoardLayout(surface, contract) {
     // D+1 through D+4 are independent settlement summaries, not currency cells.
     const summary = authoredNode(surface, '3PAQ-0');
     for (const mirror of summary.querySelectorAll('.bs-paired')) mirror.remove();
+    for (const wrapper of summary.querySelectorAll('.bs-col')) wrapper.replaceWith(...wrapper.childNodes);
     for (const node of [summary, ...summary.querySelectorAll('[data-col]')]) {
       delete node.dataset.row;
       delete node.dataset.col;
@@ -2692,6 +2747,17 @@ function mountBoard(root, boardId, values, options = {}) {
       for (const link of links) {
         const node = findStateControlNode(surface, link.control, { links });
         if (node) node.dataset.bsAccountNavigation = 'true';
+      }
+    }
+    if (String(boardId) === '3GRO-0') {
+      const strip = authoredNode(surface, '3S9V-0');
+      if (strip) {
+        strip.tabIndex = 0;
+        strip.setAttribute('role', 'region');
+        strip.setAttribute('aria-label', '증거금율 구간별 주문가능');
+        const hint = layoutGroup(doc, 'bs-readable-hint');
+        hint.textContent = '구간을 좌우로 이동해 모두 확인하세요';
+        strip.after(hint);
       }
     }
     prepareInvestorGrid(surface, contract);

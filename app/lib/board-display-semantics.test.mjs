@@ -279,3 +279,13 @@ test('exploration details do not claim selection or an unobserved specimen indus
     assert.equal(text(id,{},'s138'),'상태 미확인');
   }
 });
+
+test('account settlement axes and deposit ledger keep fixed context without specimen dates', () => {
+  assert.equal(text('3LGC-0',{},'s026'),'입출고 내역');
+  for (const [slot,label] of [['s106','오늘'],['s108','D+1'],['s110','D+2']]) {
+    assert.equal(text('3MTJ-0',{},slot),label);
+    assert.equal(text('3MTJ-0',{[slot]:'20991231'},slot),label);
+  }
+  assert.equal(text('3MTJ-0',{s109:'0'},'s109'),'0');
+  assert.equal(text('3OIM-0',{s092:'0000512'},'s092'),'0000512');
+});
