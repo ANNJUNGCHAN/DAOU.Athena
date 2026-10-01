@@ -458,10 +458,11 @@ def analyze_question(
         elif stated("daily history", "daily historical", "일별 이력", "일자별 이력"):
             add(data_intents, DataIntent.HISTORY)
             add(temporal_scopes, TemporalScope.DAILY)
-    volatility_request = stated("volatility interruption", "vi 발동", "변동성 완화")
+    volatility_terms = ("volatility interruption", "vi 발동", "vi발동", "변동성 완화", "변동성완화장치")
+    volatility_request = stated(*volatility_terms)
     volatility_snapshot = (
         volatility_request
-        and stated("현황", "목록", "리스트", "status", "list")
+        and stated("현황", "목록", "리스트", "발동종목", "발동 종목", "status", "list")
         and not stated("구독", "감시", "등록", "해제", "중지", "종료", "취소",
                        "subscribe", "subscription", "monitor", "register", "remove", "stop", "end", "cancel")
         and execution is not ExecutionKind.ORDER
@@ -1357,7 +1358,7 @@ def analyze_question(
         ),
         (
             CapabilityKind.VOLATILITY_INDICATOR,
-            ("volatility interruption", "vi 발동", "변동성 완화"),
+            volatility_terms,
         ),
         (
             CapabilityKind.INVESTOR_FLOW,

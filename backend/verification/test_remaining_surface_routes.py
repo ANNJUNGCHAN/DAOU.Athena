@@ -51,6 +51,9 @@ VI_ARGUMENTS = {
 @pytest.mark.parametrize("question", [
     "현재 VI 발동 종목 목록", "실시간 VI 발동 현황", "VI 발동 종목",
     "국내주식 VI 발동 현황", "현재 국내주식 VI 발동 종목 목록",
+    "현재 변동성완화장치 발동종목", "변동성완화장치발동종목요청",
+    "변동성완화장치 발동종목 조회", "변동성 완화장치 발동 종목 요청",
+    "실시간 변동성완화장치 발동 현황", "VI발동종목요청",
 ])
 def test_vi_snapshot_preserves_trigger_semantics_and_current_scope(selector, question):
     result = selector.resolve(ResolveRequest(question=question, intent="query", arguments=VI_ARGUMENTS))
@@ -61,6 +64,9 @@ def test_vi_snapshot_preserves_trigger_semantics_and_current_scope(selector, que
     "실시간 VI 발동 구독", "VI 발동 종목 목록 조회 후 실시간 감시 등록",
     "VI 발동 목록 구독 해제", "VI 발동 목록 조회 후 중지",
     "VI 발동 목록 조회 후 종료", "VI 발동 종목 매수 주문",
+    "변동성완화장치발동종목 실시간 구독", "변동성완화장치 발동종목 감시 등록",
+    "변동성완화장치 발동종목 구독 해제", "변동성완화장치발동종목 조회 후 중지",
+    "변동성완화장치발동종목 조회 후 종료", "변동성완화장치 발동 종목 매수 주문",
 ])
 def test_vi_list_does_not_turn_subscription_control_or_orders_into_snapshot(selector, question):
     with pytest.raises(SelectorError):
@@ -71,3 +77,16 @@ def test_vi_read_still_requires_validated_request_arguments(selector):
     with pytest.raises(SelectorError) as error:
         selector.resolve(ResolveRequest(question="현재 VI 발동 종목 목록", intent="query", arguments={}))
     assert error.value.code == "INVALID_ARGUMENTS"
+
+
+@pytest.mark.parametrize("question", ["현재 변동성완화장치 발동종목", "변동성완화장치발동종목요청"])
+def test_vi_tool_rephrasing_supports_only_the_compatible_preferred_operation(selector, question):
+    result = selector.resolve(ResolveRequest(
+        question=question, intent="query", arguments=VI_ARGUMENTS, preferred_ref="base:ka10054",
+    ))
+    assert result.operation_ref == "base:ka10054"
+    with pytest.raises(SelectorError) as error:
+        selector.resolve(ResolveRequest(
+            question=question, intent="query", arguments=VI_ARGUMENTS, preferred_ref="base:ka10019",
+        ))
+    assert error.value.code == "PREFERRED_REF_NOT_SUPPORTED_BY_QUERY"
