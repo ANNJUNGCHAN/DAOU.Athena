@@ -4187,21 +4187,25 @@
       "node_path": "2/1/0/0/0/0",
       "paper_text": "이수페타시스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 22.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "종목명 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s140",
@@ -4215,22 +4219,21 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "literal": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "종목코드 재표시",
-      "note": "종목코드 병기. 'KOSPI'는 ka10027 응답에 시장 구분 필드가 없어 종목코드에서 파생한 표기"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10027",
+      "f": "stk_cd",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s141",
@@ -4265,9 +4268,6 @@
       "font_size_px": 36.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "cur_prc",
-      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
@@ -4280,7 +4280,12 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "현재가 재표시"
+      "dup_note": "현재가 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "cur_prc",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s143",
@@ -4294,12 +4299,9 @@
       "font_size_px": 14.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "pred_pre",
-      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "kind": "number",
+        "unit": "text",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4309,22 +4311,11 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "레일 선택 종목 전일대비 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "flu_rt",
-          "kor": "등락률",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": " · ",
-          "aspect": "sign",
-          "note": "전일대비기호 1(상한)을 '상한가'로 표기"
-        }
-      ]
+      "mapping_id": "base:ka10027",
+      "f": "pred_pre",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s144",
@@ -4354,19 +4345,19 @@
       "node_path": "2/1/1/0/1",
       "paper_text": "반도체",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
-      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s146",
@@ -4375,21 +4366,25 @@
       "node_path": "2/1/1/1/0/0",
       "paper_text": "SK하이닉스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "종목명 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 1,
+      "note": "현재 목록의 추가 결과 1와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s147",
@@ -4403,9 +4398,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4418,16 +4410,11 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "mapping_id": "base:ka10027",
+      "f": "flu_rt",
+      "alt_mappings": [],
+      "row_index": 1,
+      "note": "현재 목록의 추가 결과 1와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s148",
@@ -4436,21 +4423,25 @@
       "node_path": "2/1/1/1/1/0",
       "paper_text": "DB하이텍",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "종목명 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 2,
+      "note": "현재 목록의 추가 결과 2와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s149",
@@ -4464,9 +4455,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4479,16 +4467,11 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "mapping_id": "base:ka10027",
+      "f": "flu_rt",
+      "alt_mappings": [],
+      "row_index": 2,
+      "note": "현재 목록의 추가 결과 2와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s150",
@@ -4497,21 +4480,25 @@
       "node_path": "2/1/1/1/2/0",
       "paper_text": "한미반도체",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "종목명 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 3,
+      "note": "현재 목록의 추가 결과 3와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s151",
@@ -4525,9 +4512,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4540,16 +4524,11 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "mapping_id": "base:ka10027",
+      "f": "flu_rt",
+      "alt_mappings": [],
+      "row_index": 3,
+      "note": "현재 목록의 추가 결과 3와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s152",

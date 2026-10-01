@@ -742,15 +742,15 @@ const policy = {
       "bound-identifier",
       "stk_cd"
     ],
-    "s128": [
-      "삼성전자",
-      "bound-label",
-      "name"
-    ],
     "s129": [
       "005930 · KOSPI · 대형주 · 제조",
       "bound-identifier",
-      "code"
+      "stk_cd"
+    ],
+    "s130": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s131": [
       "150,850",
@@ -762,45 +762,45 @@ const policy = {
       "direction",
       "pred_pre_sig"
     ],
+    "s136": [
+      "149,000",
+      "unavailable",
+      null
+    ],
+    "s138": [
+      "59.7억주 · 1975.06.11",
+      "unavailable",
+      null
+    ],
     "s139": [
       "정상",
-      "bound-label",
-      "state"
+      "status",
+      null
     ],
     "s140": [
       "감리 없음",
-      "bound-label",
-      "auditInfo"
+      "status",
+      null
     ],
     "s141": [
       "투자유의 아님",
-      "bound-label",
-      "orderWarning"
+      "status",
+      null
     ],
     "s142": [
       "VI 미발동",
       "status",
       null
     ],
+    "s143": [
+      "같이 비교해볼 종목",
+      "caption",
+      "다른 조회 결과"
+    ],
     "s144": [
       "반도체",
-      "bound-label",
-      "upName"
-    ],
-    "s145": [
-      "SK하이닉스",
-      "bound-label",
-      "name"
-    ],
-    "s147": [
-      "DB하이텍",
-      "bound-label",
-      "name"
-    ],
-    "s149": [
-      "한미반도체",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s153": [
       "● 실시간 갱신 중 · 마지막 반영 09:42:18",
@@ -6991,6 +6991,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s047": [
+      "거래량 · 거래대금",
+      "caption",
+      "거래량 · 전일비"
+    ],
     "s051": [
       "한미반도체",
       "bound-label",
@@ -7590,11 +7595,6 @@ const policy = {
       "코스피",
       "unavailable",
       null
-    ],
-    "s270": [
-      "선택 종목 · 한미반도체",
-      "bound-label",
-      "stk_nm"
     ],
     "s271": [
       "042700 · 코스피",
@@ -8925,6 +8925,21 @@ const policy = {
       "unavailable",
       null
     ],
+    "s315": [
+      "160,000",
+      "unavailable",
+      null
+    ],
+    "s317": [
+      "18.2배",
+      "unavailable",
+      null
+    ],
+    "s319": [
+      "24일",
+      "unavailable",
+      null
+    ],
     "s323": [
       "상위 10종목 잔량 합 4,998만주",
       "unavailable",
@@ -9661,6 +9676,21 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s315": [
+      "160,000",
+      "unavailable",
+      null
+    ],
+    "s317": [
+      "18.2배",
+      "unavailable",
+      null
+    ],
+    "s319": [
+      "24일",
+      "unavailable",
+      null
+    ],
     "s323": [
       "콜 상위 11종목 · 풋 상위 9종목",
       "unavailable",
@@ -9673,6 +9703,11 @@ const policy = {
     ],
     "s326": [
       "+6.8%",
+      "unavailable",
+      null
+    ],
+    "s328": [
+      "3.2배 · 0.01",
       "unavailable",
       null
     ],
@@ -10083,15 +10118,15 @@ const policy = {
       "unavailable",
       null
     ],
-    "s134": [
-      "삼성전자",
-      "bound-label",
-      "name"
-    ],
     "s135": [
       "005930 · KOSPI",
       "bound-identifier",
-      "code"
+      "stk_cd"
+    ],
+    "s136": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s137": [
       "150,850",
@@ -10103,35 +10138,25 @@ const policy = {
       "direction",
       "pred_pre_sig"
     ],
+    "s139": [
+      "같이 비교해볼 종목",
+      "caption",
+      "다른 조회 결과"
+    ],
     "s140": [
       "반도체",
-      "bound-label",
-      "upName"
-    ],
-    "s141": [
-      "SK하이닉스",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s142": [
       "+2.05%",
       "unavailable",
       null
     ],
-    "s143": [
-      "DB하이텍",
-      "bound-label",
-      "name"
-    ],
     "s144": [
       "-0.34%",
       "unavailable",
       null
-    ],
-    "s145": [
-      "한미반도체",
-      "bound-label",
-      "name"
     ],
     "s146": [
       "+4.18%",
@@ -10143,20 +10168,30 @@ const policy = {
       "unavailable",
       null
     ],
+    "s151": [
+      "149,000",
+      "unavailable",
+      null
+    ],
+    "s153": [
+      "59.7억주 · 1975.06.11",
+      "unavailable",
+      null
+    ],
     "s154": [
       "정상",
-      "bound-label",
-      "state"
+      "status",
+      null
     ],
     "s155": [
       "감리 없음",
-      "bound-label",
-      "auditInfo"
+      "status",
+      null
     ],
     "s156": [
       "투자유의 아님",
-      "bound-label",
-      "orderWarning"
+      "status",
+      null
     ],
     "s157": [
       "VI 미발동",
@@ -10445,35 +10480,30 @@ const policy = {
       "bound-identifier",
       "stk_cd"
     ],
-    "s139": [
-      "이수페타시스",
-      "bound-label",
-      "stk_nm"
-    ],
     "s140": [
       "007660 · KOSPI",
       "bound-identifier",
       "stk_cd"
+    ],
+    "s141": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s142": [
       "64,500",
       "price",
       "cur_prc"
     ],
-    "s146": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
+    "s144": [
+      "같이 비교해볼 종목",
+      "caption",
+      "다른 조회 결과"
     ],
-    "s148": [
-      "DB하이텍",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s150": [
-      "한미반도체",
-      "bound-label",
-      "stk_nm"
+    "s145": [
+      "반도체",
+      "unavailable",
+      null
     ],
     "s154": [
       "매도 해당 없음 · 매수 64,500",
@@ -10757,35 +10787,30 @@ const policy = {
       "bound-identifier",
       "stk_cd"
     ],
-    "s134": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
-    ],
     "s135": [
       "005930 · KOSPI",
       "bound-identifier",
       "stk_cd"
+    ],
+    "s136": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s137": [
       "149,900",
       "price",
       "exp_cntr_pric"
     ],
-    "s141": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
+    "s139": [
+      "같이 비교해볼 종목",
+      "caption",
+      "다른 조회 결과"
     ],
-    "s143": [
-      "DB하이텍",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s145": [
-      "한미반도체",
-      "bound-label",
-      "stk_nm"
+    "s140": [
+      "반도체",
+      "unavailable",
+      null
     ],
     "s155": [
       "149,000 · 1,180만주",
@@ -11129,45 +11154,40 @@ const policy = {
       "direction",
       "pred_pre_sig"
     ],
-    "s140": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
-    ],
     "s141": [
       "005930 · KOSPI",
       "bound-identifier",
       "stk_cd"
+    ],
+    "s142": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s143": [
       "150,850",
       "price",
       "cur_prc"
     ],
-    "s147": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
+    "s145": [
+      "같이 비교해볼 종목",
+      "caption",
+      "다른 조회 결과"
+    ],
+    "s146": [
+      "반도체",
+      "unavailable",
+      null
     ],
     "s148": [
       "+2.05%",
       "direction",
       "pred_pre_sig"
     ],
-    "s149": [
-      "DB하이텍",
-      "bound-label",
-      "stk_nm"
-    ],
     "s150": [
       "-0.34%",
       "direction",
       "pred_pre_sig"
-    ],
-    "s151": [
-      "한미반도체",
-      "bound-label",
-      "stk_nm"
     ],
     "s152": [
       "+4.18%",
@@ -11623,13 +11643,28 @@ const policy = {
     ],
     "s309": [
       "4위",
-      "unavailable",
-      null
+      "caption",
+      "첫 번째 결과"
     ],
     "s310": [
       "415",
       "price",
       "cur_prc"
+    ],
+    "s315": [
+      "160,000",
+      "unavailable",
+      null
+    ],
+    "s317": [
+      "18.2배",
+      "unavailable",
+      null
+    ],
+    "s319": [
+      "24일",
+      "unavailable",
+      null
     ],
     "s323": [
       "95% 이상 2종목 · 평균 잔존 19일",
@@ -12093,6 +12128,21 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s315": [
+      "160,000",
+      "unavailable",
+      null
+    ],
+    "s317": [
+      "18.2배",
+      "unavailable",
+      null
+    ],
+    "s319": [
+      "24일",
+      "unavailable",
+      null
+    ],
     "s323": [
       "오늘 12건 · 최근 09:41",
       "time",
@@ -12495,70 +12545,75 @@ const policy = {
       "unavailable",
       null
     ],
-    "s135": [
-      "삼성전자",
-      "bound-label",
-      "name"
-    ],
     "s136": [
       "005930 · KOSPI",
       "bound-identifier",
-      "code"
+      "stk_cd"
+    ],
+    "s137": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s138": [
       "150,850",
       "price",
       "cur_prc"
     ],
+    "s140": [
+      "같이 비교해볼 종목",
+      "caption",
+      "다른 조회 결과"
+    ],
     "s141": [
       "반도체",
-      "bound-label",
-      "upName"
-    ],
-    "s142": [
-      "SK하이닉스",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s143": [
       "+2.05%",
       "unavailable",
       null
     ],
-    "s144": [
-      "DB하이텍",
-      "bound-label",
-      "name"
-    ],
     "s145": [
       "-0.34%",
       "unavailable",
       null
-    ],
-    "s146": [
-      "한미반도체",
-      "bound-label",
-      "name"
     ],
     "s147": [
       "+4.18%",
       "unavailable",
       null
     ],
+    "s150": [
+      "매도 150,900 · 매수 150,850",
+      "unavailable",
+      null
+    ],
+    "s152": [
+      "149,000",
+      "unavailable",
+      null
+    ],
+    "s154": [
+      "59.7억주 · 1975.06.11",
+      "unavailable",
+      null
+    ],
     "s155": [
       "정상",
-      "bound-label",
-      "state"
+      "status",
+      null
     ],
     "s156": [
       "감리 없음",
-      "bound-label",
-      "auditInfo"
+      "status",
+      null
     ],
     "s157": [
       "투자유의 아님",
-      "bound-label",
-      "orderWarning"
+      "status",
+      null
     ],
     "s158": [
       "VI 미발동",
@@ -12922,70 +12977,75 @@ const policy = {
       "unavailable",
       null
     ],
-    "s135": [
-      "삼성전자",
-      "bound-label",
-      "name"
-    ],
     "s136": [
       "005930 · KOSPI",
       "bound-identifier",
-      "code"
+      "stk_cd"
+    ],
+    "s137": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s138": [
       "150,850",
       "price",
       "cur_prc"
     ],
+    "s140": [
+      "같이 비교해볼 종목",
+      "caption",
+      "다른 조회 결과"
+    ],
     "s141": [
       "반도체",
-      "bound-label",
-      "upName"
-    ],
-    "s142": [
-      "SK하이닉스",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s143": [
       "+2.05%",
       "unavailable",
       null
     ],
-    "s144": [
-      "DB하이텍",
-      "bound-label",
-      "name"
-    ],
     "s145": [
       "-0.34%",
       "unavailable",
       null
-    ],
-    "s146": [
-      "한미반도체",
-      "bound-label",
-      "name"
     ],
     "s147": [
       "+4.18%",
       "unavailable",
       null
     ],
+    "s150": [
+      "매도 150,900 · 매수 150,850",
+      "unavailable",
+      null
+    ],
+    "s152": [
+      "149,000",
+      "unavailable",
+      null
+    ],
+    "s154": [
+      "59.7억주 · 1975.06.11",
+      "unavailable",
+      null
+    ],
     "s155": [
       "정상",
-      "bound-label",
-      "state"
+      "status",
+      null
     ],
     "s156": [
       "감리 없음",
-      "bound-label",
-      "auditInfo"
+      "status",
+      null
     ],
     "s157": [
       "투자유의 아님",
-      "bound-label",
-      "orderWarning"
+      "status",
+      null
     ],
     "s158": [
       "VI 미발동",
@@ -13264,15 +13324,15 @@ const policy = {
       "bound-identifier",
       "code"
     ],
-    "s134": [
-      "삼성전자",
-      "bound-label",
-      "name"
-    ],
     "s135": [
       "005930 · KOSPI",
       "bound-identifier",
-      "code"
+      "stk_cd"
+    ],
+    "s136": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s137": [
       "150,850",
@@ -13284,40 +13344,45 @@ const policy = {
       "direction",
       "pred_pre_sig"
     ],
+    "s139": [
+      "같이 비교해볼 종목",
+      "caption",
+      "다른 조회 결과"
+    ],
     "s140": [
       "반도체",
-      "bound-label",
-      "upName"
+      "unavailable",
+      null
     ],
-    "s141": [
-      "SK하이닉스",
-      "bound-label",
-      "name"
+    "s149": [
+      "매도 150,900 · 매수 150,850",
+      "unavailable",
+      null
     ],
-    "s143": [
-      "DB하이텍",
-      "bound-label",
-      "name"
+    "s151": [
+      "149,000",
+      "unavailable",
+      null
     ],
-    "s145": [
-      "한미반도체",
-      "bound-label",
-      "name"
+    "s153": [
+      "59.7억주 · 1975.06.11",
+      "unavailable",
+      null
     ],
     "s154": [
       "정상",
-      "bound-label",
-      "state"
+      "status",
+      null
     ],
     "s155": [
       "감리 없음",
-      "bound-label",
-      "auditInfo"
+      "status",
+      null
     ],
     "s156": [
       "투자유의 아님",
-      "bound-label",
-      "orderWarning"
+      "status",
+      null
     ],
     "s157": [
       "VI 미발동",
@@ -13546,35 +13611,30 @@ const policy = {
       "bound-identifier",
       "stk_cd"
     ],
-    "s133": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
-    ],
     "s134": [
       "005930 · KOSPI",
       "bound-identifier",
       "stk_cd"
+    ],
+    "s135": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s136": [
       "151,200",
       "price",
       "cur_prc"
     ],
-    "s140": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
+    "s138": [
+      "같이 비교해볼 종목",
+      "caption",
+      "다른 조회 결과"
     ],
-    "s142": [
-      "DB하이텍",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s144": [
-      "한미반도체",
-      "bound-label",
-      "stk_nm"
+    "s139": [
+      "반도체",
+      "unavailable",
+      null
     ],
     "s148": [
       "매도 151,250 · 매수 151,200",
@@ -15773,15 +15833,25 @@ const policy = {
       "unavailable",
       null
     ],
+    "s167": [
+      "58H219 · KB증권 9C21회차 · 잔존 24일",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s168": [
+      "1위",
+      "unavailable",
+      null
+    ],
     "s169": [
       "415",
       "price",
       "cur_prc"
     ],
-    "s182": [
-      "키움증권 · 미래에셋증권",
-      "bound-label",
-      "lpmmcm_nm_1"
+    "s172": [
+      "38/40",
+      "unavailable",
+      null
     ],
     "s186": [
       "오늘 감지 5건 · 저장 2건",
@@ -22523,15 +22593,20 @@ const policy = {
       "unavailable",
       null
     ],
+    "s247": [
+      "14종목",
+      "unavailable",
+      null
+    ],
     "s249": [
       "9종목",
-      "direction",
-      "pred_pre_sig"
+      "unavailable",
+      null
     ],
     "s251": [
       "5종목",
-      "direction",
-      "pred_pre_sig"
+      "unavailable",
+      null
     ]
   },
   "3BQB-0": {

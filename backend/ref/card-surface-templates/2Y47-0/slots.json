@@ -10647,34 +10647,19 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30001",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "unit": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka30004",
-          "f": "isscomp_nm",
-          "kor": "발행사명",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "base:ka30004",
-          "f": "sqnc",
-          "kor": "회차",
-          "sep": " "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka30001",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s308",
@@ -10688,28 +10673,20 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30001",
-      "f": "stk_cd",
-      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "literal": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka30001",
-          "f": "rank",
-          "kor": "순위",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka30001",
+      "f": "stk_cd",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s309",
@@ -10723,9 +10700,6 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30001",
-      "f": "rank",
-      "alt_mappings": null,
       "kor": "순위",
       "format": {
         "unit": "text",
@@ -10736,7 +10710,12 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka30001",
+      "f": "rank",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s310",
@@ -10750,9 +10729,6 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30001",
-      "f": "cur_prc",
-      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
@@ -10764,7 +10740,12 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka30001",
+      "f": "cur_prc",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s311",
@@ -10778,9 +10759,6 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30001",
-      "f": "pred_pre",
-      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
         "kind": "number",
@@ -10791,21 +10769,12 @@
       "paired_with": "s310",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka30001",
-          "f": "pre_sig",
-          "kor": "대비기호",
-          "sep": " "
-        },
-        {
-          "mapping_id": "base:ka30009",
-          "f": "flu_rt",
-          "kor": "등락률",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka30001",
+      "f": "pred_pre",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s312",
@@ -10840,9 +10809,6 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30001",
-      "f": "jmp_rt",
-      "alt_mappings": null,
       "kor": "급등율",
       "format": {
         "unit": "percent",
@@ -10853,7 +10819,12 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka30001",
+      "f": "jmp_rt",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s314",
@@ -10888,9 +10859,6 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "exec_pric",
-      "alt_mappings": null,
       "kor": "행사가격",
       "format": {
         "unit": "text",
@@ -10901,7 +10869,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s316",
@@ -10936,9 +10907,6 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "gear_rt",
-      "alt_mappings": null,
       "kor": "기어링비율",
       "format": {
         "kind": "percent",
@@ -10948,7 +10916,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s318",
@@ -10983,9 +10954,6 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "srvive_dys",
-      "alt_mappings": null,
       "kor": "잔존일수",
       "format": {
         "unit": "text",
@@ -10996,7 +10964,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s320",

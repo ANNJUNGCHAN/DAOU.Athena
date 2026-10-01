@@ -5475,35 +5475,19 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "unit": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "선택 종목 카드 제목 — 발행사 약칭 회차 종목명",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka30005",
-          "f": "isscomp_nm",
-          "kor": "발행사명",
-          "sep": " "
-        },
-        {
-          "mapping_id": "base:ka30005",
-          "f": "sqnc",
-          "kor": "회차",
-          "sep": " "
-        }
-      ],
-      "display_dup": true
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "display_dup": true,
+      "mapping_id": "base:ka30005",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s167",
@@ -5517,40 +5501,20 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "sqnc",
-      "alt_mappings": null,
-      "kor": "회차",
+      "kor": "종목코드",
       "format": {
         "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "literal": true
       },
       "paired_with": "s166",
       "collapse_group": null,
       "expanded_board": null,
-      "note": "선택 종목 카드 2줄 — 종목코드 · 발행사명 회차 · 잔존일수(표 종목 셀이 발행사명을 대표하므로 이 자리를 회차의 자리로 적는다)",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka30005",
-          "f": "stk_cd",
-          "kor": "종목코드",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "base:ka30005",
-          "f": "isscomp_nm",
-          "kor": "발행사명",
-          "sep": " "
-        },
-        {
-          "mapping_id": "base:ka30005",
-          "f": "srvive_dys",
-          "kor": "잔존일수",
-          "sep": " · 잔존 "
-        }
-      ]
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka30005",
+      "f": "stk_cd",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true
     },
     {
       "slot_id": "s168",
@@ -5564,9 +5528,6 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "elwcnd_qry",
-      "alt_mappings": null,
       "kor": "ELW조건검색",
       "format": {
         "unit": "count",
@@ -5578,7 +5539,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "선택 종목 순번",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s169",
@@ -5592,9 +5556,6 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "cur_prc",
-      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "kind": "number",
@@ -5606,7 +5567,12 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka30005",
+      "f": "cur_prc",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s170",
@@ -5620,9 +5586,6 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "pred_pre",
-      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -5633,21 +5596,12 @@
       "paired_with": "s169",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka30005",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "base:ka30005",
-          "f": "pre_tp",
-          "kor": "대비구분",
-          "aspect": "sign"
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka30005",
+      "f": "pred_pre",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s171",
@@ -5682,9 +5636,6 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "elwcnd_qry",
-      "alt_mappings": null,
       "kor": "ELW조건검색",
       "format": {
         "unit": "count",
@@ -5696,7 +5647,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "일치 항목 — 요청 조건 대비 일치 개수(응답 필드가 아니라 조건검색 결과 원소 파생)",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s173",
@@ -5731,9 +5685,6 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "exec_pric",
-      "alt_mappings": null,
       "kor": "행사가격",
       "format": {
         "kind": "number",
@@ -5743,7 +5694,13 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "mapping_id": "base:ka30005",
+      "f": "exec_pric",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s175",
@@ -5778,9 +5735,6 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "lvrg",
-      "alt_mappings": null,
       "kor": "레버리지",
       "format": {
         "kind": "number",
@@ -5790,7 +5744,13 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "mapping_id": "base:ka30005",
+      "f": "lvrg",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s177",
@@ -5825,9 +5785,6 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "gear_rt",
-      "alt_mappings": null,
       "kor": "기어링비율",
       "format": {
         "kind": "percent",
@@ -5837,7 +5794,13 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "mapping_id": "base:ka30005",
+      "f": "gear_rt",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s179",
@@ -5872,9 +5835,6 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "pl_qutr_pt",
-      "alt_mappings": null,
       "kor": "손익분기점",
       "format": {
         "unit": "krw_ko",
@@ -5884,7 +5844,13 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "mapping_id": "base:ka30005",
+      "f": "pl_qutr_pt",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s181",
@@ -5914,20 +5880,12 @@
       "node_path": "2/1/0/3/5/1",
       "paper_text": "키움증권 · 미래에셋증권",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30005",
-      "f": "lpmmcm_nm_1",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka30005",
-          "f": "lpmmcm_nm_2"
-        }
-      ],
-      "kor": "LP회원사명1",
+      "kor": "LP 회원사",
       "format": {
         "unit": "text",
         "sign": false,
@@ -5937,22 +5895,12 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "LP회원사 2사 병기 — 둘째 회원사는 병기 값",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka30005",
-          "f": "lpmmcm_nm_2",
-          "kor": "LP회원사명2",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "base:ka30005",
-          "f": "lpmmcm_nm",
-          "kor": "LP회원사명",
-          "same_value": true
-        }
-      ],
-      "unbound_reason": "LP회원사명2 — 이 보드에 LP회원사 텍스트 노드가 하나뿐이라 슬롯 mapping은 첫 값(LP회원사명1)이 갖고 둘째 회원사는 extra_fields 병기로만 선다"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka30005",
+      "f": "lpmmcm_nm_1",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true
     },
     {
       "slot_id": "s183",

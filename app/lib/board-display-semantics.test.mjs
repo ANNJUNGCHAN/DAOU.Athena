@@ -9,6 +9,16 @@ const { formatSlot } = require('./board-format');
 const source = id => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
 const text = (id, values, slot) => mountPlan(registry.contractFor(id), values).assignments.find(x => x.slotId === slot)?.text;
 
+test('ranking rails name their first result and do not retain unsupported cross-query specimens', () => {
+  assert.equal(text('2YA8-0', {}, 's137'), '첫 번째 결과');
+  assert.equal(text('2YA8-0', {}, 's140'), '다른 조회 결과');
+  for (const slot of ['s141', 's150', 's152', 's154']) assert.equal(text('2YA8-0', {}, slot), '—');
+  assert.equal(text('2YA8-0', {s136:'252670'}, 's136'), '252670');
+  assert.equal(text('2VDA-0', {s054:'0.34'}, 's054'), '+0.34%');
+  assert.equal(text('2VDA-0', {s058:'-30.12'}, 's058'), '전일비 -30.12%');
+  assert.equal(text('2VDA-0', {}, 's047'), '거래량 · 전일비');
+});
+
 test('price differences, direction enumerations, fiscal months and dates keep their separate meanings', () => {
   assert.equal(text('2RBO-1', {s006:-1500}, 's006'), '-1,500');
   assert.equal(text('2RBO-1', {s113:12}, 's113'), '결산 12월');

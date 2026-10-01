@@ -3902,21 +3902,25 @@
       "node_path": "2/1/0/0/0/0",
       "paper_text": "삼성전자",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 22.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10100",
-      "f": "name",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목찾기 보드 13K0-2 우 레일 종목 정보",
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10023",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s135",
@@ -3930,29 +3934,21 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10100",
-      "f": "code",
-      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "literal": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목찾기 보드 13K0-2 우 레일 종목 정보",
-      "note": "'· KOSPI'는 시장명(marketName) 병기 — 시장구분코드(marketCode)가 그 근거",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10100",
-          "f": "marketName",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "display_dup": true,
+      "mapping_id": "base:ka10023",
+      "f": "stk_cd",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s136",
@@ -3987,9 +3983,6 @@
       "font_size_px": 36.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10023",
-      "f": "cur_prc",
-      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
@@ -4002,7 +3995,12 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "표 '현재가' 열 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10023",
+      "f": "cur_prc",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s138",
@@ -4016,9 +4014,6 @@
       "font_size_px": 14.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10023",
-      "f": "pred_pre_sig",
-      "alt_mappings": null,
       "kor": "전일대비기호",
       "format": {
         "kind": "text",
@@ -4027,21 +4022,12 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "전일대비·등락률의 ± 부호와 상승·하락 색 자리 — 수치는 표 '현재가' 셀 전일대비·'등락률' 열 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10023",
-          "f": "flu_rt",
-          "sep": " · "
-        }
-      ],
-      "also_from": [
-        {
-          "mapping_id": "base:ka10023",
-          "f": "pred_pre",
-          "kor": "전일대비"
-        }
-      ]
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10023",
+      "f": "pred_pre_sig",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true
     },
     {
       "slot_id": "s139",
@@ -4071,21 +4057,21 @@
       "node_path": "2/1/1/0/1",
       "paper_text": "반도체",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10100",
-      "f": "upName",
-      "alt_mappings": null,
       "kor": "업종명",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목찾기 보드 13K0-2 우 레일 종목 정보",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s141",
@@ -4094,21 +4080,25 @@
       "node_path": "2/1/1/1/0/0",
       "paper_text": "SK하이닉스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "비교 종목 — 본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10023",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 1,
+      "note": "현재 목록의 추가 결과 1와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s142",
@@ -4122,9 +4112,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10023",
-      "f": "flu_rt",
-      "alt_mappings": null,
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4136,7 +4123,12 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "비교 종목 등락률 — 표 '등락률' 열 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10023",
+      "f": "flu_rt",
+      "alt_mappings": [],
+      "row_index": 1,
+      "note": "현재 목록의 추가 결과 1와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s143",
@@ -4145,21 +4137,25 @@
       "node_path": "2/1/1/1/1/0",
       "paper_text": "DB하이텍",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "비교 종목 — 본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10023",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 2,
+      "note": "현재 목록의 추가 결과 2와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s144",
@@ -4173,9 +4169,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10023",
-      "f": "flu_rt",
-      "alt_mappings": null,
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4187,7 +4180,12 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "비교 종목 등락률 — 표 '등락률' 열 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10023",
+      "f": "flu_rt",
+      "alt_mappings": [],
+      "row_index": 2,
+      "note": "현재 목록의 추가 결과 2와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s145",
@@ -4196,21 +4194,25 @@
       "node_path": "2/1/1/1/2/0",
       "paper_text": "한미반도체",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "비교 종목 — 본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10023",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 3,
+      "note": "현재 목록의 추가 결과 3와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s146",
@@ -4224,9 +4226,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10023",
-      "f": "flu_rt",
-      "alt_mappings": null,
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4238,7 +4237,12 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "비교 종목 등락률 — 표 '등락률' 열 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10023",
+      "f": "flu_rt",
+      "alt_mappings": [],
+      "row_index": 3,
+      "note": "현재 목록의 추가 결과 3와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s147",
@@ -4294,9 +4298,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10032",
-      "f": "sel_bid",
-      "alt_mappings": null,
       "kor": "매도호가",
       "format": {
         "unit": "text",
@@ -4308,14 +4309,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목찾기 보드 13K0-2 우 레일 '호가' 행",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10032",
-          "f": "buy_bid",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s150",
@@ -4350,9 +4347,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10100",
-      "f": "lastPrice",
-      "alt_mappings": null,
       "kor": "전일종가",
       "format": {
         "unit": "text",
@@ -4364,7 +4358,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목찾기 보드 13K0-2 우 레일 종목 정보",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s152",
@@ -4399,9 +4396,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10100",
-      "f": "listCount",
-      "alt_mappings": null,
       "kor": "상장주식수",
       "format": {
         "unit": "shares",
@@ -4413,14 +4407,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목찾기 보드 13K0-2 우 레일 종목 정보",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10100",
-          "f": "regDay",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s154",
@@ -4429,21 +4419,21 @@
       "node_path": "2/1/2/4/0/0",
       "paper_text": "정상",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10100",
-      "f": "state",
-      "alt_mappings": null,
       "kor": "종목상태",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목찾기 보드 13K0-2 우 레일 종목 정보",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s155",
@@ -4452,21 +4442,21 @@
       "node_path": "2/1/2/4/1/0",
       "paper_text": "감리 없음",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10100",
-      "f": "auditInfo",
-      "alt_mappings": null,
       "kor": "감리구분",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목찾기 보드 13K0-2 우 레일 종목 정보",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s156",
@@ -4475,21 +4465,21 @@
       "node_path": "2/1/2/4/2/0",
       "paper_text": "투자유의 아님",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10100",
-      "f": "orderWarning",
-      "alt_mappings": null,
       "kor": "투자유의종목여부",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목찾기 보드 13K0-2 우 레일 종목 정보",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s157",

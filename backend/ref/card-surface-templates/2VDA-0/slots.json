@@ -2173,9 +2173,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s053",
@@ -2307,10 +2307,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s057",
       "collapse_group": null,
@@ -2527,9 +2528,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s064",
@@ -2664,10 +2665,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s068",
       "collapse_group": null,
@@ -2885,9 +2887,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s075",
@@ -3022,10 +3024,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s079",
       "collapse_group": null,
@@ -3243,9 +3246,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s086",
@@ -3380,10 +3383,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s090",
       "collapse_group": null,
@@ -3601,9 +3605,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s097",
@@ -3738,10 +3742,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s101",
       "collapse_group": null,
@@ -3959,9 +3964,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s108",
@@ -4096,10 +4101,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s112",
       "collapse_group": null,
@@ -4317,9 +4323,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s119",
@@ -4454,10 +4460,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s123",
       "collapse_group": null,
@@ -4675,9 +4682,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s130",
@@ -4812,10 +4819,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s134",
       "collapse_group": null,
@@ -5033,9 +5041,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s141",
@@ -5170,10 +5178,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s145",
       "collapse_group": null,
@@ -5391,9 +5400,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s152",
@@ -5528,10 +5537,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s156",
       "collapse_group": null,
@@ -5749,9 +5759,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s163",
@@ -5886,10 +5896,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s167",
       "collapse_group": null,
@@ -6107,9 +6118,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s174",
@@ -6244,10 +6255,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s178",
       "collapse_group": null,
@@ -6465,9 +6477,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s185",
@@ -6602,10 +6614,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s189",
       "collapse_group": null,
@@ -6823,9 +6836,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s196",
@@ -6960,10 +6973,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s200",
       "collapse_group": null,
@@ -7181,9 +7195,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s207",
@@ -7318,10 +7332,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s211",
       "collapse_group": null,
@@ -7539,9 +7554,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s218",
@@ -7676,10 +7691,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s222",
       "collapse_group": null,
@@ -7897,9 +7913,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s229",
@@ -8034,10 +8050,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s233",
       "collapse_group": null,
@@ -8255,9 +8272,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s240",
@@ -8391,10 +8408,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s244",
       "collapse_group": null,
@@ -8612,9 +8630,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s251",
@@ -8749,10 +8767,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s255",
       "collapse_group": null,
@@ -8970,9 +8989,9 @@
       ],
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s262",
@@ -9107,10 +9126,11 @@
       "alt_mappings": null,
       "kor": "전일거래량대비율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
       },
       "paired_with": "s266",
       "collapse_group": null,
@@ -9185,21 +9205,24 @@
       "node_path": "2/1/0/0/0",
       "paper_text": "선택 종목 · 한미반도체",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10016",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "선택 종목 카드 제목"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10016",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s271",
@@ -9213,21 +9236,20 @@
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10016",
-      "f": "stk_cd",
-      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "literal": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "뒤의 시장(코스피)은 ka10016 응답 필드가 아니다"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10016",
+      "f": "stk_cd",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s272",
@@ -9241,9 +9263,6 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10016",
-      "f": "cur_prc",
-      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
@@ -9255,7 +9274,12 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10016",
+      "f": "cur_prc",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s273",
@@ -9269,9 +9293,6 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10016",
-      "f": "pred_pre",
-      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
         "kind": "number",
@@ -9282,19 +9303,12 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10016",
-          "f": "flu_rt",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "base:ka10016",
-          "f": "pred_pre_sig",
-          "sep": null,
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "mapping_id": "base:ka10016",
+      "f": "pred_pre",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s274",
@@ -9337,22 +9351,23 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10016",
-      "f": "high_pric",
-      "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral",
-        "absolute": true
+        "suffix": "원",
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "선택 종목의 52주 신고가"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10016",
+      "f": "high_pric",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s276",
@@ -9437,9 +9452,6 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10016",
-      "f": "trde_qty",
-      "alt_mappings": null,
       "kor": "거래량",
       "format": {
         "unit": "shares",
@@ -9450,7 +9462,12 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "mapping_id": "base:ka10016",
+      "f": "trde_qty",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s280",
@@ -9485,32 +9502,22 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10016",
-      "f": "sel_bid",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10016",
-          "f": "buy_bid"
-        }
-      ],
       "kor": "매도호가",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "number",
+        "absolute": true,
+        "prefix": "매도 ",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10016",
-          "f": "buy_bid",
-          "sep": " · 매수 "
-        }
-      ],
-      "note": "한 텍스트에 매도·매수 호가 두 값 — 둘째 값은 extra_fields로 병기 선언"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10016",
+      "f": "sel_bid",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true
     },
     {
       "slot_id": "s282",
