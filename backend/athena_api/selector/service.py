@@ -19,7 +19,7 @@ from athena_api.generated.registry import SPLIT_BASE_TR_IDS
 from athena_api.generated.runtime import call_order_tr, call_typed_tr, call_websocket_tr
 from athena_api.routing_contract import BindingRole, EntityKind
 
-from .catalog import OperationCatalog, OperationDocument, realtime_item_model
+from .catalog import READ_ONLY_CONDITION_REFS, OperationCatalog, OperationDocument, realtime_item_model
 from .compatibility import (
     CompatibilityConfidence,
     CompatibilityDecision,
@@ -146,6 +146,8 @@ def _detail_group_summaries(
 
 
 def _intent_allows(document: OperationDocument, intent: DiscoveryIntent) -> bool:
+    if document.operation_ref in READ_ONLY_CONDITION_REFS:
+        return intent in {DiscoveryIntent.AUTO, DiscoveryIntent.QUERY, DiscoveryIntent.WEBSOCKET}
     if document.kind == "query":
         return intent in {DiscoveryIntent.AUTO, DiscoveryIntent.QUERY}
     if document.kind == "order":
@@ -584,7 +586,7 @@ class SelectorService:
         document = self.catalog.find_exact(request.operation_ref)
         if document is None or not _intent_allows(document, request.intent):
             raise OperationNotFoundError("Operation was not found")
-        if document.kind == "query":
+        if document.kind == "query" or document.operation_ref in READ_ONLY_CONDITION_REFS:
             policy_reasons: list[ReasonCode] = []
             if document.group_id:
                 execution_policy = "selector_detail"
@@ -934,6 +936,12 @@ class SelectorService:
             else dict(request.arguments)
         )
         arguments = self._validated_arguments(document, planned_arguments)
+        if (request.intent in {DiscoveryIntent.AUTO, DiscoveryIntent.QUERY}
+                and document.operation_ref in READ_ONLY_CONDITION_REFS):
+            expected = "CNSRLST" if document.operation_ref == "base:ka10171" else "CNSRREQ"
+            if (arguments.get("trnm") != expected
+                    or (document.operation_ref == "base:ka10172" and arguments.get("search_type") != "0")):
+                raise InvalidArgumentsError("Condition query plans accept list or one-shot reads only")
         token, expires_at = self.signer.issue(
             catalog=self.catalog,
             document=document,

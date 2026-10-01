@@ -14,6 +14,8 @@ from athena_api.selector.catalog import build_operation_catalog
 from athena_api.selector.errors import OrderTicketRequiredError, PlanAlreadyUsedError, QueryPlanRequiredError
 from athena_api.selector.plans import PlanSigner
 from athena_api.selector.service import SelectorService
+from athena_api.selector.errors import InvalidArgumentsError, OperationNotFoundError
+from athena_api.selector.schemas import DescribeRequest, DiscoveryIntent, ResolveRequest, SearchRequest
 
 
 class ConditionClient:
@@ -172,3 +174,57 @@ async def test_order_and_general_realtime_plans_keep_the_existing_preexecution_g
         await render(f)
     assert not f[2].calls
     assert f[1].app.state.canvas_events.empty()
+
+
+@pytest.mark.parametrize("intent", ["auto", "query"])
+def test_discovery_exposes_only_the_two_read_only_condition_operations(intent):
+    selector = fixture()[0]
+    visible = selector.catalog.visible_for(DiscoveryIntent(intent))
+    assert {doc.operation_ref for doc in visible if doc.kind == "websocket"} == {
+        "base:ka10171", "base:ka10172",
+    }
+    for ref in ("base:ka10171", "base:ka10172"):
+        description = selector.describe(DescribeRequest(operation_ref=ref, intent=intent))
+        assert description.kind == "websocket"
+        assert description.generic_callable
+        assert description.execution_policy == "selector_query"
+        hit = selector.search(SearchRequest(query=ref, intent=intent)).results[0]
+        assert hit.operation_ref == ref and not hit.discovery_only
+    for ref in ("base:ka10173", "base:ka10174", "base:0B", "base:kt10000"):
+        with pytest.raises(OperationNotFoundError):
+            selector.describe(DescribeRequest(operation_ref=ref, intent=intent))
+        with pytest.raises(OperationNotFoundError):
+            selector.resolve(ResolveRequest(question=ref, intent=intent, arguments={}))
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("intent", ["auto", "query"])
+@pytest.mark.parametrize(("operation", "question", "arguments", "body"), [
+    ("ka10171", "조건검색 목록 조회", {"trnm": "CNSRLST"},
+     {"return_code": 0, "trnm": "CNSRLST", "data": [["1", "합성 조건"]]}),
+    ("ka10172", "base:ka10172", {"trnm": "CNSRREQ", "seq": "1", "search_type": "0", "stex_tp": "K"},
+     {"return_code": 0, "trnm": "CNSRREQ", "seq": "1", "data": []}),
+])
+async def test_read_discovery_resolve_and_signed_canvas_delivery(intent, operation, question, arguments, body):
+    selector, request, client, payload = fixture(operation, arguments, body)
+    resolved = selector.resolve(ResolveRequest(question=question, intent=intent, arguments=arguments))
+    assert resolved.operation_ref == f"base:{operation}"
+    payload = payload.model_copy(update={"plan_token": resolved.plan_token})
+    await render((selector, request, client, payload))
+    assert client.calls == [(operation, arguments)]
+    assert request.app.state.canvas_events.get_nowait()["surface_contract"]["board_id"] == "2UN6-1"
+    with pytest.raises(PlanAlreadyUsedError):
+        await render((selector, request, client, payload))
+
+
+@pytest.mark.parametrize("intent", ["auto", "query"])
+@pytest.mark.parametrize(("operation", "arguments"), [
+    ("ka10171", {"trnm": "REG"}),
+    ("ka10171", {"trnm": "CNSRCLR"}),
+    ("ka10172", {"trnm": "CNSRREQ", "seq": "1", "search_type": "1", "stex_tp": "K"}),
+    ("ka10172", {"trnm": "REMOVE", "seq": "1", "search_type": "0", "stex_tp": "K"}),
+])
+def test_read_intent_cannot_sign_condition_registration_or_removal(intent, operation, arguments):
+    selector = fixture()[0]
+    with pytest.raises(InvalidArgumentsError):
+        selector.resolve(ResolveRequest(question=f"base:{operation}", intent=intent, arguments=arguments))

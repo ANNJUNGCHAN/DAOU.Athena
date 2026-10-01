@@ -578,18 +578,7 @@ def decide_selector_compatibility(
     target_resolver: TargetResolver | None = None,
 ) -> CompatibilityDecision:
     """Apply the transport-neutral typed policy over the requested visible surface."""
-    allowed_kinds = (
-        {"query"}
-        if intent in {DiscoveryIntent.AUTO, DiscoveryIntent.QUERY}
-        else {"order"}
-        if intent is DiscoveryIntent.ORDER
-        else {"websocket"}
-    )
-    operations = tuple(
-        document
-        for document in catalog.documents
-        if document.kind in allowed_kinds and document.visibility != "hidden"
-    )
+    operations = catalog.visible_for(intent)
     # Operation identity is authoritative only through the exact service fast path.
     # An operation-like token embedded in natural language must never fall through
     # to semantic selection, including longer-prefix/suffix near misses.
