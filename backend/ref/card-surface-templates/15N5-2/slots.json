@@ -1520,7 +1520,8 @@
         "sign": false,
         "precision": 2,
         "tone": "neutral",
-        "divisor": 100
+        "divisor": 100,
+        "prefix": "추적현재가 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1555,7 +1556,8 @@
         "sign": true,
         "precision": 2,
         "tone": "change",
-        "divisor": 100
+        "divisor": 100,
+        "prefix": "추적전일대비 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2375,7 +2377,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "ETF 과세: "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2401,7 +2404,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "ETN 과세: "
       },
       "paired_with": null,
       "collapse_group": null,

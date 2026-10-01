@@ -65,7 +65,6 @@ function toNumber(value) {
   const text = value.trim().replace(/,/g, '');
   if (!text) return null;
   const wire = kiwoomWireNumber(value);
-  if (wire && wire.empty) return 0;
   if (wire && wire.numeric != null) return wire.numeric;
   const parsed = Number(text);
   return Number.isFinite(parsed) ? parsed : null;
@@ -81,8 +80,7 @@ function kiwoomWireNumber(value) {
   const text = value.trim().replace(/,/g, '');
   if (!text) return null;
   // 앞 0이 있는 6자리는 종목코드(005930). 앞 0이 없는 6자리(269500)는 가격이다.
-  if (/^0\d{5}$/.test(text)) return null;
-  if (/^0{6,}$/.test(text)) return { empty: true };
+  if (/^0\d{5}$/.test(text) && !/^0+$/.test(text)) return null;
   // 키움 순매수는 `--2860591`처럼 부호를 두 번 붙인다. 한 개의 [+-]만 받으면
   // 파싱이 실패해 생문자가 화면에 남는다.
   const match = /^([+-]+)?(0*)(\d+)(\.\d+)?$/.exec(text);
@@ -153,8 +151,11 @@ function formatTime(value) {
   const text = String(value);
   // 금현물 체결시각은 YYYYMMDDHHmmss다. 날짜를 남겨 과거 시세를 오늘로 오인하지 않는다.
   if (/^\d{14}$/.test(text)) {
-    return `${factsCard.formatDatetime(text.slice(0, 8))} ${formatTime(text.slice(8))}`;
+    const clock = formatTime(text.slice(8));
+    return clock === null ? null : `${factsCard.formatDatetime(text.slice(0, 8))} ${clock}`;
   }
+  const clock = text.match(/^(\d{2}):?(\d{2}):?(\d{2})$/) || text.match(/^(\d{2}):(\d{2})$/);
+  if (clock && (Number(clock[1]) > 23 || Number(clock[2]) > 59 || Number(clock[3] || 0) > 59)) return null;
   return /^\d{6}$/.test(text)
     ? `${text.slice(0, 2)}:${text.slice(2, 4)}:${text.slice(4, 6)}`
     : text;
@@ -207,6 +208,7 @@ function keepAsStockCode(text, spec) {
   if (typeof field === 'string' && /(_cd|_code)$/.test(field)) return true;
   const kor = spec && spec.kor;
   if (typeof kor === 'string' && kor.includes('코드')) return true;
+  if (/^0+$/.test(trimmed)) return false;
   if (trimmed.startsWith('0')) return true;
   const kind = spec ? kindOf(spec) : 'text';
   if (kind === 'number' || kind === 'korean' || kind === 'percent') return false;
@@ -301,6 +303,7 @@ function formatSlot(format, raw) {
       : spec.date_style === 'month-day' && /^\d{8}$/.test(rawDate)
         ? `${rawDate.slice(4, 6)}-${rawDate.slice(6, 8)}`
         : factsCard.formatDatetime(rawDate);
+    if (text === null) return missingResult(spec);
     return applyAffixes(spec, { text, tone: toneFor(spec, normalized.value), missing: false });
   }
   if (typeof normalized.value === 'string' && keepAsStockCode(normalized.value, spec)) {
@@ -311,9 +314,6 @@ function formatSlot(format, raw) {
     });
   }
   const wire = kiwoomWireNumber(normalized.value);
-  if (wire && wire.empty) {
-    return { text: '', tone: null, missing: false };
-  }
   const wireSigned = Boolean(wire && (wire.padded || wire.plus || wire.repeated) && wire.signed);
   const toneSource = wireSigned
     ? (wire.numeric === 0 ? 0 : wire.plus ? 1 : -Math.abs(wire.numeric))
@@ -325,7 +325,7 @@ function formatSlot(format, raw) {
       const display = wire.signed ? Math.abs(wire.numeric) : wire.numeric;
       return applyAffixes(spec, {
         text: display.toLocaleString('ko-KR'),
-        tone,
+        tone: wire.numeric === 0 ? 'flat' : tone,
         missing: false,
       });
     }
