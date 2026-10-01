@@ -843,9 +843,9 @@
       "alt_mappings": null,
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s010",
@@ -859,7 +859,8 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "현재가 옆 등락률은 같은 시세의 flu_rt를 소수 둘째 자리까지 재표시한다. 방향 기호나 거래량 전일비를 등락률로 사용하지 않는다."
     },
     {
       "slot_id": "s012",
@@ -3997,13 +3998,13 @@
       "anchor": null,
       "table": null,
       "mapping_id": "detail:ka10007:expected_market",
-      "f": "smbol",
+      "f": "flu_rt",
       "alt_mappings": null,
-      "kor": "부호",
+      "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s107",
@@ -4023,7 +4024,8 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "현재가 옆 등락률은 같은 시세의 flu_rt를 소수 둘째 자리까지 재표시한다. 방향 기호나 거래량 전일비를 등락률로 사용하지 않는다."
     },
     {
       "slot_id": "s109",

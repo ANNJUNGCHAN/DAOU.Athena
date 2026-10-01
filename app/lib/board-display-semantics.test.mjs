@@ -9,6 +9,16 @@ const { formatSlot } = require('./board-format');
 const source = id => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
 const text = (id, values, slot) => mountPlan(registry.contractFor(id), values).assignments.find(x => x.slotId === slot)?.text;
 
+test('regular orderbook change rates keep their two decimal places in every repeated location', () => {
+  for (const [board,slots] of [['13BC-2',['s011','s062']],['1JPU-0',['s169','s255']],
+    ['2TRW-1',['s011','s046']],['3JZ3-0',['s011','s108']],['3N4O-0',['s085','s178']]]) {
+    for (const slot of slots) {
+      assert.equal(text(board,{[slot]:'0.93'},slot),'+0.93%');
+      assert.equal(text(board,{[slot]:'-0.04'},slot),'-0.04%');
+    }
+  }
+});
+
 test('credit and lending summaries describe their actual ranking source and scaled aggregate', () => {
   assert.equal(text('2YS8-0', {}, 's014'), '미제공');
   assert.equal(text('2YS8-0', {s166:'합성가'}, 's166'), '합성가');
