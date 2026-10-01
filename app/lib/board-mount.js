@@ -689,7 +689,8 @@ function applyPlan(root, plan, options = {}) {
       delete el.dataset.bsMissingDescription;
     }
     setTone(el, assignment.tone, assignment.forceFlatTone);
-    if (assignment.text === '상태 미확인') setStatusAppearance(el, false);
+    if (assignment.text === '상태 미확인'
+      || (assignment.missing && assignment.text === '시각 미제공' && el.closest?.('.bs-header'))) setStatusAppearance(el, false);
     if (el.dataset) {
       el.dataset.slotId = assignment.slotId;
       if (assignment.valueAtomic) el.dataset.bsValueAtomic = 'true';
@@ -1525,6 +1526,10 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  '2RWK-1': { node: '2RYE-1', rows: ['3AUO-0', '3AUW-0', '3AVA-0', '3AVO-0', '3AW2-0', '3AWG-0'], widths: [120, 180, 180, 120, 140, 180, 120], label: '신용·대차', stack: false, compact: true },
+  '2ZTA-0': { node: '38MX-0', rows: ['38MY-0', '38NS-0', '38OD-0', '38Y7-0', '38YS-0', '38ZD-0', '38ZY-0', '38N7-0', '390J-0'], widths: [52, 180, 110, 96, 110, 180, 180, 170], label: '한도 소진율', stack: false, compact: true },
+  '2XTO-0': { node: '365N-0', rows: ['365S-0', '3660-0', '366I-0', '3670-0', '367I-0', '3680-0'], widths: [52, 180, 120, 100, 180, 180, 180], label: '잔량 순위', stack: false, compact: true },
+  '2UN6-1': { node: '34NC-0', rows: ['34O8-0', '34OG-0', '34P0-0', '34PK-0', '34Q4-0', '34QO-0', '34R8-0'], widths: [130, 200, 140, 100, 100, 140, 130], label: '조건검색 결과', stack: false, compact: true },
   '3MTJ-0': { node: '3OP4-0', rows: ['3OP8-0', '3OPM-0', '3OQ2-0', '3OQJ-0'], widths: [112, 150, 150, 150, 150, 150, 150], label: '결제 예정' },
   '15J9-2': { node: '355R-0', rows: ['355S-0', '355Z-0', '356G-0', '356X-0'], widths: [166, 160, 126, 210, 180, 160], gap: 12, label: '주도 종목' },
   '2SCE-1': { node: '375G-0', rows: ['375K-0', '379R-0', '37EU-0', '37FJ-0', '37G8-0', '37GX-0', '37HM-0', '37IB-0', '37J0-0'], widths: [168, 186, 144, 190, 222, 160], label: '보유종목' },
@@ -1584,6 +1589,9 @@ function readableTable(surface, contract, config) {
   const owner = authoredNode(surface, config.node);
   const rows = config.rows.map((id) => authoredNode(surface, id));
   if (!owner || rows.some((row) => !row)) return;
+  for (const property of ['overflow', 'overflow-x', 'overflow-y']) owner.style.removeProperty(property);
+  owner.classList.remove('bs-r-scroll', 'bs-r-scroll-table');
+  owner.removeAttribute('tabindex');
   const doc = surface.ownerDocument;
   const viewport = layoutGroup(doc, 'bs-readable-scroll');
   viewport.tabIndex = 0;
@@ -1594,8 +1602,11 @@ function readableTable(surface, contract, config) {
   inner.setAttribute('aria-label', config.label);
   inner.style.setProperty('--bs-table-width', `${config.widths.reduce((a, b) => a + b, 0) + (config.widths.length - 1) * (config.gap || 0)}px`);
   inner.style.setProperty('--bs-table-gap', `${config.gap || 0}px`);
-  owner.insertBefore(viewport, rows[0]);
+  let firstRowContainer = rows[0];
+  while (firstRowContainer.parentElement !== owner) firstRowContainer = firstRowContainer.parentElement;
+  owner.insertBefore(viewport, firstRowContainer);
   viewport.append(inner);
+  const sourceParents = new Set(rows.map(row => row.parentElement));
   for (const [rowIndex, row] of rows.entries()) {
     if (!row.dataset.row) row.dataset.row = rowIndex === 0 ? 'head' : String(rowIndex - 1);
     // 병기 사본은 원본 열을 모두 유지하는 이 표에서는 필요 없다.
@@ -1636,6 +1647,12 @@ function readableTable(surface, contract, config) {
     }
     inner.append(row);
   }
+  for (const parent of sourceParents) {
+    if (parent === owner || parent.contains(viewport)) continue;
+    if (!parent.textContent.trim()) setHidden(parent, true);
+    else parent.classList.add('bs-readable-remainder');
+  }
+  if (firstRowContainer !== rows[0] && firstRowContainer.textContent.trim()) firstRowContainer.after(viewport);
   const hint = layoutGroup(doc, 'bs-readable-hint');
   hint.textContent = '표를 좌우로 이동해 모든 열을 확인하세요';
   viewport.after(hint);
@@ -1769,10 +1786,48 @@ function applyReadableBoardLayout(surface, contract) {
 function applyConditionQueryMode(surface, contract, operationRef) {
   if (contract.board_id !== '2UN6-1') return;
   const query = operationRef === 'base:ka10171' || operationRef === 'base:ka10172';
+  surface.dataset.bsConditionRead = query ? (operationRef === 'base:ka10171' ? 'list' : 'search') : '';
+  const band = authoredNode(surface, '34ND-0');
+  if (band && !band.dataset.bsConditionPrepared) {
+    const keep = ['34NG-0', '3SAL-0', '34NQ-0', '34NS-0', '34O0-0', '34O2-0'].map(id => authoredNode(surface, id));
+    for (const node of band.querySelectorAll('[data-node]')) {
+      if (!keep.some(leaf => leaf && (node === leaf || node.contains(leaf)))) node.classList.add('bs-condition-monitor-only');
+    }
+    band.dataset.bsConditionPrepared = 'true';
+  }
+  let context = surface.querySelector('.bs-condition-query-context');
+  if (!context) {
+    context = layoutGroup(surface.ownerDocument, 'bs-query-context bs-condition-query-context');
+    surface.insertBefore(context, surface.querySelector('.bs-workspace'));
+  }
+  context.hidden = !query;
+  context.textContent = operationRef === 'base:ka10171' ? '저장된 조건검색 목록' : '조건검색 1회 조회 결과';
+  if (band) {
+    for (const [cardId, nameId, codeId] of [['34NE-0','34NG-0','3SAL-0'], ['34NO-0','34NQ-0','34NS-0'], ['34NY-0','34O0-0','34O2-0']]) {
+      const card = authoredNode(surface, cardId);
+      const hasData = [nameId, codeId].some(id => {
+        const node = authoredNode(surface, id);
+        return node && !node.dataset.missing && !node.dataset.bsDesignText && node.textContent.trim();
+      });
+      if (card) card.classList.toggle('bs-condition-empty-card', !hasData);
+    }
+    let empty = band.querySelector('.bs-condition-empty');
+    if (!empty) {
+      empty = layoutGroup(surface.ownerDocument, 'bs-empty-table-message bs-condition-empty');
+      empty.setAttribute('role', 'status');
+      empty.textContent = '저장된 조건검색이 없습니다';
+      band.append(empty);
+    }
+    empty.hidden = !query || ['34NG-0', '34NQ-0', '34O0-0'].some(id => {
+      const node = authoredNode(surface, id);
+      return node && !node.dataset.missing && node.textContent.trim();
+    });
+  }
   for (const [id, selected] of [['32P0-0', false], ['32P2-0', operationRef === 'base:ka10172']]) {
     const label = authoredNode(surface, id);
     if (!label || !label.parentElement) continue;
     const chip = label.parentElement;
+    chip.classList.add('bs-condition-monitor-mode');
     for (const [node, properties] of [[chip, ['backgroundColor', 'borderColor', 'borderStyle', 'borderWidth']], [label, ['color', 'fontFamily']]]) {
       if (!node.__bsQueryModeStyle) node.__bsQueryModeStyle = Object.fromEntries(properties.map(key => [key, node.style[key]]));
       for (const key of properties) node.style[key] = node.__bsQueryModeStyle[key];
@@ -2069,6 +2124,10 @@ function relaxOverflowHeights(surface) {
 function relaxOverflowRows(surface) {
   if (!surface || typeof surface.querySelectorAll !== 'function') return [];
   if (typeof getComputedStyle !== 'function' || typeof document === 'undefined') return [];
+  for (const hint of surface.querySelectorAll('.bs-readable-hint')) {
+    const scroll = hint.previousElementSibling;
+    hint.style.display = scroll && scroll.clientWidth > 0 && scroll.scrollWidth > scroll.clientWidth + 1 ? 'block' : 'none';
+  }
   // 같은 폭에서 두 번 재지 않는다. 제품에서는 표면의 관찰자가, 게이트에서는 정착
   // 판정이 같은 함수를 부르므로 그대로 두면 같은 폭에서 여러 번 돌고, 그때마다
   // 레이아웃이 조금씩 바뀌어 정착 판정이 한도까지 늘어진다(실측: 마운트 게이트가

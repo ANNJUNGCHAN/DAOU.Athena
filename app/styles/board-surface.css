@@ -544,6 +544,7 @@
   outline-offset: -2px;
 }
 .bs-readable-table { width: max(100%, var(--bs-table-width)); }
+.board-surface .bs-readable-remainder { width:100%; height:auto; min-height:0; flex:0 0 auto; }
 .bs-readable-table .bs-col { display: contents; }
 .bs-readable-table .bs-readable-row {
   display: flex;
@@ -792,3 +793,30 @@
 .bs-flow-value { display: flex; justify-content: flex-end; }
 .bs-flow-value-text { font-family: var(--font-mono); font-size: 13px; line-height: 18px; white-space: nowrap; }
 @container board (max-width: 479px) { .bs-flow-section { padding-inline: 16px; } }
+
+/* A list query and a one-shot search do not start a monitoring session. */
+.board-surface[data-bs-condition-read]:not([data-bs-condition-read=""]) :is(.bs-rail, .bs-condition-monitor-only, .bs-condition-monitor-mode, [data-node="2UPY-1"]) { display: none !important; }
+.board-surface[data-bs-condition-read]:not([data-bs-condition-read=""]) :is(.bs-workspace, .bs-primary, [data-node="34ND-0"]) { height: auto; min-height: 0; }
+.board-surface[data-bs-condition-read]:not([data-bs-condition-read=""]) .bs-primary { width: 100%; flex: 0 0 auto; border-right: 0; }
+.board-surface[data-bs-condition-read="list"] :is(.bs-readable-scroll, .bs-readable-hint) { display: none; }
+.board-surface[data-bs-condition-read="list"] .bs-condition-empty-card { display: none !important; }
+.board-surface[data-bs-condition-read="list"] .bs-readable-owner > .bs-empty-table-message { display: none !important; }
+.board-surface[data-bs-condition-read="list"] [data-node="34ND-0"] { flex-direction: column; gap: 0; width: 100%; }
+.board-surface[data-bs-condition-read="list"] :is([data-node="34NE-0"], [data-node="34NO-0"], [data-node="34NY-0"]) { width: 100%; flex: 0 0 auto; padding: 12px 0; }
+.board-surface[data-bs-condition-read="list"] [data-node="34ND-0"] [data-bs-hoisted] { height: auto; min-height: 0; }
+.board-surface[data-bs-condition-read="list"] :is([data-node="34NE-0"], [data-node="34NO-0"], [data-node="34NY-0"]) { background: transparent; border-color: var(--color-k-line-soft); }
+.board-surface[data-bs-condition-read="search"] [data-node="34ND-0"] { display: none !important; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-table { --bs-table-width: 270px !important; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-cell:not([data-col="1"]):not([data-col="5"]) { display: none !important; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-cell[data-col="1"] { --bs-cell-width: 150px !important; align-items: flex-start; text-align: left; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-cell[data-col="5"] { --bs-cell-width: 120px !important; }
+.bs-condition-query-context[hidden], .bs-condition-empty[hidden] { display: none; }
+
+/* Rail dates preserve all ten date characters beside the numeric measure. */
+.board-surface :is([data-node="3DVA-0"], [data-node="3DVE-0"], [data-node="3DVI-0"], [data-node="3DVM-0"], [data-node="3DWD-0"], [data-node="3SHB-0"], [data-node="3SHG-0"], [data-node="3SHL-0"], [data-node="3SHQ-0"], [data-node="3SHV-0"]) { min-width: 10ch; width: auto; flex-shrink: 0; white-space: nowrap; }
+.board-surface :is([data-node="3DV9-0"], [data-node="3DVD-0"], [data-node="3DVH-0"], [data-node="3DVL-0"]) { flex-wrap: wrap; gap: 6px 10px; height: auto; min-height: 0; }
+.board-surface :is([data-node="3DV9-0"], [data-node="3DVD-0"], [data-node="3DVH-0"], [data-node="3DVL-0"]) > :nth-child(2) { min-width: max-content; flex: 1 0 auto; }
+.board-surface :is([data-node="3DV9-0"], [data-node="3DVD-0"], [data-node="3DVH-0"], [data-node="3DVL-0"]) > :nth-child(3) { display: block; width: 100%; flex: 1 0 100%; white-space: normal; overflow-wrap: anywhere; }
+.board-surface [data-node="3DWE-0"] > [data-node] { flex-wrap: wrap; gap: 6px 10px; height: auto; min-height: 0; }
+.board-surface [data-node="3DWE-0"] > [data-node] > :nth-child(2) { min-width: 96px; flex-shrink: 0; }
+.board-surface [data-node="3SQC-0"] { min-width: max-content; flex-shrink: 0; }
