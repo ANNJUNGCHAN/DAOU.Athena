@@ -144,3 +144,14 @@ test('unreceived watchlist group context and VI states do not reuse authored exa
   }
   assert.equal(text('2UHM-1',{},'s104'),'상태 미확인');
 });
+
+test('after-hours and gold quote prices preserve positive amounts and real zero quantities', () => {
+  for (const [board, price, quantity] of [['2QRP-1','s026','s028'],['3JT4-0','s031','s032'],['2QX1-1','s014','s092']]) {
+    assert.equal(text(board,{[price]:0},price),'—');
+    assert.equal(text(board,{[price]:-1234},price),'1,234');
+    assert.match(text(board,{[quantity]:0},quantity),/^0(?:주)?$/);
+  }
+  assert.equal(text('2QRP-1',{s012:'160001'},'s012'),'16:00:01');
+  assert.equal(text('2QX1-1',{s011:'0.78'},'s011'),'+0.78%');
+  assert.equal(text('2QX1-1',{s050:'121.5'},'s050'),'121.5%');
+});

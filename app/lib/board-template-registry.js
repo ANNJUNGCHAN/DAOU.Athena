@@ -39,7 +39,7 @@ const ACCOUNT_NAVIGATION = Object.freeze([
 // Instrument details require the subject of the same market. The source board
 // is server-authored; a specimen name or a six-character code cannot prove it.
 const INSTRUMENT_DOMAINS = Object.freeze({
-  gold: ['2RJ7-1'],
+  gold: ['2RJ7-1', '2QX1-1'],
   sector: ['32S7-0', '15J9-2', '2TZN-1'],
   etf: ['15N5-2', '2VIN-0', '2WZK-0'],
   elw: ['15P5-2', '2VO0-0', '2XA5-0', '2XY6-0', '2Y47-0', '2Z49-0', '2ZN9-0', '3DZ1-0', '3TOM-0'],
@@ -47,8 +47,10 @@ const INSTRUMENT_DOMAINS = Object.freeze({
 const INSTRUMENT_DETAIL_DOMAINS = Object.freeze({
   '137X-2': 'stock', '2R3M-1': 'stock', '2RBO-1': 'stock',
   '3DI2-0': 'stock', '3FR6-0': 'stock',
-  '2RJ7-1': 'gold', '32S7-0': 'sector', '15N5-2': 'etf',
+  '2RJ7-1': 'gold', '2QX1-1': 'gold', '32S7-0': 'sector', '15N5-2': 'etf',
   '15P5-2': 'elw', '3DZ1-0': 'elw',
+  '13BC-2': 'stock', '1JPU-0': 'stock', '2TRW-1': 'stock',
+  '3JZ3-0': 'stock', '3N4O-0': 'stock', '2QRP-1': 'stock', '3JT4-0': 'stock',
 });
 const ELW_LIST_BOARDS = ['2VO0-0', '2XA5-0', '2XY6-0', '2Y47-0', '2Z49-0', '2ZN9-0'];
 // These detail headers visibly repeat the ETF/ELW tabs, but the authored graph

@@ -59,12 +59,16 @@ test('a stock context cannot hydrate gold, sector, ETF or ELW details', () => {
   const stock = { surface_contract: { board_id: '137X-2' }, symbol: '005930' };
   assert.equal(registry.navigationTargetRequirement('2RBO-1', stock), '');
   for (const [id, text] of [
-    ['2RJ7-1', '금현물 종목'], ['32S7-0', '업종'], ['15N5-2', 'ETF 종목'], ['3DZ1-0', 'ELW 종목'],
+    ['2RJ7-1', '금현물 종목'], ['2QX1-1', '금현물 종목'], ['32S7-0', '업종'], ['15N5-2', 'ETF 종목'], ['3DZ1-0', 'ELW 종목'],
   ]) {
     assert.ok(registry.navigationTargetRequirement(id, stock).startsWith(text));
     assert.equal(registry.navigationTargetRequirement(id, { surface_contract: { board_id: id } }), '');
   }
   assert.ok(registry.navigationTargetRequirement('137X-2', { surface_contract: { board_id: '2RJ7-1' } }));
+  for (const id of ['13BC-2', '1JPU-0', '2TRW-1', '3JZ3-0', '3N4O-0', '2QRP-1', '3JT4-0']) {
+    assert.equal(registry.navigationTargetRequirement(id, stock), '');
+    assert.match(registry.navigationTargetRequirement(id, { surface_contract: { board_id: '2QX1-1' } }), /^주식 종목/);
+  }
   assert.equal(registry.navigationTargetRequirement('3MTJ-0', stock), '');
 });
 

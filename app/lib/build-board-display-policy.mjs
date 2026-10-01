@@ -118,9 +118,11 @@ export function buildPolicy() {
       }
       const role = staticDisplayRole(slot)
         || (UNANNOTATED[entry.board_id]?.includes(slot.slot_id) ? 'unavailable' : null);
-      const price = (PRICE_FIELDS.has(slot.f) || /^(?:sel|buy)_(?:[1-9]|10)bid$/.test(slot.f || '')) && hasBinding(slot);
+      const sessionQuote = ['2QRP-1', '3JT4-0', '2QX1-1'].includes(entry.board_id)
+        && /^(?:ovt_sigpric_(?:(?:sel|buy)_bid_[1-5]|cur_prc)|pri_(?:sel|buy)_bid_unit|cntr_pric)$/.test(slot.f || '');
+      const price = (PRICE_FIELDS.has(slot.f) || /^(?:sel|buy)_(?:[1-9]|10)bid$/.test(slot.f || '') || sessionQuote) && hasBinding(slot);
       const direction = /^(?:pred_pre_sig(?:_n)?|pre_sig|pre_tp)$/.test(slot.f || '') && hasBinding(slot);
-      const time = hasBinding(slot) && (TIME_FIELDS.test(slot.f || '')
+      const time = hasBinding(slot) && (TIME_FIELDS.test(slot.f || '') || slot.f === 'bid_req_base_tm'
         || (slot.f === '20' && /^base:0/.test(slot.mapping_id || '')));
       const identifier = hasBinding(slot) && (/^(?:code|symbol)$|(?:_cd|_code)$/.test(slot.f || '')
         || /코드/.test(slot.kor || '') || slot.format?.literal === true);

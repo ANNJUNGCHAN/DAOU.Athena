@@ -521,14 +521,12 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "216",
+      "mapping_id": "detail:ka10007:identity",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "투자자별ticker",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
+        "kind": "text",
         "tone": "neutral"
       },
       "paired_with": null,
@@ -536,7 +534,7 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "종목코드 005930 — 원장 귀속은 3JZ3-0 푸터, 여기선 헤더 재표시",
-      "note": "뒤쪽 16:00~18:00은 시간외 단일가 운영 시간(고정 문구)"
+      "note": "현재 조회 대상 종목코드. 시간외 가격·잔량은 ka10087에서만 받는다."
     },
     {
       "slot_id": "s004",
@@ -1907,8 +1905,8 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "23",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "예상체결가",
       "format": {
@@ -1929,7 +1927,9 @@
           "f": "291",
           "kor": "예상체결가"
         }
-      ]
+      ],
+      "static": "blank",
+      "unbound_reason": "시간외 단일가 조회는 이 정규장 예상체결·거래대금·거래소별 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s052",
@@ -1943,8 +1943,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "200",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "예상체결가전일종가대비",
       "format": {
@@ -1988,7 +1988,9 @@
           "f": "293",
           "kor": "예상체결가전일대비기호"
         }
-      ]
+      ],
+      "static": "blank",
+      "unbound_reason": "시간외 단일가 조회는 이 정규장 예상체결·거래대금·거래소별 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s053",
@@ -2002,8 +2004,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "24",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "예상체결수량",
       "format": {
@@ -2029,7 +2031,9 @@
           "kor": "예상체결량"
         }
       ],
-      "paired_note": "예상 체결가 행 둘째 줄 — 주값 s051의 수량 병기(부모 프레임이 달라 paired_with는 비운다)"
+      "paired_note": "예상 체결가 행 둘째 줄 — 주값 s051의 수량 병기(부모 프레임이 달라 paired_with는 비운다)",
+      "static": "blank",
+      "unbound_reason": "시간외 단일가 조회는 이 정규장 예상체결·거래대금·거래소별 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s054",
@@ -3578,8 +3582,8 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "detail:ka10007:session",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
@@ -3593,7 +3597,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "부모 보드 2QRP-1(시간외 단일가)의 같은 값 재표시 — 낱값 펼침 보드"
+      "dup_note": "부모 보드 2QRP-1(시간외 단일가)의 같은 값 재표시 — 낱값 펼침 보드",
+      "static": "blank",
+      "unbound_reason": "시간외 단일가 조회는 이 정규장 예상체결·거래대금·거래소별 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s110",
@@ -3768,8 +3774,8 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "6064",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "KRX 매도호가총잔량",
       "format": {
@@ -3790,7 +3796,9 @@
           "kor": "KRX 매수호가총잔량",
           "sep": " / "
         }
-      ]
+      ],
+      "static": "blank",
+      "unbound_reason": "시간외 단일가 조회는 이 정규장 예상체결·거래대금·거래소별 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s118",
@@ -3825,8 +3833,8 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "6086",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "NXT 매도호가총잔량",
       "format": {
@@ -3847,7 +3855,9 @@
           "kor": "NXT 매수호가총잔량",
           "sep": " / "
         }
-      ]
+      ],
+      "static": "blank",
+      "unbound_reason": "시간외 단일가 조회는 이 정규장 예상체결·거래대금·거래소별 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s120",
