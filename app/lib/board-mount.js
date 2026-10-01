@@ -610,6 +610,10 @@ function setStatusAppearance(el, receiving) {
     && typeof chip.closest === 'function' && chip.closest('.bs-header')) {
     chip.style.backgroundColor = receiving ? '#5FCE3F1F' : 'var(--color-k-panel3)';
   }
+  for (const dot of chip && typeof chip.querySelectorAll === 'function'
+    ? chip.querySelectorAll('[data-node="34NM-0"], [data-node="34NW-0"]') : []) {
+    dot.style.backgroundColor = receiving ? 'var(--color-ok)' : 'var(--color-k-dim)';
+  }
 }
 
 function unitHasLiveSlot(box) {
@@ -670,7 +674,18 @@ function applyPlan(root, plan, options = {}) {
     const el = index.get(assignment.node);
     if (!el) { unbound.push(assignment.slotId); continue; }
     if (elementChildCount(el) > 0) { containers.push(assignment.slotId); continue; }
-    el.textContent = assignment.missing && assignment.text === boardFormat.missingText() && tableCellOf(el) ? '—' : assignment.text;
+    const compactTime = assignment.missing && assignment.text === '시각 미제공'
+      && typeof el.closest === 'function' && !!el.closest('.bs-kpi-cell, .bs-table');
+    el.textContent = compactTime || (assignment.missing && assignment.text === boardFormat.missingText() && tableCellOf(el)) ? '—' : assignment.text;
+    if (compactTime) {
+      el.setAttribute('title', assignment.text);
+      el.setAttribute('aria-label', assignment.text);
+      el.dataset.bsMissingDescription = 'true';
+    } else if (el.dataset && el.dataset.bsMissingDescription) {
+      el.removeAttribute('title');
+      el.removeAttribute('aria-label');
+      delete el.dataset.bsMissingDescription;
+    }
     setTone(el, assignment.tone, assignment.forceFlatTone);
     if (assignment.text === '상태 미확인') setStatusAppearance(el, false);
     if (el.dataset) {
@@ -1724,6 +1739,25 @@ function applyReadableBoardLayout(surface, contract) {
   }
 }
 
+function applyConditionQueryMode(surface, contract, operationRef) {
+  if (contract.board_id !== '2UN6-1') return;
+  const query = operationRef === 'base:ka10171' || operationRef === 'base:ka10172';
+  for (const [id, selected] of [['32P0-0', false], ['32P2-0', operationRef === 'base:ka10172']]) {
+    const label = authoredNode(surface, id);
+    if (!label || !label.parentElement) continue;
+    const chip = label.parentElement;
+    for (const [node, properties] of [[chip, ['backgroundColor', 'borderColor', 'borderStyle', 'borderWidth']], [label, ['color', 'fontFamily']]]) {
+      if (!node.__bsQueryModeStyle) node.__bsQueryModeStyle = Object.fromEntries(properties.map(key => [key, node.style[key]]));
+      for (const key of properties) node.style[key] = node.__bsQueryModeStyle[key];
+    }
+    if (!query) continue;
+    chip.style.backgroundColor = selected ? 'var(--color-k-text)' : 'transparent';
+    chip.style.border = '1px solid var(--color-k-line)';
+    label.style.color = selected ? 'var(--color-k-panel)' : 'var(--color-k-text)';
+    label.style.fontFamily = selected ? 'var(--font-strong)' : 'var(--font-body)';
+  }
+}
+
 function compactReducedContent(surface, contract) {
   for (const box of surface.querySelectorAll('.bs-reduced-content')) {
     box.classList.remove('bs-reduced-content');
@@ -2253,6 +2287,7 @@ function mountBoard(root, boardId, values, options = {}) {
     root.__bsBoardId = String(boardId);
   }
   const report = applyPlan(surface, plan, options);
+  applyConditionQueryMode(surface, contract, options.operationRef);
   updateBasketRows(surface, contract, plan, values);
   updateEmptyTableStates(surface);
   compactReducedContent(surface, contract);

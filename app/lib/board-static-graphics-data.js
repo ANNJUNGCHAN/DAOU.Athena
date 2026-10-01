@@ -1,9 +1,13 @@
 // Reviewed fixed specimen geometry from the public card-surface templates.
-// Exact authored node IDs only; actual primary renderers are excluded.
+// Exact authored node IDs only; actual primary mount regions are excluded.
 // Region nodes retain their text anchors; only shapes are unavailable graphics.
 (function () {
 'use strict';
 const data = {
+  "137X-2": {
+    "shapes": ["33C7-0", "33C8-0", "33CE-0", "33CM-0", "33CN-0", "33CT-0", "33D1-0", "33D7-0", "33D8-0"],
+    "regions": ["33C2-0"]
+  },
   "133H-2": {
     "shapes": [
       "3JLS-0",
