@@ -47,9 +47,11 @@ function prepare(surface, contract) {
   const quotes = add(section, 'div', 'bs-gold-quotes');
   for (const [slot, caption] of [['s014','최우선 매도호가'],['s017','최우선 매수호가']]) {
     const cell = add(quotes, 'div', 'bs-gold-quote');
+    cell.dataset.goldQuote = slot;
     add(cell, 'div', 'bs-gold-label', caption);
     move(cell, slot);
-    add(cell, 'div', 'bs-gold-label', '원');
+    add(cell, 'div', 'bs-gold-value bs-gold-missing');
+    add(cell, 'div', 'bs-gold-label bs-gold-unit', '원');
   }
   const metrics = add(section, 'div', 'bs-gold-metrics');
   for (const [slot, caption] of METRICS) {
@@ -98,6 +100,24 @@ function update(surface, contract, plan, options = {}) {
   for (const leaf of surface.querySelectorAll('.bs-gold-value')) {
     const item = bySlot.get(leaf.dataset.slotId);
     if (item?.missing || !['up', 'down'].includes(item?.tone)) leaf.style.color = 'var(--color-k-text)';
+  }
+  // These two requested prices must explain missing data. Generic empty-value
+  // cleanup may hide the moved slot and its new container before this update.
+  for (const cell of surface.querySelectorAll('[data-gold-quote]')) {
+    const item = bySlot.get(cell.dataset.goldQuote);
+    const hasValue = received(item);
+    cell.hidden = false;
+    cell.style.removeProperty('display');
+    const leaf = cell.querySelector('[data-slot-id]');
+    if (leaf) {
+      leaf.hidden = !hasValue;
+      if (hasValue) leaf.style.removeProperty('display');
+    }
+    const missing = cell.querySelector('.bs-gold-missing');
+    missing.hidden = hasValue;
+    missing.textContent = pending.has(cell.dataset.goldQuote) ? '조회 중' : '미제공';
+    const unit = cell.querySelector('.bs-gold-unit');
+    if (unit) unit.hidden = !hasValue;
   }
   for (const [slot] of METRICS) {
     const cell = surface.querySelector(`[data-gold-metric="${slot}"]`);
