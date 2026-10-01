@@ -1,5 +1,8 @@
 """Synthetic public response shapes; no account data or external requests."""
 from athena_api.card_surface_contract import bind_surface_values, build_board_surface_contract
+from athena_api.card_surface_templates import get_registry
+from athena_api.surface_display_units import annotate_surface_display_units
+from athena_api.mock_unsupported import is_mock_unsupported
 
 
 def values_for(board, responses):
@@ -103,3 +106,75 @@ def test_stock_trend_missing_broker_names_never_inherit_specimens_and_keep_zero_
     assert values['s123'] == '합성 매도2'
     assert values['s124'] == '-5'
     assert all(slot not in values for slot in ['s114','s116','s118','s121','s125'])
+
+
+SPECS = {
+    '2V71-0': ('base:ka90003', 'prm_netprps_upper_50', '2WBN-0',
+        ['rank','stk_cd','stk_nm','cur_prc','pred_pre','prm_netprps_amt','prm_buy_amt','prm_sell_amt','acc_trde_qty']),
+    '3063-0': ('base:ka10065', 'opmr_invsr_trde_upper', '35L4-0',
+        ['stk_cd','stk_nm','buy_qty','sel_qty','netslmt']),
+    '30HY-0': ('base:ka10131', 'orgn_frgnr_cont_trde_prst', '34IW-0',
+        ['rank','stk_cd','stk_nm','frgnr_nettrde_amt','frgnr_nettrde_qty','orgn_nettrde_amt','orgn_nettrde_qty','nettrde_amt','nettrde_qty','tot_cont_netprps_dys','tot_cont_nettrde_qty','tot_cont_netprps_amt']),
+}
+
+def fixture_bound(zero=False):
+    bound = {}
+    for source, (operation, array, _, fields) in enumerate(SPECS.values(),1):
+        rows=[]
+        for row in range(8):
+            rows.append({field: (f'합성{source}-{row}' if field=='stk_nm' else f'{source*100+row:06d}' if field=='stk_cd' else str(row+1) if field=='rank' else '0' if zero else str(-source*10000-row)) for field in fields})
+        bound.update(bind_surface_values(operation,{array:rows}))
+    bound.update(bind_surface_values('base:ka10034',{'for_dt_trde_upper':[{'stk_nm':'다른 조회 종목','stk_cd':'999999','cur_prc':'987654','pred_pre':'-54321'} for _ in range(8)]}))
+    return bound
+
+def contract(board,zero=False):
+    return build_board_surface_contract(board,fixture_bound(zero),get_registry())
+
+def test_three_main_lists_keep_one_source_and_each_explicit_row():
+    registry=get_registry()
+    for board,(operation,_,table,_) in SPECS.items():
+        values={v['slot_id']:v for v in contract(board)['slot_values']}
+        names=[]
+        for slot in registry.boards[board].slots:
+            if not slot.table or slot.table.table_id!=table or not slot.table.row.isdigit():continue
+            if slot.binds_a_field:
+                entry=values[slot.slot_id]
+                assert entry['occurrence_id'].startswith(operation+'|')
+                assert entry['row_index']==int(slot.table.row)
+                if slot.f=='stk_nm': names.append(entry['value'])
+            else: assert slot.slot_id not in values
+        assert len(names)==len(set(names))==8
+
+def test_selected_pairs_match_received_first_stock_and_last_row_is_distinct():
+    for board, selected, first in [('2V71-0',('s168','s169'),('s042','s043')),('3063-0',('s170','s171'),('s046','s047')),('30HY-0',('s158','s159'),('s042','s043'))]:
+        values={v['slot_id']:v['value'] for v in contract(board)['slot_values']}
+        assert tuple(values[s] for s in selected)==tuple(values[s] for s in first)
+
+def test_real_zero_is_present_and_empty_response_invents_nothing():
+    for board in SPECS:
+        result=contract(board,True)
+        assert any(v['value']=='0' for v in result['slot_values'])
+        assert not build_board_surface_contract(board,{},get_registry())['slot_values']
+
+def test_investor_amount_quantity_and_unknown_keep_raw_and_no_subject_assertion():
+    raw=contract('3063-0')
+    for mode,unit in [('1','백만원'),('2','주'),('', 'unknown')]:
+        annotated=annotate_surface_display_units(raw,{'base:ka10065':{'amt_qty_tp':mode}})
+        nums=[v for v in annotated['slot_values'] if v['occurrence_id'].split('|')[1].rsplit('.',1)[-1] in ('buy_qty','sel_qty','netslmt')]
+        assert len(nums)==33
+        originals={v['slot_id']:v['value'] for v in raw['slot_values']}
+        assert all(v['value']['display_unit']==unit and v['value']['value']==originals[v['slot_id']] for v in nums)
+    assert 'flow_query_context' not in annotated
+
+def test_credit_list_cannot_borrow_foreign_ranking_prices():
+    board=get_registry().boards['31OF-0']
+    assert is_mock_unsupported('base:kt20016') and is_mock_unsupported('base:kt20017')
+    assert not board.operation_refs
+    assert not board.binding_slots
+    assert any(key.startswith('base:ka10034|') and '.cur_prc|' in key for key in fixture_bound())
+    assert not contract('31OF-0')['slot_values']
+
+def test_program_summary_public_units_are_raw_thousand_shares_and_unknown():
+    slots={s.slot_id:s for s in get_registry().boards['2V71-0'].slots}
+    assert all(slots[s].format.get('suffix')=='천주' for s in ['s186','s189'])
+    assert slots['s194'].format.get('suffix')==' (단위 미확인)'

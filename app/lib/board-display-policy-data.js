@@ -7980,20 +7980,45 @@ const policy = {
     ]
   },
   "2V71-0": {
-    "s016": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
+    "s003": [
+      "시장 전체 · 상위 50종목",
+      "caption",
+      "프로그램 조회 결과 · 최대8종목 표시"
+    ],
+    "s011": [
+      "프로그램 순매수 상위 50",
+      "caption",
+      "조회 응답 순서"
+    ],
+    "s012": [
+      "상위 50 합계",
+      "caption",
+      "종목별 프로그램 조회 합계"
+    ],
+    "s014": [
+      "순매수 기준",
+      "caption",
+      "별도 조회 · 순매수대금"
+    ],
+    "s015": [
+      "순매수 1위",
+      "caption",
+      "첫 조회 종목"
+    ],
+    "s018": [
+      "신용비율 최고",
+      "caption",
+      "신용 조회"
     ],
     "s019": [
       "11.8%",
       "unavailable",
       null
     ],
-    "s042": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
+    "s021": [
+      "대차잔고 1위",
+      "caption",
+      "대차 별도 조회"
     ],
     "s043": [
       "005930",
@@ -8005,11 +8030,6 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s056": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
-    ],
     "s057": [
       "000660",
       "bound-identifier",
@@ -8019,11 +8039,6 @@ const policy = {
       "198,400",
       "price",
       "cur_prc"
-    ],
-    "s070": [
-      "현대차",
-      "bound-label",
-      "stk_nm"
     ],
     "s071": [
       "005380",
@@ -8035,11 +8050,6 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s084": [
-      "KB금융",
-      "bound-label",
-      "stk_nm"
-    ],
     "s085": [
       "105560",
       "bound-identifier",
@@ -8050,11 +8060,6 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s098": [
-      "NAVER",
-      "bound-label",
-      "stk_nm"
-    ],
     "s099": [
       "035420",
       "bound-identifier",
@@ -8064,11 +8069,6 @@ const policy = {
       "214,000",
       "price",
       "cur_prc"
-    ],
-    "s112": [
-      "POSCO홀딩스",
-      "bound-label",
-      "stk_nm"
     ],
     "s113": [
       "005490",
@@ -8095,11 +8095,6 @@ const policy = {
       "unavailable",
       null
     ],
-    "s129": [
-      "LG화학",
-      "bound-label",
-      "stk_nm"
-    ],
     "s130": [
       "051910",
       "bound-identifier",
@@ -8109,11 +8104,6 @@ const policy = {
       "312,000",
       "price",
       "cur_prc"
-    ],
-    "s143": [
-      "카카오",
-      "bound-label",
-      "stk_nm"
     ],
     "s144": [
       "035720",
@@ -8125,10 +8115,10 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s168": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
+    "s165": [
+      "전체 50개 · 상위 6 + 하위 2 표시",
+      "caption",
+      "조회 응답 순서 · 최대8개 표시"
     ],
     "s169": [
       "순위 1위 · 005930",
@@ -8139,6 +8129,41 @@ const policy = {
       "11.8% · 4,208억원",
       "unavailable",
       null
+    ],
+    "s174": [
+      "프로그램 수급 요약",
+      "caption",
+      "프로그램 별도 조회"
+    ],
+    "s175": [
+      "삼성전자",
+      "caption",
+      "차익·비차익 조회값"
+    ],
+    "s180": [
+      "매도 상위 · 카카오",
+      "caption",
+      "프로그램 순매수 조회값"
+    ],
+    "s182": [
+      "상위 50 합계",
+      "caption",
+      "종목별 프로그램 조회 합계"
+    ],
+    "s183": [
+      "09:42 기준",
+      "caption",
+      ""
+    ],
+    "s190": [
+      "순매수",
+      "caption",
+      "순매수대금"
+    ],
+    "s193": [
+      "집계 종목",
+      "caption",
+      "조회 합계6"
     ],
     "s195": [
       "매수 우위 34 · 매도 우위 16",
@@ -8169,6 +8194,11 @@ const policy = {
       "63.0%",
       "unavailable",
       null
+    ],
+    "s203": [
+      "잔고성 항목 전일 확정 기준 · 마지막 조회 09:42:18",
+      "caption",
+      "조회별 응답 기준"
     ]
   },
   "2VDA-0": {
@@ -19035,6 +19065,16 @@ const policy = {
     ]
   },
   "3063-0": {
+    "s003": [
+      "시장 전체 · 상위 50종목",
+      "caption",
+      "요청한 주체의 매매 · 최대8종목 표시"
+    ],
+    "s011": [
+      "장중 순매수 큰 순",
+      "caption",
+      "조회 응답 순서"
+    ],
     "s013": [
       "+2,368억원",
       "unavailable",
@@ -19042,6 +19082,11 @@ const policy = {
     ],
     "s016": [
       "-1,186억원",
+      "unavailable",
+      null
+    ],
+    "s020": [
+      "+310억원",
       "unavailable",
       null
     ],
@@ -19055,103 +19100,93 @@ const policy = {
       "unavailable",
       null
     ],
-    "s046": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
+    "s033": [
+      "대상",
+      "caption",
+      "조회 주체"
+    ],
+    "s034": [
+      "외국인",
+      "caption",
+      "요청한 주체의 매매"
+    ],
+    "s035": [
+      "기관",
+      "caption",
+      ""
+    ],
+    "s036": [
+      "개인",
+      "caption",
+      ""
+    ],
+    "s040": [
+      "외국인",
+      "caption",
+      "매수"
+    ],
+    "s041": [
+      "기관",
+      "caption",
+      "매도"
+    ],
+    "s042": [
+      "개인",
+      "caption",
+      "순매매"
     ],
     "s047": [
       "000660",
       "bound-identifier",
       "stk_cd"
     ],
-    "s048": [
-      "198,400",
-      "price",
-      "cur_prc"
-    ],
     "s059": [
       "1.23조원",
       "unavailable",
       null
-    ],
-    "s061": [
-      "현대차",
-      "bound-label",
-      "stk_nm"
     ],
     "s062": [
       "005380",
       "bound-identifier",
       "stk_cd"
     ],
-    "s063": [
-      "232,500",
-      "price",
-      "cur_prc"
-    ],
     "s074": [
       "6,600억원",
       "unavailable",
       null
-    ],
-    "s076": [
-      "KB금융",
-      "bound-label",
-      "stk_nm"
     ],
     "s077": [
       "105560",
       "bound-identifier",
       "stk_cd"
     ],
-    "s078": [
-      "78,200",
-      "price",
-      "cur_prc"
-    ],
     "s089": [
       "3,222억원",
       "unavailable",
       null
-    ],
-    "s091": [
-      "NAVER",
-      "bound-label",
-      "stk_nm"
     ],
     "s092": [
       "035420",
       "bound-identifier",
       "stk_cd"
     ],
-    "s093": [
-      "214,000",
-      "price",
-      "cur_prc"
-    ],
     "s104": [
       "3,980억원",
       "unavailable",
       null
-    ],
-    "s106": [
-      "POSCO홀딩스",
-      "bound-label",
-      "stk_nm"
     ],
     "s107": [
       "005490",
       "bound-identifier",
       "stk_cd"
     ],
-    "s108": [
-      "389,500",
-      "price",
-      "cur_prc"
-    ],
     "s119": [
       "2,649억원",
+      "unavailable",
+      null
+    ],
+    "s120": [
+      "6~47위 42종목",
       "unavailable",
       null
     ],
@@ -19160,95 +19195,95 @@ const policy = {
       "unavailable",
       null
     ],
-    "s123": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
-    ],
     "s124": [
       "005930",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s125": [
-      "150,850",
-      "price",
-      "cur_prc"
     ],
     "s136": [
       "2.14조원",
       "unavailable",
       null
     ],
-    "s138": [
-      "LG화학",
-      "bound-label",
-      "stk_nm"
-    ],
     "s139": [
       "051910",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s140": [
-      "312,000",
-      "price",
-      "cur_prc"
     ],
     "s151": [
       "2,995억원",
       "unavailable",
       null
     ],
-    "s153": [
-      "카카오",
-      "bound-label",
-      "stk_nm"
-    ],
     "s154": [
       "035720",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s155": [
-      "41,850",
-      "price",
-      "cur_prc"
     ],
     "s166": [
       "5,189억원",
       "unavailable",
       null
     ],
-    "s170": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
+    "s167": [
+      "전체 50개 · 상위 5 + 하위 3 표시",
+      "caption",
+      "조회 응답 순서 · 최대8개 표시"
+    ],
+    "s168": [
+      "20개 더 보기",
+      "caption",
+      "더 보기"
     ],
     "s171": [
       "순위 48위 · 005930",
       "bound-identifier",
       "stk_cd"
     ],
-    "s176": [
-      "외국인",
-      "bound-label",
-      "opmr_invsr_trde"
+    "s172": [
+      "주체",
+      "caption",
+      "종목"
     ],
-    "s183": [
-      "기관",
-      "bound-label",
-      "opmr_invsr_trde"
-    ],
-    "s190": [
-      "개인",
-      "bound-label",
-      "opmr_invsr_trde"
+    "s175": [
+      "순매수",
+      "caption",
+      "순매매"
     ],
     "s197": [
       "합계",
-      "bound-label",
-      "opmr_invsr_trde"
+      "unavailable",
+      null
+    ],
+    "s198": [
+      "3,572억원",
+      "unavailable",
+      null
+    ],
+    "s199": [
+      "236.8만주",
+      "unavailable",
+      null
+    ],
+    "s200": [
+      "3,582억원",
+      "unavailable",
+      null
+    ],
+    "s201": [
+      "237.5만주",
+      "unavailable",
+      null
+    ],
+    "s202": [
+      "-10억원",
+      "unavailable",
+      null
+    ],
+    "s203": [
+      "-0.7만주",
+      "unavailable",
+      null
     ],
     "s205": [
       "09:00 → 09:30",
@@ -19267,6 +19302,56 @@ const policy = {
     ],
     "s212": [
       "3,686억원",
+      "unavailable",
+      null
+    ],
+    "s213": [
+      "-264억원",
+      "unavailable",
+      null
+    ],
+    "s214": [
+      "-17.5만주",
+      "unavailable",
+      null
+    ],
+    "s216": [
+      "▲+150억원",
+      "unavailable",
+      null
+    ],
+    "s217": [
+      "▲+9.9만주",
+      "unavailable",
+      null
+    ],
+    "s218": [
+      "▼-104억원",
+      "unavailable",
+      null
+    ],
+    "s219": [
+      "▼-6.9만주",
+      "unavailable",
+      null
+    ],
+    "s220": [
+      "▲+254억원",
+      "unavailable",
+      null
+    ],
+    "s221": [
+      "▲+16.8만주",
+      "unavailable",
+      null
+    ],
+    "s223": [
+      "150,240",
+      "unavailable",
+      null
+    ],
+    "s224": [
+      "-610 · -0.41%",
       "unavailable",
       null
     ],
@@ -19290,6 +19375,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s234": [
+      "4,280만주",
+      "unavailable",
+      null
+    ],
     "s235": [
       "집계 30분",
       "unavailable",
@@ -19297,8 +19387,8 @@ const policy = {
     ],
     "s237": [
       "장중 30분 집계 잠정 · 마지막 조회 09:42:18",
-      "status",
-      null
+      "caption",
+      "조회 응답 기준 · 값별 단위 표기"
     ]
   },
   "30C1-0": {
@@ -20089,6 +20179,16 @@ const policy = {
     ]
   },
   "30HY-0": {
+    "s003": [
+      "시장 전체 · 상위 50종목",
+      "caption",
+      "외국인·기관 조회 결과 · 최대8종목 표시"
+    ],
+    "s011": [
+      "외국인 순매수순",
+      "caption",
+      "조회 응답 순서"
+    ],
     "s013": [
       "18종목",
       "unavailable",
@@ -20099,10 +20199,10 @@ const policy = {
       "unavailable",
       null
     ],
-    "s019": [
-      "SK하이닉스",
-      "bound-label",
-      "for_netprps_stk_nm"
+    "s018": [
+      "외국인 순매수 1위",
+      "caption",
+      "첫 결과 · 외국인 순매매액"
     ],
     "s022": [
       "08-31 확정",
@@ -20114,215 +20214,70 @@ const policy = {
       "time",
       null
     ],
-    "s042": [
-      "SK하이닉스",
-      "bound-label",
-      "for_netprps_stk_nm"
-    ],
     "s043": [
       "000660",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s044": [
-      "198,400",
-      "unavailable",
-      null
-    ],
-    "s045": [
-      "+3,985 · +2.05%",
-      "unavailable",
-      null
-    ],
-    "s054": [
-      "620만주",
-      "unavailable",
-      null
-    ],
-    "s056": [
-      "삼성전자",
-      "bound-label",
-      "for_netprps_stk_nm"
     ],
     "s057": [
       "005930",
       "bound-identifier",
       "stk_cd"
     ],
-    "s058": [
-      "150,850",
-      "unavailable",
-      null
-    ],
-    "s059": [
-      "+1,850 · +1.24%",
-      "unavailable",
-      null
-    ],
-    "s068": [
-      "1,420만주",
-      "unavailable",
-      null
-    ],
-    "s070": [
-      "현대차",
-      "bound-label",
-      "for_netprps_stk_nm"
-    ],
     "s071": [
       "005380",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s072": [
-      "232,500",
-      "unavailable",
-      null
-    ],
-    "s073": [
-      "+1,985 · +0.86%",
-      "unavailable",
-      null
-    ],
-    "s082": [
-      "284만주",
-      "unavailable",
-      null
-    ],
-    "s084": [
-      "KB금융",
-      "bound-label",
-      "for_netprps_stk_nm"
     ],
     "s085": [
       "105560",
       "bound-identifier",
       "stk_cd"
     ],
-    "s086": [
-      "78,200",
-      "unavailable",
-      null
-    ],
-    "s087": [
-      "+865 · +1.12%",
-      "unavailable",
-      null
-    ],
-    "s096": [
-      "412만주",
-      "unavailable",
-      null
-    ],
-    "s098": [
-      "NAVER",
-      "bound-label",
-      "for_netprps_stk_nm"
-    ],
     "s099": [
       "035420",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s100": [
-      "214,000",
-      "unavailable",
-      null
-    ],
-    "s101": [
-      "-1,010 · -0.47%",
-      "unavailable",
-      null
-    ],
-    "s110": [
-      "186만주",
-      "unavailable",
-      null
-    ],
-    "s112": [
-      "POSCO홀딩스",
-      "bound-label",
-      "for_netprps_stk_nm"
     ],
     "s113": [
       "005490",
       "bound-identifier",
       "stk_cd"
     ],
-    "s114": [
-      "389,500",
-      "unavailable",
-      null
-    ],
-    "s115": [
-      "+2,515 · +0.65%",
-      "unavailable",
-      null
-    ],
-    "s124": [
-      "68만주",
-      "unavailable",
-      null
-    ],
-    "s128": [
-      "LG화학",
-      "bound-label",
-      "for_netslmt_stk_nm"
-    ],
     "s129": [
       "051910",
       "bound-identifier",
-      "for_netslmt_stk_cd"
-    ],
-    "s130": [
-      "312,000",
-      "unavailable",
-      null
-    ],
-    "s131": [
-      "-3,470 · -1.10%",
-      "unavailable",
-      null
-    ],
-    "s140": [
-      "96만주",
-      "unavailable",
-      null
-    ],
-    "s142": [
-      "카카오",
-      "bound-label",
-      "orgn_netslmt_stk_nm"
+      "stk_cd"
     ],
     "s143": [
       "035720",
       "bound-identifier",
-      "orgn_netslmt_stk_cd"
+      "stk_cd"
     ],
-    "s144": [
-      "41,850",
-      "unavailable",
-      null
+    "s155": [
+      "전체 50개 · 상위 6 + 하위 2 표시",
+      "caption",
+      "조회 응답 순서 · 최대8개 표시"
     ],
-    "s145": [
-      "-350 · -0.83%",
-      "unavailable",
-      null
+    "s156": [
+      "20개 더 보기",
+      "caption",
+      "더 보기"
     ],
-    "s154": [
-      "1,240만주",
-      "unavailable",
-      null
-    ],
-    "s158": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
+    "s159": [
+      "순위 2위 · 005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s163": [
       "-274억원",
       "unavailable",
       null
+    ],
+    "s164": [
+      "동반 요약",
+      "caption",
+      "첫 결과 · 연속 순매수금액"
     ],
     "s165": [
       "08-31 확정",
@@ -20344,40 +20299,20 @@ const policy = {
       "unavailable",
       null
     ],
-    "s176": [
-      "SK하이닉스",
-      "bound-label",
-      "for_netprps_stk_nm"
+    "s174": [
+      "외국인 순매수 상위 6",
+      "caption",
+      "외국인 순매매액 · 첫6개 조회 결과"
     ],
-    "s178": [
-      "삼성전자",
-      "bound-label",
-      "for_netprps_stk_nm"
-    ],
-    "s180": [
-      "현대차",
-      "bound-label",
-      "for_netprps_stk_nm"
-    ],
-    "s182": [
-      "KB금융",
-      "bound-label",
-      "for_netprps_stk_nm"
-    ],
-    "s184": [
-      "NAVER",
-      "bound-label",
-      "for_netprps_stk_nm"
-    ],
-    "s186": [
-      "POSCO홀딩스",
-      "bound-label",
-      "for_netprps_stk_nm"
+    "s175": [
+      "1위 대비",
+      "caption",
+      "조회 응답 순서"
     ],
     "s189": [
       "투자자 08-31 확정 기준 · 마지막 조회 09:42:18",
-      "time",
-      null
+      "caption",
+      "조회 기간의 응답 기준"
     ]
   },
   "30O1-0": {
@@ -23145,8 +23080,13 @@ const policy = {
   "31OF-0": {
     "s003": [
       "시장 전체 · 상위 50종목",
-      "unavailable",
-      null
+      "caption",
+      "신용융자 가능종목 조회"
+    ],
+    "s011": [
+      "보증금률 낮은 순",
+      "caption",
+      "조회 지원 범위"
     ],
     "s013": [
       "1,842종목",
@@ -23183,11 +23123,6 @@ const policy = {
       "bound-identifier",
       "stk_cd"
     ],
-    "s044": [
-      "150,850",
-      "price",
-      "cur_prc"
-    ],
     "s047": [
       "가능",
       "bound-label",
@@ -23212,11 +23147,6 @@ const policy = {
       "000660",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s054": [
-      "198,400",
-      "price",
-      "cur_prc"
     ],
     "s057": [
       "가능",
@@ -23243,11 +23173,6 @@ const policy = {
       "bound-identifier",
       "stk_cd"
     ],
-    "s064": [
-      "232,500",
-      "price",
-      "cur_prc"
-    ],
     "s067": [
       "가능",
       "bound-label",
@@ -23272,11 +23197,6 @@ const policy = {
       "105560",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s074": [
-      "78,200",
-      "price",
-      "cur_prc"
     ],
     "s077": [
       "가능",
@@ -23303,11 +23223,6 @@ const policy = {
       "bound-identifier",
       "stk_cd"
     ],
-    "s084": [
-      "214,000",
-      "price",
-      "cur_prc"
-    ],
     "s087": [
       "가능",
       "bound-label",
@@ -23332,11 +23247,6 @@ const policy = {
       "005490",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s094": [
-      "389,500",
-      "price",
-      "cur_prc"
     ],
     "s097": [
       "가능",
@@ -23373,11 +23283,6 @@ const policy = {
       "bound-identifier",
       "stk_cd"
     ],
-    "s106": [
-      "312,000",
-      "price",
-      "cur_prc"
-    ],
     "s109": [
       "가능",
       "bound-label",
@@ -23403,11 +23308,6 @@ const policy = {
       "bound-identifier",
       "stk_cd"
     ],
-    "s116": [
-      "41,850",
-      "price",
-      "cur_prc"
-    ],
     "s119": [
       "한도 초과",
       "bound-label",
@@ -23425,13 +23325,13 @@ const policy = {
     ],
     "s124": [
       "전체 50개 · 상위 6 + 하위 2 표시",
-      "unavailable",
-      null
+      "caption",
+      "모의 조회 미지원"
     ],
     "s125": [
       "20개 더 보기",
-      "unavailable",
-      null
+      "caption",
+      ""
     ],
     "s128": [
       "전체 2,056종목",
@@ -23515,8 +23415,8 @@ const policy = {
     ],
     "s162": [
       "융자 가능 여부 전일 확정 기준 · 마지막 조회 09:42:18",
-      "status",
-      null
+      "caption",
+      "모의 조회에서 제공하지 않는 항목"
     ]
   },
   "31UD-0": {

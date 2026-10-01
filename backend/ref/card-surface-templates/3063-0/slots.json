@@ -1074,8 +1074,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액",
       "format": {
@@ -1088,7 +1088,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "순매수 1위 종목 합계 값 재표시"
+      "note": "순매수 1위 종목 합계 값 재표시",
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s021",
@@ -1656,8 +1658,8 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10065",
-      "f": "opmr_invsr_trde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1669,7 +1671,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s046",
@@ -1678,7 +1682,7 @@
       "node_path": "2/0/1/1/1/0",
       "paper_text": "SK하이닉스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1691,10 +1695,16 @@
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s047",
@@ -1725,7 +1735,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "paired_note": "주값 셀(s046)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s046)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 0
     },
     {
       "slot_id": "s048",
@@ -1743,8 +1754,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1756,7 +1767,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s049",
@@ -1774,8 +1787,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -1788,20 +1801,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "현재가 셀 2번째 줄 — 부호·전일대비·등락률 한 텍스트",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10063",
-          "f": "pre_sig",
-          "kor": "대비기호",
-          "sep": ""
-        },
-        {
-          "mapping_id": "base:ka10063",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s050",
@@ -1819,21 +1820,21 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "buy_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s051",
@@ -1851,8 +1852,8 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -1864,7 +1865,9 @@
       },
       "paired_with": "s050",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s052",
@@ -1883,18 +1886,19 @@
         "col": 4
       },
       "mapping_id": "base:ka10065",
-      "f": "netslmt",
+      "f": "sel_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "precision": 0,
+        "kind": "number",
         "sign": true,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s053",
@@ -1912,8 +1916,8 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -1926,7 +1930,9 @@
       "paired_with": "s052",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s054",
@@ -1944,19 +1950,20 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10058",
-      "f": "netslmt_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s055",
@@ -1974,8 +1981,8 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -1988,7 +1995,9 @@
       "paired_with": "s054",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s056",
@@ -2006,8 +2015,8 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2020,7 +2029,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s057",
@@ -2038,8 +2049,8 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -2050,7 +2061,9 @@
       },
       "paired_with": "s056",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s058",
@@ -2068,8 +2081,8 @@
         "row": "0",
         "col": 7
       },
-      "mapping_id": "base:ka10063",
-      "f": "acc_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2080,7 +2093,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s059",
@@ -2111,8 +2126,9 @@
       "paired_with": "s058",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)"
+      "static": "blank",
+      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s060",
@@ -2130,8 +2146,8 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10065",
-      "f": "opmr_invsr_trde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2143,7 +2159,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s061",
@@ -2152,7 +2170,7 @@
       "node_path": "2/0/1/2/1/0",
       "paper_text": "현대차",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2165,11 +2183,17 @@
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s062",
@@ -2201,7 +2225,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "paired_note": "주값 셀(s061)이 라벨로 분류돼 병기 짝을 비운다",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s063",
@@ -2219,8 +2244,8 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2233,7 +2258,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s064",
@@ -2251,8 +2278,8 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -2265,21 +2292,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "현재가 셀 2번째 줄 — 부호·전일대비·등락률 한 텍스트",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10063",
-          "f": "pre_sig",
-          "kor": "대비기호",
-          "sep": ""
-        },
-        {
-          "mapping_id": "base:ka10063",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s065",
@@ -2297,21 +2312,21 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "buy_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s066",
@@ -2329,8 +2344,8 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -2343,7 +2358,9 @@
       "paired_with": "s065",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s067",
@@ -2362,19 +2379,20 @@
         "col": 4
       },
       "mapping_id": "base:ka10065",
-      "f": "netslmt",
+      "f": "sel_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "precision": 0,
+        "kind": "number",
         "sign": true,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s068",
@@ -2392,8 +2410,8 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -2406,7 +2424,9 @@
       "paired_with": "s067",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s069",
@@ -2424,12 +2444,12 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10058",
-      "f": "netslmt_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2437,7 +2457,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s070",
@@ -2455,8 +2476,8 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -2469,7 +2490,9 @@
       "paired_with": "s069",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s071",
@@ -2487,8 +2510,8 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2501,7 +2524,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s072",
@@ -2519,8 +2544,8 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -2532,7 +2557,9 @@
       "paired_with": "s071",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s073",
@@ -2550,8 +2577,8 @@
         "row": "1",
         "col": 7
       },
-      "mapping_id": "base:ka10063",
-      "f": "acc_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2563,7 +2590,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s074",
@@ -2594,8 +2623,9 @@
       "paired_with": "s073",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)"
+      "static": "blank",
+      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s075",
@@ -2613,8 +2643,8 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10065",
-      "f": "opmr_invsr_trde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2626,7 +2656,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s076",
@@ -2635,7 +2667,7 @@
       "node_path": "2/0/1/3/1/0",
       "paper_text": "KB금융",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2648,11 +2680,17 @@
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s077",
@@ -2684,7 +2722,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "paired_note": "주값 셀(s076)이 라벨로 분류돼 병기 짝을 비운다",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s078",
@@ -2702,8 +2741,8 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2716,7 +2755,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s079",
@@ -2734,8 +2775,8 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -2748,21 +2789,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "현재가 셀 2번째 줄 — 부호·전일대비·등락률 한 텍스트",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10063",
-          "f": "pre_sig",
-          "kor": "대비기호",
-          "sep": ""
-        },
-        {
-          "mapping_id": "base:ka10063",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s080",
@@ -2780,21 +2809,21 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "buy_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s081",
@@ -2812,8 +2841,8 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -2826,7 +2855,9 @@
       "paired_with": "s080",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s082",
@@ -2845,19 +2876,20 @@
         "col": 4
       },
       "mapping_id": "base:ka10065",
-      "f": "netslmt",
+      "f": "sel_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "precision": 0,
+        "kind": "number",
         "sign": true,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s083",
@@ -2875,8 +2907,8 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -2889,7 +2921,9 @@
       "paired_with": "s082",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s084",
@@ -2907,12 +2941,12 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10058",
-      "f": "netslmt_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2920,7 +2954,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s085",
@@ -2938,8 +2973,8 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -2952,7 +2987,9 @@
       "paired_with": "s084",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s086",
@@ -2970,8 +3007,8 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2984,7 +3021,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s087",
@@ -3002,8 +3041,8 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -3015,7 +3054,9 @@
       "paired_with": "s086",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s088",
@@ -3033,8 +3074,8 @@
         "row": "2",
         "col": 7
       },
-      "mapping_id": "base:ka10063",
-      "f": "acc_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3046,7 +3087,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s089",
@@ -3077,8 +3120,9 @@
       "paired_with": "s088",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)"
+      "static": "blank",
+      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s090",
@@ -3096,8 +3140,8 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:ka10065",
-      "f": "opmr_invsr_trde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3109,7 +3153,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s091",
@@ -3118,7 +3164,7 @@
       "node_path": "2/0/1/4/1/0",
       "paper_text": "NAVER",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3131,11 +3177,17 @@
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s092",
@@ -3167,7 +3219,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "paired_note": "주값 셀(s091)이 라벨로 분류돼 병기 짝을 비운다",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s093",
@@ -3185,8 +3238,8 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3199,7 +3252,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s094",
@@ -3217,8 +3272,8 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -3231,21 +3286,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "현재가 셀 2번째 줄 — 부호·전일대비·등락률 한 텍스트",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10063",
-          "f": "pre_sig",
-          "kor": "대비기호",
-          "sep": ""
-        },
-        {
-          "mapping_id": "base:ka10063",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s095",
@@ -3263,21 +3306,21 @@
         "row": "3",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "buy_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s096",
@@ -3295,8 +3338,8 @@
         "row": "3",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -3309,7 +3352,9 @@
       "paired_with": "s095",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s097",
@@ -3328,19 +3373,20 @@
         "col": 4
       },
       "mapping_id": "base:ka10065",
-      "f": "netslmt",
+      "f": "sel_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "precision": 0,
+        "kind": "number",
         "sign": true,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s098",
@@ -3358,8 +3404,8 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -3372,7 +3418,9 @@
       "paired_with": "s097",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s099",
@@ -3390,12 +3438,12 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10058",
-      "f": "netslmt_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3403,7 +3451,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s100",
@@ -3421,8 +3470,8 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -3435,7 +3484,9 @@
       "paired_with": "s099",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s101",
@@ -3453,8 +3504,8 @@
         "row": "3",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3467,7 +3518,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s102",
@@ -3485,8 +3538,8 @@
         "row": "3",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -3498,7 +3551,9 @@
       "paired_with": "s101",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s103",
@@ -3516,8 +3571,8 @@
         "row": "3",
         "col": 7
       },
-      "mapping_id": "base:ka10063",
-      "f": "acc_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3529,7 +3584,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s104",
@@ -3560,8 +3617,9 @@
       "paired_with": "s103",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)"
+      "static": "blank",
+      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s105",
@@ -3579,8 +3637,8 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:ka10065",
-      "f": "opmr_invsr_trde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3592,7 +3650,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s106",
@@ -3601,7 +3661,7 @@
       "node_path": "2/0/1/5/1/0",
       "paper_text": "POSCO홀딩스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3614,11 +3674,17 @@
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s107",
@@ -3650,7 +3716,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "paired_note": "주값 셀(s106)이 라벨로 분류돼 병기 짝을 비운다",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s108",
@@ -3668,8 +3735,8 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3682,7 +3749,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s109",
@@ -3700,8 +3769,8 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -3714,21 +3783,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "현재가 셀 2번째 줄 — 부호·전일대비·등락률 한 텍스트",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10063",
-          "f": "pre_sig",
-          "kor": "대비기호",
-          "sep": ""
-        },
-        {
-          "mapping_id": "base:ka10063",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s110",
@@ -3746,21 +3803,21 @@
         "row": "4",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "buy_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s111",
@@ -3778,8 +3835,8 @@
         "row": "4",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -3792,7 +3849,9 @@
       "paired_with": "s110",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s112",
@@ -3811,19 +3870,20 @@
         "col": 4
       },
       "mapping_id": "base:ka10065",
-      "f": "netslmt",
+      "f": "sel_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "precision": 0,
+        "kind": "number",
         "sign": true,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s113",
@@ -3841,8 +3901,8 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -3855,7 +3915,9 @@
       "paired_with": "s112",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s114",
@@ -3873,12 +3935,12 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10058",
-      "f": "netslmt_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3886,7 +3948,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s115",
@@ -3904,8 +3967,8 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -3918,7 +3981,9 @@
       "paired_with": "s114",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s116",
@@ -3936,8 +4001,8 @@
         "row": "4",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3950,7 +4015,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s117",
@@ -3968,8 +4035,8 @@
         "row": "4",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -3981,7 +4048,9 @@
       "paired_with": "s116",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s118",
@@ -3999,8 +4068,8 @@
         "row": "4",
         "col": 7
       },
-      "mapping_id": "base:ka10063",
-      "f": "acc_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4012,7 +4081,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s119",
@@ -4043,8 +4114,9 @@
       "paired_with": "s118",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)"
+      "static": "blank",
+      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s120",
@@ -4058,8 +4130,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10058",
-      "f": "invsr_daly_trde_stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "투자자별일별매매종목",
       "format": {
@@ -4105,7 +4177,9 @@
         "expanded_board": null
       },
       "expanded_board": null,
-      "note": "6~47위 42종목 접힘 — 낱값은 '20개 더 보기'로 편다"
+      "note": "6~47위 42종목 접힘 — 낱값은 '20개 더 보기'로 편다",
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s121",
@@ -4151,8 +4225,8 @@
         "row": "5",
         "col": 0
       },
-      "mapping_id": "base:ka10058",
-      "f": "invsr_daly_trde_stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "투자자별일별매매종목",
       "format": {
@@ -4165,7 +4239,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "48~50위는 상위 응답 밖 — 투자자별일별매매종목 전체 목록에서 채운다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s123",
@@ -4174,7 +4250,7 @@
       "node_path": "2/0/1/7/1/0",
       "paper_text": "삼성전자",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4183,14 +4259,20 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka10058",
+      "mapping_id": "base:ka10065",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s124",
@@ -4208,7 +4290,7 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka10058",
+      "mapping_id": "base:ka10065",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -4221,7 +4303,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "paired_note": "주값 셀(s123)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s123)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 5
     },
     {
       "slot_id": "s125",
@@ -4239,8 +4322,8 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10058",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
@@ -4252,7 +4335,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s126",
@@ -4270,8 +4355,8 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10058",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -4284,20 +4369,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "하위 3행 현재가 셀 2번째 줄 — 부호·전일대비·등락률 한 텍스트",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10058",
-          "f": "pre_sig",
-          "kor": "대비기호",
-          "sep": ""
-        },
-        {
-          "mapping_id": "base:ka10063",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s127",
@@ -4315,21 +4388,21 @@
         "row": "5",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "buy_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s128",
@@ -4347,8 +4420,8 @@
         "row": "5",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -4361,7 +4434,9 @@
       "paired_with": "s127",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s129",
@@ -4380,19 +4455,20 @@
         "col": 4
       },
       "mapping_id": "base:ka10065",
-      "f": "netslmt",
+      "f": "sel_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "precision": 0,
+        "kind": "number",
         "sign": true,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s130",
@@ -4410,8 +4486,8 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -4424,7 +4500,9 @@
       "paired_with": "s129",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s131",
@@ -4442,12 +4520,12 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10058",
-      "f": "netslmt_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4455,7 +4533,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s132",
@@ -4473,8 +4552,8 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -4487,7 +4566,9 @@
       "paired_with": "s131",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s133",
@@ -4505,8 +4586,8 @@
         "row": "5",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4519,7 +4600,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s134",
@@ -4537,8 +4620,8 @@
         "row": "5",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -4550,7 +4633,9 @@
       "paired_with": "s133",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s135",
@@ -4568,8 +4653,8 @@
         "row": "5",
         "col": 7
       },
-      "mapping_id": "base:ka10063",
-      "f": "acc_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4581,7 +4666,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s136",
@@ -4612,8 +4699,9 @@
       "paired_with": "s135",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)"
+      "static": "blank",
+      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s137",
@@ -4631,8 +4719,8 @@
         "row": "6",
         "col": 0
       },
-      "mapping_id": "base:ka10058",
-      "f": "invsr_daly_trde_stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "투자자별일별매매종목",
       "format": {
@@ -4645,7 +4733,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "48~50위는 상위 응답 밖 — 투자자별일별매매종목 전체 목록에서 채운다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s138",
@@ -4654,7 +4744,7 @@
       "node_path": "2/0/1/8/1/0",
       "paper_text": "LG화학",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4663,15 +4753,21 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka10058",
+      "mapping_id": "base:ka10065",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s139",
@@ -4689,7 +4785,7 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka10058",
+      "mapping_id": "base:ka10065",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -4703,7 +4799,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "paired_note": "주값 셀(s138)이 라벨로 분류돼 병기 짝을 비운다",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s140",
@@ -4721,8 +4818,8 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka10058",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
@@ -4735,7 +4832,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s141",
@@ -4753,8 +4852,8 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka10058",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -4767,21 +4866,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "하위 3행 현재가 셀 2번째 줄 — 부호·전일대비·등락률 한 텍스트",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10058",
-          "f": "pre_sig",
-          "kor": "대비기호",
-          "sep": ""
-        },
-        {
-          "mapping_id": "base:ka10063",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s142",
@@ -4799,21 +4886,21 @@
         "row": "6",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "buy_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s143",
@@ -4831,8 +4918,8 @@
         "row": "6",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -4845,7 +4932,9 @@
       "paired_with": "s142",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s144",
@@ -4864,19 +4953,20 @@
         "col": 4
       },
       "mapping_id": "base:ka10065",
-      "f": "netslmt",
+      "f": "sel_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "precision": 0,
+        "kind": "number",
         "sign": true,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s145",
@@ -4894,8 +4984,8 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -4908,7 +4998,9 @@
       "paired_with": "s144",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s146",
@@ -4926,12 +5018,12 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10058",
-      "f": "netslmt_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4939,7 +5031,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s147",
@@ -4957,8 +5050,8 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -4971,7 +5064,9 @@
       "paired_with": "s146",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s148",
@@ -4989,8 +5084,8 @@
         "row": "6",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5003,7 +5098,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s149",
@@ -5021,8 +5118,8 @@
         "row": "6",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -5034,7 +5131,9 @@
       "paired_with": "s148",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s150",
@@ -5052,8 +5151,8 @@
         "row": "6",
         "col": 7
       },
-      "mapping_id": "base:ka10063",
-      "f": "acc_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5065,7 +5164,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s151",
@@ -5096,8 +5197,9 @@
       "paired_with": "s150",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)"
+      "static": "blank",
+      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s152",
@@ -5115,8 +5217,8 @@
         "row": "7",
         "col": 0
       },
-      "mapping_id": "base:ka10058",
-      "f": "invsr_daly_trde_stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "투자자별일별매매종목",
       "format": {
@@ -5129,7 +5231,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "48~50위는 상위 응답 밖 — 투자자별일별매매종목 전체 목록에서 채운다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s153",
@@ -5138,7 +5242,7 @@
       "node_path": "2/0/1/9/1/0",
       "paper_text": "카카오",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -5147,15 +5251,21 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka10058",
+      "mapping_id": "base:ka10065",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s154",
@@ -5173,7 +5283,7 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka10058",
+      "mapping_id": "base:ka10065",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -5187,7 +5297,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "paired_note": "주값 셀(s153)이 라벨로 분류돼 병기 짝을 비운다",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s155",
@@ -5205,8 +5316,8 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka10058",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
@@ -5219,7 +5330,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s156",
@@ -5237,8 +5350,8 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka10058",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -5251,21 +5364,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "하위 3행 현재가 셀 2번째 줄 — 부호·전일대비·등락률 한 텍스트",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10058",
-          "f": "pre_sig",
-          "kor": "대비기호",
-          "sep": ""
-        },
-        {
-          "mapping_id": "base:ka10063",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s157",
@@ -5283,21 +5384,21 @@
         "row": "7",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "buy_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s158",
@@ -5315,8 +5416,8 @@
         "row": "7",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -5329,7 +5430,9 @@
       "paired_with": "s157",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s159",
@@ -5348,19 +5451,20 @@
         "col": 4
       },
       "mapping_id": "base:ka10065",
-      "f": "netslmt",
+      "f": "sel_qty",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "precision": 0,
+        "kind": "number",
         "sign": true,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s160",
@@ -5378,8 +5482,8 @@
         "row": "7",
         "col": 4
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -5392,7 +5496,9 @@
       "paired_with": "s159",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s161",
@@ -5410,12 +5516,12 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka10058",
-      "f": "netslmt_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -5423,7 +5529,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s162",
@@ -5441,8 +5548,8 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수금액증감",
       "format": {
@@ -5455,7 +5562,9 @@
       "paired_with": "s161",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s163",
@@ -5473,8 +5582,8 @@
         "row": "7",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5487,7 +5596,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s164",
@@ -5505,8 +5616,8 @@
         "row": "7",
         "col": 6
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -5518,7 +5629,9 @@
       "paired_with": "s163",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s165",
@@ -5536,8 +5649,8 @@
         "row": "7",
         "col": 7
       },
-      "mapping_id": "base:ka10063",
-      "f": "acc_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5549,7 +5662,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s166",
@@ -5580,8 +5695,9 @@
       "paired_with": "s165",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)"
+      "static": "blank",
+      "static_reason": "거래대금 — 장중 투자자 응답 3종에 거래대금 필드가 없다(거래량 × 평균가 파생)",
+      "unbound_reason": "ka10065 동일 조회에 없는 순위·시세·타 주체·비교값; 다른 목록으로 채우지 않음"
     },
     {
       "slot_id": "s167",
@@ -5667,20 +5783,28 @@
       "node_path": "2/1/0/0/0",
       "paper_text": "삼성전자",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
+      "mapping_id": "base:ka10065",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "레일 선택 종목"
+      "note": "레일 선택 종목",
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s171",
@@ -5694,7 +5818,7 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
+      "mapping_id": "base:ka10065",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -5707,7 +5831,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "앞의 '순위 48위'는 표 배열 순서 표기 — 장중 응답에 순위 필드가 없다"
+      "note": "앞의 '순위 48위'는 표 배열 순서 표기 — 장중 응답에 순위 필드가 없다",
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s172",
@@ -5816,7 +5943,7 @@
       "node_path": "2/1/0/1/1/0",
       "paper_text": "외국인",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -5825,14 +5952,22 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10063",
-      "f": "opmr_invsr_trde",
+      "mapping_id": "base:ka10065",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s177",
@@ -5855,14 +5990,17 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "sign": true,
         "precision": 0,
-        "sign": false,
-        "tone": "neutral"
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s178",
@@ -5880,8 +6018,8 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka10063",
-      "f": "buy_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수수량",
       "format": {
@@ -5892,7 +6030,9 @@
       },
       "paired_with": "s177",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "한 요청의 금액/수량 중 실제 요청 단위 한 값만 표시; 두 단위 동시 추정 금지"
     },
     {
       "slot_id": "s179",
@@ -5915,14 +6055,17 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "sign": true,
         "precision": 0,
-        "sign": false,
-        "tone": "neutral"
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s180",
@@ -5940,8 +6083,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "sell_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도수량",
       "format": {
@@ -5952,7 +6095,9 @@
       },
       "paired_with": "s179",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "한 요청의 금액/수량 중 실제 요청 단위 한 값만 표시; 두 단위 동시 추정 금지"
     },
     {
       "slot_id": "s181",
@@ -5970,21 +6115,22 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s182",
@@ -6002,8 +6148,8 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -6015,7 +6161,9 @@
       "paired_with": "s181",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "한 요청의 금액/수량 중 실제 요청 단위 한 값만 표시; 두 단위 동시 추정 금지"
     },
     {
       "slot_id": "s183",
@@ -6024,7 +6172,7 @@
       "node_path": "2/1/0/1/2/0",
       "paper_text": "기관",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -6033,15 +6181,22 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10063",
-      "f": "opmr_invsr_trde",
+      "mapping_id": "base:ka10065",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s184",
@@ -6064,15 +6219,17 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "sign": true,
         "precision": 0,
-        "sign": false,
-        "tone": "neutral"
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s185",
@@ -6090,8 +6247,8 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka10063",
-      "f": "buy_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수수량",
       "format": {
@@ -6103,7 +6260,9 @@
       "paired_with": "s184",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "한 요청의 금액/수량 중 실제 요청 단위 한 값만 표시; 두 단위 동시 추정 금지"
     },
     {
       "slot_id": "s186",
@@ -6126,15 +6285,17 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "sign": true,
         "precision": 0,
-        "sign": false,
-        "tone": "neutral"
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s187",
@@ -6152,8 +6313,8 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "sell_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도수량",
       "format": {
@@ -6165,7 +6326,9 @@
       "paired_with": "s186",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "한 요청의 금액/수량 중 실제 요청 단위 한 값만 표시; 두 단위 동시 추정 금지"
     },
     {
       "slot_id": "s188",
@@ -6183,21 +6346,22 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s189",
@@ -6215,8 +6379,8 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -6228,7 +6392,9 @@
       "paired_with": "s188",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "한 요청의 금액/수량 중 실제 요청 단위 한 값만 표시; 두 단위 동시 추정 금지"
     },
     {
       "slot_id": "s190",
@@ -6237,7 +6403,7 @@
       "node_path": "2/1/0/1/3/0",
       "paper_text": "개인",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -6246,15 +6412,22 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10063",
-      "f": "opmr_invsr_trde",
+      "mapping_id": "base:ka10065",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s191",
@@ -6277,15 +6450,17 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "sign": true,
         "precision": 0,
-        "sign": false,
-        "tone": "neutral"
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s192",
@@ -6303,8 +6478,8 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka10063",
-      "f": "buy_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수수량",
       "format": {
@@ -6316,7 +6491,9 @@
       "paired_with": "s191",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "한 요청의 금액/수량 중 실제 요청 단위 한 값만 표시; 두 단위 동시 추정 금지"
     },
     {
       "slot_id": "s193",
@@ -6339,15 +6516,17 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "sign": true,
         "precision": 0,
-        "sign": false,
-        "tone": "neutral"
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s194",
@@ -6365,8 +6544,8 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "sell_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도수량",
       "format": {
@@ -6378,7 +6557,9 @@
       "paired_with": "s193",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "한 요청의 금액/수량 중 실제 요청 단위 한 값만 표시; 두 단위 동시 추정 금지"
     },
     {
       "slot_id": "s195",
@@ -6396,21 +6577,22 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": "base:ka10065",
+      "f": "netslmt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "kind": "korean",
+        "kind": "number",
         "sign": true,
-        "tone": "change",
-        "scale": "백만",
-        "suffix": "원"
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s196",
@@ -6428,8 +6610,8 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka10058",
-      "f": "netslmt_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매도수량",
       "format": {
@@ -6441,7 +6623,9 @@
       "paired_with": "s195",
       "collapse_group": null,
       "expanded_board": null,
-      "note": "개인 행 순매도 수량"
+      "note": "개인 행 순매도 수량",
+      "static": "blank",
+      "unbound_reason": "한 요청의 금액/수량 중 실제 요청 단위 한 값만 표시; 두 단위 동시 추정 금지"
     },
     {
       "slot_id": "s197",
@@ -6450,7 +6634,7 @@
       "node_path": "2/1/0/1/4/0",
       "paper_text": "합계",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -6459,15 +6643,17 @@
         "row": "foot",
         "col": 0
       },
-      "mapping_id": "base:ka10063",
-      "f": "opmr_invsr_trde",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s198",
@@ -6485,8 +6671,8 @@
         "row": "foot",
         "col": 1
       },
-      "mapping_id": "base:ka10063",
-      "f": "buy_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수금액",
       "format": {
@@ -6499,7 +6685,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "주체 표 합계 행 — 종목 단위 장중 매매 응답의 매수금액"
+      "note": "주체 표 합계 행 — 종목 단위 장중 매매 응답의 매수금액",
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s199",
@@ -6517,8 +6705,8 @@
         "row": "foot",
         "col": 1
       },
-      "mapping_id": "base:ka10063",
-      "f": "buy_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수수량",
       "format": {
@@ -6530,7 +6718,9 @@
       "paired_with": "s198",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s200",
@@ -6548,8 +6738,8 @@
         "row": "foot",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "sell_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도금액",
       "format": {
@@ -6562,7 +6752,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "주체 표 합계 행 — 종목 단위 장중 매매 응답의 매도금액"
+      "note": "주체 표 합계 행 — 종목 단위 장중 매매 응답의 매도금액",
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s201",
@@ -6580,8 +6772,8 @@
         "row": "foot",
         "col": 2
       },
-      "mapping_id": "base:ka10063",
-      "f": "sell_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도수량",
       "format": {
@@ -6593,7 +6785,9 @@
       "paired_with": "s200",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s202",
@@ -6611,8 +6805,8 @@
         "row": "foot",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -6625,7 +6819,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s203",
@@ -6643,8 +6839,8 @@
         "row": "foot",
         "col": 3
       },
-      "mapping_id": "base:ka10063",
-      "f": "netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수수량",
       "format": {
@@ -6656,7 +6852,9 @@
       "paired_with": "s202",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s204",
@@ -6887,8 +7085,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
-      "f": "prev_netprps_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "이전순매수금액",
       "format": {
@@ -6900,7 +7098,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s214",
@@ -6914,8 +7114,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
-      "f": "prev_pot_netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "이전시점순매수수량",
       "format": {
@@ -6926,7 +7126,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s215",
@@ -6961,8 +7163,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
-      "f": "buy_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수금액증감",
       "format": {
@@ -6974,7 +7176,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s217",
@@ -6988,8 +7192,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
-      "f": "buy_qty_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수수량증감",
       "format": {
@@ -7000,7 +7204,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s218",
@@ -7014,8 +7220,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
-      "f": "sell_amt_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도금액증감",
       "format": {
@@ -7027,7 +7233,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s219",
@@ -7041,8 +7249,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
-      "f": "sell_qty_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도수량증감",
       "format": {
@@ -7053,7 +7261,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s220",
@@ -7067,8 +7277,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
-      "f": "netprps_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수증감",
       "format": {
@@ -7079,7 +7289,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s221",
@@ -7093,8 +7305,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10063",
-      "f": "netprps_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수증감",
       "format": {
@@ -7107,7 +7319,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "순매수증감의 수량 표기",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s222",
@@ -7142,8 +7356,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10058",
-      "f": "prsm_avg_pric",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "추정평균가",
       "format": {
@@ -7154,7 +7368,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s224",
@@ -7168,8 +7384,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10058",
-      "f": "avg_pric_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "평균가대비",
       "format": {
@@ -7182,14 +7398,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "추정평균가 행 2번째 줄 — 평균가 대비와 대비율 한 텍스트",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10058",
-          "f": "pre_rt",
-          "kor": "대비율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s225",
@@ -7420,8 +7630,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10058",
-      "f": "dt_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기간거래량",
       "format": {
@@ -7432,7 +7642,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "ka10065 동일 종목·동일 조회로 검증되지 않은 비교 또는 집계 값"
     },
     {
       "slot_id": "s235",

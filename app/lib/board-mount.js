@@ -1196,6 +1196,7 @@ function applyPlan(root, plan, options = {}) {
   updateAccountDetailSections(root);
   updateAccountResidualDetails(root, plan);
   updateRankingResidualDetails(root, plan);
+  updateRankFour(root, plan);
   updateCurrentQuoteDetails(root, plan);
   updateOrderbookKpi(root, options);
   updateOrderbookDetails(root, plan);
@@ -1995,7 +1996,7 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
-  '30HY-0': {"node":"34IW-0","rows":["34IX-0","34JR-0","34J6-0","34KC-0","34S0-0","34SL-0","34T6-0","34VB-0","34VW-0"],"widths":[52,220,140,200,200,200,200,200],"label":"외국인·기관 순위","stack":false,"compact":true},
+  '30HY-0': {"node":"34IW-0","rows":["34IX-0","34JR-0","34J6-0","34KC-0","34S0-0","34SL-0","34T6-0","34VB-0","34VW-0"],"widths":[80,240,0,210,210,210,200,0],"label":"외국인·기관 순위","stack":false,"compact":true},
   '3UTA-0': {"node":"3V3D-0","rows":["3V3G-0","3V3K-0","3V3O-0","3V3S-0","3V3W-0","3V40-0","3V44-0","3V48-0","3V4C-0","3V4G-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true,"additional":[{"node":"3V4K-0","rows":["3V4N-0","3V4R-0","3V4V-0","3V4Z-0","3V53-0","3V57-0","3V5B-0","3V5F-0","3V5J-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true},{"node":"3V5P-0","rows":["3V5S-0","3V5W-0","3V60-0","3V64-0","3V68-0","3V6C-0","3V6G-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true},{"node":"3V6K-0","rows":["3V6N-0","3V6R-0","3V6V-0","3V6Z-0","3V73-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true}]},
   '3NVG-0': {"node":"3P9I-0","rows":["3P9M-0","3P9W-0","3PA8-0"],"widths":[160,200,200,200,200],"label":"통화별 예수금","stack":false,"compact":true},
   "13K0-2": {"node":"33Z2-0","rows":["33Z6-0","33ZD-0","33ZO-0","33ZZ-0"],"widths":[0,220,106,86,160,216],"label":"조회 순위 결과","stack":false,"compact":true},
@@ -2039,7 +2040,7 @@ const READABLE_TABLES = {
   "3FR6-0": {"node":"3T8I-0","rows":["3T8S-0","3T91-0","3T9C-0","3T9M-0","3T9W-0","3TA6-0","3TAG-0","3TAQ-0","3TB0-0","3TBA-0","3TBK-0","3TBU-0","3TC4-0","3TCE-0"],"widths":[210,130,130,130,130,190,0],"label":"분봉 표","stack":false,"compact":true,"additional":[{"node":"3SP2-0","rows":["3SP7-0","3SPG-0","3SPR-0","3SQ1-0"],"widths":[120,130,130,130,130,190,200],"label":"일자별 시세","stack":false,"compact":true}]},
   "15N5-2": {"node":"3CXU-0","rows":["3CXV-0","3CY4-0","3CYR-0","3CZE-0"],"widths":[112,130,130,180,190,0,0,130],"label":"ETF 시간대별 시세","stack":false,"compact":true,"additional":[{"node":"3D05-0","rows":["3D06-0","3D0C-0","3D0M-0","3D0W-0"],"widths":[120,130,120,180,190],"label":"ETF 일별 시세","stack":false,"compact":true}]},
   "3ODO-0": {"node":"3P48-0","rows":["3P4C-0","3P4J-0","3P51-0","3P5I-0"],"widths":[120,150,190,190,190,100],"label":"금현물 거래내역","stack":false,"compact":true,"additional":[{"node":"3P3G-0","rows":["3P3K-0","3P3R-0"],"widths":[190,190,190,190,190,130],"label":"금현물 잔고","stack":false,"compact":true}]},
-  "3063-0": {"node":"35L4-0","rows":["35L5-0","35M1-0","35MO-0","35UQ-0","35VD-0","35W0-0","35LE-0","35WN-0","35XA-0"],"widths":[52,190,130,200,200,200,200,190],"label":"순위 결과","stack":false,"compact":true,"additional":[{"node":"3TYN-0","rows":["3TYO-0","3TYT-0","3TZ4-0","3TZF-0","3TZQ-0"],"widths":[110,200,200,200],"label":"투자자 표","stack":false,"compact":true}]},
+  "3063-0": {"node":"35L4-0","rows":["35L5-0","35M1-0","35MO-0","35UQ-0","35VD-0","35W0-0","35LE-0","35WN-0","35XA-0"],"widths":[0,240,0,200,200,200,0,0],"label":"요청 주체의 매매","stack":false,"compact":true,"additional":[{"node":"3TYN-0","rows":["3TYO-0","3TYT-0","3TZ4-0","3TZF-0","3TZQ-0"],"widths":[240,200,200,200],"label":"첫3개 조회 종목","stack":false,"compact":true}]},
   "30TY-0": {"node":"362Z-0","rows":["3630-0","3639-0","363U-0","364F-0","3650-0","36A6-0","36AR-0","36BC-0","36BX-0"],"widths":[52,190,130,210,210,210,190,130],"label":"순위 결과","stack":false,"compact":true},
   '4A9H-1': {"node":"4ABV-1","rows":["4AE9-1","4ADS-1","4ADC-1","4ACW-1","4ACG-1","4AC0-1"],"widths":[52,190,130,110,190,210,130],"label":"필터 결과","stack":false,"compact":true,"additional":[{"node":"4AB3-1","rows":["4ABM-1","4ABG-1","4ABA-1","4AB4-1"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
   '4AGN-1': {"node":"4AJB-1","rows":["4ALP-1","4AL8-1","4AKS-1","4AKC-1","4AJW-1","4AJG-1"],"widths":[52,190,130,110,190,210,130],"label":"필터 결과","stack":false,"compact":true,"additional":[{"node":"4AIJ-1","rows":["4AJ2-1","4AIW-1","4AIQ-1","4AIK-1"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
@@ -2047,7 +2048,7 @@ const READABLE_TABLES = {
   '4AUX-1': {"node":"4AXL-1","rows":["4AZZ-1","4AZI-1","4AZ2-1","4AYM-1","4AY6-1","4AXQ-1"],"widths":[52,190,130,110,190,210,130],"label":"필터 결과","stack":false,"compact":true,"additional":[{"node":"4AWT-1","rows":["4AXC-1","4AX6-1","4AX0-1","4AWU-1"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
   '2YS8-0': { node: '39D6-0', rows: ['39D7-0', '39DG-0', '39E4-0', '39ES-0', '39M7-0', '39MV-0', '39NJ-0', '39O7-0', '39OV-0'], widths: [52, 190, 130, 110, 0, 0, 0, 190], label: '신용비율 순위', stack: false, compact: true },
   '2ZBB-0': { node: '384C-0', rows: ['384D-0', '384M-0', '3857-0', '385S-0', '389D-0', '389Y-0', '38AJ-0', '38B4-0', '38BP-0'], widths: [52, 190, 0, 190, 190, 210, 0, 0], label: '대차거래 순위', stack: false, compact: true },
-  '2V71-0': { node: '2WBN-0', rows: ['358S-0', '3594-0', '35C2-0', '35GH-0', '35NC-0', '35OF-0', '35PF-0', '35Q1-0', '35U0-0'], widths: [52, 190, 130, 210, 210, 210, 190, 130], label: '프로그램 매매', stack: false, compact: true },
+  '2V71-0': {"node":"2WBN-0","rows":["358S-0","3594-0","35C2-0","35GH-0","35NC-0","35OF-0","35PF-0","35Q1-0","35U0-0"],"widths":[80,240,150,190,190,190,160,0],"label":"프로그램 매매","stack":false,"compact":true},
   '2Z49-0': { node: '3AXF-0', rows: ['3AXG-0', '3AXP-0', '3AY4-0', '3AYJ-0', '3AYY-0', '3AZD-0', '3AZS-0'], widths: [52, 0, 220, 160, 190, 190, 210, 0], label: 'ELW 종목별 순매매', stack: false, compact: true },
   '3TOM-0': { node: '3TS6-0', rows: ['3TUP-0', '3TUA-0', '3TTV-0', '3TTG-0', '3TT1-0', '3TWV-0', '3TXA-0', '3TSM-0', '3TXP-0', '3TY4-0', '3TS7-0'], widths: [52, 0, 220, 160, 190, 190, 210, 0], label: 'ELW 종목별 순매매', stack: false, compact: true },
   '13BC-2': { node: '3IMQ-0', rows: ['3IN3-0', '3INL-0', '3INU-0', '3IO3-0', '3IOC-0', '3IP9-0', '3IPI-0', '3IPR-0', '3IQ0-0'], widths: [96, 120, 120, 180, 88, 110], label: '실시간 체결', stack: false, compact: true },
@@ -2076,6 +2077,56 @@ function layoutGroup(doc, className) {
   const group = doc.createElement('div');
   group.className = className;
   return group;
+}
+
+const RANK_FOUR = {"2V71-0":{"groups":[["kpi","프로그램 요약",["s013","s016","s017","s022","s023"]],["2WBN-0","프로그램 조회 종목",["s041","s042","s043","s044","s045","s046","s047","s048","s049","s050","s051","s052","s053","s054","s055","s056","s057","s058","s059","s060","s061","s062","s063","s064","s065","s066","s067","s068","s069","s070","s071","s072","s073","s074","s075","s076","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s087","s088","s089","s090","s091","s092","s093","s094","s095","s096","s097","s098","s099","s100","s101","s102","s103","s104","s105","s106","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s135","s136","s137","s138","s139","s140","s141","s142","s143","s144","s145","s146","s147","s148","s149","s150","s151","s152","s153","s154","s155"]],["3E9K-0","첫 조회 종목",["s168","s169","s173"]],["3E9U-0","프로그램 별도 조회",["s177","s179","s181"]],["3EAD-0","종목별 프로그램 조회 합계",["s185","s186","s188","s189","s191","s194"]]],"omitted":["s047","s049","s051","s053","s054","s061","s063","s065","s067","s068","s075","s077","s079","s081","s082","s089","s091","s093","s095","s096","s103","s105","s107","s109","s110","s117","s119","s121","s123","s124","s134","s136","s138","s140","s141","s148","s150","s152","s154","s155","s171","s192","s195"]},"3063-0":{"groups":[["kpi","요약 통계",["s013","s016","s020","s022"]],["35L4-0","요청 주체의 조회 종목",["s045","s046","s047","s048","s049","s050","s051","s052","s053","s054","s055","s056","s057","s058","s059","s060","s061","s062","s063","s064","s065","s066","s067","s068","s069","s070","s071","s072","s073","s074","s075","s076","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s087","s088","s089","s090","s091","s092","s093","s094","s095","s096","s097","s098","s099","s100","s101","s102","s103","s104","s105","s106","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s135","s136","s137","s138","s139","s140","s141","s142","s143","s144","s145","s146","s147","s148","s149","s150","s151","s152","s153","s154","s155","s156","s157","s158","s159","s160","s161","s162","s163","s164","s165","s166"]],["3TYJ-0","첫3개 조회 종목",["s176","s177","s179","s181","s183","s184","s186","s188","s190","s191","s193","s195"]],["3U01-0","직전 비교",["s204","s205","s206","s207","s208","s209","s210","s211","s212","s213","s214","s215","s216","s217","s218","s219","s220","s221","s222","s223","s224"]],["3U0Z-0","조회 요약",["s225","s226","s227","s228","s229","s230","s231","s232","s233","s234","s235"]]],"omitted":["s020","s045","s048","s049","s051","s053","s055","s056","s057","s058","s059","s060","s063","s064","s066","s068","s070","s071","s072","s073","s074","s075","s078","s079","s081","s083","s085","s086","s087","s088","s089","s090","s093","s094","s096","s098","s100","s101","s102","s103","s104","s105","s108","s109","s111","s113","s115","s116","s117","s118","s119","s120","s122","s125","s126","s128","s130","s132","s133","s134","s135","s136","s137","s140","s141","s143","s145","s147","s148","s149","s150","s151","s152","s155","s156","s158","s160","s162","s163","s164","s165","s166","s178","s180","s182","s185","s187","s189","s192","s194","s196","s197","s198","s199","s200","s201","s202","s203","s213","s214","s216","s217","s218","s219","s220","s221","s223","s224","s234"]},"30HY-0":{"groups":[["kpi","외국인·기관 요약",["s013","s016","s019","s020","s022"]],["34IW-0","외국인·기관 조회 종목",["s041","s042","s043","s044","s045","s046","s047","s048","s049","s050","s051","s052","s053","s054","s055","s056","s057","s058","s059","s060","s061","s062","s063","s064","s065","s066","s067","s068","s069","s070","s071","s072","s073","s074","s075","s076","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s087","s088","s089","s090","s091","s092","s093","s094","s095","s096","s097","s098","s099","s100","s101","s102","s103","s104","s105","s106","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s135","s136","s137","s138","s139","s140","s141","s142","s143","s144","s145","s146","s147","s148","s149","s150","s151","s152","s153"]],["3I61-0","첫 조회 종목",["s158","s159"]],["3I6B-0","첫 결과 연속 순매수",["s172","s173"]],["3T0G-0","외국인 순매매액",["s176","s177","s178","s179","s180","s181","s182","s183","s184","s185","s186","s187"]]],"omitted":["s044","s045","s054","s058","s059","s068","s072","s073","s082","s086","s087","s096","s100","s101","s110","s114","s115","s124","s126","s130","s131","s140","s144","s145","s154","s161","s163","s165","s166","s167","s168","s169","s170","s171"]},"31OF-0":{"groups":[["3A7P-0","신용융자 가능종목",[]]],"omitted":["s044","s045","s054","s055","s064","s065","s074","s075","s084","s085","s094","s095","s106","s107","s116","s117"]}};
+function prepareRankFour(surface, contract) {
+  if (!RANK_FOUR[contract.board_id]) return;
+  const config = RANK_FOUR[contract.board_id];
+  surface.classList.add('bs-rank-four');
+  for (const slot of config.omitted) surface.querySelector(`[data-slot-id="${slot}"]`)?.classList.add('bs-rank-four-unsupported');
+  for (const [id] of config.groups) {
+    const group = id === 'kpi' ? surface.querySelector('.bs-kpi') : authoredNode(surface, id);
+    group?.classList.add('bs-ranking-managed');
+  }
+  if (contract.board_id === '30HY-0') {
+    const group = authoredNode(surface, '3T0G-0');
+    group?.querySelector('.bs-unavailable-graphic-message')?.remove();
+    for (const id of ['3T0K-0','3T0P-0','3T0U-0','3T10-0','3T15-0','3T1A-0']) authoredNode(surface,id)?.classList.add('bs-rank-four-mini-row');
+  }
+}
+
+function updateRankFour(surface, plan) {
+  const id = surface.dataset?.bsBoardId, config = RANK_FOUR[id];
+  if (!config) return;
+  const states = surface.__bsRankFourStates || (surface.__bsRankFourStates = new Map());
+  for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  for (const slot of config.omitted) surface.querySelector(`[data-slot-id="${slot}"]`)?.classList.add('bs-rank-four-unsupported');
+  const received = state => state && !state.pending && !state.missing && !state.empty && !state.designText && String(state.text).trim();
+  for (const [nodeId, title, ids] of config.groups) {
+    const group = nodeId === 'kpi' ? surface.querySelector('.bs-kpi') : authoredNode(surface,nodeId);
+    if (!group) continue;
+    const watched = ids.map(slot=>states.get(slot));
+    const pending = watched.some(value=>value?.pending);
+    const empty = !watched.some(received);
+    const unsupported = id === '31OF-0' && nodeId === '3A7P-0';
+    group.classList.toggle('bs-ranking-unavailable-group',empty || unsupported);
+    for (let box=group;box&&box!==surface;box=box.parentElement) {
+      if (surface.__bsEmptyValueHidden?.has(box) || box.dataset.bsUnavailableHidden === 'true') {
+        setHidden(box,false);surface.__bsEmptyValueHidden?.delete(box);delete box.dataset.bsUnavailableHidden;
+      }
+      if (box.matches('.bs-rail,.bs-primary')) break;
+    }
+    let note=group.querySelector(':scope > .bs-ranking-unavailable-note');
+    if ((empty||unsupported)&&!note) {note=layoutGroup(surface.ownerDocument,'bs-ranking-unavailable-note');note.setAttribute('role','status');group.append(note);}
+    if (note) {note.hidden=!empty&&!unsupported;note.textContent=unsupported?'모의 조회에서 신용융자 가능종목을 제공하지 않습니다.':title+(pending?' 수신 대기':' 미제공');}
+  }
+  const kpi=surface.querySelector('.bs-kpi');
+  for (const cell of kpi?.querySelectorAll('.bs-kpi-cell')||[]) {
+    const watched=[...cell.querySelectorAll('[data-slot-id]')].map(node=>states.get(node.dataset.slotId));
+    cell.classList.toggle('bs-ranking-unavailable-cell',!watched.some(received)&&!watched.some(state=>state?.pending));
+  }
+  surface.querySelector('.bs-rail')?.classList.add('bs-ranking-compact-rail');
 }
 
 function suppressStaticGraphics(surface, contract) {
@@ -3202,6 +3253,7 @@ function mountBoard(root, boardId, values, options = {}) {
     if (flowLayout) flowLayout.prepare(surface, contract);
     if (goldQuote) goldQuote.prepare(surface, contract);
     suppressStaticGraphics(surface, contract);
+    prepareRankFour(surface, contract);
     scrubRawIdentityNames(surface);
     root.__bsSurface = surface;
     root.__bsBoardId = String(boardId);

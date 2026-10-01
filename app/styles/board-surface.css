@@ -1155,3 +1155,51 @@
   .board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-rail { width: 100% !important; min-width: 0 !important; }
   .board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-rail > [data-node] { width: 100%; max-width: 100%; }
 }
+
+/* Only the four reviewed query lists; zero-valued received cells are retained. */
+.bs-rank-four .bs-rank-four-unsupported { display:none !important; }
+.bs-rank-four .bs-workspace, .bs-rank-four .bs-primary, .bs-rank-four .bs-rail { min-height:0 !important; height:auto !important; align-self:start; }
+.bs-rank-four .bs-workspace { align-items:start; }
+.bs-rank-four .bs-rail { width:100% !important; max-width:100% !important; }
+.bs-rank-four .bs-rail > [data-node] { min-width:0; max-width:100%; height:auto !important; min-height:0 !important; }
+.bs-rank-four .bs-kpi { display:grid !important; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); height:auto !important; min-height:0 !important; }
+.bs-rank-four .bs-kpi > [data-node] { width:auto !important; min-width:0 !important; height:auto !important; flex-basis:auto !important; }
+.bs-rank-four .bs-kpi [data-slot-id], .bs-rank-four .bs-rail [data-slot-id] { min-width:0 !important; max-width:100% !important; height:auto !important; white-space:normal !important; overflow-wrap:anywhere; line-height:1.5 !important; }
+.bs-rank-four .bs-ranking-unavailable-group { display:block !important; }
+.bs-rank-four .bs-readable-cell[data-col="1"] { align-items:flex-start; text-align:left; }
+.bs-rank-four .bs-readable-cell > [data-slot-id] { max-width:100%; white-space:normal; overflow-wrap:anywhere; }
+.bs-rank-four .bs-ranking-unavailable-note { white-space:normal; overflow-wrap:anywhere; }
+.bs-rank-four .bs-rail .bs-paired { display:none !important; }
+.board-surface[data-bs-board-id="2V71-0"] [data-node="2WBN-0"] .bs-readable-cell[data-col="7"],
+.board-surface[data-bs-board-id="3063-0"] [data-node="35L4-0"] .bs-readable-cell:is([data-col="0"],[data-col="2"],[data-col="6"],[data-col="7"]),
+.board-surface[data-bs-board-id="30HY-0"] [data-node="34IW-0"] .bs-readable-cell:is([data-col="2"],[data-col="7"]) { display:none !important; }
+.board-surface[data-bs-board-id="2V71-0"] :is([data-node="3SFY-0"],[data-node="3SG6-0"],[data-node="3SGN-0"],[data-node="3E9O-0"]),
+.board-surface[data-bs-board-id="3063-0"] :is([data-node="335R-0"],[data-node="335T-0"],[data-node="3TZQ-0"],[data-node="3SU1-0"]),
+.board-surface[data-bs-board-id="30HY-0"] :is([data-node="3SYD-0"],[data-node="3I65-0"],[data-node="3I68-0"]) { display:none !important; }
+.board-surface[data-bs-board-id="30HY-0"] :is([data-node="3I6F-0"],[data-node="3I6L-0"],[data-node="3I6S-0"]) { display:none !important; }
+/* These authored more/fold chips have no registered action; real state tabs remain. */
+.board-surface[data-bs-board-id="2V71-0"] [data-node="2WE2-0"],
+.board-surface[data-bs-board-id="3063-0"] [data-node="307J-0"],
+.board-surface[data-bs-board-id="30HY-0"] [data-node="30JE-0"],
+.board-surface[data-bs-board-id="31OF-0"] [data-node="31PV-0"] { display:none !important; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="335M-0"] { height:auto !important; min-height:0 !important; gap:8px; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="335P-0"] { width:auto !important; height:auto !important; background:transparent !important; }
+.board-surface[data-bs-board-id="2V71-0"] :is([data-node="3E9Z-0"],[data-node="3EA5-0"],[data-node="3EAA-0"],[data-node="3EAH-0"],[data-node="3EAL-0"],[data-node="3EAP-0"],[data-node="3EAT-0"]),
+.board-surface[data-bs-board-id="30HY-0"] [data-node="3I6V-0"] { display:flex !important; flex-wrap:wrap; gap:8px; height:auto !important; min-height:0 !important; align-items:baseline; }
+.board-surface[data-bs-board-id="2V71-0"] :is([data-node="3E9Z-0"],[data-node="3EA5-0"],[data-node="3EAA-0"],[data-node="3EAH-0"],[data-node="3EAL-0"],[data-node="3EAP-0"],[data-node="3EAT-0"]) > *,
+.board-surface[data-bs-board-id="30HY-0"] [data-node="3I6V-0"] > * { width:auto !important; min-width:0 !important; height:auto !important; flex:1 1 130px; }
+.board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row { display:grid !important; grid-template-columns:minmax(0,1fr) minmax(140px,auto); gap:12px; height:auto !important; min-height:0 !important; align-items:baseline; padding-block:8px; }
+.board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row > [data-slot-id] { width:auto !important; text-align:left; }
+.board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row > [data-slot-id]:last-child { text-align:right; }
+.board-surface[data-bs-board-id="31OF-0"] :is(.bs-kpi,.bs-rail) { display:none !important; }
+.board-surface[data-bs-board-id="31OF-0"] [data-node="3A7P-0"] { width:100% !important; box-sizing:border-box; min-height:0 !important; padding:20px; }
+.board-surface[data-bs-board-id="31OF-0"] [data-node="31SA-0"] { display:flex !important; flex-direction:row !important; flex-wrap:wrap; gap:8px; width:100% !important; height:auto !important; min-height:0 !important; }
+.board-surface[data-bs-board-id="31OF-0"] :is([data-node="31SK-0"],[data-node="31SB-0"]) { display:contents !important; }
+.board-surface[data-bs-board-id="31OF-0"] :is([data-node="31SK-0"],[data-node="31SB-0"]) > [data-node] { width:max-content !important; flex:0 0 auto !important; height:auto !important; }
+.board-surface[data-bs-board-id="31OF-0"] [data-node="31SA-0"] [data-slot-id] { white-space:nowrap !important; }
+.board-surface[data-bs-board-id="2V71-0"] [data-node="3EAD-0"]:not(.bs-ranking-unavailable-group) > [data-node="3EAE-0"] { display:flex !important; height:auto !important; }
+@container board (max-width:600px) {
+ .bs-rank-four .bs-workspace { grid-template-columns:minmax(0,1fr) !important; flex-direction:column !important; }
+ .bs-rank-four .bs-primary,.bs-rank-four .bs-rail { width:100% !important; max-width:100% !important; flex-basis:auto !important; }
+ .board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row { grid-template-columns:minmax(0,1fr); gap:2px; }
+}
