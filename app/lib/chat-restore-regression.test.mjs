@@ -61,6 +61,24 @@ test('Markdown tables preserve numeric units and literal text through rerenderin
   assert.ok(host.textContent.includes('<img src=x>'));
 });
 
+test('table inline emphasis and code render safely while formatted numbers keep numeric layout', () => {
+  const ctx = context();
+  const host = ctx.document.createElement('div');
+  const source = '| **항목** | 가격 | 코드 | 설명 |\n|---|---|---|---|\n| 합성 | **5,846,278,608,123원** | `005930` | **<img src=x onerror=alert(1)>** <script>alert(2)</script> |';
+  ctx.window.AthenaLib.Markdown.render(host, source);
+  ctx.window.AthenaLib.Markdown.render(host, source);
+  assert.equal(host.children.length, 1);
+  const nodes = [];
+  function visit(node) { nodes.push(node); node.children.forEach(visit); }
+  visit(host);
+  assert.deepEqual(nodes.filter(n => n.nodeName === 'strong').map(n => n.textContent), ['항목', '5,846,278,608,123원', '<img src=x onerror=alert(1)>']);
+  assert.equal(nodes.find(n => n.nodeName === 'code').textContent, '005930');
+  assert.deepEqual(Array.from(host.querySelectorAll('.md-table-number'), n => n.textContent), ['5,846,278,608,123원', '005930']);
+  assert.ok(!nodes.some(n => n.nodeName === 'img' || n.nodeName === 'script'));
+  assert.ok(host.textContent.includes('<script>alert(2)</script>'));
+  assert.ok(!host.textContent.includes('**'));
+});
+
 test('opening saved Aegis conversation refreshes tasks after workspace restoration', () => {
   const calls = [];
   const ctx = context({

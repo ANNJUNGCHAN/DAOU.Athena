@@ -118,8 +118,8 @@ function renderMarkdownInto(container, mdText) {
           const tr = document.createElement('tr');
           for (const cell of cells) {
             const td = document.createElement('td');
-            td.textContent = cell; // 텍스트 노드 — innerHTML 금지
-            if (/^[+\-−]?\d[\d,.\s/%:()+\-−원주억만천백개건배]*$/u.test(cell)) td.className = 'md-table-number';
+            appendInline(td, cell);
+            if (/^[+\-−]?\d[\d,.\s/%:()+\-−원주억만천백개건배]*$/u.test(td.textContent)) td.className = 'md-table-number';
             tr.appendChild(td);
           }
           tbody.appendChild(tr);
