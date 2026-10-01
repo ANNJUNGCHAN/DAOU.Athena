@@ -23148,6 +23148,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s018": [
+      "전일 62억원",
+      "unavailable",
+      null
+    ],
     "s020": [
       "9 · 5",
       "direction",
@@ -23160,6 +23165,11 @@ const policy = {
     ],
     "s026": [
       "3 종목",
+      "unavailable",
+      null
+    ],
+    "s027": [
+      "90일 내",
       "unavailable",
       null
     ],
@@ -23663,8 +23673,38 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s228": [
+      "8,200",
+      "unavailable",
+      null
+    ],
+    "s230": [
+      "-2.1%",
+      "unavailable",
+      null
+    ],
+    "s232": [
+      "2026.11.20",
+      "unavailable",
+      null
+    ],
     "s238": [
       "만기 90일 내 3종목",
+      "unavailable",
+      null
+    ],
+    "s240": [
+      "1:1",
+      "unavailable",
+      null
+    ],
+    "s242": [
+      "2026.11.10~20",
+      "unavailable",
+      null
+    ],
+    "s245": [
+      "9사",
       "unavailable",
       null
     ],
@@ -24249,10 +24289,50 @@ const policy = {
       "unavailable",
       null
     ],
+    "s029": [
+      "투자자 12주체",
+      "caption",
+      "투자자별 조회"
+    ],
+    "s031": [
+      "오늘의 수급 · 기관",
+      "caption",
+      "최근 조회일 · 기관"
+    ],
+    "s035": [
+      "순매수 · 억원",
+      "caption",
+      "조회 응답 · 값별 단위 표기"
+    ],
+    "s038": [
+      "화 · 당일",
+      "caption",
+      ""
+    ],
+    "s040": [
+      "월",
+      "caption",
+      ""
+    ],
+    "s042": [
+      "금",
+      "caption",
+      ""
+    ],
+    "s044": [
+      "목",
+      "caption",
+      ""
+    ],
+    "s046": [
+      "수",
+      "caption",
+      ""
+    ],
     "s047": [
       "5일 누적",
-      "unavailable",
-      null
+      "caption",
+      "조회일"
     ],
     "s144": [
       "0",
@@ -24284,15 +24364,35 @@ const policy = {
       "unavailable",
       null
     ],
+    "s151": [
+      "순매수 · 억원",
+      "caption",
+      "조회 응답 · 값별 단위 표기"
+    ],
     "s153": [
       "09:00~09:30",
       "bound-time",
       "tm"
     ],
+    "s154": [
+      "확정",
+      "caption",
+      ""
+    ],
     "s155": [
       "09:30~09:42",
       "bound-time",
       "tm"
+    ],
+    "s156": [
+      "진행",
+      "caption",
+      ""
+    ],
+    "s157": [
+      "당일 누계",
+      "caption",
+      "조회 시각"
     ],
     "s158": [
       "09:42",
@@ -24396,13 +24496,13 @@ const policy = {
     ],
     "s219": [
       "일자별 5거래일 · 장중 30분 구간 · 마지막 갱신 09:42:18",
-      "time",
-      null
+      "caption",
+      "일자별 · 장중 조회 결과"
     ],
     "s220": [
       "순매수 기준 · 통화단위 원 · 금액단위 억원 · 09-01 잠정 · 08-26~08-31 확정",
-      "unavailable",
-      null
+      "caption",
+      "실제 조회값과 단위를 표시합니다."
     ]
   },
   "3DZ1-0": {
@@ -24822,8 +24922,13 @@ const policy = {
     ],
     "s007": [
       "09:42:18",
-      "time",
-      null
+      "bound-time",
+      "cntr_tm"
+    ],
+    "s015": [
+      "시가 · 고가 · 저가",
+      "caption",
+      "당일 시가"
     ],
     "s016": [
       "149,200 · 152,400 · 148,100",
@@ -24865,10 +24970,30 @@ const policy = {
       "unavailable",
       null
     ],
+    "s030": [
+      "09-01(화)",
+      "bound-time",
+      "cntr_tm"
+    ],
     "s031": [
       "1분봉",
-      "unavailable",
-      null
+      "caption",
+      "분봉"
+    ],
+    "s032": [
+      "150,850",
+      "price",
+      "cur_prc"
+    ],
+    "s036": [
+      "전체 42건 · 13건 표시",
+      "caption",
+      "분봉 · 최대 13개 표시"
+    ],
+    "s044": [
+      "09:42",
+      "bound-time",
+      "cntr_tm"
     ],
     "s045": [
       "150,800",
@@ -24885,6 +25010,21 @@ const policy = {
       "price",
       "low_pric"
     ],
+    "s048": [
+      "150,850",
+      "price",
+      "cur_prc"
+    ],
+    "s051": [
+      "573억원",
+      "unavailable",
+      null
+    ],
+    "s052": [
+      "09:41",
+      "bound-time",
+      "cntr_tm"
+    ],
     "s053": [
       "150,850",
       "price",
@@ -24899,6 +25039,21 @@ const policy = {
       "150,750",
       "price",
       "low_pric"
+    ],
+    "s056": [
+      "150,800",
+      "price",
+      "cur_prc"
+    ],
+    "s059": [
+      "633억원",
+      "unavailable",
+      null
+    ],
+    "s060": [
+      "09:40",
+      "bound-time",
+      "cntr_tm"
     ],
     "s061": [
       "150,750",
@@ -24915,6 +25070,21 @@ const policy = {
       "price",
       "low_pric"
     ],
+    "s064": [
+      "150,850",
+      "price",
+      "cur_prc"
+    ],
+    "s067": [
+      "769억원",
+      "unavailable",
+      null
+    ],
+    "s068": [
+      "09:39",
+      "bound-time",
+      "cntr_tm"
+    ],
     "s069": [
       "150,800",
       "price",
@@ -24929,6 +25099,21 @@ const policy = {
       "150,700",
       "price",
       "low_pric"
+    ],
+    "s072": [
+      "150,750",
+      "price",
+      "cur_prc"
+    ],
+    "s075": [
+      "498억원",
+      "unavailable",
+      null
+    ],
+    "s076": [
+      "09:38",
+      "bound-time",
+      "cntr_tm"
     ],
     "s077": [
       "150,700",
@@ -24945,6 +25130,21 @@ const policy = {
       "price",
       "low_pric"
     ],
+    "s080": [
+      "150,800",
+      "price",
+      "cur_prc"
+    ],
+    "s083": [
+      "678억원",
+      "unavailable",
+      null
+    ],
+    "s084": [
+      "09:37",
+      "bound-time",
+      "cntr_tm"
+    ],
     "s085": [
       "150,750",
       "price",
@@ -24959,6 +25159,21 @@ const policy = {
       "150,650",
       "price",
       "low_pric"
+    ],
+    "s088": [
+      "150,700",
+      "price",
+      "cur_prc"
+    ],
+    "s091": [
+      "437억원",
+      "unavailable",
+      null
+    ],
+    "s092": [
+      "09:36",
+      "bound-time",
+      "cntr_tm"
     ],
     "s093": [
       "150,650",
@@ -24975,6 +25190,21 @@ const policy = {
       "price",
       "low_pric"
     ],
+    "s096": [
+      "150,750",
+      "price",
+      "cur_prc"
+    ],
+    "s099": [
+      "543억원",
+      "unavailable",
+      null
+    ],
+    "s100": [
+      "09:35",
+      "bound-time",
+      "cntr_tm"
+    ],
     "s101": [
       "150,700",
       "price",
@@ -24989,6 +25219,21 @@ const policy = {
       "150,600",
       "price",
       "low_pric"
+    ],
+    "s104": [
+      "150,650",
+      "price",
+      "cur_prc"
+    ],
+    "s107": [
+      "467억원",
+      "unavailable",
+      null
+    ],
+    "s108": [
+      "09:34",
+      "bound-time",
+      "cntr_tm"
     ],
     "s109": [
       "150,650",
@@ -25005,6 +25250,21 @@ const policy = {
       "price",
       "low_pric"
     ],
+    "s112": [
+      "150,700",
+      "price",
+      "cur_prc"
+    ],
+    "s115": [
+      "603억원",
+      "unavailable",
+      null
+    ],
+    "s116": [
+      "09:33",
+      "bound-time",
+      "cntr_tm"
+    ],
     "s117": [
       "150,550",
       "price",
@@ -25019,6 +25279,21 @@ const policy = {
       "150,550",
       "price",
       "low_pric"
+    ],
+    "s120": [
+      "150,650",
+      "price",
+      "cur_prc"
+    ],
+    "s123": [
+      "407억원",
+      "unavailable",
+      null
+    ],
+    "s124": [
+      "09:32",
+      "bound-time",
+      "cntr_tm"
     ],
     "s125": [
       "150,600",
@@ -25035,6 +25310,21 @@ const policy = {
       "price",
       "low_pric"
     ],
+    "s128": [
+      "150,550",
+      "price",
+      "cur_prc"
+    ],
+    "s131": [
+      "512억원",
+      "unavailable",
+      null
+    ],
+    "s132": [
+      "09:31",
+      "bound-time",
+      "cntr_tm"
+    ],
     "s133": [
       "150,550",
       "price",
@@ -25049,6 +25339,21 @@ const policy = {
       "150,500",
       "price",
       "low_pric"
+    ],
+    "s136": [
+      "150,600",
+      "price",
+      "cur_prc"
+    ],
+    "s139": [
+      "572억원",
+      "unavailable",
+      null
+    ],
+    "s140": [
+      "09:30",
+      "bound-time",
+      "cntr_tm"
     ],
     "s141": [
       "150,500",
@@ -25065,10 +25370,20 @@ const policy = {
       "price",
       "low_pric"
     ],
-    "s149": [
-      "전체 60건 · 3건 표시",
+    "s144": [
+      "150,550",
+      "price",
+      "cur_prc"
+    ],
+    "s147": [
+      "692억원",
       "unavailable",
       null
+    ],
+    "s149": [
+      "전체 60건 · 3건 표시",
+      "caption",
+      "일자별 · 최대 3개 표시"
     ],
     "s158": [
       "149,200",
@@ -25115,6 +25430,11 @@ const policy = {
       "price",
       "low_pric"
     ],
+    "s183": [
+      "09:30 ~ 09:42 · 13분",
+      "time",
+      null
+    ],
     "s185": [
       "+300 · +0.20%",
       "unavailable",
@@ -25125,6 +25445,16 @@ const policy = {
       "unavailable",
       null
     ],
+    "s189": [
+      "490만주",
+      "unavailable",
+      null
+    ],
+    "s191": [
+      "7,384억원",
+      "unavailable",
+      null
+    ],
     "s194": [
       "정규장",
       "status",
@@ -25132,8 +25462,8 @@ const policy = {
     ],
     "s196": [
       "1분",
-      "unavailable",
-      null
+      "caption",
+      "요청한 분봉 주기"
     ],
     "s200": [
       "09:00 ~ 09:42",
@@ -25154,6 +25484,11 @@ const policy = {
       "104,300",
       "unavailable",
       null
+    ],
+    "s208": [
+      "당일 고가 · 저가",
+      "caption",
+      "당일 고가"
     ],
     "s209": [
       "152,400 · 148,100",

@@ -9,6 +9,27 @@ const { formatSlot } = require('./board-format');
 const source = id => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
 const text = (id, values, slot) => mountPlan(registry.contractFor(id), values).assignments.find(x => x.slotId === slot)?.text;
 
+test('investor grids label real dates and times without specimen weekdays or cumulative claims', () => {
+  assert.equal(text('3DI2-0', {s030:'20261001'}, 's030'), '2026-10-01');
+  for (const slot of ['s038','s040','s042','s044','s046','s154','s156']) assert.equal(text('3DI2-0', {}, slot), '');
+  assert.equal(text('3DI2-0', {}, 's047'), '조회일');
+  assert.equal(text('3DI2-0', {}, 's157'), '조회 시각');
+  assert.equal(text('3DI2-0', {s051:{value:'0',text:'0천주',display_unit:'천주'}}, 's051'), '0천주');
+});
+
+test('minute timestamps and price changes do not become dates without clocks or percentages', () => {
+  assert.equal(text('3FR6-0', {s044:'20261001101500'}, 's044'), '2026-10-01 10:15:00');
+  assert.equal(text('3FR6-0', {s049:'1250'}, 's049'), '+1,250원');
+  assert.equal(text('3FR6-0', {s048:'-1234'}, 's048'), '1,234');
+  assert.equal(text('3FR6-0', {}, 's036'), '분봉 · 최대 13개 표시');
+  assert.equal(text('3FR6-0', {}, 's183'), '시각 미제공');
+  for (const slot of ['s051','s185','s187','s189','s191']) assert.equal(text('3FR6-0', {}, slot), '—');
+});
+
+test('warrant terms absent from the quote response cannot retain specimen periods or amounts', () => {
+  for (const slot of ['s018','s027','s232','s238','s240','s242','s245']) assert.equal(text('32XM-0', {}, slot), '—');
+});
+
 test('ranking rails name their first result and do not retain unsupported cross-query specimens', () => {
   assert.equal(text('2YA8-0', {}, 's137'), '첫 번째 결과');
   assert.equal(text('2YA8-0', {}, 's140'), '다른 조회 결과');

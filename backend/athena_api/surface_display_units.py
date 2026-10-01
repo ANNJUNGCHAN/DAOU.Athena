@@ -7,13 +7,21 @@ from typing import Any
 
 from athena_api.semantic_presentation_registry import get_semantic_presentation_registry
 
+# ka10060's response descriptions say 백만원, while its request explicitly
+# selects amount/quantity and the quantity unit. Only investor fields vary;
+# acc_trde_prica remains a fixed monetary observation.
+_KA10060_INVESTORS = frozenset({
+    'ind_invsr', 'frgnr_invsr', 'orgn', 'fnnc_invt', 'insrnc', 'invtrt',
+    'etc_fnnc', 'bank', 'penfnd_etc', 'samo_fund', 'natn', 'etc_corp', 'natfor',
+})
+
 
 def _unit(operation: str, arguments: Mapping[str, Any]) -> str:
     tr_id = operation.split(':')[1]
     mode = str(arguments.get('amt_qty_tp', ''))
     if tr_id == 'ka10051':
         return {'0': '억원', '1': '천주'}.get(mode, '')
-    if tr_id in {'ka10059', 'ka10061'}:
+    if tr_id in {'ka10059', 'ka10060', 'ka10061'}:
         if mode == '1':
             return '백만원'
         if mode == '2':
@@ -77,7 +85,8 @@ def annotate_surface_display_units(surface: dict[str, Any],
         operation = field.wire_occurrence_id.split('|', 1)[0]
         arguments = arguments_by_operation.get(operation, {})
         description = field.description or ''
-        if '주' in description:
+        investor_chart = operation == 'base:ka10060' and field.json_path.rsplit('.', 1)[-1] in _KA10060_INVESTORS
+        if '주' in description or investor_chart:
             unit = _unit(operation, arguments)
         else:
             fixed = re.search(r'단위:\s*(천원|백만원|억원|원)', description)

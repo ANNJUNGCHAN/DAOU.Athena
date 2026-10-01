@@ -1115,7 +1115,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "전일 거래대금 — ka10011은 당일 스냅샷만 준다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 전일 거래대금 — ka10011은 당일 스냅샷만 준다",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 전일 거래대금 — ka10011은 당일 스냅샷만 준다"
     },
     {
       "slot_id": "s019",
@@ -1342,7 +1343,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "기간 조건 고정 문구"
+      "unbound_reason": "미제공 — 신주인수권 조회는 만기일이나 90일 조건을 제공하지 않는다.",
+      "static_reason": "미제공 — 신주인수권 조회는 만기일이나 90일 조건을 제공하지 않는다."
     },
     {
       "slot_id": "s028",
@@ -2013,9 +2015,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 0,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s052",
@@ -2047,9 +2048,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 0,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s053",
@@ -2081,9 +2081,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 0,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s054",
@@ -2452,9 +2451,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 1,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s065",
@@ -2486,9 +2484,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 1,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s066",
@@ -2520,9 +2517,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 1,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s067",
@@ -2891,9 +2887,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 2,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s078",
@@ -2925,9 +2920,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 2,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s079",
@@ -2959,9 +2953,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 2,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s080",
@@ -3330,9 +3323,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 3,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s091",
@@ -3364,9 +3356,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 3,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s092",
@@ -3398,9 +3389,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 3,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s093",
@@ -3769,9 +3759,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 4,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s104",
@@ -3803,9 +3792,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 4,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s105",
@@ -3837,9 +3825,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 4,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s106",
@@ -4208,9 +4195,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 5,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s117",
@@ -4242,9 +4228,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 5,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s118",
@@ -4276,9 +4261,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 5,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s119",
@@ -4647,9 +4631,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 6,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s130",
@@ -4681,9 +4664,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 6,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s131",
@@ -4715,9 +4697,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 6,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s132",
@@ -5086,9 +5067,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 7,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s143",
@@ -5120,9 +5100,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 7,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s144",
@@ -5154,9 +5133,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 7,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s145",
@@ -5525,9 +5503,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 8,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s156",
@@ -5559,9 +5536,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 8,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s157",
@@ -5593,9 +5569,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 8,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s158",
@@ -5964,9 +5939,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 9,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s169",
@@ -5998,9 +5972,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 9,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s170",
@@ -6032,9 +6005,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 9,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s171",
@@ -6403,9 +6375,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 10,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s182",
@@ -6437,9 +6408,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 10,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s183",
@@ -6471,9 +6441,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 10,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s184",
@@ -6842,9 +6811,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 11,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s195",
@@ -6876,9 +6844,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 11,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s196",
@@ -6910,9 +6877,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 11,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s197",
@@ -7281,9 +7247,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 12,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s208",
@@ -7315,9 +7280,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 12,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s209",
@@ -7349,9 +7313,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 12,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s210",
@@ -7720,9 +7683,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
-      "row_index": 13,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다(신주인수권 행사가는 응답 12필드에 포함되지 않는다)"
     },
     {
       "slot_id": "s221",
@@ -7754,9 +7716,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
-      "row_index": 13,
-      "static_reason": "행사가·괴리율 — 신주인수권시세(ka10011) 응답에 행사가·괴리율 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다(행사가가 없어 산출 근거도 없다)"
     },
     {
       "slot_id": "s222",
@@ -7788,9 +7749,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
-      "row_index": 13,
-      "static_reason": "만기일 — 신주인수권시세(ka10011) 응답에 만기일 필드가 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다(만기일 필드는 ELW 응답 ka30005·ka10095 몫)"
     },
     {
       "slot_id": "s223",
@@ -7951,7 +7911,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사가 — ka10011에 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사가 — ka10011에 없다"
     },
     {
       "slot_id": "s229",
@@ -8000,7 +7961,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "괴리율 — ka10011에 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 괴리율 — ka10011에 없다"
     },
     {
       "slot_id": "s231",
@@ -8049,7 +8011,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "만기일 — ka10011에 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 만기일 — ka10011에 없다"
     },
     {
       "slot_id": "s233",
@@ -8239,7 +8202,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "행사 비율 — ka10011에 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사 비율 — ka10011에 없다",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 행사 비율 — ka10011에 없다"
     },
     {
       "slot_id": "s241",
@@ -8288,7 +8252,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "납입 기간 — ka10011에 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 납입 기간 — ka10011에 없다",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 납입 기간 — ka10011에 없다"
     },
     {
       "slot_id": "s243",
@@ -8358,7 +8323,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "발행사 수 — ka10011에 없다"
+      "unbound_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 발행사 수 — ka10011에 없다",
+      "static_reason": "미제공 — 신주인수권 ka10011 응답에 이 값 또는 기간 조건 필드가 없다. 발행사 수 — ka10011에 없다"
     },
     {
       "slot_id": "s246",
