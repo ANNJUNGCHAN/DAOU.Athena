@@ -287,7 +287,8 @@ function formatSlot(format, raw) {
   }
   if (typeof normalized.text === 'string' && normalized.text) {
     // 호출부가 완성한 표기다. 접두·접미·단위를 다시 입히지 않는다.
-    return { text: normalized.text, tone: normalized.tone || null, missing: false };
+    const tone = normalized.tone || (toNumber(normalized.value) === null ? null : toneFor(spec, normalized.value));
+    return { text: normalized.text, tone, missing: false };
   }
 
   const kind = kindOf(spec);
