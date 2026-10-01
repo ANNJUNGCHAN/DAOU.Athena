@@ -1106,6 +1106,20 @@
 .bs-kpi.bs-ranking-unavailable-group > .bs-ranking-unavailable-note { padding-inline: 28px; }
 .bs-ranking-compact-rail { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
 .bs-ranking-duplicate-list { display: none !important; }
+.board-surface[data-bs-board-id="2R3M-1"] .bs-current-quote-empty-costs { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface[data-bs-board-id="2R3M-1"] .bs-current-quote-empty-costs > :not(.bs-current-quote-note) { display: none !important; }
+.board-surface[data-bs-board-id="2R3M-1"] [data-node="36MQ-0"]:has(> .bs-current-quote-empty-costs) { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.board-surface[data-bs-board-id="2R3M-1"] [data-node="3DFG-0"] .bs-current-quote-column-empty { display: none !important; }
+.bs-current-quote-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+@container board (max-width: 959px) {
+  .board-surface[data-bs-board-id="2ZN9-0"] :is([data-node="3054-0"], [data-node="3055-0"]) { height: auto !important; min-height: 0 !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3055-0"] { flex-wrap: wrap !important; gap: 8px !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3056-0"] { width: 100% !important; min-width: 0 !important; flex: 0 0 100% !important; flex-wrap: nowrap !important; overflow-x: auto !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] :is([data-node="3056-0"], [data-node="305J-0"]) > [data-node] { flex: 0 0 auto !important; white-space: nowrap; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="305J-0"] { width: max-content !important; min-width: max-content !important; flex: 0 0 auto !important; flex-wrap: nowrap !important; gap: 6px !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3BGY-0"],
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3BGY-0"] > [data-node] { width: 100% !important; min-width: 0 !important; }
+}
 .board-surface[data-bs-board-id="2YXS-0"] :is([data-slot-id="s330"], [data-slot-id="s333"], [data-slot-id="s336"], [data-slot-id="s339"], [data-slot-id="s342"], [data-slot-id="s346"], [data-slot-id="s349"], [data-slot-id="s352"], [data-slot-id="s355"]) { display: none !important; }
 
 /* Hide only source-confirmed absent ranking columns and specimen KPI cells. */

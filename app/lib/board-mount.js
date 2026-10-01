@@ -664,7 +664,7 @@ function hideUnavailableUnits(surface) {
   };
   for (const el of surface.querySelectorAll('[data-slot-id]')) {
     if (!isUnavailableSlotEl(el)) continue;
-    if (el.closest?.('.bs-quote-labelled-value, .bs-orderbook-managed, .bs-ranking-managed')) continue;
+    if (el.closest?.('.bs-quote-labelled-value, .bs-orderbook-managed, .bs-ranking-managed, .bs-current-quote-managed')) continue;
     if (tableCellOf(el)) continue;
     add(el);
     const box = unitBoxForUnavailable(el, surface);
@@ -929,6 +929,60 @@ function updateAccountResidualDetails(surface, plan) {
   }
 }
 
+function updateCurrentQuoteDetails(surface, plan) {
+  if (surface.dataset?.bsBoardId !== '2R3M-1') return;
+  const states = surface.__bsCurrentQuoteStates || (surface.__bsCurrentQuoteStates = new Map());
+  for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  const unavailable = slots => slots.every(slot => {
+    const state = states.get(slot);
+    return state && (state.pending || state.empty || state.missing);
+  });
+  const status = slots => slots.some(slot => states.get(slot)?.pending) ? '수신 대기' : '미제공';
+  const costs = ['s178','s180','s182','s184','s186','s188'];
+  const section = authoredNode(surface, '36TD-0');
+  const compact = unavailable(costs);
+  section.classList.toggle('bs-current-quote-empty-costs', compact);
+  let note = section.querySelector(':scope > .bs-current-quote-note');
+  if (compact && !note) {
+    note = layoutGroup(surface.ownerDocument, 'bs-current-quote-note');
+    note.setAttribute('role', 'status');
+    section.append(note);
+  }
+  if (note) {
+    note.textContent = `체결 비용·증거금 ${status(costs)}`;
+    note.hidden = !compact;
+  }
+  const table = authoredNode(surface, '3DFG-0');
+  const inner = table.querySelector('.bs-readable-table');
+  const columns = [
+    [5, 96, '전일대비·등락률', ['s221','s222','s232','s233','s243','s244']],
+    [7, 144, '외국계·프로그램', ['s225','s226','s236','s237','s247','s248']],
+  ];
+  let width = READABLE_TABLES['2R3M-1'].widths.reduce((sum, value) => sum + value, 0);
+  const notices = [];
+  for (const [col, size, label, slots] of columns) {
+    const hidden = unavailable(slots);
+    for (const cell of inner.querySelectorAll(`.bs-readable-cell[data-col="${col}"]`)) {
+      cell.classList.toggle('bs-current-quote-column-empty', hidden);
+    }
+    if (hidden) {
+      width -= size;
+      notices.push(`${label} ${status(slots)}`);
+    }
+  }
+  inner.style.setProperty('--bs-table-width', `${width}px`);
+  let columnNote = table.querySelector(':scope > .bs-current-quote-note');
+  if (!columnNote && notices.length) {
+    columnNote = layoutGroup(surface.ownerDocument, 'bs-current-quote-note');
+    columnNote.setAttribute('role', 'status');
+    table.querySelector('.bs-readable-scroll').before(columnNote);
+  }
+  if (columnNote) {
+    columnNote.textContent = notices.join(' · ');
+    columnNote.hidden = notices.length === 0;
+  }
+}
+
 function updateOrderbookKpi(surface, options) {
   if (registry.cardIdFor(surface.dataset?.bsBoardId) !== 'CC-04') return;
   if (!options.partial) surface.__bsKpiPending = new Set(options.deferredValueSlots || []);
@@ -1142,6 +1196,7 @@ function applyPlan(root, plan, options = {}) {
   updateAccountDetailSections(root);
   updateAccountResidualDetails(root, plan);
   updateRankingResidualDetails(root, plan);
+  updateCurrentQuoteDetails(root, plan);
   updateOrderbookKpi(root, options);
   updateOrderbookDetails(root, plan);
   if (options.partial) {
@@ -2319,6 +2374,15 @@ function applyReadableBoardLayout(surface, contract) {
   if (id === '2R3M-1') {
     // The day selectors remain available when the adjacent venue/time is absent.
     for (const node of ['3CS2-0', '3CS4-0']) authoredNode(surface, node).dataset.bsKeepMissing = 'true';
+    const costs = authoredNode(surface, '36TD-0');
+    costs.classList.add('bs-current-quote-managed');
+    for (const slot of nodeIndex(costs).values()) slot.dataset.bsKeepMissing = 'true';
+  }
+  if (id === '2ZN9-0') {
+    const modes = authoredNode(surface, '3056-0');
+    modes.tabIndex = 0;
+    modes.setAttribute('role', 'region');
+    modes.setAttribute('aria-label', 'ELW 조회 방식, 좌우 방향키로 이동');
   }
   if (id === '2VIN-0') {
     for (const node of ['3O76-0', '3O7G-0']) {

@@ -510,6 +510,19 @@ test('ETF tax and optional summary metrics preserve supplied zero', () => {
   }
 });
 
+test('quote costs and daily change or foreign flow columns keep actual zero observations', () => {
+  const ids = ['s178','s180','s182','s184','s186','s188','s221','s222','s232','s233','s243','s244','s225','s226','s236','s237','s247','s248'];
+  const slots = source('2R3M-1').slots;
+  for (const id of ids) {
+    assert.ok(slots.find(slot => slot.slot_id === id).mapping_id, id);
+    for (const value of [0, '0', {value: 0, text: '0'}]) {
+      const assignment = mountPlan(registry.contractFor('2R3M-1'), {[id]: value}).assignments.find(a => a.slotId === id);
+      assert.equal(assignment.missing, false, id);
+      assert.match(assignment.text, /0/, id);
+    }
+  }
+});
+
 test('trade flow keeps source exchange strength and bid-ask composite beneath a truthful header', () => {
   assert.equal(text('2R3M-1', {}, 's049'), '거래소');
   assert.equal(text('2R3M-1', {s058:'KRX'}, 's058'), 'KRX');
