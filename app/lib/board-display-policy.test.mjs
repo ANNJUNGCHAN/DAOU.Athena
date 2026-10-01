@@ -189,3 +189,20 @@ test('the investor KPI caption describes its received accumulated trading amount
   assert.equal(text(result, 's019'), value.text);
   assert.equal(source('3DI2-0').slots.find(s => s.slot_id === 's019').f, 'acc_trde_prica');
 });
+
+test('sector quotes preserve actual rows without claiming a specimen industry or theme', () => {
+  const result = plan('15J9-2', { s015: '합성 업종 종목', s016: '000007', s017: '-12340', s020: 0 });
+  assert.equal(text(result, 's001'), '업종별 종목 시세');
+  assert.equal(text(result, 's002'), '조회한 업종의 종목 목록');
+  assert.equal(text(result, 's009'), '종목');
+  assert.equal(text(result, 's011'), '거래량');
+  assert.equal(text(result, 's012'), '고가 · 시가');
+  assert.equal(text(result, 's048'), '조회 순서 · 최대 3종목 표시');
+  assert.equal(text(result, 's007'), '—');
+  assert.equal(text(result, 's015'), '합성 업종 종목');
+  assert.equal(text(result, 's016'), '000007');
+  assert.equal(text(result, 's017'), '12,340');
+  assert.equal(text(result, 's020'), '0주');
+  for (const id of ['s025','s036','s047','s052','s069','s072','s075']) assert.equal(text(result, id), '—');
+  for (const id of ['s051','s068','s071','s074']) assert.equal(text(result, id), '');
+});
