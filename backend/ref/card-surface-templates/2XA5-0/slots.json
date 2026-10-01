@@ -1973,7 +1973,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2103,10 +2104,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s053",
       "collapse_group": null,
@@ -2134,9 +2136,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -2165,9 +2167,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s055",
@@ -2394,7 +2396,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2527,10 +2530,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s066",
       "collapse_group": null,
@@ -2559,9 +2563,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -2591,9 +2595,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s068",
@@ -2824,7 +2828,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2957,10 +2962,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s079",
       "collapse_group": null,
@@ -2989,9 +2995,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -3021,9 +3027,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s081",
@@ -3254,7 +3260,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3387,10 +3394,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s092",
       "collapse_group": null,
@@ -3419,9 +3427,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -3451,9 +3459,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s094",
@@ -3684,7 +3692,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3817,10 +3826,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s105",
       "collapse_group": null,
@@ -3849,9 +3859,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -3881,9 +3891,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s107",
@@ -4114,7 +4124,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4247,10 +4258,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s118",
       "collapse_group": null,
@@ -4279,9 +4291,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -4311,9 +4323,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s120",
@@ -4548,7 +4560,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4681,10 +4694,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s131",
       "collapse_group": null,
@@ -4713,9 +4727,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -4745,9 +4759,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s133",
@@ -4978,7 +4992,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5111,10 +5126,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s144",
       "collapse_group": null,
@@ -5143,9 +5159,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -5175,9 +5191,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s146",
@@ -5408,7 +5424,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5541,10 +5558,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s157",
       "collapse_group": null,
@@ -5573,9 +5591,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -5605,9 +5623,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s159",
@@ -5842,7 +5860,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5975,10 +5994,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s170",
       "collapse_group": null,
@@ -6007,9 +6027,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -6039,9 +6059,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s172",
@@ -6103,7 +6123,7 @@
       "alt_mappings": null,
       "kor": "행사가격",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
         "tone": "neutral"
@@ -6272,7 +6292,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6405,10 +6426,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s183",
       "collapse_group": null,
@@ -6437,9 +6459,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -6469,9 +6491,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s185",
@@ -6702,7 +6724,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6835,10 +6858,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s196",
       "collapse_group": null,
@@ -6867,9 +6891,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -6899,9 +6923,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s198",
@@ -7132,7 +7156,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7265,10 +7290,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s209",
       "collapse_group": null,
@@ -7297,9 +7323,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -7329,9 +7355,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s211",
@@ -7562,7 +7588,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7695,10 +7722,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s222",
       "collapse_group": null,
@@ -7727,9 +7755,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -7759,9 +7787,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s224",
@@ -7992,7 +8020,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8125,10 +8154,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s235",
       "collapse_group": null,
@@ -8157,9 +8187,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -8189,9 +8219,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s237",
@@ -8422,7 +8452,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8555,10 +8586,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s248",
       "collapse_group": null,
@@ -8587,9 +8619,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -8619,9 +8651,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s250",
@@ -8852,7 +8884,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8985,10 +9018,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s261",
       "collapse_group": null,
@@ -9017,9 +9051,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -9049,9 +9083,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s263",
@@ -9282,7 +9316,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9415,10 +9450,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s274",
       "collapse_group": null,
@@ -9447,9 +9483,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -9479,9 +9515,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s276",
@@ -9712,7 +9748,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9845,10 +9882,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s287",
       "collapse_group": null,
@@ -9877,9 +9915,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -9909,9 +9947,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s289",
@@ -10146,7 +10184,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -10279,10 +10318,11 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s300",
       "collapse_group": null,
@@ -10311,9 +10351,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -10343,9 +10383,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s302",
@@ -10407,7 +10447,7 @@
       "alt_mappings": null,
       "kor": "행사가격",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
         "tone": "neutral"
@@ -10569,7 +10609,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -10593,7 +10634,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -10750,7 +10791,7 @@
       "alt_mappings": null,
       "kor": "기어링비율",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -11013,7 +11054,7 @@
       "alt_mappings": null,
       "kor": "레버리지",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 1,
         "tone": "neutral"

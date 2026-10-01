@@ -1270,8 +1270,7 @@
       "alt_mappings": [],
       "kor": "당월투자원금",
       "format": {
-        "unit": "percent",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
         "tone": "neutral"
       },
@@ -4423,9 +4422,7 @@
       "alt_mappings": null,
       "kor": "일자",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
+        "kind": "date",
         "tone": "neutral"
       },
       "paired_with": null,

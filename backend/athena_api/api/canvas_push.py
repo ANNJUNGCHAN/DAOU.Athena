@@ -781,6 +781,10 @@ def _bind_semantic_values(
         surface_source = elw_detail_source(board_id, operation_ref, source, surface_target)
         surface_source = stock_detail_source(board_id, surface_source, surface_target)
     attach_surface_contract(card_contract, operation_ref, surface_source)
+    if isinstance(card_contract.get('surface_contract'), dict) and surface_target is not None:
+        from athena_api.surface_display_units import annotate_surface_display_units
+        card_contract['surface_contract'] = annotate_surface_display_units(
+            card_contract['surface_contract'], {operation_ref: surface_target})
 
 
 def _integrated_card_contract(
@@ -1125,6 +1129,8 @@ def _initial_surface_contract(
     )
     if contract is None:
         return None
+    from athena_api.surface_display_units import annotate_surface_display_units
+    contract = annotate_surface_display_units(contract, {ref: target for ref in queried_refs})
     filled = {entry["slot_id"] for entry in contract["slot_values"]}
     contract["hydration_slot_ids"] = [
         slot.slot_id
@@ -1487,6 +1493,11 @@ async def internal_canvas_board_hydrate(
 
     surface_contract = build_board_surface_contract(board.board_id, bound, registry)
     assert surface_contract is not None
+    from athena_api.surface_display_units import annotate_surface_display_units
+    surface_contract = annotate_surface_display_units(surface_contract, {
+        operation: arguments.model_dump(by_alias=True)
+        for operation, (_result, arguments) in hydrated_results.items()
+    })
     filled = {entry["slot_id"] for entry in surface_contract["slot_values"]}
     retryable_refs = {
         status["operation_ref"]

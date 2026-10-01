@@ -309,12 +309,11 @@
       "table": null,
       "mapping_id": "base:0U",
       "f": "10",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 2,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -338,13 +337,14 @@
       "table": null,
       "mapping_id": "base:0U",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
-        "precision": 2,
-        "tone": "change"
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": "s006",
       "collapse_group": null,
@@ -401,12 +401,11 @@
       "table": null,
       "mapping_id": "base:0U",
       "f": "10",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 2,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -430,13 +429,14 @@
       "table": null,
       "mapping_id": "base:0U",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
-        "precision": 2,
-        "tone": "change"
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": "s009",
       "collapse_group": null,
@@ -859,10 +859,11 @@
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -887,7 +888,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -981,10 +982,11 @@
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1009,7 +1011,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -1103,10 +1105,11 @@
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1131,7 +1134,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"

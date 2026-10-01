@@ -26,7 +26,7 @@ test('generated policy exactly follows the 94 public read-only source contracts'
     for (const [slotId, [authored, role]] of Object.entries(rules)) {
       const slot = contract.slots.find((item) => item.slot_id === slotId);
       assert.equal(authored, slot.paper_text);
-      if (role !== 'caption') assert.equal(hasBinding(slot), ['price', 'price-composite', 'bound-time', 'bound-label', 'bound-name', 'bound-format'].includes(role), `${id}/${slotId}`);
+      if (role !== 'caption') assert.equal(hasBinding(slot), ['price', 'price-composite', 'direction', 'bound-time', 'bound-label', 'bound-name', 'bound-format'].includes(role), `${id}/${slotId}`);
     }
   }
 });
@@ -103,10 +103,10 @@ test('time sentinel is unavailable while a received time is formatted', () => {
 });
 
 test('verified industry fields use their own units and the caption describes that single field', () => {
-  const result = plan('2TZN-1', { s148: 4321.25, s150: 123000000, s152: 777, s154: 4100.5, s156: 2100.25, s157: '20260317' });
+  const result = plan('2TZN-1', { s148: 4321.25, s150: 1234, s152: 777, s154: 4100.5, s156: 2100.25, s157: '20260317' });
   assert.equal(text(result, 's145'), '선택 업종');
   assert.equal(text(result, 's148'), '4,321.25');
-  assert.equal(text(result, 's150'), '1억 2,300만');
+  assert.equal(text(result, 's150'), '12억 3,400만원');
   assert.equal(text(result, 's152'), '777개');
   assert.equal(text(result, 's154'), '4,100.50');
   assert.equal(text(result, 's156'), '2,100.25');

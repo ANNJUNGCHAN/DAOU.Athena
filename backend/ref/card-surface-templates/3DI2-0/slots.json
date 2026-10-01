@@ -356,7 +356,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -381,7 +382,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -683,10 +684,11 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 2,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1020,10 +1022,11 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1474,10 +1477,11 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1502,10 +1506,11 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1530,10 +1535,11 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1558,10 +1564,11 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1586,10 +1593,11 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1614,10 +1622,11 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1663,10 +1672,11 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1691,10 +1701,11 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1719,10 +1730,11 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1747,10 +1759,11 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1775,10 +1788,11 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1803,10 +1817,11 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1873,10 +1888,11 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1899,10 +1915,11 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1927,10 +1944,11 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1955,10 +1973,11 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1983,10 +2002,11 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2011,10 +2031,11 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2060,10 +2081,11 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2086,10 +2108,11 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2114,10 +2137,11 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2142,10 +2166,11 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2170,10 +2195,11 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2198,10 +2224,11 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2247,10 +2274,11 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2273,10 +2301,11 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2301,10 +2330,11 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2329,10 +2359,11 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2357,10 +2388,11 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2385,10 +2417,11 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2434,10 +2467,11 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2460,10 +2494,11 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2488,10 +2523,11 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2516,10 +2552,11 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2544,10 +2581,11 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2572,10 +2610,11 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2621,10 +2660,11 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2647,10 +2687,11 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2675,10 +2716,11 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2703,10 +2745,11 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2731,10 +2774,11 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2759,10 +2803,11 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2808,10 +2853,11 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2834,10 +2880,11 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2862,10 +2909,11 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2890,10 +2938,11 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2918,10 +2967,11 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2946,10 +2996,11 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2995,10 +3046,11 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3021,10 +3073,11 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3049,10 +3102,11 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3077,10 +3131,11 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3105,10 +3160,11 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3133,10 +3189,11 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3182,10 +3239,11 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3210,10 +3268,11 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3238,10 +3297,11 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3266,10 +3326,11 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3294,10 +3355,11 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3322,10 +3384,11 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3392,10 +3455,11 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3418,10 +3482,11 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3446,10 +3511,11 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3474,10 +3540,11 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3502,10 +3569,11 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3530,10 +3598,11 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3579,10 +3648,11 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3605,10 +3675,11 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3633,10 +3704,11 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3661,10 +3733,11 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3689,10 +3762,11 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3717,10 +3791,11 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3766,10 +3841,11 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3792,10 +3868,11 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3820,10 +3897,11 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3848,10 +3926,11 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3876,10 +3955,11 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3904,10 +3984,11 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,

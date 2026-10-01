@@ -1244,7 +1244,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1429,9 +1430,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -1610,7 +1611,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1777,9 +1779,9 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -1809,9 +1811,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": "s060",
@@ -1994,7 +1996,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2161,9 +2164,9 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -2193,9 +2196,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": "s072",
@@ -2378,7 +2381,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2545,9 +2549,9 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -2577,9 +2581,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": "s084",
@@ -2762,7 +2766,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2929,9 +2934,9 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -2961,9 +2966,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": "s096",
@@ -4268,7 +4273,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4293,7 +4299,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"

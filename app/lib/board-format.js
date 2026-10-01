@@ -290,6 +290,16 @@ function formatSlot(format, raw) {
 
   const kind = kindOf(spec);
   const scale = SCALE_FACTOR[spec.scale] || 1;
+  // Date/time sentinels and leading-zero clocks are not stock identifiers.
+  if (kind === 'date' || kind === 'time') {
+    const rawDate = String(normalized.value).trim();
+    if (/^0+$/.test(rawDate)) return missingResult(spec);
+    const text = kind === 'time' ? formatTime(rawDate)
+      : spec.date_style === 'month-day' && /^\d{8}$/.test(rawDate)
+        ? `${rawDate.slice(4, 6)}-${rawDate.slice(6, 8)}`
+        : factsCard.formatDatetime(rawDate);
+    return applyAffixes(spec, { text, tone: toneFor(spec, normalized.value), missing: false });
+  }
   if (typeof normalized.value === 'string' && keepAsStockCode(normalized.value, spec)) {
     return applyAffixes(spec, {
       text: String(normalized.value).trim(),
@@ -318,18 +328,6 @@ function formatSlot(format, raw) {
     }
     return applyAffixes(spec, { text: String(normalized.value), tone, missing: false });
   }
-  if (kind === 'date') {
-    const rawDate = String(normalized.value);
-    if (/^0+$/.test(rawDate)) return { text: '', tone: null, missing: false };
-    const text = spec.date_style === 'month-day' && /^\d{8}$/.test(rawDate)
-      ? `${rawDate.slice(4, 6)}-${rawDate.slice(6, 8)}`
-      : factsCard.formatDatetime(normalized.value);
-    return applyAffixes(spec, { text, tone, missing: false });
-  }
-  if (kind === 'time') {
-    return applyAffixes(spec, { text: formatTime(normalized.value), tone, missing: false });
-  }
-
   const numeric = (wire && wire.numeric != null) ? wire.numeric : toNumber(normalized.value);
   // Paper 원문·이미 단위가 붙은 표기는 숫자가 아니다. 접두·접미를 얹으면
   // 「900.4조」가 「900.4조원」이 된다.

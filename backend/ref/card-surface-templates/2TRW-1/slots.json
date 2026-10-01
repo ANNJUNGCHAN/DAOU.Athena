@@ -743,7 +743,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1856,7 +1857,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1921,7 +1923,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -3072,7 +3074,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "change"
@@ -3342,7 +3344,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3367,13 +3370,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3458,7 +3462,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -3523,7 +3527,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3548,13 +3553,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3639,7 +3645,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -3704,7 +3710,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3729,13 +3736,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3820,7 +3828,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -3885,7 +3893,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3910,13 +3919,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4001,7 +4011,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4066,7 +4076,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4091,13 +4102,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4182,7 +4194,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4247,7 +4259,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4272,13 +4285,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4363,7 +4377,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4428,7 +4442,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4453,13 +4468,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4544,7 +4560,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4609,7 +4625,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4634,13 +4651,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4725,7 +4743,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4935,7 +4953,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4962,7 +4981,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,

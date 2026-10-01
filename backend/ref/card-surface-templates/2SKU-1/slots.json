@@ -3061,9 +3061,8 @@
       ],
       "kor": "단가",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -5202,9 +5201,8 @@
       "alt_mappings": null,
       "kor": "미수확보금",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,

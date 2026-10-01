@@ -50,7 +50,8 @@ def test_initial_surface_projection_filters_subject_but_keeps_full_semantic_obse
     ]}
     contract = _integrated_card_contract('base:ka10066')
     _bind_semantic_values(contract, 'base:ka10066', source, surface_target={'stk_cd': '123456'})
-    values = [s['value'] for s in contract['surface_contract']['slot_values']]
+    values = [s['value'].get('value') if isinstance(s['value'], dict) else s['value']
+              for s in contract['surface_contract']['slot_values']]
     assert '999' not in values
     assert '101' in values
     observed = [s.get('value') for s in contract['semantic_observations']]

@@ -52,6 +52,13 @@ function prepareDisplayInput(contract, values) {
       }
       return next;
     }
+    if (role === 'direction') {
+      next.format = { kind: 'text', missing_text: '—' };
+      const label = { '1': '상한가', '2': '상승', '3': '보합', '4': '하한가', '5': '하락' }[String(value ?? '').trim()];
+      if (changedValues === values) changedValues = { ...values };
+      changedValues[slot.slot_id] = label ? { value, text: label } : null;
+      return next;
+    }
     if (role === 'price') {
       next.format.absolute = true;
       next.format.missing_text = '—';

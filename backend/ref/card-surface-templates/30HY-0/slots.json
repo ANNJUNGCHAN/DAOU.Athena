@@ -907,10 +907,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1585,10 +1586,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1663,10 +1665,11 @@
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1741,10 +1744,11 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2071,10 +2075,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2149,10 +2154,11 @@
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2227,10 +2233,11 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2557,10 +2564,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2635,10 +2643,11 @@
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2713,10 +2722,11 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3043,10 +3053,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3121,10 +3132,11 @@
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3199,10 +3211,11 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3529,10 +3542,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3607,10 +3621,11 @@
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3685,10 +3700,11 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4015,10 +4031,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4093,10 +4110,11 @@
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4171,10 +4189,11 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4350,10 +4369,11 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s125",
       "collapse_group": null,
@@ -4541,10 +4561,11 @@
       "alt_mappings": null,
       "kor": "외인순매도금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4603,10 +4624,11 @@
       "alt_mappings": null,
       "kor": "기관순매도금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4665,10 +4687,11 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4981,10 +5004,11 @@
       "alt_mappings": null,
       "kor": "외국인순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5043,10 +5067,11 @@
       "alt_mappings": null,
       "kor": "기관순매매금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5105,10 +5130,11 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5723,10 +5749,11 @@
       "alt_mappings": null,
       "kor": "합계연속순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s172",
       "collapse_group": null,
@@ -5836,10 +5863,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5885,10 +5913,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5934,10 +5963,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5983,10 +6013,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6032,10 +6063,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6081,10 +6113,11 @@
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,

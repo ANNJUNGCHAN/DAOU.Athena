@@ -891,10 +891,11 @@
       "alt_mappings": null,
       "kor": "순매수대금합계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -992,10 +993,11 @@
       "alt_mappings": null,
       "kor": "프로그램순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1694,7 +1696,8 @@
         "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1775,26 +1778,6 @@
           "mapping_id": "base:ka10078",
           "f": "pred_pre",
           "kor": "전일대비"
-        },
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율"
-        },
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_sig",
-          "kor": "등락기호"
-        },
-        {
-          "mapping_id": "base:ka90008",
-          "f": "flu_rt",
-          "kor": "등락율"
-        },
-        {
-          "mapping_id": "base:ka90013",
-          "f": "flu_rt",
-          "kor": "등락율"
         }
       ],
       "kor": "전일대비",
@@ -1910,10 +1893,11 @@
       "alt_mappings": null,
       "kor": "프로그램순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1980,10 +1964,11 @@
       "alt_mappings": null,
       "kor": "매수체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2047,10 +2032,11 @@
       "alt_mappings": null,
       "kor": "매도체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2144,10 +2130,11 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s052",
       "collapse_group": null,
@@ -2301,7 +2288,8 @@
         "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2325,18 +2313,7 @@
       },
       "mapping_id": "base:ka90004",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율"
-        },
-        {
-          "mapping_id": "base:ka90004",
-          "f": "flu_sig",
-          "kor": "등락기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -2378,10 +2355,11 @@
       "alt_mappings": null,
       "kor": "순매수대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2440,10 +2418,11 @@
       "alt_mappings": null,
       "kor": "프로그램매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2502,10 +2481,11 @@
       "alt_mappings": null,
       "kor": "프로그램매도금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2596,10 +2576,11 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s066",
       "collapse_group": null,
@@ -2757,7 +2738,8 @@
         "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2781,18 +2763,7 @@
       },
       "mapping_id": "base:ka90008",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율"
-        },
-        {
-          "mapping_id": "base:ka90008",
-          "f": "pre_sig",
-          "kor": "대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -2834,10 +2805,11 @@
       "alt_mappings": null,
       "kor": "프로그램순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2898,10 +2870,11 @@
       "alt_mappings": null,
       "kor": "매수체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2962,10 +2935,11 @@
       "alt_mappings": null,
       "kor": "매도체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3058,10 +3032,11 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s080",
       "collapse_group": null,
@@ -3219,7 +3194,8 @@
         "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3243,18 +3219,7 @@
       },
       "mapping_id": "base:ka90013",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka90008",
-          "f": "flu_rt",
-          "kor": "등락율"
-        },
-        {
-          "mapping_id": "base:ka90013",
-          "f": "pre_sig",
-          "kor": "대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -3296,10 +3261,11 @@
       "alt_mappings": null,
       "kor": "프로그램순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3360,10 +3326,11 @@
       "alt_mappings": null,
       "kor": "매수체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3424,10 +3391,11 @@
       "alt_mappings": null,
       "kor": "매도체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3520,10 +3488,11 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s094",
       "collapse_group": null,
@@ -3681,7 +3650,8 @@
         "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3705,13 +3675,7 @@
       },
       "mapping_id": "base:ka10008",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka90013",
-          "f": "flu_rt",
-          "kor": "등락율"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -3753,10 +3717,11 @@
       "alt_mappings": null,
       "kor": "프로그램순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3817,10 +3782,11 @@
       "alt_mappings": null,
       "kor": "매수체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3881,10 +3847,11 @@
       "alt_mappings": null,
       "kor": "매도체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3977,10 +3944,11 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s108",
       "collapse_group": null,
@@ -4138,7 +4106,8 @@
         "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4162,18 +4131,7 @@
       },
       "mapping_id": "base:ka10034",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10034",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        },
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -4215,10 +4173,11 @@
       "alt_mappings": null,
       "kor": "프로그램순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4279,10 +4238,11 @@
       "alt_mappings": null,
       "kor": "매수체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4343,10 +4303,11 @@
       "alt_mappings": null,
       "kor": "매도체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4439,10 +4400,11 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s122",
       "collapse_group": null,
@@ -4686,7 +4648,8 @@
         "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4710,18 +4673,7 @@
       },
       "mapping_id": "base:ka10035",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10035",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        },
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -4763,10 +4715,11 @@
       "alt_mappings": null,
       "kor": "프로그램순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4827,10 +4780,11 @@
       "alt_mappings": null,
       "kor": "매수체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4891,10 +4845,11 @@
       "alt_mappings": null,
       "kor": "매도체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4987,10 +4942,11 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s139",
       "collapse_group": null,
@@ -5150,7 +5106,8 @@
         "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5176,13 +5133,7 @@
       },
       "mapping_id": "base:ka10043",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -5224,10 +5175,11 @@
       "alt_mappings": null,
       "kor": "프로그램순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5288,10 +5240,11 @@
       "alt_mappings": null,
       "kor": "매수체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5352,10 +5305,11 @@
       "alt_mappings": null,
       "kor": "매도체결금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5448,10 +5402,11 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s153",
       "collapse_group": null,
@@ -5674,10 +5629,11 @@
       "alt_mappings": null,
       "kor": "순매수대금합계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5702,10 +5658,11 @@
       "alt_mappings": null,
       "kor": "매수체결금액합계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5728,10 +5685,11 @@
       "alt_mappings": null,
       "kor": "매도체결금액합계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6145,10 +6103,11 @@
       "alt_mappings": null,
       "kor": "프로그램순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6249,10 +6208,11 @@
       "alt_mappings": null,
       "kor": "매수체결금액합계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6324,10 +6284,11 @@
       "alt_mappings": null,
       "kor": "매도체결금액합계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6399,10 +6360,11 @@
       "alt_mappings": null,
       "kor": "순매수대금합계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,

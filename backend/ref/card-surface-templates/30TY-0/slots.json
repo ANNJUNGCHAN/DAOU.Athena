@@ -1751,22 +1751,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1791,19 +1783,10 @@
       },
       "mapping_id": "base:ka10037",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1858,18 +1841,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1941,10 +1920,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2016,10 +1996,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2124,18 +2105,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s058",
       "collapse_group": null,
@@ -2298,22 +2275,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2338,19 +2307,10 @@
       },
       "mapping_id": "base:ka10037",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2405,18 +2365,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2488,10 +2444,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2563,10 +2520,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2671,18 +2629,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s072",
       "collapse_group": null,
@@ -2845,22 +2799,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2885,19 +2831,10 @@
       },
       "mapping_id": "base:ka10037",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2952,18 +2889,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3035,10 +2968,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3110,10 +3044,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3218,18 +3153,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s086",
       "collapse_group": null,
@@ -3392,22 +3323,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3432,19 +3355,10 @@
       },
       "mapping_id": "base:ka10037",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3499,18 +3413,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3582,10 +3492,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3657,10 +3568,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3765,18 +3677,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s100",
       "collapse_group": null,
@@ -3939,22 +3847,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3979,19 +3879,10 @@
       },
       "mapping_id": "base:ka10037",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4046,18 +3937,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4129,10 +4016,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4204,10 +4092,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4312,18 +4201,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s114",
       "collapse_group": null,
@@ -4486,22 +4371,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4526,19 +4403,10 @@
       },
       "mapping_id": "base:ka10037",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4593,18 +4461,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4676,10 +4540,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4751,10 +4616,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4859,18 +4725,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s128",
       "collapse_group": null,
@@ -5126,22 +4988,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5166,19 +5020,10 @@
       },
       "mapping_id": "base:ka10037",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -5233,18 +5078,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5316,10 +5157,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5391,10 +5233,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5499,18 +5342,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s145",
       "collapse_group": null,
@@ -5673,22 +5512,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5713,19 +5544,10 @@
       },
       "mapping_id": "base:ka10037",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10037",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10037",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -5780,18 +5602,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": [],
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5863,10 +5681,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5938,10 +5757,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6046,18 +5866,14 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s159",
       "collapse_group": null,
@@ -6549,15 +6365,10 @@
       "table": null,
       "mapping_id": "base:ka10039",
       "f": "prid_stkpc_flu",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "기간중주가등락",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -7047,10 +6858,11 @@
       "alt_mappings": null,
       "kor": "순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7096,10 +6908,11 @@
       "alt_mappings": null,
       "kor": "순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7145,10 +6958,11 @@
       "alt_mappings": null,
       "kor": "순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7194,10 +7008,11 @@
       "alt_mappings": null,
       "kor": "순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7243,10 +7058,11 @@
       "alt_mappings": null,
       "kor": "순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7292,10 +7108,11 @@
       "alt_mappings": null,
       "kor": "순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "천",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,

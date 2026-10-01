@@ -1663,7 +1663,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1684,19 +1685,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2025,7 +2017,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2046,21 +2039,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2394,7 +2376,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2415,21 +2398,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2763,7 +2735,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2784,21 +2757,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3132,7 +3094,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3153,21 +3116,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3501,7 +3453,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3522,21 +3475,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3870,7 +3812,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3891,21 +3834,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4239,7 +4171,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4260,21 +4193,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4608,7 +4530,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4629,21 +4552,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4977,7 +4889,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4998,21 +4911,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -5346,7 +5248,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5367,21 +5270,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -5715,7 +5607,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5736,21 +5629,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -6084,7 +5966,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6105,21 +5988,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -6453,7 +6325,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6474,21 +6347,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -6822,7 +6684,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6843,21 +6706,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -7191,7 +7043,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7212,21 +7065,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -7560,7 +7402,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7581,21 +7424,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -7929,7 +7761,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7950,21 +7783,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -8298,7 +8120,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8319,21 +8142,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -8667,7 +8479,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8688,21 +8501,10 @@
       "table": null,
       "mapping_id": "base:ka10024",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10024",
-          "f": "flu_rt",
-          "kor": "등락률"
-        },
-        {
-          "mapping_id": "base:ka10024",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"

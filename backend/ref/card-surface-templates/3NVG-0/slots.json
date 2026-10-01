@@ -1117,15 +1117,17 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "detail:kt00001:foreign_currency_deposits",
-      "f": "stk_entr_prst",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "static": true,
+      "static_reason": "고정 통화 구분 라벨 — 원화 요약과 외화 목록은 별개 응답"
     },
     {
       "slot_id": "s034",
@@ -1143,15 +1145,17 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "detail:kt00001:foreign_currency_deposits",
-      "f": "crnc_cd",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "통화코드",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "static": true,
+      "static_reason": "고정 통화 구분 라벨 — 원화 요약과 외화 목록은 별개 응답"
     },
     {
       "slot_id": "s035",
@@ -1262,15 +1266,17 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "detail:kt00001:foreign_currency_deposits",
-      "f": "pymn_alow_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "static": true,
+      "static_reason": "고정 통화 구분 라벨 — 원화 요약과 외화 목록은 별개 응답"
     },
     {
       "slot_id": "s039",
@@ -1288,15 +1294,17 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "detail:kt00001:foreign_currency_deposits",
-      "f": "stk_entr_prst",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "static": true,
+      "static_reason": "고정 통화 구분 라벨 — 원화 요약과 외화 목록은 별개 응답"
     },
     {
       "slot_id": "s040",

@@ -1528,7 +1528,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1554,12 +1555,11 @@
       },
       "mapping_id": "base:04",
       "f": "307",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "기준가",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": "s042",
@@ -1933,7 +1933,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1959,12 +1960,11 @@
       },
       "mapping_id": "base:04",
       "f": "307",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "기준가",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": "s055",
@@ -2344,7 +2344,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2370,12 +2371,11 @@
       },
       "mapping_id": "base:04",
       "f": "307",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "기준가",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": "s068",
@@ -2750,7 +2750,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2776,12 +2777,11 @@
       },
       "mapping_id": "base:04",
       "f": "307",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "기준가",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": "s081",
@@ -3156,7 +3156,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3182,12 +3183,11 @@
       },
       "mapping_id": "base:04",
       "f": "307",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "기준가",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": "s094",
@@ -3562,7 +3562,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3588,12 +3589,11 @@
       },
       "mapping_id": "base:04",
       "f": "307",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "기준가",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": "s107",
@@ -3968,7 +3968,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3994,12 +3995,11 @@
       },
       "mapping_id": "base:04",
       "f": "307",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "기준가",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": "s120",
@@ -4374,7 +4374,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4400,12 +4401,11 @@
       },
       "mapping_id": "base:04",
       "f": "307",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "기준가",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": "s133",

@@ -1386,10 +1386,11 @@
       ],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1429,7 +1430,7 @@
       ],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -1553,10 +1554,11 @@
       ],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1956,10 +1958,11 @@
       ],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2001,7 +2004,7 @@
       ],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -2103,10 +2106,11 @@
       ],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2464,10 +2468,11 @@
       ],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2509,7 +2514,7 @@
       ],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -2611,10 +2616,11 @@
       ],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2972,10 +2978,11 @@
       ],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3017,7 +3024,7 @@
       ],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -3119,10 +3126,11 @@
       ],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3480,10 +3488,11 @@
       ],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3525,7 +3534,7 @@
       ],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -3627,10 +3636,11 @@
       ],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3988,10 +3998,11 @@
       ],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4033,7 +4044,7 @@
       ],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -4135,10 +4146,11 @@
       ],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4623,10 +4635,11 @@
       "alt_mappings": null,
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4650,15 +4663,11 @@
         {
           "mapping_id": "detail:ka20001:market_snapshot",
           "f": "pred_pre"
-        },
-        {
-          "mapping_id": "detail:ka20001:intraday_history",
-          "f": "pred_pre_sig_n"
         }
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -4842,10 +4851,11 @@
       "alt_mappings": null,
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4875,7 +4885,7 @@
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5053,10 +5063,11 @@
       "alt_mappings": null,
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5086,7 +5097,7 @@
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5288,10 +5299,11 @@
       ],
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5315,15 +5327,11 @@
         {
           "mapping_id": "detail:ka20009:market_snapshot",
           "f": "pred_pre"
-        },
-        {
-          "mapping_id": "detail:ka20009:daily_history",
-          "f": "pred_pre_sig_n"
         }
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5520,10 +5528,11 @@
       ],
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5553,7 +5562,7 @@
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5732,10 +5741,11 @@
       ],
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5765,7 +5775,7 @@
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5978,18 +5988,13 @@
       "table": null,
       "mapping_id": "detail:ka20001:market_snapshot",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:ka20001:market_snapshot",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "percent",
-        "sign": false,
+        "kind": "number",
         "precision": 2,
-        "tone": "change"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6050,10 +6055,11 @@
       ],
       "kor": "거래대금",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6217,38 +6223,15 @@
         {
           "mapping_id": "base:0J",
           "f": "16"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "17"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "18"
-        },
-        {
-          "mapping_id": "detail:ka20001:session_range",
-          "f": "high_pric"
-        },
-        {
-          "mapping_id": "detail:ka20001:session_range",
-          "f": "low_pric"
-        },
-        {
-          "mapping_id": "detail:ka20009:session_range",
-          "f": "high_pric"
-        },
-        {
-          "mapping_id": "detail:ka20009:session_range",
-          "f": "low_pric"
         }
       ],
       "kor": "시가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6338,22 +6321,15 @@
         {
           "mapping_id": "detail:ka20009:fifty_two_week_range",
           "f": "52wk_lwst_pric"
-        },
-        {
-          "mapping_id": "detail:ka20001:fifty_two_week_range",
-          "f": "52wk_hgst_pric"
-        },
-        {
-          "mapping_id": "detail:ka20009:fifty_two_week_range",
-          "f": "52wk_hgst_pric"
         }
       ],
       "kor": "52주최저가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6391,37 +6367,12 @@
         {
           "mapping_id": "detail:ka20009:fifty_two_week_range",
           "f": "52wk_hgst_pric_dt"
-        },
-        {
-          "mapping_id": "detail:ka20001:fifty_two_week_range",
-          "f": "52wk_hgst_pric_pre_rt"
-        },
-        {
-          "mapping_id": "detail:ka20001:fifty_two_week_range",
-          "f": "52wk_lwst_pric_dt"
-        },
-        {
-          "mapping_id": "detail:ka20001:fifty_two_week_range",
-          "f": "52wk_lwst_pric_pre_rt"
-        },
-        {
-          "mapping_id": "detail:ka20009:fifty_two_week_range",
-          "f": "52wk_hgst_pric_pre_rt"
-        },
-        {
-          "mapping_id": "detail:ka20009:fifty_two_week_range",
-          "f": "52wk_lwst_pric_dt"
-        },
-        {
-          "mapping_id": "detail:ka20009:fifty_two_week_range",
-          "f": "52wk_lwst_pric_pre_rt"
         }
       ],
       "kor": "52주최고가일",
       "format": {
-        "unit": "percent",
+        "kind": "date",
         "sign": false,
-        "precision": 2,
         "tone": "neutral"
       },
       "paired_with": "s156",

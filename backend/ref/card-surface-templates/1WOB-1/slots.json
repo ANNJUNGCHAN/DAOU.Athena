@@ -563,9 +563,9 @@
       "alt_mappings": null,
       "kor": "합계",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": true,
-        "precision": 2,
         "tone": "change"
       },
       "paired_with": null,
@@ -644,9 +644,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -1550,7 +1550,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1641,9 +1642,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -1734,9 +1735,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 2,
         "tone": "neutral"
       },
       "paired_with": "s050",
@@ -1888,7 +1889,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1979,9 +1981,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -2072,9 +2074,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 2,
         "tone": "neutral"
       },
       "paired_with": "s061",
@@ -2226,7 +2228,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2317,9 +2320,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -2410,9 +2413,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s072",
@@ -2564,7 +2567,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2655,9 +2659,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -2748,9 +2752,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s083",
@@ -2902,7 +2906,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2993,9 +2998,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -3086,9 +3091,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s094",
@@ -3240,7 +3245,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3331,9 +3337,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -3424,9 +3430,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s105",
@@ -3578,7 +3584,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3669,9 +3676,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -3762,9 +3769,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s116",
@@ -3916,7 +3923,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4007,9 +4015,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -4100,9 +4108,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s127",
@@ -4254,7 +4262,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4345,9 +4354,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -4438,9 +4447,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s138",
@@ -4592,7 +4601,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4683,9 +4693,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -4776,9 +4786,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s149",
@@ -4930,7 +4940,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5021,9 +5032,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -5114,9 +5125,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s160",
@@ -5268,7 +5279,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5359,9 +5371,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -5452,9 +5464,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s171",
@@ -5606,7 +5618,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5697,9 +5710,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -5790,9 +5803,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s182",
@@ -5944,7 +5957,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6035,9 +6049,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -6128,9 +6142,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s193",
@@ -6282,7 +6296,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6373,9 +6388,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -6466,9 +6481,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s204",
@@ -6620,7 +6635,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6711,9 +6727,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -6804,9 +6820,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s215",
@@ -6958,7 +6974,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7049,9 +7066,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -7142,9 +7159,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s226",
@@ -7296,7 +7313,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7387,9 +7405,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -7480,9 +7498,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s237",
@@ -7634,7 +7652,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7725,9 +7744,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -7818,9 +7837,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s248",
@@ -7972,7 +7991,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8063,9 +8083,9 @@
       "alt_mappings": null,
       "kor": "순매수량",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -8156,9 +8176,9 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": "s259",

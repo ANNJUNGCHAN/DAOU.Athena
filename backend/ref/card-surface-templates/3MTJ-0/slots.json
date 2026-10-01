@@ -2854,10 +2854,8 @@
       "alt_mappings": null,
       "kor": "결제일자",
       "format": {
-        "unit": "text",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "date",
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2941,10 +2939,8 @@
       "alt_mappings": null,
       "kor": "결제일자",
       "format": {
-        "unit": "text",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "date",
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3033,10 +3029,8 @@
       "alt_mappings": null,
       "kor": "결제일자",
       "format": {
-        "unit": "text",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "date",
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3120,10 +3114,8 @@
       "alt_mappings": null,
       "kor": "결제일자",
       "format": {
-        "unit": "text",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "date",
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
