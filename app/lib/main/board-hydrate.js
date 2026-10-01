@@ -76,7 +76,7 @@ function buildHydrateBody({ boardId, target, account, slotIds, rankingOperationR
   const board = clean(boardId);
   if (!board) throw new TypeError('board_id가 없다');
   const body = { board_id: board };
-  if (board === '4B22-1' && clean(rankingOperationRef)) body.ranking_operation_ref = clean(rankingOperationRef);
+  if ((board === '4B22-1' || board === '13K0-2') && clean(rankingOperationRef)) body.ranking_operation_ref = clean(rankingOperationRef);
   const bag = buildTargetBag(target);
   if (bag) body.target = bag;
   const accountValue = clean(account);

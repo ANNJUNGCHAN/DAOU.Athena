@@ -2704,7 +2704,9 @@ function rememberRealtimeFallbackAuthority(payload = {}) {
   const surfaceContract = payload.envelope && payload.envelope.surface_contract;
   const boardId = String(surfaceContract && surfaceContract.board_id || '').trim();
   const boardHydrateAuthority = boardId
-    ? Object.freeze({ boardId, target: Object.freeze({ ...operationArgs }) })
+    ? Object.freeze({ boardId, target: Object.freeze({ ...operationArgs }),
+      ...(boardId === '13K0-2' ? { rankingOperationRef: operationRef === 'base:ka00198' ? operationRef : 'base:ka10032' } : {}),
+    })
     : null;
   realtimeFallbackAuthorities.delete(key);
   realtimeFallbackAuthorities.set(key, Object.freeze({
@@ -2814,6 +2816,9 @@ async function refreshRealtimeFallback(descriptor, { signal } = {}) {
       boardId: hydrate.boardId,
       target: hydrate.target,
       slotIds: descriptor.slotIds,
+      rankingOperationRef: hydrate.boardId === '13K0-2'
+        && ['base:ka10032', 'base:ka00198'].includes(hydrate.rankingOperationRef)
+        ? hydrate.rankingOperationRef : undefined,
       signal,
     });
     if (realtimeFallbackAuthorities.get(descriptor.authorityKey) !== authority) {
@@ -3361,6 +3366,9 @@ ipcMain.handle('athena:canvas-board-hydrate', async (event, payload = {}) => {
         }),
         boardHydrate: Object.freeze({
           boardId,
+          ...(boardId === '13K0-2' ? {
+            rankingOperationRef: payload.rankingOperationRef === 'base:ka00198' ? 'base:ka00198' : 'base:ka10032',
+          } : {}),
           target: payload.target && typeof payload.target === 'object'
             ? Object.freeze({ ...payload.target }) : Object.freeze({}),
         }),

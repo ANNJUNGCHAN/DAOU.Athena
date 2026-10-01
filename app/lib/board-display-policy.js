@@ -31,6 +31,19 @@ function prepareDisplayInput(contract, values) {
       delete next.static;
       next.kind = 'value';
       next.format = { ...rule[2], missing_text: '—' };
+      // These paired values need their meaning even when a response already
+      // supplies display text. Keep the global preformatted-text contract intact.
+      if (contract.board_id === '13K0-2' && bound && typeof bound === 'object'
+        && typeof bound.text === 'string' && bound.text && !bound.missing) {
+        const format = rule[2];
+        let text = bound.text;
+        if (text.startsWith(format.prefix)) text = text.slice(format.prefix.length);
+        const numeric = Number(String(value).replace(/,/g, '').replace('−', '-'));
+        if (format.sign && Number.isFinite(numeric) && numeric < 0 && !/^[-−]/.test(text)) text = '-' + text.replace(/^\+/, '');
+        if (format.suffix && !text.endsWith(format.suffix)) text += format.suffix;
+        if (changedValues === values) changedValues = { ...values };
+        changedValues[slot.slot_id] = { ...bound, text: format.prefix + text };
+      }
       return next;
     }
     if (role === 'bound-identifier') {
@@ -67,6 +80,9 @@ function prepareDisplayInput(contract, values) {
       const label = { '1': '상한가', '2': '상승', '3': '보합', '4': '하한가', '5': '하락' }[String(value ?? '').trim()];
       if (changedValues === values) changedValues = { ...values };
       changedValues[slot.slot_id] = label ? { value, text: label } : null;
+      if (contract.board_id === '13K0-2' && slot.slot_id === 's132' && label) {
+        changedValues[slot.slot_id].tone = { '1': 'up', '2': 'up', '3': 'flat', '4': 'down', '5': 'down' }[String(value).trim()];
+      }
       return next;
     }
     if (role === 'quote-magnitude') {

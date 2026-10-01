@@ -48,6 +48,7 @@ from athena_api.card_surface_contract import (
     json_path_values,
     observation_id_for,
     resolve_section_titles_ko,
+    with_ranking_rail_rows,
 )
 from athena_api.card_surface_templates import get_registry as get_card_surface_registry
 from athena_api.dependencies import (
@@ -1438,12 +1439,19 @@ async def internal_canvas_board_hydrate(
     from athena_api.ranking_expanded_result import (
         EXPANDED_BOARD, build_ranking_result, is_expanded_ranking_operation,
     )
-    if payload.ranking_operation_ref is not None:
-        if board.board_id != EXPANDED_BOARD or not is_expanded_ranking_operation(payload.ranking_operation_ref):
+    active_operation_refs: tuple[str, ...] = ()
+    if payload.ranking_operation_ref is not None and board.board_id == EXPANDED_BOARD:
+        if not is_expanded_ranking_operation(payload.ranking_operation_ref):
             raise HTTPException(status_code=422, detail="unsupported expanded ranking operation")
         operation_refs = [payload.ranking_operation_ref]
     else:
         operation_refs = list(_hydrate_operation_refs(board, payload.slot_ids))
+        if payload.ranking_operation_ref is not None:
+            if board.board_id != "13K0-2" or payload.ranking_operation_ref not in {"base:ka10032", "base:ka00198"}:
+                raise HTTPException(status_code=422, detail="unsupported board ranking source")
+            active_operation_refs = (payload.ranking_operation_ref,)
+            if payload.ranking_operation_ref not in operation_refs:
+                operation_refs.append(payload.ranking_operation_ref)
     primary = board.primary if isinstance(board.primary, Mapping) else {}
     if primary.get("renderer") == "athena-chart":
         for source in primary.get("props_from") or ():
@@ -1505,7 +1513,11 @@ async def internal_canvas_board_hydrate(
         operations.append(status)
         bound.update(values)
 
-    surface_contract = build_board_surface_contract(board.board_id, bound, registry)
+    surface_contract = with_ranking_rail_rows(
+        build_board_surface_contract(board.board_id, bound, registry, active_operation_refs),
+        {operation: result for operation, (result, _arguments) in hydrated_results.items()},
+        registry=registry, active_operation_refs=active_operation_refs,
+    )
     assert surface_contract is not None
     from athena_api.surface_display_units import annotate_surface_display_units
     surface_contract = annotate_surface_display_units(surface_contract, {
@@ -1665,7 +1677,7 @@ async def internal_canvas_board_hydrate(
             }
 
     ranking_result = None
-    if payload.ranking_operation_ref is not None:
+    if board.board_id == EXPANDED_BOARD and payload.ranking_operation_ref is not None:
         hydrated = hydrated_results.get(payload.ranking_operation_ref)
         if hydrated is not None:
             result, arguments = hydrated

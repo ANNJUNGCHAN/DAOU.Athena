@@ -627,6 +627,17 @@ const policy = {
       "time",
       null
     ],
+    "s040": [
+      "전일 3위",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "위",
+        "tone": "neutral"
+      }
+    ],
     "s041": [
       "삼성전자",
       "bound-label",
@@ -642,10 +653,44 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s044": [
+      "+1,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "sign": true,
+        "prefix": "전일비 ",
+        "suffix": "원",
+        "tone": "change"
+      }
+    ],
+    "s048": [
+      "전일 1,180만주",
+      "bound-format",
+      {
+        "kind": "shares",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "주",
+        "tone": "neutral"
+      }
+    ],
     "s049": [
       "108.4%",
       "unavailable",
       null
+    ],
+    "s051": [
+      "전일 1위",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "위",
+        "tone": "neutral"
+      }
     ],
     "s052": [
       "SK하이닉스",
@@ -662,10 +707,44 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s055": [
+      "+3,990",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "sign": true,
+        "prefix": "전일비 ",
+        "suffix": "원",
+        "tone": "change"
+      }
+    ],
+    "s059": [
+      "전일 402만주",
+      "bound-format",
+      {
+        "kind": "shares",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "주",
+        "tone": "neutral"
+      }
+    ],
     "s060": [
       "116.2%",
       "unavailable",
       null
+    ],
+    "s062": [
+      "전일 2위",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "위",
+        "tone": "neutral"
+      }
     ],
     "s063": [
       "현대차",
@@ -682,10 +761,44 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s066": [
+      "-1,220",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "sign": true,
+        "prefix": "전일비 ",
+        "suffix": "원",
+        "tone": "change"
+      }
+    ],
+    "s070": [
+      "전일 288만주",
+      "bound-format",
+      {
+        "kind": "shares",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "주",
+        "tone": "neutral"
+      }
+    ],
     "s071": [
       "93.8%",
       "unavailable",
       null
+    ],
+    "s073": [
+      "전일 5위",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "위",
+        "tone": "neutral"
+      }
     ],
     "s074": [
       "NAVER",
@@ -702,10 +815,44 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s077": [
+      "+1,800",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "sign": true,
+        "prefix": "전일비 ",
+        "suffix": "원",
+        "tone": "change"
+      }
+    ],
+    "s081": [
+      "전일 274만주",
+      "bound-format",
+      {
+        "kind": "shares",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "주",
+        "tone": "neutral"
+      }
+    ],
     "s082": [
       "104.1%",
       "unavailable",
       null
+    ],
+    "s084": [
+      "전일 9위",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "위",
+        "tone": "neutral"
+      }
     ],
     "s085": [
       "한화에어로스페이스",
@@ -721,6 +868,29 @@ const policy = {
       "810,000",
       "price",
       "cur_prc"
+    ],
+    "s088": [
+      "+23,700",
+      "bound-format",
+      {
+        "kind": "number",
+        "precision": 0,
+        "sign": true,
+        "prefix": "전일비 ",
+        "suffix": "원",
+        "tone": "change"
+      }
+    ],
+    "s092": [
+      "전일 61.2만주",
+      "bound-format",
+      {
+        "kind": "shares",
+        "precision": 0,
+        "prefix": "전일 ",
+        "suffix": "주",
+        "tone": "neutral"
+      }
     ],
     "s093": [
       "127.5%",

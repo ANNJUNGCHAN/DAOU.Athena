@@ -129,6 +129,11 @@ const LABELS = {
     s064: 'D+2 자산', s067: 'D+2 금액', s106: '오늘', s108: 'D+1', s110: 'D+2' },
 };
 const FORMATS = {
+  '13K0-2': Object.fromEntries(Array.from({ length: 5 }, (_, row) => [
+    ['s' + String(40 + row * 11).padStart(3, '0'), ['pred_rank', { kind: 'number', precision: 0, prefix: '전일 ', suffix: '위', tone: 'neutral' }]],
+    ['s' + String(44 + row * 11).padStart(3, '0'), ['pred_pre', { kind: 'number', precision: 0, sign: true, prefix: '전일비 ', suffix: '원', tone: 'change' }]],
+    ['s' + String(48 + row * 11).padStart(3, '0'), ['pred_trde_qty', { kind: 'shares', precision: 0, prefix: '전일 ', suffix: '주', tone: 'neutral' }]],
+  ]).flat()),
   '15N5-2': { s062: ['etfobjt_idex_cd', { kind: 'text', prefix: '대상지수 코드 ' }] },
   '2TZN-1': {
     s148: ['cur_prc', { kind: 'number', precision: 2, absolute: true }],

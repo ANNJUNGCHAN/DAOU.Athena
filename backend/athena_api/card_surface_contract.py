@@ -673,6 +673,59 @@ def _board_contract(
     }
 
 
+def with_ranking_rail_rows(
+    contract: dict[str, Any] | None,
+    sources: Mapping[str, Any],
+    *,
+    registry: CardSurfaceRegistry | None = None,
+    active_operation_refs: Iterable[str] = (),
+) -> dict[str, Any] | None:
+    """13K0 rail identities come from each selected source row, never its name."""
+    if not contract or contract.get("board_id") != "13K0-2":
+        return contract
+    registry = registry if registry is not None else get_registry()
+    board = registry.boards["13K0-2"]
+    groups = (
+        ("s128", "s129", "s131", "s132", "s134"),
+        ("s145", "s146"), ("s147", "s148"), ("s149", "s150"),
+    )
+    containers = {"base:ka10032": "trde_prica_upper", "base:ka00198": "item_inq_rank"}
+    # Only this metadata needs field presence: the ordinary binder still uses its
+    # existing serialization. An absent field is not an explicit null update.
+    data = {
+        op: source.model_dump(by_alias=True, exclude_unset=True)
+        if hasattr(source, "model_dump") else source
+        for op, source in sources.items() if op in containers
+    }
+    priority = dict.fromkeys((*active_operation_refs, *board.operation_refs))
+    entries = {entry["slot_id"]: entry for entry in contract["slot_values"]}
+    rows = []
+    for row, slot_ids in enumerate(groups):
+        occurrence = entries.get(slot_ids[0], {}).get("occurrence_id")
+        operation = occurrence.split("|")[0] if occurrence else None
+        if operation is None:
+            operation = next((op for op in priority if op in containers
+                and isinstance(data.get(op), Mapping)
+                and isinstance(data[op].get(containers[op]), list)), None)
+        if operation not in containers or not isinstance(data.get(operation), Mapping):
+            continue
+        source_rows = data[operation].get(containers[operation])
+        if not isinstance(source_rows, list):
+            continue
+        source_row = source_rows[row] if row < len(source_rows) and isinstance(source_rows[row], Mapping) else {}
+        code = source_row.get("stk_cd")
+        empty_slots = []
+        for slot_id in slot_ids:
+            field = board.slot(slot_id).f
+            if field in source_row and (source_row[field] is None
+                or isinstance(source_row[field], str) and not source_row[field].strip()):
+                empty_slots.append(slot_id)
+        rows.append({"row": row, "source": operation,
+            "code": code.strip() if isinstance(code, str) and code.strip() else None,
+            "empty_slots": empty_slots})
+    return {**contract, "ranking_rail_rows": rows}
+
+
 def attach_surface_contract(
     card_contract: dict[str, Any],
     operation_ref: str,
@@ -683,8 +736,9 @@ def attach_surface_contract(
     """REST·MCP 공통 첨부점. ``source``가 없으면 값 없는 골격(슬롯 전부 unbound)."""
 
     bound = bind_surface_values(operation_ref, source) if source is not None else None
-    card_contract["surface_contract"] = build_surface_contract(
-        operation_ref, bound, registry
+    card_contract["surface_contract"] = with_ranking_rail_rows(
+        build_surface_contract(operation_ref, bound, registry),
+        {operation_ref: source}, registry=registry,
     )
     return card_contract
 

@@ -1020,6 +1020,81 @@ function expandedRankingOperation(state) {
     ? state.rankingSourceOperation : RANKING_BOARD_OPERATIONS[sourceBoard] || 'base:ka10032';
 }
 
+function selectedRankingRailSource(state) {
+  return state.rankingSourceBoard === '13K0-2'
+    && ['base:ka10032', 'base:ka00198'].includes(state.rankingSourceOperation)
+    ? state.rankingSourceOperation : 'base:ka10032';
+}
+
+const RANKING_RAIL_GROUPS = [
+  ['s128', 's129', 's131', 's132', 's134'], ['s145', 's146'],
+  ['s147', 's148'], ['s149', 's150'],
+];
+
+function rankingRailCode(value) {
+  const raw = value && typeof value === 'object' ? value.value : value;
+  return typeof raw === 'string' && raw.trim() ? raw.trim() : null;
+}
+
+function rankingRailRows(contract) {
+  if (contract?.board_id !== '13K0-2' || !Array.isArray(contract.ranking_rail_rows)) return null;
+  const rows = new Map();
+  for (const item of contract.ranking_rail_rows) {
+    if (!item || !Number.isInteger(item.row) || !RANKING_RAIL_GROUPS[item.row] || rows.has(item.row)
+      || !['base:ka10032', 'base:ka00198'].includes(item.source)
+      || (item.code !== null && !rankingRailCode(item.code)) || !Array.isArray(item.empty_slots)
+      || item.empty_slots.some(id => !RANKING_RAIL_GROUPS[item.row].includes(id))) return null;
+    rows.set(item.row, { code: rankingRailCode(item.code), source: item.source, empty_slots: item.empty_slots.slice() });
+  }
+  return rows;
+}
+
+function mergeRankingRailValues(state, incoming, contract) {
+  const boardId = state.boardId;
+  const next = { ...state.values };
+  const identities = new Map(state.rankingRailRowsByBoard?.get(boardId) || []);
+  const retired = state.rankingRailRetiredByBoard?.get(boardId) || new Set();
+  const clearRow = (row) => {
+    for (const slotId of RANKING_RAIL_GROUPS[row]) { delete next[slotId]; retired.add(slotId); }
+  };
+  const rows = rankingRailRows(contract);
+  if (rows) {
+    for (const [row, identity] of rows) {
+      if (!identity.code || !identities.get(row)?.code || identities.get(row).code !== identity.code) clearRow(row);
+      for (const slotId of identity.empty_slots) delete next[slotId];
+      identities.set(row, identity);
+    }
+  } else {
+    // A legacy patch cannot establish comparison identity from its display name.
+    if (Object.hasOwn(incoming, 's129') && rankingRailCode(next.s129) !== rankingRailCode(incoming.s129)) {
+      clearRow(0); identities.delete(0);
+    }
+    for (let row = 1; row < RANKING_RAIL_GROUPS.length; row++) {
+      if (!Object.hasOwn(incoming, RANKING_RAIL_GROUPS[row][0])) continue;
+      clearRow(row); identities.delete(row);
+    }
+  }
+  (state.rankingRailRowsByBoard ||= new Map()).set(boardId, identities);
+  (state.rankingRailRetiredByBoard ||= new Map()).set(boardId, retired);
+  return Object.assign(next, incoming);
+}
+
+function excludeRetiredRankingRailSlots(state) {
+  if (state.boardId !== '13K0-2') return;
+  const retired = state.rankingRailRetiredByBoard?.get(state.boardId);
+  if (!retired?.size) return;
+  // Observation ids identify source/path/row, not a stock. Old-envelope indexes
+  // must not reattach a previous stock's stream after this row changes identity.
+  for (const [bindingId, slots] of state.realtimeSlots) {
+    const keep = slots.filter(slotId => !retired.has(slotId));
+    if (keep.length) state.realtimeSlots.set(bindingId, keep);
+    else {
+      state.realtimeSlots.delete(bindingId);
+      state.realtimeSlots.observationByBinding?.delete(bindingId);
+    }
+  }
+}
+
 function boardHydrateTarget(envelope, host) {
   const args = (envelope && (envelope.operation_args || envelope.arguments)) || {};
   const target = args && typeof args === 'object' && !Array.isArray(args) ? { ...args } : {};
@@ -1059,6 +1134,7 @@ function boardStateOf(host) {
       values: {}, links: [], unbound: [], boardId: null,
       valuesByBoard: new Map(), unboundByBoard: new Map(), hydrationByBoard: new Map(),
       realtimeByBoard: new Map(),
+      rankingRailRowsByBoard: new Map(), rankingRailRetiredByBoard: new Map(),
       // 자료가 한 칸도 없는 되풀이 줄(계약의 empty_rows) — 보드별로 격리한다.
       emptyRows: [], emptyRowsByBoard: new Map(),
       // 값이 한 줄도 없는 표의 열(계약의 empty_columns).
@@ -1093,6 +1169,10 @@ function boardStateOf(host) {
 function seedBoardState(state, contract, envelope) {
   if (!contract || !contract.board_id) return;
   const boardId = String(contract.board_id);
+  if (boardId === '13K0-2') {
+    (state.rankingRailRowsByBoard ||= new Map()).set(boardId, rankingRailRows(contract) || new Map());
+    (state.rankingRailRetiredByBoard ||= new Map()).set(boardId, new Set());
+  }
   if (boardId === '2QFO-2' && Object.prototype.hasOwnProperty.call(contract, 'flow_query_context')) {
     (state.flowQueryContextByBoard ||= new Map()).set(boardId, contract.flow_query_context);
   }
@@ -1445,6 +1525,7 @@ function clearRankingBoardCache(state) {
     state.valuesByBoard, state.unboundByBoard, state.hydrationByBoard, state.realtimeByBoard,
     state.emptyRowsByBoard, state.emptyColumnsByBoard, state.emptyValueSlotsByBoard,
     state.deferredValueSlotsByBoard,
+    state.rankingRailRowsByBoard, state.rankingRailRetiredByBoard,
   ]) {
     if (!cache || typeof cache.keys !== 'function') continue;
     for (const boardId of cache.keys()) {
@@ -2100,7 +2181,8 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     reply = await window.athena.invoke('athena:canvas-board-hydrate', {
       boardId,
       slotIds: pending,
-      rankingOperationRef: boardId === '4B22-1' ? expandedRankingOperation(state) : undefined,
+      rankingOperationRef: boardId === '4B22-1' ? expandedRankingOperation(state)
+        : boardId === '13K0-2' ? selectedRankingRailSource(state) : undefined,
       target: boardHydrateTarget(envelope, host),
       account: boardHydrateAccount(envelope),
       correlation: envelope && envelope.correlation,
@@ -2116,6 +2198,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   const failures = (Array.isArray(reply.operations) ? reply.operations : [])
     .filter((op) => op && op.status !== 'bound' && RETRYABLE_BOARD_HYDRATE_REASONS.has(op.reason));
   const requiredRef = boardId === '4B22-1' ? expandedRankingOperation(state)
+    : boardId === '13K0-2' ? selectedRankingRailSource(state)
     : boardId === '15N5-2' && state.etfDetailIdentity ? 'base:ka40002'
     : boardId === '2WZK-0' && state.etfReturnIdentity ? 'base:ka40001'
     : String((envelope && envelope.operation_ref) || '');
@@ -2138,6 +2221,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   const contract = reply.surface_contract;
   let metadataReceived = false;
   if (contract && (!contract.board_id || String(contract.board_id) === boardId)) {
+    if (boardId === '13K0-2' && rankingRailRows(contract)) metadataReceived = true;
     if (boardId === '2QFO-2' && Object.prototype.hasOwnProperty.call(contract, 'flow_query_context')) {
       (state.flowQueryContextByBoard ||= new Map()).set(boardId, contract.flow_query_context);
       metadataReceived = true;
@@ -2153,7 +2237,8 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     }
   }
   if ((!filled || !Object.keys(filled).length) && !state.rankingResult && !metadataReceived) return mounted;
-  state.values = { ...state.values, ...filled };
+  state.values = boardId === '13K0-2'
+    ? mergeRankingRailValues(state, filled, contract) : { ...state.values, ...filled };
   state.valuesByBoard.set(boardId, state.values);
   state.unbound = state.unbound.filter((slotId) => !(slotId in filled));
   state.unboundByBoard.set(boardId, state.unbound);
@@ -2171,6 +2256,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   for (const [bindingId, observationId] of hydratedRealtimeSlots.observationByBinding) {
     state.realtimeSlots.observationByBinding.set(bindingId, observationId);
   }
+  excludeRetiredRankingRailSlots(state);
   state.realtimeByBoard.set(boardId, state.realtimeSlots);
   if (!isCurrent() || state.boardId !== boardId) return mounted;
   const remounted = boardMount.mountBoard(
@@ -2830,7 +2916,9 @@ async function applyRealtimeFallbackData(session, payload) {
     const values = slotValuesOf({ slot_values: payload.slotValues });
     if (!Object.keys(values).length) return false;
     if (Object.keys(values).some((slotId) => !session.slotIds.includes(slotId))) return false;
-    state.values = { ...state.values, ...values };
+    state.values = state.boardId === '13K0-2'
+      ? mergeRankingRailValues(state, values, payload.surfaceContract || payload.surface_contract) : { ...state.values, ...values };
+    excludeRetiredRankingRailSlots(state);
     state.valuesByBoard.set(state.boardId, state.values);
     const mounted = boardMount.mountBoard(host, state.boardId, state.values, boardMountOptions(host, session.envelope));
     rememberMountedBoard(state, mounted);

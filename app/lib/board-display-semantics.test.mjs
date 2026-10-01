@@ -9,6 +9,33 @@ const { formatSlot } = require('./board-format');
 const source = id => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
 const text = (id, values, slot) => mountPlan(registry.contractFor(id), values).assignments.find(x => x.slotId === slot)?.text;
 
+test('13K0 paired values label prior rank, price change and quantity for raw and wrapped values', () => {
+  const contract=registry.contractFor('13K0-2');
+  for(let row=0;row<5;row++)for(const[num,prefix,suffix]of [[40,'전일 ','위'],[44,'전일비 ','원'],[48,'전일 ','주']]) {
+    const sid='s'+String(num+row*11).padStart(3,'0');
+    for(const value of [0,'0',{value:0,text:'0'}]) {
+      const a=mountPlan(contract,{[sid]:value}).assignments.find(x=>x.slotId===sid);
+      assert.equal(a.missing,false);assert.ok(a.text.startsWith(prefix)&&a.text.endsWith(suffix)&&a.text.includes('0'));
+    }
+    const empty=mountPlan(contract,{[sid]:null}).assignments.find(x=>x.slotId===sid);
+    assert.equal(empty.missing,true);assert.equal(empty.text.includes(prefix),false);
+    const value=num===44?-12345:12345,display=prefix+(value<0?'-12,345':'12,345')+suffix;
+    assert.equal(text('13K0-2',{[sid]:{value,text:display}},sid),display);
+    if(num===44) {
+      const a=mountPlan(contract,{[sid]:{value,text:'12,345'}}).assignments.find(x=>x.slotId===sid);
+      assert.equal(a.text,'전일비 -12,345원');assert.equal(a.tone,'down');
+    }
+  }
+});
+
+test('13K0 direction codes use enum meaning instead of numeric sign', () => {
+  for(const[value,tone]of [['1','up'],['2','up'],['3','flat'],['4','down'],['5','down']]) {
+    const a=mountPlan(registry.contractFor('13K0-2'),{s132:{value,text:'wire'}}).assignments.find(x=>x.slotId==='s132');
+    assert.equal(a.tone,tone);
+  }
+  for(const value of [null,'bad'])assert.equal(text('13K0-2',{s132:value},'s132'),'—');
+});
+
 test('chart flow captions show each received date and preserve missing source context', () => {
   assert.equal(text('137X-2', {}, 's068'), '일별 거래상세 · 순매수');
   assert.equal(text('137X-2', {s076:'20260102',s091:'20251231'}, 's076'), '기준일 2026-01-02');

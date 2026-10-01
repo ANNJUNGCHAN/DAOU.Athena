@@ -1203,3 +1203,12 @@
  .bs-rank-four .bs-primary,.bs-rank-four .bs-rail { width:100% !important; max-width:100% !important; flex-basis:auto !important; }
  .board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row { grid-template-columns:minmax(0,1fr); gap:2px; }
 }
+
+/* 13K0: retain six supported columns and use the available rail width. */
+.board-surface[data-bs-board-id="13K0-2"] :is([data-node="33WP-0"],[data-node="33X5-0"],[data-node="33XL-0"],[data-node="33Y1-0"],[data-node="33YH-0"],[data-node="33YX-0"]) { display:none !important; }
+.board-surface[data-bs-board-id="13K0-2"] [data-node="3447-0"][data-missing] { color:var(--color-k-dim) !important; }
+@container board (max-width:959px) {
+ .board-surface[data-bs-board-id="13K0-2"] :is([data-node="343Y-0"],[data-node="3448-0"],[data-node="344B-0"],[data-node="344E-0"],[data-node="344H-0"],[data-node="344Q-0"],[data-node="3454-0"],[data-node="3455-0"]) { width:100% !important; min-width:0 !important; }
+ .board-surface[data-bs-board-id="13K0-2"] :is([data-node="343Z-0"],[data-node="3440-0"],[data-node="3445-0"]) { min-width:0 !important; flex-wrap:wrap !important; height:auto !important; }
+ .board-surface[data-bs-board-id="13K0-2"] :is([data-node="344W-0"],[data-node="3450-0"],[data-node="3453-0"]) { min-width:0 !important; overflow-wrap:anywhere; }
+}
