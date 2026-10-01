@@ -1079,3 +1079,16 @@
 /* The minute context keeps session/basis data and its reserved action area. */
 .board-surface[data-bs-board-id="3FR6-0"] [data-node="3FRD-0"] { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
 .board-surface[data-bs-board-id="2VDA-0"] [data-slot-id="s300"] { color: var(--color-k-text) !important; }
+
+/* ELW lists keep only fields belonging to the received row. */
+.board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"]) .bs-readable-cell:is([data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="2ZN9-0"] [data-node="3B82-0"] .bs-readable-cell:is([data-col="0"], [data-col="3"]),
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="7"],
+.bs-elw-unavailable-line { display: none !important; }
+.board-surface[data-bs-board-id="2VIN-0"] :is(.bs-workspace, .bs-primary, .bs-rail) { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) :is(.bs-workspace, .bs-primary, .bs-rail, .bs-kpi, .bs-kpi-cell) { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-kpi { padding-block: 12px; flex-wrap: wrap; row-gap: 12px; }
+@container board (max-width: 959px) {
+  .board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-rail { width: 100% !important; min-width: 0 !important; }
+  .board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-rail > [data-node] { width: 100%; max-width: 100%; }
+}

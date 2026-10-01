@@ -776,7 +776,13 @@ function updateAccountDetailSections(surface) {
 }
 
 function updateRankingResidualDetails(surface, plan) {
+  const elw = ['2VO0-0', '2XA5-0', '2XY6-0', '2Y47-0', '2ZN9-0'].includes(surface.dataset?.bsBoardId);
   const groups = {
+    '2VO0-0': [['2WXT-0', '잔량 분포'], ['3HK2-0', '발행사별 상장']],
+    '2XA5-0': [['2XAD-0', '등락 분포'], ['3JI5-0', '등락 구간별']],
+    '2XY6-0': [['2XYE-0', '근접 요약'], ['3LFT-0', '근접 구간별']],
+    '2Y47-0': [['2Y4F-0', '감지 현황'], ['3MPF-0', '기준가 대비 구간별']],
+    '2ZN9-0': [['2ZNH-0', '저장 조건식']],
     '2VDA-0': [['3HX8-0', '신고·신저 분포'], ['3HY6-0', '시장별 통계'], ['3HYL-0', '경신 시간대']],
     '2YXS-0': [['3GI1-0', '상한·하한 집계'], ['3GJP-0', '도달 시각 통계'], ['3GK7-0', '업종 분포']],
     '2ZHC-0': [['3JAN-0', '고저가 근접 집계'], ['3JBO-0', '조건별 통계'], ['3JC3-0', '잔여 폭 통계'], ['3JCI-0', '시장별 통계']],
@@ -788,7 +794,11 @@ function updateRankingResidualDetails(surface, plan) {
   if (!groups) return;
   const states = surface.__bsRankingDetailStates || (surface.__bsRankingDetailStates = new Map());
   for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
-  const sections = [[surface.querySelector('.bs-kpi'), '시장 요약 통계'],
+  const main = elw || surface.dataset.bsBoardId === '2VIN-0'
+    ? authoredNode(surface, READABLE_TABLES[surface.dataset.bsBoardId].node) : null;
+  const sections = [[surface.querySelector('.bs-kpi'), elw ? '요약 지표' : '시장 요약 통계'],
+    ...(main ? [[main, '조회 종목', [...main.querySelectorAll('[data-slot-id]')]
+      .map(node => node.dataset.slotId).filter(slot => states.get(slot)?.valueSlot)]] : []),
     ...groups.map(([node, title, valueSlots]) => [authoredNode(surface, node), title, valueSlots])];
   for (const [section, title, valueSlots] of sections) {
     if (!section) continue;
@@ -796,8 +806,9 @@ function updateRankingResidualDetails(surface, plan) {
       .map(slot => states.get(slot));
     const unavailable = slots.length > 0 && slots.every(state => state && !state.pending
       && (state.missing || state.empty || state.designText || !state.text));
-    const pending = !!valueSlots && slots.some(state => state?.pending)
-      && slots.every(state => state && (state.pending || state.missing || state.empty));
+    const pending = (!!valueSlots || elw) && slots.some(state => state?.pending)
+      && slots.every(state => state && (state.pending || state.missing || state.empty
+        || (elw && (state.designText || !state.text))));
     section.classList.toggle('bs-ranking-unavailable-group', unavailable || pending);
     let note = section.querySelector(':scope > .bs-ranking-unavailable-note');
     if ((unavailable || pending) && !note) {
@@ -807,6 +818,19 @@ function updateRankingResidualDetails(surface, plan) {
     if (note) {
       note.textContent = title + (pending ? ' 수신 대기' : ' 미제공');
       note.hidden = !unavailable && !pending;
+    }
+  }
+  if (elw) {
+    for (const sid of ['s017', 's020', 's023', 's026']) {
+      const state = states.get(sid), node = surface.querySelector(`[data-slot-id="${sid}"]`);
+      node?.closest('.bs-kpi-cell')?.classList.toggle('bs-ranking-unavailable-cell',
+        !!state && !state.pending && (state.empty || state.missing));
+    }
+    const detailSlots = surface.dataset.bsBoardId === '2ZN9-0' ? ['s172'] : ['s313', 's315', 's317', 's319'];
+    for (const sid of detailSlots) {
+      const state = states.get(sid), node = surface.querySelector(`[data-slot-id="${sid}"]`);
+      node?.parentElement?.classList.toggle('bs-ranking-unavailable-cell',
+        !!state && !state.pending && (state.empty || state.missing));
     }
   }
   if (surface.dataset.bsBoardId === '2VIN-0') {
@@ -1830,14 +1854,14 @@ const READABLE_TABLES = {
   "2U5L-1": {"node":"3C0K-0","rows":["3C0L-0","3C5D-0","3CFR-0","3CGS-0","3CHT-0","3CNW-0","3COV-0","3CPU-0","3CQT-0"],"widths":[220,160,160,160,160,240,200],"label":"조회 상세 내역","stack":false,"compact":true},
   "2UBO-1": {"node":"34AI-0","rows":["34AM-0","34AT-0","34BA-0","34BR-0"],"widths":[220,160,140,200,200,200],"label":"조회 상세 내역","stack":false,"compact":true},
   "2UHM-1": {"node":"2ULF-1","rows":["359Q-0","359Y-0","35AN-0","35BC-0"],"widths":[120,220,180,140,160,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
-  "2VIN-0": {"node":"3QN3-0","rows":["3QN4-0","3QND-0","3QO4-0","3QOV-0","3QPM-0","3QQD-0","3QR4-0","3QRV-0","3QSM-0","3QTD-0","3QU4-0","3QUV-0","3QVM-0","3QWD-0","3QX4-0","3QXV-0","3QYM-0","3QZD-0","3R04-0","3R0V-0","3R1M-0"],"widths":[0,220,160,140,140,200,140,120],"label":"ETF 전체 시세","stack":false,"compact":true},
-  "2VO0-0": {"node":"38TO-0","rows":["38TP-0","38TY-0","38UH-0","38V0-0","38VJ-0","38W2-0","38WL-0","38X4-0","38XN-0","3GLC-0","3GLV-0","3GME-0","3GMX-0","3GNG-0","3GNZ-0","3GOI-0","3GP1-0","3GPK-0","3GQ3-0","3GQM-0","3GR5-0"],"widths":[52,220,160,200,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
-  "2XA5-0": {"node":"39FH-0","rows":["39FI-0","39FR-0","39GA-0","39GT-0","39HC-0","39HV-0","39IE-0","39IX-0","39JG-0","3HZP-0","3I08-0","3I0R-0","3I1A-0","3I1T-0","3I2C-0","3I2V-0","3I3E-0","3I3X-0","3I4G-0","3I4Z-0","3I5I-0"],"widths":[52,220,160,140,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
-  "2XY6-0": {"node":"39V5-0","rows":["39V6-0","39VF-0","39VY-0","39WH-0","39X0-0","39Y2-0","39YL-0","39Z4-0","3KGH-0","3KH0-0","39XJ-0","3KHJ-0","3KI2-0","3KIL-0","3KJ4-0","3KJN-0","3KK6-0","3KKP-0","3KL8-0","3KLR-0","3KMA-0"],"widths":[52,220,160,140,160,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
-  "2Y47-0": {"node":"3A9M-0","rows":["3A9N-0","3A9W-0","3AAF-0","3AAY-0","3ABH-0","3AC0-0","3ACJ-0","3AD2-0","3ADL-0","3MBF-0","3MBY-0","3MCH-0","3MD0-0","3MDJ-0","3ME2-0","3MEL-0","3MF4-0","3MFN-0","3MG6-0","3MGP-0","3MH8-0"],"widths":[52,220,160,160,160,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2VIN-0": {"node":"3QN3-0","rows":["3QN4-0","3QND-0","3QO4-0","3QOV-0","3QPM-0","3QQD-0","3QR4-0","3QRV-0","3QSM-0","3QTD-0","3QU4-0","3QUV-0","3QVM-0","3QWD-0","3QX4-0","3QXV-0","3QYM-0","3QZD-0","3R04-0","3R0V-0","3R1M-0"],"widths":[0,220,160,140,140,200,140,0],"label":"ETF 전체 시세","stack":false,"compact":true},
+  "2VO0-0": {"node":"38TO-0","rows":["38TP-0","38TY-0","38UH-0","38V0-0","38VJ-0","38W2-0","38WL-0","38X4-0","38XN-0","3GLC-0","3GLV-0","3GME-0","3GMX-0","3GNG-0","3GNZ-0","3GOI-0","3GP1-0","3GPK-0","3GQ3-0","3GQM-0","3GR5-0"],"widths":[52,220,160,200,200,200,0,0],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2XA5-0": {"node":"39FH-0","rows":["39FI-0","39FR-0","39GA-0","39GT-0","39HC-0","39HV-0","39IE-0","39IX-0","39JG-0","3HZP-0","3I08-0","3I0R-0","3I1A-0","3I1T-0","3I2C-0","3I2V-0","3I3E-0","3I3X-0","3I4G-0","3I4Z-0","3I5I-0"],"widths":[52,220,160,140,200,200,0,0],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2XY6-0": {"node":"39V5-0","rows":["39V6-0","39VF-0","39VY-0","39WH-0","39X0-0","39Y2-0","39YL-0","39Z4-0","3KGH-0","3KH0-0","39XJ-0","3KHJ-0","3KI2-0","3KIL-0","3KJ4-0","3KJN-0","3KK6-0","3KKP-0","3KL8-0","3KLR-0","3KMA-0"],"widths":[52,220,160,140,160,200,0,0],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2Y47-0": {"node":"3A9M-0","rows":["3A9N-0","3A9W-0","3AAF-0","3AAY-0","3ABH-0","3AC0-0","3ACJ-0","3AD2-0","3ADL-0","3MBF-0","3MBY-0","3MCH-0","3MD0-0","3MDJ-0","3ME2-0","3MEL-0","3MF4-0","3MFN-0","3MG6-0","3MGP-0","3MH8-0"],"widths":[52,220,160,160,160,200,0,0],"label":"조회 순위 결과","stack":false,"compact":true},
   "2YXS-0": {"node":"3G5L-0","rows":["3G5M-0","3G5V-0","3G6I-0","3G75-0","3G7S-0","3G8F-0","3G92-0","3G9P-0","3GAC-0","3GAZ-0","3GBM-0","3GC9-0","3GCW-0","3GDJ-0","3GE6-0","3GET-0","3GFG-0","3GG3-0","3GGQ-0","3GHD-0"],"widths":[0,220,160,0,200,160,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "2ZHC-0": {"node":"3IYO-0","rows":["3IYP-0","3IZJ-0","3J04-0","3J0P-0","3J2G-0","3J1A-0","3J1V-0","3J31-0","3IYY-0","3J3M-0","3J47-0","3J4S-0","3J5D-0","3J5Y-0","3J6J-0","3J74-0","3J7P-0","3J8A-0","3J8V-0","3J9G-0","3JA1-0"],"widths":[0,220,160,0,160,160,200,0],"label":"조회 순위 결과","stack":false,"compact":true},
-  "2ZN9-0": {"node":"3B82-0","rows":["3B83-0","3B8C-0","3B8X-0","3B9I-0","3BA6-0","3BAR-0","3BBC-0","3BBX-0","3BCI-0"],"widths":[52,220,200,120,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2ZN9-0": {"node":"3B82-0","rows":["3B83-0","3B8C-0","3B8X-0","3B9I-0","3BA6-0","3BAR-0","3BBC-0","3BBX-0","3BCI-0"],"widths":[0,220,200,0,200,200,160,160],"label":"조회 순위 결과","stack":false,"compact":true},
   "2ZZ7-0": {"node":"3KPB-0","rows":["3KPC-0","3KPL-0","3KQ2-0","3KQJ-0","3KR0-0","3KRH-0","3KRY-0","3KSF-0","3KSW-0","3KTD-0","3KTU-0","3KUB-0","3KUS-0","3KV9-0","3KVQ-0","3KW7-0","3KWO-0"],"widths":[0,220,160,140,160,200,0,0],"label":"조회 순위 결과","stack":false,"compact":true},
   "30O1-0": {"node":"3RJU-0","rows":["3RJV-0","3RK4-0","3RKN-0","3RL6-0","3RLP-0","3RM8-0","3RMR-0","3RNA-0","3RNT-0","3ROC-0","3ROV-0","3RPE-0","3RPX-0","3RQG-0","3RQZ-0","3RRI-0","3RS1-0","3RSK-0","3RT3-0","3RTM-0"],"widths":[0,220,160,160,200,200,120,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "30ZW-0": {"node":"3R7U-0","rows":["3R7V-0","3R84-0","3R8P-0","3R9A-0","3R9V-0","3RAG-0","3RB1-0","3RBM-0","3RC7-0","3RCS-0","3RDD-0","3RDY-0","3REJ-0","3RF4-0","3RFP-0","3RGA-0","3RGV-0","3RHG-0","3RI1-0","3RIM-0"],"widths":[0,220,160,120,0,0,200,0],"label":"조회 순위 결과","stack":false,"compact":true},
@@ -2007,6 +2031,16 @@ function readableTable(surface, contract, config) {
   viewport.after(hint);
   owner.classList.add('bs-readable-owner');
   if (config.compact) owner.classList.add('bs-readable-compact');
+  // These secondary lines belong to another ELW list, not this row's source.
+  if (['2XY6-0', '2Y47-0'].includes(contract.board_id)) {
+    for (const slot of slotList(contract)) {
+      if (!slot.paired_with) continue;
+      const node = authoredNode(surface, anchorOf(slot));
+      if (!node || !owner.contains(node)) continue;
+      const col = node.closest('.bs-readable-cell')?.dataset.col;
+      if (col === '5' || (contract.board_id === '2XY6-0' && col === '4')) node.classList.add('bs-elw-unavailable-line');
+    }
+  }
 }
 
 function prepareInvestorGrid(surface, contract) {

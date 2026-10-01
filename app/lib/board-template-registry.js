@@ -130,6 +130,9 @@ function navigationTargetRequirement(boardId, envelope = {}) {
 }
 
 function resolvedStateLink(boardId, candidate) {
+  if (candidate.board_id === '2WZK-0' && candidate.control === '3달 수익률 높은 순') {
+    return { ...candidate, control: '기간 수익률' };
+  }
   if (candidate.control === '금현물 · 5단' && candidate.board_id === '2QX1-1') {
     return { ...candidate, control: '금현물 호가' };
   }
@@ -144,8 +147,10 @@ function resolvedStateLink(boardId, candidate) {
 
 function directStateLinksFor(boardId) {
   const id = String(boardId || '');
-  return [...((STATE_GRAPH[id] && STATE_GRAPH[id].links) || []), ...additionalStateLinks(id)]
+  const links = [...((STATE_GRAPH[id] && STATE_GRAPH[id].links) || []), ...additionalStateLinks(id)]
     .map(link => resolvedStateLink(id, link));
+  return links.filter((link, index) => links.findIndex(other =>
+    other.board_id === link.board_id && other.control === link.control) === index);
 }
 
 // 이 스크립트가 어디서 왔는지 — 청크도 같은 폴더에 있다. 문서 URL 기준 상대경로를

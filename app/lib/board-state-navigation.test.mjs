@@ -5,6 +5,15 @@ const require = createRequire(import.meta.url);
 const registry = require('./board-template-registry');
 const { STATE_GRAPH } = require('./board-templates.index.generated');
 
+test('ETF list offers one period query without a fictitious three-month ranking', () => {
+  for (const links of [registry.directStateLinksFor('2VIN-0'), registry.stateLinksFor('2VIN-0')]) {
+    const periods = links.filter(link => link.board_id === '2WZK-0');
+    assert.deepEqual(periods, [{control:'기간 수익률', board_id:'2WZK-0'}]);
+    assert.ok(links.some(link => link.board_id === '15N5-2' && link.control === 'ETF 상세 열기'));
+  }
+  assert.equal(registry.stateLinksFor('2WZK-0').some(link => /3달/.test(link.control)), false);
+});
+
 test('gold quote navigation does not promise nonexistent five-level data', () => {
   for (const id of ['13BC-2', '2TRW-1', '2QX1-1', '2QRP-1', '3JT4-0']) {
     assert.ok(registry.stateLinksFor(id).some(link => link.control === '금현물 호가' && link.board_id === '2QX1-1'));

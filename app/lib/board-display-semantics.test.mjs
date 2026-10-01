@@ -423,3 +423,20 @@ test('minute amount specimens remain distinct from received daily amounts', () =
     assert.match(text('3FR6-0', {[slot.slot_id]:'0'}, slot.slot_id), /0/);
   }
 });
+
+test('ELW summaries remove saved-search specimens while retaining received percentages', () => {
+  for (const id of ['2XA5-0', '2XY6-0', '2Y47-0']) {
+    const plan = mountPlan(registry.contractFor(id), {});
+    const count = plan.assignments.find(slot => slot.slotId === 's026');
+    assert.equal(count.missing, true);
+    assert.notEqual(count.text, '2건');
+  }
+  for (const id of ['2VO0-0', '2XA5-0', '2XY6-0', '2Y47-0', '2ZN9-0']) {
+    assert.equal(text(id, {s017:'0'}, 's017'), '0.00%');
+    assert.equal(text(id, {s017:'200'}, 's017'), '+200.00%');
+    assert.equal(text(id, {}, 's016'), '첫 결과 등락률');
+  }
+  assert.equal(text('2XY6-0', {}, 's043'), '근접률');
+  assert.equal(text('2XY6-0', {}, 's044'), '거래량');
+  assert.equal(text('2Y47-0', {}, 's044'), '거래량');
+});
