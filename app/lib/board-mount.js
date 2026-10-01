@@ -10,6 +10,7 @@ const displayPolicy = isCjs ? require('./board-display-policy') : lib.BoardDispl
 const staticGraphics = isCjs ? require('./board-static-graphics-data') : lib.BoardStaticGraphicsData;
 const etfPeriod = isCjs ? require('./board-etf-period') : lib.BoardEtfPeriod;
 const flowLayout = isCjs ? require('./board-flow-layout') : lib.BoardFlowLayout;
+const rankingResult = isCjs ? require('./board-ranking-result') : lib.BoardRankingResult;
 
 const ROLLUP_MARK = '▸';
 
@@ -1660,8 +1661,46 @@ function readableTable(surface, contract, config) {
   if (config.compact) owner.classList.add('bs-readable-compact');
 }
 
+function prepareAfterhoursDepthTable(surface) {
+  const table = authoredNode(surface, '3KG8-0');
+  table.classList.add('bs-table', 'bs-depth-scroll');
+  table.tabIndex = 0;
+  table.setAttribute('role', 'region');
+  table.setAttribute('aria-label', '시간외 단일가 5단 호가, 좌우 방향키로 이동');
+  for (const property of ['overflow', 'overflow-x', 'overflow-y']) table.style.removeProperty(property);
+  for (const mirror of table.querySelectorAll('.bs-paired')) mirror.remove();
+  for (const node of [table, ...table.querySelectorAll('*')]) {
+    // The source classified an entire depth group as one row. Its five levels
+    // must never be hidden as optional columns at a narrow width.
+    delete node.dataset.row;
+    delete node.dataset.col;
+    node.classList.remove('bs-r-paired-table', 'bs-col');
+    node.removeAttribute('data-paired-source');
+  }
+  const stages = ['3L3J-0', '3L3Q-0', '3L3X-0', '3L45-0', '3L4C-0', '3LAA-0', '3LAH-0', '3LAO-0', '3LCJ-0', '3LCQ-0'];
+  const rows = [authoredNode(surface, '3KG9-0'), ...stages.map(id => authoredNode(surface, id).parentElement)];
+  rows.forEach((row, index) => {
+    row.classList.add('bs-depth-row');
+    row.dataset.row = index === 0 ? 'head' : `depth-${index}`;
+    row.setAttribute('role', 'row');
+    delete row.dataset.bsWrapRow;
+    row.style.flexWrap = 'nowrap';
+    row.style.justifyContent = 'flex-start';
+    row.style.gap = '0';
+    row.style.removeProperty('padding');
+    [...row.children].forEach((cell, col) => {
+      cell.dataset.col = String(col);
+      cell.setAttribute('role', index === 0 ? 'columnheader' : 'cell');
+    });
+  });
+  const inner = layoutGroup(surface.ownerDocument, 'bs-depth-table');
+  inner.append(...table.childNodes);
+  table.append(inner);
+}
+
 function applyReadableBoardLayout(surface, contract) {
   const id = contract.board_id;
+  if (id === '3JT4-0') prepareAfterhoursDepthTable(surface);
   if (id === '3N4O-0') {
     // This authored ladder has no table metadata. Missing quotes still occupy
     // their own column so the received quantity cannot move under the price.
@@ -2124,8 +2163,8 @@ function relaxOverflowHeights(surface) {
 function relaxOverflowRows(surface) {
   if (!surface || typeof surface.querySelectorAll !== 'function') return [];
   if (typeof getComputedStyle !== 'function' || typeof document === 'undefined') return [];
-  for (const hint of surface.querySelectorAll('.bs-readable-hint')) {
-    const scroll = hint.previousElementSibling;
+  for (const hint of surface.querySelectorAll('.bs-readable-hint, .bs-ranking-scroll-hint')) {
+    const scroll = hint.classList.contains('bs-ranking-scroll-hint') ? hint.nextElementSibling : hint.previousElementSibling;
     hint.style.display = scroll && scroll.clientWidth > 0 && scroll.scrollWidth > scroll.clientWidth + 1 ? 'block' : 'none';
   }
   // 같은 폭에서 두 번 재지 않는다. 제품에서는 표면의 관찰자가, 게이트에서는 정착
@@ -2408,6 +2447,7 @@ function mountBoard(root, boardId, values, options = {}) {
   compactReducedContent(surface, contract);
   applyQueryContext(surface, contract, options);
   if (etfPeriod) etfPeriod.mount(surface, contract, plan, options);
+  if (rankingResult) rankingResult.mount(surface, contract, plan, options);
   // 값이 실린 뒤에 잰다 — 목업보다 긴 값이 들어오면 줄이 그때 넘친다. 폭이 바뀌면
   // 표면의 관찰자가 다시 잰다.
   relaxOverflowHeights(surface);
