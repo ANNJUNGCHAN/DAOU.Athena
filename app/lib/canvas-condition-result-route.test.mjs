@@ -5,7 +5,8 @@ import vm from 'node:vm';
 
 const source = fs.readFileSync(new URL('../canvas.js', import.meta.url), 'utf8');
 
-test('a cached one-shot alternate opens and returns without a new hydrate request', async () => {
+for (const [parentId, childId, slot] of [['2UN6-1', '15L8-2', 's013'], ['31II-0', '15R0-2', 's043']]) {
+test(`a cached ${childId} alternate opens and returns without a new hydrate request`, async () => {
   const state = {};
   for (const key of ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
     'emptyRowsByBoard', 'emptyColumnsByBoard', 'emptyValueSlotsByBoard', 'deferredValueSlotsByBoard']) state[key] = new Map();
@@ -23,16 +24,17 @@ test('a cached one-shot alternate opens and returns without a new hydrate reques
     assert.ok(a >= 0 && b > a);
     vm.runInContext(source.slice(a, b), context);
   }
-  const parent = { board_id: '2UN6-1', slot_values: [{ slot_id: 's045', value: '합성 종목' }], hydration_slot_ids: [] };
-  const child = { board_id: '15L8-2', slot_values: [{ slot_id: 's013', value: '합성 종목' }], hydration_slot_ids: [], empty_rows: ['synthetic-empty-row'] };
+  const parent = { board_id: parentId, slot_values: [{ slot_id: 's045', value: '합성 종목' }], hydration_slot_ids: [] };
+  const child = { board_id: childId, slot_values: [{ slot_id: slot, value: '합성 종목' }], hydration_slot_ids: [], empty_rows: ['synthetic-empty-row'] };
   context.seedBoardState(state, parent, {});
   context.seedBoardState(state, child, {});
-  context.activateBoardState(state, '15L8-2');
-  assert.equal(state.values.s013, '합성 종목');
+  context.activateBoardState(state, childId);
+  assert.equal(state.values[slot], '합성 종목');
   assert.deepEqual(Array.from(state.emptyRows), ['synthetic-empty-row']);
   const mounted = { plan: { missing: ['static-unbound-slot'] } };
   assert.equal(await context.hydrateBoardSlots({}, {}, mounted), mounted);
-  context.activateBoardState(state, '2UN6-1');
+  context.activateBoardState(state, parentId);
   assert.equal(state.values.s045, '합성 종목');
-  assert.equal(state.values.s013, undefined);
+  assert.equal(state.values[slot], undefined);
 });
+}

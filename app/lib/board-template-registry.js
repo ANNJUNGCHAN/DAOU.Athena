@@ -73,6 +73,8 @@ function additionalControlLabels(control) {
 }
 
 function additionalStateLinks(boardId) {
+  if (['2UHM-1', '31II-0', '3TCO-0'].includes(boardId)) return [{ control: '시장 체온·VI', board_id: '15R0-2' }];
+  if (boardId === '15R0-2') return [{ control: 'VI 조회 결과로', board_id: '2UHM-1' }];
   if (boardId === '2UN6-1') return [{ control: '관심·조건 신호', board_id: '15L8-2' }];
   if (boardId === '15L8-2') return [{ control: '조건검색 결과로', board_id: '2UN6-1' }];
   if (DETAIL_MARKET_TABS.includes(boardId)) return DETAIL_MARKET_LINKS;
@@ -100,6 +102,11 @@ function instrumentDomainFor(boardId) {
 }
 
 function navigationTargetRequirement(boardId, envelope = {}) {
+  if (String(boardId) === '15R0-2') {
+    const cached = envelope.initial_surface_contract || envelope.initialSurfaceContract;
+    return envelope.operation_ref === 'base:ka10054' && cached?.board_id === '15R0-2'
+      ? '' : '현재 VI 발동 종목을 조회한 뒤 시장 체온·VI를 열어 주세요.';
+  }
   if (String(boardId) === '15L8-2') {
     const cached = envelope.initial_surface_contract || envelope.initialSurfaceContract;
     return envelope.operation_ref === 'base:ka10172' && cached?.board_id === '15L8-2'

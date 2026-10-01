@@ -781,6 +781,11 @@ def _bind_semantic_values(
         surface_source = elw_detail_source(board_id, operation_ref, source, surface_target)
         surface_source = stock_detail_source(board_id, surface_source, surface_target)
     attach_surface_contract(card_contract, operation_ref, surface_source)
+    if operation_ref == 'base:ka10054':
+        from athena_api.canvas_vi_snapshot import vi_snapshot_surface
+        snapshot = vi_snapshot_surface(operation_ref, surface_source)
+        if snapshot is not None:
+            card_contract['initial_surface_contract'] = snapshot
     if isinstance(card_contract.get('surface_contract'), dict) and surface_target is not None:
         from athena_api.surface_display_units import annotate_surface_display_units
         card_contract['surface_contract'] = annotate_surface_display_units(

@@ -5,6 +5,20 @@ const require = createRequire(import.meta.url);
 const registry = require('./board-template-registry');
 const { STATE_GRAPH } = require('./board-templates.index.generated');
 
+test('VI market overview opens only the completed query snapshot and has a return path', () => {
+  for (const id of ['2UHM-1', '31II-0', '3TCO-0']) {
+    assert.ok(registry.stateLinksFor(id).some(link => link.control === '시장 체온·VI' && link.board_id === '15R0-2'));
+  }
+  assert.ok(registry.stateLinksFor('15R0-2').some(link => link.board_id === '2UHM-1'));
+  assert.equal(registry.navigationTargetRequirement('15R0-2', {
+    operation_ref: 'base:ka10054', initial_surface_contract: { board_id: '15R0-2' },
+  }), '');
+  for (const envelope of [{}, { operation_ref: 'base:ka10054' },
+    { operation_ref: 'base:ka10030', initial_surface_contract: { board_id: '15R0-2' } }]) {
+    assert.match(registry.navigationTargetRequirement('15R0-2', envelope), /VI 발동 종목/);
+  }
+});
+
 test('every account surface keeps all seven authored read-only header destinations', () => {
   const account = registry.boardIds().filter(id => registry.cardIdFor(id) === 'CC-01');
   assert.equal(account.length, 14);
