@@ -1229,6 +1229,20 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   const target = String(transition.boardId || '');
   if (!target || target === state.boardId) return null;
   if (!state.links.some((link) => link.board_id === target)) return null;
+  const targetRequirement = boardTemplateRegistry.navigationTargetRequirement(target, envelope);
+  if (targetRequirement) {
+    if (state.navigationNoticeNode) state.navigationNoticeNode.remove();
+    const note = errorNote(targetRequirement);
+    note.classList.add('board-navigation-target-note');
+    note.setAttribute('role', 'status');
+    boardLoadAnchor(state, host).insertBefore(note, host);
+    state.navigationNoticeNode = note;
+    return null;
+  }
+  if (state.navigationNoticeNode) {
+    state.navigationNoticeNode.remove();
+    state.navigationNoticeNode = null;
+  }
   if (transition.criteria) {
     state.rankingCriteria = { ...(state.rankingCriteria || {}), ...transition.criteria };
   }
@@ -1241,18 +1255,24 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   ));
 }
 
-const RESPONSIVE_STATE_CONTROL_OWNER = '.bs-r-flow, .bs-r-scroll, .bs-r-scroll-table';
-
-function isResponsiveStateControl(node) {
-  return !!(node && typeof node.closest === 'function'
-    && node.closest(RESPONSIVE_STATE_CONTROL_OWNER));
-}
-
 function wireStateControls(host, envelope, mounted) {
   const state = boardStateOf(host);
   const surface = mounted && mounted.surface;
   if (!surface || !state.links.length) return 0;
   let wired = 0;
+  const direct = boardTemplateRegistry.directStateLinksFor(state.boardId);
+  const fallbackNodes = new Map([...surface.querySelectorAll('[data-state-link]')]
+    .map(node => [node.dataset.stateLink, node]));
+  // A later response can restore the original control. Reuse a fallback only
+  // while its authored control is still unavailable, without accumulating it.
+  for (const node of fallbackNodes.values()) node.remove();
+  const isAvailable = node => {
+    if (!node || !String(node.textContent || '').trim() || node.dataset.missing === 'true') return false;
+    for (let parent = node; parent && parent !== surface; parent = parent.parentElement) {
+      if (parent.hidden || getComputedStyle(parent).display === 'none') return false;
+    }
+    return true;
+  };
   const navigation = state.links.filter(link => link.navigation);
   if (navigation.length && !surface.querySelector('.board-state-return')) {
     const rail = document.createElement('nav');
@@ -1271,23 +1291,47 @@ function wireStateControls(host, envelope, mounted) {
     const control = String(link.control || '').trim();
     if (!control) continue;
     // 칩 찾기(표식·같은 문구·별칭 문구)는 board-mount가 갖는다 — 단위 테스트가 걸린다.
-    const node = boardMount.findStateControlNode(surface, control, { links: state.links });
-    if (!node) continue;
-    const didWire = boardMount.wireStateControlActivation(
-      node,
-      () => switchStateBoard(host, link.board_id, envelope, control),
-      { keyboard: boardTemplateRegistry.cardIdFor(state.boardId) === 'CC-01' || isResponsiveStateControl(node) },
-    );
-    if (!didWire) continue;
-    const visibleControl = String(node.textContent || '').trim();
-    if (!visibleControl || /^[▸▶›»→▾▼⌄]+$/.test(visibleControl)) {
-      if (!node.getAttribute('aria-label')) node.setAttribute('aria-label', control);
-      if (!node.getAttribute('title')) node.setAttribute('title', control);
+    const linkKey = `${link.board_id}|${control}`;
+    let node = boardMount.findStateControlNode(surface, control, { links: state.links });
+    const aliases = boardTemplateRegistry.additionalControlLabels(control)
+      .map(label => boardMount.findStateControlNode(surface, label, { links: state.links }))
+      .filter(isAvailable);
+    if (!isAvailable(node) && aliases.length) node = aliases.shift();
+    if (!isAvailable(node) && direct.some(item => item.board_id === link.board_id && item.control === control)) {
+      let rail = surface.querySelector('.board-state-return');
+      if (!rail) {
+        rail = document.createElement('nav');
+        rail.className = 'board-state-return';
+        rail.setAttribute('aria-label', '카드 화면 탐색');
+        surface.prepend(rail);
+      }
+      node = fallbackNodes.get(linkKey) || document.createElement('button');
+      node.type = 'button';
+      node.textContent = control.replace(/\s*\d+건\s*$/, '').replace(/\d+창구/, '창구').replace('삼성전자 행 펼침', '종목 상세');
+      node.dataset.stateLink = linkKey;
+      rail.appendChild(node);
     }
-    // 표시는 CSS가 한다([data-state-board], board-surface.css) — 인라인 원문은 안 건드린다(D1).
-    node.dataset.stateBoard = link.board_id;
-    wired += 1;
+    for (const targetNode of new Set([node, ...aliases].filter(isAvailable))) {
+      const didWire = boardMount.wireStateControlActivation(
+        targetNode,
+        () => switchStateBoard(host, link.board_id, envelope, control),
+        { keyboard: true },
+      );
+      if (!didWire) continue;
+      const visibleControl = String(targetNode.textContent || '').trim();
+      if (!visibleControl || /^[▸▶›»→▾▼⌄]+$/.test(visibleControl)) {
+        if (!targetNode.getAttribute('aria-label')) targetNode.setAttribute('aria-label', control);
+        if (!targetNode.getAttribute('title')) targetNode.setAttribute('title', control);
+      }
+      // 표시는 CSS가 한다([data-state-board], board-surface.css) — 인라인 원문은 안 건드린다(D1).
+      targetNode.dataset.stateBoard = link.board_id;
+      wired += 1;
+    }
   }
+  const rail = surface.querySelector('.board-state-return');
+  if (rail && !rail.children.length) rail.remove();
+  delete surface.__bsRelaxWidth;
+  boardMount.relaxOverflowRows(surface);
   return wired;
 }
 

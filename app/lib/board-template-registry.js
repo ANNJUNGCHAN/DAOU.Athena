@@ -36,6 +36,79 @@ const ACCOUNT_NAVIGATION = Object.freeze([
   { control: '금현물', board_id: '3ODO-0' },
 ]);
 
+// Instrument details require the subject of the same market. The source board
+// is server-authored; a specimen name or a six-character code cannot prove it.
+const INSTRUMENT_DOMAINS = Object.freeze({
+  gold: ['2RJ7-1'],
+  sector: ['32S7-0', '15J9-2', '2TZN-1'],
+  etf: ['15N5-2', '2VIN-0', '2WZK-0'],
+  elw: ['15P5-2', '2VO0-0', '2XA5-0', '2XY6-0', '2Y47-0', '2Z49-0', '2ZN9-0', '3DZ1-0', '3TOM-0'],
+});
+const INSTRUMENT_DETAIL_DOMAINS = Object.freeze({
+  '137X-2': 'stock', '2R3M-1': 'stock', '2RBO-1': 'stock',
+  '3DI2-0': 'stock', '3FR6-0': 'stock',
+  '2RJ7-1': 'gold', '32S7-0': 'sector', '15N5-2': 'etf',
+  '15P5-2': 'elw', '3DZ1-0': 'elw',
+});
+const ELW_LIST_BOARDS = ['2VO0-0', '2XA5-0', '2XY6-0', '2Y47-0', '2Z49-0', '2ZN9-0'];
+// These visible buttons exist in the canonical surfaces, separately from the
+// specimen's marked KPI/footer anchors. Both must open the same read-only view.
+const ADDITIONAL_CONTROL_LABELS = Object.freeze({
+  '신용비율 높은 순': ['신용비율 상위'],
+  '대차잔고 많은 순': ['대차 상위'],
+  'ELW 거래원별 10창구 전체': ['창구 상세 열기'],
+});
+
+function additionalControlLabels(control) {
+  return (ADDITIONAL_CONTROL_LABELS[control] || []).slice();
+}
+
+function additionalStateLinks(boardId) {
+  if (ELW_LIST_BOARDS.includes(boardId) && boardId !== '2Z49-0') {
+    return [{ control: 'ELW 상세 열기', board_id: '15P5-2' }];
+  }
+  if (boardId === '2VIN-0') return [{ control: '기간 수익률', board_id: '2WZK-0' }];
+  return [];
+}
+
+function instrumentDomainFor(boardId) {
+  const id = String(boardId || '');
+  for (const [domain, boards] of Object.entries(INSTRUMENT_DOMAINS)) {
+    if (boards.includes(id)) return domain;
+  }
+  return cardIdFor(id) === 'CC-03' || cardIdFor(id) === 'CC-04' ? 'stock' : '';
+}
+
+function navigationTargetRequirement(boardId, envelope = {}) {
+  const required = INSTRUMENT_DETAIL_DOMAINS[String(boardId || '')];
+  if (!required) return '';
+  const source = envelope.surface_contract || envelope.surfaceContract || {};
+  const sourceDomain = instrumentDomainFor(source.board_id)
+    || (envelope.data && envelope.data.chart && envelope.data.chart.target) || '';
+  const args = envelope.operation_args || envelope.arguments || {};
+  const symbol = String(envelope.stk_cd || args.stk_cd || envelope.symbol || args.symbol || '').trim();
+  if (sourceDomain === required
+    && !(required === 'elw' && ELW_LIST_BOARDS.includes(source.board_id) && !symbol)) return '';
+  const subject = { stock: '주식 종목', gold: '금현물 종목', sector: '업종', etf: 'ETF 종목', elw: 'ELW 종목' }[required];
+  return `${subject}을 지정해 조회해 주세요.`;
+}
+
+function resolvedStateLink(boardId, candidate) {
+  if (candidate.control === '차트' && candidate.board_id === '32S7-0') {
+    return { ...candidate, board_id: boardId === '32S7-0' || boardId === '2RJ7-1' ? boardId : '137X-2' };
+  }
+  if (candidate.control === '순위' && candidate.board_id === '32XM-0') {
+    return { ...candidate, control: '신주인수권 전체' };
+  }
+  return candidate;
+}
+
+function directStateLinksFor(boardId) {
+  const id = String(boardId || '');
+  return [...((STATE_GRAPH[id] && STATE_GRAPH[id].links) || []), ...additionalStateLinks(id)]
+    .map(link => resolvedStateLink(id, link));
+}
+
 // 이 스크립트가 어디서 왔는지 — 청크도 같은 폴더에 있다. 문서 URL 기준 상대경로를
 // 쓰면 fixture HTML(app/*.html)처럼 다른 위치에서 부를 때 깨진다.
 const SELF_SRC = (typeof document !== 'undefined' && document.currentScript
@@ -201,6 +274,7 @@ function stateLinksFor(boardId) {
   const visited = new Set();
   let current = id;
   const candidates = cardIdFor(id) === 'CC-01' ? ACCOUNT_NAVIGATION.slice() : [];
+  candidates.push(...additionalStateLinks(id));
   while (current && !visited.has(current)) {
     visited.add(current);
     const ancestor = STATE_GRAPH[current];
@@ -215,7 +289,10 @@ function stateLinksFor(boardId) {
       candidates.push({ control: '기본 화면으로', board_id: rootId, navigation: 'root' });
     }
   }
-  for (const link of candidates) {
+  for (const candidate of candidates) {
+    // The original specimen reused the stock "차트" tab for an industry chart.
+    // Keep each instrument's chart in its own family when returning from tabs.
+    const link = resolvedStateLink(id, candidate);
     const key = `${link.board_id} ${link.control}`;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -253,6 +330,7 @@ function clearTemplateCache() {
 const __exports = {
   BOARD_CARD, boardIds, cardIds, hasBoard, cardIdFor, isLoaded,
   ACCOUNT_NAVIGATION,
+  instrumentDomainFor, navigationTargetRequirement, directStateLinksFor, additionalControlLabels,
   chunkFileName, chunkUrl, loadChunk, loadBoard,
   boardHtml, boardSha256, contractFor, primaryRendererFor, stateLinksFor, controlLabels,
   templateFor, clearTemplateCache,

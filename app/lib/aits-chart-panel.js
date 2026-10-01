@@ -381,6 +381,8 @@ function createAitsChartPanelAdapter(options) {
     let applied = 0;
     for (const state of Array.from(sessions.values())) {
       if (state.closed || !state.renderer || !state.body) continue;
+      // This channel carries stock executions (0B), never sector or gold ticks.
+      if (state.body.target !== 'stock') continue;
       if (Number.isInteger(realtimeAccountGeneration)
         && state.realtimeAccountGeneration !== realtimeAccountGeneration) continue;
       if (String(state.stock || '') !== String(tick.symbol)) continue;
