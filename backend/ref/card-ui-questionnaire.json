@@ -9,7 +9,7 @@
     "in_scope_templates": 94,
     "reference_only_templates": 7,
     "seed_questions": 12,
-    "additional_flows": 32,
+    "additional_flows": 31,
     "excluded_features": [
       "실매매",
       "증권사 주문 실행",
@@ -10003,47 +10003,6 @@
       ]
     },
     {
-      "id": "natural-backtest",
-      "channel": "ui-navigation",
-      "workspace": "pallas",
-      "prompt": null,
-      "expected_card_kinds": [
-        "natural-strategy-form",
-        "natural-monitor-summary",
-        "natural-decision-table",
-        "natural-audit-detail"
-      ],
-      "variants": [
-        "empty",
-        "paused",
-        "running",
-        "done",
-        "failed",
-        "long-strategy",
-        "long-model-reason"
-      ],
-      "prerequisites": [
-        "백테스트 백엔드 활성",
-        "실제 모델 판단에는 로컬 LAYA 서버; 미연결 시 대체 사유 확인 가능"
-      ],
-      "ui_steps": [
-        "팔라스 → 자연어 전략 · LAYA 모의 감시 열기",
-        "데이터 출처: 합성 데모",
-        "전략 조건: 종가가 5일 평균보다 높으면 진입하고 낮으면 청산한다. 그 외에는 관망하거나 보유한다.",
-        "새 모의 감시 시작 → 다음 봉 → 남은 봉 연속 실행 → 일시 정지",
-        "판단 근거·원문 요청/응답 펼침",
-        "기록 JSON 내보내기"
-      ],
-      "status": "not_run",
-      "coverage_source": [
-        "app/lib/backtest-natural.js:130",
-        "backend/ref/natural-backtest.md"
-      ],
-      "notes": [
-        "합성 데모는 실제 시장 데이터 검증과 구분한다. 카드의 레이아웃/모의 체결 흐름을 검사하며 LAYA 조건 정확도 통과를 주장하지 않는다."
-      ]
-    },
-    {
       "id": "graph-summary",
       "channel": "ui-navigation",
       "workspace": "metis",
@@ -10211,6 +10170,53 @@
         "Glaux MiniCard 문법의 table·compound·event·status도 각각 실제 원본 카드/이벤트로 확인한다. 타입별로 서로 대체하지 않는다.",
         "MiniCard의 action·order_ticket 문법은 주문 경로이므로 reference-only로 제외한다."
       ]
+    }
+  ],
+  "separate_branch_flows": [
+    {
+      "id": "natural-backtest",
+      "channel": "ui-navigation",
+      "workspace": "pallas",
+      "prompt": null,
+      "expected_card_kinds": [
+        "natural-strategy-form",
+        "natural-monitor-summary",
+        "natural-decision-table",
+        "natural-audit-detail"
+      ],
+      "variants": [
+        "empty",
+        "paused",
+        "running",
+        "done",
+        "failed",
+        "long-strategy",
+        "long-model-reason"
+      ],
+      "prerequisites": [
+        "백테스트 백엔드 활성",
+        "실제 모델 판단에는 로컬 LAYA 서버; 미연결 시 대체 사유 확인 가능"
+      ],
+      "ui_steps": [
+        "팔라스 → 자연어 전략 · LAYA 모의 감시 열기",
+        "데이터 출처: 합성 데모",
+        "전략 조건: 종가가 5일 평균보다 높으면 진입하고 낮으면 청산한다. 그 외에는 관망하거나 보유한다.",
+        "새 모의 감시 시작 → 다음 봉 → 남은 봉 연속 실행 → 일시 정지",
+        "판단 근거·원문 요청/응답 펼침",
+        "기록 JSON 내보내기"
+      ],
+      "status": "excluded",
+      "coverage_source": [
+        "app/lib/backtest-natural.js:130",
+        "backend/ref/natural-backtest.md"
+      ],
+      "notes": [
+        "합성 데모는 실제 시장 데이터 검증과 구분한다. 카드의 레이아웃/모의 체결 흐름을 검사하며 LAYA 조건 정확도 통과를 주장하지 않는다."
+      ],
+      "scope": "separate_branch",
+      "branch": "codex/laya-experiments-20261001",
+      "commit": "41c879121d061fa054c5e2fbb0d13625a56ed8c4",
+      "exclusion_reason": "2026-10-01 사용자 요청으로 LAYA 관련 기능을 별도 실험 브랜치에 분리했다. 현재 카드 UI 브랜치의 실행 대상에서 제외하며 기존 설계·검증 기록은 보존한다."
     }
   ]
 }

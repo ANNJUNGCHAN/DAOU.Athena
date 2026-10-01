@@ -20,7 +20,8 @@
     "Source comparison statuses and notes are transcribed from the canonical author review receipts. This index check verifies counts, identities, evidence existence and live Paper inventory; it is not a new independent visual review of every drawing.",
     "Paper drawings use editable elements. Native scrollbar chrome is omitted where recorded; long interior scroll regions in settings/model and natural backtest cases are expanded to show all content.",
     "Source file hashes recorded after capture do not prove the exact code bytes at capture time. See source-hash-manifest.json for capture and recording timestamps.",
-    "The baseline timeline drawing intentionally retains the old raw-tree output. The new timeline renderer belongs to the separate improvement evidence."
+    "The baseline timeline drawing intentionally retains the old raw-tree output. The new timeline renderer belongs to the separate improvement evidence.",
+    "2026-10-01 사용자 요청 이후 natural-form/natural-result/natural-error 3개는 codex/laya-experiments-20261001 브랜치의 참고 도면이다. 이 파일의 46개 기준선과 원본 검증 기록은 분리 전 상태를 보존한다."
   ],
   "canonical_receipts": [
     "paper-support-reviewed-receipts.json",
@@ -203,7 +204,10 @@
         "source_screenshot": "auxiliary-baseline/screenshots/natural-error-1120.png",
         "source_screenshot_sha256": "25ba6a6c2f3eca150db2843195b7b213e2b571ac198ae3290281c9625417b23e",
         "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/natural-error.json"
-      }
+      },
+      "current_scope": "separate_branch",
+      "branch": "codex/laya-experiments-20261001",
+      "paper_current_name": "실험 참고 · LAYA 백테스트 · 오류 상태"
     },
     {
       "case_id": "natural-form",
@@ -221,7 +225,10 @@
         "source_screenshot": "auxiliary-baseline/screenshots/natural-form-1120.png",
         "source_screenshot_sha256": "5fcd041d72a0db6e36bb5b69f45d9c56eeb0744a8893ad96da37a946f9633a68",
         "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/natural-form.json"
-      }
+      },
+      "current_scope": "separate_branch",
+      "branch": "codex/laya-experiments-20261001",
+      "paper_current_name": "실험 참고 · LAYA 백테스트 · 입력 폼"
     },
     {
       "case_id": "natural-result",
@@ -239,7 +246,10 @@
         "source_screenshot": "auxiliary-baseline/screenshots/natural-result-1120.png",
         "source_screenshot_sha256": "ef4dc2d58f96713f6b634b714f532d7ff19d2aa19c95ca115de2370c5e650ff7",
         "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/natural-result.json"
-      }
+      },
+      "current_scope": "separate_branch",
+      "branch": "codex/laya-experiments-20261001",
+      "paper_current_name": "실험 참고 · LAYA 백테스트 · 결과"
     },
     {
       "case_id": "plugins-empty",
