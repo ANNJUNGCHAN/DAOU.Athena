@@ -1572,6 +1572,7 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  '32XM-0': { node: '3RU8-0', rows: ['3RU9-0', '3RUI-0', '3RV1-0', '3RVK-0', '3RW3-0', '3RWM-0', '3RX5-0', '3RXO-0', '3RY7-0', '3RYQ-0', '3RZ9-0', '3RZS-0', '3S0B-0', '3S0U-0', '3S1D-0'], widths: [52, 220, 130, 130, 170, 170, 0, 0], label: '신주인수권 조회 목록', stack: false, compact: true },
   '2X5N-0': { node: '34X2-0', rows: ['34X7-0', '34XF-0', '34XV-0', '34YB-0', '34YR-0', '34Z7-0'], widths: [52, 190, 130, 130, 190, 210, 130], label: '순위 결과', stack: false, compact: true },
   '30C1-0': { node: '3LY6-0', rows: ['3LY7-0', '3LYG-0', '3LYZ-0', '3LZI-0', '3M01-0', '3M0K-0', '3M13-0', '3M1M-0', '3M25-0', '3M2O-0', '3M37-0', '3M3Q-0', '3M49-0', '3M4S-0', '3M5B-0', '3M5U-0', '3M6D-0', '3M6W-0', '3M7F-0', '3M7Y-0', '3M8H-0'], widths: [52, 190, 130, 160, 140, 210, 130, 100], label: '거래량 갱신 결과', stack: false, compact: true },
   '15R0-2': { node: '170E-2', rows: ['36HF-0', '36IS-0', '36J5-0', '36JI-0'], widths: [190, 90, 140, 120], label: 'VI 영향 종목', stack: false, compact: true },

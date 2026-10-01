@@ -617,6 +617,22 @@
 [data-bs-layout="15J9-2"] .bs-readable-table { --bs-table-width: 890px !important; }
 [data-bs-layout="15J9-2"] .bs-workspace { flex: 0 0 auto; }
 
+/* 신주인수권 조회는 응답 순서와 실제 가격·거래량만 보존한다. */
+[data-bs-layout="32XM-0"] :is([data-node="332S-0"], [data-node="332O-0"], [data-node="332G-0"], [data-node="3324-0"], [data-node="3ONT-0"], [data-node="3ONW-0"], [data-node="3ONZ-0"], [data-node="3OOA-0"], [data-node="3OOO-0"], .bs-readable-cell[data-col="6"], .bs-readable-cell[data-col="7"]) { display: none !important; }
+[data-bs-layout="32XM-0"] .bs-readable-cell[data-col="5"] > :nth-child(2) { display: none !important; }
+[data-bs-layout="32XM-0"] :is([data-node="333K-0"], [data-node="333G-0"]) { flex-wrap: wrap; gap: 8px 12px; }
+[data-bs-layout="32XM-0"] :is([data-node="333K-0"], [data-node="333G-0"]) > * { flex: 0 0 auto; max-width: 100%; }
+[data-bs-layout="32XM-0"] [data-node="333J-0"] { font-size: 14px !important; line-height: 20px !important; }
+[data-bs-layout="32XM-0"] :is(.bs-workspace, .bs-primary, .bs-rail, .bs-kpi, .bs-kpi-cell) { height: auto; min-height: 0; }
+[data-bs-layout="32XM-0"] .bs-workspace { flex: 0 0 auto; align-items: flex-start; }
+[data-bs-layout="32XM-0"] .bs-kpi { padding-block: 16px; flex-wrap: wrap; row-gap: 12px; }
+[data-bs-layout="32XM-0"] .bs-kpi-cell { width: auto; flex: 1 1 240px; }
+[data-bs-layout="32XM-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+@container board (min-width: 960px) {
+  [data-bs-layout="32XM-0"] .bs-primary { width: auto; flex: 1 1 0; }
+  [data-bs-layout="32XM-0"] .bs-rail { width: 300px; min-width: 0; flex: 0 0 300px; }
+}
+
 /* 신용·대차 표의 100% 폭이 보조 영역을 누르지 않게 각 영역의 몫을 정한다. */
 [data-bs-board-id="2RWK-1"] :is(.bs-workspace, .bs-primary, .bs-rail) { height: auto; min-height: 0; }
 [data-bs-board-id="2RWK-1"] .bs-workspace { flex: 0 0 auto; align-items: flex-start; }

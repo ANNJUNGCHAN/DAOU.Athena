@@ -68,6 +68,7 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "backend/verification/test_stock_display_identity.py",
   "backend/verification/test_table_query_arguments.py",
   "backend/verification/test_instrument_semantic_contracts.py",
+  "backend/verification/test_subscription_rights_surface.py",
   "backend/verification/test_surface_display_units.py",
   "backend/verification/test_backtest_project_scope.py",
   "backend/verification/test_backtest_refresh.py",

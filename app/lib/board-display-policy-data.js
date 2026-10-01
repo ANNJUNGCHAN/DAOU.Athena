@@ -23873,15 +23873,35 @@ const policy = {
     ]
   },
   "32XM-0": {
+    "s002": [
+      "전 종목 · 등락률 순",
+      "caption",
+      "조회 응답 순서"
+    ],
+    "s004": [
+      "상장 14 종목",
+      "caption",
+      "최대 14종목 표시"
+    ],
     "s005": [
       "상승 9 · 하락 5",
-      "direction",
-      "pred_pre_sig"
+      "caption",
+      ""
     ],
     "s006": [
       "09:42:18 조회",
       "time",
       null
+    ],
+    "s014": [
+      "정렬 기준",
+      "caption",
+      "표시 기준"
+    ],
+    "s015": [
+      "등락률 큰 순",
+      "caption",
+      "조회 응답 순서"
     ],
     "s017": [
       "51억원",
@@ -23895,13 +23915,18 @@ const policy = {
     ],
     "s020": [
       "9 · 5",
-      "direction",
-      "pred_pre_sig"
+      "unavailable",
+      null
     ],
     "s021": [
       "보합 0",
-      "direction",
-      "pred_pre_sig"
+      "unavailable",
+      null
+    ],
+    "s022": [
+      "최대 등락률",
+      "caption",
+      "첫 수신 종목 등락률"
     ],
     "s026": [
       "3 종목",
@@ -23912,6 +23937,31 @@ const policy = {
       "90일 내",
       "unavailable",
       null
+    ],
+    "s032": [
+      "전체 14건 · 14건 표시",
+      "caption",
+      "조회 순서 · 최대 14종목 표시"
+    ],
+    "s033": [
+      "순위",
+      "caption",
+      "순서"
+    ],
+    "s036": [
+      "시가 / 고가 / 저가",
+      "caption",
+      "시가"
+    ],
+    "s038": [
+      "거래량 · 거래대금",
+      "caption",
+      "거래량"
+    ],
+    "s041": [
+      "1",
+      "caption",
+      "1"
     ],
     "s043": [
       "010145",
@@ -23948,6 +23998,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s054": [
+      "2",
+      "caption",
+      "2"
+    ],
     "s056": [
       "329182",
       "bound-identifier",
@@ -23982,6 +24037,11 @@ const policy = {
       "2026.12.05",
       "unavailable",
       null
+    ],
+    "s067": [
+      "3",
+      "caption",
+      "3"
     ],
     "s069": [
       "042665",
@@ -24018,6 +24078,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s080": [
+      "4",
+      "caption",
+      "4"
+    ],
     "s082": [
       "034023",
       "bound-identifier",
@@ -24052,6 +24117,11 @@ const policy = {
       "2027.01.15",
       "unavailable",
       null
+    ],
+    "s093": [
+      "5",
+      "caption",
+      "5"
     ],
     "s095": [
       "003495",
@@ -24088,6 +24158,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s106": [
+      "6",
+      "caption",
+      "6"
+    ],
     "s108": [
       "000155",
       "bound-identifier",
@@ -24122,6 +24197,11 @@ const policy = {
       "2027.03.12",
       "unavailable",
       null
+    ],
+    "s119": [
+      "7",
+      "caption",
+      "7"
     ],
     "s121": [
       "001045",
@@ -24158,6 +24238,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s132": [
+      "8",
+      "caption",
+      "8"
+    ],
     "s134": [
       "004995",
       "bound-identifier",
@@ -24192,6 +24277,11 @@ const policy = {
       "2027.02.05",
       "unavailable",
       null
+    ],
+    "s145": [
+      "9",
+      "caption",
+      "9"
     ],
     "s147": [
       "180642",
@@ -24228,6 +24318,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s158": [
+      "10",
+      "caption",
+      "10"
+    ],
     "s160": [
       "078935",
       "bound-identifier",
@@ -24262,6 +24357,11 @@ const policy = {
       "2026.12.22",
       "unavailable",
       null
+    ],
+    "s171": [
+      "11",
+      "caption",
+      "11"
     ],
     "s173": [
       "120115",
@@ -24298,6 +24398,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s184": [
+      "12",
+      "caption",
+      "12"
+    ],
     "s186": [
       "004565",
       "bound-identifier",
@@ -24333,6 +24438,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s197": [
+      "13",
+      "caption",
+      "13"
+    ],
     "s199": [
       "047055",
       "bound-identifier",
@@ -24367,6 +24477,11 @@ const policy = {
       "2027.02.20",
       "unavailable",
       null
+    ],
+    "s210": [
+      "14",
+      "caption",
+      "14"
     ],
     "s212": [
       "298045",

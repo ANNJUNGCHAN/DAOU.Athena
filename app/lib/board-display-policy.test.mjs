@@ -206,3 +206,21 @@ test('sector quotes preserve actual rows without claiming a specimen industry or
   for (const id of ['s025','s036','s047','s052','s069','s072','s075']) assert.equal(text(result, id), '—');
   for (const id of ['s051','s068','s071','s074']) assert.equal(text(result, id), '');
 });
+
+test('subscription-right quotes label response order and keep first observed values', () => {
+  const result = plan('32XM-0', { s023: '-3.56', s024: '합성 첫 종목', s042: '합성 첫 종목', s043: 'J000007D', s049: 0 });
+  assert.equal(text(result, 's002'), '조회 응답 순서');
+  assert.equal(text(result, 's015'), '조회 응답 순서');
+  assert.equal(text(result, 's022'), '첫 수신 종목 등락률');
+  assert.equal(text(result, 's023'), '-3.56%');
+  assert.equal(text(result, 's024'), '합성 첫 종목');
+  assert.equal(text(result, 's032'), '조회 순서 · 최대 14종목 표시');
+  assert.equal(text(result, 's033'), '순서');
+  assert.equal(text(result, 's036'), '시가');
+  assert.equal(text(result, 's038'), '거래량');
+  assert.equal(text(result, 's041'), '1');
+  assert.equal(text(result, 's054'), '2');
+  assert.equal(text(result, 's043'), 'J000007D');
+  assert.equal(text(result, 's049'), '0주');
+  for (const id of ['s020', 's021', 's051', 's052', 's053']) assert.equal(text(result, id), '—');
+});
