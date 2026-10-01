@@ -1319,7 +1319,9 @@ async def _hydrate_operation(
         return unbound(fetch_error)
     if hydrated_results is not None:
         hydrated_results[operation_ref] = (result, arguments)
-    bound = bind_surface_values(operation_ref, result.model_dump(by_alias=True))
+    from athena_api.elw_display_identity import elw_detail_source
+    source = elw_detail_source(payload.board_id, operation_ref, result.model_dump(by_alias=True), target)
+    bound = bind_surface_values(operation_ref, source)
     return (
         {
             "operation_ref": operation_ref,

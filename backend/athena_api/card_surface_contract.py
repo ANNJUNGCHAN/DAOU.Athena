@@ -31,7 +31,9 @@ SURFACE_CONTRACT_VERSION = "card-surface.v1"
 # either one the entry surface causes hydration to merge independently ordered
 # ka10099 and ka10032 rows. Keep the source rows in the semantic workspace until
 # a product-list board with its own entry contract exists.
-_SOURCE_ROW_ONLY_OPERATIONS = frozenset({"base:ka10099"})
+# ka30004 likewise returns ELW disparity rows. No disparity-specific ranking
+# surface is authored; the single-ELW detail is not an honest list destination.
+_SOURCE_ROW_ONLY_OPERATIONS = frozenset({"base:ka10099", "base:ka30004"})
 
 
 def observation_id_for(wire_occurrence_id: str, array_index: int | None = None) -> str:
@@ -206,8 +208,17 @@ def _resolve_slot(
         aligned = _list_field_occurrence(peer_name_occurrence, slot.f)
         if aligned:
             value = _slot_value(slot, aligned, bound, solo_occurrences)
-            if value is not _UNBOUND and value is not _EMPTY:
+            if value is not _UNBOUND:
                 return aligned, value
+            # A name owns this list row. A differently ordered response is not a
+            # join key, even if it also has a value at the same numeric index.
+            owner = aligned.rsplit(".", 1)[0]
+            for binding in slot.bindings:
+                if binding.occurrence_id and binding.occurrence_id.rsplit(".", 1)[0] == owner:
+                    value = _slot_value(slot, binding.occurrence_id, bound, solo_occurrences)
+                    if value is not _UNBOUND:
+                        return binding.occurrence_id, value
+            return None, _UNBOUND
     ranked = sorted(
         enumerate(slot.bindings),
         key=lambda item: (priority.get(item[1].mapping_id, len(priority)), item[0]),
@@ -299,7 +310,10 @@ def _row_key(slot: SurfaceSlot) -> tuple[str, str, int | str] | None:
     return None
 
 
-def _row_name_occurrences(board: BoardTemplate) -> dict[tuple[str, str, int | str], str]:
+def _row_name_occurrences(
+    board: BoardTemplate, bound: Mapping[str, Any], priority: Mapping[str, int],
+    solo_occurrences: frozenset[str],
+) -> dict[tuple[str, str, int | str], str]:
     """같은 되풀이 줄의 종목명 occurrence. 이름·코드·가격이 서로 다른 순위 TR을
     물고 한 행에 섞이는 것을 막는다(실측 2V71-0: ka90003 이름 + ka10034 코드)."""
 
@@ -310,7 +324,8 @@ def _row_name_occurrences(board: BoardTemplate) -> dict[tuple[str, str, int | st
         key = _row_key(slot)
         if key is None:
             continue
-        mapping.setdefault(key, slot.occurrence_id)
+        occurrence, _ = _resolve_slot(slot, bound, priority, solo_occurrences)
+        mapping.setdefault(key, occurrence or slot.occurrence_id)
     return mapping
 
 
@@ -567,7 +582,7 @@ def _board_contract(
     bound = bound_values or {}
     priority = _operation_priority(board, active_operation_refs)
     solo_occurrences = _solo_array_occurrences(board)
-    row_names = _row_name_occurrences(board)
+    row_names = _row_name_occurrences(board, bound, priority, solo_occurrences)
     slot_values: list[dict[str, Any]] = []
     unbound_slots: list[str] = []
     empty_value_slots: list[str] = []
