@@ -575,7 +575,8 @@
   box-sizing: border-box;
 }
 .bs-readable-cell[data-col="0"], [data-bs-layout="3LGC-0"] .bs-readable-cell[data-col="2"],
-.board-surface:is([data-bs-board-id="2Z49-0"], [data-bs-board-id="3TOM-0"]) .bs-readable-cell[data-col="2"] {
+.board-surface:is([data-bs-board-id="2Z49-0"], [data-bs-board-id="3TOM-0"]) .bs-readable-cell[data-col="2"],
+.board-surface:is([data-bs-board-id="4A9H-1"], [data-bs-board-id="4AGN-1"], [data-bs-board-id="4ANS-1"], [data-bs-board-id="4AUX-1"], [data-bs-board-id="2YS8-0"], [data-bs-board-id="2ZBB-0"], [data-bs-board-id="2V71-0"]) .bs-readable-cell[data-col="1"] {
   align-items: flex-start;
   text-align: left;
 }
@@ -755,6 +756,14 @@
 .board-surface [data-node="3TS6-0"] [data-col="1"],
 .board-surface [data-node="3TS6-0"] [data-col="7"],
 .board-surface [data-node="3O8M-0"] { display: none !important; }
+.board-surface[data-bs-board-id="2YS8-0"] .bs-readable-cell:is([data-col="4"], [data-col="5"], [data-col="6"]),
+.board-surface[data-bs-board-id="2ZBB-0"] .bs-readable-cell:is([data-col="2"], [data-col="6"], [data-col="7"]) { display: none !important; }
+.board-surface[data-bs-board-id="2YS8-0"] [data-node="2YWX-0"] { min-width: 270px; flex-shrink: 0; }
+.board-surface[data-bs-board-id="2V71-0"] [data-node="3SGG-0"] { min-width: max-content; }
+.board-surface .bs-filter-popover { max-width: calc(100% - 16px); z-index: 30; }
+.board-surface .bs-filter-popover .bs-filter-option { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; height: auto; min-height: 52px; padding: 10px 12px; }
+.board-surface .bs-filter-option > [data-node] { width: 100%; max-width: 100%; white-space: normal; overflow-wrap: anywhere; font-size: 13px; line-height: 18px; }
+.board-surface .bs-filter-option > [data-node] + [data-node] { font-size: 12px; }
 .board-surface [data-node="3CXU-0"] :is([data-col="5"], [data-col="6"]) { display: none !important; }
 .board-surface:is([data-bs-board-id="31UD-0"], [data-bs-board-id="30ZW-0"], [data-bs-board-id="316O-0"], [data-bs-board-id="2Z49-0"], [data-bs-board-id="3TOM-0"]) :is(.bs-workspace, .bs-primary) { height: auto; min-height: 0; width: 100%; flex-basis: auto; }
 .bs-etf-period { display: flex; flex-direction: column; gap: 20px; padding: 20px 24px; min-width: 0; }

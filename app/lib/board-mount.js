@@ -11,6 +11,7 @@ const staticGraphics = isCjs ? require('./board-static-graphics-data') : lib.Boa
 const etfPeriod = isCjs ? require('./board-etf-period') : lib.BoardEtfPeriod;
 const flowLayout = isCjs ? require('./board-flow-layout') : lib.BoardFlowLayout;
 const rankingResult = isCjs ? require('./board-ranking-result') : lib.BoardRankingResult;
+const popoverLayout = isCjs ? require('./board-popover-layout') : lib.BoardPopoverLayout;
 
 const ROLLUP_MARK = '▸';
 
@@ -1569,6 +1570,13 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  '4A9H-1': { node: '4ABV-1', rows: ['4AE9-1', '4ADS-1', '4ADC-1', '4ACW-1', '4ACG-1', '4AC0-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
+  '4AGN-1': { node: '4AJB-1', rows: ['4ALP-1', '4AL8-1', '4AKS-1', '4AKC-1', '4AJW-1', '4AJG-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
+  '4ANS-1': { node: '4AQG-1', rows: ['4ASU-1', '4ASD-1', '4ARX-1', '4ARH-1', '4AR1-1', '4AQL-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
+  '4AUX-1': { node: '4AXL-1', rows: ['4AZZ-1', '4AZI-1', '4AZ2-1', '4AYM-1', '4AY6-1', '4AXQ-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
+  '2YS8-0': { node: '39D6-0', rows: ['39D7-0', '39DG-0', '39E4-0', '39ES-0', '39M7-0', '39MV-0', '39NJ-0', '39O7-0', '39OV-0'], widths: [52, 190, 130, 110, 0, 0, 0, 190], label: '신용비율 순위', stack: false, compact: true },
+  '2ZBB-0': { node: '384C-0', rows: ['384D-0', '384M-0', '3857-0', '385S-0', '389D-0', '389Y-0', '38AJ-0', '38B4-0', '38BP-0'], widths: [52, 190, 0, 190, 190, 210, 0, 0], label: '대차거래 순위', stack: false, compact: true },
+  '2V71-0': { node: '2WBN-0', rows: ['358S-0', '3594-0', '35C2-0', '35GH-0', '35NC-0', '35OF-0', '35PF-0', '35Q1-0', '35U0-0'], widths: [52, 190, 130, 210, 210, 210, 190, 130], label: '프로그램 매매', stack: false, compact: true },
   '2Z49-0': { node: '3AXF-0', rows: ['3AXG-0', '3AXP-0', '3AY4-0', '3AYJ-0', '3AYY-0', '3AZD-0', '3AZS-0'], widths: [52, 0, 220, 160, 190, 190, 210, 0], label: 'ELW 종목별 순매매', stack: false, compact: true },
   '3TOM-0': { node: '3TS6-0', rows: ['3TUP-0', '3TUA-0', '3TTV-0', '3TTG-0', '3TT1-0', '3TWV-0', '3TXA-0', '3TSM-0', '3TXP-0', '3TY4-0', '3TS7-0'], widths: [52, 0, 220, 160, 190, 190, 210, 0], label: 'ELW 종목별 순매매', stack: false, compact: true },
   '13BC-2': { node: '3IMQ-0', rows: ['3IN3-0', '3INL-0', '3INU-0', '3IO3-0', '3IOC-0', '3IP9-0', '3IPI-0', '3IPR-0', '3IQ0-0'], widths: [96, 120, 120, 180, 88, 110], label: '실시간 체결', stack: false, compact: true },
@@ -2212,6 +2220,7 @@ function relaxOverflowHeights(surface) {
 function relaxOverflowRows(surface) {
   if (!surface || typeof surface.querySelectorAll !== 'function') return [];
   if (typeof getComputedStyle !== 'function' || typeof document === 'undefined') return [];
+  if (popoverLayout) popoverLayout.update(surface);
   for (const hint of surface.querySelectorAll('.bs-readable-hint, .bs-ranking-scroll-hint')) {
     const scroll = hint.classList.contains('bs-ranking-scroll-hint') ? hint.nextElementSibling : hint.previousElementSibling;
     hint.style.display = scroll && scroll.clientWidth > 0 && scroll.scrollWidth > scroll.clientWidth + 1 ? 'block' : 'none';
@@ -2274,6 +2283,7 @@ function relaxOverflowRows(surface) {
       Number(surface.dataset.bsRelaxedRows || 0) + relaxed.length,
     );
   }
+  if (popoverLayout) popoverLayout.update(surface);
   return relaxed;
 }
 
