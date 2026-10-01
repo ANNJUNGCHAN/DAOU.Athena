@@ -80,8 +80,10 @@ function prepare(surface, contract) {
     row.setAttribute('role', 'row');
     for (const slot of slots) {
       const cell = add(row, 'div', 'bs-gold-cell');
+      cell.dataset.goldHistorySlot = slot;
       cell.setAttribute('role', 'cell');
       move(cell, slot);
+      add(cell, 'span', 'bs-gold-missing', '—');
     }
   });
   add(section, 'div', 'bs-gold-empty').setAttribute('role', 'status');
@@ -129,6 +131,17 @@ function update(surface, contract, plan, options = {}) {
     const hasData = slots.some(id => received(bySlot.get(id)));
     const row = surface.querySelector(`[data-gold-row="${index}"]`);
     if (row) row.hidden = !hasData;
+    for (const cell of row?.querySelectorAll('[data-gold-history-slot]') || []) {
+      const hasValue = received(bySlot.get(cell.dataset.goldHistorySlot));
+      cell.hidden = false;
+      cell.style.removeProperty('display');
+      const leaf = cell.querySelector('[data-slot-id]');
+      if (leaf) {
+        leaf.hidden = !hasValue;
+        if (hasValue) leaf.style.removeProperty('display');
+      }
+      cell.querySelector('.bs-gold-missing').hidden = hasValue;
+    }
     visible += Number(hasData);
     waiting = waiting || slots.some(id => pending.has(id));
   });

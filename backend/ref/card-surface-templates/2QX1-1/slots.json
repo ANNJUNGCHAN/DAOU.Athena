@@ -3127,7 +3127,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3313,7 +3313,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3500,7 +3500,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3687,7 +3687,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3874,7 +3874,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4061,7 +4061,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4248,7 +4248,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4435,7 +4435,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
