@@ -11592,6 +11592,11 @@ const policy = {
     ]
   },
   "2XP6-0": {
+    "s002": [
+      "장전 동시호가",
+      "caption",
+      "예상체결 조회"
+    ],
     "s020": [
       "● 실시간 갱신",
       "status",
@@ -11861,6 +11866,11 @@ const policy = {
       "149,000 · 1,180만주",
       "unavailable",
       null
+    ],
+    "s157": [
+      "집계 전",
+      "caption",
+      "미제공"
     ],
     "s160": [
       "● 실시간 갱신 중 · 마지막 반영 08:50:12",
@@ -14683,6 +14693,16 @@ const policy = {
     ],
     "s148": [
       "매도 151,250 · 매수 151,200",
+      "unavailable",
+      null
+    ],
+    "s149": [
+      "정규장 종가 · 전일 종가",
+      "caption",
+      "정규장 종가"
+    ],
+    "s152": [
+      "59.7억주 · 1975.06.11",
       "unavailable",
       null
     ],
@@ -29342,6 +29362,41 @@ const policy = {
       "+1,850 · +1.24%",
       "direction",
       "pred_pre_sig"
+    ],
+    "s124": [
+      "반도체",
+      "unavailable",
+      null
+    ],
+    "s125": [
+      "SK하이닉스",
+      "unavailable",
+      null
+    ],
+    "s126": [
+      "+2.05%",
+      "unavailable",
+      null
+    ],
+    "s127": [
+      "DB하이텍",
+      "unavailable",
+      null
+    ],
+    "s128": [
+      "-0.34%",
+      "unavailable",
+      null
+    ],
+    "s129": [
+      "한미반도체",
+      "unavailable",
+      null
+    ],
+    "s130": [
+      "+4.18%",
+      "unavailable",
+      null
     ],
     "s133": [
       "매도 150,900 · 매수 150,850",

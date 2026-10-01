@@ -1581,11 +1581,15 @@
       "f": "stk_cls",
       "alt_mappings": null,
       "kor": "종목분류",
-      "format": null,
+      "format": {
+        "kind": "text",
+        "prefix": "분류 ",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "종목 셀 코드 옆 종목분류 칩. 1위 행은 같은 자리에 전일대비기호 칩('상한가')이 온다"
+      "note": "공식 ka10027 응답의 종목분류 코드 원문. 코드별 명칭 정의가 없어 보통주 등의 의미를 추정하지 않는다."
     },
     {
       "slot_id": "s055",
@@ -1965,12 +1969,17 @@
       "f": "stk_cls",
       "alt_mappings": null,
       "kor": "종목분류",
-      "format": null,
+      "format": {
+        "kind": "text",
+        "prefix": "분류 ",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목분류 칩 재표시"
+      "dup_note": "종목분류 칩 재표시",
+      "note": "공식 ka10027 응답의 종목분류 코드 원문. 코드별 명칭 정의가 없어 보통주 등의 의미를 추정하지 않는다."
     },
     {
       "slot_id": "s067",
@@ -2350,12 +2359,17 @@
       "f": "stk_cls",
       "alt_mappings": null,
       "kor": "종목분류",
-      "format": null,
+      "format": {
+        "kind": "text",
+        "prefix": "분류 ",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목분류 칩 재표시"
+      "dup_note": "종목분류 칩 재표시",
+      "note": "공식 ka10027 응답의 종목분류 코드 원문. 코드별 명칭 정의가 없어 보통주 등의 의미를 추정하지 않는다."
     },
     {
       "slot_id": "s079",
@@ -2735,12 +2749,17 @@
       "f": "stk_cls",
       "alt_mappings": null,
       "kor": "종목분류",
-      "format": null,
+      "format": {
+        "kind": "text",
+        "prefix": "분류 ",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목분류 칩 재표시"
+      "dup_note": "종목분류 칩 재표시",
+      "note": "공식 ka10027 응답의 종목분류 코드 원문. 코드별 명칭 정의가 없어 보통주 등의 의미를 추정하지 않는다."
     },
     {
       "slot_id": "s091",

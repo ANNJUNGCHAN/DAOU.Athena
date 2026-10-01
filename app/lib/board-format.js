@@ -122,6 +122,8 @@ function formatKoreanUnit(value) {
 }
 
 function withPrecision(numeric, precision) {
+  // Signed wire zero is still zero; Intl otherwise renders JavaScript -0 as -0.
+  if (numeric === 0) numeric = 0;
   if (!Number.isFinite(precision)) return numeric.toLocaleString('ko-KR');
   return numeric.toLocaleString('ko-KR', {
     minimumFractionDigits: precision, maximumFractionDigits: precision,
@@ -313,7 +315,7 @@ function formatSlot(format, raw) {
   }
   const wireSigned = Boolean(wire && (wire.padded || wire.plus || wire.repeated) && wire.signed);
   const toneSource = wireSigned
-    ? (wire.plus ? 1 : -Math.abs(wire.numeric))
+    ? (wire.numeric === 0 ? 0 : wire.plus ? 1 : -Math.abs(wire.numeric))
     : normalized.value;
   const tone = wireSigned ? toneOf(toneSource) : toneFor(spec, toneSource);
 

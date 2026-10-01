@@ -4283,7 +4283,7 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "상장주식수·상장일 — ka10098에 없는 종목 기본정보(원장 귀속은 CC-03)"
+      "unbound_reason": "상장주식수·상장일 미제공 — ka10098 응답에는 종목 기본정보 필드가 없다"
     },
     {
       "slot_id": "s153",
