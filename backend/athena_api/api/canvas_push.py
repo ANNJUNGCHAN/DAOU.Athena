@@ -658,6 +658,8 @@ def _bind_semantic_values(
     card_contract: dict[str, Any],
     operation_ref: str,
     source: Any,
+    *,
+    surface_target: Mapping[str, Any] | None = None,
 ) -> None:
     """Attach only product-safe values while retaining occurrence identity."""
 
@@ -770,7 +772,15 @@ def _bind_semantic_values(
         for observation in observations
     ]
     # 보드 슬롯 값은 같은 source·같은 경로 평가기에서 나온다(표면과 관찰이 갈리지 않게).
-    attach_surface_contract(card_contract, operation_ref, source)
+    surface_source = source
+    if isinstance(source, dict) and surface_target is not None:
+        from athena_api.elw_display_identity import elw_detail_source
+        from athena_api.stock_display_identity import stock_detail_source
+        surface = card_contract.get('surface_contract') or {}
+        board_id = surface.get('board_id', '')
+        surface_source = elw_detail_source(board_id, operation_ref, source, surface_target)
+        surface_source = stock_detail_source(board_id, surface_source, surface_target)
+    attach_surface_contract(card_contract, operation_ref, surface_source)
 
 
 def _integrated_card_contract(
@@ -1102,10 +1112,14 @@ def _initial_surface_contract(
         )
     }
     source_data = source.model_dump(by_alias=True)
+    from athena_api.elw_display_identity import elw_detail_source
+    from athena_api.stock_display_identity import stock_detail_source
     bound: dict[str, Any] = {}
     for operation_ref in board.operation_refs:
         if operation_ref in queried_refs:
-            bound.update(bind_surface_values(operation_ref, source_data))
+            display_source = elw_detail_source(board_id, operation_ref, source_data, target)
+            display_source = stock_detail_source(board_id, display_source, target)
+            bound.update(bind_surface_values(operation_ref, display_source))
     contract = build_board_surface_contract(
         board_id, bound, registry, active_operation_refs=queried_refs
     )
@@ -1320,7 +1334,9 @@ async def _hydrate_operation(
     if hydrated_results is not None:
         hydrated_results[operation_ref] = (result, arguments)
     from athena_api.elw_display_identity import elw_detail_source
+    from athena_api.stock_display_identity import stock_detail_source
     source = elw_detail_source(payload.board_id, operation_ref, result.model_dump(by_alias=True), target)
+    source = stock_detail_source(payload.board_id, source, target)
     bound = bind_surface_values(operation_ref, source)
     return (
         {
@@ -2455,13 +2471,17 @@ async def canvas_render_plan(
             transform_ms=_elapsed_ms(transform_start),
             next_actions=["resolve_again"],
         )
-    _bind_semantic_values(card_contract, operation_ref, call_payload.get("data"))
+    surface_target = dict(verified_plan.arguments)
+    sealed_context = call_payload.get('canvas_context')
+    if isinstance(sealed_context, Mapping) and sealed_context.get('symbol'):
+        surface_target.setdefault('stk_cd', sealed_context['symbol'])
+    _bind_semantic_values(card_contract, operation_ref, call_payload.get("data"), surface_target=surface_target)
     if full_responses:
         initial_contract = _initial_surface_contract(
             card_contract,
             source=full_responses[0],
             tr_id=document.tr_id,
-            target=verified_plan.arguments,
+            target=surface_target,
             selector=selector,
         )
         if initial_contract is not None:
