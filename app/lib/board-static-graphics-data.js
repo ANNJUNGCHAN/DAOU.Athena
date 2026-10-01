@@ -4,6 +4,14 @@
 (function () {
 'use strict';
 const data = {
+  "13BC-2": {
+    "shapes": ["3IFM-0", "3IFN-0", "3JD3-0", "3JD4-0", "3IFL-0", "3JD2-0"],
+    "regions": []
+  },
+  "1JPU-0": {
+    "shapes": ["1JQR-0", "34TX-0", "34TY-0", "1JZI-0", "1JZJ-0", "34TW-0", "1JZH-0"],
+    "regions": []
+  },
   "137X-2": {
     "shapes": ["33C7-0", "33C8-0", "33CE-0", "33CM-0", "33CN-0", "33CT-0", "33D1-0", "33D7-0", "33D8-0"],
     "regions": ["33C2-0"]

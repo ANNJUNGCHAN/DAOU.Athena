@@ -574,7 +574,8 @@
   line-height: 18px;
   box-sizing: border-box;
 }
-.bs-readable-cell[data-col="0"], [data-bs-layout="3LGC-0"] .bs-readable-cell[data-col="2"] {
+.bs-readable-cell[data-col="0"], [data-bs-layout="3LGC-0"] .bs-readable-cell[data-col="2"],
+.board-surface:is([data-bs-board-id="2Z49-0"], [data-bs-board-id="3TOM-0"]) .bs-readable-cell[data-col="2"] {
   align-items: flex-start;
   text-align: left;
 }
@@ -717,6 +718,17 @@
 .board-surface .bs-reduced-content[data-bs-hoisted] { height: auto; min-height: 0; }
 .bs-workspace.bs-reduced-content { align-items: flex-start; }
 .board-surface .bs-rail > .bs-reduced-content { flex-basis: auto; }
+.board-surface :is(.bs-rail.bs-reduced-content, .bs-workspace > .bs-reduced-content) { align-self: flex-start; }
+.board-surface .bs-empty-orderbook-kpi { display: none !important; }
+.board-surface .bs-kpi:has(> .bs-empty-orderbook-kpi) { height: auto; min-height: 0; flex-wrap: wrap; }
+.board-surface .bs-kpi:has(> .bs-empty-orderbook-kpi) > .bs-kpi-cell { width: auto; flex: 1 1 220px; }
+.board-surface .bs-kpi:has(> .bs-empty-orderbook-kpi):not(:has(> .bs-kpi-cell:not(.bs-empty-orderbook-kpi))) { padding-block: 0; }
+/* 이 열은 숨긴 고정 잔량 막대의 제목뿐이다. 실제 가격·수량·합계 행은 유지한다. */
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TU5-1"] [data-row]:not([data-row="10"]) [data-col="3"] { display: none !important; }
+@container board (min-width: 960px) {
+  .board-surface:is([data-bs-board-id="13BC-2"], [data-bs-board-id="2TRW-1"]) .bs-readable-owner.bs-rail { width: 360px; min-width: 0; flex: 0 0 360px; }
+  .board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQF-0"].bs-readable-owner { width: 310px; min-width: 0; flex: 0 0 310px; }
+}
 .board-surface .bs-etf-period-original { display: none !important; }
 .board-surface [data-bs-primary-mockup="true"] { display: none !important; }
 .bs-query-context { padding: 14px 24px 0; font-size: 13px; line-height: 20px; color: var(--color-k-dim); overflow-wrap: anywhere; }

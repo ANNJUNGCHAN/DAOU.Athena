@@ -212,13 +212,17 @@ function mountPlan(contract, values, options = {}) {
   ({ contract, values } = displayPolicy.prepareDisplayInput(contract, values));
   const pending = pendingSet(options);
   const identity = options.identity;
+  const orderbook = identityCardId(contract) === 'CC-04';
   const identitySlots = new Set();
   if (identity && (identity.name || identity.code)
-    && slotList(contract).some((slot) => slot.slot_id === 's001' && slot.kind === 'value')) {
+    && (orderbook || slotList(contract).some((slot) => slot.slot_id === 's001' && slot.kind === 'value'))) {
     values = { ...values };
     const byId = new Map(slotList(contract).map((slot) => [slot.slot_id, slot]));
     const nameSlot = byId.get('s001');
-    const codeSlot = byId.get(['2QFO-2', '2QM7-2'].includes(contract.board_id) ? 's003' : 's002');
+    // 호가의 s002는 상태 또는 종목명이다. 금현물 s003도 종목코드가 아니다.
+    const codeSlot = byId.get(orderbook
+      ? (['13BC-2', '2TRW-1', '3JZ3-0', '2QRP-1', '3JT4-0'].includes(contract.board_id) ? 's003' : null)
+      : (['2QFO-2', '2QM7-2'].includes(contract.board_id) ? 's003' : 's002'));
     // static blank: ETF 탭처럼 응답에 종목코드가 없어 빈 칸인 헤더 — 카드 주제로 채운다.
     // static true/text: 금현물처럼 고정 표기 — 주식 identity로 덮지 않는다.
     const stampIdentity = (slot) => slot && slot.kind === 'value'
@@ -266,18 +270,22 @@ function mountPlan(contract, values, options = {}) {
         ));
     if (identity && identityCardId(contract) === 'CC-04') {
       formatted = { ...formatted, text: restampFixtureText(formatted.text, identity) };
-      if (shouldBlankFixtureMarketStat(slot, formatted.text, identity)) {
+      if (missingBound && shouldBlankFixtureMarketStat(slot, formatted.text, identity)) {
         formatted = { text: '미제공', tone: null, missing: true };
       }
     }
     const verifiedTone = verifiedChartHeaderTone(contract, slot, bound);
     if (verifiedTone) formatted = { ...formatted, tone: verifiedTone.tone };
+    const observedZero = staticText === null && !formatted.missing && isValueSlot(slot)
+      && boardFormat.toNumber(bound && typeof bound === 'object' ? bound.value : bound) === 0;
+    if (observedZero) formatted = { ...formatted, tone: 'flat' };
     assignments.push({
       slotId: slot.slot_id,
       node,
       text: formatted.text,
       tone: formatted.tone,
-      forceFlatTone: Boolean(verifiedTone && verifiedTone.forceFlat),
+      forceFlatTone: Boolean(verifiedTone && verifiedTone.forceFlat)
+        || observedZero,
       missing: formatted.missing,
       // 값이 아니라 디자인이 정한 글자(Paper 라벨·static 문면·빈 칸).
       designText: !override && staticText !== null,
@@ -609,12 +617,13 @@ function setStatusAppearance(el, receiving) {
   if (!el || !el.style) return;
   el.style.color = receiving ? 'var(--color-ok)' : 'var(--color-k-dim)';
   const chip = el.parentElement;
-  if (chip && (chip.children.length === 1 || chip.dataset?.node === '2QFV-2') && chip.style.backgroundColor
+  const dots = chip && typeof chip.querySelectorAll === 'function'
+    ? chip.querySelectorAll('[data-node="34NM-0"], [data-node="34NW-0"], [data-node="2QFW-2"], [data-node="2QKN-2"], [data-node="2QNK-2"], [data-node="153F-2"], [data-node="15BT-2"], [data-node="2TZL-1"], [data-node="2TS6-1"], [data-node="3K7I-0"], [data-node="3LV0-0"], [data-node="1JQ8-0"], [data-node="3NH2-0"]') : [];
+  if (chip && (chip.children.length === 1 || dots.length) && chip.style.backgroundColor
     && typeof chip.closest === 'function' && chip.closest('.bs-header')) {
     chip.style.backgroundColor = receiving ? '#5FCE3F1F' : 'var(--color-k-panel3)';
   }
-  for (const dot of chip && typeof chip.querySelectorAll === 'function'
-    ? chip.querySelectorAll('[data-node="34NM-0"], [data-node="34NW-0"], [data-node="2QFW-2"], [data-node="2QKN-2"], [data-node="2QNK-2"]') : []) {
+  for (const dot of dots) {
     dot.style.backgroundColor = receiving ? 'var(--color-ok)' : 'var(--color-k-dim)';
   }
 }
@@ -662,6 +671,21 @@ function hideUnavailableUnits(surface) {
   surface.__bsUnavailableHidden = next;
 }
 
+function updateOrderbookKpi(surface, options) {
+  if (registry.cardIdFor(surface.dataset?.bsBoardId) !== 'CC-04') return;
+  if (!options.partial) surface.__bsKpiPending = new Set(options.deferredValueSlots || []);
+  const pending = surface.__bsKpiPending || new Set();
+  for (const cell of surface.querySelectorAll('.bs-kpi-cell')) {
+    const values = [...cell.querySelectorAll('[data-bs-value-slot="true"]')];
+    for (const node of values) {
+      if (!node.dataset.missing && node.textContent.trim()) pending.delete(node.dataset.slotId);
+    }
+    const empty = values.length > 0 && values.every(node => !pending.has(node.dataset.slotId)
+      && ['', '—', '미제공', '시각 미제공'].includes(node.textContent.trim()));
+    cell.classList.toggle('bs-empty-orderbook-kpi', empty);
+  }
+}
+
 // DOM 쓰기 층 — 텍스트 노드만 건드린다. 구조·인라인 스타일 원문은 손대지 않는다(D1).
 function applyPlan(root, plan, options = {}) {
   if (!options.partial) {
@@ -677,6 +701,19 @@ function applyPlan(root, plan, options = {}) {
     const el = index.get(assignment.node);
     if (!el) { unbound.push(assignment.slotId); continue; }
     if (elementChildCount(el) > 0) { containers.push(assignment.slotId); continue; }
+    if (options.partial && assignment.valueSlot && !assignment.missing && String(assignment.text).trim()
+      && !el.closest?.('[data-bs-primary-mockup="true"]')) {
+      for (const box of root.__bsEmptyValueHidden || []) {
+        if (box !== el && !box.contains(el)) continue;
+        setHidden(box, false);
+        root.__bsEmptyValueHidden.delete(box);
+      }
+      const row = el.closest?.('[data-bs-row-collapsed="true"]');
+      if (row) {
+        setHidden(row, false);
+        delete row.dataset.bsRowCollapsed;
+      }
+    }
     const compactTime = assignment.missing && assignment.text === '시각 미제공'
       && typeof el.closest === 'function' && !!el.closest('.bs-kpi-cell, .bs-table');
     el.textContent = compactTime || (assignment.missing && assignment.text === boardFormat.missingText() && tableCellOf(el)) ? '—' : assignment.text;
@@ -738,6 +775,7 @@ function applyPlan(root, plan, options = {}) {
     hideEmptyValueUnits(root, plan);
   }
   hideUnavailableUnits(root);
+  updateOrderbookKpi(root, options);
   if (options.partial) {
     return { unbound, unmapped: [], containers, collapsedRows, collapsedColumns };
   }
@@ -878,6 +916,10 @@ function applyRealtimeSlots(surface, contract, values, slotIds, options = {}) {
   if (flowLayout && ['2QFO-2', '2QM7-2'].includes(contract.board_id)) {
     flowLayout.update(surface, contract, mountPlan(contract, values), { ...surface.__bsFlowOptions, ...options });
     updateEmptyTableStates(surface);
+  }
+  if (identityCardId(contract) === 'CC-04') {
+    updateEmptyTableStates(surface);
+    compactReducedContent(surface, contract);
   }
   return { touched: plan.touched, plan, ...report };
 }
@@ -1527,6 +1569,11 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  '2Z49-0': { node: '3AXF-0', rows: ['3AXG-0', '3AXP-0', '3AY4-0', '3AYJ-0', '3AYY-0', '3AZD-0', '3AZS-0'], widths: [52, 0, 220, 160, 190, 190, 210, 0], label: 'ELW 종목별 순매매', stack: false, compact: true },
+  '3TOM-0': { node: '3TS6-0', rows: ['3TUP-0', '3TUA-0', '3TTV-0', '3TTG-0', '3TT1-0', '3TWV-0', '3TXA-0', '3TSM-0', '3TXP-0', '3TY4-0', '3TS7-0'], widths: [52, 0, 220, 160, 190, 190, 210, 0], label: 'ELW 종목별 순매매', stack: false, compact: true },
+  '13BC-2': { node: '3IMQ-0', rows: ['3IN3-0', '3INL-0', '3INU-0', '3IO3-0', '3IOC-0', '3IP9-0', '3IPI-0', '3IPR-0', '3IQ0-0'], widths: [96, 120, 120, 180, 88, 110], label: '실시간 체결', stack: false, compact: true },
+  '2TRW-1': { node: '2TS8-1', rows: ['3JJK-0', '3JQP-0', '3JQY-0', '3JR7-0', '3JRG-0', '3JRP-0', '3JRY-0', '3JS7-0', '3JSG-0'], widths: [96, 120, 120, 180, 88, 110], label: '실시간 체결', stack: false, compact: true },
+  '1JPU-0': { node: '1JQF-0', rows: ['3KMT-0', '3L53-0', '3L5C-0', '3L5L-0', '3L5U-0', '3L63-0', '3L6C-0', '3L6L-0', '3L6U-0', '3LDS-0', '3LE1-0', '3LEA-0', '3LEJ-0', '3LES-0', '3LF1-0', '3LFA-0', '3LFJ-0'], widths: [96, 120, 120, 180, 88, 110], label: '최근 체결', stack: false, compact: true },
   '2RWK-1': { node: '2RYE-1', rows: ['3AUO-0', '3AUW-0', '3AVA-0', '3AVO-0', '3AW2-0', '3AWG-0'], widths: [120, 180, 180, 120, 140, 180, 120], label: '신용·대차', stack: false, compact: true },
   '2ZTA-0': { node: '38MX-0', rows: ['38MY-0', '38NS-0', '38OD-0', '38Y7-0', '38YS-0', '38ZD-0', '38ZY-0', '38N7-0', '390J-0'], widths: [52, 180, 110, 96, 110, 180, 180, 170], label: '한도 소진율', stack: false, compact: true },
   '2XTO-0': { node: '365N-0', rows: ['365S-0', '3660-0', '366I-0', '3670-0', '367I-0', '3680-0'], widths: [52, 180, 120, 100, 180, 180, 180], label: '잔량 순위', stack: false, compact: true },
@@ -1884,8 +1931,8 @@ function compactReducedContent(surface, contract) {
     box.classList.remove('bs-reduced-content');
     if (box.dataset.bsGrowBox === 'true') box.style.setProperty('min-height', box.style.getPropertyValue('--bs-height'));
   }
-  // 실제 차트·호가 모듈의 높이는 해당 렌더러가 소유한다.
-  if (contract.primary && contract.primary.renderer) return;
+  // 실제 차트·호가 모듈만 높이를 소유한다. 형제 보조 영역은 빈 값에 맞춰 줄인다.
+  const primary = contract.primary && contract.primary.renderer ? primaryMountPoint(surface, contract) : null;
   const hidden = [
     ...surface.querySelectorAll('[data-bs-row-collapsed="true"]'),
     ...(surface.__bsEmptyValueHidden || []),
@@ -1893,8 +1940,10 @@ function compactReducedContent(surface, contract) {
   ];
   for (const unit of hidden) {
     if (!unit.hidden) continue;
+    if (primary && primary.contains(unit)) continue;
     for (let box = unit.parentElement; box && box !== surface; box = box.parentElement) {
       if (box.matches('.bs-header, .bs-strip, .bs-footer')) break;
+      if (primary && box.contains(primary)) break;
       // 원래 접힌 값/행을 담던 상자의 높이만 풀고 글자와 앵커는 그대로 둔다.
       box.classList.add('bs-reduced-content');
       if (box.dataset.bsGrowBox === 'true') box.style.setProperty('min-height', '0');
