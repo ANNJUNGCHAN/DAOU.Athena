@@ -15,10 +15,7 @@
     1014
   ],
   "operation_refs": [
-    "base:ka10068",
-    "base:ka10069",
-    "base:ka20068",
-    "base:ka90012"
+    "base:ka10069"
   ],
   "state": {
     "kind": "sort",
@@ -548,13 +545,13 @@
       "node_path": "0/0/1",
       "paper_text": "시장 전체 · 상위 50종목",
       "region": "header",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90012",
-      "f": "dbrt_trde_prps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래내역",
       "format": {
@@ -564,9 +561,11 @@
         "tone": "neutral"
       },
       "paired_with": null,
-      "collapse_group": null,
       "expanded_board": null,
-      "note": "조회 범위 — 시장 전체 대차거래내역에서 상위 50종목"
+      "note": "조회 범위 — 시장 전체 대차거래내역에서 상위 50종목",
+      "static": true,
+      "unbound_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다.",
+      "static_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다."
     },
     {
       "slot_id": "s004",
@@ -781,15 +780,17 @@
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "대차잔고 1위 값 재표시"
+      "note": "대차잔고 1위 값 재표시",
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s014",
@@ -798,19 +799,24 @@
       "node_path": "1/1/2",
       "paper_text": "삼성전자",
       "region": "kpi",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10069",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s015",
@@ -845,20 +851,21 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10068",
-      "f": "dbrt_trde_irds",
+      "mapping_id": "base:ka10069",
+      "f": "rmnd_sum",
       "alt_mappings": null,
       "kor": "대차거래증감",
       "format": {
-        "unit": "shares",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "시장 대차거래증감 — 상위 50 합계 표기"
+      "note": "시장 대차거래증감 — 상위 50 합계 표기",
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s017",
@@ -1431,7 +1438,7 @@
       "node_path": "2/0/1/1/0",
       "paper_text": "1",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1440,8 +1447,8 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_upper_10stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1452,7 +1459,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s042",
@@ -1461,7 +1471,7 @@
       "node_path": "2/0/1/1/1/0",
       "paper_text": "삼성전자",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1477,7 +1487,10 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s043",
@@ -1508,7 +1521,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "paired_note": "주값 셀(s042)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s042)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s044",
@@ -1526,8 +1542,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1541,7 +1557,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "다른 보드에 낱값이 귀속된 필드의 재표시"
+      "note": "다른 보드에 낱값이 귀속된 필드의 재표시",
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s045",
@@ -1559,8 +1578,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -1587,7 +1606,10 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s046",
@@ -1617,7 +1639,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s047",
@@ -1635,8 +1660,8 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_cntrcnt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래체결주수비율",
       "format": {
@@ -1647,7 +1672,10 @@
       },
       "paired_with": "s046",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s048",
@@ -1677,7 +1705,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s049",
@@ -1695,8 +1726,8 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_rpy_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상환주수비율",
       "format": {
@@ -1707,7 +1738,10 @@
       },
       "paired_with": "s048",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s050",
@@ -1738,7 +1772,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s051",
@@ -1769,7 +1805,10 @@
       },
       "paired_with": "s050",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s052",
@@ -1787,8 +1826,8 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "rmnd_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1799,7 +1838,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s053",
@@ -1817,8 +1859,8 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "remn_amt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고금액비율",
       "format": {
@@ -1829,7 +1871,10 @@
       },
       "paired_with": "s052",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s054",
@@ -1847,8 +1892,8 @@
         "row": "0",
         "col": 7
       },
-      "mapping_id": "base:ka20068",
-      "f": "dbrt_trde_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1859,7 +1904,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s055",
@@ -1868,7 +1916,7 @@
       "node_path": "2/0/1/2/0",
       "paper_text": "2",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1877,8 +1925,8 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_upper_10stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1890,7 +1938,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s056",
@@ -1899,7 +1950,7 @@
       "node_path": "2/0/1/2/1/0",
       "paper_text": "SK하이닉스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1916,7 +1967,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s057",
@@ -1948,7 +2001,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "paired_note": "주값 셀(s056)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s056)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 1,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s058",
@@ -1966,8 +2021,8 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1981,7 +2036,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "다른 보드에 낱값이 귀속된 필드의 재표시"
+      "note": "다른 보드에 낱값이 귀속된 필드의 재표시",
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s059",
@@ -1999,8 +2057,8 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -2027,7 +2085,10 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s060",
@@ -2058,7 +2119,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s061",
@@ -2076,8 +2139,8 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_cntrcnt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래체결주수비율",
       "format": {
@@ -2089,7 +2152,10 @@
       "paired_with": "s060",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s062",
@@ -2120,7 +2186,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s063",
@@ -2138,8 +2206,8 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_rpy_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상환주수비율",
       "format": {
@@ -2151,7 +2219,10 @@
       "paired_with": "s062",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s064",
@@ -2182,7 +2253,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s065",
@@ -2214,7 +2287,9 @@
       "paired_with": "s064",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s066",
@@ -2232,8 +2307,8 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "rmnd_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2245,7 +2320,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s067",
@@ -2263,8 +2341,8 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "remn_amt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고금액비율",
       "format": {
@@ -2276,7 +2354,10 @@
       "paired_with": "s066",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s068",
@@ -2294,8 +2375,8 @@
         "row": "1",
         "col": 7
       },
-      "mapping_id": "base:ka20068",
-      "f": "dbrt_trde_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2307,7 +2388,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s069",
@@ -2316,7 +2400,7 @@
       "node_path": "2/0/1/3/0",
       "paper_text": "3",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2325,8 +2409,8 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_upper_10stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2338,7 +2422,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s070",
@@ -2347,7 +2434,7 @@
       "node_path": "2/0/1/3/1/0",
       "paper_text": "현대차",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2364,7 +2451,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s071",
@@ -2396,7 +2485,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "paired_note": "주값 셀(s070)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s070)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 2,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s072",
@@ -2414,8 +2505,8 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2429,7 +2520,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "다른 보드에 낱값이 귀속된 필드의 재표시"
+      "note": "다른 보드에 낱값이 귀속된 필드의 재표시",
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s073",
@@ -2447,8 +2541,8 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -2475,7 +2569,10 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s074",
@@ -2506,7 +2603,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s075",
@@ -2524,8 +2623,8 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_cntrcnt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래체결주수비율",
       "format": {
@@ -2537,7 +2636,10 @@
       "paired_with": "s074",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s076",
@@ -2568,7 +2670,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s077",
@@ -2586,8 +2690,8 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_rpy_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상환주수비율",
       "format": {
@@ -2599,7 +2703,10 @@
       "paired_with": "s076",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s078",
@@ -2630,7 +2737,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s079",
@@ -2662,7 +2771,9 @@
       "paired_with": "s078",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s080",
@@ -2680,8 +2791,8 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "rmnd_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2693,7 +2804,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s081",
@@ -2711,8 +2825,8 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "remn_amt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고금액비율",
       "format": {
@@ -2724,7 +2838,10 @@
       "paired_with": "s080",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s082",
@@ -2742,8 +2859,8 @@
         "row": "2",
         "col": 7
       },
-      "mapping_id": "base:ka20068",
-      "f": "dbrt_trde_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2755,7 +2872,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s083",
@@ -2764,7 +2884,7 @@
       "node_path": "2/0/1/4/0",
       "paper_text": "4",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2773,8 +2893,8 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_upper_10stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2786,7 +2906,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s084",
@@ -2795,7 +2918,7 @@
       "node_path": "2/0/1/4/1/0",
       "paper_text": "KB금융",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2812,7 +2935,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s085",
@@ -2844,7 +2969,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "paired_note": "주값 셀(s084)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s084)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 3,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s086",
@@ -2862,8 +2989,8 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2877,7 +3004,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "다른 보드에 낱값이 귀속된 필드의 재표시"
+      "note": "다른 보드에 낱값이 귀속된 필드의 재표시",
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s087",
@@ -2895,8 +3025,8 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -2923,7 +3053,10 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s088",
@@ -2954,7 +3087,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s089",
@@ -2972,8 +3107,8 @@
         "row": "3",
         "col": 3
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_cntrcnt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래체결주수비율",
       "format": {
@@ -2985,7 +3120,10 @@
       "paired_with": "s088",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s090",
@@ -3016,7 +3154,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s091",
@@ -3034,8 +3174,8 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_rpy_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상환주수비율",
       "format": {
@@ -3047,7 +3187,10 @@
       "paired_with": "s090",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s092",
@@ -3078,7 +3221,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s093",
@@ -3110,7 +3255,9 @@
       "paired_with": "s092",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s094",
@@ -3128,8 +3275,8 @@
         "row": "3",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "rmnd_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3141,7 +3288,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s095",
@@ -3159,8 +3309,8 @@
         "row": "3",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "remn_amt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고금액비율",
       "format": {
@@ -3172,7 +3322,10 @@
       "paired_with": "s094",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s096",
@@ -3190,8 +3343,8 @@
         "row": "3",
         "col": 7
       },
-      "mapping_id": "base:ka20068",
-      "f": "dbrt_trde_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3203,7 +3356,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s097",
@@ -3212,7 +3368,7 @@
       "node_path": "2/0/1/5/0",
       "paper_text": "5",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3221,8 +3377,8 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_upper_10stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3234,7 +3390,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s098",
@@ -3243,7 +3402,7 @@
       "node_path": "2/0/1/5/1/0",
       "paper_text": "NAVER",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3260,7 +3419,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s099",
@@ -3292,7 +3453,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "paired_note": "주값 셀(s098)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s098)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 4,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s100",
@@ -3310,8 +3473,8 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3325,7 +3488,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "다른 보드에 낱값이 귀속된 필드의 재표시"
+      "note": "다른 보드에 낱값이 귀속된 필드의 재표시",
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s101",
@@ -3343,8 +3509,8 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -3371,7 +3537,10 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s102",
@@ -3402,7 +3571,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s103",
@@ -3420,8 +3591,8 @@
         "row": "4",
         "col": 3
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_cntrcnt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래체결주수비율",
       "format": {
@@ -3433,7 +3604,10 @@
       "paired_with": "s102",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s104",
@@ -3464,7 +3638,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s105",
@@ -3482,8 +3658,8 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_rpy_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상환주수비율",
       "format": {
@@ -3495,7 +3671,10 @@
       "paired_with": "s104",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s106",
@@ -3526,7 +3705,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s107",
@@ -3558,7 +3739,9 @@
       "paired_with": "s106",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s108",
@@ -3576,8 +3759,8 @@
         "row": "4",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "rmnd_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3589,7 +3772,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s109",
@@ -3607,8 +3793,8 @@
         "row": "4",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "remn_amt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고금액비율",
       "format": {
@@ -3620,7 +3806,10 @@
       "paired_with": "s108",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s110",
@@ -3638,8 +3827,8 @@
         "row": "4",
         "col": 7
       },
-      "mapping_id": "base:ka20068",
-      "f": "dbrt_trde_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3651,7 +3840,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s111",
@@ -3660,7 +3852,7 @@
       "node_path": "2/0/1/6/0",
       "paper_text": "6",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3669,8 +3861,8 @@
         "row": "5",
         "col": 0
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_upper_10stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3682,7 +3874,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s112",
@@ -3691,7 +3886,7 @@
       "node_path": "2/0/1/6/1/0",
       "paper_text": "POSCO홀딩스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3708,7 +3903,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s113",
@@ -3740,7 +3937,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "paired_note": "주값 셀(s112)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s112)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 5,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s114",
@@ -3758,8 +3957,8 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3773,7 +3972,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "다른 보드에 낱값이 귀속된 필드의 재표시"
+      "note": "다른 보드에 낱값이 귀속된 필드의 재표시",
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s115",
@@ -3791,8 +3993,8 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -3819,7 +4021,10 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s116",
@@ -3850,7 +4055,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s117",
@@ -3868,8 +4075,8 @@
         "row": "5",
         "col": 3
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_cntrcnt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래체결주수비율",
       "format": {
@@ -3881,7 +4088,10 @@
       "paired_with": "s116",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s118",
@@ -3912,7 +4122,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s119",
@@ -3930,8 +4142,8 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_rpy_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상환주수비율",
       "format": {
@@ -3943,7 +4155,10 @@
       "paired_with": "s118",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s120",
@@ -3974,7 +4189,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s121",
@@ -4006,7 +4223,9 @@
       "paired_with": "s120",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s122",
@@ -4024,8 +4243,8 @@
         "row": "5",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "rmnd_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4037,7 +4256,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s123",
@@ -4055,8 +4277,8 @@
         "row": "5",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "remn_amt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고금액비율",
       "format": {
@@ -4068,7 +4290,10 @@
       "paired_with": "s122",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s124",
@@ -4086,8 +4311,8 @@
         "row": "5",
         "col": 7
       },
-      "mapping_id": "base:ka20068",
-      "f": "dbrt_trde_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4099,7 +4324,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s125",
@@ -4108,13 +4336,13 @@
       "node_path": "2/0/1/7/0",
       "paper_text": "7~48위 42종목",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90012",
-      "f": "dbrt_trde_prps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래내역",
       "format": {
@@ -4124,44 +4352,12 @@
         "tone": "neutral"
       },
       "paired_with": null,
-      "collapse_group": {
-        "group_id": "omitted_ranks",
-        "rule": "행 생략",
-        "members": [
-          {
-            "mapping_id": "base:ka90012",
-            "f": "stk_nm"
-          },
-          {
-            "mapping_id": "base:ka90012",
-            "f": "dbrt_trde_cntrcnt"
-          },
-          {
-            "mapping_id": "base:ka90012",
-            "f": "dbrt_trde_rpy"
-          },
-          {
-            "mapping_id": "base:ka90012",
-            "f": "rmnd"
-          },
-          {
-            "mapping_id": "base:ka90012",
-            "f": "remn_amt"
-          },
-          {
-            "mapping_id": "base:ka10069",
-            "f": "rmnd_rt"
-          },
-          {
-            "mapping_id": "base:ka20068",
-            "f": "dbrt_trde_irds"
-          }
-        ],
-        "expanded_board": null
-      },
       "expanded_board": null,
       "note": "7~48위 42종목 접힘 — 낱값은 '20개 더 보기'로 편다",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다.",
+      "static_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다."
     },
     {
       "slot_id": "s126",
@@ -4198,7 +4394,7 @@
       "node_path": "2/0/1/8/0",
       "paper_text": "49",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4207,8 +4403,8 @@
         "row": "6",
         "col": 0
       },
-      "mapping_id": "base:ka90012",
-      "f": "dbrt_trde_prps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래내역",
       "format": {
@@ -4221,7 +4417,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "49·50위는 상위10종목 응답 밖 — 대차거래내역 전체 목록에서 채운다",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s128",
@@ -4230,7 +4429,7 @@
       "node_path": "2/0/1/8/1/0",
       "paper_text": "LG화학",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4239,14 +4438,17 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s129",
@@ -4264,7 +4466,7 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -4277,7 +4479,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "paired_note": "주값 셀(s128)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s128)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 6,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s130",
@@ -4295,8 +4500,8 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4310,7 +4515,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "다른 보드에 낱값이 귀속된 필드의 재표시"
+      "note": "다른 보드에 낱값이 귀속된 필드의 재표시",
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s131",
@@ -4328,8 +4536,8 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -4356,7 +4564,10 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s132",
@@ -4374,7 +4585,7 @@
         "row": "6",
         "col": 3
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "dbrt_trde_cntrcnt",
       "alt_mappings": null,
       "kor": "대차거래체결주수",
@@ -4386,7 +4597,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s133",
@@ -4404,8 +4618,8 @@
         "row": "6",
         "col": 3
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_cntrcnt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래체결주수비율",
       "format": {
@@ -4417,7 +4631,10 @@
       "paired_with": "s132",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s134",
@@ -4435,7 +4652,7 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "dbrt_trde_rpy",
       "alt_mappings": null,
       "kor": "대차거래상환주수",
@@ -4447,7 +4664,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s135",
@@ -4465,8 +4685,8 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_rpy_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상환주수비율",
       "format": {
@@ -4478,7 +4698,10 @@
       "paired_with": "s134",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s136",
@@ -4496,7 +4719,7 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "rmnd",
       "alt_mappings": null,
       "kor": "잔고주수",
@@ -4508,7 +4731,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s137",
@@ -4526,7 +4752,7 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "remn_amt",
       "alt_mappings": null,
       "kor": "잔고금액",
@@ -4539,7 +4765,10 @@
       },
       "paired_with": "s136",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s138",
@@ -4557,8 +4786,8 @@
         "row": "6",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "rmnd_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4570,7 +4799,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s139",
@@ -4588,8 +4820,8 @@
         "row": "6",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "remn_amt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고금액비율",
       "format": {
@@ -4601,7 +4833,10 @@
       "paired_with": "s138",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s140",
@@ -4619,8 +4854,8 @@
         "row": "6",
         "col": 7
       },
-      "mapping_id": "base:ka20068",
-      "f": "dbrt_trde_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4632,7 +4867,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s141",
@@ -4641,7 +4879,7 @@
       "node_path": "2/0/1/9/0",
       "paper_text": "50",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4650,8 +4888,8 @@
         "row": "7",
         "col": 0
       },
-      "mapping_id": "base:ka90012",
-      "f": "dbrt_trde_prps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래내역",
       "format": {
@@ -4664,7 +4902,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "49·50위는 상위10종목 응답 밖 — 대차거래내역 전체 목록에서 채운다",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s142",
@@ -4673,7 +4914,7 @@
       "node_path": "2/0/1/9/1/0",
       "paper_text": "카카오",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4682,7 +4923,7 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -4690,7 +4931,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s143",
@@ -4708,7 +4951,7 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -4722,7 +4965,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "paired_note": "주값 셀(s142)이 라벨로 분류돼 병기 짝을 비운다"
+      "paired_note": "주값 셀(s142)이 라벨로 분류돼 병기 짝을 비운다",
+      "row_index": 7,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s144",
@@ -4740,8 +4985,8 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4755,7 +5000,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "다른 보드에 낱값이 귀속된 필드의 재표시"
+      "note": "다른 보드에 낱값이 귀속된 필드의 재표시",
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s145",
@@ -4773,8 +5021,8 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka90013",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
@@ -4801,7 +5049,10 @@
           "sep": " · "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s146",
@@ -4819,7 +5070,7 @@
         "row": "7",
         "col": 3
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "dbrt_trde_cntrcnt",
       "alt_mappings": null,
       "kor": "대차거래체결주수",
@@ -4832,7 +5083,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s147",
@@ -4850,8 +5103,8 @@
         "row": "7",
         "col": 3
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_cntrcnt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래체결주수비율",
       "format": {
@@ -4863,7 +5116,10 @@
       "paired_with": "s146",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s148",
@@ -4881,7 +5137,7 @@
         "row": "7",
         "col": 4
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "dbrt_trde_rpy",
       "alt_mappings": null,
       "kor": "대차거래상환주수",
@@ -4894,7 +5150,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s149",
@@ -4912,8 +5170,8 @@
         "row": "7",
         "col": 4
       },
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_rpy_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상환주수비율",
       "format": {
@@ -4925,7 +5183,10 @@
       "paired_with": "s148",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s150",
@@ -4943,7 +5204,7 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "rmnd",
       "alt_mappings": null,
       "kor": "잔고주수",
@@ -4956,7 +5217,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s151",
@@ -4974,7 +5237,7 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka90012",
+      "mapping_id": "base:ka10069",
       "f": "remn_amt",
       "alt_mappings": null,
       "kor": "잔고금액",
@@ -4988,7 +5251,9 @@
       "paired_with": "s150",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s152",
@@ -5006,8 +5271,8 @@
         "row": "7",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "rmnd_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5019,7 +5284,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s153",
@@ -5037,8 +5305,8 @@
         "row": "7",
         "col": 6
       },
-      "mapping_id": "base:ka10069",
-      "f": "remn_amt_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고금액비율",
       "format": {
@@ -5050,7 +5318,10 @@
       "paired_with": "s152",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s154",
@@ -5068,8 +5339,8 @@
         "row": "7",
         "col": 7
       },
-      "mapping_id": "base:ka20068",
-      "f": "dbrt_trde_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5081,7 +5352,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다.",
+      "static_reason": "미제공 — 대차 상위 응답의 종목 행에 없는 값. 다른 조회 종목/시장 추이/응답 전체 비율을 이 종목에 복사하지 않는다."
     },
     {
       "slot_id": "s155",
@@ -5090,13 +5364,13 @@
       "node_path": "2/0/2/0",
       "paper_text": "전체 50개 · 상위 6 + 하위 2 표시",
       "region": "primary",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_upper_10stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상위10종목",
       "format": {
@@ -5106,10 +5380,12 @@
         "tone": "neutral"
       },
       "paired_with": null,
-      "collapse_group": null,
       "expanded_board": null,
       "note": "표 전체 건수 · 표시 행수",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다.",
+      "static_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다."
     },
     {
       "slot_id": "s156",
@@ -5383,16 +5659,16 @@
       "alt_mappings": null,
       "kor": "잔고주수비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "divisor": 100
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "note": "잔고비중 최고 종목 값 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s168",
@@ -5449,13 +5725,13 @@
       "node_path": "2/1/1/0/0",
       "paper_text": "대차잔고 상위 6",
       "region": "rail",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10069",
-      "f": "dbrt_trde_upper_10stk",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래상위10종목",
       "format": {
@@ -5465,10 +5741,12 @@
         "tone": "neutral"
       },
       "paired_with": null,
-      "collapse_group": null,
       "expanded_board": null,
       "note": "레일 블록 제목 — 표시 종목 수",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다.",
+      "static_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다."
     },
     {
       "slot_id": "s171",
@@ -5505,19 +5783,24 @@
       "node_path": "2/1/1/1/0",
       "paper_text": "삼성전자",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10069",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s173",
@@ -5536,15 +5819,16 @@
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s174",
@@ -5553,19 +5837,24 @@
       "node_path": "2/1/1/2/0",
       "paper_text": "SK하이닉스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10069",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s175",
@@ -5584,15 +5873,16 @@
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s176",
@@ -5601,19 +5891,24 @@
       "node_path": "2/1/1/3/0",
       "paper_text": "현대차",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10069",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s177",
@@ -5632,15 +5927,16 @@
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s178",
@@ -5649,19 +5945,24 @@
       "node_path": "2/1/1/4/0",
       "paper_text": "KB금융",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10069",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s179",
@@ -5680,15 +5981,16 @@
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s180",
@@ -5697,19 +5999,24 @@
       "node_path": "2/1/1/5/0",
       "paper_text": "NAVER",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10069",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s181",
@@ -5728,15 +6035,16 @@
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s182",
@@ -5745,19 +6053,24 @@
       "node_path": "2/1/1/6/0",
       "paper_text": "POSCO홀딩스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10069",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s183",
@@ -5776,15 +6089,16 @@
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s184",
@@ -5793,13 +6107,13 @@
       "node_path": "2/1/2/0/0",
       "paper_text": "표시 구성 · 상위 50종목",
       "region": "rail",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90012",
-      "f": "dbrt_trde_prps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대차거래내역",
       "format": {
@@ -5809,10 +6123,12 @@
         "tone": "neutral"
       },
       "paired_with": null,
-      "collapse_group": null,
       "expanded_board": null,
       "note": "표시 범위 — 대차거래내역 상위 50종목",
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다.",
+      "static_reason": "미제공 — 실제 수신 건수나 전체 건수는 이 필드의 배열 자체에서 숫자로 추정하지 않는다."
     },
     {
       "slot_id": "s185",

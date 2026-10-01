@@ -9,6 +9,17 @@ const { formatSlot } = require('./board-format');
 const source = id => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
 const text = (id, values, slot) => mountPlan(registry.contractFor(id), values).assignments.find(x => x.slotId === slot)?.text;
 
+test('credit and lending summaries describe their actual ranking source and scaled aggregate', () => {
+  assert.equal(text('2YS8-0', {}, 's014'), '미제공');
+  assert.equal(text('2YS8-0', {s166:'합성가'}, 's166'), '합성가');
+  assert.equal(text('2YS8-0', {}, 's133'), '7');
+  assert.equal(text('2ZBB-0', {}, 's141'), '8');
+  assert.equal(text('2ZBB-0', {s167:'1898'}, 's167'), '18.98%');
+  assert.equal(text('2ZBB-0', {}, 's166'), '조회 전체 잔고주수 비율');
+  for (const slot of ['s125','s126','s156']) assert.equal(text('2ZBB-0', {}, slot), '');
+  for (const slot of ['s172','s174','s176','s178','s180','s182']) assert.equal(text('2ZBB-0', {}, slot), '미제공');
+});
+
 test('investor grids label real dates and times without specimen weekdays or cumulative claims', () => {
   assert.equal(text('3DI2-0', {s030:'20261001'}, 's030'), '2026-10-01');
   for (const slot of ['s038','s040','s042','s044','s046','s154','s156']) assert.equal(text('3DI2-0', {}, slot), '');
