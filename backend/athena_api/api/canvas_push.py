@@ -1712,9 +1712,11 @@ def _correlation(
 def _chart_reload_metadata(
     canvas_kind: str, payload: RenderPlanRequest, verified_arguments: dict[str, Any]
 ) -> dict[str, Any]:
-    if canvas_kind != "chart":
-        return {}
+    # Every read-only card hydrates with the original criteria, including table
+    # sorting and issuer/LP filters. Only chart reload correlation is chart-only.
     metadata: dict[str, Any] = {"operation_args": dict(verified_arguments)}
+    if canvas_kind != "chart":
+        return metadata
     if payload.dataset_id is None and payload.delivery_id is not None:
         metadata["correlation"] = {
             "dataset_id": payload.delivery_id,
