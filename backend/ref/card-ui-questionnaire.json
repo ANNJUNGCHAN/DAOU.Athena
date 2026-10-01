@@ -735,12 +735,43 @@
             "원문만으로는모든카드호출을덮지못하므로유효ELW종목을찾은추가입력이필요"
           ],
           "tested_at": "2026-09-30T22:59:20.542Z"
+        },
+        {
+          "phase": "listing-retest-1",
+          "prompt": "ELW 거래량순 조건검색",
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "15P5-2",
+          "target_coverage": "source_template_confirmed",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/seed-elw-listing-retest-1.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "짧은 한 문장으로 ELW 조회 카드와 거래량순 목록 응답 도착.",
+            "카드 제목은 첫 ELW 종목, 상단 순위 필터도 표시됨.",
+            "실제 종목명과 무관한 NAVER 기초자산 고정 문구와 정적 계약/권리 수치 의심, 출처 확인 필요.",
+            "LP 유동성·LP 보유수량·API 조회 스냅샷 사이 큰 세로 공백과 중첩 세로 스크롤."
+          ],
+          "tested_at": "2026-10-01T00:01:45.053Z",
+          "source_template_id": "15P5-2",
+          "source_metadata_evidence": ".omc/artifacts/card-ui-audit/latest-elw-source-metadata.json",
+          "source_deliveries": [
+            {
+              "created_at": "2026-10-01T00:01:01.670Z"
+            }
+          ]
         }
       ],
-      "call_status": "needs_target",
-      "ui_status": "not_run",
+      "call_status": "passed",
+      "ui_status": "failed",
       "observed_template_id": null,
-      "target_coverage": "not_reached"
+      "target_coverage": "source_template_confirmed"
     },
     {
       "id": "seed-market-vi",
@@ -1270,6 +1301,30 @@
             "아직 데이터 바인딩/레이아웃 원인 미검증"
           ],
           "tested_at": "2026-09-30T22:07:47.934Z"
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 차트 → 상위 화면으로",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "137X-2",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-137X-2-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "상위 복귀로 삼성전자 본래 종목 차트 표시, 가격과 차트 대상 일치.",
+            "전체가로넘침 없음, 세션 표는 내부 가로스크롤 제공.",
+            "투자자 값은 0인데 기관12주체 막대가 양수/음수 도형으로 남아 출처 확인 필요.",
+            "좁은 우측 세션 표에 상태미확인 문구가 장중 행 자리로 보이며 일부 수치 오른쪽 잘림은 내부스크롤 대상."
+          ],
+          "tested_at": "2026-10-01T00:08:42.637Z"
         }
       ],
       "call_status": "passed",
@@ -1346,12 +1401,35 @@
               "created_at": "2026-09-30T22:47:33.257Z"
             }
           ]
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "삼성전자 매수·매도 호가 가격 대화 다시 열기",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "orderbook",
+          "actual_template_id": null,
+          "expected_template_id": "13BC-2",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-13BC-2-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "실시간10단가격·잔량·상대막대가갱신되고0잔량표현은정상.",
+            "원본으로보이는옅은호가막대가왼쪽에별도로남아실제오른쪽막대와이중표시. LP열전행0이며폭이매우넓음.",
+            "정규장선택pill은문자가비어있고상단최우선호가값빈칸,005930상태badge와상태미확인둘이중복."
+          ],
+          "tested_at": "2026-10-01T00:50:17.639Z"
         }
       ],
       "call_status": "passed",
       "ui_status": "failed",
       "observed_template_id": null,
-      "target_coverage": "source_template_confirmed"
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-13K0-2",
@@ -1570,9 +1648,46 @@
       ],
       "ui_steps": [],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=15P5-2]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "listing-retest-1",
+          "prompt": "ELW 거래량순 조건검색",
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "15P5-2",
+          "target_coverage": "source_template_confirmed",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/seed-elw-listing-retest-1.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "짧은 한 문장으로 ELW 조회 카드와 거래량순 목록 응답 도착.",
+            "카드 제목은 첫 ELW 종목, 상단 순위 필터도 표시됨.",
+            "실제 종목명과 무관한 NAVER 기초자산 고정 문구와 정적 계약/권리 수치 의심, 출처 확인 필요.",
+            "LP 유동성·LP 보유수량·API 조회 스냅샷 사이 큰 세로 공백과 중첩 세로 스크롤."
+          ],
+          "tested_at": "2026-10-01T00:01:45.053Z",
+          "source_template_id": "15P5-2",
+          "source_metadata_evidence": ".omc/artifacts/card-ui-audit/latest-elw-source-metadata.json",
+          "source_deliveries": [
+            {
+              "created_at": "2026-10-01T00:01:01.670Z"
+            }
+          ]
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "source_template_confirmed"
     },
     {
       "id": "template-15R0-2",
@@ -1811,12 +1926,35 @@
               "created_at": "2026-09-30T22:44:21.373Z"
             }
           ]
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "삼성전자 종목별 투자자 대화 다시 열기",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "2QFO-2",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2QFO-2-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "투자자별13행이 표시되며 그림은 미제공으로 대체됨.",
+            "주체·매도·매수·순매수·비중5개 머리글과 실제 오른쪽 값 열 정렬이 맞지 않아 오른쪽끝 수치의 제목이 불명확.",
+            "시간별 순매수와 오늘순매수1위의 기준 시각/기간은 미제공이지만 서로다른시계열을요약하는지검토 필요."
+          ],
+          "tested_at": "2026-10-01T00:33:09.918Z"
         }
       ],
       "call_status": "passed",
       "ui_status": "failed",
       "observed_template_id": null,
-      "target_coverage": "source_template_confirmed"
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2QM7-2",
@@ -1861,9 +1999,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2QM7-2]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 종목별 투자자 → 거래원",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "2QM7-2",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2QM7-2-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "거래원 탭 호출 성공. 같은행 상하값의 금액/수량·출처 혼합이 의심되는 서로다른 규모 값 표시.",
+            "20분 지연 집계·갱신중 고정 상태와 093127 시각 표시가 남음.",
+            "일별순매수추이 날짜는 비었지만2/268500등 다른 의미값이남음. 표 내부 행간은 겹치지 않음."
+          ],
+          "tested_at": "2026-10-01T00:34:23.321Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2QRP-1",
@@ -1900,9 +2067,60 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2QRP-1]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "호가 → 시간외",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "orderbook",
+          "actual_template_id": null,
+          "expected_template_id": "2QRP-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2QRP-1-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "시간외상태호출은성공했으나일부조회실패안내동반.",
+            "내역없음표시위에호가열355061주가남음(가격아닌수량혼합).",
+            "구간잔량·체결영역넓은공백과2중세로스크롤. 정규장칩상태미확인으로오표시."
+          ],
+          "tested_at": "2026-10-01T00:51:23.752Z"
+        },
+        {
+          "phase": "initial-bottom",
+          "prompt": null,
+          "action": "시간외 카드 하단으로 스크롤",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "orderbook",
+          "actual_template_id": null,
+          "expected_template_id": "2QRP-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2QRP-1-initial-bottom.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "시간외정보·거래소잔량을300px이상간격으로세로배치해넓은빈공간.",
+            "하단까지이동해도시간외단계별낱값상세로가는명확한클릭항목이보이지않음."
+          ],
+          "tested_at": "2026-10-01T00:51:40.284Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2QX1-1",
@@ -1981,7 +2199,7 @@
         }
       ],
       "prerequisites": [],
-      "status": "failed",
+      "status": "passed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2R3M-1]",
       "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
       "native_evidence": [
@@ -2009,10 +2227,34 @@
             "일별시세기준일10-01행0거래,전일09-30종가269500과현재268500 구분필요"
           ],
           "tested_at": "2026-09-30T22:09:30.898Z"
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "삼성전자 현재시세",
+          "call_status": "passed",
+          "ui_status": "passed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2R3M-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2R3M-1-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "한 문장으로 현재시세 카드 도착, 실제 종목명·가격·호가·체결·일별 표 표시.",
+            "이전 표 열 겹침과 카드 전체 가로 스크롤 해결. 일별 시세 내부 가로 스크롤과 안내문 제공.",
+            "넓은 화면에 좌우 정보가 배치되고 과도한 전체 빈 공간 없음.",
+            "현재 관측 폭2122 및실제자료에서 geometry PASS; 좁은폭/모든탭결과는별도."
+          ],
+          "tested_at": "2026-10-01T00:06:59.076Z"
         }
       ],
       "call_status": "passed",
-      "ui_status": "failed",
+      "ui_status": "passed",
       "observed_template_id": null,
       "target_coverage": "visual_reference_only"
     },
@@ -2078,6 +2320,30 @@
             "카드전체가로스크롤과고정세로빈공간"
           ],
           "tested_at": "2026-09-30T22:10:39.354Z"
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 기업정보",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2RBO-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2RBO-1-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "기업정보 주요 항목이 겹침이나 가로 넘침 없이 화면 안에 배치됨.",
+            "헤더 상태 미확인 배지가 두 번 반복.",
+            "가격 전일대비가 -1,500%로 표시되어 금액/비율 바인딩·형식 확인 필요.",
+            "하단 오른쪽 12% 표시도 결산월 등 잘못 연결된 값인지 계약 확인 필요."
+          ],
+          "tested_at": "2026-10-01T00:09:34.395Z"
         }
       ],
       "call_status": "passed",
@@ -2125,9 +2391,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2RJ7-1]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 기업정보 → 금현물",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2RJ7-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2RJ7-1-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "금현물 탭을 누르면 삼성전자005930 제목·주식차트가 금현물 전용 라벨과 함께 표시됨.",
+            "상단 일부 추가정보조회 실패 안내도 표시. 다른 자산 유형 이동 시 대상 분리 필요.",
+            "오른쪽 작은 체결표에 시각미제공 반복줄바꿈, 예상체결 전일대비 금액이 %로 표시되는 형식 문제."
+          ],
+          "tested_at": "2026-10-01T00:10:42.175Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2ROJ-1",
@@ -2161,9 +2456,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2ROJ-1]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 종목별 투자자 → 프로그램",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "2ROJ-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2ROJ-1-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "프로그램 수급 탭 도착. 표는 보이나 우측 일자가20260930000000로 노출되고2026-10-01은2행으로쪼개짐, 기준일이20,261,001로숫자출력.",
+            "시간별 합계 각행이같은값으로반복하며 증감/베이시스/방향 의미연결검토필요.",
+            "정보가있는반면위KPI중앙뒤 넓은공백이남고 미확인상태는녹색."
+          ],
+          "tested_at": "2026-10-01T00:38:01.018Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2RWK-1",
@@ -2199,9 +2523,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2RWK-1]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 종목별 투자자 → 신용·대차",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "2RWK-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2RWK-1-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "본문5일 표 날짜와 데이터가 표시되고 표열 겹침없음.",
+            "우측 소형시계열날짜가2026-/09-30처럼2줄로쪼개지고값과가까움.",
+            "공매도량 아래금액의주단위와시장잔고/개별잔고출처확인필요. 본문표아래180px가량큰공백."
+          ],
+          "tested_at": "2026-10-01T00:39:07.888Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2S4E-1",
@@ -2240,9 +2593,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2S4E-1]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 종목별 투자자 → 종목 동향",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "2S4E-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2S4E-1-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "요청은삼성전자이고본문시세·수급은삼성전자이지만 제목은동화약품015760_AL로바뀜. 서로다른종목정보혼합.",
+            "본문전일대비가격차이%표시,우측동일값3줄라벨없음.",
+            "아래빈공간및고정장마감확정문구가남음."
+          ],
+          "tested_at": "2026-10-01T00:39:50.366Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2SCE-1",
@@ -2569,6 +2951,52 @@
             "오른쪽 이달잔고증감 상세 진입점 보임, 전체가로넘침 없음"
           ],
           "tested_at": "2026-09-30T23:18:14.531Z"
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 손익·성과",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "2SRV-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2SRV-1-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "빈 거래행이 한 줄 안내로 정리되고 표 열 겹침 사라짐.",
+            "하단 요약이 넓은 화면에서도 좁은 열로 세로 배치되어 수백 px 공백과 전체 세로 스크롤 남음.",
+            "실제 손익 목록이 비어 있어 날짜 값 줄바꿈의 실제 데이터 재검증은 불가."
+          ],
+          "tested_at": "2026-09-30T23:56:15.851Z"
+        },
+        {
+          "phase": "bottom",
+          "prompt": null,
+          "action": "손익·성과 하단 스크롤",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "2SRV-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2SRV-1-bottom.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "각 요약 구역 사이 약 300px 빈 높이 반복.",
+            "오늘 실현 상세 옆 기준일로 추정되는 값이 쉼표 포함 숫자로 표시됨. 슬롯 형식 확인 필요.",
+            "이달 잔고 증감 확장 버튼은 스크롤 후 표시."
+          ],
+          "tested_at": "2026-09-30T23:57:29.891Z"
         }
       ],
       "call_status": "passed",
@@ -2644,6 +3072,30 @@
             "조회 탭만 열었으며 주문 실행은 하지 않음"
           ],
           "tested_at": "2026-09-30T23:18:47.525Z"
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 주문·체결 조회",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "2SYW-1",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2SYW-1-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "빈 주문행은 한 줄 안내로 정리됨, 글자 겹침·가로 넘침 없음.",
+            "하단 요약 두 구역에 큰 높이가 남아 불필요한 세로스크롤.",
+            "상태 미확인인데 주식 현물·실시간·최신순 고정 안내가 잔존.",
+            "조회만 수행했으며 주문 실행 없음."
+          ],
+          "tested_at": "2026-09-30T23:59:36.861Z"
         }
       ],
       "call_status": "passed",
@@ -3248,9 +3700,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2V71-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 종목별 투자자 → 순위",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "2V71-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2V71-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "프로그램순매수 순위 기본화면도달.",
+            "현재가 음수표시,상위50집계와실제8행,오른쪽삼성전자라벨과000660종목코드불일치.",
+            "정렬칩은2줄로잘배치되고외부가로넘침은없지만하단합계값이footer경계에붙음."
+          ],
+          "tested_at": "2026-10-01T00:40:26.323Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2VDA-0",
@@ -3310,6 +3791,30 @@
             "공간대부분빈채세로/가로스크롤존재"
           ],
           "tested_at": "2026-09-30T22:12:07.444Z"
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2VDA-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2VDA-0-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "실제 순위 목록이 도착해 큰 빈 본문 없이 행으로 채워짐.",
+            "표의 종목명·가격·거래량 구분 및 전체 가로넘침 없음.",
+            "오른쪽 종목 요약의 금액 전일대비가 +1,100%로 표시되는 단위 오류.",
+            "오른쪽 최근갱신의 시각미제공이 두줄씩 반복돼 좁고 빽빽함."
+          ],
+          "tested_at": "2026-10-01T00:11:12.011Z"
         }
       ],
       "call_status": "passed",
@@ -3356,9 +3861,39 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2VIN-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → 기본 순위로 복귀 → ETF",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2VIN-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2VIN-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "기본 주식 순위의 ETF 범위 버튼에서 ETF 전체시세 목록으로 이동 성공.",
+            "긴 ETF 명칭도 표 안에 표시되고 전체 가로넘침 없음.",
+            "현재가 하단 금액/% 공통오류. 추적지수 열에 종가가 부호를 달고 반복돼 연결 의미 확인 필요.",
+            "헤더5·행별19/20배지의 의미가 명확하지 않음."
+          ],
+          "tested_at": "2026-10-01T00:20:01.868Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2VO0-0",
@@ -3399,9 +3934,61 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2VO0-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "axis-question-retest-1",
+          "prompt": null,
+          "action": "ELW 잔량 순위 보여줘",
+          "call_status": "failed",
+          "ui_status": "not_run",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2VO0-0",
+          "target_coverage": "not_reached",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2VO0-0-axis-question-retest-1.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "ELW 잔량 순위 버튼은 입력창에 질문을 작성하며 Return으로 실행함.",
+            "응답은 순매수잔량 목록이나 카드 본문은 개별 ELW 계약 상세 형태로 표시됨. 목표 잔량 순위 배치는 미도달.",
+            "개별 ELW 카드의 큰 세로공백은 지속됨."
+          ],
+          "tested_at": "2026-10-01T00:04:56.959Z"
+        },
+        {
+          "phase": "ranking-path-initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → ETF → 3달 → ELW",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2VO0-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2VO0-0-ranking-path-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "실제 ELW 잔량 순위 목록으로 이동됨. 이전 ELW 직접 질문과 달리 정렬 경로는 호출 성공.",
+            "전일대비 가격 차이를 퍼센트로 표시. LP 표기와 상위 KPI 의미는 canonical 감사 필요.",
+            "전체20행과 오른쪽 요약은 가로 넘침·문자 겹침 없이 표시됨."
+          ],
+          "tested_at": "2026-10-01T00:26:00.474Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2WZK-0",
@@ -3445,14 +4032,45 @@
           "action": "sort",
           "from_template_id": "2VIN-0",
           "control": "3달 수익률 높은 순",
-          "visible_text": "3달 수익률 높은 순",
+          "visible_text": "3달",
           "to_template_id": "2WZK-0"
         }
       ],
-      "prerequisites": [],
-      "status": "not_run",
+      "prerequisites": [
+        "실제 초기 검증에서는 기간 수익률 pill이 반응하지 않았고 오른쪽 아래 3달을 눌러 이 배치가 열렸다. 기간 선택 의미와 데이터는 실패로 기록했으며, 새 단일 ETF 기간 조회 UI는 별도 재검증이 필요하다."
+      ],
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2WZK-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → ETF → 3달",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2WZK-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2WZK-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "ETF 기간 수익률 상태로 이동됨. 기간 수익률 pill은 반응하지 않았으나 오른쪽 하단 3달 값 클릭은 작동함.",
+            "1주·1달·3달·1년 첫 행 수익률이 동일하고 1년/기간별 1위에 단순 다음 행 종목명이 표시됨. canonical 출처 감사 대상.",
+            "긴 ETF 이름은 열 내에서 줄바꿈하며 카드 밖 가로 넘침은 관찰되지 않음."
+          ],
+          "tested_at": "2026-10-01T00:25:14.216Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2X5N-0",
@@ -3533,9 +4151,37 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2XA5-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "ELW 순위 → 등락률",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2XA5-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2XA5-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "등락률20행으로 갱신되고 기하 겹침은 관찰되지 않음.",
+            "우측 전일대비는 금액을 퍼센트로 잘못 표시. 조건검색 저장2건, 기어링25.56, 잔존106 등의 출처 확인 필요."
+          ],
+          "tested_at": "2026-10-01T00:26:26.006Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2XG6-0",
@@ -3708,9 +4354,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2XY6-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "ELW 순위 → 근접률",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2XY6-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2XY6-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "근접률 상태는 열렸지만 이름·현재가·근접률은 전부 미제공인데 잔존일·행사가·LP의20행 값은 남아 있어 출처 혼합 의심.",
+            "고정 우측 계약 수치와 조건검색 저장2건의 의미 연결을 수정 대상으로 전달.",
+            "표 자체 겹침은 관찰되지 않음."
+          ],
+          "tested_at": "2026-10-01T00:27:11.976Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2Y47-0",
@@ -3761,9 +4436,37 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2Y47-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "ELW 순위 → 가격급등락",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2Y47-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2Y47-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "실제2개 결과 아래에18개 빈 종목 행이 잔존일·행사가·LP 값 때문에 남아 있음.",
+            "가격차이를 퍼센트로 표시하며 다른 순위의 등락률 상위 KPI가 남아 있음."
+          ],
+          "tested_at": "2026-10-01T00:29:18.980Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2YA8-0",
@@ -3919,9 +4622,36 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2YS8-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "아래 실제 입력 또는 클릭으로 목표 카드에 도달하지 못했다. 정적 탐색 경로만으로 성공을 간주하지 않으며, 수정 후 별도 재검증이 필요하다.",
+      "native_evidence": [
+        {
+          "phase": "navigation-initial",
+          "prompt": null,
+          "action": "수급 순위 → 신용비율 상위",
+          "call_status": "failed",
+          "ui_status": "not_run",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2YS8-0",
+          "target_coverage": "not_reached",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2YS8-0-navigation-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "신용비율상위 칩을실제로클릭했지만 프로그램순매수 화면 유지. 두번째관찰에도전환없음."
+          ],
+          "tested_at": "2026-10-01T00:41:11.504Z"
+        }
+      ],
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "observed_template_id": null,
+      "target_coverage": "not_reached"
     },
     {
       "id": "template-2YXS-0",
@@ -3961,9 +4691,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2YXS-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → 상하한가",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2YXS-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2YXS-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "상하한가 정렬 화면으로 이동하며 조회내역 없음 안내.",
+            "첫도달 KPI에 시각미제공이 큰 글자로 두 줄을 차지해 다른 KPI와 불균형.",
+            "하단 요약의 고정 큰 높이와 불필요한 세로 스크롤 남음."
+          ],
+          "tested_at": "2026-10-01T00:12:09.109Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2Z49-0",
@@ -4010,9 +4769,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2Z49-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "ELW 순위 → 거래원별 순매매",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2Z49-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2Z49-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "전 창구 순위 표시인데 실제 종목 목록이고 창구명이 비어 있음.",
+            "상위 KPI는 순매매 행값을 매수1위·매도1위·외국계합계로 잘못 매핑한 것으로 보이며 정적 증권사명이 남음.",
+            "오른쪽 상세 영역이 거의 비어 있고 5종 표시 안내와 실제3행 불일치."
+          ],
+          "tested_at": "2026-10-01T00:30:00.649Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2ZBB-0",
@@ -4050,9 +4838,36 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2ZBB-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "아래 실제 입력 또는 클릭으로 목표 카드에 도달하지 못했다. 정적 탐색 경로만으로 성공을 간주하지 않으며, 수정 후 별도 재검증이 필요하다.",
+      "native_evidence": [
+        {
+          "phase": "navigation-initial",
+          "prompt": null,
+          "action": "수급 순위 → 대차 상위",
+          "call_status": "failed",
+          "ui_status": "not_run",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2ZBB-0",
+          "target_coverage": "not_reached",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2ZBB-0-navigation-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "대차상위 칩클릭후두번째관찰에도프로그램순매수상태유지."
+          ],
+          "tested_at": "2026-10-01T00:41:40.045Z"
+        }
+      ],
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "observed_template_id": null,
+      "target_coverage": "not_reached"
     },
     {
       "id": "template-2ZHC-0",
@@ -4092,9 +4907,39 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2ZHC-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → 고저가근접",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2ZHC-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2ZHC-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "목록이 채워지고 긴 종목명이 표 안에서 표시됨, 전체 가로넘침 없음.",
+            "가격 전일대비 금액으로 보이는 값들이 %로 표시됨.",
+            "실제 조회시각과 다른 09:4218 조회 정적문구 잔존 의심.",
+            "오른쪽 시각미제공 두줄 반복."
+          ],
+          "tested_at": "2026-10-01T00:12:41.265Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2ZN9-0",
@@ -4141,9 +4986,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2ZN9-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "ELW 순위 → 조건검색",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2ZN9-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2ZN9-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "조건검색8행은 열렸으나 매수호가에 음수가 보이고 잔존일·상장일·행사가·저장조건 활성은 다른 출처 또는 고정표본 의심.",
+            "목록 하단에 대시 하나만 있는 작은 버튼과 넓은 빈 영역이 남음.",
+            "카드 밖 가로 넘침은 관찰되지 않음."
+          ],
+          "tested_at": "2026-10-01T00:31:10.583Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2ZTA-0",
@@ -4181,9 +5055,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2ZTA-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "수급 순위 → 한도소진율 증가",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "2ZTA-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2ZTA-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "정렬전환성공. 외국인보유와한도두열의긴숫자가실제로겹침.",
+            "전종목한도동일scalar반복,최고소진율의값/현대차라벨및우측삼성전자가목록과불일치.",
+            "기준시점전일확정고정표시."
+          ],
+          "tested_at": "2026-10-01T00:42:14.440Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-2ZZ7-0",
@@ -4223,9 +5126,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=2ZZ7-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → 가격급등락",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "2ZZ7-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-2ZZ7-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "실제16개 종목 목록 도착, 표 구조와 열 정렬 정상.",
+            "현재가 아래 금액차이가 퍼센트로 표시되는 공통 단위오류.",
+            "헤더09:4218조회, 최근감지09:41,감지구간09:00~09:42등 실제조회보다 미래의 예시시각 잔존."
+          ],
+          "tested_at": "2026-10-01T00:13:21.314Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-3063-0",
@@ -4262,9 +5194,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=3063-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "수급 순위 → 장중 투자자 상위",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "3063-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-3063-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "장중투자자순위도달.기관·개인 긴수치가인접열로넘어와겹침.",
+            "종목코드439,960/365,330처럼숫자쉼표출력. 오른쪽딥커머스900110은목록첫종목과다름.",
+            "행별기관/개인/합계값이중복되거나서로다른출처로보여canonical감사대상."
+          ],
+          "tested_at": "2026-10-01T00:42:44.073Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-30C1-0",
@@ -4304,9 +5265,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=30C1-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → 거래량갱신",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "30C1-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-30C1-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "실제41건 중20건 표시는 안내됨, 목록·열 정렬과 외부 가로넘침 정상.",
+            "공통 전일대비 금액의 %표시 및 고정09:4218조회 시각 문제.",
+            "오른쪽 배율/거래대금 상위에 값없는 고정 종목명들이 잔존, 최근갱신09:39도 현재시각과 불일치."
+          ],
+          "tested_at": "2026-10-01T00:14:03.870Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-30HY-0",
@@ -4342,9 +5332,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=30HY-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "수급 순위 → 외국인·기관 상위",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "30HY-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-30HY-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "외국인기관정렬상태도달.",
+            "SK텔레콤등종목명과402340_AL등코드가불일치. 우측종목명도다름.",
+            "외국인기관·연속일열밑에거래량값이섞이고하단긴수치가인접열겹침."
+          ],
+          "tested_at": "2026-10-01T00:43:13.391Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-30O1-0",
@@ -4384,9 +5403,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=30O1-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → 매물대집중",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "30O1-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-30O1-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "빈 목록 안내 및 집중 비중 정렬 화면 표시.",
+            "하단 집중요약·가격대분포가 고정 큰 높이를 유지해 불필요한 전체 세로스크롤.",
+            "표 열과 정렬 버튼의 겹침·가로 넘침 없음."
+          ],
+          "tested_at": "2026-10-01T00:14:35.914Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-30TY-0",
@@ -4425,9 +5473,37 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=30TY-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "수급 순위 → 증권사별 상위",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "30TY-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-30TY-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "증권사별상위상태도달.첫행매수·매도큰금액끼리겹침.",
+            "주가등락금액을퍼센트표시,우측상위6종목과본문순위종목불일치,요약일별거래량과금액단위혼합검토필요."
+          ],
+          "tested_at": "2026-10-01T00:43:40.535Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-30ZW-0",
@@ -4468,9 +5544,39 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=30ZW-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → 고저 PER",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "30ZW-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-30ZW-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "PER 순위 목록 도착, 표 글자 겹침·외부 가로넘침 없음.",
+            "최고 PER 요약이 목록 뒤 항목보다 작은 값이라 집계 의미 확인 필요.",
+            "선택종목 고정 삼성전자 문구와 실제 첫행 종목코드가 불일치.",
+            "업종평균 PER 및 행별 업종 배수가 고정 예시인지 확인 필요, 금액/%공통오류 지속."
+          ],
+          "tested_at": "2026-10-01T00:15:27.577Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-316O-0",
@@ -4511,9 +5617,39 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=316O-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → 시가대비 등락",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "316O-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-316O-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "정렬 상태 전환과 목록 표시, 표 열 배치 정상.",
+            "오른쪽 시가대비 상위 종목명들이 현재 첫행 종목과 달라 고정 예시 바인딩 확인 필요.",
+            "현재가 하단 금액을 %로 표시하는 공통 문제 지속.",
+            "시가와 시가대비 값의 행 연결도 공개 계약 확인 필요."
+          ],
+          "tested_at": "2026-10-01T00:16:00.369Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-31CL-0",
@@ -4548,9 +5684,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=31CL-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "수급 순위 → 동일순매매",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "31CL-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-31CL-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "동일순매매8행도달.",
+            "각행의외국인·기관·동반순매수하단수량이옆열침범,전일대비가격%오류.",
+            "우측대부분미제공이지만동반매수고정상태가남고넓은하단빈영역."
+          ],
+          "tested_at": "2026-10-01T00:46:41.065Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-31II-0",
@@ -4590,9 +5755,39 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=31II-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → VI 발동",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "31II-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-31II-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "VI 발동 정렬 카드로 이동, 현재 조회내역 없음 안내.",
+            "발동진행 영역에 한미반도체·정적VI 예시 종목이 남음.",
+            "하단 고정 큰 높이의 빈 공간 반복.",
+            "목표 전체발동 상세 펼침 문구가 접근성 목록에 보이지 않아 추가확인 필요."
+          ],
+          "tested_at": "2026-10-01T00:16:32.591Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-31OF-0",
@@ -4628,9 +5823,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=31OF-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "수급 순위 → 신용융자 가능종목",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "flow",
+          "actual_template_id": null,
+          "expected_template_id": "31OF-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-31OF-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "신용융자가능상태도달.",
+            "종목명과가능여부가전부비어있는데현재가8행과가격%가남아다른조회목록혼합의심.",
+            "우측고정6종목이름과상위50문구/전일확정이남음. 카드가로넘침은없음."
+          ],
+          "tested_at": "2026-10-01T00:48:24.192Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-31UD-0",
@@ -4670,9 +5894,39 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=31UD-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 순위 → 당일·전일 체결량",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "31UD-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-31UD-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "체결 시각별 행은 도착하지만 종목명·순위가 모두 비어 있음.",
+            "전일 체결량 열에 현재 누적체결량처럼 연속증가 값이 나타나 계약 의미 확인 필요.",
+            "전일대비 금액의 %표시 오류와 우측 고정09:00~09:42정규장 문구 잔존.",
+            "표 헤더와 셀의 가로 겹침 없음."
+          ],
+          "tested_at": "2026-10-01T00:17:33.414Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-32S7-0",
@@ -4680,8 +5934,8 @@
       "name": "CC-03 / R01-T7 · 차트 — 업종 지수",
       "scope": "in_scope",
       "channel": "ui-navigation",
-      "seed_id": "seed-stock",
-      "prompt": "삼성전자 최근 3개월 차트",
+      "seed_id": "seed-sector",
+      "prompt": null,
       "expected_card_kind": "instrument",
       "expected_capabilities": [
         "chart"
@@ -4695,19 +5949,43 @@
         "base:ka20008",
         "base:ka20019"
       ],
-      "ui_steps": [
+      "ui_steps": [],
+      "prerequisites": [
+        "이 화면은 업종 차트다. 주식 종목 질문의 차트 탭으로 열지 않는다. 업종을 지정한 별도 입력의 실제 검증이 필요하며, 현재 확정된 최소 입력은 없다."
+      ],
+      "status": "failed",
+      "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=32S7-0]",
+      "route_caveat": "종목 카드의 차트 탭이 잘못된 업종 표본을 열었던 회귀 기록이다. 당시 종목 체결과 업종 이력이 섞였으므로 정상 호출 경로로 사용하지 않는다. 도메인 분리 수정 후 업종 전용 입력은 아직 실제 검증하지 않았다.",
+      "native_evidence": [
         {
-          "action": "tab",
-          "from_template_id": "137X-2",
-          "control": "차트",
-          "visible_text": "차트",
-          "to_template_id": "32S7-0"
+          "phase": "initial",
+          "prompt": null,
+          "action": "삼성전자 현재시세 → 차트",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "instrument",
+          "actual_template_id": null,
+          "expected_template_id": "32S7-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-32S7-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "삼성전자 현재시세에서 차트를 누르면 KOSPI 반도체 제목·업종요약으로 바뀜.",
+            "기존 삼성전자 탭명은 유지되며 차트가 업종 지수 이력 후 삼성전자 가격으로 급격히 이어지는 형태.",
+            "종목/업종 문맥과 실시간 입력 격리 확인 필요.",
+            "넓은 화면의 차트/도구/요약 배치는 겹침 없음."
+          ],
+          "tested_at": "2026-10-01T00:07:35.806Z"
         }
       ],
-      "prerequisites": [],
-      "status": "not_run",
-      "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=32S7-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-32XM-0",
@@ -5093,9 +6371,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=3IGR-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 예수금·결제 → 증거금·보증금 구간별 → 증거금 재원·담보 상세",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "3IGR-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-3IGR-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "상위 화면과 계좌 탭·형제 상세 이동 정상.",
+            "가로 넘침이나 글자 겹침 없음.",
+            "대부분 값 미제공인데 표와 항목 제목만 남는 빈 섹션이 많아 세로 밀도가 낮음."
+          ],
+          "tested_at": "2026-09-30T23:52:25.626Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-3JT4-0",
@@ -5211,9 +6518,38 @@
       "prerequisites": [
         "금현물 조회 권한 및 실제 금현물 종목/계좌"
       ],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=3K7K-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 손익·성과 → 이달 잔고 증감",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "3K7K-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-3K7K-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "확장화면 진입 및 계좌탭/상위복귀 정상.",
+            "조회 기간 미확인인데 08월01일/09월01일 예시 날짜가 제목·표헤더·우측 기간에 잔존.",
+            "가로 넘침·글자 겹침 없으나 미제공 항목과 빈 하단영역 남음."
+          ],
+          "tested_at": "2026-09-30T23:58:17.430Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-3LGC-0",
@@ -5256,9 +6592,38 @@
         }
       ],
       "prerequisites": [],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=3LGC-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 예수금·결제 → 수표 입금·증권 입고·증권 출고",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "3LGC-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-3LGC-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "빈 거래내역 안내는 정상 표시.",
+            "외화정산 제목 아래 빈 영역과 하단 rail이 큰 높이를 유지해 불필요한 전체 세로 스크롤 발생.",
+            "상위 화면·계좌 탭 제공, 가로 넘침 없음."
+          ],
+          "tested_at": "2026-09-30T23:55:44.775Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-3MTJ-0",
@@ -5321,6 +6686,29 @@
             "전체 가로 넘침은 없음"
           ],
           "tested_at": "2026-09-30T23:14:54.198Z"
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 예수금·결제 → D+2 상세",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "3MTJ-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-3MTJ-0-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "오늘·D+1·D+2 행 라벨과 출금가능·예수금 열이 겹침 없이 구분됨.",
+            "D+2 자산 내역 미제공 시 표 헤더 아래 약250px 빈 영역 남음.",
+            "상위/기본 복귀 제공, 가로 넘침 없음."
+          ],
+          "tested_at": "2026-10-01T00:00:22.689Z"
         }
       ],
       "call_status": "passed",
@@ -5402,9 +6790,38 @@
       "prerequisites": [
         "금현물 조회 권한 및 실제 금현물 종목/계좌"
       ],
-      "status": "not_run",
+      "status": "failed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=3NVG-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 예수금·결제 → 외화예수금",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "3NVG-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-3NVG-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "상위/기본 복귀 및 계좌 탭 제공, 가로 넘침 없음.",
+            "통화 표시가 -인데 예수금·주문가능·출금가능 숫자가 있어 통화/단위 계약 확인 필요.",
+            "D+1~D+4 외화예수금과 하단 두 구역이 제목만 남아 빈 영역 차지."
+          ],
+          "tested_at": "2026-09-30T23:54:46.360Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "failed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-3ODO-0",
@@ -5473,6 +6890,29 @@
               "원본금현물KPI는gold endpoint만참조한다는독립계약검증확인"
             ]
           }
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 금현물",
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "3ODO-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-3ODO-0-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "금현물 조회내역 없음 상태이며 주식 KPI는 표시되지 않음.",
+            "고정 09월01일 기준일은 시각 미제공으로 교체됨.",
+            "빈 행은 한 줄 안내로 정리됐지만 하단 요약의 넓은 빈 높이와 전체 세로 스크롤 남음."
+          ],
+          "tested_at": "2026-09-30T23:58:39.508Z"
         }
       ],
       "call_status": "passed",
@@ -5517,7 +6957,7 @@
       "prerequisites": [
         "금현물 조회 권한 및 실제 금현물 종목/계좌"
       ],
-      "status": "failed",
+      "status": "passed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=3OIM-0]",
       "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
       "native_evidence": [
@@ -5542,12 +6982,36 @@
             "기존 금현물잔고 화면이 유지됨"
           ],
           "tested_at": "2026-09-30T23:22:57.277Z"
+        },
+        {
+          "phase": "restart-retest-2",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 금현물 → 금현물 주문·체결 조회",
+          "call_status": "passed",
+          "ui_status": "passed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "3OIM-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-3OIM-0-restart-retest-2.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "이전 실패했던 보조탭 이동이 정상 작동.",
+            "내역없음 안내와 미제공 지표 표시, 상위/기본 복귀 및 계좌탭 제공.",
+            "카드 높이가 내용에 맞고 가로·세로 넘침이나 글자 겹침 없음.",
+            "조회만 수행했으며 주문 입력·실행 없음."
+          ],
+          "tested_at": "2026-09-30T23:59:09.061Z"
         }
       ],
-      "call_status": "failed",
-      "ui_status": "not_run",
+      "call_status": "passed",
+      "ui_status": "passed",
       "observed_template_id": null,
-      "target_coverage": "not_reached"
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-3TCO-0",
@@ -5704,9 +7168,38 @@
       "prerequisites": [
         "금현물 조회 권한 및 실제 금현물 종목/계좌"
       ],
-      "status": "not_run",
+      "status": "passed",
       "coverage_source": "backend/ref/card-surface-templates/index.json#boards[board_id=3UTA-0]",
-      "route_caveat": "정적 색인의 목표 경로다. live 호출·탭 전환·실제 보드 id와 스크린샷이 아직 검증되지 않았다."
+      "route_caveat": "실제 앱에서 아래 기록의 질문 또는 탭 이동으로 해당 배치가 관측됐다. 예상 디자인과의 화면 비교이며 실제 보드 ID는 노출되지 않아 미확정이다. 호출/전환과 UI 검토를 구분하며, 각 회차의 수정 후 재검증 결과를 따로 기록한다.",
+      "native_evidence": [
+        {
+          "phase": "initial",
+          "prompt": null,
+          "action": "보유 종목별 평가 손익 → 예수금·결제 → 부채·미수 상세",
+          "call_status": "passed",
+          "ui_status": "passed",
+          "actual_card_kind": "account",
+          "actual_template_id": null,
+          "expected_template_id": "3UTA-0",
+          "target_coverage": "visual_reference_only",
+          "screenshot_path": ".omc/artifacts/card-ui-audit/native/template-3UTA-0-initial.jpg",
+          "window_size": [
+            2122,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "observations": [
+            "부채·미수·연체 상세와 27항목 안내 표시.",
+            "상위 화면·계좌 탭 이동 제공, 글자 겹침·가로 넘침 없음.",
+            "값 미제공 항목이 많으나 실제 0과 미제공을 구분함."
+          ],
+          "tested_at": "2026-09-30T23:53:06.583Z"
+        }
+      ],
+      "call_status": "passed",
+      "ui_status": "passed",
+      "observed_template_id": null,
+      "target_coverage": "visual_reference_only"
     },
     {
       "id": "template-4A9H-1",
