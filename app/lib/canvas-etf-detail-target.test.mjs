@@ -98,3 +98,23 @@ test('an ETF information request failure is surfaced even when the envelope came
   vm.runInContext(source.slice(a, b), f.context);
   await assert.rejects(f.context.hydrateBoardSlots(f.host, { operation_ref: 'base:ka40004' }, {}), /종목 정보를 불러오지 못했습니다/);
 });
+
+test('state navigation starts at the new header and stale loads cannot move the current card', async () => {
+  const f = fixture('153270');
+  f.state.loadBody = { scrollTop: 1400 };
+  await f.context.switchStateBoard(f.host, '15N5-2', {});
+  assert.equal(f.state.loadBody.scrollTop, 0);
+
+  const settlement = fixture('153270');
+  settlement.state.boardId = '2SKU-1';
+  settlement.state.links = registry.stateLinksFor('2SKU-1');
+  settlement.state.loadBody = { scrollTop: 900 };
+  await settlement.context.switchStateBoard(settlement.host, '3MTJ-0', {});
+  assert.equal(settlement.state.loadBody.scrollTop, 0);
+
+  const stale = fixture('153270');
+  stale.state.loadBody = { scrollTop: 1400 };
+  stale.context.runBoardSurfaceLoad = (_host, _envelope, load) => load(() => false);
+  await stale.context.switchStateBoard(stale.host, '15N5-2', {});
+  assert.equal(stale.state.loadBody.scrollTop, 1400);
+});

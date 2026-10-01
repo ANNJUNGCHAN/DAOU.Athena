@@ -236,7 +236,8 @@ function mountPlan(contract, values, options = {}) {
       identitySlots.add('s001');
     }
     if (identity.code && stampIdentity(codeSlot)) {
-      values[codeSlot.slot_id] = identity.code;
+      values[codeSlot.slot_id] = contract.board_id === '15N5-2'
+        ? { value: identity.code, text: identity.code } : identity.code;
       identitySlots.add(codeSlot.slot_id);
     }
   }
@@ -258,8 +259,8 @@ function mountPlan(contract, values, options = {}) {
     // 카드 자신의 종목 이름·코드는 응답이 채우는 자리가 아니라 **카드의 주제**다.
     // 「응답에 그 값이 없다」는 빈 칸(`static: "blank"`)보다 이쪽이 앞선다 — 실측
     // 15N5-2 `s002`를 빈 칸으로 덮으면 탭을 옮길 때 종목 코드가 사라졌다.
-    const flowSourceDate = contract.board_id === '137X-2' && ['s076', 's091'].includes(slot.slot_id)
-      && slot.format?.kind === 'date';
+    const flowSourceDate = ((contract.board_id === '137X-2' && ['s076', 's091'].includes(slot.slot_id))
+      || (contract.board_id === '2RBO-1' && slot.slot_id === 's103')) && slot.format?.kind === 'date';
     const authoredText = (missingBound || (slot.static && !identitySlots.has(slot.slot_id)))
       ? (missingBound && pending.has(String(slot.slot_id)) && !flowSourceDate ? '' : staticTextOf(slot))
       : null;
@@ -681,6 +682,48 @@ function hideUnavailableUnits(surface) {
   surface.__bsUnavailableHidden = next;
 }
 
+// 수급·예상체결의 빈 응답도 항목명과 상태를 함께 남긴다.
+function updateInstrumentResidualDetails(surface, plan) {
+  const id = surface.dataset?.bsBoardId;
+  const slots = { '137X-2': ['s070', 's072', 's075'], '15N5-2': ['s043', 's044', 's047'], '2RBO-1': ['s064'] }[id];
+  if (!slots) return;
+  const states = surface.__bsInstrumentDetailStates || (surface.__bsInstrumentDetailStates = new Map());
+  for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  const completedMissing = sid => {
+    const state = states.get(sid);
+    return state && !state.pending && (state.missing || state.empty);
+  };
+  for (const sid of slots) {
+    const state = states.get(sid), node = surface.querySelector(`[data-slot-id="${sid}"]`);
+    if (!state || !node) continue;
+    // 값이 없는 작은 그룹도 출처·항목과 대기 상태는 읽을 수 있어야 한다.
+    if (state.pending) node.textContent = '수신 대기';
+    else if (completedMissing(sid)) node.textContent = id === '2RBO-1' ? '미제공' : '—';
+    for (let box = node; box && box !== surface; box = box.parentElement) {
+      if (box.dataset.bsUnavailableHidden === 'true' || surface.__bsEmptyValueHidden?.has(box)) {
+        setHidden(box, false);
+        delete box.dataset.bsUnavailableHidden;
+        surface.__bsEmptyValueHidden?.delete(box);
+      }
+      if (box.matches('.bs-rail, .bs-primary')) break;
+    }
+  }
+  if (id !== '137X-2') return;
+  const section = authoredNode(surface, '14SQ-2');
+  const empty = slots.every(completedMissing);
+  section.classList.toggle('bs-empty-chart-flow', empty);
+  let note = section.querySelector(':scope > .bs-instrument-empty-note');
+  if (empty && !note) {
+    note = layoutGroup(surface.ownerDocument, 'bs-instrument-empty-note');
+    note.setAttribute('role', 'status');
+    note.textContent = '제공된 일별 순매수 데이터가 없습니다';
+    authoredNode(surface, '3C3J-0').after(note);
+  }
+  if (note) note.hidden = !empty;
+  authoredNode(surface, '14SW-2').textContent = empty ? '기관별 상세' : '기관';
+}
+
+
 // 값이 일부라도 있는 계좌 상세는 각 자리를 유지하고, 완전 미제공 묶음만 한 줄로 알린다.
 function updateAccountDetailSections(surface) {
   if (registry.cardIdFor(surface.dataset?.bsBoardId) !== 'CC-01') return;
@@ -745,18 +788,26 @@ function updateAccountResidualDetails(surface, plan) {
       const state = states.get(slot);
       return state && !state.pending && (state.empty || state.missing);
     });
-    section.classList.toggle('bs-account-residual-empty', empty);
+    const pending = id === '2SYW-1' && slots.some(slot => states.get(slot)?.pending)
+      && slots.every(slot => {
+        const state = states.get(slot);
+        return state && (state.pending || state.empty || state.missing);
+      });
+    const compact = empty || pending;
+    section.classList.toggle('bs-account-residual-empty', compact);
     for (const child of section.children) {
       child.classList.toggle('bs-account-detail-navigation',
         child.matches(navigation) || !!child.querySelector(navigation));
     }
     let note = section.querySelector(':scope > .bs-account-residual-note');
-    if (empty && !note) {
+    if (compact && !note) {
       note = layoutGroup(surface.ownerDocument, 'bs-account-empty-note bs-account-residual-note');
-      note.textContent = text;
       section.append(note);
     }
-    if (note) note.hidden = !empty;
+    if (note) {
+      note.textContent = pending ? text.replace(/ 정보 미제공$/, ' 수신 대기') : text;
+      note.hidden = !compact;
+    }
   }
 }
 
@@ -880,6 +931,7 @@ function applyPlan(root, plan, options = {}) {
     hideEmptyValueUnits(root, plan);
   }
   hideUnavailableUnits(root);
+  updateInstrumentResidualDetails(root, plan);
   updateAccountDetailSections(root);
   updateAccountResidualDetails(root, plan);
   updateOrderbookKpi(root, options);

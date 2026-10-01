@@ -1338,9 +1338,12 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   // 표면을 통째로 갈면 컨테이너가 바뀐다 — 같은 panelId를 다른 컨테이너로 열면
   // AITS adapter가 던지므로(aits-chart-panel openPanel) 먼저 닫는다.
   destroyBoardPrimary(state);
-  return runBoardSurfaceLoad(host, envelope, (isCurrent) => (
-    mountBoardState(host, target, envelope, isCurrent)
-  ));
+  return runBoardSurfaceLoad(host, envelope, async (isCurrent) => {
+    const mounted = await mountBoardState(host, target, envelope, isCurrent);
+    // 상태 버튼으로 다른 카드를 열었을 때 이전 표의 스크롤 위치를 넘기지 않는다.
+    if (isCurrent() && state.loadBody) state.loadBody.scrollTop = 0;
+    return mounted;
+  });
 }
 
 function wireStateControls(host, envelope, mounted) {

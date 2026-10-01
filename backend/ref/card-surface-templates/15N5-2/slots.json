@@ -986,7 +986,8 @@
         "sign": false,
         "precision": 2,
         "tone": "neutral",
-        "absolute": true
+        "absolute": true,
+        "prefix": "NAV "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1402,10 +1403,12 @@
       ],
       "kor": "전일대비",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1610,10 +1613,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": " (단위 미확인)"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1639,7 +1641,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "누적 거래량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1971,15 +1974,17 @@
       "alt_mappings": null,
       "kor": "외인순매수",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "시간대별 조회 "
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s044",
@@ -1999,13 +2004,15 @@
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
+        "sign": true,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "change",
+        "prefix": "수익률 조회 "
       },
-      "paired_with": "s043",
+      "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s045",
@@ -2075,13 +2082,15 @@
       "kor": "기관순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
+        "sign": true,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "change",
+        "prefix": "수익률 조회 "
       },
-      "paired_with": "s046",
+      "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s048",
@@ -2475,10 +2484,8 @@
       "alt_mappings": null,
       "kor": "ETF대상지수코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "대상지수 코드 "
       },
       "paired_with": null,
       "collapse_group": null,

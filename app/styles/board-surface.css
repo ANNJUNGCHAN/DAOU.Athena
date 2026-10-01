@@ -604,6 +604,8 @@
 @container board (max-width: 719px) {
   [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] { flex-direction: column; }
   [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] > [data-node] { width: 100%; min-width: 0; flex: 0 0 auto; padding-inline: 0; }
+  [data-bs-layout="3NVG-0"] [data-node="3PBS-0"] { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); height: auto; min-height: 0; }
+  [data-bs-layout="3NVG-0"] [data-node="3PBS-0"] > [data-node] { width: auto; min-width: 0; min-height: 64px; }
 }
 @container readable (max-width: 1069px) { .bs-readable-hint { display: block; } }
 [data-bs-layout="3MTJ-0"] .bs-readable-owner { container-name: readable-settlement; }
@@ -1032,3 +1034,12 @@
 
 /* ETF 전체 시세에는 scalar 순위가 제공되지 않는다. */
 .board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="0"] { display: none; }
+
+/* 받은 수급값과 출처를 보존하고, 완료된 빈 수급만 짧게 알린다. */
+.bs-instrument-empty-note { color:var(--color-k-dim); font-size:12px; line-height:1.6; }
+.board-surface[data-bs-board-id="137X-2"] .bs-empty-chart-flow { height:auto!important; min-height:0!important; }
+.board-surface[data-bs-board-id="137X-2"] .bs-empty-chart-flow :is([data-node="14SS-2"], [data-node="14SY-2"], [data-slot-id="s072"]) { display:none!important; }
+.board-surface[data-bs-board-id="15N5-2"] [data-slot-id="s046"],
+.board-surface[data-bs-board-id="2RBO-1"] [data-slot-id="s065"] { display:none!important; }
+.board-surface[data-bs-board-id="15N5-2"] :is([data-node="3CWV-0"], [data-node="3CX0-0"]) { width:auto!important; min-width:0!important; height:auto!important; text-align:right; }
+.board-surface[data-bs-board-id="15N5-2"] :is([data-node="3CWT-0"], [data-node="3CWY-0"]) { height:auto!important; min-height:36px; gap:12px; }

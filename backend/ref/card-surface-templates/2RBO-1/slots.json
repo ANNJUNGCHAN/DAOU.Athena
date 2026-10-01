@@ -1861,10 +1861,9 @@
       "alt_mappings": [],
       "kor": "예상체결가",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral",
+        "suffix": "원",
         "absolute": true
       },
       "paired_with": null,
@@ -2847,19 +2846,24 @@
       "node_path": "2/1/2/0",
       "paper_text": "오늘의 수급",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 16.0,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10086",
+      "f": "date",
       "alt_mappings": null,
-      "kor": null,
-      "format": null,
+      "kor": "날짜",
+      "format": {
+        "kind": "date",
+        "prefix": "일별주가 수급 · ",
+        "missing_text": "일별주가 수급 · 기준일 미제공"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s104",
@@ -2915,7 +2919,8 @@
           "f": "for_netprps",
           "kor": "외인순매수"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s106",
@@ -2976,7 +2981,8 @@
           "f": "orgn",
           "kor": "기관"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s108",
@@ -3037,7 +3043,8 @@
           "f": "ind",
           "kor": "개인"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s110",

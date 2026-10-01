@@ -1450,8 +1450,11 @@ const policy = {
     ],
     "s062": [
       "대상지수 코스피200",
-      "bound-identifier",
-      "etfobjt_idex_cd"
+      "bound-format",
+      {
+        "kind": "text",
+        "prefix": "대상지수 코드 "
+      }
     ],
     "s070": [
       "대상지수 대비율",

@@ -289,3 +289,30 @@ test('account settlement axes and deposit ledger keep fixed context without spec
   assert.equal(text('3MTJ-0',{s109:'0'},'s109'),'0');
   assert.equal(text('3OIM-0',{s092:'0000512'},'s092'),'0000512');
 });
+
+test('ETF flow quantities retain source captions and index identifiers have a name', () => {
+  const identityPlan = mountPlan(registry.contractFor('15N5-2'), {}, {identity:{code:'153270',name:'합성 ETF'}});
+  assert.equal(identityPlan.assignments.find(s => s.slotId === 's002').text, '153270');
+  assert.equal(text('15N5-2', {s007:'85980.95'}, 's007'), 'NAV 85,980.95');
+  assert.equal(text('15N5-2', {s022:'1455'}, 's022'), '전일비 +1,455원');
+  assert.equal(text('15N5-2', {s028:'82'}, 's028'), '82 (단위 미확인)');
+  assert.equal(text('15N5-2', {s029:'0'}, 's029'), '누적 거래량 0주');
+  assert.equal(text('15N5-2', {s043:'-1234',s044:'0',s047:'99',s062:'201'}, 's043'), '시간대별 조회 -1,234주');
+  assert.equal(text('15N5-2', {s044:'0'}, 's044'), '수익률 조회 0주');
+  assert.equal(text('15N5-2', {s047:'99'}, 's047'), '수익률 조회 +99주');
+  assert.equal(text('15N5-2', {s062:'201'}, 's062'), '대상지수 코드 201');
+  for (const sid of ['s043','s044','s047','s062']) {
+    assert.deepEqual(registry.contractFor('15N5-2').slots.find(s => s.slot_id === sid).format,
+      source('15N5-2').slots.find(s => s.slot_id === sid).format);
+  }
+});
+
+test('company expected price is won and daily flow caption uses the received date', () => {
+  assert.equal(text('2RBO-1', {s064:'-150900'}, 's064'), '150,900원');
+  assert.equal(text('2RBO-1', {s064:'0'}, 's064'), '—');
+  assert.equal(text('2RBO-1', {s103:'20260102'}, 's103'), '일별주가 수급 · 2026-01-02');
+  for (const options of [{}, {emptyValueSlots:['s103']}, {deferredValueSlots:['s103']}]) {
+    const plan = mountPlan(registry.contractFor('2RBO-1'), {}, options);
+    assert.equal(plan.assignments.find(s => s.slotId === 's103').text, '일별주가 수급 · 기준일 미제공');
+  }
+});

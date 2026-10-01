@@ -107,6 +107,7 @@ const LABELS = {
     s064: 'D+2 자산', s067: 'D+2 금액', s106: '오늘', s108: 'D+1', s110: 'D+2' },
 };
 const FORMATS = {
+  '15N5-2': { s062: ['etfobjt_idex_cd', { kind: 'text', prefix: '대상지수 코드 ' }] },
   '2TZN-1': {
     s148: ['cur_prc', { kind: 'number', precision: 2, absolute: true }],
     s150: ['trde_prica', { kind: 'korean', scale: '백만', suffix: '원' }],

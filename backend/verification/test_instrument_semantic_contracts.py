@@ -168,3 +168,23 @@ def test_corrected_owned_boards_remain_loadable():
     registry = get_registry()
     for board in ['31UD-0','2WZK-0','30ZW-0','316O-0','15N5-2','2Z49-0','3TOM-0']:
         assert board in registry.boards
+
+
+def test_company_flow_heading_uses_first_daily_price_response_date():
+    values = values_for('2RBO-1', {'base:ka10086': {'daly_stkpc': [
+        {'date': '20260102', 'for_netprps': '0', 'orgn_netprps': '12', 'ind_netprps': '-12'},
+        {'date': '20260101', 'for_netprps': '100', 'orgn_netprps': '200', 'ind_netprps': '300'},
+    ]}})
+    assert [values[s] for s in ['s103', 's105', 's107', 's109']] == ['20260102', '0', '12', '-12']
+    missing = values_for('2RBO-1', {'base:ka10086': {'daly_stkpc': [{'for_netprps': '0'}]}})
+    assert 's103' not in missing and missing['s105'] == '0'
+
+
+def test_etf_flow_sources_remain_separate_when_only_one_query_responds():
+    values = values_for('15N5-2', {
+        'base:ka40010': {'etftisl_trnsn': [{'for_netprps': '-1234'}]},
+        'base:ka40001': {'etfprft_rt_lst': [{'for_netprps_qty': '0', 'orgn_netprps_qty': '99'}]},
+    })
+    assert [values[s] for s in ['s043', 's044', 's047']] == ['-1234', '0', '99']
+    partial = values_for('15N5-2', {'base:ka40001': {'etfprft_rt_lst': [{'orgn_netprps_qty': '0'}]}})
+    assert partial['s047'] == '0' and not {'s043', 's044'} & partial.keys()
