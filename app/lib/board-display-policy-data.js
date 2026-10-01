@@ -4700,9 +4700,14 @@ const policy = {
       "unavailable",
       null
     ],
-    "s014": [
-      "1회 조회",
-      "unavailable",
+    "s015": [
+      "알림 켜짐",
+      "status",
+      null
+    ],
+    "s018": [
+      "● 실시간 감시 중",
+      "status",
       null
     ],
     "s019": [
@@ -4720,14 +4725,44 @@ const policy = {
       "unavailable",
       null
     ],
+    "s024": [
+      "실시간 감시 · 알림 켜짐",
+      "status",
+      null
+    ],
+    "s025": [
+      "감시 중",
+      "status",
+      null
+    ],
     "s027": [
       "2건",
       "unavailable",
       null
     ],
+    "s029": [
+      "실시간 감시 · 알림 켜짐",
+      "status",
+      null
+    ],
+    "s030": [
+      "감시 중",
+      "status",
+      null
+    ],
     "s032": [
       "0건",
       "unavailable",
+      null
+    ],
+    "s034": [
+      "장 마감 후 판정",
+      "status",
+      null
+    ],
+    "s035": [
+      "중지됨",
+      "status",
       null
     ],
     "s045": [
@@ -4737,8 +4772,8 @@ const policy = {
     ],
     "s047": [
       "거래대금 급증",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s049": [
       "편입",
@@ -4767,8 +4802,8 @@ const policy = {
     ],
     "s058": [
       "거래대금 급증",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s060": [
       "편입",
@@ -4797,8 +4832,8 @@ const policy = {
     ],
     "s069": [
       "거래대금 급증",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s071": [
       "편입",
@@ -4825,6 +4860,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s080": [
+      "20일 신고가",
+      "unavailable",
+      null
+    ],
     "s082": [
       "편입",
       "bound-label",
@@ -4847,8 +4887,8 @@ const policy = {
     ],
     "s091": [
       "거래대금 급증",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s093": [
       "이탈",
@@ -4874,6 +4914,11 @@ const policy = {
       "한미반도체",
       "bound-label",
       "302"
+    ],
+    "s102": [
+      "20일 신고가",
+      "unavailable",
+      null
     ],
     "s104": [
       "편입",
@@ -4917,33 +4962,33 @@ const policy = {
     ],
     "s125": [
       "한미반도체",
-      "bound-label",
-      "302"
+      "unavailable",
+      null
     ],
     "s126": [
       "거래대금 급증",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s128": [
       "삼성전자",
-      "bound-label",
-      "302"
+      "unavailable",
+      null
     ],
     "s129": [
       "거래대금 급증",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s131": [
       "현대차",
-      "bound-label",
-      "302"
+      "unavailable",
+      null
     ],
     "s132": [
       "거래대금 급증",
-      "bound-label",
-      "name"
+      "unavailable",
+      null
     ],
     "s134": [
       "조건식 3개",

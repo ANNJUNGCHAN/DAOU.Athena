@@ -701,7 +701,7 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "조회 모드 선택 상태 — 요청 구분이라 응답 필드가 아니다"
+      "unbound_reason": "조회 모드 선택 옵션 — 요청 조건"
     },
     {
       "slot_id": "s015",
@@ -722,7 +722,9 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "실제 알림·감시·판정 상태는 수신되지 않음"
     },
     {
       "slot_id": "s016",
@@ -785,7 +787,9 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "실제 알림·감시·판정 상태는 수신되지 않음"
     },
     {
       "slot_id": "s019",
@@ -937,7 +941,9 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "실제 알림·감시·판정 상태는 수신되지 않음"
     },
     {
       "slot_id": "s025",
@@ -958,7 +964,9 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "실제 알림·감시·판정 상태는 수신되지 않음"
     },
     {
       "slot_id": "s026",
@@ -1061,7 +1069,9 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "실제 알림·감시·판정 상태는 수신되지 않음"
     },
     {
       "slot_id": "s030",
@@ -1082,7 +1092,9 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "실제 알림·감시·판정 상태는 수신되지 않음"
     },
     {
       "slot_id": "s031",
@@ -1151,15 +1163,9 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10174",
+      "mapping_id": "base:ka10171",
       "f": "seq",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10171",
-          "f": "seq",
-          "kor": "조건검색식 일련번호"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "조건검색식 일련번호",
       "format": {
         "unit": "text",
@@ -1170,7 +1176,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "중지된 조건식 카드 — 실시간 해제(ka10174)가 이 일련번호를 되돌려준다"
+      "note": "중지된 조건식 카드 — 실시간 해제(ka10174)가 이 일련번호를 되돌려준다",
+      "row_index": 2
     },
     {
       "slot_id": "s034",
@@ -1191,7 +1198,9 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "실제 알림·감시·판정 상태는 수신되지 않음"
     },
     {
       "slot_id": "s035",
@@ -1212,7 +1221,9 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "실제 알림·감시·판정 상태는 수신되지 않음"
     },
     {
       "slot_id": "s036",
@@ -1536,8 +1547,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10171",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": null,
@@ -1546,7 +1557,9 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "조건식 카드 밴드 s020과 같은 조건검색식 명 재표시",
-      "row_index": 0
+      "row_index": 0,
+      "static": true,
+      "static_reason": "감지 결과·감지 이력 미제공 — 저장 목록은 발생 이벤트가 아니다"
     },
     {
       "slot_id": "s048",
@@ -1885,8 +1898,8 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10171",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": null,
@@ -1894,7 +1907,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 1,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "감지 결과·감지 이력 미제공 — 저장 목록은 발생 이벤트가 아니다"
     },
     {
       "slot_id": "s059",
@@ -2237,8 +2252,8 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10171",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": null,
@@ -2246,7 +2261,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 2,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "감지 결과·감지 이력 미제공 — 저장 목록은 발생 이벤트가 아니다"
     },
     {
       "slot_id": "s070",
@@ -2589,8 +2606,8 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10171",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2603,7 +2620,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 3,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "감지 결과·감지 이력 미제공 — 저장 목록은 발생 이벤트가 아니다"
     },
     {
       "slot_id": "s081",
@@ -2951,8 +2970,8 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10171",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": null,
@@ -2960,7 +2979,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 4,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "감지 결과·감지 이력 미제공 — 저장 목록은 발생 이벤트가 아니다"
     },
     {
       "slot_id": "s092",
@@ -3303,8 +3324,8 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10171",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3317,7 +3338,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 5,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "감지 결과·감지 이력 미제공 — 저장 목록은 발생 이벤트가 아니다"
     },
     {
       "slot_id": "s103",
@@ -3926,8 +3949,8 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10172",
-      "f": "302",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": {
@@ -3941,7 +3964,9 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "감지 이력 — 표 '종목' 열과 같은 종목명 재표시",
-      "row_index": 0
+      "row_index": 0,
+      "static": true,
+      "static_reason": "감지 이력 미제공 — 일회 검색 결과를 발생 이벤트로 대체하지 않는다"
     },
     {
       "slot_id": "s126",
@@ -3955,8 +3980,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10171",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "조건검색식 명",
       "format": {
@@ -3970,7 +3995,9 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "감지 이력 — 표 '조건식' 열과 같은 조건검색식 명 재표시",
-      "row_index": 0
+      "row_index": 0,
+      "static": true,
+      "static_reason": "감지 결과·감지 이력 미제공 — 저장 목록은 발생 이벤트가 아니다"
     },
     {
       "slot_id": "s127",
@@ -4012,8 +4039,8 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10172",
-      "f": "302",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": {
@@ -4027,7 +4054,9 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "감지 이력 — 표 '종목' 열과 같은 종목명 재표시",
-      "row_index": 1
+      "row_index": 1,
+      "static": true,
+      "static_reason": "감지 이력 미제공 — 일회 검색 결과를 발생 이벤트로 대체하지 않는다"
     },
     {
       "slot_id": "s129",
@@ -4041,8 +4070,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10171",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "조건검색식 명",
       "format": {
@@ -4056,7 +4085,9 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "감지 이력 — 표 '조건식' 열과 같은 조건검색식 명 재표시",
-      "row_index": 0
+      "row_index": 0,
+      "static": true,
+      "static_reason": "감지 결과·감지 이력 미제공 — 저장 목록은 발생 이벤트가 아니다"
     },
     {
       "slot_id": "s130",
@@ -4098,8 +4129,8 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10172",
-      "f": "302",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": {
@@ -4113,7 +4144,9 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "감지 이력 — 표 '종목' 열과 같은 종목명 재표시",
-      "row_index": 2
+      "row_index": 2,
+      "static": true,
+      "static_reason": "감지 이력 미제공 — 일회 검색 결과를 발생 이벤트로 대체하지 않는다"
     },
     {
       "slot_id": "s132",
@@ -4127,8 +4160,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10171",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "조건검색식 명",
       "format": {
@@ -4142,7 +4175,9 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "감지 이력 — 표 '조건식' 열과 같은 조건검색식 명 재표시",
-      "row_index": 0
+      "row_index": 0,
+      "static": true,
+      "static_reason": "감지 결과·감지 이력 미제공 — 저장 목록은 발생 이벤트가 아니다"
     },
     {
       "slot_id": "s133",

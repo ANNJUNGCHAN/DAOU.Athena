@@ -148,6 +148,18 @@ test('account generated display metadata agrees with the canonical slots', () =>
   }
 });
 
+test('condition query preserves the mode control and does not claim monitoring or invent detection history', () => {
+  const result = plan('2UN6-1', { s020: '합성 저장조건', s022: '7' });
+  assert.equal(text(result, 's014'), '1회 조회');
+  assert.equal(text(result, 's020'), '합성 저장조건');
+  for (const id of ['s015', 's018', 's024', 's025', 's029', 's030', 's034', 's035']) {
+    assert.equal(text(result, id), '상태 미확인');
+  }
+  for (const id of ['s047', 's058', 's069', 's125', 's126', 's128', 's129', 's131', 's132']) {
+    assert.equal(text(result, id), '—');
+  }
+});
+
 test('preparation is immutable and requires exact source text provenance', () => {
   const contract = registry.contractFor('137X-2');
   const values = { s005: { value: '000000' }, s018: 0 };

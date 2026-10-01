@@ -30,6 +30,7 @@ from athena_api.canvas_card_registry import (
     resolve_canvas_card,
 )
 from athena_api.canvas_field_registry import get_operation_field_contract
+from athena_api.canvas_condition_query import is_condition_read_plan, render_condition_query
 from athena_api.canvas_transform import (
     build_aits_chart_envelope_data,
     build_compound_generic,
@@ -2707,6 +2708,7 @@ async def canvas_render_query(
     client: OptionalDataClientDep,
     selector: SelectorServiceDep,
     account: AccountAliasDep,
+    ws_client: OptionalWsClientDep = None,
 ) -> JSONResponse:
     # MCP previously used call-query before rebuilding a card without its signed
     # target identity. Keep that endpoint's pre-execution rejection contract for
@@ -2715,6 +2717,12 @@ async def canvas_render_query(
         payload.plan_token, selector.catalog, expected_account=account
     )
     document = selector.catalog.find_exact(verified_plan.operation_ref)
+    # These two condition commands return a read-only page over WebSocket.
+    # Their dedicated path does not loosen query-only or subscription dispatch.
+    if is_condition_read_plan(document, verified_plan):
+        return await render_condition_query(
+            payload, request, response, ws_client, selector, account
+        )
     if document is None or document.kind != "query":
         # This raises before consuming the token or dispatching: order plans keep
         # their sanitized ticket draft and remain available for human confirmation.

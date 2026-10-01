@@ -1117,6 +1117,7 @@ function activateBoardState(state, boardId) {
 function boardMountOptions(host, envelope) {
   return {
     identity: boardMount.boardIdentityFromEnvelope(envelope, boardStateOf(host).values),
+    operationRef: String((envelope && (envelope.operation_ref || envelope.operationRef)) || '').trim(),
     // 백엔드가 「자료가 한 칸도 없다」고 표시한 줄. 마운트가 그 줄만 감춘다.
     emptyRows: boardStateOf(host).emptyRows || [],
     // 실시간 프레임·주문 응답이 오기 전에는 빈 칸으로 두는 잎.
@@ -1985,6 +1986,7 @@ async function showBoardReady(state, host, envelope, mounted, retry) {
     state.loadNode = partial;
   }
   if (mounted) await mountBoardPrimary(host, state.primaryEnvelope || envelope, mounted, retry);
+  window.AthenaLib.ConditionQueryList?.render(host, state.boardId === '2UN6-1' ? envelope : null);
 }
 
 function showBoardLoadError(state, host, error, retry) {
