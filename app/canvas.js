@@ -1025,6 +1025,9 @@ function boardHydrateTarget(envelope, host) {
   const stkCd = cardStkCd(envelope) || args.stk_cd || (envelope && envelope.symbol) || args.symbol;
   if (stkCd) target.stk_cd = stkCd;
   const state = host && host.__athenaBoard;
+  if (state && state.boardId === '3D4I-0' && state.watchlistExpandedSymbol) {
+    target.stk_cd = state.watchlistExpandedSymbol;
+  }
   if (state && state.boardId === '2WZK-0' && state.etfReturnPeriod !== undefined) {
     target.dt = state.etfReturnPeriod;
   }
@@ -1141,6 +1144,7 @@ function boardMountOptions(host, envelope) {
     operationRef: String((envelope && (envelope.operation_ref || envelope.operationRef)) || '').trim(),
     operationArgs: boardHydrateTarget(envelope, host),
     rankingResult: boardStateOf(host).boardId === '4B22-1' ? boardStateOf(host).rankingResult : null,
+    rankingOperationRef: boardStateOf(host).boardId === '4B22-1' ? expandedRankingOperation(boardStateOf(host)) : null,
     onEtfPeriodChange: (dt) => selectEtfReturnPeriod(host, envelope, dt),
     // 백엔드가 「자료가 한 칸도 없다」고 표시한 줄. 마운트가 그 줄만 감춘다.
     emptyRows: boardStateOf(host).emptyRows || [],
@@ -1260,7 +1264,16 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   const target = String(transition.boardId || '');
   if (!target || target === state.boardId) return null;
   if (!state.links.some((link) => link.board_id === target)) return null;
-  const targetRequirement = boardTemplateRegistry.navigationTargetRequirement(target, envelope);
+  // This authored expansion belongs to the first actual watchlist row. The
+  // envelope can still describe a group or an earlier stock, so it is not its target.
+  const watchlistExpansion = state.boardId === '2U5L-1' && target === '3D4I-0';
+  const rowCode = watchlistExpansion && state.values.s029;
+  const watchlistSymbol = String(rowCode && typeof rowCode === 'object'
+    ? (!rowCode.missing ? rowCode.value || '' : '') : rowCode || '').trim();
+  const targetRequirement = watchlistExpansion
+    && (!/^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(watchlistSymbol) || watchlistSymbol === '000000')
+    ? '관심목록 첫 행의 종목코드가 제공된 뒤 펼칠 수 있습니다.'
+    : boardTemplateRegistry.navigationTargetRequirement(target, envelope);
   if (targetRequirement) {
     if (state.navigationNoticeNode) state.navigationNoticeNode.remove();
     const note = errorNote(targetRequirement);
@@ -1273,6 +1286,15 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   if (state.navigationNoticeNode) {
     state.navigationNoticeNode.remove();
     state.navigationNoticeNode = null;
+  }
+  if (watchlistExpansion) {
+    state.watchlistExpandedSymbol = watchlistSymbol;
+    // A refreshed group may have a different first row. Never show a cached
+    // expansion for the previous symbol while the current row is loading.
+    for (const key of ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
+      'emptyRowsByBoard', 'emptyColumnsByBoard', 'emptyValueSlotsByBoard', 'deferredValueSlotsByBoard']) {
+      if (state[key]) state[key].delete(target);
+    }
   }
   if (transition.criteria) {
     state.rankingCriteria = { ...(state.rankingCriteria || {}), ...transition.criteria };
