@@ -2495,12 +2495,32 @@ const policy = {
     ],
     "s003": [
       "005930 · KOSPI · 장중",
-      "bound-identifier",
-      "stk_cd"
+      "unavailable",
+      null
+    ],
+    "s012": [
+      "+1,842억원",
+      "unavailable",
+      null
     ],
     "s013": [
       "5거래일 연속 순매수 · 09:40 기준",
       "time",
+      null
+    ],
+    "s015": [
+      "-1,204억원",
+      "unavailable",
+      null
+    ],
+    "s016": [
+      "금융투자 -842억원",
+      "unavailable",
+      null
+    ],
+    "s018": [
+      "-638억원",
+      "unavailable",
       null
     ],
     "s019": [
@@ -2508,13 +2528,43 @@ const policy = {
       "unavailable",
       null
     ],
-    "s027": [
-      "순매수 순 · 09:40 집계",
-      "time",
+    "s021": [
+      "+368억원",
+      "unavailable",
+      null
+    ],
+    "s022": [
+      "비차익 +1,430억원",
+      "unavailable",
+      null
+    ],
+    "s024": [
+      "2.14조원",
+      "unavailable",
+      null
+    ],
+    "s025": [
+      "거래량 1,420만주 · 체결강도 108.4",
+      "unavailable",
       null
     ],
     "s035": [
       "5일 연속 매수",
+      "unavailable",
+      null
+    ],
+    "s036": [
+      "2,366억원",
+      "unavailable",
+      null
+    ],
+    "s037": [
+      "4,208억원",
+      "unavailable",
+      null
+    ],
+    "s039": [
+      "+122.1만주",
       "unavailable",
       null
     ],
@@ -2523,8 +2573,48 @@ const policy = {
       "unavailable",
       null
     ],
+    "s041": [
+      "+3,214억원",
+      "unavailable",
+      null
+    ],
+    "s043": [
+      "418억원",
+      "unavailable",
+      null
+    ],
+    "s044": [
+      "604억원",
+      "unavailable",
+      null
+    ],
+    "s046": [
+      "+12.3만주",
+      "unavailable",
+      null
+    ],
     "s047": [
       "4.4%",
+      "unavailable",
+      null
+    ],
+    "s048": [
+      "+1,014억원",
+      "unavailable",
+      null
+    ],
+    "s050": [
+      "246억원",
+      "unavailable",
+      null
+    ],
+    "s051": [
+      "312억원",
+      "unavailable",
+      null
+    ],
+    "s053": [
+      "+4.4만주",
       "unavailable",
       null
     ],
@@ -2533,8 +2623,48 @@ const policy = {
       "unavailable",
       null
     ],
+    "s055": [
+      "+214억원",
+      "unavailable",
+      null
+    ],
+    "s057": [
+      "110억원",
+      "unavailable",
+      null
+    ],
+    "s058": [
+      "86억원",
+      "unavailable",
+      null
+    ],
+    "s060": [
+      "-1.6만주",
+      "unavailable",
+      null
+    ],
     "s061": [
       "0.6%",
+      "unavailable",
+      null
+    ],
+    "s062": [
+      "-64억원",
+      "unavailable",
+      null
+    ],
+    "s064": [
+      "102억원",
+      "unavailable",
+      null
+    ],
+    "s065": [
+      "64억원",
+      "unavailable",
+      null
+    ],
+    "s067": [
+      "-2.5만주",
       "unavailable",
       null
     ],
@@ -2543,8 +2673,48 @@ const policy = {
       "unavailable",
       null
     ],
+    "s069": [
+      "-92억원",
+      "unavailable",
+      null
+    ],
+    "s071": [
+      "82억원",
+      "unavailable",
+      null
+    ],
+    "s072": [
+      "38억원",
+      "unavailable",
+      null
+    ],
+    "s074": [
+      "-2.9만주",
+      "unavailable",
+      null
+    ],
     "s075": [
       "1.0%",
+      "unavailable",
+      null
+    ],
+    "s076": [
+      "-118억원",
+      "unavailable",
+      null
+    ],
+    "s078": [
+      "120억원",
+      "unavailable",
+      null
+    ],
+    "s079": [
+      "54억원",
+      "unavailable",
+      null
+    ],
+    "s081": [
+      "-4.4만주",
       "unavailable",
       null
     ],
@@ -2553,8 +2723,48 @@ const policy = {
       "unavailable",
       null
     ],
+    "s083": [
+      "-280억원",
+      "unavailable",
+      null
+    ],
+    "s085": [
+      "310억원",
+      "unavailable",
+      null
+    ],
+    "s086": [
+      "214억원",
+      "unavailable",
+      null
+    ],
+    "s088": [
+      "-6.4만주",
+      "unavailable",
+      null
+    ],
     "s089": [
       "2.3%",
+      "unavailable",
+      null
+    ],
+    "s090": [
+      "-286억원",
+      "unavailable",
+      null
+    ],
+    "s092": [
+      "310억원",
+      "unavailable",
+      null
+    ],
+    "s093": [
+      "168억원",
+      "unavailable",
+      null
+    ],
+    "s095": [
+      "-9.4만주",
       "unavailable",
       null
     ],
@@ -2563,8 +2773,33 @@ const policy = {
       "unavailable",
       null
     ],
+    "s097": [
+      "-286억원",
+      "unavailable",
+      null
+    ],
+    "s099": [
+      "590억원",
+      "unavailable",
+      null
+    ],
+    "s100": [
+      "386억원",
+      "unavailable",
+      null
+    ],
+    "s102": [
+      "-13.5만주",
+      "unavailable",
+      null
+    ],
     "s103": [
       "4.9%",
+      "unavailable",
+      null
+    ],
+    "s104": [
+      "-524억원",
       "unavailable",
       null
     ],
@@ -2573,8 +2808,43 @@ const policy = {
       "unavailable",
       null
     ],
+    "s107": [
+      "4,480억원",
+      "unavailable",
+      null
+    ],
+    "s108": [
+      "3,842억원",
+      "unavailable",
+      null
+    ],
+    "s110": [
+      "-42.3만주",
+      "unavailable",
+      null
+    ],
     "s111": [
       "15.2%",
+      "unavailable",
+      null
+    ],
+    "s112": [
+      "-1,306억원",
+      "unavailable",
+      null
+    ],
+    "s114": [
+      "1,946억원",
+      "unavailable",
+      null
+    ],
+    "s115": [
+      "1,104억원",
+      "unavailable",
+      null
+    ],
+    "s117": [
+      "-55.8만주",
       "unavailable",
       null
     ],
@@ -2583,8 +2853,28 @@ const policy = {
       "unavailable",
       null
     ],
+    "s119": [
+      "-1,486억원",
+      "unavailable",
+      null
+    ],
     "s121": [
       "소계 · 8개 주체",
+      "unavailable",
+      null
+    ],
+    "s122": [
+      "3,868억원",
+      "unavailable",
+      null
+    ],
+    "s123": [
+      "2,664억원",
+      "unavailable",
+      null
+    ],
+    "s125": [
+      "-79.8만주",
       "unavailable",
       null
     ],
@@ -2593,8 +2883,78 @@ const policy = {
       "unavailable",
       null
     ],
+    "s127": [
+      "-1,842억원",
+      "unavailable",
+      null
+    ],
+    "s128": [
+      "12개 주체 · 기관계 소계 포함 · 잠정 09:40 집계 · 확정 18:00 반영",
+      "time",
+      null
+    ],
     "s130": [
       "오늘 상위 5",
+      "unavailable",
+      null
+    ],
+    "s133": [
+      "+842억원",
+      "unavailable",
+      null
+    ],
+    "s135": [
+      "+516억원",
+      "unavailable",
+      null
+    ],
+    "s137": [
+      "+308억원",
+      "unavailable",
+      null
+    ],
+    "s140": [
+      "-604억원",
+      "unavailable",
+      null
+    ],
+    "s142": [
+      "-428억원",
+      "unavailable",
+      null
+    ],
+    "s144": [
+      "-312억원",
+      "unavailable",
+      null
+    ],
+    "s148": [
+      "3.42%",
+      "unavailable",
+      null
+    ],
+    "s150": [
+      "1,284만주",
+      "unavailable",
+      null
+    ],
+    "s152": [
+      "4,208억원",
+      "unavailable",
+      null
+    ],
+    "s154": [
+      "0.86%",
+      "unavailable",
+      null
+    ],
+    "s158": [
+      "+368억원",
+      "unavailable",
+      null
+    ],
+    "s160": [
+      "+1,430억원",
       "unavailable",
       null
     ],
@@ -2608,35 +2968,50 @@ const policy = {
       "time",
       null
     ],
+    "s166": [
+      "+1,842억원",
+      "unavailable",
+      null
+    ],
+    "s168": [
+      "-1,204억원",
+      "unavailable",
+      null
+    ],
+    "s170": [
+      "-638억원",
+      "unavailable",
+      null
+    ],
     "s171": [
       "09:15",
-      "bound-time",
-      "20"
+      "time",
+      null
     ],
     "s172": [
       "09:20",
-      "bound-time",
-      "20"
+      "time",
+      null
     ],
     "s173": [
       "09:25",
-      "bound-time",
-      "20"
+      "time",
+      null
     ],
     "s174": [
       "09:30",
-      "bound-time",
-      "20"
+      "time",
+      null
     ],
     "s175": [
       "09:35",
-      "bound-time",
-      "20"
+      "time",
+      null
     ],
     "s176": [
       "09:40",
-      "bound-time",
-      "20"
+      "time",
+      null
     ],
     "s177": [
       "장중 실시간 · 투자자·거래원 집계 갱신 중",
@@ -2647,22 +3022,42 @@ const policy = {
   "2QM7-2": {
     "s001": [
       "삼성전자 수급",
-      "bound-label",
-      "stk_nm"
+      "unavailable",
+      null
+    ],
+    "s002": [
+      "20분 지연",
+      "status",
+      null
     ],
     "s003": [
       "005930 · KOSPI · 장중",
-      "bound-identifier",
-      "stk_cd"
+      "unavailable",
+      null
     ],
     "s011": [
       "모건스탠리",
-      "bound-label",
-      "mmcm_nm"
+      "unavailable",
+      null
+    ],
+    "s012": [
+      "+842억원",
+      "unavailable",
+      null
     ],
     "s013": [
       "외국계 창구 · 09:22 기준",
       "time",
+      null
+    ],
+    "s015": [
+      "+1,666억원",
+      "unavailable",
+      null
+    ],
+    "s016": [
+      "매수추정 4,182억원 · 매도추정 2,516억원",
+      "unavailable",
       null
     ],
     "s018": [
@@ -2672,8 +3067,13 @@ const policy = {
     ],
     "s021": [
       "다이와",
-      "bound-label",
-      "sel_upper_scesn_ori"
+      "unavailable",
+      null
+    ],
+    "s022": [
+      "전일 4위 → 오늘 9위",
+      "unavailable",
+      null
     ],
     "s024": [
       "48.7%",
@@ -2685,10 +3085,10 @@ const policy = {
       "time",
       null
     ],
-    "s036": [
-      "모건스탠리",
-      "bound-label",
-      "151"
+    "s035": [
+      "01",
+      "unavailable",
+      null
     ],
     "s037": [
       "16",
@@ -2697,78 +3097,353 @@ const policy = {
     ],
     "s038": [
       "외국계",
-      "bound-label",
-      "gb"
+      "unavailable",
+      null
     ],
-    "s048": [
-      "JP모간",
-      "bound-label",
-      "buy_trde_ori_nm_3"
+    "s040": [
+      "42.7만주",
+      "bound-identifier",
+      "146"
+    ],
+    "s041": [
+      "1,486억원",
+      "unavailable",
+      null
+    ],
+    "s044": [
+      "+55.8만주",
+      "unavailable",
+      null
+    ],
+    "s045": [
+      "▲ +18,420주",
+      "unavailable",
+      null
+    ],
+    "s046": [
+      "10.0%",
+      "unavailable",
+      null
+    ],
+    "s047": [
+      "02",
+      "unavailable",
+      null
+    ],
+    "s049": [
+      "36",
+      "bound-identifier",
+      "157"
     ],
     "s050": [
       "외국계",
-      "bound-label",
-      "gb"
+      "unavailable",
+      null
     ],
-    "s060": [
-      "CS증권",
-      "bound-label",
-      "mmcm_nm"
+    "s052": [
+      "26.0만주",
+      "bound-identifier",
+      "147"
+    ],
+    "s053": [
+      "908억원",
+      "unavailable",
+      null
+    ],
+    "s056": [
+      "+34.2만주",
+      "unavailable",
+      null
+    ],
+    "s057": [
+      "▲ +9,240주",
+      "unavailable",
+      null
+    ],
+    "s058": [
+      "6.1%",
+      "unavailable",
+      null
+    ],
+    "s059": [
+      "03",
+      "unavailable",
+      null
     ],
     "s061": [
       "17",
       "bound-identifier",
-      "code"
+      "158"
     ],
     "s062": [
       "외국계",
-      "bound-label",
-      "gb"
+      "unavailable",
+      null
     ],
-    "s072": [
-      "NH투자증권",
-      "bound-label",
-      "name"
+    "s064": [
+      "22.1만주",
+      "bound-identifier",
+      "148"
+    ],
+    "s065": [
+      "642억원",
+      "unavailable",
+      null
+    ],
+    "s068": [
+      "+20.5만주",
+      "unavailable",
+      null
+    ],
+    "s069": [
+      "▲ +5,180주",
+      "unavailable",
+      null
+    ],
+    "s070": [
+      "4.6%",
+      "unavailable",
+      null
+    ],
+    "s071": [
+      "04",
+      "unavailable",
+      null
     ],
     "s073": [
       "05",
       "bound-identifier",
-      "mmcm_cd"
+      "159"
     ],
-    "s083": [
-      "한국투자증권",
-      "bound-label",
-      "145"
+    "s075": [
+      "29.7만주",
+      "bound-identifier",
+      "149"
+    ],
+    "s076": [
+      "512억원",
+      "unavailable",
+      null
+    ],
+    "s079": [
+      "+4.2만주",
+      "unavailable",
+      null
+    ],
+    "s080": [
+      "▲ +1,120주",
+      "unavailable",
+      null
+    ],
+    "s081": [
+      "4.5%",
+      "unavailable",
+      null
+    ],
+    "s082": [
+      "05",
+      "unavailable",
+      null
     ],
     "s084": [
       "03",
       "bound-identifier",
+      "160"
+    ],
+    "s086": [
+      "29.8만주",
+      "bound-identifier",
       "150"
+    ],
+    "s087": [
+      "386억원",
+      "unavailable",
+      null
+    ],
+    "s090": [
+      "-4.2만주",
+      "unavailable",
+      null
+    ],
+    "s091": [
+      "▼ -980주",
+      "unavailable",
+      null
+    ],
+    "s092": [
+      "3.9%",
+      "unavailable",
+      null
+    ],
+    "s093": [
+      "06",
+      "unavailable",
+      null
     ],
     "s094": [
       "삼성증권",
-      "bound-label",
-      "sel_trde_ori_3"
+      "unavailable",
+      null
     ],
     "s095": [
       "02",
-      "bound-identifier",
-      "sel_trde_ori_cd_3"
+      "unavailable",
+      null
+    ],
+    "s096": [
+      "1,016억원",
+      "unavailable",
+      null
+    ],
+    "s097": [
+      "67.4만주",
+      "unavailable",
+      null
+    ],
+    "s098": [
+      "704억원",
+      "unavailable",
+      null
+    ],
+    "s099": [
+      "46.7만주",
+      "unavailable",
+      null
+    ],
+    "s100": [
+      "-312억원",
+      "unavailable",
+      null
+    ],
+    "s101": [
+      "-20.7만주",
+      "unavailable",
+      null
+    ],
+    "s102": [
+      "▼ -3,240주",
+      "unavailable",
+      null
+    ],
+    "s103": [
+      "8.0%",
+      "unavailable",
+      null
+    ],
+    "s104": [
+      "07",
+      "unavailable",
+      null
     ],
     "s105": [
       "미래에셋",
-      "bound-label",
-      "sel_trde_ori_nm_2"
+      "unavailable",
+      null
+    ],
+    "s106": [
+      "06",
+      "unavailable",
+      null
+    ],
+    "s107": [
+      "1,290억원",
+      "unavailable",
+      null
+    ],
+    "s108": [
+      "85.5만주",
+      "unavailable",
+      null
+    ],
+    "s109": [
+      "862억원",
+      "unavailable",
+      null
+    ],
+    "s110": [
+      "57.1만주",
+      "unavailable",
+      null
+    ],
+    "s111": [
+      "-428억원",
+      "unavailable",
+      null
+    ],
+    "s112": [
+      "-28.4만주",
+      "unavailable",
+      null
+    ],
+    "s113": [
+      "▼ -6,410주",
+      "unavailable",
+      null
+    ],
+    "s114": [
+      "10.1%",
+      "unavailable",
+      null
+    ],
+    "s115": [
+      "08",
+      "unavailable",
+      null
     ],
     "s116": [
       "키움증권",
-      "bound-label",
-      "sel_trde_ori_1"
+      "unavailable",
+      null
     ],
     "s117": [
       "01",
-      "bound-identifier",
-      "sel_trde_ori_cd_1"
+      "unavailable",
+      null
+    ],
+    "s118": [
+      "1,852억원",
+      "unavailable",
+      null
+    ],
+    "s119": [
+      "122.8만주",
+      "unavailable",
+      null
+    ],
+    "s120": [
+      "1,248억원",
+      "unavailable",
+      null
+    ],
+    "s121": [
+      "82.7만주",
+      "unavailable",
+      null
+    ],
+    "s122": [
+      "-604억원",
+      "unavailable",
+      null
+    ],
+    "s123": [
+      "-40.1만주",
+      "unavailable",
+      null
+    ],
+    "s124": [
+      "▼ -9,860주",
+      "unavailable",
+      null
+    ],
+    "s125": [
+      "14.5%",
+      "unavailable",
+      null
+    ],
+    "s126": [
+      "전체 8개 창구 · 순매수 순",
+      "unavailable",
+      null
     ],
     "s127": [
       "8곳 합계 +322억원",
@@ -2780,8 +3455,33 @@ const policy = {
       "unavailable",
       null
     ],
+    "s134": [
+      "09-01",
+      "unavailable",
+      null
+    ],
+    "s135": [
+      "+1,666억원",
+      "unavailable",
+      null
+    ],
     "s136": [
       "-1,344억원",
+      "unavailable",
+      null
+    ],
+    "s137": [
+      "150,850 +1.24%",
+      "unavailable",
+      null
+    ],
+    "s138": [
+      "08-31",
+      "unavailable",
+      null
+    ],
+    "s139": [
+      "+1,208억원",
       "unavailable",
       null
     ],
@@ -2790,23 +3490,78 @@ const policy = {
       "unavailable",
       null
     ],
+    "s141": [
+      "149,000 +0.68%",
+      "unavailable",
+      null
+    ],
+    "s142": [
+      "08-28",
+      "unavailable",
+      null
+    ],
+    "s143": [
+      "+642억원",
+      "unavailable",
+      null
+    ],
     "s144": [
       "-518억원",
       "unavailable",
       null
     ],
+    "s145": [
+      "147,990 -0.34%",
+      "unavailable",
+      null
+    ],
     "s148": [
       "다이와",
-      "bound-label",
-      "sel_upper_scesn_ori"
+      "unavailable",
+      null
+    ],
+    "s149": [
+      "매도 이탈 09:18 · 42,180주",
+      "time",
+      null
+    ],
+    "s150": [
+      "4위 → 9위",
+      "unavailable",
+      null
     ],
     "s151": [
       "노무라",
-      "bound-label",
-      "buy_upper_scesn_ori"
+      "unavailable",
+      null
+    ],
+    "s152": [
+      "매수 이탈 09:20 · 28,640주",
+      "time",
+      null
+    ],
+    "s153": [
+      "5위 → 10위",
+      "unavailable",
+      null
+    ],
+    "s155": [
+      "2곳",
+      "unavailable",
+      null
+    ],
+    "s157": [
+      "상위 4개 가격대",
+      "unavailable",
+      null
     ],
     "s158": [
       "151,000",
+      "unavailable",
+      null
+    ],
+    "s159": [
+      "매수 82,400주 · 매도 41,200주",
       "unavailable",
       null
     ],
@@ -2815,8 +3570,18 @@ const policy = {
       "unavailable",
       null
     ],
+    "s161": [
+      "매수 64,300주 · 매도 32,200주",
+      "unavailable",
+      null
+    ],
     "s162": [
       "150,000",
+      "unavailable",
+      null
+    ],
+    "s163": [
+      "매수 23,100주 · 매도 46,200주",
       "unavailable",
       null
     ],
@@ -2825,35 +3590,90 @@ const policy = {
       "unavailable",
       null
     ],
+    "s165": [
+      "매수 14,100주 · 매도 28,200주",
+      "unavailable",
+      null
+    ],
     "s167": [
       "실시간",
       "status",
       null
     ],
+    "s168": [
+      "최근 1분",
+      "unavailable",
+      null
+    ],
     "s169": [
       "모건스탠리",
-      "bound-label",
-      "trde_ori_nm"
+      "unavailable",
+      null
+    ],
+    "s170": [
+      "▲ +6,240주",
+      "unavailable",
+      null
     ],
     "s171": [
       "09:41:20",
-      "bound-time",
-      "tm"
+      "time",
+      null
     ],
     "s172": [
       "키움증권",
-      "bound-label",
-      "trde_ori_nm"
+      "unavailable",
+      null
+    ],
+    "s173": [
+      "▼ -3,180주",
+      "unavailable",
+      null
     ],
     "s174": [
       "09:41:44",
-      "bound-time",
-      "tm"
+      "time",
+      null
+    ],
+    "s178": [
+      "4,182억원",
+      "unavailable",
+      null
+    ],
+    "s179": [
+      "▲ +212억원",
+      "unavailable",
+      null
+    ],
+    "s181": [
+      "2,516억원",
+      "unavailable",
+      null
+    ],
+    "s182": [
+      "▼ -94억원",
+      "unavailable",
+      null
+    ],
+    "s184": [
+      "+1,666억원",
+      "unavailable",
+      null
+    ],
+    "s185": [
+      "▲ +306억원",
+      "unavailable",
+      null
     ],
     "s187": [
       "3곳",
-      "bound-identifier",
-      "list"
+      "unavailable",
+      null
+    ],
+    "s188": [
+      "20분 지연 집계 · 갱신 중",
+      "status",
+      null
     ]
   },
   "2QRP-1": {

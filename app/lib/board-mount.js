@@ -9,6 +9,7 @@ const registry = isCjs ? require('./board-template-registry') : lib.BoardTemplat
 const displayPolicy = isCjs ? require('./board-display-policy') : lib.BoardDisplayPolicy;
 const staticGraphics = isCjs ? require('./board-static-graphics-data') : lib.BoardStaticGraphicsData;
 const etfPeriod = isCjs ? require('./board-etf-period') : lib.BoardEtfPeriod;
+const flowLayout = isCjs ? require('./board-flow-layout') : lib.BoardFlowLayout;
 
 const ROLLUP_MARK = '▸';
 
@@ -216,7 +217,7 @@ function mountPlan(contract, values, options = {}) {
     values = { ...values };
     const byId = new Map(slotList(contract).map((slot) => [slot.slot_id, slot]));
     const nameSlot = byId.get('s001');
-    const codeSlot = byId.get('s002');
+    const codeSlot = byId.get(['2QFO-2', '2QM7-2'].includes(contract.board_id) ? 's003' : 's002');
     // static blank: ETF 탭처럼 응답에 종목코드가 없어 빈 칸인 헤더 — 카드 주제로 채운다.
     // static true/text: 금현물처럼 고정 표기 — 주식 identity로 덮지 않는다.
     const stampIdentity = (slot) => slot && slot.kind === 'value'
@@ -226,8 +227,8 @@ function mountPlan(contract, values, options = {}) {
       identitySlots.add('s001');
     }
     if (identity.code && stampIdentity(codeSlot)) {
-      values.s002 = identity.code;
-      identitySlots.add('s002');
+      values[codeSlot.slot_id] = identity.code;
+      identitySlots.add(codeSlot.slot_id);
     }
   }
   const slots = slotList(contract);
@@ -607,12 +608,12 @@ function setStatusAppearance(el, receiving) {
   if (!el || !el.style) return;
   el.style.color = receiving ? 'var(--color-ok)' : 'var(--color-k-dim)';
   const chip = el.parentElement;
-  if (chip && chip.children.length === 1 && chip.style.backgroundColor
+  if (chip && (chip.children.length === 1 || chip.dataset?.node === '2QFV-2') && chip.style.backgroundColor
     && typeof chip.closest === 'function' && chip.closest('.bs-header')) {
     chip.style.backgroundColor = receiving ? '#5FCE3F1F' : 'var(--color-k-panel3)';
   }
   for (const dot of chip && typeof chip.querySelectorAll === 'function'
-    ? chip.querySelectorAll('[data-node="34NM-0"], [data-node="34NW-0"]') : []) {
+    ? chip.querySelectorAll('[data-node="34NM-0"], [data-node="34NW-0"], [data-node="2QFW-2"], [data-node="2QKN-2"], [data-node="2QNK-2"]') : []) {
     dot.style.backgroundColor = receiving ? 'var(--color-ok)' : 'var(--color-k-dim)';
   }
 }
@@ -872,6 +873,10 @@ function applyRealtimeSlots(surface, contract, values, slotIds, options = {}) {
   if (!surface || !slotIds || !slotIds.length) return { touched: [], plan: null };
   const plan = realtimePlan(contract, values, slotIds);
   const report = applyPlan(surface, plan, { ...options, partial: true });
+  if (flowLayout && ['2QFO-2', '2QM7-2'].includes(contract.board_id)) {
+    flowLayout.update(surface, contract, mountPlan(contract, values), { ...surface.__bsFlowOptions, ...options });
+    updateEmptyTableStates(surface);
+  }
   return { touched: plan.touched, plan, ...report };
 }
 
@@ -2319,7 +2324,8 @@ function mountBoard(root, boardId, values, options = {}) {
   // CC-04 호가는 Paper 픽스처가 「삼성전자 통합 호가」로 박혀 있어, 다른 종목
   // 조회에서도 그 제목이 남았다. 카드 주제(identity)로만 고친다.
   const cardId = registry.cardIdFor(boardId);
-  const identity = (cardId === 'CC-03' || cardId === 'CC-04') ? options.identity : null;
+  const identity = (cardId === 'CC-03' || cardId === 'CC-04'
+    || ['2QFO-2', '2QM7-2'].includes(String(boardId))) ? options.identity : null;
   const plan = mountPlan(contract, values, { ...options, identity });
   let surface = root.__bsSurface;
   if (!surface || root.__bsBoardId !== String(boardId) || !root.contains(surface)) {
@@ -2329,6 +2335,7 @@ function mountBoard(root, boardId, values, options = {}) {
     surface.dataset.bsBoardId = String(boardId);
     applyResponsiveHooks(surface);
     applyReadableBoardLayout(surface, contract);
+    if (flowLayout) flowLayout.prepare(surface, contract);
     suppressStaticGraphics(surface, contract);
     scrubRawIdentityNames(surface);
     root.__bsSurface = surface;
@@ -2337,6 +2344,7 @@ function mountBoard(root, boardId, values, options = {}) {
   const report = applyPlan(surface, plan, options);
   applyConditionQueryMode(surface, contract, options.operationRef);
   updateBasketRows(surface, contract, plan, values);
+  if (flowLayout) flowLayout.update(surface, contract, plan, options);
   updateEmptyTableStates(surface);
   compactReducedContent(surface, contract);
   applyQueryContext(surface, contract, options);

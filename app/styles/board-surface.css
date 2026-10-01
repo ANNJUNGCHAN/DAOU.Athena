@@ -768,3 +768,27 @@
   .bs-etf-metrics { gap: 20px; }
   .bs-etf-metric { flex-basis: calc(50% - 10px); }
 }
+
+/* Each query measure and each broker side has its own table. */
+.bs-flow-card .bs-header [data-slot-id="s001"] { font-size: 20px; line-height: 28px; }
+.bs-flow-card .bs-header [data-slot-id="s002"] { white-space: nowrap; }
+.board-surface .bs-flow-original { display: none !important; }
+.bs-flow-section { padding: 20px 24px 24px; }
+.bs-flow-context { color: var(--color-k-dim); font-size: 13px; line-height: 20px; margin-bottom: 18px; overflow-wrap: anywhere; }
+.bs-flow-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 24px; align-items: start; }
+.bs-flow-panel { min-width: 0; }
+.bs-flow-title { margin: 0 0 12px; font-family: var(--font-strong); font-size: 16px; line-height: 22px; color: var(--color-k-text); }
+.bs-flow-table { width: 100%; height: auto; min-height: 0; }
+.bs-flow-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1fr); gap: 12px; min-height: 46px; border-bottom: 1px solid var(--color-k-line-soft); align-items: center; }
+.bs-flow-row[data-row="head"] { min-height: 36px; color: var(--color-k-dim); font-size: 12px; }
+.bs-flow-cell { min-width: 0; padding-block: 10px; }
+.bs-flow-cell:last-child { text-align: right; }
+.bs-flow-identity { display: flex; gap: 10px; align-items: center; }
+.bs-flow-rank { font-family: var(--font-mono); font-size: 12px; color: var(--color-k-dim); width: 20px; flex: 0 0 20px; }
+.bs-flow-name { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.bs-flow-section [data-bs-hoisted] { width: auto; max-width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 1 auto; }
+.bs-flow-name-text { font-family: var(--font-body); font-size: 13px; line-height: 18px; color: var(--color-k-text); overflow-wrap: anywhere; }
+.bs-flow-code { font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--color-k-dim); }
+.bs-flow-value { display: flex; justify-content: flex-end; }
+.bs-flow-value-text { font-family: var(--font-mono); font-size: 13px; line-height: 18px; white-space: nowrap; }
+@container board (max-width: 479px) { .bs-flow-section { padding-inline: 16px; } }
