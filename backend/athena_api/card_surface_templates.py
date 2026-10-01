@@ -33,15 +33,16 @@ logger = logging.getLogger(__name__)
 
 SCHEMA_VERSION = "card-surface.v1"
 
-# These collection queries have authored ranking surfaces. Their fields also
-# appear as supplementary details on 15P5, which must not win by state rank.
-_ELW_COLLECTION_BOARDS = {
+# These queries have authored result surfaces. Their fields also appear as
+# supplementary details on product defaults, which must not win by state rank.
+_OPERATION_ENTRY_BOARDS = {
     "base:ka30001": "2Y47-0",
     "base:ka30002": "2Z49-0",
     "base:ka30005": "2ZN9-0",
     "base:ka30009": "2XA5-0",
     "base:ka30010": "2VO0-0",
     "base:ka30011": "2XY6-0",
+    "base:ka40001": "2WZK-0",
 }
 
 # 헌장 §2.3의 밀도 예산(하드). 위반은 그 보드를 제품 표면에서 뺀다 — Paper 보드가
@@ -305,7 +306,7 @@ class CardSurfaceRegistry:
         board_ids = self.by_operation.get(operation_ref)
         if not board_ids:
             return None
-        preferred = _ELW_COLLECTION_BOARDS.get(operation_ref)
+        preferred = _OPERATION_ENTRY_BOARDS.get(operation_ref)
         if preferred in board_ids:
             return self.boards[preferred]
         ordered = sorted(

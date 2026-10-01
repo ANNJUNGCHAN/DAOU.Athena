@@ -1,5 +1,5 @@
 """Public API schema fixtures; no account data or network access."""
-from athena_api.card_surface_contract import bind_surface_values, build_board_surface_contract
+from athena_api.card_surface_contract import bind_surface_values, build_board_surface_contract, build_surface_contract
 from athena_api.card_surface_templates import get_registry
 
 
@@ -96,6 +96,25 @@ def test_one_etf_period_does_not_fabricate_other_periods_or_other_stocks():
 def test_etf_zero_is_observation_and_short_response_remains_missing():
     values = values_for('2WZK-0', {'base:ka40001': {'etfprft_rt_lst': [{'etfprft_rt':'0','for_netprps_qty':'0'}]}})
     assert values == {'s017':'0','s023':'0'}
+
+
+def test_etf_period_query_enters_the_period_surface_with_all_four_received_metrics():
+    ref = 'base:ka40001'
+    registry = get_registry()
+    assert registry.base_board_for(ref).board_id == '2WZK-0'
+    assert registry.initial_state_board_for(ref) is None
+    contract = build_surface_contract(ref, bind_surface_values(ref, ETF_RESPONSE))
+    assert contract['board_id'] == '2WZK-0'
+    assert contract['initial_state_board'] is None
+    assert {item['slot_id']: item['value'] for item in contract['slot_values']} == {
+        's017': '2.35', 's020': '2.1', 's023': '12340', 's026': '-4560',
+    }
+
+
+def test_etf_information_query_keeps_the_product_detail_entry():
+    contract = build_surface_contract('base:ka40002')
+    assert contract['board_id'] == '15N5-2'
+    assert contract['initial_state_board'] is None
 
 
 def test_nav_price_is_not_nav_index_or_quantity():
