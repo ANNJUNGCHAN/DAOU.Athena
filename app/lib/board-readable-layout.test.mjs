@@ -121,3 +121,15 @@ test('deferred text and number value slots stay pending until a response arrives
   assert.equal(received[1].missing, false);
   assert.match(received[1].text, /0/);
 });
+
+test('answered empty slots are not deferred even when an earlier stream mapping was pending', () => {
+  const contract = { slots: [{ slot_id: 'amount', node: 'amount', kind: 'value', format: { unit: 'text' } }] };
+  const options = { deferredValueSlots: ['amount'], emptyValueSlots: ['amount'] };
+  const empty = mountPlan(contract, {}, options).assignments[0];
+  assert.equal(empty.pending, false);
+  assert.equal(empty.empty, true);
+  const zero = mountPlan(contract, { amount: '0' }, options).assignments[0];
+  assert.equal(zero.pending, false);
+  assert.equal(zero.empty, false);
+  assert.equal(zero.text, '0');
+});

@@ -2067,7 +2067,8 @@
         "unit": "percent",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "신용잔고율 "
       },
       "paired_with": "s070",
       "collapse_group": null,

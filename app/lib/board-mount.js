@@ -213,6 +213,8 @@ function shouldBlankFixtureMarketStat(slot, text, identity) {
 function mountPlan(contract, values, options = {}) {
   ({ contract, values } = displayPolicy.prepareDisplayInput(contract, values));
   const pending = pendingSet(options);
+  const deferred = new Set(options.deferredValueSlots || []);
+  const answeredEmpty = new Set(options.emptyValueSlots || []);
   const identity = options.identity;
   const orderbook = identityCardId(contract) === 'CC-04';
   const identitySlots = new Set();
@@ -294,7 +296,9 @@ function mountPlan(contract, values, options = {}) {
       valueAtomic: slot.static !== true && slot.kind !== 'label'
         && slot.kind !== 'static' && isValueSlot(slot),
       valueSlot: slot.kind === 'value' && !slot.static,
-      pending: missingBound && pending.has(String(slot.slot_id)) && slot.kind === 'value' && !slot.static,
+      pending: missingBound && deferred.has(String(slot.slot_id)) && !answeredEmpty.has(String(slot.slot_id))
+        && slot.kind === 'value' && !slot.static,
+      empty: missingBound && answeredEmpty.has(String(slot.slot_id)) && slot.kind === 'value' && !slot.static,
       pairedWith: slot.paired_with || null,
       expandedBoard: slot.expanded_board || null,
     });
@@ -758,20 +762,21 @@ function applyPlan(root, plan, options = {}) {
       el.dataset.bsKeepMissing = 'true';
     }
     const accountPending = accountDetail && assignment.pending;
+    const accountEmpty = accountDetail && assignment.empty;
     const missingValue = assignment.missing && assignment.text === boardFormat.missingText();
-    el.textContent = accountPending ? '조회 중'
+    el.textContent = accountPending ? '수신 대기' : accountEmpty ? '—'
       : compactTime || (missingValue && (tableCellOf(el) || accountDetail)) ? '—' : assignment.text;
-    if (compactTime || (accountDetail && (missingValue || accountPending))) {
-      el.setAttribute('title', accountPending ? '조회 중' : assignment.text);
-      el.setAttribute('aria-label', accountPending ? '조회 중' : assignment.text);
+    if (compactTime || (accountDetail && (missingValue || accountPending || accountEmpty))) {
+      el.setAttribute('title', accountPending ? '수신 대기' : accountEmpty ? '응답에 값이 없습니다' : assignment.text);
+      el.setAttribute('aria-label', accountPending ? '수신 대기' : accountEmpty ? '응답에 값이 없습니다' : assignment.text);
       el.dataset.bsMissingDescription = 'true';
     } else if (el.dataset && el.dataset.bsMissingDescription) {
       el.removeAttribute('title');
       el.removeAttribute('aria-label');
       delete el.dataset.bsMissingDescription;
     }
-    setTone(el, accountDetail && (assignment.missing || accountPending) ? 'flat' : assignment.tone,
-      Boolean(accountDetail && (assignment.missing || accountPending)) || assignment.forceFlatTone);
+    setTone(el, accountDetail && (assignment.missing || accountPending || accountEmpty) ? 'flat' : assignment.tone,
+      Boolean(accountDetail && (assignment.missing || accountPending || accountEmpty)) || assignment.forceFlatTone);
     if (assignment.text === '상태 미확인'
       || (assignment.missing && assignment.text === '시각 미제공' && el.closest?.('.bs-header'))) setStatusAppearance(el, false);
     if (el.dataset) {
@@ -780,7 +785,7 @@ function applyPlan(root, plan, options = {}) {
       else delete el.dataset.bsValueAtomic;
       if (assignment.valueSlot) el.dataset.bsValueSlot = 'true';
       else delete el.dataset.bsValueSlot;
-      if (assignment.missing) el.dataset.missing = 'true';
+      if (assignment.missing || accountEmpty) el.dataset.missing = 'true';
       else delete el.dataset.missing;
       // 디자인 문구(라벨·static)는 값이 아니다 — 빈 줄 접기가 이 표시를 보고
       // 「이 줄에 자료가 있다」고 오해하지 않게 남긴다.

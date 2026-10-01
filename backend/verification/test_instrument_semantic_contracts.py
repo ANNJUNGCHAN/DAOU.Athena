@@ -33,6 +33,15 @@ def test_company_ohlc_and_price_history_keep_every_labelled_part():
     assert 's055' in partial
 
 
+def test_chart_period_volume_is_distinct_from_session_total_and_has_no_array_label():
+    values = values_for('137X-2', {'base:ka10015': {'daly_trde_dtl': [
+        {'tot_3': '123456', 'prid_trde_qty': '654321'},
+    ]}})
+    assert values['s120'] == '123456'
+    assert values['s123'] == '654321'
+    assert 's122' not in values
+
+
 PER_ROWS = [
     {'stk_cd': '100001', 'stk_nm': '합성 PER 종목', 'per': '7.25', 'cur_prc': '12340', 'pred_pre': '-60', 'flu_rt': '-0.48', 'now_trde_qty': '123456', 'sel_bid': '12350'},
     {'stk_cd': '100002', 'stk_nm': '합성 PER 둘째', 'per': '8.5', 'cur_prc': '20000', 'pred_pre': '0', 'flu_rt': '0', 'now_trde_qty': '0', 'sel_bid': '20050'},

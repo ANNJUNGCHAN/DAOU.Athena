@@ -2056,7 +2056,22 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     boardId,
     boardMount.nextHydrationSlots(pending, filled, reply.surface_contract),
   );
-  if ((!filled || !Object.keys(filled).length) && !state.rankingResult) return mounted;
+  // 값이 하나도 없는 정상 응답도 초기 대기 상태를 끝낸다. 행·열 상태는 보드별로
+  // 갱신하며, 옛 응답이 메타를 생략한 경우에는 기존 상태를 유지한다.
+  const contract = reply.surface_contract;
+  let metadataReceived = false;
+  if (contract && (!contract.board_id || String(contract.board_id) === boardId)) {
+    for (const [field, property] of [
+      ['empty_rows', 'emptyRows'], ['empty_columns', 'emptyColumns'],
+      ['empty_value_slots', 'emptyValueSlots'], ['deferred_value_slots', 'deferredValueSlots'],
+    ]) {
+      if (!Array.isArray(contract[field])) continue;
+      state[property] = contract[field].slice();
+      state[property + 'ByBoard'].set(boardId, state[property]);
+      metadataReceived = true;
+    }
+  }
+  if ((!filled || !Object.keys(filled).length) && !state.rankingResult && !metadataReceived) return mounted;
   state.values = { ...state.values, ...filled };
   state.valuesByBoard.set(boardId, state.values);
   state.unbound = state.unbound.filter((slotId) => !(slotId in filled));
