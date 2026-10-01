@@ -269,3 +269,13 @@ test('cash-flow row captions stay fixed and daily money is not formatted as a da
   assert.equal(text('2SKU-1',{s177:'0'},'s177'),'일별 입금 0');
   assert.equal(text('2SKU-1',{s180:'12345678'},'s180'),'일별 출금 1,234만 5,678');
 });
+
+test('exploration details do not claim selection or an unobserved specimen industry', () => {
+  assert.equal(text('13K0-2',{},'s130'),'조회 종목');
+  for(const id of ['4A9H-1','4AGN-1','4ANS-1','4AUX-1']) {
+    assert.equal(text(id,{},'s124'),'—');
+    assert.equal(text(id,{s124:'합성 실제 업종'},'s124'),'합성 실제 업종');
+    assert.equal(text(id,{s138:'거래 정상'},'s138'),'거래 정상');
+    assert.equal(text(id,{},'s138'),'상태 미확인');
+  }
+});

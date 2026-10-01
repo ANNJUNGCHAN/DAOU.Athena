@@ -765,7 +765,7 @@ const policy = {
     "s130": [
       "선택됨",
       "caption",
-      "첫 번째 결과"
+      "조회 종목"
     ],
     "s131": [
       "150,850",
@@ -28758,6 +28758,11 @@ const policy = {
       "direction",
       "pred_pre_sig"
     ],
+    "s124": [
+      "반도체",
+      "unavailable",
+      null
+    ],
     "s133": [
       "매도 150,900 · 매수 150,850",
       "unavailable",
@@ -28974,6 +28979,11 @@ const policy = {
       "+1,850 · +1.24%",
       "direction",
       "pred_pre_sig"
+    ],
+    "s124": [
+      "반도체",
+      "unavailable",
+      null
     ],
     "s133": [
       "매도 150,900 · 매수 150,850",
@@ -29192,6 +29202,11 @@ const policy = {
       "direction",
       "pred_pre_sig"
     ],
+    "s124": [
+      "반도체",
+      "unavailable",
+      null
+    ],
     "s133": [
       "매도 150,900 · 매수 150,850",
       "unavailable",
@@ -29408,6 +29423,11 @@ const policy = {
       "+1,850 · +1.24%",
       "direction",
       "pred_pre_sig"
+    ],
+    "s124": [
+      "반도체",
+      "unavailable",
+      null
     ],
     "s133": [
       "매도 150,900 · 매수 150,850",
