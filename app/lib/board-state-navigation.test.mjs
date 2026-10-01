@@ -17,6 +17,17 @@ test('every account surface keeps all seven authored read-only header destinatio
   }
 });
 
+test('condition signals reuse the completed one-shot view and keep a return path', () => {
+  assert.ok(registry.stateLinksFor('2UN6-1').some(link => link.control === '관심·조건 신호' && link.board_id === '15L8-2'));
+  assert.ok(registry.stateLinksFor('15L8-2').some(link => link.board_id === '2UN6-1'));
+  assert.equal(registry.navigationTargetRequirement('15L8-2', {
+    operation_ref: 'base:ka10172', initial_surface_contract: { board_id: '15L8-2' },
+  }), '');
+  for (const envelope of [{}, { operation_ref: 'base:ka10171' }, { operation_ref: 'base:ka10172' }]) {
+    assert.match(registry.navigationTargetRequirement('15L8-2', envelope), /1회 조회한 뒤/);
+  }
+});
+
 test('nested expansions retain root siblings and the authored detail controls without duplicates', () => {
   let nested = 0;
   for (const [id, entry] of Object.entries(STATE_GRAPH)) {

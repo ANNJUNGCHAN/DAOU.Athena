@@ -77,6 +77,14 @@ async def render_condition_query(payload, request, response, ws_client, selector
         "2UN6-1", bound_values=bind_surface_values(plan.operation_ref, data),
         active_operation_refs=[plan.operation_ref],
     )
+    if plan.operation_ref == "base:ka10172":
+        # The watchlist view is the same completed response, not another command
+        # or a subscription. The renderer's existing secondary cache seeds it.
+        contract["initial_surface_contract"] = build_board_surface_contract(
+            "15L8-2", bound_values=bind_surface_values(plan.operation_ref, data),
+            active_operation_refs=[plan.operation_ref],
+        )
+        contract["initial_surface_contract"]["hydration_slot_ids"] = []
     if not _apply_workspace_reservation(request.app, contract, reservation):
         return _stale_workspace_response(operation_ref=plan.operation_ref, reservation=reservation)
 

@@ -73,6 +73,8 @@ function additionalControlLabels(control) {
 }
 
 function additionalStateLinks(boardId) {
+  if (boardId === '2UN6-1') return [{ control: '관심·조건 신호', board_id: '15L8-2' }];
+  if (boardId === '15L8-2') return [{ control: '조건검색 결과로', board_id: '2UN6-1' }];
   if (DETAIL_MARKET_TABS.includes(boardId)) return DETAIL_MARKET_LINKS;
   if (boardId === '15N5-2') return [
     { control: '현재시세', board_id: '2R3M-1' },
@@ -98,6 +100,11 @@ function instrumentDomainFor(boardId) {
 }
 
 function navigationTargetRequirement(boardId, envelope = {}) {
+  if (String(boardId) === '15L8-2') {
+    const cached = envelope.initial_surface_contract || envelope.initialSurfaceContract;
+    return envelope.operation_ref === 'base:ka10172' && cached?.board_id === '15L8-2'
+      ? '' : '조건검색식을 1회 조회한 뒤 관심·조건 신호를 열어 주세요.';
+  }
   const required = INSTRUMENT_DETAIL_DOMAINS[String(boardId || '')];
   if (!required) return '';
   const source = envelope.surface_contract || envelope.surfaceContract || {};
