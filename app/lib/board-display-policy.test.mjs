@@ -169,3 +169,14 @@ test('preparation is immutable and requires exact source text provenance', () =>
   const changed = { board_id: '137X-2', slots: [{ slot_id: 's003', paper_text: '새 고정 라벨', kind: 'label', static: true }] };
   assert.equal(prepareDisplayInput(changed, {}).contract.slots[0], changed.slots[0]);
 });
+
+test('regular depth navigation keeps fixed captions without replacing the observed session', () => {
+  for (const id of ['13BC-2', '2TRW-1']) {
+    for (const values of [{}, { s004: '3' }]) {
+      const result = plan(id, values);
+      assert.equal(text(result, 's007'), '5단');
+      assert.equal(text(result, 's008'), '10단');
+      if (values.s004) assert.equal(text(result, 's004'), '3');
+    }
+  }
+});
