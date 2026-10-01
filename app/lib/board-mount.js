@@ -1621,6 +1621,37 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  '30HY-0': {"node":"34IW-0","rows":["34IX-0","34JR-0","34J6-0","34KC-0","34S0-0","34SL-0","34T6-0","34VB-0","34VW-0"],"widths":[52,220,140,200,200,200,200,200],"label":"외국인·기관 순위","stack":false,"compact":true},
+  '3UTA-0': {"node":"3V3D-0","rows":["3V3G-0","3V3K-0","3V3O-0","3V3S-0","3V3W-0","3V40-0","3V44-0","3V48-0","3V4C-0","3V4G-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true,"additional":[{"node":"3V4K-0","rows":["3V4N-0","3V4R-0","3V4V-0","3V4Z-0","3V53-0","3V57-0","3V5B-0","3V5F-0","3V5J-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true},{"node":"3V5P-0","rows":["3V5S-0","3V5W-0","3V60-0","3V64-0","3V68-0","3V6C-0","3V6G-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true},{"node":"3V6K-0","rows":["3V6N-0","3V6R-0","3V6V-0","3V6Z-0","3V73-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true}]},
+  '3NVG-0': {"node":"3P9I-0","rows":["3P9M-0","3P9W-0","3PA8-0"],"widths":[160,200,200,200,200],"label":"통화별 예수금","stack":false,"compact":true},
+  "13K0-2": {"node":"33Z2-0","rows":["33Z6-0","33ZD-0","33ZO-0","33ZZ-0"],"widths":[52,220,106,86,160,216],"label":"조회 순위 결과","stack":false,"compact":true},
+  "15P5-2": {"node":"3D17-0","rows":["3D1B-0","3D22-0","3D2M-0","3D35-0","3D3O-0"],"widths":[130,160,200,140,120,120,120,140],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2RJ7-1": {"node":"3HC9-0","rows":["3HCF-0","3HCO-0","3HDD-0","3HE2-0","3HER-0"],"widths":[150,200,200,200,200,200,200,200],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2ROJ-1": {"node":"33JM-0","rows":["33JN-0","33JV-0","33KB-0","33KQ-0"],"widths":[120,200,200,200,200,140],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2S4E-1": {"node":"2S68-1","rows":["33M0-0","33M8-0","33R1-0","33RH-0","33S6-0","33SX-0"],"widths":[130,160,200,200,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2SYW-1": {"node":"3Q8R-0","rows":["3Q9T-0","3QA1-0","3QAS-0","3QBH-0","3QC6-0","3QCV-0"],"widths":[120,220,120,200,160,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2TZN-1": {"node":"2U3G-1","rows":["340B-0","340J-0","3411-0","341J-0","3421-0","342J-0","3431-0"],"widths":[220,120,160,140,200,155,140],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2U5L-1": {"node":"3C0K-0","rows":["3C0L-0","3C5D-0","3CFR-0","3CGS-0","3CHT-0","3CNW-0","3COV-0","3CPU-0","3CQT-0"],"widths":[220,160,160,160,160,240,200],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2UBO-1": {"node":"34AI-0","rows":["34AM-0","34AT-0","34BA-0","34BR-0"],"widths":[220,160,140,200,200,200],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2UHM-1": {"node":"2ULF-1","rows":["359Q-0","359Y-0","35AN-0","35BC-0"],"widths":[120,220,180,140,160,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2VIN-0": {"node":"3QN3-0","rows":["3QN4-0","3QND-0","3QO4-0","3QOV-0","3QPM-0","3QQD-0","3QR4-0","3QRV-0","3QSM-0","3QTD-0","3QU4-0","3QUV-0","3QVM-0","3QWD-0","3QX4-0","3QXV-0","3QYM-0","3QZD-0","3R04-0","3R0V-0","3R1M-0"],"widths":[52,220,160,140,140,200,140,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2VO0-0": {"node":"38TO-0","rows":["38TP-0","38TY-0","38UH-0","38V0-0","38VJ-0","38W2-0","38WL-0","38X4-0","38XN-0","3GLC-0","3GLV-0","3GME-0","3GMX-0","3GNG-0","3GNZ-0","3GOI-0","3GP1-0","3GPK-0","3GQ3-0","3GQM-0","3GR5-0"],"widths":[52,220,160,200,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2XA5-0": {"node":"39FH-0","rows":["39FI-0","39FR-0","39GA-0","39GT-0","39HC-0","39HV-0","39IE-0","39IX-0","39JG-0","3HZP-0","3I08-0","3I0R-0","3I1A-0","3I1T-0","3I2C-0","3I2V-0","3I3E-0","3I3X-0","3I4G-0","3I4Z-0","3I5I-0"],"widths":[52,220,160,140,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2XY6-0": {"node":"39V5-0","rows":["39V6-0","39VF-0","39VY-0","39WH-0","39X0-0","39Y2-0","39YL-0","39Z4-0","3KGH-0","3KH0-0","39XJ-0","3KHJ-0","3KI2-0","3KIL-0","3KJ4-0","3KJN-0","3KK6-0","3KKP-0","3KL8-0","3KLR-0","3KMA-0"],"widths":[52,220,160,140,160,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2Y47-0": {"node":"3A9M-0","rows":["3A9N-0","3A9W-0","3AAF-0","3AAY-0","3ABH-0","3AC0-0","3ACJ-0","3AD2-0","3ADL-0","3MBF-0","3MBY-0","3MCH-0","3MD0-0","3MDJ-0","3ME2-0","3MEL-0","3MF4-0","3MFN-0","3MG6-0","3MGP-0","3MH8-0"],"widths":[52,220,160,160,160,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2YXS-0": {"node":"3G5L-0","rows":["3G5M-0","3G5V-0","3G6I-0","3G75-0","3G7S-0","3G8F-0","3G92-0","3G9P-0","3GAC-0","3GAZ-0","3GBM-0","3GC9-0","3GCW-0","3GDJ-0","3GE6-0","3GET-0","3GFG-0","3GG3-0","3GGQ-0","3GHD-0"],"widths":[52,220,160,120,200,160,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2ZHC-0": {"node":"3IYO-0","rows":["3IYP-0","3IZJ-0","3J04-0","3J0P-0","3J2G-0","3J1A-0","3J1V-0","3J31-0","3IYY-0","3J3M-0","3J47-0","3J4S-0","3J5D-0","3J5Y-0","3J6J-0","3J74-0","3J7P-0","3J8A-0","3J8V-0","3J9G-0","3JA1-0"],"widths":[160,220,160,200,160,160,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2ZN9-0": {"node":"3B82-0","rows":["3B83-0","3B8C-0","3B8X-0","3B9I-0","3BA6-0","3BAR-0","3BBC-0","3BBX-0","3BCI-0"],"widths":[52,220,200,120,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2ZZ7-0": {"node":"3KPB-0","rows":["3KPC-0","3KPL-0","3KQ2-0","3KQJ-0","3KR0-0","3KRH-0","3KRY-0","3KSF-0","3KSW-0","3KTD-0","3KTU-0","3KUB-0","3KUS-0","3KV9-0","3KVQ-0","3KW7-0","3KWO-0"],"widths":[160,220,160,140,160,200,120,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "30O1-0": {"node":"3RJU-0","rows":["3RJV-0","3RK4-0","3RKN-0","3RL6-0","3RLP-0","3RM8-0","3RMR-0","3RNA-0","3RNT-0","3ROC-0","3ROV-0","3RPE-0","3RPX-0","3RQG-0","3RQZ-0","3RRI-0","3RS1-0","3RSK-0","3RT3-0","3RTM-0"],"widths":[52,220,160,160,200,200,120,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "30ZW-0": {"node":"3R7U-0","rows":["3R7V-0","3R84-0","3R8P-0","3R9A-0","3R9V-0","3RAG-0","3RB1-0","3RBM-0","3RC7-0","3RCS-0","3RDD-0","3RDY-0","3REJ-0","3RF4-0","3RFP-0","3RGA-0","3RGV-0","3RHG-0","3RI1-0","3RIM-0"],"widths":[52,220,160,120,0,0,200,0],"label":"조회 순위 결과","stack":false,"compact":true},
+  "316O-0": {"node":"3NJL-0","rows":["3NJM-0","3NJV-0","3NKC-0","3NKT-0","3NLA-0","3NLR-0","3NM8-0","3NMP-0","3NN6-0","3NNN-0","3NO4-0","3NOL-0","3NP2-0","3NPJ-0","3NQ0-0","3NQH-0","3NQY-0","3NRF-0","3NRW-0","3NSD-0","3NSU-0"],"widths":[160,220,160,160,0,200,140,0],"label":"조회 순위 결과","stack":false,"compact":true},
+  "31CL-0": {"node":"37AW-0","rows":["37AX-0","37B6-0","37BR-0","37CC-0","37L8-0","37LT-0","37ME-0","37MZ-0","37NK-0"],"widths":[52,220,160,200,200,200,200,200],"label":"조회 순위 결과","stack":false,"compact":true},
+  "31II-0": {"node":"3ARB-0","rows":["3ARC-0","3ARL-0","3AS8-0","3ASV-0","3T6K-0","3T78-0","3T7V-0"],"widths":[52,220,160,120,160,140,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "31OF-0": {"node":"3A7P-0","rows":["3A7Q-0","3A7Z-0","3A8E-0","3A8T-0","3AF3-0","3AFI-0","3AFX-0","3AGC-0","3AGR-0"],"widths":[52,220,160,160,140,140,140,200],"label":"조회 순위 결과","stack":false,"compact":true},
+  "3JZ3-0": {"node":"3KFV-0","rows":["3KFW-0","3L2Y-0","3L2O-0","3L2E-0","3L24-0","3L1U-0","3L0S-0","3L0I-0","3L08-0","3KZY-0","3KZO-0","3L38-0","3L7D-0","3L7N-0","3L7X-0","3L87-0","3L8H-0","3LAV-0","3LB5-0","3LBF-0","3LBP-0","3LBZ-0","3LC9-0"],"widths":[120,160,200,132,132,122,200],"label":"조회 상세 내역","stack":false,"compact":true},
+  "3OIM-0": {"node":"3SUJ-0","rows":["3SUQ-0","3SUY-0","3SVJ-0","3SW5-0"],"widths":[130,220,120,200,200,120,120],"label":"조회 상세 내역","stack":false,"compact":true},
+  "3TCO-0": {"node":"3TEG-0","rows":["3TIB-0","3THO-0","3TH1-0","3TGE-0","3TFR-0","3TF4-0","3TEH-0","3TKQ-0","3TLD-0","3TM0-0","3TMN-0","3TNA-0","3TNX-0"],"widths":[52,220,160,120,160,140,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
   '2VDA-0': {"node":"3HMX-0","rows":["3HMY-0","3HN7-0","3HNO-0","3HO5-0","3HOM-0","3HP3-0","3HPK-0","3HQ1-0","3HQI-0","3HQZ-0","3HRG-0","3HRX-0","3HSE-0","3HSV-0","3HTC-0","3HTT-0","3HUA-0","3HUR-0","3HV8-0","3HVP-0","3HW6-0"],"widths":[52,220,150,100,170,210,130,100],"label":"종목 순위 결과","stack":false,"compact":true},
   "3K7K-0": {"node":"3L4J-0","rows":["3L4N-0","3L8Y-0","3L93-0","3L98-0","3L9D-0","3L9I-0","3L9N-0","3L9S-0","3L9X-0","3LA2-0","3LD0-0","3LD5-0","3LDA-0","3LDF-0","3LDK-0"],"widths":[244,200,200,200],"label":"월별 자산·부채 구성","stack":false,"compact":true},
   "2SRV-1": {"node":"3IFY-0","rows":["3IGJ-0","3JDD-0","3JDY-0","3JEJ-0","3JF4-0","3JGA-0","3JGV-0","3JHG-0"],"widths":[112,190,180,130,205,228],"label":"일자별 실현손익","stack":false,"compact":true},
@@ -1628,7 +1659,7 @@ const READABLE_TABLES = {
   "3GRO-0": {"node":"3I8U-0","widths":[110,180,180,180],"label":"증거금율 구간별 주문가능","rows":["3I8V-0","3I93-0","3I9B-0","3I9J-0","3I9R-0","3I9Z-0","3IA7-0","3IAF-0"],"stack":false,"compact":true,"additional":[{"node":"3IAR-0","widths":[110,200,180,180,180],"label":"보증금율 구간별 주문가능","rows":["3IAS-0","3IB2-0","3IBC-0","3IBM-0","3IBW-0"],"stack":false,"compact":true}]},
   "3IGR-0": {"node":"3U6J-0","widths":[170,190,190],"label":"신용·추가 담보","rows":["3U6K-0","3U6Q-0","3U6W-0","3U72-0"],"stack":false,"compact":true},
   '32XM-0': { node: '3RU8-0', rows: ['3RU9-0', '3RUI-0', '3RV1-0', '3RVK-0', '3RW3-0', '3RWM-0', '3RX5-0', '3RXO-0', '3RY7-0', '3RYQ-0', '3RZ9-0', '3RZS-0', '3S0B-0', '3S0U-0', '3S1D-0'], widths: [52, 220, 130, 130, 170, 170, 0, 0], label: '신주인수권 조회 목록', stack: false, compact: true },
-  '2X5N-0': { node: '34X2-0', rows: ['34X7-0', '34XF-0', '34XV-0', '34YB-0', '34YR-0', '34Z7-0'], widths: [52, 190, 130, 130, 190, 210, 130], label: '순위 결과', stack: false, compact: true },
+  '2X5N-0': {"node":"34X2-0","rows":["34X7-0","34XF-0","34XV-0","34YB-0","34YR-0","34Z7-0"],"widths":[52,190,130,130,190,210,130],"label":"순위 결과","stack":false,"compact":true,"additional":[{"node":"34ZR-0","rows":["34ZV-0","3501-0","3507-0","350D-0"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
   '30C1-0': { node: '3LY6-0', rows: ['3LY7-0', '3LYG-0', '3LYZ-0', '3LZI-0', '3M01-0', '3M0K-0', '3M13-0', '3M1M-0', '3M25-0', '3M2O-0', '3M37-0', '3M3Q-0', '3M49-0', '3M4S-0', '3M5B-0', '3M5U-0', '3M6D-0', '3M6W-0', '3M7F-0', '3M7Y-0', '3M8H-0'], widths: [52, 190, 130, 160, 140, 210, 130, 100], label: '거래량 갱신 결과', stack: false, compact: true },
   '15R0-2': { node: '170E-2', rows: ['36HF-0', '36IS-0', '36J5-0', '36JI-0'], widths: [190, 90, 140, 120], label: 'VI 영향 종목', stack: false, compact: true },
   "3FR6-0": {"node":"3T8I-0","rows":["3T8S-0","3T91-0","3T9C-0","3T9M-0","3T9W-0","3TA6-0","3TAG-0","3TAQ-0","3TB0-0","3TBA-0","3TBK-0","3TBU-0","3TC4-0","3TCE-0"],"widths":[210,130,130,130,130,190,200],"label":"분봉 표","stack":false,"compact":true,"additional":[{"node":"3SP2-0","rows":["3SP7-0","3SPG-0","3SPR-0","3SQ1-0"],"widths":[120,130,130,130,130,190,200],"label":"일자별 시세","stack":false,"compact":true}]},
@@ -1636,10 +1667,10 @@ const READABLE_TABLES = {
   "3ODO-0": {"node":"3P48-0","rows":["3P4C-0","3P4J-0","3P51-0","3P5I-0"],"widths":[120,150,190,190,190,100],"label":"금현물 거래내역","stack":false,"compact":true,"additional":[{"node":"3P3G-0","rows":["3P3K-0","3P3R-0"],"widths":[190,190,190,190,190,130],"label":"금현물 잔고","stack":false,"compact":true}]},
   "3063-0": {"node":"35L4-0","rows":["35L5-0","35M1-0","35MO-0","35UQ-0","35VD-0","35W0-0","35LE-0","35WN-0","35XA-0"],"widths":[52,190,130,200,200,200,200,190],"label":"순위 결과","stack":false,"compact":true,"additional":[{"node":"3TYN-0","rows":["3TYO-0","3TYT-0","3TZ4-0","3TZF-0","3TZQ-0"],"widths":[110,200,200,200],"label":"투자자 표","stack":false,"compact":true}]},
   "30TY-0": {"node":"362Z-0","rows":["3630-0","3639-0","363U-0","364F-0","3650-0","36A6-0","36AR-0","36BC-0","36BX-0"],"widths":[52,190,130,210,210,210,190,130],"label":"순위 결과","stack":false,"compact":true},
-  '4A9H-1': { node: '4ABV-1', rows: ['4AE9-1', '4ADS-1', '4ADC-1', '4ACW-1', '4ACG-1', '4AC0-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
-  '4AGN-1': { node: '4AJB-1', rows: ['4ALP-1', '4AL8-1', '4AKS-1', '4AKC-1', '4AJW-1', '4AJG-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
-  '4ANS-1': { node: '4AQG-1', rows: ['4ASU-1', '4ASD-1', '4ARX-1', '4ARH-1', '4AR1-1', '4AQL-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
-  '4AUX-1': { node: '4AXL-1', rows: ['4AZZ-1', '4AZI-1', '4AZ2-1', '4AYM-1', '4AY6-1', '4AXQ-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
+  '4A9H-1': {"node":"4ABV-1","rows":["4AE9-1","4ADS-1","4ADC-1","4ACW-1","4ACG-1","4AC0-1"],"widths":[52,190,130,110,190,210,130],"label":"필터 결과","stack":false,"compact":true,"additional":[{"node":"4AB3-1","rows":["4ABM-1","4ABG-1","4ABA-1","4AB4-1"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
+  '4AGN-1': {"node":"4AJB-1","rows":["4ALP-1","4AL8-1","4AKS-1","4AKC-1","4AJW-1","4AJG-1"],"widths":[52,190,130,110,190,210,130],"label":"필터 결과","stack":false,"compact":true,"additional":[{"node":"4AIJ-1","rows":["4AJ2-1","4AIW-1","4AIQ-1","4AIK-1"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
+  '4ANS-1': {"node":"4AQG-1","rows":["4ASU-1","4ASD-1","4ARX-1","4ARH-1","4AR1-1","4AQL-1"],"widths":[52,190,130,110,190,210,130],"label":"필터 결과","stack":false,"compact":true,"additional":[{"node":"4APO-1","rows":["4AQ7-1","4AQ1-1","4APV-1","4APP-1"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
+  '4AUX-1': {"node":"4AXL-1","rows":["4AZZ-1","4AZI-1","4AZ2-1","4AYM-1","4AY6-1","4AXQ-1"],"widths":[52,190,130,110,190,210,130],"label":"필터 결과","stack":false,"compact":true,"additional":[{"node":"4AWT-1","rows":["4AXC-1","4AX6-1","4AX0-1","4AWU-1"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
   '2YS8-0': { node: '39D6-0', rows: ['39D7-0', '39DG-0', '39E4-0', '39ES-0', '39M7-0', '39MV-0', '39NJ-0', '39O7-0', '39OV-0'], widths: [52, 190, 130, 110, 0, 0, 0, 190], label: '신용비율 순위', stack: false, compact: true },
   '2ZBB-0': { node: '384C-0', rows: ['384D-0', '384M-0', '3857-0', '385S-0', '389D-0', '389Y-0', '38AJ-0', '38B4-0', '38BP-0'], widths: [52, 190, 0, 190, 190, 210, 0, 0], label: '대차거래 순위', stack: false, compact: true },
   '2V71-0': { node: '2WBN-0', rows: ['358S-0', '3594-0', '35C2-0', '35GH-0', '35NC-0', '35OF-0', '35PF-0', '35Q1-0', '35U0-0'], widths: [52, 190, 130, 210, 210, 210, 190, 130], label: '프로그램 매매', stack: false, compact: true },
@@ -1837,9 +1868,53 @@ function prepareAfterhoursDepthTable(surface) {
   table.append(inner);
 }
 
+function prepareSessionQuoteTable(surface) {
+  const table = authoredNode(surface, '2QT1-1');
+  table.classList.add('bs-table', 'bs-session-quote-scroll');
+  table.tabIndex = 0;
+  table.setAttribute('role', 'region');
+  table.setAttribute('aria-label', '시간외 단일가 호가, 좌우 방향키로 이동');
+  for (const property of ['overflow', 'overflow-x', 'overflow-y']) table.style.removeProperty(property);
+  for (const mirror of table.querySelectorAll('.bs-paired')) mirror.remove();
+  // The extracted ask/bid group is not a row: each child is one quote level.
+  for (const node of [table, ...table.querySelectorAll('*')]) {
+    delete node.dataset.row;
+    delete node.dataset.col;
+    node.classList.remove('bs-r-paired-table', 'bs-col');
+    node.removeAttribute('data-paired-source');
+  }
+  const rows = ['2QT9-1', '2QTH-1', '2QTO-1', '2QTV-1', '2QU2-1', '2QU9-1', '2QUN-1', '2QUU-1', '2QV1-1', '2QV8-1', '2QVF-1'];
+  rows.forEach((id, index) => {
+    const row = authoredNode(surface, id);
+    row.classList.add('bs-session-quote-row');
+    row.dataset.row = index === 0 ? 'head' : `quote-${index}`;
+    row.setAttribute('role', 'row');
+    delete row.dataset.bsWrapRow;
+    row.style.flexWrap = 'nowrap';
+    [...row.children].forEach((cell, col) => {
+      cell.dataset.col = String(col);
+      cell.setAttribute('role', index === 0 ? 'columnheader' : 'cell');
+    });
+  });
+  const inner = layoutGroup(surface.ownerDocument, 'bs-session-quote-table');
+  inner.append(...table.childNodes);
+  table.append(inner);
+}
+
 function applyReadableBoardLayout(surface, contract) {
   const id = contract.board_id;
   if (id === '3JT4-0') prepareAfterhoursDepthTable(surface);
+  if (id === '2QRP-1') prepareSessionQuoteTable(surface);
+  if (id === '3NVG-0') {
+    // D+1 through D+4 are independent settlement summaries, not currency cells.
+    const summary = authoredNode(surface, '3PAQ-0');
+    for (const mirror of summary.querySelectorAll('.bs-paired')) mirror.remove();
+    for (const node of [summary, ...summary.querySelectorAll('[data-col]')]) {
+      delete node.dataset.row;
+      delete node.dataset.col;
+      node.classList.remove('bs-col');
+    }
+  }
   if (id === '3N4O-0') {
     // This authored ladder has no table metadata. Missing quotes still occupy
     // their own column so the received quantity cannot move under the price.

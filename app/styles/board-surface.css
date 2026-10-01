@@ -591,6 +591,18 @@
 .bs-readable-table [data-row="head"] [data-bs-table-text="true"],
 .bs-readable-cell > [data-bs-table-text="true"] ~ [data-bs-table-text="true"] { font-size: 12px; }
 .bs-readable-hint { display: none; color: var(--color-k-dim); font-size: 12px; line-height: 18px; padding-top: 6px; }
+.board-surface .bs-session-quote-scroll { overflow-x: auto; max-width: 100%; height: auto; min-height: 0; }
+.bs-session-quote-table { width: max(100%, 660px); min-width: 660px; }
+.bs-session-quote-table .bs-session-quote-row { display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; min-height: 40px; height: auto; }
+.bs-session-quote-row > [data-col] { display: flex; justify-content: flex-end; align-items: center; box-sizing: border-box; min-width: 150px; width: 150px; flex: 0 0 150px; padding: 10px 12px; text-align: right; font-size: 13px; line-height: 18px; }
+.bs-session-quote-row > [data-col="2"], .bs-session-quote-row > [data-col="3"] { width: 180px; min-width: 180px; flex-basis: 180px; }
+.board-surface .bs-session-quote-table [data-bs-hoisted] { height: auto; min-height: 0; max-height: none; }
+[data-bs-layout="30HY-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+[data-bs-layout="3NVG-0"] [data-node="3PCB-0"] { overflow-wrap: anywhere; }
+@container board (max-width: 719px) {
+  [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] { flex-direction: column; }
+  [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] > [data-node] { width: 100%; min-width: 0; flex: 0 0 auto; padding-inline: 0; }
+}
 @container readable (max-width: 1069px) { .bs-readable-hint { display: block; } }
 [data-bs-layout="3MTJ-0"] .bs-readable-owner { container-name: readable-settlement; }
 @container readable-settlement (max-width: 1011px) { .bs-readable-hint { display: block; } }
@@ -965,3 +977,28 @@
 /* 월별 대여 수량은 좁은 레일에서 두 개의 값 묶음을 차례로 배치한다. */
 .board-surface[data-bs-board-id="3K7K-0"] :is([data-node="3US4-0"], [data-node="3USB-0"], [data-node="3USI-0"], [data-node="3USV-0"], [data-node="3UT2-0"]) { flex-wrap: wrap; height: auto; gap: 8px 16px !important; }
 .board-surface[data-bs-board-id="3K7K-0"] :is([data-node="3US4-0"], [data-node="3USB-0"], [data-node="3USI-0"], [data-node="3USV-0"], [data-node="3UT2-0"]) > [data-node] { flex: 1 1 240px; min-width: 0; }
+
+/* 독립 열 제목을 한 칸에 합치지 않는 표: 종목·거래원 이름은 왼쪽 정렬한다. */
+.board-surface[data-bs-board-id="13K0-2"] [data-node="33Z2-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2SYW-1"] [data-node="3Q8R-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2UHM-1"] [data-node="2ULF-1"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2VO0-0"] [data-node="38TO-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2XA5-0"] [data-node="39FH-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2XY6-0"] [data-node="39V5-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2Y47-0"] [data-node="3A9M-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2YXS-0"] [data-node="3G5L-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2ZHC-0"] [data-node="3IYO-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2ZN9-0"] [data-node="3B82-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2ZZ7-0"] [data-node="3KPB-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="30O1-0"] [data-node="3RJU-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="30ZW-0"] [data-node="3R7U-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="316O-0"] [data-node="3NJL-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="31CL-0"] [data-node="37AW-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="31II-0"] [data-node="3ARB-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="31OF-0"] [data-node="3A7P-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="3OIM-0"] [data-node="3SUJ-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="3TCO-0"] [data-node="3TEG-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+
+/* ETF 이름·배수·분류 칩은 종목 칸 안에서 줄을 나눌 수 있다. */
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="1"] > [data-bs-col-item] { flex-wrap: wrap; max-width: 100%; }

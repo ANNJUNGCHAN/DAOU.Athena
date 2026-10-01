@@ -213,3 +213,9 @@ test('after-hours and gold quote prices preserve positive amounts and real zero 
   assert.equal(text('2QX1-1',{s011:'0.78'},'s011'),'+0.78%');
   assert.equal(text('2QX1-1',{s050:'121.5'},'s050'),'121.5%');
 });
+
+test('settlement summary keeps its caption without specimen calendar dates', () => {
+  assert.equal(text('3MTJ-0', {}, 's026'), '결제 예정');
+  assert.equal(text('2QRP-1', {}, 's007'), '5단');
+  assert.equal(text('2QRP-1', {}, 's008'), '10단');
+});
