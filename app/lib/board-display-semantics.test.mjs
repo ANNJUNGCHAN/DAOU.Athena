@@ -89,3 +89,18 @@ test('numeric realtime field IDs follow their official price or difference meani
   assert.equal(text('15R0-2',{s009:'12345678'},'s009'),'12,345,678');
   assert.equal(text('2TZN-1',{s150:1234},'s150'),'12억 3,400만원');
 });
+
+test('identifier fields keep every character instead of grouping them as a number', () => {
+  assert.equal(text('2YA8-0',{s042:'252670'},'s042'),'252670');
+  assert.equal(text('2YA8-0',{s042:'005930'},'s042'),'005930');
+  assert.equal(text('3BQB-0',{s024:'007'},'s024'),'007');
+  assert.equal(text('2XP6-0',{s041:'A12345'},'s041'),'A12345');
+  assert.equal(text('2YA8-0',{},'s042'),'—');
+});
+
+test('unreceived watchlist group context and VI states do not reuse authored examples', () => {
+  for(const [board,slots]of [['3D4I-0',['s003','s011','s019','s020','s099','s113']],['3EWN-0',['s003','s011','s019','s020','s114']],['2UHM-1',['s103']]]){
+    for(const id of slots)assert.equal(text(board,{},id),'—',`${board}/${id}`);
+  }
+  assert.equal(text('2UHM-1',{},'s104'),'상태 미확인');
+});

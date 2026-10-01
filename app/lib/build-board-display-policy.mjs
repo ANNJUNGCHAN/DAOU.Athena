@@ -22,6 +22,9 @@ export function staticDisplayRole(slot) {
   if (!text) return null;
   if (/^[▸▾▲▼→←…·]+$/.test(text)) return null;
   if (/상태|여부/.test(reason) && /필드.{0,16}없|미제공/.test(reason)) return 'status';
+  if (/부모 보드.*되비침|관심 그룹.*응답.*(?:아니|없)|그룹 종목 수.*개별 필드가 아니다/.test(reason)) return 'unavailable';
+  if (slot.region === 'rail' && /—\s*(?:선택|발동 중)/.test(text)) return 'unavailable';
+  if (slot.region === 'rail' && /^(?:VI (?:미발동|발동)|단일가 진행)$/.test(text)) return 'status';
   // Specimen as-of dates remain unavailable even when authored as fixed prose.
   if (/기준일|기준 시각|갱신 시각/.test(reason)
     && /\d{1,2}(?:월|\/|-)\s*\d{1,2}/.test(text)) return 'time';
@@ -49,6 +52,8 @@ const UNANNOTATED = {
   '2ZN9-0': ['s165', 's187', 's188', 's189', 's190'],
   '3LGC-0': ['s026', 's027', 's034', 's043', 's051', 's060', 's077', 's085', 's094', 's102', 's109', 's112'],
   '2TZN-1': ['s213', 's215', 's217'],
+  '3D4I-0': ['s011', 's012', 's013', 's014', 's114', 's117', 's120', 's123'],
+  '3EWN-0': ['s011', 's012', 's013', 's014'],
 };
 // Observed native defects: captions described several specimen values while
 // their source mapping supplies only the named field below. Do not infer extras.
@@ -102,12 +107,15 @@ export function buildPolicy() {
         || (UNANNOTATED[entry.board_id]?.includes(slot.slot_id) ? 'unavailable' : null);
       const price = PRICE_FIELDS.has(slot.f) && hasBinding(slot);
       const direction = /^(?:pred_pre_sig(?:_n)?|pre_sig|pre_tp)$/.test(slot.f || '') && hasBinding(slot);
-      const time = hasBinding(slot) && TIME_FIELDS.test(slot.f || '');
+      const time = hasBinding(slot) && (TIME_FIELDS.test(slot.f || '')
+        || (slot.f === '20' && /^base:0/.test(slot.mapping_id || '')));
+      const identifier = hasBinding(slot) && (/^(?:code|symbol)$|(?:_cd|_code)$/.test(slot.f || '')
+        || /코드/.test(slot.kor || '') || slot.format?.literal === true);
       const priceParts = entry.card_id === 'CC-03' && slot.composite?.parts
         ?.filter((part) => PRICE_FIELDS.has(part.f)).map((part) => part.f);
       const boundName = entry.card_id === 'CC-03' && slot.slot_id === 's001' && slot.f === 'stk_nm';
       const boundLabel = slot.kind === 'label' && hasBinding(slot);
-      const displayRole = role || (price ? 'price' : direction ? 'direction' : time ? 'bound-time'
+      const displayRole = role || (price ? 'price' : direction ? 'direction' : time ? 'bound-time' : identifier ? 'bound-identifier'
         : priceParts?.length ? 'price-composite' : boundName ? 'bound-name' : boundLabel ? 'bound-label' : null);
       if (displayRole) slots[slot.slot_id] = [slot.paper_text, displayRole,
         displayRole === 'price-composite' ? priceParts : slot.f || null];

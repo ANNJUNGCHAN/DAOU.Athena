@@ -33,6 +33,16 @@ function prepareDisplayInput(contract, values) {
       next.format = { ...rule[2], missing_text: '—' };
       return next;
     }
+    if (role === 'bound-identifier') {
+      delete next.static;
+      next.kind = 'value';
+      next.format = { kind: 'text', missing_text: '—' };
+      if (typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value))) {
+        if (changedValues === values) changedValues = { ...values };
+        changedValues[slot.slot_id] = { value, text: String(value) };
+      }
+      return next;
+    }
     if (role === 'bound-name' || role === 'bound-label') {
       // Generated chunks omit mapping metadata. A mapped label must never fall back
       // to a specimen company name or cash type when that response row is absent.

@@ -13,6 +13,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s036": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s037": [
       "현금",
       "bound-label",
@@ -28,6 +33,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s049": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s050": [
       "현금",
       "bound-label",
@@ -37,6 +47,11 @@ const policy = {
       "198,400",
       "price",
       "cur_prc"
+    ],
+    "s062": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s063": [
       "현금",
@@ -53,6 +68,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s075": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s076": [
       "현금",
       "bound-label",
@@ -67,6 +87,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s088": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s089": [
       "현금",
@@ -83,6 +108,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s101": [
+      "207940",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s102": [
       "현금",
       "bound-label",
@@ -98,6 +128,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s114": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s115": [
       "현금",
       "bound-label",
@@ -112,6 +147,11 @@ const policy = {
       "기아",
       "bound-label",
       "stk_nm"
+    ],
+    "s127": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s128": [
       "현금",
@@ -154,6 +194,11 @@ const policy = {
       "삼성전자",
       "bound-name",
       "stk_nm"
+    ],
+    "s002": [
+      "005930 · KOSPI · KRX",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s003": [
       "정규장",
@@ -295,6 +340,11 @@ const policy = {
       "status",
       null
     ],
+    "s003": [
+      "005930 · KOSPI · 정규장",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s004": [
       "정규장",
       "bound-label",
@@ -425,40 +475,80 @@ const policy = {
       "unavailable",
       null
     ],
+    "s107": [
+      "09:42:21",
+      "bound-time",
+      "20"
+    ],
     "s111": [
       "매수",
       "bound-label",
       "25"
+    ],
+    "s113": [
+      "09:42:20",
+      "bound-time",
+      "20"
     ],
     "s117": [
       "매도",
       "bound-label",
       "25"
     ],
+    "s119": [
+      "09:42:19",
+      "bound-time",
+      "20"
+    ],
     "s123": [
       "매수",
       "bound-label",
       "25"
+    ],
+    "s125": [
+      "09:42:18",
+      "bound-time",
+      "20"
     ],
     "s129": [
       "매수",
       "bound-label",
       "25"
     ],
+    "s131": [
+      "09:42:17",
+      "bound-time",
+      "20"
+    ],
     "s135": [
       "매도",
       "bound-label",
       "25"
+    ],
+    "s137": [
+      "09:42:16",
+      "bound-time",
+      "20"
     ],
     "s141": [
       "매수",
       "bound-label",
       "25"
     ],
+    "s143": [
+      "09:42:15",
+      "bound-time",
+      "20"
+    ],
     "s147": [
       "매도",
       "bound-label",
       "25"
+    ],
+    "s149": [
+      "09:42:14",
+      "bound-time",
+      "20"
     ],
     "s153": [
       "매수",
@@ -527,6 +617,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s042": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s043": [
       "150,850",
       "price",
@@ -541,6 +636,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s053": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s054": [
       "198,400",
@@ -557,6 +657,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s064": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s065": [
       "232,500",
       "price",
@@ -571,6 +676,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s075": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s076": [
       "214,000",
@@ -587,6 +697,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s086": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s087": [
       "810,000",
       "price",
@@ -602,20 +717,40 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s106": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s113": [
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s114": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s121": [
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
     ],
+    "s122": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s128": [
       "삼성전자",
       "bound-label",
       "name"
+    ],
+    "s129": [
+      "005930 · KOSPI · 대형주 · 제조",
+      "bound-identifier",
+      "code"
     ],
     "s131": [
       "150,850",
@@ -699,6 +834,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s016": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s017": [
       "198,400",
       "price",
@@ -729,6 +869,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s027": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s028": [
       "197,400",
       "price",
@@ -758,6 +903,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s038": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s039": [
       "150,850",
@@ -936,6 +1086,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s014": [
+      "005930",
+      "bound-identifier",
+      "9001"
+    ],
     "s015": [
       "거래대금 급증",
       "bound-label",
@@ -951,6 +1106,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s024": [
+      "000660",
+      "bound-identifier",
+      "9001"
+    ],
     "s032": [
       "조건 충족",
       "status",
@@ -961,6 +1121,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s034": [
+      "042700",
+      "bound-identifier",
+      "9001"
+    ],
     "s035": [
       "거래대금 급증",
       "bound-label",
@@ -970,6 +1135,11 @@ const policy = {
       "조건 충족",
       "status",
       null
+    ],
+    "s044": [
+      "069500",
+      "bound-identifier",
+      "9001"
     ],
     "s045": [
       "관찰 중",
@@ -986,6 +1156,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s054": [
+      "005380",
+      "bound-identifier",
+      "9001"
+    ],
     "s055": [
       "관찰 중",
       "unavailable",
@@ -1000,6 +1175,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "302"
+    ],
+    "s064": [
+      "035420",
+      "bound-identifier",
+      "9001"
     ],
     "s065": [
       "관찰 중",
@@ -1016,6 +1196,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s074": [
+      "035720",
+      "bound-identifier",
+      "9001"
+    ],
     "s075": [
       "관찰 중",
       "unavailable",
@@ -1030,6 +1215,11 @@ const policy = {
       "기아",
       "bound-label",
       "302"
+    ],
+    "s084": [
+      "000270",
+      "bound-identifier",
+      "9001"
     ],
     "s085": [
       "관찰 중",
@@ -1088,6 +1278,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s004": [
+      "KRX · 09:42:18 장중",
+      "bound-time",
+      "20"
+    ],
     "s023": [
       "20일 추적오차",
       "caption",
@@ -1117,6 +1312,11 @@ const policy = {
       "47,957",
       "price",
       "base_pric"
+    ],
+    "s062": [
+      "대상지수 코스피200",
+      "bound-identifier",
+      "etfobjt_idex_cd"
     ],
     "s070": [
       "대상지수 대비율",
@@ -1159,6 +1359,16 @@ const policy = {
       "삼성전자 2503 콜 ELW",
       "bound-name",
       "stk_nm"
+    ],
+    "s002": [
+      "58H215 · 기초자산 005930 · KB증권 발행 2503회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s007": [
+      "09:42:18 · KRX",
+      "bound-time",
+      "20"
     ],
     "s009": [
       "1,215원",
@@ -1387,6 +1597,11 @@ const policy = {
     ]
   },
   "15R0-2": {
+    "s004": [
+      "오전 9:42 · 실시간",
+      "bound-time",
+      "20"
+    ],
     "s019": [
       "114",
       "unavailable",
@@ -1396,6 +1611,11 @@ const policy = {
       "반도체",
       "bound-label",
       "stk_nm"
+    ],
+    "s024": [
+      "G2510 · 제조",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s025": [
       "3,184.52",
@@ -1407,6 +1627,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s028": [
+      "G3520 · 제조",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s029": [
       "14,208.55",
       "price",
@@ -1416,6 +1641,11 @@ const policy = {
       "은행",
       "bound-label",
       "stk_nm"
+    ],
+    "s032": [
+      "G4010 · 금융",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s033": [
       "912.44",
@@ -1437,6 +1667,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s044": [
+      "396300",
+      "bound-identifier",
+      "9001"
+    ],
     "s045": [
       "정적 VI",
       "bound-label",
@@ -1457,6 +1692,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s052": [
+      "007660",
+      "bound-identifier",
+      "9001"
+    ],
     "s053": [
       "동적 VI",
       "bound-label",
@@ -1476,6 +1716,11 @@ const policy = {
       "테마파워",
       "bound-label",
       "302"
+    ],
+    "s060": [
+      "217500",
+      "bound-identifier",
+      "9001"
     ],
     "s061": [
       "정적 VI",
@@ -1519,80 +1764,160 @@ const policy = {
       "status",
       null
     ],
+    "s019": [
+      "09:42:21",
+      "bound-time",
+      "20"
+    ],
     "s023": [
       "매수",
       "bound-label",
       "1315"
+    ],
+    "s025": [
+      "09:42:20",
+      "bound-time",
+      "20"
     ],
     "s029": [
       "매도",
       "bound-label",
       "1315"
     ],
+    "s031": [
+      "09:42:19",
+      "bound-time",
+      "20"
+    ],
     "s035": [
       "매수",
       "bound-label",
       "1315"
+    ],
+    "s037": [
+      "09:42:18",
+      "bound-time",
+      "20"
     ],
     "s041": [
       "매수",
       "bound-label",
       "1315"
     ],
+    "s043": [
+      "09:42:17",
+      "bound-time",
+      "20"
+    ],
     "s047": [
       "매도",
       "bound-label",
       "1315"
+    ],
+    "s049": [
+      "09:42:16",
+      "bound-time",
+      "20"
     ],
     "s053": [
       "매수",
       "bound-label",
       "1315"
     ],
+    "s055": [
+      "09:42:15",
+      "bound-time",
+      "20"
+    ],
     "s059": [
       "매도",
       "bound-label",
       "1315"
+    ],
+    "s061": [
+      "09:42:14",
+      "bound-time",
+      "20"
     ],
     "s065": [
       "매수",
       "bound-label",
       "1315"
     ],
+    "s067": [
+      "09:42:13",
+      "bound-time",
+      "20"
+    ],
     "s071": [
       "매도",
       "bound-label",
       "1315"
+    ],
+    "s073": [
+      "09:42:12",
+      "bound-time",
+      "20"
     ],
     "s077": [
       "매수",
       "bound-label",
       "1315"
     ],
+    "s079": [
+      "09:42:11",
+      "bound-time",
+      "20"
+    ],
     "s083": [
       "매수",
       "bound-label",
       "1315"
+    ],
+    "s085": [
+      "09:42:10",
+      "bound-time",
+      "20"
     ],
     "s089": [
       "매도",
       "bound-label",
       "1315"
     ],
+    "s091": [
+      "09:42:09",
+      "bound-time",
+      "20"
+    ],
     "s095": [
       "매수",
       "bound-label",
       "1315"
+    ],
+    "s097": [
+      "09:42:08",
+      "bound-time",
+      "20"
     ],
     "s101": [
       "매도",
       "bound-label",
       "1315"
     ],
+    "s103": [
+      "09:42:07",
+      "bound-time",
+      "20"
+    ],
     "s107": [
       "매수",
       "bound-label",
       "1315"
+    ],
+    "s109": [
+      "09:42:06",
+      "bound-time",
+      "20"
     ],
     "s113": [
       "매도",
@@ -1749,6 +2074,16 @@ const policy = {
       "price",
       "lst_pric"
     ],
+    "s241": [
+      "VI 미발동",
+      "status",
+      null
+    ],
+    "s243": [
+      "VI 미발동",
+      "status",
+      null
+    ],
     "s246": [
       "149,200원",
       "price",
@@ -1856,6 +2191,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s044": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s045": [
       "150,850",
       "price",
@@ -1865,6 +2205,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s055": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s056": [
       "198,400",
@@ -1876,6 +2221,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s066": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s067": [
       "232,500",
       "price",
@@ -1885,6 +2235,11 @@ const policy = {
       "KB금융",
       "bound-label",
       "stk_nm"
+    ],
+    "s077": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s078": [
       "78,200",
@@ -1896,6 +2251,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s088": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s089": [
       "389,500",
       "price",
@@ -1905,6 +2265,11 @@ const policy = {
       "기아",
       "bound-label",
       "stk_nm"
+    ],
+    "s099": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s100": [
       "99,400",
@@ -1916,6 +2281,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s110": [
+      "006400",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s111": [
       "342,000",
       "price",
@@ -1925,6 +2295,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s121": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s122": [
       "214,000",
@@ -1936,6 +2311,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s132": [
+      "373220",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s133": [
       "402,500",
       "price",
@@ -1945,6 +2325,11 @@ const policy = {
       "셀트리온",
       "bound-label",
       "stk_nm"
+    ],
+    "s143": [
+      "068270",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s144": [
       "186,300",
@@ -1956,6 +2341,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s154": [
+      "055550",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s155": [
       "62,400",
       "price",
@@ -1965,6 +2355,11 @@ const policy = {
       "삼성바이오로직스",
       "bound-label",
       "stk_nm"
+    ],
+    "s165": [
+      "207940",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s166": [
       "1,024,000",
@@ -1976,6 +2371,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s176": [
+      "034020",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s177": [
       "62,800",
       "price",
@@ -1985,6 +2385,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s187": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s188": [
       "812,000",
@@ -1996,6 +2401,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s198": [
+      "012330",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s199": [
       "284,500",
       "price",
@@ -2005,6 +2415,11 @@ const policy = {
       "삼성물산",
       "bound-label",
       "stk_nm"
+    ],
+    "s209": [
+      "028260",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s210": [
       "168,700",
@@ -2016,6 +2431,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s220": [
+      "030200",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s221": [
       "52,300",
       "price",
@@ -2025,6 +2445,11 @@ const policy = {
       "한국전력",
       "bound-label",
       "stk_nm"
+    ],
+    "s231": [
+      "015760",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s232": [
       "34,850",
@@ -2036,6 +2461,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s242": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s243": [
       "197,400",
       "price",
@@ -2045,6 +2475,11 @@ const policy = {
       "이수페타시스",
       "bound-label",
       "stk_nm"
+    ],
+    "s253": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s254": [
       "64,500",
@@ -2057,6 +2492,11 @@ const policy = {
       "실시간",
       "status",
       null
+    ],
+    "s003": [
+      "005930 · KOSPI · 장중",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s013": [
       "5거래일 연속 순매수 · 09:40 기준",
@@ -2168,6 +2608,36 @@ const policy = {
       "time",
       null
     ],
+    "s171": [
+      "09:15",
+      "bound-time",
+      "20"
+    ],
+    "s172": [
+      "09:20",
+      "bound-time",
+      "20"
+    ],
+    "s173": [
+      "09:25",
+      "bound-time",
+      "20"
+    ],
+    "s174": [
+      "09:30",
+      "bound-time",
+      "20"
+    ],
+    "s175": [
+      "09:35",
+      "bound-time",
+      "20"
+    ],
+    "s176": [
+      "09:40",
+      "bound-time",
+      "20"
+    ],
     "s177": [
       "장중 실시간 · 투자자·거래원 집계 갱신 중",
       "status",
@@ -2179,6 +2649,11 @@ const policy = {
       "삼성전자 수급",
       "bound-label",
       "stk_nm"
+    ],
+    "s003": [
+      "005930 · KOSPI · 장중",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s011": [
       "모건스탠리",
@@ -2215,6 +2690,11 @@ const policy = {
       "bound-label",
       "151"
     ],
+    "s037": [
+      "16",
+      "bound-identifier",
+      "156"
+    ],
     "s038": [
       "외국계",
       "bound-label",
@@ -2235,6 +2715,11 @@ const policy = {
       "bound-label",
       "mmcm_nm"
     ],
+    "s061": [
+      "17",
+      "bound-identifier",
+      "code"
+    ],
     "s062": [
       "외국계",
       "bound-label",
@@ -2245,15 +2730,30 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s073": [
+      "05",
+      "bound-identifier",
+      "mmcm_cd"
+    ],
     "s083": [
       "한국투자증권",
       "bound-label",
       "145"
     ],
+    "s084": [
+      "03",
+      "bound-identifier",
+      "150"
+    ],
     "s094": [
       "삼성증권",
       "bound-label",
       "sel_trde_ori_3"
+    ],
+    "s095": [
+      "02",
+      "bound-identifier",
+      "sel_trde_ori_cd_3"
     ],
     "s105": [
       "미래에셋",
@@ -2264,6 +2764,11 @@ const policy = {
       "키움증권",
       "bound-label",
       "sel_trde_ori_1"
+    ],
+    "s117": [
+      "01",
+      "bound-identifier",
+      "sel_trde_ori_cd_1"
     ],
     "s127": [
       "8곳 합계 +322억원",
@@ -2344,6 +2849,11 @@ const policy = {
       "09:41:44",
       "bound-time",
       "tm"
+    ],
+    "s187": [
+      "3곳",
+      "bound-identifier",
+      "list"
     ]
   },
   "2QRP-1": {
@@ -2676,6 +3186,11 @@ const policy = {
       "bound-name",
       "stk_nm"
     ],
+    "s002": [
+      "005930 · KOSPI · KRX",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s003": [
       "정규장",
       "status",
@@ -2985,6 +3500,11 @@ const policy = {
       "price",
       "low_pric"
     ],
+    "s255": [
+      "08:50",
+      "bound-time",
+      "20"
+    ],
     "s258": [
       "● 현재가·체결 실시간 갱신 중",
       "status",
@@ -3001,6 +3521,11 @@ const policy = {
       "삼성전자",
       "bound-name",
       "stk_nm"
+    ],
+    "s002": [
+      "005930 · KOSPI · KRX",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s003": [
       "정규장",
@@ -3273,15 +3798,30 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s135": [
+      "8000",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s150": [
       "기관",
       "bound-label",
       "stk_nm"
     ],
+    "s151": [
+      "1000",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s166": [
       "외국인",
       "bound-label",
       "stk_nm"
+    ],
+    "s167": [
+      "9000",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s183": [
       "집계 기간 미제공",
@@ -3319,6 +3859,11 @@ const policy = {
       "실시간",
       "status",
       null
+    ],
+    "s003": [
+      "005930 · KOSPI · 장중",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s013": [
       "5거래일 연속 순매수 · 09:40 기준",
@@ -3402,6 +3947,11 @@ const policy = {
       "status",
       null
     ],
+    "s003": [
+      "005930 · KOSPI · 장중",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s013": [
       "5거래일 연속 순매수 · 09:40 기준",
       "time",
@@ -3463,6 +4013,11 @@ const policy = {
       "실시간",
       "status",
       null
+    ],
+    "s003": [
+      "005930 · KOSPI · 장중",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s019": [
       "4거래일 연속 순매도",
@@ -3556,6 +4111,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s036": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s037": [
       "현금",
       "bound-label",
@@ -3571,6 +4131,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s051": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s052": [
       "현금",
       "bound-label",
@@ -3580,6 +4145,11 @@ const policy = {
       "198,400",
       "price",
       "cur_prc"
+    ],
+    "s066": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s067": [
       "현금",
@@ -3596,6 +4166,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s081": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s082": [
       "현금",
       "bound-label",
@@ -3610,6 +4185,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s096": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s097": [
       "현금",
@@ -3626,6 +4206,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s111": [
+      "207940",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s112": [
       "현금",
       "bound-label",
@@ -3641,6 +4226,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s126": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s127": [
       "현금",
       "bound-label",
@@ -3655,6 +4245,11 @@ const policy = {
       "기아",
       "bound-label",
       "stk_nm"
+    ],
+    "s141": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s142": [
       "현금",
@@ -3935,6 +4530,11 @@ const policy = {
       "status",
       null
     ],
+    "s048": [
+      "069500 · 035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s049": [
       "현금",
       "bound-label",
@@ -3954,6 +4554,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s059": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s060": [
       "현금",
@@ -3975,6 +4580,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s070": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s071": [
       "현금",
       "bound-label",
@@ -3994,6 +4604,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s081": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s082": [
       "현금",
@@ -4015,6 +4630,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s092": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s093": [
       "현금",
       "bound-label",
@@ -4035,6 +4655,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s103": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s104": [
       "현금",
       "bound-label",
@@ -4049,6 +4674,11 @@ const policy = {
       "거래세 -6,010 · 농특세 -18,020",
       "unavailable",
       null
+    ],
+    "s114": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s115": [
       "현금",
@@ -4117,6 +4747,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s060": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s061": [
       "KRX",
       "bound-label",
@@ -4162,6 +4797,11 @@ const policy = {
       "bound-time",
       "cntr_tm"
     ],
+    "s076": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s077": [
       "KRX",
       "bound-label",
@@ -4191,6 +4831,11 @@ const policy = {
       "현대차",
       "bound-label",
       "stk_nm"
+    ],
+    "s091": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s092": [
       "KRX",
@@ -4227,6 +4872,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s106": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s107": [
       "KRX",
       "bound-label",
@@ -4256,6 +4906,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s121": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s122": [
       "KRX",
@@ -4379,6 +5034,11 @@ const policy = {
       "status",
       null
     ],
+    "s003": [
+      "005930 · KOSPI · 정규장",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s004": [
       "정규장",
       "bound-label",
@@ -4459,40 +5119,80 @@ const policy = {
       "unavailable",
       null
     ],
+    "s090": [
+      "09:42:21",
+      "bound-time",
+      "20"
+    ],
     "s094": [
       "매수",
       "bound-label",
       "25"
+    ],
+    "s096": [
+      "09:42:20",
+      "bound-time",
+      "20"
     ],
     "s100": [
       "매도",
       "bound-label",
       "25"
     ],
+    "s102": [
+      "09:42:19",
+      "bound-time",
+      "20"
+    ],
     "s106": [
       "매수",
       "bound-label",
       "25"
+    ],
+    "s108": [
+      "09:42:18",
+      "bound-time",
+      "20"
     ],
     "s112": [
       "매수",
       "bound-label",
       "25"
     ],
+    "s114": [
+      "09:42:17",
+      "bound-time",
+      "20"
+    ],
     "s118": [
       "매도",
       "bound-label",
       "25"
+    ],
+    "s120": [
+      "09:42:16",
+      "bound-time",
+      "20"
     ],
     "s124": [
       "매수",
       "bound-label",
       "25"
     ],
+    "s126": [
+      "09:42:15",
+      "bound-time",
+      "20"
+    ],
     "s130": [
       "매도",
       "bound-label",
       "25"
+    ],
+    "s132": [
+      "09:42:14",
+      "bound-time",
+      "20"
     ],
     "s136": [
       "매수",
@@ -4531,6 +5231,11 @@ const policy = {
     ]
   },
   "2TZN-1": {
+    "s002": [
+      "장중 · 09:42",
+      "bound-time",
+      "20"
+    ],
     "s016": [
       "정규장",
       "status",
@@ -4541,14 +5246,24 @@ const policy = {
       "status",
       null
     ],
+    "s018": [
+      "21개 업종",
+      "bound-identifier",
+      "list"
+    ],
     "s026": [
       "반도체",
       "bound-label",
       "name"
     ],
+    "s027": [
+      "G2510 · 제조",
+      "bound-identifier",
+      "code"
+    ],
     "s028": [
       "KOSPI",
-      "bound-label",
+      "bound-identifier",
       "marketCode"
     ],
     "s029": [
@@ -4561,9 +5276,14 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s038": [
+      "G3520 · 제조",
+      "bound-identifier",
+      "code"
+    ],
     "s039": [
       "KOSPI",
-      "bound-label",
+      "bound-identifier",
       "marketCode"
     ],
     "s040": [
@@ -4576,9 +5296,14 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s049": [
+      "G4010 · 금융",
+      "bound-identifier",
+      "code"
+    ],
     "s050": [
       "KOSPI",
-      "bound-label",
+      "bound-identifier",
       "marketCode"
     ],
     "s051": [
@@ -4591,9 +5316,14 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s060": [
+      "G2710 · 제조",
+      "bound-identifier",
+      "code"
+    ],
     "s061": [
       "KOSPI",
-      "bound-label",
+      "bound-identifier",
       "marketCode"
     ],
     "s062": [
@@ -4606,9 +5336,14 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s071": [
+      "G1510 · 제조",
+      "bound-identifier",
+      "code"
+    ],
     "s072": [
       "KOSPI",
-      "bound-label",
+      "bound-identifier",
       "marketCode"
     ],
     "s073": [
@@ -4621,15 +5356,25 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s082": [
+      "G2020 · 건설",
+      "bound-identifier",
+      "code"
+    ],
     "s083": [
       "KOSPI",
-      "bound-label",
+      "bound-identifier",
       "marketCode"
     ],
     "s084": [
       "78.61",
       "price",
       "cur_prc"
+    ],
+    "s095": [
+      "09:42 기준",
+      "bound-time",
+      "20"
     ],
     "s101": [
       "시간별",
@@ -4793,6 +5538,11 @@ const policy = {
       "● 업종 지수 실시간 갱신 중",
       "status",
       null
+    ],
+    "s222": [
+      "마지막 반영 09:42:18",
+      "bound-time",
+      "20"
     ]
   },
   "2U5L-1": {
@@ -4831,6 +5581,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s029": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s030": [
       "거래대금 급증",
       "bound-label",
@@ -4865,6 +5620,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s050": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s051": [
       "신고가",
@@ -4901,6 +5661,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s071": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s072": [
       "거래대금 급증",
       "bound-label",
@@ -4930,6 +5695,11 @@ const policy = {
       "189,800",
       "price",
       "low_pric"
+    ],
+    "s092": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s093": [
       "48,360",
@@ -4961,6 +5731,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s112": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s113": [
       "232,500",
       "price",
@@ -4990,6 +5765,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s132": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s133": [
       "214,000",
@@ -5021,6 +5801,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s152": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s153": [
       "41,850",
       "price",
@@ -5050,6 +5835,11 @@ const policy = {
       "기아",
       "bound-label",
       "stk_nm"
+    ],
+    "s172": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s173": [
       "99,400",
@@ -5111,20 +5901,40 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s209": [
+      "G001",
+      "bound-identifier",
+      "gcod"
+    ],
     "s211": [
       "배당주",
       "bound-label",
       "name"
+    ],
+    "s212": [
+      "G002",
+      "bound-identifier",
+      "gcod"
     ],
     "s214": [
       "ETF 모음",
       "bound-label",
       "name"
     ],
+    "s215": [
+      "G003",
+      "bound-identifier",
+      "gcod"
+    ],
     "s217": [
       "ELW 관찰",
       "bound-label",
       "name"
+    ],
+    "s218": [
+      "G004",
+      "bound-identifier",
+      "gcod"
     ],
     "s220": [
       "● 관심종목 시세 실시간 갱신 중",
@@ -5158,6 +5968,11 @@ const policy = {
       "bound-label",
       "thema_nm"
     ],
+    "s024": [
+      "T0142",
+      "bound-identifier",
+      "thema_grp_cd"
+    ],
     "s026": [
       "2.8조",
       "unavailable",
@@ -5168,10 +5983,20 @@ const policy = {
       "bound-label",
       "thema_nm"
     ],
+    "s031": [
+      "T0087",
+      "bound-identifier",
+      "thema_grp_cd"
+    ],
     "s033": [
       "1.1조",
       "unavailable",
       null
+    ],
+    "s038": [
+      "T0053",
+      "bound-identifier",
+      "thema_grp_cd"
     ],
     "s040": [
       "0.9조",
@@ -5183,6 +6008,11 @@ const policy = {
       "bound-label",
       "thema_nm"
     ],
+    "s045": [
+      "T0119",
+      "bound-identifier",
+      "thema_grp_cd"
+    ],
     "s047": [
       "0.6조",
       "unavailable",
@@ -5193,6 +6023,11 @@ const policy = {
       "bound-label",
       "thema_nm"
     ],
+    "s052": [
+      "T0064",
+      "bound-identifier",
+      "thema_grp_cd"
+    ],
     "s054": [
       "0.4조",
       "unavailable",
@@ -5202,6 +6037,11 @@ const policy = {
       "저PBR 가치",
       "bound-label",
       "thema_nm"
+    ],
+    "s059": [
+      "T0201",
+      "bound-identifier",
+      "thema_grp_cd"
     ],
     "s061": [
       "0.7조",
@@ -5223,6 +6063,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s076": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s077": [
       "198,400",
       "price",
@@ -5233,6 +6078,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s087": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s088": [
       "197,400",
       "price",
@@ -5242,6 +6092,11 @@ const policy = {
       "이수페타시스",
       "bound-label",
       "stk_nm"
+    ],
+    "s098": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s099": [
       "64,500",
@@ -5278,10 +6133,25 @@ const policy = {
       "bound-label",
       "thema_nm"
     ],
+    "s123": [
+      "T0087",
+      "bound-identifier",
+      "thema_grp_cd"
+    ],
+    "s126": [
+      "T0053",
+      "bound-identifier",
+      "thema_grp_cd"
+    ],
     "s128": [
       "로봇",
       "bound-label",
       "thema_nm"
+    ],
+    "s129": [
+      "T0119",
+      "bound-identifier",
+      "thema_grp_cd"
     ],
     "s133": [
       "● 테마 등락 실시간 갱신 중",
@@ -5350,6 +6220,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s040": [
+      "007660",
+      "bound-identifier",
+      "9001"
+    ],
     "s041": [
       "KOSPI",
       "bound-label",
@@ -5374,6 +6249,11 @@ const policy = {
       "대성첨단",
       "bound-label",
       "302"
+    ],
+    "s055": [
+      "396300",
+      "bound-identifier",
+      "9001"
     ],
     "s056": [
       "KOSDAQ",
@@ -5400,6 +6280,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s070": [
+      "217500",
+      "bound-identifier",
+      "9001"
+    ],
     "s071": [
       "KOSDAQ",
       "bound-label",
@@ -5420,6 +6305,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s084": [
+      "09:42 기준",
+      "bound-time",
+      "20"
+    ],
     "s085": [
       "08:30",
       "unavailable",
@@ -5429,6 +6319,11 @@ const policy = {
       "09:00",
       "unavailable",
       null
+    ],
+    "s091": [
+      "09:42",
+      "bound-time",
+      "20"
     ],
     "s094": [
       "15:20",
@@ -5445,6 +6340,16 @@ const policy = {
       "unavailable",
       null
     ],
+    "s103": [
+      "이수페타시스 — 발동 중",
+      "unavailable",
+      null
+    ],
+    "s104": [
+      "단일가 진행",
+      "status",
+      null
+    ],
     "s106": [
       "동적 VI · 상승",
       "bound-label",
@@ -5455,15 +6360,30 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s113": [
+      "396300 · 발동 중",
+      "bound-identifier",
+      "9001"
+    ],
     "s115": [
       "테마파워",
       "bound-label",
       "302"
     ],
+    "s116": [
+      "217500 · 09:06:12 해제",
+      "bound-identifier",
+      "9001"
+    ],
     "s120": [
       "● 시장 상태·VI 실시간 갱신 중",
       "status",
       null
+    ],
+    "s121": [
+      "마지막 반영 09:42:18",
+      "bound-time",
+      "20"
     ]
   },
   "2UN6-1": {
@@ -5552,6 +6472,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s046": [
+      "042700",
+      "bound-identifier",
+      "9001"
+    ],
     "s047": [
       "거래대금 급증",
       "unavailable",
@@ -5581,6 +6506,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "302"
+    ],
+    "s057": [
+      "005930",
+      "bound-identifier",
+      "9001"
     ],
     "s058": [
       "거래대금 급증",
@@ -5612,6 +6542,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s068": [
+      "005380",
+      "bound-identifier",
+      "9001"
+    ],
     "s069": [
       "거래대금 급증",
       "unavailable",
@@ -5642,6 +6577,11 @@ const policy = {
       "bound-label",
       "302"
     ],
+    "s079": [
+      "000660",
+      "bound-identifier",
+      "9001"
+    ],
     "s080": [
       "20일 신고가",
       "unavailable",
@@ -5666,6 +6606,11 @@ const policy = {
       "+2.06%",
       "unavailable",
       null
+    ],
+    "s090": [
+      "069500",
+      "bound-identifier",
+      "9001"
     ],
     "s091": [
       "거래대금 급증",
@@ -5696,6 +6641,11 @@ const policy = {
       "한미반도체",
       "bound-label",
       "302"
+    ],
+    "s101": [
+      "042700",
+      "bound-identifier",
+      "9001"
     ],
     "s102": [
       "20일 신고가",
@@ -5819,6 +6769,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s043": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s044": [
       "150,850",
       "price",
@@ -5828,6 +6783,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s057": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s058": [
       "198,400",
@@ -5839,6 +6799,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s071": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s072": [
       "232,500",
       "price",
@@ -5848,6 +6813,11 @@ const policy = {
       "KB금융",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "78,200",
@@ -5859,6 +6829,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s099": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s100": [
       "214,000",
       "price",
@@ -5868,6 +6843,11 @@ const policy = {
       "POSCO홀딩스",
       "bound-label",
       "stk_nm"
+    ],
+    "s113": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s114": [
       "389,500",
@@ -5894,6 +6874,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s130": [
+      "051910",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s131": [
       "312,000",
       "price",
@@ -5904,6 +6889,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s144": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s145": [
       "41,850",
       "price",
@@ -5913,6 +6903,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s169": [
+      "순위 1위 · 005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s171": [
       "11.8% · 4,208억원",
@@ -6001,6 +6996,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s052": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s053": [
       "197,400",
       "price",
@@ -6025,6 +7025,11 @@ const policy = {
       "HD현대일렉트릭",
       "bound-label",
       "stk_nm"
+    ],
+    "s063": [
+      "267260",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s064": [
       "412,500",
@@ -6051,6 +7056,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s074": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s075": [
       "198,400",
       "price",
@@ -6075,6 +7085,11 @@ const policy = {
       "이수페타시스",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "64,500",
@@ -6101,6 +7116,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s096": [
+      "196170",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s097": [
       "391,000",
       "price",
@@ -6125,6 +7145,11 @@ const policy = {
       "레인보우로보틱스",
       "bound-label",
       "stk_nm"
+    ],
+    "s107": [
+      "277810",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s108": [
       "246,500",
@@ -6151,6 +7176,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s118": [
+      "257720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s119": [
       "58,900",
       "price",
@@ -6175,6 +7205,11 @@ const policy = {
       "리가켐바이오",
       "bound-label",
       "stk_nm"
+    ],
+    "s129": [
+      "141080",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s130": [
       "172,300",
@@ -6201,6 +7236,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s140": [
+      "078600",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s141": [
       "118,700",
       "price",
@@ -6225,6 +7265,11 @@ const policy = {
       "하나마이크론",
       "bound-label",
       "stk_nm"
+    ],
+    "s151": [
+      "067310",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s152": [
       "27,850",
@@ -6251,6 +7296,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s162": [
+      "005290",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s163": [
       "42,150",
       "price",
@@ -6275,6 +7325,11 @@ const policy = {
       "주성엔지니어링",
       "bound-label",
       "stk_nm"
+    ],
+    "s173": [
+      "036930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s174": [
       "38,700",
@@ -6301,6 +7356,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s184": [
+      "240810",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s185": [
       "41,300",
       "price",
@@ -6325,6 +7385,11 @@ const policy = {
       "티씨케이",
       "bound-label",
       "stk_nm"
+    ],
+    "s195": [
+      "064760",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s196": [
       "96,400",
@@ -6351,6 +7416,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s206": [
+      "003230",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s207": [
       "745,000",
       "price",
@@ -6375,6 +7445,11 @@ const policy = {
       "현대로템",
       "bound-label",
       "stk_nm"
+    ],
+    "s217": [
+      "064350",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s218": [
       "128,900",
@@ -6401,6 +7476,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s228": [
+      "010120",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s229": [
       "289,500",
       "price",
@@ -6425,6 +7505,11 @@ const policy = {
       "코스맥스",
       "bound-label",
       "stk_nm"
+    ],
+    "s239": [
+      "192820",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s240": [
       "118,600",
@@ -6451,6 +7536,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s250": [
+      "213420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s251": [
       "26,150",
       "price",
@@ -6476,6 +7566,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s261": [
+      "011170",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s262": [
       "61,200",
       "price",
@@ -6500,6 +7595,11 @@ const policy = {
       "선택 종목 · 한미반도체",
       "bound-label",
       "stk_nm"
+    ],
+    "s271": [
+      "042700 · 코스피",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s272": [
       "197,400",
@@ -6673,6 +7773,16 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s050": [
+      "305720",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s052": [
+      "KRX2B",
+      "bound-identifier",
+      "trace_idex_cd"
+    ],
     "s056": [
       "괴리 +0.18%",
       "unavailable",
@@ -6693,9 +7803,14 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s067": [
+      "396500",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s069": [
       "KSEMI",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s073": [
@@ -6717,6 +7832,16 @@ const policy = {
       "국내 업종섹터",
       "bound-label",
       "stk_cls"
+    ],
+    "s084": [
+      "305540",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s086": [
+      "KRX2B",
+      "bound-identifier",
+      "trace_idex_cd"
     ],
     "s090": [
       "괴리 +0.15%",
@@ -6743,6 +7868,11 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s101": [
+      "091230",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s102": [
       "· 반도체",
       "bound-label",
@@ -6750,7 +7880,7 @@ const policy = {
     ],
     "s103": [
       "KSEMI",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s107": [
@@ -6778,6 +7908,16 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s118": [
+      "122630",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s120": [
+      "K200",
+      "bound-identifier",
+      "trace_idex_cd"
+    ],
     "s124": [
       "괴리 +0.06%",
       "unavailable",
@@ -6797,6 +7937,16 @@ const policy = {
       "국내 시장대표",
       "bound-label",
       "stk_cls"
+    ],
+    "s135": [
+      "232080",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s137": [
+      "KQ150",
+      "bound-identifier",
+      "trace_idex_cd"
     ],
     "s141": [
       "괴리 +0.09%",
@@ -6823,6 +7973,11 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s152": [
+      "091180",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s153": [
       "· 자동차",
       "bound-label",
@@ -6830,7 +7985,7 @@ const policy = {
     ],
     "s154": [
       "KRXAU",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s158": [
@@ -6853,9 +8008,14 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s169": [
+      "360750",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s171": [
       "SPX",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s175": [
@@ -6878,6 +8038,16 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s186": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s188": [
+      "K200",
+      "bound-identifier",
+      "trace_idex_cd"
+    ],
     "s192": [
       "괴리 +0.09%",
       "unavailable",
@@ -6897,6 +8067,16 @@ const policy = {
       "국내 시장대표",
       "bound-label",
       "stk_cls"
+    ],
+    "s203": [
+      "102110",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s205": [
+      "K200",
+      "bound-identifier",
+      "trace_idex_cd"
     ],
     "s209": [
       "괴리 +0.07%",
@@ -6918,9 +8098,14 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s220": [
+      "367380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s222": [
       "NDX",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s226": [
@@ -6948,6 +8133,11 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s237": [
+      "325020",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s238": [
       "· 배당가치",
       "bound-label",
@@ -6955,7 +8145,7 @@ const policy = {
     ],
     "s239": [
       "KRXDV",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s243": [
@@ -6978,6 +8168,11 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s254": [
+      "466940",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s255": [
       "· 은행고배당",
       "bound-label",
@@ -6985,7 +8180,7 @@ const policy = {
     ],
     "s256": [
       "KRXBK",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s260": [
@@ -7013,6 +8208,11 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s271": [
+      "273130",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s272": [
       "· 종합채권",
       "bound-label",
@@ -7020,7 +8220,7 @@ const policy = {
     ],
     "s273": [
       "KBOND",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s277": [
@@ -7042,6 +8242,16 @@ const policy = {
       "해외 채권",
       "bound-label",
       "stk_cls"
+    ],
+    "s288": [
+      "305080",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s290": [
+      "UST10",
+      "bound-identifier",
+      "trace_idex_cd"
     ],
     "s294": [
       "괴리 +0.03%",
@@ -7068,6 +8278,11 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s305": [
+      "132030",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s306": [
       "· 금 선물",
       "bound-label",
@@ -7075,7 +8290,7 @@ const policy = {
     ],
     "s307": [
       "GOLD",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s311": [
@@ -7103,6 +8318,11 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s322": [
+      "130680",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s323": [
       "· WTI 원유 선물",
       "bound-label",
@@ -7110,7 +8330,7 @@ const policy = {
     ],
     "s324": [
       "WTI",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s328": [
@@ -7138,6 +8358,11 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s339": [
+      "266420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s340": [
       "· 헬스케어",
       "bound-label",
@@ -7145,7 +8370,7 @@ const policy = {
     ],
     "s341": [
       "KRXHC",
-      "bound-label",
+      "bound-identifier",
       "trace_idex_cd"
     ],
     "s345": [
@@ -7178,6 +8403,16 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s356": [
+      "114800",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s358": [
+      "K200F",
+      "bound-identifier",
+      "trace_idex_cd"
+    ],
     "s362": [
       "괴리 -1.18%",
       "unavailable",
@@ -7198,6 +8433,16 @@ const policy = {
       "bound-label",
       "stk_cls"
     ],
+    "s373": [
+      "252710",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s375": [
+      "K200F",
+      "bound-identifier",
+      "trace_idex_cd"
+    ],
     "s379": [
       "괴리 -0.14%",
       "unavailable",
@@ -7212,6 +8457,11 @@ const policy = {
       "KRX",
       "unavailable",
       null
+    ],
+    "s387": [
+      "305720 · 1위",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s393": [
       "+0.18%",
@@ -7280,6 +8530,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s049": [
+      "58H219 · KB증권 9C21회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s050": [
       "415",
       "price",
@@ -7295,6 +8550,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s062": [
+      "58J377 · 미래에셋증권 7K55회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s063": [
       "285",
       "price",
@@ -7304,6 +8564,11 @@ const policy = {
       "미래",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s075": [
+      "58K902 · 한국투자증권 3F09회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s076": [
       "190",
@@ -7320,6 +8585,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s088": [
+      "58L118 · 신한투자증권 5T31회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s089": [
       "145",
       "price",
@@ -7334,6 +8604,11 @@ const policy = {
       "현대차 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s101": [
+      "58M204 · KB증권 8Q02회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s102": [
       "520",
@@ -7350,6 +8625,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s114": [
+      "58N551 · 미래에셋증권 2W18회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s115": [
       "88",
       "price",
@@ -7359,6 +8639,11 @@ const policy = {
       "미래",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s127": [
+      "58P630 · 한국투자증권 6B44회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s128": [
       "305",
@@ -7375,6 +8660,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s140": [
+      "58Q745 · 신한투자증권 9K12회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s141": [
       "240",
       "price",
@@ -7389,6 +8679,11 @@ const policy = {
       "한미반도체 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s153": [
+      "59T447 · KB증권 4D77회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s154": [
       "605",
@@ -7405,6 +8700,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s166": [
+      "59U182 · 미래에셋증권 1H26회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s167": [
       "96",
       "price",
@@ -7420,6 +8720,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s179": [
+      "59V603 · 한국투자증권 7M08회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s180": [
       "1,340",
       "price",
@@ -7429,6 +8734,11 @@ const policy = {
       "한투",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s192": [
+      "59W250 · 신한투자증권 2P59회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s193": [
       "174",
@@ -7445,6 +8755,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s205": [
+      "58X512 · KB증권 6C31회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s206": [
       "142",
       "price",
@@ -7459,6 +8774,11 @@ const policy = {
       "NAVER 풋",
       "bound-label",
       "stk_nm"
+    ],
+    "s218": [
+      "58Y268 · 미래에셋증권 3J40회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s219": [
       "205",
@@ -7475,6 +8795,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s231": [
+      "58Z144 · 한국투자증권 8N17회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s232": [
       "268",
       "price",
@@ -7489,6 +8814,11 @@ const policy = {
       "현대차 풋",
       "bound-label",
       "stk_nm"
+    ],
+    "s244": [
+      "59A806 · 신한투자증권 5R63회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s245": [
       "118",
@@ -7505,6 +8835,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s257": [
+      "59B473 · KB증권 9T20회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s258": [
       "388",
       "price",
@@ -7519,6 +8854,11 @@ const policy = {
       "한미반도체 풋",
       "bound-label",
       "stk_nm"
+    ],
+    "s270": [
+      "59C059 · 미래에셋증권 4X85회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s271": [
       "132",
@@ -7535,6 +8875,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s283": [
+      "59D627 · 한국투자증권 1Z38회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s284": [
       "76",
       "price",
@@ -7550,6 +8895,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s296": [
+      "59E381 · 신한투자증권 6G92회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s297": [
       "210",
       "price",
@@ -7559,6 +8909,11 @@ const policy = {
       "신한",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s308": [
+      "58H219 · 잔량 1위",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s310": [
       "415",
@@ -7709,6 +9064,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "150,850",
       "price",
@@ -7723,6 +9083,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s052": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s053": [
       "198,400",
@@ -7739,6 +9104,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "232,500",
       "price",
@@ -7754,6 +9124,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s074": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s075": [
       "214,000",
       "price",
@@ -7768,6 +9143,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "810,000",
@@ -7814,6 +9194,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s119": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s121": [
       "150,850",
       "price",
@@ -7854,6 +9239,11 @@ const policy = {
       "status",
       null
     ],
+    "s141": [
+      "VI 미발동",
+      "status",
+      null
+    ],
     "s144": [
       "● 실시간 갱신 중 · 마지막 반영 09:42:18",
       "time",
@@ -7881,6 +9271,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s049": [
+      "58H219 · KB증권 9C21회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s050": [
       "415",
       "price",
@@ -7895,6 +9290,11 @@ const policy = {
       "이수페타시스 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s062": [
+      "59V603 · 한국투자증권 7M08회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s063": [
       "1,340",
@@ -7911,6 +9311,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s075": [
+      "58J377 · 미래에셋증권 7K55회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s076": [
       "285",
       "price",
@@ -7925,6 +9330,11 @@ const policy = {
       "카카오 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s088": [
+      "58Z144 · 한국투자증권 8N17회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s089": [
       "268",
@@ -7941,6 +9351,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s101": [
+      "59B473 · KB증권 9T20회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s102": [
       "388",
       "price",
@@ -7956,6 +9371,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s114": [
+      "59T447 · KB증권 4D77회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s115": [
       "605",
       "price",
@@ -7965,6 +9385,11 @@ const policy = {
       "키움",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s127": [
+      "59W250 · 신한투자증권 2P59회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s128": [
       "174",
@@ -7981,6 +9406,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s140": [
+      "58M204 · KB증권 8Q02회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s141": [
       "520",
       "price",
@@ -7996,6 +9426,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s153": [
+      "58N551 · 미래에셋증권 2W18회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s154": [
       "88",
       "price",
@@ -8005,6 +9440,11 @@ const policy = {
       "미래",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s166": [
+      "58P630 · 한국투자증권 6B44회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s167": [
       "305",
@@ -8021,6 +9461,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s179": [
+      "58Q745 · 신한투자증권 9K12회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s180": [
       "240",
       "price",
@@ -8035,6 +9480,11 @@ const policy = {
       "현대차 풋",
       "bound-label",
       "stk_nm"
+    ],
+    "s192": [
+      "59A806 · 신한투자증권 5R63회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s193": [
       "118",
@@ -8051,6 +9501,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s205": [
+      "59E381 · 신한투자증권 6G92회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s206": [
       "210",
       "price",
@@ -8065,6 +9520,11 @@ const policy = {
       "LG에너지솔루션 풋",
       "bound-label",
       "stk_nm"
+    ],
+    "s218": [
+      "59D627 · 한국투자증권 1Z38회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s219": [
       "76",
@@ -8081,6 +9541,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s231": [
+      "59C059 · 미래에셋증권 4X85회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s232": [
       "132",
       "price",
@@ -8095,6 +9560,11 @@ const policy = {
       "NAVER 풋",
       "bound-label",
       "stk_nm"
+    ],
+    "s244": [
+      "58Y268 · 미래에셋증권 3J40회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s245": [
       "205",
@@ -8111,6 +9581,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s257": [
+      "58L118 · 신한투자증권 5T31회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s258": [
       "145",
       "price",
@@ -8125,6 +9600,11 @@ const policy = {
       "SK하이닉스 풋",
       "bound-label",
       "stk_nm"
+    ],
+    "s270": [
+      "58X512 · KB증권 6C31회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s271": [
       "142",
@@ -8141,6 +9621,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s283": [
+      "59U182 · 미래에셋증권 1H26회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s284": [
       "96",
       "price",
@@ -8151,6 +9636,11 @@ const policy = {
       "bound-label",
       "lpmmcm_nm"
     ],
+    "s296": [
+      "58K902 · 한국투자증권 3F09회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s297": [
       "190",
       "price",
@@ -8160,6 +9650,11 @@ const policy = {
       "한투",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s308": [
+      "58H219 · 등락률 1위",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s310": [
       "415",
@@ -8243,6 +9738,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "150,850",
       "price",
@@ -8272,6 +9772,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s052": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s053": [
       "198,400",
@@ -8303,6 +9808,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "232,500",
       "price",
@@ -8332,6 +9842,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s074": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s075": [
       "214,000",
@@ -8363,6 +9878,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s085": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s086": [
       "810,000",
       "price",
@@ -8393,6 +9913,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s099": [
+      "007660",
+      "bound-identifier",
+      "code"
+    ],
     "s100": [
       "+29.90%",
       "unavailable",
@@ -8402,6 +9927,11 @@ const policy = {
       "한미반도체",
       "bound-label",
       "name"
+    ],
+    "s102": [
+      "042700",
+      "bound-identifier",
+      "code"
     ],
     "s103": [
       "+4.18%",
@@ -8413,6 +9943,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s105": [
+      "012450",
+      "bound-identifier",
+      "code"
+    ],
     "s106": [
       "+3.01%",
       "unavailable",
@@ -8422,6 +9957,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "name"
+    ],
+    "s108": [
+      "000660",
+      "bound-identifier",
+      "code"
     ],
     "s109": [
       "+2.05%",
@@ -8433,10 +9973,20 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s111": [
+      "005930",
+      "bound-identifier",
+      "code"
+    ],
     "s112": [
       "+1.24%",
       "unavailable",
       null
+    ],
+    "s114": [
+      "069500",
+      "bound-identifier",
+      "code"
     ],
     "s115": [
       "+0.86%",
@@ -8448,6 +9998,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s117": [
+      "035420",
+      "bound-identifier",
+      "code"
+    ],
     "s118": [
       "+0.85%",
       "unavailable",
@@ -8457,6 +10012,11 @@ const policy = {
       "DB하이텍",
       "bound-label",
       "name"
+    ],
+    "s120": [
+      "000990",
+      "bound-identifier",
+      "code"
     ],
     "s121": [
       "-0.34%",
@@ -8468,6 +10028,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s123": [
+      "005380",
+      "bound-identifier",
+      "code"
+    ],
     "s124": [
       "-0.52%",
       "unavailable",
@@ -8477,6 +10042,11 @@ const policy = {
       "기아",
       "bound-label",
       "name"
+    ],
+    "s126": [
+      "000270",
+      "bound-identifier",
+      "code"
     ],
     "s127": [
       "-0.70%",
@@ -8488,6 +10058,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s129": [
+      "035720",
+      "bound-identifier",
+      "code"
+    ],
     "s130": [
       "-0.83%",
       "unavailable",
@@ -8498,6 +10073,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s132": [
+      "006400",
+      "bound-identifier",
+      "code"
+    ],
     "s133": [
       "-1.12%",
       "unavailable",
@@ -8507,6 +10087,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "name"
+    ],
+    "s135": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "code"
     ],
     "s137": [
       "150,850",
@@ -8615,6 +10200,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "상한가",
       "direction",
@@ -8640,6 +10230,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s053": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s054": [
       "보통주",
       "bound-label",
@@ -8659,6 +10254,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s065": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s066": [
       "보통주",
@@ -8680,6 +10280,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s077": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s078": [
       "보통주",
       "bound-label",
@@ -8699,6 +10304,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s089": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s090": [
       "보통주",
@@ -8725,60 +10335,125 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s104": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s106": [
       "한미반도체",
       "bound-label",
       "stk_nm"
+    ],
+    "s107": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s109": [
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
     ],
+    "s110": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s112": [
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s113": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s115": [
       "삼성전자",
       "bound-label",
       "stk_nm"
     ],
+    "s116": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s119": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s121": [
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s122": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s124": [
       "DB하이텍",
       "bound-label",
       "stk_nm"
     ],
+    "s125": [
+      "000990",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s127": [
       "현대차",
       "bound-label",
       "stk_nm"
+    ],
+    "s128": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s130": [
       "기아",
       "bound-label",
       "stk_nm"
     ],
+    "s131": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s133": [
       "카카오",
       "bound-label",
       "stk_nm"
+    ],
+    "s134": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s136": [
       "삼성SDI",
       "bound-label",
       "stk_nm"
     ],
+    "s137": [
+      "006400",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s139": [
       "이수페타시스",
       "bound-label",
       "stk_nm"
+    ],
+    "s140": [
+      "007660 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s142": [
       "64,500",
@@ -8830,6 +10505,11 @@ const policy = {
       "status",
       null
     ],
+    "s162": [
+      "VI 발동",
+      "status",
+      null
+    ],
     "s165": [
       "● 실시간 갱신 중 · 마지막 반영 09:42:18",
       "status",
@@ -8862,6 +10542,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "54,500",
       "price",
@@ -8876,6 +10561,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s052": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s053": [
       "802,000",
@@ -8892,6 +10582,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "196,500",
       "price",
@@ -8907,6 +10602,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s074": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s075": [
       "191,200",
       "price",
@@ -8921,6 +10621,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "149,900",
@@ -8942,60 +10647,125 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s099": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s101": [
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s102": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s104": [
       "SK하이닉스",
       "bound-label",
       "stk_nm"
     ],
+    "s105": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s107": [
       "한미반도체",
       "bound-label",
       "stk_nm"
+    ],
+    "s108": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s110": [
       "삼성전자",
       "bound-label",
       "stk_nm"
     ],
+    "s111": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s114": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s116": [
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s117": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s119": [
       "DB하이텍",
       "bound-label",
       "stk_nm"
     ],
+    "s120": [
+      "000990",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s122": [
       "현대차",
       "bound-label",
       "stk_nm"
+    ],
+    "s123": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s125": [
       "기아",
       "bound-label",
       "stk_nm"
     ],
+    "s126": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s128": [
       "카카오",
       "bound-label",
       "stk_nm"
+    ],
+    "s129": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s131": [
       "삼성SDI",
       "bound-label",
       "stk_nm"
     ],
+    "s132": [
+      "006400",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s134": [
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s135": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s137": [
       "149,900",
@@ -9059,6 +10829,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s042": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s043": [
       "150,850",
       "price",
@@ -9078,6 +10853,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s054": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s055": [
       "198,400",
@@ -9099,6 +10879,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s066": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s067": [
       "232,500",
       "price",
@@ -9119,6 +10904,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s078": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s079": [
       "214,000",
       "price",
@@ -9138,6 +10928,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s090": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s091": [
       "810,000",
@@ -9164,6 +10959,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s105": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s106": [
       "+29.90%",
       "direction",
@@ -9173,6 +10973,11 @@ const policy = {
       "한미반도체",
       "bound-label",
       "stk_nm"
+    ],
+    "s108": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s109": [
       "+4.18%",
@@ -9184,6 +10989,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s111": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s112": [
       "+3.01%",
       "direction",
@@ -9193,6 +11003,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s114": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s115": [
       "+2.05%",
@@ -9204,10 +11019,20 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s117": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s118": [
       "+1.24%",
       "direction",
       "pred_pre_sig"
+    ],
+    "s120": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s121": [
       "+0.86%",
@@ -9219,6 +11044,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s123": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s124": [
       "+0.85%",
       "direction",
@@ -9228,6 +11058,11 @@ const policy = {
       "DB하이텍",
       "bound-label",
       "stk_nm"
+    ],
+    "s126": [
+      "000990",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s127": [
       "-0.34%",
@@ -9239,6 +11074,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s129": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s130": [
       "-0.52%",
       "direction",
@@ -9248,6 +11088,11 @@ const policy = {
       "기아",
       "bound-label",
       "stk_nm"
+    ],
+    "s132": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s133": [
       "-0.70%",
@@ -9259,6 +11104,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s135": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s136": [
       "-0.83%",
       "direction",
@@ -9269,6 +11119,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s138": [
+      "006400",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s139": [
       "-1.12%",
       "direction",
@@ -9278,6 +11133,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s141": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s143": [
       "150,850",
@@ -9344,6 +11204,11 @@ const policy = {
       "status",
       null
     ],
+    "s163": [
+      "VI 미발동",
+      "status",
+      null
+    ],
     "s166": [
       "● 실시간 갱신 중 · 마지막 반영 09:42:18",
       "status",
@@ -9366,6 +11231,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s049": [
+      "58P630 · 한국투자증권 6B44회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s050": [
       "305",
       "price",
@@ -9380,6 +11250,11 @@ const policy = {
       "카카오 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s062": [
+      "58R210 · KB증권 4H27회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s063": [
       "62",
@@ -9396,6 +11271,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s075": [
+      "58J377 · 미래에셋증권 7K55회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s076": [
       "285",
       "price",
@@ -9410,6 +11290,11 @@ const policy = {
       "삼성전자 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s088": [
+      "58H219 · KB증권 9C21회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s089": [
       "415",
@@ -9426,6 +11311,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s101": [
+      "58L118 · 신한투자증권 5T31회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s102": [
       "145",
       "price",
@@ -9440,6 +11330,11 @@ const policy = {
       "LG에너지솔루션 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s114": [
+      "58Q745 · 신한투자증권 9K12회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s115": [
       "240",
@@ -9456,6 +11351,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s127": [
+      "58T933 · 한국투자증권 5N82회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s128": [
       "96",
       "price",
@@ -9470,6 +11370,11 @@ const policy = {
       "이수페타시스 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s140": [
+      "59F215 · 미래에셋증권 3C41회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s141": [
       "96",
@@ -9486,6 +11391,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s153": [
+      "59G608 · KB증권 8L07회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s154": [
       "52",
       "price",
@@ -9500,6 +11410,11 @@ const policy = {
       "기아 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s166": [
+      "58S408 · 미래에셋증권 1J60회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s167": [
       "110",
@@ -9516,6 +11431,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s179": [
+      "59H172 · 한국투자증권 5D29회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s180": [
       "38",
       "price",
@@ -9530,6 +11450,11 @@ const policy = {
       "NAVER 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s192": [
+      "59J940 · 신한투자증권 2M63회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s193": [
       "24",
@@ -9546,6 +11471,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s205": [
+      "59K337 · KB증권 7B18회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s206": [
       "61",
       "price",
@@ -9555,6 +11485,11 @@ const policy = {
       "키움",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s218": [
+      "59L806 · 미래에셋증권 4F52회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s219": [
       "45",
@@ -9571,6 +11506,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s231": [
+      "59M429 · 한국투자증권 9R84회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s232": [
       "33",
       "price",
@@ -9585,6 +11525,11 @@ const policy = {
       "삼성전자 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s244": [
+      "59N118 · 신한투자증권 6T20회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s245": [
       "28",
@@ -9601,6 +11546,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s257": [
+      "59P573 · KB증권 1V96회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s258": [
       "41",
       "price",
@@ -9616,6 +11566,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s270": [
+      "59Q264 · 미래에셋증권 8W35회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s271": [
       "26",
       "price",
@@ -9625,6 +11580,11 @@ const policy = {
       "미래",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s283": [
+      "59R850 · 한국투자증권 3Y47회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s284": [
       "19",
@@ -9641,6 +11601,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s296": [
+      "59S391 · 신한투자증권 5H62회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s297": [
       "15",
       "price",
@@ -9650,6 +11615,11 @@ const policy = {
       "신한",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s308": [
+      "58H219 · 근접률 4위",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s309": [
       "4위",
@@ -9733,6 +11703,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s049": [
+      "58H219 · KB증권 9C21회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s050": [
       "415",
       "price",
@@ -9747,6 +11722,11 @@ const policy = {
       "SK하이닉스 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s062": [
+      "58J377 · 미래에셋증권 7K55회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s063": [
       "285",
@@ -9763,6 +11743,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s075": [
+      "58R210 · KB증권 4H27회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s076": [
       "62",
       "price",
@@ -9772,6 +11757,11 @@ const policy = {
       "키움",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s088": [
+      "58K902 · 한국투자증권 3F09회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s089": [
       "190",
@@ -9788,6 +11778,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s101": [
+      "58M204 · KB증권 8Q02회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s102": [
       "520",
       "price",
@@ -9802,6 +11797,11 @@ const policy = {
       "NAVER 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s114": [
+      "58N551 · 미래에셋증권 2W18회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s115": [
       "88",
@@ -9818,6 +11818,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s127": [
+      "58T933 · 한국투자증권 5N82회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s128": [
       "96",
       "price",
@@ -9832,6 +11837,11 @@ const policy = {
       "LG에너지솔루션 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s140": [
+      "58Q745 · 신한투자증권 9K12회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s141": [
       "240",
@@ -9848,6 +11858,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s153": [
+      "59F215 · 미래에셋증권 3C41회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s154": [
       "96",
       "price",
@@ -9862,6 +11877,11 @@ const policy = {
       "한미반도체 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s166": [
+      "59G608 · KB증권 8L07회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s167": [
       "52",
@@ -9878,6 +11898,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s179": [
+      "59H172 · 한국투자증권 5D29회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s180": [
       "38",
       "price",
@@ -9892,6 +11917,11 @@ const policy = {
       "NAVER 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s192": [
+      "59J940 · 신한투자증권 2M63회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s193": [
       "24",
@@ -9908,6 +11938,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s205": [
+      "59K337 · KB증권 7B18회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s206": [
       "61",
       "price",
@@ -9917,6 +11952,11 @@ const policy = {
       "키움",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s218": [
+      "59L806 · 미래에셋증권 4F52회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s219": [
       "45",
@@ -9933,6 +11973,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s231": [
+      "59M429 · 한국투자증권 9R84회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s232": [
       "33",
       "price",
@@ -9947,6 +11992,11 @@ const policy = {
       "삼성전자 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s244": [
+      "59N118 · 신한투자증권 6T20회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s245": [
       "28",
@@ -9963,6 +12013,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s257": [
+      "59P573 · KB증권 1V96회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s258": [
       "41",
       "price",
@@ -9978,6 +12033,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s270": [
+      "59Q264 · 미래에셋증권 8W35회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s271": [
       "26",
       "price",
@@ -9987,6 +12047,11 @@ const policy = {
       "미래",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s283": [
+      "59R850 · 한국투자증권 3Y47회차",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s284": [
       "19",
@@ -10003,6 +12068,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s296": [
+      "59S391 · 신한투자증권 5H62회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s297": [
       "15",
       "price",
@@ -10012,6 +12082,11 @@ const policy = {
       "신한",
       "bound-label",
       "lpmmcm_nm"
+    ],
+    "s308": [
+      "58H219 · 급등 1위",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s310": [
       "415",
@@ -10105,6 +12180,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s042": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s043": [
       "150,850",
       "price",
@@ -10129,6 +12209,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s053": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s054": [
       "198,400",
@@ -10155,6 +12240,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s064": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s065": [
       "232,500",
       "price",
@@ -10179,6 +12269,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s075": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s076": [
       "214,000",
@@ -10205,6 +12300,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s086": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s087": [
       "810,000",
       "price",
@@ -10225,6 +12325,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s100": [
+      "007660",
+      "bound-identifier",
+      "code"
+    ],
     "s101": [
       "+29.90%",
       "unavailable",
@@ -10234,6 +12339,11 @@ const policy = {
       "한미반도체",
       "bound-label",
       "name"
+    ],
+    "s103": [
+      "042700",
+      "bound-identifier",
+      "code"
     ],
     "s104": [
       "+4.18%",
@@ -10245,6 +12355,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s106": [
+      "012450",
+      "bound-identifier",
+      "code"
+    ],
     "s107": [
       "+3.01%",
       "unavailable",
@@ -10254,6 +12369,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "name"
+    ],
+    "s109": [
+      "000660",
+      "bound-identifier",
+      "code"
     ],
     "s110": [
       "+2.05%",
@@ -10265,10 +12385,20 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s112": [
+      "005930",
+      "bound-identifier",
+      "code"
+    ],
     "s113": [
       "+1.24%",
       "unavailable",
       null
+    ],
+    "s115": [
+      "069500",
+      "bound-identifier",
+      "code"
     ],
     "s116": [
       "+0.86%",
@@ -10280,6 +12410,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s118": [
+      "035420",
+      "bound-identifier",
+      "code"
+    ],
     "s119": [
       "+0.85%",
       "unavailable",
@@ -10289,6 +12424,11 @@ const policy = {
       "DB하이텍",
       "bound-label",
       "name"
+    ],
+    "s121": [
+      "000990",
+      "bound-identifier",
+      "code"
     ],
     "s122": [
       "-0.34%",
@@ -10300,6 +12440,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s124": [
+      "005380",
+      "bound-identifier",
+      "code"
+    ],
     "s125": [
       "-0.52%",
       "unavailable",
@@ -10309,6 +12454,11 @@ const policy = {
       "기아",
       "bound-label",
       "name"
+    ],
+    "s127": [
+      "000270",
+      "bound-identifier",
+      "code"
     ],
     "s128": [
       "-0.70%",
@@ -10320,6 +12470,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s130": [
+      "035720",
+      "bound-identifier",
+      "code"
+    ],
     "s131": [
       "-0.83%",
       "unavailable",
@@ -10330,6 +12485,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s133": [
+      "006400",
+      "bound-identifier",
+      "code"
+    ],
     "s134": [
       "-1.12%",
       "unavailable",
@@ -10339,6 +12499,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "name"
+    ],
+    "s136": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "code"
     ],
     "s138": [
       "150,850",
@@ -10394,6 +12559,11 @@ const policy = {
       "투자유의 아님",
       "bound-label",
       "orderWarning"
+    ],
+    "s158": [
+      "VI 미발동",
+      "status",
+      null
     ],
     "s161": [
       "● 실시간 갱신 중 · 마지막 반영 09:42:18",
@@ -10437,6 +12607,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s042": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s043": [
       "150,850",
       "price",
@@ -10461,6 +12636,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s053": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s054": [
       "198,400",
@@ -10487,6 +12667,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s064": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s065": [
       "232,500",
       "price",
@@ -10511,6 +12696,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s075": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s076": [
       "214,000",
@@ -10537,6 +12727,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s086": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s087": [
       "810,000",
       "price",
@@ -10557,6 +12752,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s100": [
+      "007660",
+      "bound-identifier",
+      "code"
+    ],
     "s101": [
       "+29.90%",
       "unavailable",
@@ -10566,6 +12766,11 @@ const policy = {
       "한미반도체",
       "bound-label",
       "name"
+    ],
+    "s103": [
+      "042700",
+      "bound-identifier",
+      "code"
     ],
     "s104": [
       "+4.18%",
@@ -10577,6 +12782,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s106": [
+      "012450",
+      "bound-identifier",
+      "code"
+    ],
     "s107": [
       "+3.01%",
       "unavailable",
@@ -10586,6 +12796,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "name"
+    ],
+    "s109": [
+      "000660",
+      "bound-identifier",
+      "code"
     ],
     "s110": [
       "+2.05%",
@@ -10597,10 +12812,20 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s112": [
+      "005930",
+      "bound-identifier",
+      "code"
+    ],
     "s113": [
       "+1.24%",
       "unavailable",
       null
+    ],
+    "s115": [
+      "069500",
+      "bound-identifier",
+      "code"
     ],
     "s116": [
       "+0.86%",
@@ -10612,6 +12837,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s118": [
+      "035420",
+      "bound-identifier",
+      "code"
+    ],
     "s119": [
       "+0.85%",
       "unavailable",
@@ -10621,6 +12851,11 @@ const policy = {
       "DB하이텍",
       "bound-label",
       "name"
+    ],
+    "s121": [
+      "000990",
+      "bound-identifier",
+      "code"
     ],
     "s122": [
       "-0.34%",
@@ -10632,6 +12867,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s124": [
+      "005380",
+      "bound-identifier",
+      "code"
+    ],
     "s125": [
       "-0.52%",
       "unavailable",
@@ -10641,6 +12881,11 @@ const policy = {
       "기아",
       "bound-label",
       "name"
+    ],
+    "s127": [
+      "000270",
+      "bound-identifier",
+      "code"
     ],
     "s128": [
       "-0.70%",
@@ -10652,6 +12897,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s130": [
+      "035720",
+      "bound-identifier",
+      "code"
+    ],
     "s131": [
       "-0.83%",
       "unavailable",
@@ -10662,6 +12912,11 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s133": [
+      "006400",
+      "bound-identifier",
+      "code"
+    ],
     "s134": [
       "-1.12%",
       "unavailable",
@@ -10671,6 +12926,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "name"
+    ],
+    "s136": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "code"
     ],
     "s138": [
       "150,850",
@@ -10727,6 +12987,11 @@ const policy = {
       "bound-label",
       "orderWarning"
     ],
+    "s158": [
+      "VI 미발동",
+      "status",
+      null
+    ],
     "s161": [
       "● 실시간 갱신 중 · 마지막 반영 09:42:18",
       "status",
@@ -10769,6 +13034,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "150,850",
       "price",
@@ -10788,6 +13058,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s052": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s053": [
       "198,400",
@@ -10809,6 +13084,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "232,500",
       "price",
@@ -10828,6 +13108,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s074": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s075": [
       "214,000",
@@ -10849,6 +13134,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s085": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s086": [
       "810,000",
       "price",
@@ -10864,60 +13154,125 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s099": [
+      "007660",
+      "bound-identifier",
+      "code"
+    ],
     "s101": [
       "한미반도체",
       "bound-label",
       "name"
+    ],
+    "s102": [
+      "042700",
+      "bound-identifier",
+      "code"
     ],
     "s104": [
       "한화에어로스페이스",
       "bound-label",
       "name"
     ],
+    "s105": [
+      "012450",
+      "bound-identifier",
+      "code"
+    ],
     "s107": [
       "SK하이닉스",
       "bound-label",
       "name"
+    ],
+    "s108": [
+      "000660",
+      "bound-identifier",
+      "code"
     ],
     "s110": [
       "삼성전자",
       "bound-label",
       "name"
     ],
+    "s111": [
+      "005930",
+      "bound-identifier",
+      "code"
+    ],
+    "s114": [
+      "069500",
+      "bound-identifier",
+      "code"
+    ],
     "s116": [
       "NAVER",
       "bound-label",
       "name"
+    ],
+    "s117": [
+      "035420",
+      "bound-identifier",
+      "code"
     ],
     "s119": [
       "DB하이텍",
       "bound-label",
       "name"
     ],
+    "s120": [
+      "000990",
+      "bound-identifier",
+      "code"
+    ],
     "s122": [
       "현대차",
       "bound-label",
       "name"
+    ],
+    "s123": [
+      "005380",
+      "bound-identifier",
+      "code"
     ],
     "s125": [
       "기아",
       "bound-label",
       "name"
     ],
+    "s126": [
+      "000270",
+      "bound-identifier",
+      "code"
+    ],
     "s128": [
       "카카오",
       "bound-label",
       "name"
+    ],
+    "s129": [
+      "035720",
+      "bound-identifier",
+      "code"
     ],
     "s131": [
       "삼성SDI",
       "bound-label",
       "name"
     ],
+    "s132": [
+      "006400",
+      "bound-identifier",
+      "code"
+    ],
     "s134": [
       "삼성전자",
       "bound-label",
       "name"
+    ],
+    "s135": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "code"
     ],
     "s137": [
       "150,850",
@@ -10964,6 +13319,11 @@ const policy = {
       "bound-label",
       "orderWarning"
     ],
+    "s157": [
+      "VI 미발동",
+      "status",
+      null
+    ],
     "s160": [
       "● 실시간 갱신 중 · 마지막 반영 09:42:18",
       "status",
@@ -11001,6 +13361,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s040": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s041": [
       "151,200",
       "price",
@@ -11010,6 +13375,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s051": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s052": [
       "198,800",
@@ -11021,6 +13391,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s062": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s063": [
       "232,900",
       "price",
@@ -11030,6 +13405,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s073": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s074": [
       "214,250",
@@ -11041,6 +13421,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s084": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s085": [
       "810,500",
       "price",
@@ -11051,60 +13436,125 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s098": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s100": [
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s101": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s103": [
       "현대차",
       "bound-label",
       "stk_nm"
     ],
+    "s104": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s106": [
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s107": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s109": [
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
     ],
+    "s110": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s112": [
       "이수페타시스",
       "bound-label",
       "stk_nm"
+    ],
+    "s113": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s115": [
       "한미반도체",
       "bound-label",
       "stk_nm"
     ],
+    "s116": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s119": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s121": [
       "기아",
       "bound-label",
       "stk_nm"
+    ],
+    "s122": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s124": [
       "DB하이텍",
       "bound-label",
       "stk_nm"
     ],
+    "s125": [
+      "000990",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s127": [
       "카카오",
       "bound-label",
       "stk_nm"
+    ],
+    "s128": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s130": [
       "삼성SDI",
       "bound-label",
       "stk_nm"
     ],
+    "s131": [
+      "006400",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s133": [
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s134": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s136": [
       "151,200",
@@ -11146,6 +13596,11 @@ const policy = {
       "status",
       null
     ],
+    "s156": [
+      "VI 미발동",
+      "status",
+      null
+    ],
     "s159": [
       "● 실시간 갱신 중 · 마지막 반영 16:12:00",
       "status",
@@ -11173,6 +13628,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s043": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s045": [
       "150,850",
       "price",
@@ -11187,6 +13647,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s058": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s060": [
       "198,400",
@@ -11203,6 +13668,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s073": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s075": [
       "232,500",
       "price",
@@ -11217,6 +13687,11 @@ const policy = {
       "KB금융",
       "bound-label",
       "stk_nm"
+    ],
+    "s088": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s090": [
       "78,200",
@@ -11233,6 +13708,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s103": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s105": [
       "214,000",
       "price",
@@ -11247,6 +13727,11 @@ const policy = {
       "POSCO홀딩스",
       "bound-label",
       "stk_nm"
+    ],
+    "s118": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s120": [
       "389,500",
@@ -11268,6 +13753,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s135": [
+      "051910",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s137": [
       "312,000",
       "price",
@@ -11283,6 +13773,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s150": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s152": [
       "41,850",
       "price",
@@ -11292,6 +13787,11 @@ const policy = {
       "5,189억원",
       "unavailable",
       null
+    ],
+    "s167": [
+      "순위 1위 · 005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s169": [
       "45%",
@@ -11380,6 +13880,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s052": [
+      "007660 · 코스피 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s053": [
       "64,500",
       "price",
@@ -11399,6 +13904,11 @@ const policy = {
       "펩트론",
       "bound-label",
       "stk_nm"
+    ],
+    "s066": [
+      "087010 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s067": [
       "132,600",
@@ -11420,6 +13930,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s080": [
+      "277810 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s081": [
       "246,500",
       "price",
@@ -11434,6 +13949,11 @@ const policy = {
       "실리콘투",
       "bound-label",
       "stk_nm"
+    ],
+    "s094": [
+      "257720 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s095": [
       "58,900",
@@ -11450,6 +13970,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s108": [
+      "141080 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s109": [
       "172,300",
       "price",
@@ -11464,6 +13989,11 @@ const policy = {
       "대주전자재료",
       "bound-label",
       "stk_nm"
+    ],
+    "s122": [
+      "078600 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s123": [
       "118,700",
@@ -11480,6 +14010,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s136": [
+      "440110 · 코스닥 · 증거금 100%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s137": [
       "31,450",
       "price",
@@ -11494,6 +14029,11 @@ const policy = {
       "하나마이크론",
       "bound-label",
       "stk_nm"
+    ],
+    "s150": [
+      "067310 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s151": [
       "27,850",
@@ -11510,6 +14050,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s164": [
+      "033640 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s165": [
       "19,840",
       "price",
@@ -11524,6 +14069,11 @@ const policy = {
       "동진쎄미켐",
       "bound-label",
       "stk_nm"
+    ],
+    "s178": [
+      "005290 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s179": [
       "42,150",
@@ -11540,6 +14090,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s192": [
+      "036930 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s193": [
       "38,700",
       "price",
@@ -11554,6 +14109,11 @@ const policy = {
       "알테오젠",
       "bound-label",
       "stk_nm"
+    ],
+    "s206": [
+      "196170 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s207": [
       "391,000",
@@ -11570,6 +14130,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s220": [
+      "240810 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s221": [
       "41,300",
       "price",
@@ -11584,6 +14149,11 @@ const policy = {
       "티씨케이",
       "bound-label",
       "stk_nm"
+    ],
+    "s234": [
+      "064760 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s235": [
       "96,400",
@@ -11600,6 +14170,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s248": [
+      "003230 · 코스피 · 증거금 20%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s249": [
       "745,000",
       "price",
@@ -11614,6 +14189,11 @@ const policy = {
       "현대로템",
       "bound-label",
       "stk_nm"
+    ],
+    "s262": [
+      "064350 · 코스피 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s263": [
       "128,900",
@@ -11630,6 +14210,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s276": [
+      "192820 · 코스피 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s277": [
       "118,600",
       "price",
@@ -11645,6 +14230,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s290": [
+      "213420 · 코스닥 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s291": [
       "26,150",
       "price",
@@ -11659,6 +14249,11 @@ const policy = {
       "이마트",
       "bound-label",
       "stk_nm"
+    ],
+    "s304": [
+      "139480 · 코스피 · 증거금 40%",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s305": [
       "52,300",
@@ -11877,6 +14472,36 @@ const policy = {
       "caption",
       "번호"
     ],
+    "s050": [
+      "58H219",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s061": [
+      "58J377",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s072": [
+      "58M204",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s083": [
+      "58P630",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s094": [
+      "58L118",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s105": [
+      "58K902",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s114": [
       "상위 10창구 집계 · 5종 표시",
       "caption",
@@ -11892,25 +14517,50 @@ const policy = {
       "caption",
       "거래량"
     ],
+    "s123": [
+      "58H219",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s124": [
       "415",
       "unavailable",
       null
+    ],
+    "s132": [
+      "58J377",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s133": [
       "285",
       "unavailable",
       null
     ],
+    "s141": [
+      "58M204",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s142": [
       "520",
       "unavailable",
       null
     ],
+    "s150": [
+      "58P630",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s151": [
       "305",
       "unavailable",
       null
+    ],
+    "s159": [
+      "59V603",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s160": [
       "1,340",
@@ -11999,6 +14649,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s043": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s044": [
       "150,850",
       "price",
@@ -12008,6 +14663,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s057": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s058": [
       "198,400",
@@ -12019,6 +14679,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s071": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s072": [
       "232,500",
       "price",
@@ -12028,6 +14693,11 @@ const policy = {
       "KB금융",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "78,200",
@@ -12039,6 +14709,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s099": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s100": [
       "214,000",
       "price",
@@ -12048,6 +14723,11 @@ const policy = {
       "POSCO홀딩스",
       "bound-label",
       "stk_nm"
+    ],
+    "s113": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s114": [
       "389,500",
@@ -12064,6 +14744,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s129": [
+      "051910",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s130": [
       "312,000",
       "price",
@@ -12073,6 +14758,11 @@ const policy = {
       "카카오",
       "bound-label",
       "stk_nm"
+    ],
+    "s143": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s144": [
       "41,850",
@@ -12151,6 +14841,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s052": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s053": [
       "232,500",
       "price",
@@ -12180,6 +14875,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s066": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s067": [
       "762,000",
@@ -12211,6 +14911,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s080": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s081": [
       "214,000",
       "price",
@@ -12240,6 +14945,11 @@ const policy = {
       "기아",
       "bound-label",
       "stk_nm"
+    ],
+    "s094": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s095": [
       "99,400",
@@ -12271,6 +14981,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s108": [
+      "034020",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s109": [
       "62,400",
       "price",
@@ -12300,6 +15015,11 @@ const policy = {
       "HD한국조선해양",
       "bound-label",
       "stk_nm"
+    ],
+    "s122": [
+      "009540",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s123": [
       "386,500",
@@ -12331,6 +15051,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s136": [
+      "207940",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s137": [
       "1,048,000",
       "price",
@@ -12360,6 +15085,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s150": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s151": [
       "150,850",
@@ -12391,6 +15121,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s164": [
+      "068270",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s165": [
       "186,300",
       "price",
@@ -12420,6 +15155,11 @@ const policy = {
       "포스코퓨처엠",
       "bound-label",
       "stk_nm"
+    ],
+    "s178": [
+      "003670",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s179": [
       "318,000",
@@ -12451,6 +15191,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s192": [
+      "259960",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s193": [
       "342,000",
       "price",
@@ -12480,6 +15225,11 @@ const policy = {
       "삼성물산",
       "bound-label",
       "stk_nm"
+    ],
+    "s206": [
+      "028260",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s207": [
       "186,700",
@@ -12511,6 +15261,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s220": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s221": [
       "118,900",
       "price",
@@ -12540,6 +15295,11 @@ const policy = {
       "신한지주",
       "bound-label",
       "stk_nm"
+    ],
+    "s234": [
+      "055550",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s235": [
       "68,300",
@@ -12571,6 +15331,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s248": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s249": [
       "41,850",
       "price",
@@ -12600,6 +15365,11 @@ const policy = {
       "엔씨소프트",
       "bound-label",
       "stk_nm"
+    ],
+    "s262": [
+      "036570",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s263": [
       "168,400",
@@ -12631,6 +15401,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s276": [
+      "090430",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s277": [
       "97,600",
       "price",
@@ -12660,6 +15435,11 @@ const policy = {
       "HMM",
       "bound-label",
       "stk_nm"
+    ],
+    "s290": [
+      "011200",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s291": [
       "18,240",
@@ -12691,6 +15471,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s304": [
+      "251270",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s305": [
       "52,800",
       "price",
@@ -12720,6 +15505,11 @@ const policy = {
       "카카오뱅크",
       "bound-label",
       "stk_nm"
+    ],
+    "s318": [
+      "323410",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s319": [
       "22,150",
@@ -13040,6 +15830,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s043": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s044": [
       "198,400",
       "price",
@@ -13059,6 +15854,11 @@ const policy = {
       "현대차",
       "bound-label",
       "stk_nm"
+    ],
+    "s057": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s058": [
       "232,500",
@@ -13080,6 +15880,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s071": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s072": [
       "78,200",
       "price",
@@ -13099,6 +15904,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "214,000",
@@ -13120,6 +15930,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s099": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s100": [
       "389,500",
       "price",
@@ -13139,6 +15954,11 @@ const policy = {
       "LG화학",
       "bound-label",
       "stk_nm"
+    ],
+    "s115": [
+      "051910",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s116": [
       "312,000",
@@ -13160,6 +15980,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s129": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s130": [
       "150,850",
       "price",
@@ -13179,6 +16004,11 @@ const policy = {
       "카카오",
       "bound-label",
       "stk_nm"
+    ],
+    "s143": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s144": [
       "41,850",
@@ -13267,6 +16097,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s052": [
+      "042700 · 대형주",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s053": [
       "197,400",
       "price",
@@ -13296,6 +16131,11 @@ const policy = {
       "이수페타시스",
       "bound-label",
       "stk_nm"
+    ],
+    "s064": [
+      "007660 · 중형주",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s065": [
       "64,500",
@@ -13327,6 +16167,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s076": [
+      "277810 · 중형주",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s077": [
       "246,500",
       "price",
@@ -13356,6 +16201,11 @@ const policy = {
       "HD현대일렉트릭",
       "bound-label",
       "stk_nm"
+    ],
+    "s088": [
+      "267260 · 대형주",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s089": [
       "412,500",
@@ -13387,6 +16237,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s100": [
+      "257720 · 중형주",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s101": [
       "58,900",
       "price",
@@ -13416,6 +16271,11 @@ const policy = {
       "알테오젠",
       "bound-label",
       "stk_nm"
+    ],
+    "s112": [
+      "196170 · 대형주",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s113": [
       "391,000",
@@ -13447,6 +16307,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s124": [
+      "141080 · 중형주",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s125": [
       "172,300",
       "price",
@@ -13476,6 +16341,11 @@ const policy = {
       "삼양식품",
       "bound-label",
       "stk_nm"
+    ],
+    "s136": [
+      "003230 · 대형주",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s137": [
       "745,000",
@@ -13507,6 +16377,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s148": [
+      "000660 · 대형주",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s149": [
       "198,400",
       "price",
@@ -13536,6 +16411,11 @@ const policy = {
       "현대로템",
       "bound-label",
       "stk_nm"
+    ],
+    "s160": [
+      "064350 · 대형주",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s161": [
       "128,900",
@@ -13567,6 +16447,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s172": [
+      "010120 · 대형주",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s173": [
       "289,500",
       "price",
@@ -13596,6 +16481,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s184": [
+      "005930 · 대형주",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s185": [
       "150,850",
@@ -13627,6 +16517,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s196": [
+      "139480 · 중형주",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s197": [
       "52,300",
       "price",
@@ -13656,6 +16551,11 @@ const policy = {
       "롯데케미칼",
       "bound-label",
       "stk_nm"
+    ],
+    "s208": [
+      "011170 · 중형주",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s209": [
       "61,200",
@@ -13687,6 +16587,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s220": [
+      "192820 · 중형주",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s221": [
       "118,600",
       "price",
@@ -13716,6 +16621,11 @@ const policy = {
       "덕산네오룩스",
       "bound-label",
       "stk_nm"
+    ],
+    "s232": [
+      "213420 · 중형주",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s233": [
       "26,150",
@@ -13909,6 +16819,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s047": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s048": [
       "198,400",
       "price",
@@ -13923,6 +16838,11 @@ const policy = {
       "현대차",
       "bound-label",
       "stk_nm"
+    ],
+    "s062": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s063": [
       "232,500",
@@ -13939,6 +16859,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s077": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s078": [
       "78,200",
       "price",
@@ -13954,6 +16879,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s092": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s093": [
       "214,000",
       "price",
@@ -13968,6 +16898,11 @@ const policy = {
       "POSCO홀딩스",
       "bound-label",
       "stk_nm"
+    ],
+    "s107": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s108": [
       "389,500",
@@ -13989,6 +16924,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s124": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s125": [
       "150,850",
       "price",
@@ -14003,6 +16943,11 @@ const policy = {
       "LG화학",
       "bound-label",
       "stk_nm"
+    ],
+    "s139": [
+      "051910",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s140": [
       "312,000",
@@ -14019,6 +16964,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s154": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s155": [
       "41,850",
       "price",
@@ -14033,6 +16983,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s171": [
+      "순위 48위 · 005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s176": [
       "외국인",
@@ -14141,6 +17096,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s052": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s053": [
       "64,500",
       "price",
@@ -14171,6 +17131,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s065": [
+      "067310",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s066": [
       "27,850",
       "price",
@@ -14195,6 +17160,11 @@ const policy = {
       "실리콘투",
       "bound-label",
       "stk_nm"
+    ],
+    "s078": [
+      "257720",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s079": [
       "58,900",
@@ -14221,6 +17191,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s091": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s092": [
       "197,400",
       "price",
@@ -14245,6 +17220,11 @@ const policy = {
       "레인보우로보틱스",
       "bound-label",
       "stk_nm"
+    ],
+    "s104": [
+      "277810",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s105": [
       "246,500",
@@ -14271,6 +17251,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s117": [
+      "196170",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s118": [
       "391,000",
       "price",
@@ -14295,6 +17280,11 @@ const policy = {
       "리가켐바이오",
       "bound-label",
       "stk_nm"
+    ],
+    "s130": [
+      "141080",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s131": [
       "172,300",
@@ -14321,6 +17311,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s143": [
+      "064350",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s144": [
       "128,900",
       "price",
@@ -14345,6 +17340,11 @@ const policy = {
       "동진쎄미켐",
       "bound-label",
       "stk_nm"
+    ],
+    "s156": [
+      "005290",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s157": [
       "42,150",
@@ -14371,6 +17371,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s169": [
+      "078600",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s170": [
       "118,700",
       "price",
@@ -14395,6 +17400,11 @@ const policy = {
       "주성엔지니어링",
       "bound-label",
       "stk_nm"
+    ],
+    "s182": [
+      "036930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s183": [
       "38,700",
@@ -14421,6 +17431,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s195": [
+      "240810",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s196": [
       "41,300",
       "price",
@@ -14445,6 +17460,11 @@ const policy = {
       "롯데케미칼",
       "bound-label",
       "stk_nm"
+    ],
+    "s208": [
+      "011170",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s209": [
       "61,200",
@@ -14471,6 +17491,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s221": [
+      "213420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s222": [
       "26,150",
       "price",
@@ -14495,6 +17520,11 @@ const policy = {
       "코스맥스",
       "bound-label",
       "stk_nm"
+    ],
+    "s234": [
+      "192820",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s235": [
       "118,600",
@@ -14521,6 +17551,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s247": [
+      "064760",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s248": [
       "96,400",
       "price",
@@ -14545,6 +17580,11 @@ const policy = {
       "HD현대일렉트릭",
       "bound-label",
       "stk_nm"
+    ],
+    "s260": [
+      "267260",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s261": [
       "412,500",
@@ -14571,6 +17611,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s273": [
+      "139480",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s274": [
       "52,300",
       "price",
@@ -14596,6 +17641,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s286": [
+      "010120",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s287": [
       "289,500",
       "price",
@@ -14620,6 +17670,11 @@ const policy = {
       "삼양식품",
       "bound-label",
       "stk_nm"
+    ],
+    "s299": [
+      "003230",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s300": [
       "745,000",
@@ -14808,6 +17863,11 @@ const policy = {
       "bound-label",
       "for_netprps_stk_nm"
     ],
+    "s043": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s044": [
       "198,400",
       "unavailable",
@@ -14827,6 +17887,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "for_netprps_stk_nm"
+    ],
+    "s057": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s058": [
       "150,850",
@@ -14848,6 +17913,11 @@ const policy = {
       "bound-label",
       "for_netprps_stk_nm"
     ],
+    "s071": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s072": [
       "232,500",
       "unavailable",
@@ -14867,6 +17937,11 @@ const policy = {
       "KB금융",
       "bound-label",
       "for_netprps_stk_nm"
+    ],
+    "s085": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "78,200",
@@ -14888,6 +17963,11 @@ const policy = {
       "bound-label",
       "for_netprps_stk_nm"
     ],
+    "s099": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s100": [
       "214,000",
       "unavailable",
@@ -14907,6 +17987,11 @@ const policy = {
       "POSCO홀딩스",
       "bound-label",
       "for_netprps_stk_nm"
+    ],
+    "s113": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s114": [
       "389,500",
@@ -14928,6 +18013,11 @@ const policy = {
       "bound-label",
       "for_netslmt_stk_nm"
     ],
+    "s129": [
+      "051910",
+      "bound-identifier",
+      "for_netslmt_stk_cd"
+    ],
     "s130": [
       "312,000",
       "unavailable",
@@ -14947,6 +18037,11 @@ const policy = {
       "카카오",
       "bound-label",
       "orgn_netslmt_stk_nm"
+    ],
+    "s143": [
+      "035720",
+      "bound-identifier",
+      "orgn_netslmt_stk_cd"
     ],
     "s144": [
       "41,850",
@@ -15060,6 +18155,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s053": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s054": [
       "197,400",
       "price",
@@ -15079,6 +18179,11 @@ const policy = {
       "HD현대일렉트릭",
       "bound-label",
       "stk_nm"
+    ],
+    "s064": [
+      "267260",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s065": [
       "412,500",
@@ -15100,6 +18205,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s075": [
+      "196170",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s076": [
       "391,000",
       "price",
@@ -15119,6 +18229,11 @@ const policy = {
       "삼양식품",
       "bound-label",
       "stk_nm"
+    ],
+    "s086": [
+      "003230",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s087": [
       "745,000",
@@ -15140,6 +18255,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s097": [
+      "064350",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s098": [
       "128,900",
       "price",
@@ -15159,6 +18279,11 @@ const policy = {
       "LS일렉트릭",
       "bound-label",
       "stk_nm"
+    ],
+    "s108": [
+      "010120",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s109": [
       "289,500",
@@ -15180,6 +18305,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s119": [
+      "011170",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s120": [
       "61,200",
       "price",
@@ -15199,6 +18329,11 @@ const policy = {
       "이마트",
       "bound-label",
       "stk_nm"
+    ],
+    "s130": [
+      "139480",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s131": [
       "52,300",
@@ -15220,6 +18355,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s141": [
+      "257720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s142": [
       "58,900",
       "price",
@@ -15239,6 +18379,11 @@ const policy = {
       "하나마이크론",
       "bound-label",
       "stk_nm"
+    ],
+    "s152": [
+      "067310",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s153": [
       "27,850",
@@ -15260,6 +18405,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s163": [
+      "005290",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s164": [
       "42,150",
       "price",
@@ -15279,6 +18429,11 @@ const policy = {
       "주성엔지니어링",
       "bound-label",
       "stk_nm"
+    ],
+    "s174": [
+      "036930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s175": [
       "38,700",
@@ -15300,6 +18455,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s185": [
+      "240810",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s186": [
       "41,300",
       "price",
@@ -15319,6 +18479,11 @@ const policy = {
       "대주전자재료",
       "bound-label",
       "stk_nm"
+    ],
+    "s196": [
+      "078600",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s197": [
       "118,700",
@@ -15340,6 +18505,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s207": [
+      "064760",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s208": [
       "96,400",
       "price",
@@ -15359,6 +18529,11 @@ const policy = {
       "리가켐바이오",
       "bound-label",
       "stk_nm"
+    ],
+    "s218": [
+      "141080",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s219": [
       "172,300",
@@ -15380,6 +18555,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s229": [
+      "277810",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s230": [
       "246,500",
       "price",
@@ -15400,6 +18580,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s240": [
+      "192820",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s241": [
       "118,600",
       "price",
@@ -15419,6 +18604,11 @@ const policy = {
       "덕산네오룩스",
       "bound-label",
       "stk_nm"
+    ],
+    "s251": [
+      "213420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s252": [
       "26,150",
@@ -15487,6 +18677,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s049": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s050": [
       "150,850",
       "price",
@@ -15501,6 +18696,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s063": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s064": [
       "198,400",
@@ -15517,6 +18717,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s077": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s078": [
       "232,500",
       "price",
@@ -15531,6 +18736,11 @@ const policy = {
       "KB금융",
       "bound-label",
       "stk_nm"
+    ],
+    "s091": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s092": [
       "78,200",
@@ -15547,6 +18757,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s105": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s106": [
       "214,000",
       "price",
@@ -15561,6 +18776,11 @@ const policy = {
       "POSCO홀딩스",
       "bound-label",
       "stk_nm"
+    ],
+    "s119": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s120": [
       "389,500",
@@ -15587,6 +18807,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s136": [
+      "051910",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s137": [
       "312,000",
       "price",
@@ -15601,6 +18826,11 @@ const policy = {
       "카카오",
       "bound-label",
       "stk_nm"
+    ],
+    "s150": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s151": [
       "41,850",
@@ -15739,6 +18969,11 @@ const policy = {
       "caption",
       "거래량"
     ],
+    "s053": [
+      "042700 · 코스피",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s054": [
       "197,400",
       "price",
@@ -15768,6 +19003,11 @@ const policy = {
       "158%",
       "unavailable",
       null
+    ],
+    "s066": [
+      "267260 · 코스피",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s067": [
       "412,500",
@@ -15799,6 +19039,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s079": [
+      "196170 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s080": [
       "391,000",
       "price",
@@ -15828,6 +19073,11 @@ const policy = {
       "147%",
       "unavailable",
       null
+    ],
+    "s092": [
+      "003230 · 코스피",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s093": [
       "745,000",
@@ -15859,6 +19109,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s105": [
+      "064350 · 코스피",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s106": [
       "128,900",
       "price",
@@ -15888,6 +19143,11 @@ const policy = {
       "133%",
       "unavailable",
       null
+    ],
+    "s118": [
+      "010120 · 코스피",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s119": [
       "289,500",
@@ -15919,6 +19179,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s131": [
+      "000270 · 코스피",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s132": [
       "99,400",
       "price",
@@ -15948,6 +19213,11 @@ const policy = {
       "94%",
       "unavailable",
       null
+    ],
+    "s144": [
+      "005290 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s145": [
       "42,150",
@@ -15979,6 +19249,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s157": [
+      "078600 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s158": [
       "118,700",
       "price",
@@ -16008,6 +19283,11 @@ const policy = {
       "168%",
       "unavailable",
       null
+    ],
+    "s170": [
+      "036930 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s171": [
       "38,700",
@@ -16039,6 +19319,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s183": [
+      "240810 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s184": [
       "41,300",
       "price",
@@ -16068,6 +19353,11 @@ const policy = {
       "151%",
       "unavailable",
       null
+    ],
+    "s196": [
+      "067310 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s197": [
       "27,850",
@@ -16099,6 +19389,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s209": [
+      "257720 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s210": [
       "58,900",
       "price",
@@ -16128,6 +19423,11 @@ const policy = {
       "187%",
       "unavailable",
       null
+    ],
+    "s222": [
+      "064760 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s223": [
       "96,400",
@@ -16159,6 +19459,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s235": [
+      "192820 · 코스피",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s236": [
       "118,600",
       "price",
@@ -16188,6 +19493,11 @@ const policy = {
       "68%",
       "unavailable",
       null
+    ],
+    "s248": [
+      "213420 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s249": [
       "26,150",
@@ -16219,6 +19529,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s261": [
+      "141080 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s262": [
       "172,300",
       "price",
@@ -16249,6 +19564,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s274": [
+      "139480 · 코스피",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s275": [
       "52,300",
       "price",
@@ -16278,6 +19598,11 @@ const policy = {
       "81%",
       "unavailable",
       null
+    ],
+    "s287": [
+      "011170 · 코스피",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s288": [
       "61,200",
@@ -16344,6 +19669,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s315": [
+      "005930 · 512위",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s323": [
       "150,850",
       "price",
@@ -16401,6 +19731,11 @@ const policy = {
       "caption",
       "거래량"
     ],
+    "s052": [
+      "277810",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s053": [
       "246,500",
       "price",
@@ -16425,6 +19760,11 @@ const policy = {
       "코스닥",
       "unavailable",
       null
+    ],
+    "s064": [
+      "007660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s065": [
       "64,500",
@@ -16451,6 +19791,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s076": [
+      "257720",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s077": [
       "58,900",
       "price",
@@ -16475,6 +19820,11 @@ const policy = {
       "코스닥",
       "unavailable",
       null
+    ],
+    "s088": [
+      "141080",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s089": [
       "172,300",
@@ -16501,6 +19851,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s100": [
+      "067310",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s101": [
       "27,850",
       "price",
@@ -16525,6 +19880,11 @@ const policy = {
       "코스닥",
       "unavailable",
       null
+    ],
+    "s112": [
+      "078600",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s113": [
       "118,700",
@@ -16551,6 +19911,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s124": [
+      "005290",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s125": [
       "42,150",
       "price",
@@ -16575,6 +19940,11 @@ const policy = {
       "코스닥",
       "unavailable",
       null
+    ],
+    "s136": [
+      "036930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s137": [
       "38,700",
@@ -16601,6 +19971,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s148": [
+      "240810",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s149": [
       "41,300",
       "price",
@@ -16625,6 +20000,11 @@ const policy = {
       "코스닥",
       "unavailable",
       null
+    ],
+    "s160": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s161": [
       "197,400",
@@ -16651,6 +20031,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s172": [
+      "064760",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s173": [
       "96,400",
       "price",
@@ -16675,6 +20060,11 @@ const policy = {
       "코스닥",
       "unavailable",
       null
+    ],
+    "s184": [
+      "267260",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s185": [
       "412,500",
@@ -16701,6 +20091,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s196": [
+      "196170",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s197": [
       "391,000",
       "price",
@@ -16725,6 +20120,11 @@ const policy = {
       "코스닥",
       "unavailable",
       null
+    ],
+    "s208": [
+      "003230",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s209": [
       "745,000",
@@ -16751,6 +20151,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s220": [
+      "064350",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s221": [
       "128,900",
       "price",
@@ -16775,6 +20180,11 @@ const policy = {
       "코스피",
       "unavailable",
       null
+    ],
+    "s232": [
+      "010120",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s233": [
       "289,500",
@@ -16801,6 +20211,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s244": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s245": [
       "150,850",
       "price",
@@ -16825,6 +20240,11 @@ const policy = {
       "코스피",
       "unavailable",
       null
+    ],
+    "s256": [
+      "011170",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s257": [
       "61,200",
@@ -16851,6 +20271,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s268": [
+      "213420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s269": [
       "26,150",
       "price",
@@ -16875,6 +20300,11 @@ const policy = {
       "코스닥",
       "unavailable",
       null
+    ],
+    "s280": [
+      "139480",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s281": [
       "52,300",
@@ -17033,6 +20463,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s043": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s044": [
       "198,400",
       "price",
@@ -17042,6 +20477,11 @@ const policy = {
       "현대차",
       "bound-label",
       "stk_nm"
+    ],
+    "s057": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s058": [
       "232,500",
@@ -17053,6 +20493,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s071": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s072": [
       "78,200",
       "price",
@@ -17062,6 +20507,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "214,000",
@@ -17073,6 +20523,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s099": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s100": [
       "389,500",
       "price",
@@ -17082,6 +20537,11 @@ const policy = {
       "한미반도체",
       "bound-label",
       "stk_nm"
+    ],
+    "s113": [
+      "042700",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s114": [
       "197,400",
@@ -17093,6 +20553,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s129": [
+      "051910",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s130": [
       "312,000",
       "price",
@@ -17102,6 +20567,11 @@ const policy = {
       "카카오",
       "bound-label",
       "stk_nm"
+    ],
+    "s143": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s144": [
       "41,850",
@@ -17190,6 +20660,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s052": [
+      "042700 · 코스피",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s054": [
       "+7,900 · +4.18%",
       "unavailable",
@@ -17204,6 +20679,11 @@ const policy = {
       "HD현대일렉트릭",
       "bound-label",
       "stk_nm"
+    ],
+    "s066": [
+      "267260 · 코스피",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s068": [
       "+11,500 · +2.86%",
@@ -17220,6 +20700,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s080": [
+      "196170 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s082": [
       "+88,200 · +29.12%",
       "unavailable",
@@ -17234,6 +20719,11 @@ const policy = {
       "이수페타시스",
       "bound-label",
       "stk_nm"
+    ],
+    "s094": [
+      "007660 · 코스피",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s096": [
       "+14,850 · +29.90%",
@@ -17250,6 +20740,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s108": [
+      "277810 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s110": [
       "+56,800 · +29.94%",
       "unavailable",
@@ -17264,6 +20759,11 @@ const policy = {
       "실리콘투",
       "bound-label",
       "stk_nm"
+    ],
+    "s122": [
+      "257720 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s124": [
       "+13,530 · +29.81%",
@@ -17387,6 +20887,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s043": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s044": [
       "150,850",
       "price",
@@ -17411,6 +20916,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s053": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s054": [
       "198,400",
@@ -17437,6 +20947,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "232,500",
       "price",
@@ -17461,6 +20976,11 @@ const policy = {
       "KB금융",
       "bound-label",
       "stk_nm"
+    ],
+    "s073": [
+      "105560",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s074": [
       "78,200",
@@ -17487,6 +21007,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s083": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s084": [
       "214,000",
       "price",
@@ -17511,6 +21036,11 @@ const policy = {
       "POSCO홀딩스",
       "bound-label",
       "stk_nm"
+    ],
+    "s093": [
+      "005490",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s094": [
       "389,500",
@@ -17547,6 +21077,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s105": [
+      "051910",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s106": [
       "312,000",
       "price",
@@ -17571,6 +21106,11 @@ const policy = {
       "카카오",
       "bound-label",
       "stk_nm"
+    ],
+    "s115": [
+      "035720",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s116": [
       "41,850",
@@ -18326,6 +21866,11 @@ const policy = {
     ]
   },
   "32S7-0": {
+    "s002": [
+      "업종 013 · KRX",
+      "bound-identifier",
+      "inds_cd"
+    ],
     "s003": [
       "실시간",
       "status",
@@ -18473,6 +22018,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s043": [
+      "010145",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s044": [
       "1,245",
       "price",
@@ -18502,6 +22052,11 @@ const policy = {
       "2026.11.20",
       "unavailable",
       null
+    ],
+    "s056": [
+      "329182",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s057": [
       "2,480",
@@ -18533,6 +22088,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s069": [
+      "042665",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s070": [
       "1,860",
       "price",
@@ -18562,6 +22122,11 @@ const policy = {
       "2026.11.28",
       "unavailable",
       null
+    ],
+    "s082": [
+      "034023",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s083": [
       "3,120",
@@ -18593,6 +22158,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s095": [
+      "003495",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s096": [
       "1,420",
       "price",
@@ -18622,6 +22192,11 @@ const policy = {
       "2026.12.18",
       "unavailable",
       null
+    ],
+    "s108": [
+      "000155",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s109": [
       "2,050",
@@ -18653,6 +22228,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s121": [
+      "001045",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s122": [
       "3,480",
       "price",
@@ -18682,6 +22262,11 @@ const policy = {
       "2026.12.02",
       "unavailable",
       null
+    ],
+    "s134": [
+      "004995",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s135": [
       "613",
@@ -18713,6 +22298,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s147": [
+      "180642",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s148": [
       "5,240",
       "price",
@@ -18742,6 +22332,11 @@ const policy = {
       "2027.01.28",
       "unavailable",
       null
+    ],
+    "s160": [
+      "078935",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s161": [
       "1,180",
@@ -18773,6 +22368,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s173": [
+      "120115",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s174": [
       "2,240",
       "price",
@@ -18802,6 +22402,11 @@ const policy = {
       "2027.01.08",
       "unavailable",
       null
+    ],
+    "s186": [
+      "004565",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s187": [
       "892",
@@ -18833,6 +22438,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s199": [
+      "047055",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s200": [
       "740",
       "price",
@@ -18862,6 +22472,11 @@ const policy = {
       "2027.02.20",
       "unavailable",
       null
+    ],
+    "s212": [
+      "298045",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s213": [
       "8,120",
@@ -18893,6 +22508,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s224": [
+      "010145 · 1위",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s225": [
       "1,245",
       "price",
@@ -18915,6 +22535,16 @@ const policy = {
     ]
   },
   "3BQB-0": {
+    "s002": [
+      "장중 · 09:42",
+      "bound-time",
+      "20"
+    ],
+    "s003": [
+      "전체 시장 · 업종 21개",
+      "bound-identifier",
+      "list"
+    ],
     "s016": [
       "정규장",
       "status",
@@ -18925,60 +22555,130 @@ const policy = {
       "status",
       null
     ],
+    "s018": [
+      "21개 업종",
+      "bound-identifier",
+      "list"
+    ],
+    "s021": [
+      "21개 업종 · 선택 반도체 · 09:42 기준",
+      "bound-identifier",
+      "list"
+    ],
     "s022": [
       "KOSPI",
-      "bound-label",
+      "bound-identifier",
       "marketCode"
+    ],
+    "s023": [
+      "11개",
+      "bound-identifier",
+      "list"
+    ],
+    "s024": [
+      "G1010",
+      "bound-identifier",
+      "code"
     ],
     "s025": [
       "음식료품",
       "bound-label",
       "name"
     ],
+    "s026": [
+      "G1510",
+      "bound-identifier",
+      "code"
+    ],
     "s027": [
       "화학",
       "bound-label",
       "name"
+    ],
+    "s028": [
+      "G2020",
+      "bound-identifier",
+      "code"
     ],
     "s029": [
       "건설",
       "bound-label",
       "name"
     ],
+    "s030": [
+      "G2510",
+      "bound-identifier",
+      "code"
+    ],
     "s031": [
       "반도체",
       "bound-label",
       "name"
+    ],
+    "s033": [
+      "G2520",
+      "bound-identifier",
+      "code"
     ],
     "s034": [
       "전기전자",
       "bound-label",
       "name"
     ],
+    "s035": [
+      "G2610",
+      "bound-identifier",
+      "code"
+    ],
     "s036": [
       "유통업",
       "bound-label",
       "name"
+    ],
+    "s037": [
+      "G2710",
+      "bound-identifier",
+      "code"
     ],
     "s038": [
       "운수장비",
       "bound-label",
       "name"
     ],
+    "s039": [
+      "G3010",
+      "bound-identifier",
+      "code"
+    ],
     "s040": [
       "서비스업",
       "bound-label",
       "name"
+    ],
+    "s041": [
+      "G3520",
+      "bound-identifier",
+      "code"
     ],
     "s042": [
       "의약품",
       "bound-label",
       "name"
     ],
+    "s043": [
+      "G4010",
+      "bound-identifier",
+      "code"
+    ],
     "s044": [
       "은행",
       "bound-label",
       "name"
+    ],
+    "s045": [
+      "G4510",
+      "bound-identifier",
+      "code"
     ],
     "s046": [
       "증권",
@@ -18987,43 +22687,123 @@ const policy = {
     ],
     "s047": [
       "KOSDAQ",
-      "bound-label",
+      "bound-identifier",
       "marketCode"
+    ],
+    "s048": [
+      "6개",
+      "bound-identifier",
+      "list"
+    ],
+    "s049": [
+      "Q1010",
+      "bound-identifier",
+      "code"
     ],
     "s050": [
       "음식료·담배",
       "bound-label",
       "name"
     ],
+    "s051": [
+      "Q2510",
+      "bound-identifier",
+      "code"
+    ],
     "s052": [
       "반도체",
       "bound-label",
       "name"
+    ],
+    "s053": [
+      "Q3010",
+      "bound-identifier",
+      "code"
     ],
     "s054": [
       "IT부품",
       "bound-label",
       "name"
     ],
+    "s055": [
+      "Q3020",
+      "bound-identifier",
+      "code"
+    ],
     "s056": [
       "소프트웨어",
       "bound-label",
       "name"
+    ],
+    "s057": [
+      "Q4010",
+      "bound-identifier",
+      "code"
     ],
     "s058": [
       "제약",
       "bound-label",
       "name"
     ],
+    "s059": [
+      "Q5010",
+      "bound-identifier",
+      "code"
+    ],
     "s060": [
       "오락·문화",
       "bound-label",
       "name"
     ],
+    "s061": [
+      "KOSPI200",
+      "bound-identifier",
+      "marketCode"
+    ],
+    "s062": [
+      "4개",
+      "bound-identifier",
+      "list"
+    ],
+    "s063": [
+      "I2510",
+      "bound-identifier",
+      "code"
+    ],
+    "s065": [
+      "I3010",
+      "bound-identifier",
+      "code"
+    ],
+    "s067": [
+      "I4010",
+      "bound-identifier",
+      "code"
+    ],
+    "s069": [
+      "I5010",
+      "bound-identifier",
+      "code"
+    ],
+    "s071": [
+      "전체 21개 표시",
+      "bound-identifier",
+      "list"
+    ],
+    "s072": [
+      "KOSPI 11 · KOSDAQ 6 · KOSPI200 4",
+      "bound-identifier",
+      "marketCode"
+    ],
     "s073": [
       "● 업종 지수 실시간 갱신 중",
       "status",
       null
+    ],
+    "s074": [
+      "마지막 반영 09:42:18",
+      "bound-time",
+      "20"
     ]
   },
   "3D4I-0": {
@@ -19031,6 +22811,31 @@ const policy = {
       "장중 · 09:42",
       "bound-time",
       "cntr_tm"
+    ],
+    "s003": [
+      "단기 관찰 그룹 · 8종목",
+      "unavailable",
+      null
+    ],
+    "s011": [
+      "단기 관찰",
+      "unavailable",
+      null
+    ],
+    "s012": [
+      "배당주",
+      "unavailable",
+      null
+    ],
+    "s013": [
+      "ETF 모음",
+      "unavailable",
+      null
+    ],
+    "s014": [
+      "ELW 관찰",
+      "unavailable",
+      null
     ],
     "s018": [
       "● 실시간 갱신",
@@ -19042,10 +22847,20 @@ const policy = {
       "unavailable",
       null
     ],
+    "s020": [
+      "그룹 4개",
+      "unavailable",
+      null
+    ],
     "s022": [
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s023": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s025": [
       "150,850",
@@ -19102,6 +22917,11 @@ const policy = {
       "bound-label",
       "exp_cntr_qty"
     ],
+    "s099": [
+      "삼성전자 — 선택",
+      "unavailable",
+      null
+    ],
     "s100": [
       "신호 1건",
       "unavailable",
@@ -19122,6 +22942,71 @@ const policy = {
       "time",
       null
     ],
+    "s113": [
+      "전체 4그룹 · 29종목",
+      "unavailable",
+      null
+    ],
+    "s114": [
+      "단기 관찰",
+      "unavailable",
+      null
+    ],
+    "s115": [
+      "G001",
+      "unavailable",
+      null
+    ],
+    "s116": [
+      "8종목",
+      "unavailable",
+      null
+    ],
+    "s117": [
+      "배당주",
+      "unavailable",
+      null
+    ],
+    "s118": [
+      "G002",
+      "unavailable",
+      null
+    ],
+    "s119": [
+      "12종목",
+      "unavailable",
+      null
+    ],
+    "s120": [
+      "ETF 모음",
+      "unavailable",
+      null
+    ],
+    "s121": [
+      "G003",
+      "unavailable",
+      null
+    ],
+    "s122": [
+      "5종목",
+      "unavailable",
+      null
+    ],
+    "s123": [
+      "ELW 관찰",
+      "unavailable",
+      null
+    ],
+    "s124": [
+      "G004",
+      "unavailable",
+      null
+    ],
+    "s125": [
+      "4종목",
+      "unavailable",
+      null
+    ],
     "s126": [
       "● 관심종목 시세 실시간 갱신 중",
       "status",
@@ -19138,6 +23023,11 @@ const policy = {
       "삼성전자",
       "bound-name",
       "stk_nm"
+    ],
+    "s002": [
+      "005930 · KOSPI · KRX",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s003": [
       "정규장",
@@ -19361,10 +23251,20 @@ const policy = {
       "bound-name",
       "stk_nm"
     ],
+    "s002": [
+      "58H215 · 기초자산 005930 · KB증권 발행 2503회차",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s004": [
       "1,245원",
       "price",
       "cur_prc"
+    ],
+    "s007": [
+      "09:42:18 · KRX",
+      "bound-time",
+      "20"
     ],
     "s009": [
       "1,215원",
@@ -19410,6 +23310,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "bsis_aset_1"
+    ],
+    "s032": [
+      "005930",
+      "bound-identifier",
+      "aset_cd"
     ],
     "s034": [
       "구성",
@@ -19548,6 +23453,31 @@ const policy = {
       "bound-time",
       "cntr_tm"
     ],
+    "s003": [
+      "ELW 관찰 그룹 · 4종목",
+      "unavailable",
+      null
+    ],
+    "s011": [
+      "단기 관찰",
+      "unavailable",
+      null
+    ],
+    "s012": [
+      "배당주",
+      "unavailable",
+      null
+    ],
+    "s013": [
+      "ETF 모음",
+      "unavailable",
+      null
+    ],
+    "s014": [
+      "ELW 관찰",
+      "unavailable",
+      null
+    ],
     "s018": [
       "● 실시간 갱신",
       "status",
@@ -19557,6 +23487,16 @@ const policy = {
       "4종목",
       "unavailable",
       null
+    ],
+    "s020": [
+      "그룹 4개",
+      "unavailable",
+      null
+    ],
+    "s023": [
+      "58H215",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s024": [
       "기초자산 005930",
@@ -19638,10 +23578,20 @@ const policy = {
       "unavailable",
       null
     ],
+    "s114": [
+      "ELW 관찰 4종목",
+      "unavailable",
+      null
+    ],
     "s115": [
       "삼성전자 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s116": [
+      "58H901",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s117": [
       "312",
@@ -19653,6 +23603,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s120": [
+      "58J204",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s121": [
       "87",
       "price",
@@ -19662,6 +23617,11 @@ const policy = {
       "SK하이닉스 콜",
       "bound-label",
       "stk_nm"
+    ],
+    "s124": [
+      "58K118",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s125": [
       "1,120",
@@ -19684,6 +23644,11 @@ const policy = {
       "삼성전자",
       "bound-name",
       "stk_nm"
+    ],
+    "s002": [
+      "005930 · KOSPI · KRX",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s003": [
       "정규장",
@@ -20742,6 +24707,16 @@ const policy = {
       "bound-label",
       "919"
     ],
+    "s168": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s170": [
+      "KR7069500007",
+      "bound-identifier",
+      "isin_cd"
+    ],
     "s172": [
       "KRX",
       "bound-label",
@@ -20930,6 +24905,16 @@ const policy = {
       "104,300원",
       "price",
       "lst_pric"
+    ],
+    "s185": [
+      "VI 미발동",
+      "status",
+      null
+    ],
+    "s187": [
+      "VI 미발동",
+      "status",
+      null
     ]
   },
   "3NVG-0": {
@@ -20965,7 +24950,7 @@ const policy = {
     ],
     "s041": [
       "USD · 외화예수금",
-      "bound-label",
+      "bound-identifier",
       "crnc_cd"
     ],
     "s047": [
@@ -21029,6 +25014,11 @@ const policy = {
       "09월 01일 09:42 기준",
       "time",
       null
+    ],
+    "s039": [
+      "04020000",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s057": [
       "당일",
@@ -21099,6 +25089,11 @@ const policy = {
       "시스템 · 영업부",
       "bound-label",
       "prcsr"
+    ],
+    "s127": [
+      "04020000",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s134": [
       "● 금현물 실시간 반영 중",
@@ -21181,6 +25176,11 @@ const policy = {
       "09/01",
       "unavailable",
       null
+    ],
+    "s056": [
+      "04020000 · 금현물",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s057": [
       "시장가",
@@ -21314,6 +25314,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s052": [
+      "042700 · 코스피",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s054": [
       "+7,900 · +4.18%",
       "unavailable",
@@ -21328,6 +25333,11 @@ const policy = {
       "HD현대일렉트릭",
       "bound-label",
       "stk_nm"
+    ],
+    "s066": [
+      "267260 · 코스피",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s068": [
       "+11,500 · +2.86%",
@@ -21344,6 +25354,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s080": [
+      "196170 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s082": [
       "+88,200 · +29.12%",
       "unavailable",
@@ -21358,6 +25373,11 @@ const policy = {
       "이수페타시스",
       "bound-label",
       "stk_nm"
+    ],
+    "s094": [
+      "007660 · 코스피",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s096": [
       "+14,850 · +29.90%",
@@ -21374,6 +25394,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s108": [
+      "277810 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s110": [
       "+56,800 · +29.94%",
       "unavailable",
@@ -21388,6 +25413,11 @@ const policy = {
       "실리콘투",
       "bound-label",
       "stk_nm"
+    ],
+    "s122": [
+      "257720 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s124": [
       "+13,530 · +29.81%",
@@ -21404,6 +25434,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s136": [
+      "005290 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s138": [
       "+9,530 · +29.22%",
       "unavailable",
@@ -21418,6 +25453,11 @@ const policy = {
       "대주전자재료",
       "bound-label",
       "stk_nm"
+    ],
+    "s150": [
+      "078600 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s152": [
       "+27,120 · +29.61%",
@@ -21434,6 +25474,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s164": [
+      "036930 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s166": [
       "+8,730 · +29.13%",
       "unavailable",
@@ -21448,6 +25493,11 @@ const policy = {
       "원익IPS",
       "bound-label",
       "stk_nm"
+    ],
+    "s178": [
+      "240810 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s180": [
       "+9,300 · +29.06%",
@@ -21464,6 +25514,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s192": [
+      "067310 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s194": [
       "+6,320 · +29.35%",
       "unavailable",
@@ -21478,6 +25533,11 @@ const policy = {
       "티씨케이",
       "bound-label",
       "stk_nm"
+    ],
+    "s206": [
+      "064760 · 코스닥",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s208": [
       "+21,700 · +29.05%",
@@ -21615,6 +25675,56 @@ const policy = {
       "순위",
       "caption",
       "번호"
+    ],
+    "s050": [
+      "58H219",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s061": [
+      "58J377",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s072": [
+      "58M204",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s083": [
+      "58P630",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s094": [
+      "59V603",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s105": [
+      "59G608",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s116": [
+      "58L118",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s127": [
+      "59Q264",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s138": [
+      "59S391",
+      "bound-identifier",
+      "stk_cd"
+    ],
+    "s149": [
+      "58K902",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s159": [
       "1위",
@@ -21760,6 +25870,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "150,850",
       "price",
@@ -21774,6 +25889,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s052": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s053": [
       "198,400",
@@ -21790,6 +25910,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "232,500",
       "price",
@@ -21805,6 +25930,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s074": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s075": [
       "214,000",
       "price",
@@ -21819,6 +25949,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "810,000",
@@ -21865,6 +26000,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s119": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s121": [
       "150,850",
       "price",
@@ -21902,6 +26042,11 @@ const policy = {
     ],
     "s140": [
       "투자유의 아님",
+      "status",
+      null
+    ],
+    "s141": [
+      "VI 미발동",
       "status",
       null
     ],
@@ -21942,6 +26087,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "150,850",
       "price",
@@ -21956,6 +26106,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s052": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s053": [
       "198,400",
@@ -21972,6 +26127,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "232,500",
       "price",
@@ -21987,6 +26147,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s074": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s075": [
       "214,000",
       "price",
@@ -22001,6 +26166,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "810,000",
@@ -22047,6 +26217,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s119": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s121": [
       "150,850",
       "price",
@@ -22084,6 +26259,11 @@ const policy = {
     ],
     "s140": [
       "투자유의 아님",
+      "status",
+      null
+    ],
+    "s141": [
+      "VI 미발동",
       "status",
       null
     ],
@@ -22124,6 +26304,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "150,850",
       "price",
@@ -22138,6 +26323,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s052": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s053": [
       "198,400",
@@ -22154,6 +26344,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "232,500",
       "price",
@@ -22169,6 +26364,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s074": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s075": [
       "214,000",
       "price",
@@ -22183,6 +26383,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "810,000",
@@ -22229,6 +26434,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s119": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s121": [
       "150,850",
       "price",
@@ -22266,6 +26476,11 @@ const policy = {
     ],
     "s140": [
       "투자유의 아님",
+      "status",
+      null
+    ],
+    "s141": [
+      "VI 미발동",
       "status",
       null
     ],
@@ -22306,6 +26521,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "150,850",
       "price",
@@ -22320,6 +26540,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s052": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s053": [
       "198,400",
@@ -22336,6 +26561,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "232,500",
       "price",
@@ -22351,6 +26581,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s074": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s075": [
       "214,000",
       "price",
@@ -22365,6 +26600,11 @@ const policy = {
       "한화에어로스페이스",
       "bound-label",
       "stk_nm"
+    ],
+    "s085": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s086": [
       "810,000",
@@ -22411,6 +26651,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s119": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s121": [
       "150,850",
       "price",
@@ -22448,6 +26693,11 @@ const policy = {
     ],
     "s140": [
       "투자유의 아님",
+      "status",
+      null
+    ],
+    "s141": [
+      "VI 미발동",
       "status",
       null
     ],
@@ -22493,6 +26743,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s041": [
+      "005930",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s042": [
       "150,850",
       "price",
@@ -22507,6 +26762,11 @@ const policy = {
       "SK하이닉스",
       "bound-label",
       "stk_nm"
+    ],
+    "s052": [
+      "000660",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s053": [
       "198,400",
@@ -22523,6 +26783,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s063": [
+      "005380",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s064": [
       "232,500",
       "price",
@@ -22537,6 +26802,11 @@ const policy = {
       "NAVER",
       "bound-label",
       "stk_nm"
+    ],
+    "s074": [
+      "035420",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s075": [
       "214,000",
@@ -22553,6 +26823,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s085": [
+      "012450",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s086": [
       "810,000",
       "price",
@@ -22567,6 +26842,11 @@ const policy = {
       "기아",
       "bound-label",
       "stk_nm"
+    ],
+    "s096": [
+      "000270",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s097": [
       "41,850",
@@ -22583,6 +26863,11 @@ const policy = {
       "bound-label",
       "stk_nm"
     ],
+    "s107": [
+      "069500",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s108": [
       "39,120",
       "price",
@@ -22597,6 +26882,11 @@ const policy = {
       "삼성전자",
       "bound-label",
       "stk_nm"
+    ],
+    "s119": [
+      "005930 · KOSPI",
+      "bound-identifier",
+      "stk_cd"
     ],
     "s121": [
       "150,850",
@@ -22638,6 +26928,11 @@ const policy = {
       "status",
       null
     ],
+    "s141": [
+      "VI 미발동",
+      "status",
+      null
+    ],
     "s144": [
       "● 실시간 갱신 중 · 마지막 반영 09:42:18",
       "time",
@@ -22645,6 +26940,6 @@ const policy = {
     ]
   }
 };
-if (typeof module !== 'undefined' && module.exports) module.exports = policy;
+if (typeof module !== "undefined" && module.exports) module.exports = policy;
 else { window.AthenaLib = window.AthenaLib || {}; window.AthenaLib.BoardDisplayPolicyData = policy; }
 })();

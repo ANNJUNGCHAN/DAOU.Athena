@@ -26,7 +26,7 @@ test('generated policy exactly follows the 94 public read-only source contracts'
     for (const [slotId, [authored, role]] of Object.entries(rules)) {
       const slot = contract.slots.find((item) => item.slot_id === slotId);
       assert.equal(authored, slot.paper_text);
-      if (role !== 'caption') assert.equal(hasBinding(slot), ['price', 'price-composite', 'direction', 'bound-time', 'bound-label', 'bound-name', 'bound-format'].includes(role), `${id}/${slotId}`);
+      if (role !== 'caption') assert.equal(hasBinding(slot), ['price', 'price-composite', 'direction', 'bound-time', 'bound-label', 'bound-name', 'bound-format', 'bound-identifier'].includes(role), `${id}/${slotId}`);
     }
   }
 });
