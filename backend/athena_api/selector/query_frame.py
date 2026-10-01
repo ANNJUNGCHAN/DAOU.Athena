@@ -146,7 +146,7 @@ _SUBJECT_PHRASES: Mapping[RoutingSubject, tuple[str, ...]] = {
 }
 
 _ENTITY_PHRASES: Mapping[EntityKind, tuple[str, ...]] = {
-    EntityKind.STOCK: ("종목", "주식", "주가", "stock"),
+    EntityKind.STOCK: ("종목", "주식", "주가", "stock", "신주인수권", "subscription rights"),
     EntityKind.ETF: ("etf",),
     EntityKind.ELW: ("elw", "elws"),
     EntityKind.GOLD: (

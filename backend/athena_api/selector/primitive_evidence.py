@@ -345,6 +345,21 @@ def analyze_question(
         rejected = set(items)
         values[:] = [item for item in values if item not in rejected]
 
+    # Subscription-right quotes are an instrument collection, not a missing
+    # single-stock target. Derive the same product capability as the catalog.
+    subscription_rights_quote = (
+        stated("신주인수권", "subscription rights")
+        and stated("시세", "quote", "price")
+        and execution is not ExecutionKind.ORDER
+    )
+    if subscription_rights_quote:
+        subject = RoutingSubject.INSTRUMENT
+        execution = ExecutionKind.QUERY
+        add(entity_kinds, EntityKind.STOCK)
+        add(data_intents, DataIntent.SCREENING)
+        add(measures, Measure.PRICE)
+        add(result_shapes, RoutingResultShape.COLLECTION)
+
     chart_request = stated("chart", "candle", "차트", "캔들")
     ohlc = stated(
         "opening price", "session high", "session low", "시가", "고가", "저가", "종가"
@@ -1193,7 +1208,7 @@ def analyze_question(
     )
     if market_wide_stock_screen:
         add(entity_kinds, EntityKind.STOCK)
-    target_scope_present = authored_target or stated(
+    target_scope_present = authored_target or subscription_rights_quote or stated(
         "account",
         "portfolio",
         "holdings",
@@ -1293,6 +1308,8 @@ def analyze_question(
     aggregation = _aggregation_scope(tuple(result_shapes))
     range_kind = _range_kind(tuple(temporal_scopes))
     capabilities: list[CapabilityKind] = []
+    if subscription_rights_quote:
+        capabilities.append(CapabilityKind.EQUITY_SUBSCRIPTION_RIGHTS)
     if sector_collection:
         capabilities.append(CapabilityKind.SECTOR_INDEX_COLLECTION)
     if stated(
@@ -1482,7 +1499,7 @@ def analyze_question(
         ),
         (
             CapabilityKind.GOLD_ORDERBOOK,
-            ("order-book", "order book", "bid and ask", "매수·매도 호가", "호가와 잔량"),
+            ("order-book", "order book", "bid and ask", "매수·매도 호가", "호가와 잔량", "호가"),
         ),
         (
             CapabilityKind.GOLD_DAILY,
