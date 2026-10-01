@@ -788,6 +788,7 @@ _SEMANTIC_KOREAN_TOKENS = frozenset(
         "낮은",
         "높은",
         "보합",
+        "발동",
         "상승",
         "속한",
         "하락",

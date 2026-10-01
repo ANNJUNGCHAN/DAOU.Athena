@@ -218,6 +218,7 @@
     },
     "base:ka10054": {
       "data_intents": ["snapshot", "screening"],
+      "temporal_scopes": ["current"],
       "capabilities": ["volatility_indicator"]
     },
     "detail:ka10007:expected_market": {

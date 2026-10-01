@@ -459,6 +459,24 @@ def analyze_question(
             add(data_intents, DataIntent.HISTORY)
             add(temporal_scopes, TemporalScope.DAILY)
     volatility_request = stated("volatility interruption", "vi 발동", "변동성 완화")
+    volatility_snapshot = (
+        volatility_request
+        and stated("현황", "목록", "리스트", "status", "list")
+        and not stated("구독", "감시", "등록", "해제", "중지", "종료", "취소",
+                       "subscribe", "subscription", "monitor", "register", "remove", "stop", "end", "cancel")
+        and execution is not ExecutionKind.ORDER
+    )
+    if volatility_snapshot:
+        # A current VI list is a read; '실시간 현황' alone is not a request to
+        # register a stream. Keep explicit subscription/control actions separate.
+        subject = RoutingSubject.INSTRUMENT
+        execution = ExecutionKind.QUERY
+        action = None
+        add(entity_kinds, EntityKind.STOCK)
+        discard(data_intents, DataIntent.SUBSCRIPTION)
+        discard(temporal_scopes, TemporalScope.REALTIME)
+        discard(result_shapes, RoutingResultShape.STREAM)
+        add(temporal_scopes, TemporalScope.CURRENT)
     market_wide_stock_wording = stated(
         "domestic stocks", "domestic equities", "stocks", "equities", "국내주식"
     )
@@ -1208,7 +1226,7 @@ def analyze_question(
     )
     if market_wide_stock_screen:
         add(entity_kinds, EntityKind.STOCK)
-    target_scope_present = authored_target or subscription_rights_quote or stated(
+    target_scope_present = authored_target or subscription_rights_quote or volatility_snapshot or stated(
         "account",
         "portfolio",
         "holdings",

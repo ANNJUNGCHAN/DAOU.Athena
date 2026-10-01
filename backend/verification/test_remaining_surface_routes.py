@@ -39,3 +39,35 @@ def test_sector_constituent_minimum_routes_to_the_authored_sector_surface(select
 def test_missing_gold_identity_and_order_actions_do_not_become_quote_reads(selector, question):
     with pytest.raises(SelectorError):
         selector.resolve(ResolveRequest(question=question, intent="query", arguments={}))
+
+
+VI_ARGUMENTS = {
+    "mrkt_tp": "000", "bf_mkrt_tp": "1", "stk_cd": "", "motn_tp": "0",
+    "skip_stk": "000000000", "trde_qty_tp": "0", "min_trde_qty": "", "max_trde_qty": "",
+    "trde_prica_tp": "0", "min_trde_prica": "", "max_trde_prica": "", "motn_drc": "0", "stex_tp": "3",
+}
+
+
+@pytest.mark.parametrize("question", [
+    "현재 VI 발동 종목 목록", "실시간 VI 발동 현황", "VI 발동 종목",
+    "국내주식 VI 발동 현황", "현재 국내주식 VI 발동 종목 목록",
+])
+def test_vi_snapshot_preserves_trigger_semantics_and_current_scope(selector, question):
+    result = selector.resolve(ResolveRequest(question=question, intent="query", arguments=VI_ARGUMENTS))
+    assert result.operation_ref == "base:ka10054"
+
+
+@pytest.mark.parametrize("question", [
+    "실시간 VI 발동 구독", "VI 발동 종목 목록 조회 후 실시간 감시 등록",
+    "VI 발동 목록 구독 해제", "VI 발동 목록 조회 후 중지",
+    "VI 발동 목록 조회 후 종료", "VI 발동 종목 매수 주문",
+])
+def test_vi_list_does_not_turn_subscription_control_or_orders_into_snapshot(selector, question):
+    with pytest.raises(SelectorError):
+        selector.resolve(ResolveRequest(question=question, intent="query", arguments=VI_ARGUMENTS))
+
+
+def test_vi_read_still_requires_validated_request_arguments(selector):
+    with pytest.raises(SelectorError) as error:
+        selector.resolve(ResolveRequest(question="현재 VI 발동 종목 목록", intent="query", arguments={}))
+    assert error.value.code == "INVALID_ARGUMENTS"
