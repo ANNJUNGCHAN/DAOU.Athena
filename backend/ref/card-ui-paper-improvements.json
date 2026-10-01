@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "verified_at": "2026-10-01T05:38:18.930Z",
+  "verified_at": "2026-10-01T08:04:25.000Z",
   "paper_file": {
     "id": "01M3SB680J59QWZX6J4CGRVXT7",
     "name": "ATHENA 앱",
@@ -475,6 +475,17 @@
         "84b2f54"
       ],
       "followup_difference": "도면은 합성 4행을 사용한다. 제품은 현재 조회의 최대 100행을 동적으로 표시하며 넘칠 때만 스크롤 안내를 보인다."
+    },
+    {
+      "page_id": "p-D-0",
+      "page_name": "개선 · 계좌 표 가독성",
+      "artboard_id": "11Q9-0",
+      "artboard_name": "추가 개선 · 빈 값과 상세 수치의 이름",
+      "targets": ["2SCE-1", "2SKU-1", "137X-2", "2RBO-1"],
+      "improvement_reason": "빈 응답·수신 대기·실제 0을 구분하고, 기간중 거래량과 신용잔고율에 이름을 붙인다.",
+      "implementation_commits": ["9c472cd", "b7ae95f"],
+      "followup_difference": "전체 카드 복제 도면이 아니라 네 카드의 개선 요소를 모은 편집 가능한 합성 예시다. 실제 제품은 각 카드의 기존 행과 조회 시점 표시 안에 해당 규칙을 적용한다.",
+      "verified_at": "2026-10-01T08:04:25.000Z"
     }
   ],
   "product_followups_without_diagram": [
