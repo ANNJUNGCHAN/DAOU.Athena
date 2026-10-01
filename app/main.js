@@ -3315,6 +3315,7 @@ async function hydrateCanvasBoardForActiveAccount(payload = {}) {
     // 확인한 서버 alias만 백엔드 라우팅 값으로 사용한다.
     account: options.backendAccountAlias,
     slotIds: payload.slotIds || payload.slot_ids,
+    rankingOperationRef: payload.rankingOperationRef,
   }), requestedAccountId);
   if (!bound.ok) return { ok: false, status: 'error', errorCode: 'backend_account_unavailable', error: bound.error };
   if (generation !== realtimeAccountGeneration || bound.accountId !== activeRestAccountId()) {

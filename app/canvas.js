@@ -1002,6 +1002,23 @@ function stateLinksOf(contract) {
 // 하이드레이션 대상 — 백엔드는 op의 manifest request alias로 적은 인자 가방을 받는다
 // (BoardHydrateRequest.target은 dict다). 봉투가 실어온 인자를 그대로 넘기고 종목코드만
 // 봉투 머리에서 보강한다 — 백엔드가 op마다 자기 alias만 골라 쓴다.
+const RANKING_BOARD_OPERATIONS = Object.freeze({
+  '13K0-2': 'base:ka10032', '2X5N-0': 'base:ka10030', '2XG6-0': 'base:ka10031',
+  '2XKO-0': 'base:ka10027', '2XP6-0': 'base:ka10029', '2XTO-0': 'base:ka10020',
+  '2YA8-0': 'base:ka10021', '2YEQ-0': 'base:ka10022', '2YJ8-0': 'base:ka10023',
+  '2YNQ-0': 'base:ka10098',
+});
+
+function expandedRankingSourceBoard(state) {
+  return state.rankingExpandedSourceBoard || state.rankingReturnBoard || '13K0-2';
+}
+
+function expandedRankingOperation(state) {
+  const sourceBoard = expandedRankingSourceBoard(state);
+  return state.rankingSourceBoard === sourceBoard && state.rankingSourceOperation
+    ? state.rankingSourceOperation : RANKING_BOARD_OPERATIONS[sourceBoard] || 'base:ka10032';
+}
+
 function boardHydrateTarget(envelope, host) {
   const args = (envelope && (envelope.operation_args || envelope.arguments)) || {};
   const target = args && typeof args === 'object' && !Array.isArray(args) ? { ...args } : {};
@@ -1012,7 +1029,8 @@ function boardHydrateTarget(envelope, host) {
     target.dt = state.etfReturnPeriod;
   }
   if (rankingBoardControls && state && rankingBoardControls.isFamilyBoard(state.boardId)) {
-    return rankingBoardControls.targetFor(target, state.rankingCriteria, state.boardId);
+    return rankingBoardControls.targetFor(target, state.rankingCriteria,
+      state.boardId === '4B22-1' ? expandedRankingSourceBoard(state) : state.boardId);
   }
   return target;
 }
@@ -1122,6 +1140,7 @@ function boardMountOptions(host, envelope) {
     identity: boardMount.boardIdentityFromEnvelope(envelope, boardStateOf(host).values),
     operationRef: String((envelope && (envelope.operation_ref || envelope.operationRef)) || '').trim(),
     operationArgs: boardHydrateTarget(envelope, host),
+    rankingResult: boardStateOf(host).boardId === '4B22-1' ? boardStateOf(host).rankingResult : null,
     onEtfPeriodChange: (dt) => selectEtfReturnPeriod(host, envelope, dt),
     // 백엔드가 「자료가 한 칸도 없다」고 표시한 줄. 마운트가 그 줄만 감춘다.
     emptyRows: boardStateOf(host).emptyRows || [],
@@ -1146,10 +1165,17 @@ async function openBoardSurface(host, contract, envelope, isCurrent) {
   if (initialContract) seedBoardState(state, initialContract, envelope);
   state.hydrationWarnings = [];
   if (rankingBoardControls && rankingBoardControls.isFamilyBoard(contract.board_id)) {
+    state.rankingReturnBoard = contract.board_id === '4B22-1'
+      ? Object.keys(RANKING_BOARD_OPERATIONS).find(id => RANKING_BOARD_OPERATIONS[id] === envelope.operation_ref) || '13K0-2'
+      : String(contract.board_id || rankingBoardControls.ROOT_BOARD);
     state.rankingCriteria = rankingBoardControls.initialCriteria(
-      boardHydrateTarget(envelope), contract.board_id,
+      boardHydrateTarget(envelope), state.rankingReturnBoard,
     );
-    state.rankingReturnBoard = String(contract.board_id || rankingBoardControls.ROOT_BOARD);
+    state.rankingSourceBoard = state.rankingReturnBoard;
+    state.rankingExpandedSourceBoard = state.rankingSourceBoard;
+    state.rankingSourceOperation = envelope.operation_ref === 'base:ka00198'
+      && state.rankingSourceBoard === '13K0-2' ? envelope.operation_ref
+      : RANKING_BOARD_OPERATIONS[state.rankingSourceBoard];
   }
   const initial = String(contract.initial_state_board || '');
   const hasInitial = initial && initial !== String(contract.board_id)
@@ -1252,6 +1278,17 @@ function switchStateBoard(host, boardId, envelope, control = '') {
     state.rankingCriteria = { ...(state.rankingCriteria || {}), ...transition.criteria };
   }
   if (transition.returnBoard) state.rankingReturnBoard = transition.returnBoard;
+  if (target === '4B22-1') {
+    if (!rankingBoardControls.isFilterBoard(state.boardId)) {
+      state.rankingReturnBoard = state.boardId;
+      state.rankingExpandedSourceBoard = state.boardId;
+    }
+    state.rankingResult = null;
+    state.hydrationByBoard.delete(target);
+  } else if (RANKING_BOARD_OPERATIONS[target] && !rankingBoardControls.isFilterBoard(state.boardId)) {
+    state.rankingSourceBoard = target;
+    state.rankingSourceOperation = RANKING_BOARD_OPERATIONS[target];
+  }
   // 표면을 통째로 갈면 컨테이너가 바뀐다 — 같은 panelId를 다른 컨테이너로 열면
   // AITS adapter가 던지므로(aits-chart-panel openPanel) 먼저 닫는다.
   destroyBoardPrimary(state);
@@ -1341,6 +1378,7 @@ function wireStateControls(host, envelope, mounted) {
 }
 
 function clearRankingBoardCache(state) {
+  state.rankingResult = null;
   for (const cache of [
     state.valuesByBoard, state.unboundByBoard, state.hydrationByBoard, state.realtimeByBoard,
     state.emptyRowsByBoard, state.emptyColumnsByBoard, state.emptyValueSlotsByBoard,
@@ -1956,7 +1994,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   const pending = authoredPending !== undefined
     ? authoredPending
     : (mounted && mounted.plan ? (mounted.plan.missing || []) : state.unbound);
-  if (!pending.length) return mounted;
+  if (!pending.length && state.boardId !== '4B22-1') return mounted;
   if (!window.athena || typeof window.athena.invoke !== 'function') {
     throw new Error('카드 데이터 조회 연결을 사용할 수 없습니다.');
   }
@@ -1966,6 +2004,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     reply = await window.athena.invoke('athena:canvas-board-hydrate', {
       boardId,
       slotIds: pending,
+      rankingOperationRef: boardId === '4B22-1' ? expandedRankingOperation(state) : undefined,
       target: boardHydrateTarget(envelope, host),
       account: boardHydrateAccount(envelope),
       correlation: envelope && envelope.correlation,
@@ -1980,18 +2019,22 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   }
   const failures = (Array.isArray(reply.operations) ? reply.operations : [])
     .filter((op) => op && op.status !== 'bound' && RETRYABLE_BOARD_HYDRATE_REASONS.has(op.reason));
-  const requiredRef = String((envelope && envelope.operation_ref) || '');
+  const requiredRef = boardId === '4B22-1' ? expandedRankingOperation(state) : String((envelope && envelope.operation_ref) || '');
   if (failures.some((op) => op.operation_ref === requiredRef)) {
     throw new Error('요청한 종목 정보를 불러오지 못했습니다. 다시 시도해 주세요.');
   }
   state.hydrationWarnings.push(...failures);
   state.primaryEnvelope = reply.primary_envelope || null;
-  const filled = reply && reply.ok && reply.slot_values ? reply.slot_values : null;
+  if (boardId === '4B22-1') {
+    if (!reply.ranking_result) throw new Error('전체 조회 목록을 받지 못했습니다. 다시 시도해 주세요.');
+    state.rankingResult = reply.ranking_result;
+  }
+  const filled = reply && reply.ok && reply.slot_values ? reply.slot_values : {};
   state.hydrationByBoard.set(
     boardId,
     boardMount.nextHydrationSlots(pending, filled, reply.surface_contract),
   );
-  if (!filled || !Object.keys(filled).length) return mounted;
+  if ((!filled || !Object.keys(filled).length) && !state.rankingResult) return mounted;
   state.values = { ...state.values, ...filled };
   state.valuesByBoard.set(boardId, state.values);
   state.unbound = state.unbound.filter((slotId) => !(slotId in filled));
