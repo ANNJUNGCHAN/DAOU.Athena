@@ -397,3 +397,29 @@ test('PER rows preserve actual PER without authored sector comparison examples',
   }
   assert.match(text('30ZW-0', {s056:'0'}, 's056'), /0/);
 });
+
+test('ranking mini lists identify received data without event-time claims', () => {
+  assert.equal(text('2VDA-0', {}, 's289'), '조회 종목 고가');
+  assert.equal(text('2VDA-0', {}, 's291'), '고가');
+  for (const sid of ['s294','s297','s300']) {
+    assert.equal(source('2VDA-0').slots.find(s => s.slot_id === sid).f, 'high_pric');
+  }
+  assert.equal(text('2ZHC-0', {}, 's337'), '조회 종목');
+  assert.equal(text('2ZHC-0', {}, 's048'), '거래량');
+  assert.equal(text('2ZZ7-0', {}, 's253'), '조회 종목 구간 등락률');
+  assert.equal(text('2ZZ7-0', {}, 's047'), '거래량');
+});
+
+test('minute amount specimens remain distinct from received daily amounts', () => {
+  const slots = source('3FR6-0').slots;
+  const minute = slots.filter(s => s.table?.table === '3T8I-0' && s.table.col === 6 && s.table.row !== 'head');
+  const daily = slots.filter(s => s.table?.table === '3SP2-0' && s.table.col === 6 && s.table.row !== 'head');
+  assert.equal(minute.length, 13);
+  assert.ok(minute.every(s => !s.mapping_id));
+  assert.equal(daily.length, 3);
+  for (const slot of daily) {
+    assert.equal(slot.mapping_id, 'base:ka10005');
+    assert.equal(slot.f, 'trde_prica');
+    assert.match(text('3FR6-0', {[slot.slot_id]:'0'}, slot.slot_id), /0/);
+  }
+});

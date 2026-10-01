@@ -96,3 +96,24 @@ def test_etf_whole_quote_hero_uses_first_response_row_without_borrowing_missing_
     assert 's386' not in values
     assert 's386' in contract['empty_value_slots']
     assert values['s387'] == '000001'
+
+
+def test_new_high_low_mini_list_uses_received_high_prices_consistently():
+    board = get_registry().boards['2VDA-0']
+    rows = [
+        {'stk_nm': '합성 종목 A', 'high_pric': '101', 'low_pric': '11'},
+        {'stk_nm': '합성 종목 B', 'high_pric': '202', 'low_pric': '22'},
+        {'stk_nm': '합성 종목 C', 'high_pric': '303', 'low_pric': '33'},
+    ]
+    bound = bind_surface_values('base:ka10016', {'ntl_pric': rows})
+    contract = build_board_surface_contract(board.board_id, bound, active_operation_refs=['base:ka10016'])
+    values = {slot['slot_id']: slot['value'] for slot in contract['slot_values']}
+    for sid, expected in [('s294', '101'), ('s297', '202'), ('s300', '303')]:
+        assert board.slot(sid).f == 'high_pric'
+        assert values[sid] == expected
+    del rows[2]['high_pric']
+    bound = bind_surface_values('base:ka10016', {'ntl_pric': rows})
+    contract = build_board_surface_contract(board.board_id, bound, active_operation_refs=['base:ka10016'])
+    values = {slot['slot_id']: slot['value'] for slot in contract['slot_values']}
+    assert 's300' not in values
+    assert 's300' in contract['empty_value_slots']

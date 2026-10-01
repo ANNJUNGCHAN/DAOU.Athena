@@ -8842,6 +8842,16 @@ const policy = {
       "unavailable",
       null
     ],
+    "s289": [
+      "최근 경신",
+      "caption",
+      "조회 종목 고가"
+    ],
+    "s291": [
+      "경신가",
+      "caption",
+      "고가"
+    ],
     "s293": [
       "한미반도체",
       "bound-label",
@@ -8880,7 +8890,7 @@ const policy = {
     "s300": [
       "60,900",
       "price",
-      "low_pric"
+      "high_pric"
     ],
     "s301": [
       "09:35",
@@ -16812,6 +16822,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s048": [
+      "거래량 · 거래대금",
+      "caption",
+      "거래량"
+    ],
     "s051": [
       "현대차",
       "bound-label",
@@ -17527,6 +17542,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s337": [
+      "오늘 도달",
+      "caption",
+      "조회 종목"
+    ],
     "s341": [
       "한미반도체",
       "bound-label",
@@ -18077,6 +18097,11 @@ const policy = {
       "+4.8%",
       "unavailable",
       null
+    ],
+    "s047": [
+      "거래량 · 거래대금",
+      "caption",
+      "거래량"
     ],
     "s051": [
       "한미반도체",
@@ -18657,6 +18682,11 @@ const policy = {
       "09:00~09:42",
       "time",
       null
+    ],
+    "s253": [
+      "최근 감지",
+      "caption",
+      "조회 종목 구간 등락률"
     ],
     "s257": [
       "09:41",

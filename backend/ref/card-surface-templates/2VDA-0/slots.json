@@ -10013,21 +10013,21 @@
         "col": 1
       },
       "mapping_id": "base:ka10016",
-      "f": "low_pric",
+      "f": "high_pric",
       "alt_mappings": null,
-      "kor": "저가",
+      "kor": "고가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change",
+        "tone": "neutral",
         "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "신저가 경신 행의 경신가"
+      "note": "조회 응답 3행 고가"
     },
     {
       "slot_id": "s301",

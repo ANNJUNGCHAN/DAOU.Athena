@@ -1066,3 +1066,16 @@
 .board-surface[data-bs-board-id="316O-0"] [data-node="3NJL-0"] .bs-readable-cell[data-col="0"] { display: none !important; }
 .bs-ranking-unavailable-cell { display: none !important; }
 .board-surface[data-bs-board-id="30C1-0"] :is([data-slot-id="s332"], [data-slot-id="s333"], [data-slot-id="s335"], [data-slot-id="s336"], [data-slot-id="s338"], [data-slot-id="s339"], [data-slot-id="s341"], [data-slot-id="s342"], [data-slot-id="s343"], [data-slot-id="s344"]) { display: none !important; }
+
+/* Exact query columns with no bound scalar values. */
+.board-surface[data-bs-board-id="2VDA-0"] [data-node="3HMX-0"] .bs-readable-cell:is([data-col="3"], [data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="2YXS-0"] [data-node="3G5L-0"] .bs-readable-cell[data-col="3"],
+.board-surface[data-bs-board-id="2ZHC-0"] [data-node="3IYO-0"] .bs-readable-cell:is([data-col="3"], [data-col="7"]),
+.board-surface[data-bs-board-id="2ZZ7-0"] [data-node="3KPB-0"] .bs-readable-cell:is([data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3T8I-0"] .bs-readable-cell[data-col="6"] { display: none !important; }
+.board-surface[data-bs-board-id="2VDA-0"] :is([data-slot-id="s292"], [data-slot-id="s295"], [data-slot-id="s298"], [data-slot-id="s301"]),
+.board-surface[data-bs-board-id="2ZHC-0"] :is([data-slot-id="s339"], [data-slot-id="s340"], [data-slot-id="s342"], [data-slot-id="s343"], [data-slot-id="s345"], [data-slot-id="s346"], [data-slot-id="s348"], [data-slot-id="s349"]),
+.board-surface[data-bs-board-id="2ZZ7-0"] :is([data-slot-id="s254"], [data-slot-id="s257"], [data-slot-id="s260"], [data-slot-id="s263"], [data-slot-id="s266"]) { display: none !important; }
+/* The minute context keeps session/basis data and its reserved action area. */
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3FRD-0"] { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.board-surface[data-bs-board-id="2VDA-0"] [data-slot-id="s300"] { color: var(--color-k-text) !important; }
