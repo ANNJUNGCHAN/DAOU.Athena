@@ -63,6 +63,7 @@ const DETAIL_MARKET_LINKS = [
 // These visible buttons exist in the canonical surfaces, separately from the
 // specimen's marked KPI/footer anchors. Both must open the same read-only view.
 const ADDITIONAL_CONTROL_LABELS = Object.freeze({
+  '금현물 호가': ['금현물 · 5단'],
   '신용비율 높은 순': ['신용비율 상위'],
   '대차잔고 많은 순': ['대차 상위'],
   'ELW 거래원별 10창구 전체': ['창구 상세 열기'],
@@ -126,6 +127,9 @@ function navigationTargetRequirement(boardId, envelope = {}) {
 }
 
 function resolvedStateLink(boardId, candidate) {
+  if (candidate.control === '금현물 · 5단' && candidate.board_id === '2QX1-1') {
+    return { ...candidate, control: '금현물 호가' };
+  }
   if (candidate.control === '차트' && candidate.board_id === '32S7-0') {
     return { ...candidate, board_id: boardId === '32S7-0' || boardId === '2RJ7-1' ? boardId : '137X-2' };
   }
@@ -338,7 +342,7 @@ function stateLinksFor(boardId) {
 // 문구로 칩을 찾아야 하고, 문구가 표식 이름과 다르면(「관심종목 시세 보드」 → 「관심」)
 // 이 표가 없으면 그 칩이 영영 안 눌린다. 판정(유일성·경합)은 board-mount가 한다.
 function controlLabels(control) {
-  const labels = CONTROL_LABELS[String(control || '')];
+  const labels = CONTROL_LABELS[control === '금현물 호가' ? '금현물 · 5단' : String(control || '')];
   return Array.isArray(labels) ? labels.slice() : [];
 }
 

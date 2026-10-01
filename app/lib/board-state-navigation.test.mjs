@@ -5,6 +5,15 @@ const require = createRequire(import.meta.url);
 const registry = require('./board-template-registry');
 const { STATE_GRAPH } = require('./board-templates.index.generated');
 
+test('gold quote navigation does not promise nonexistent five-level data', () => {
+  for (const id of ['13BC-2', '2TRW-1', '2QX1-1', '2QRP-1', '3JT4-0']) {
+    assert.ok(registry.stateLinksFor(id).some(link => link.control === '금현물 호가' && link.board_id === '2QX1-1'));
+    assert.equal(registry.stateLinksFor(id).some(link => link.control === '금현물 · 5단'), false);
+  }
+  assert.deepEqual(registry.additionalControlLabels('금현물 호가'), ['금현물 · 5단']);
+  assert.deepEqual(registry.controlLabels('금현물 호가'), registry.controlLabels('금현물 · 5단'));
+});
+
 test('VI market overview opens only the completed query snapshot and has a return path', () => {
   for (const id of ['2UHM-1', '31II-0', '3TCO-0']) {
     assert.ok(registry.stateLinksFor(id).some(link => link.control === '시장 체온·VI' && link.board_id === '15R0-2'));
