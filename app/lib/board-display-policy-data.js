@@ -21665,6 +21665,31 @@ const policy = {
       "bound-label",
       "viaplc_tp"
     ],
+    "s135": [
+      "발동 진행",
+      "caption",
+      "첫 번째 결과 · VI 시각"
+    ],
+    "s138": [
+      "발동",
+      "caption",
+      "체결처리 시각"
+    ],
+    "s139": [
+      "09:41~",
+      "caption",
+      ""
+    ],
+    "s140": [
+      "단일가 접수",
+      "caption",
+      ""
+    ],
+    "s142": [
+      "해제 예정",
+      "caption",
+      "VI 해제 시각"
+    ],
     "s144": [
       "09:42:18 기준",
       "time",
@@ -21679,6 +21704,11 @@ const policy = {
       "11건",
       "unavailable",
       null
+    ],
+    "s149": [
+      "해제 예정",
+      "caption",
+      "첫 결과 해제 시각"
     ],
     "s152": [
       "합계 21건 · 일평균 4.2건",
@@ -23437,8 +23467,13 @@ const policy = {
     ],
     "s003": [
       "전체 시장 · 업종 21개",
-      "bound-identifier",
-      "list"
+      "caption",
+      "요청한 시장의 업종 목록"
+    ],
+    "s012": [
+      "전체 시장",
+      "caption",
+      "요청 시장"
     ],
     "s016": [
       "정규장",
@@ -23452,23 +23487,23 @@ const policy = {
     ],
     "s018": [
       "21개 업종",
-      "bound-identifier",
-      "list"
+      "caption",
+      "업종 목록"
     ],
     "s021": [
       "21개 업종 · 선택 반도체 · 09:42 기준",
-      "bound-identifier",
-      "list"
+      "caption",
+      "응답 순서 · 최대 21개 표시"
     ],
     "s022": [
       "KOSPI",
-      "bound-identifier",
-      "marketCode"
+      "caption",
+      "조회 업종"
     ],
     "s023": [
       "11개",
-      "bound-identifier",
-      "list"
+      "caption",
+      ""
     ],
     "s024": [
       "G1010",
@@ -23509,6 +23544,11 @@ const policy = {
       "반도체",
       "bound-label",
       "name"
+    ],
+    "s032": [
+      "선택",
+      "caption",
+      ""
     ],
     "s033": [
       "G2520",
@@ -23582,13 +23622,13 @@ const policy = {
     ],
     "s047": [
       "KOSDAQ",
-      "bound-identifier",
-      "marketCode"
+      "caption",
+      "이어지는 업종"
     ],
     "s048": [
       "6개",
-      "bound-identifier",
-      "list"
+      "caption",
+      ""
     ],
     "s049": [
       "Q1010",
@@ -23652,13 +23692,13 @@ const policy = {
     ],
     "s061": [
       "KOSPI200",
-      "bound-identifier",
-      "marketCode"
+      "caption",
+      "이어지는 업종"
     ],
     "s062": [
       "4개",
-      "bound-identifier",
-      "list"
+      "caption",
+      ""
     ],
     "s063": [
       "I2510",
@@ -23682,13 +23722,13 @@ const policy = {
     ],
     "s071": [
       "전체 21개 표시",
-      "bound-identifier",
-      "list"
+      "caption",
+      "응답 순서 · 최대 21개 표시"
     ],
     "s072": [
       "KOSPI 11 · KOSDAQ 6 · KOSPI200 4",
-      "bound-identifier",
-      "marketCode"
+      "caption",
+      ""
     ],
     "s073": [
       "● 업종 지수 실시간 갱신 중",

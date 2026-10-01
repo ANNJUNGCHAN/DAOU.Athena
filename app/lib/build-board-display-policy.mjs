@@ -58,6 +58,8 @@ const UNANNOTATED = {
 // Observed native defects: captions described several specimen values while
 // their source mapping supplies only the named field below. Do not infer extras.
 const LABELS = {
+  "31II-0": {"s135":"첫 번째 결과 · VI 시각","s138":"체결처리 시각","s139":"","s140":"","s142":"VI 해제 시각","s149":"첫 결과 해제 시각"},
+  "3BQB-0": {"s003":"요청한 시장의 업종 목록","s012":"요청 시장","s018":"업종 목록","s021":"응답 순서 · 최대 21개 표시","s022":"조회 업종","s023":"","s032":"","s047":"이어지는 업종","s048":"","s061":"이어지는 업종","s062":"","s071":"응답 순서 · 최대 21개 표시","s072":""},
   "2VDA-0": {s047: "거래량 · 전일비"},
   "13K0-2": {"s130":"첫 번째 결과","s143":"다른 조회 결과"},
   "2XG6-0": {"s136":"첫 번째 결과","s139":"다른 조회 결과"},

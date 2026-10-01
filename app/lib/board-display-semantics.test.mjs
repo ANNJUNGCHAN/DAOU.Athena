@@ -19,6 +19,23 @@ test('ranking rails name their first result and do not retain unsupported cross-
   assert.equal(text('2VDA-0', {}, 's047'), '거래량 · 전일비');
 });
 
+test('a single-market sector list does not claim specimen markets or a fixed selection', () => {
+  assert.equal(text('3BQB-0', {}, 's022'), '조회 업종');
+  assert.equal(text('3BQB-0', {}, 's047'), '이어지는 업종');
+  assert.equal(text('3BQB-0', {}, 's061'), '이어지는 업종');
+  for (const slot of ['s023','s032','s048','s062','s072']) assert.equal(text('3BQB-0', {}, slot), '');
+  assert.equal(text('3BQB-0', {s024:'001'}, 's024'), '001');
+});
+
+test('VI summary describes observed fields and cannot claim an invented active event', () => {
+  assert.equal(text('31II-0', {}, 's135'), '첫 번째 결과 · VI 시각');
+  assert.notEqual(text('31II-0', {}, 's136'), '한미반도체 · 정적 VI');
+  assert.equal(text('31II-0', {s136:'합성 VI 하나'}, 's136'), '합성 VI 하나');
+  assert.equal(text('31II-0', {}, 's138'), '체결처리 시각');
+  assert.equal(text('31II-0', {}, 's140'), '');
+  assert.equal(text('31II-0', {}, 's142'), 'VI 해제 시각');
+});
+
 test('price differences, direction enumerations, fiscal months and dates keep their separate meanings', () => {
   assert.equal(text('2RBO-1', {s006:-1500}, 's006'), '-1,500');
   assert.equal(text('2RBO-1', {s113:12}, 's113'), '결산 12월');
