@@ -77,16 +77,16 @@ function createTimeline(data, doc = document) {
     summary.append(el('span', 'timeline-muted', '최근 종가'), el('strong', 'timeline-latest', number(latest.close)),
       el('span', 'timeline-muted', timeLabel(latest.ts)));
   }
-  summary.append(el('span', 'timeline-muted', `가격 ${model.prices.length}건 · 사건 ${model.events.length}건`));
+  summary.append(el('span', 'timeline-muted', model.rawPrices.length
+    ? `가격 ${model.prices.length}건 · 사건 ${model.events.length}건` : `사건 ${model.events.length}건`));
   root.append(summary);
   if (!model.rawPrices.length && !model.events.length) {
     root.append(el('p', 'timeline-muted', '표시할 가격이나 사건이 없습니다. 기간이나 종목을 바꿔 다시 조회해 주세요.'));
     return root;
   }
 
-  if (model.start !== null) {
+  if (model.prices.length && model.start !== null) {
     const chart = el('div', 'timeline-chart');
-    if (!model.prices.length) chart.classList.add('is-events-only');
     chart.setAttribute('role', 'img');
     chart.setAttribute('aria-label', `${model.daily ? '일자' : '시간'}별 ${model.prices.length ? '종가와 사건' : '사건'}. 상세 값은 아래 목록에서 확인할 수 있습니다.`);
     const plot = el('div', 'timeline-plot');
@@ -145,10 +145,9 @@ function createTimeline(data, doc = document) {
     const legend = [model.prices.length ? '종가' : '', model.events.length ? '분홍 표시 · 사건' : ''].filter(Boolean).join(' / ');
     root.append(chart, el('div', 'timeline-muted', `${legend} · ${model.daily ? '일자' : '시간'} 기준 (정확한 시각은 아래 목록)`));
   }
-  if (!model.prices.length) root.append(el('p', 'timeline-muted', '표시할 가격 데이터가 없습니다. 도착한 사건은 아래에서 확인할 수 있습니다.'));
   if (model.rejectedPrices) root.append(el('p', 'timeline-muted', `시각 또는 종가를 확인할 수 없는 가격 ${model.rejectedPrices}건은 차트에서 제외했습니다.`));
 
-  root.append(el('div', 'timeline-section-title', '함께 확인할 사건'));
+  if (model.prices.length) root.append(el('div', 'timeline-section-title', '함께 확인할 사건'));
   const list = el('ol', 'timeline-events');
   for (const event of model.events) {
     const row = el('li', 'timeline-event');
