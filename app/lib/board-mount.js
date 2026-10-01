@@ -946,6 +946,7 @@ function updateOrderbookKpi(surface, options) {
 
 // These groups have independent response sources; zero is received data.
 const ORDERBOOK_DETAIL_GROUPS = {
+  '1JPU-0': [['1JQF-0', ['s011', ...Array.from({ length: 96 }, (_, i) => `s${String(i + 19).padStart(3, '0')}`), 's116', 's118'], '최근체결']],
   '2TRW-1': [['3JJC-0', ['s081','s083'], '체결강도'], ['3JSS-0', ['s141','s142','s143'], '호가잔량']],
   '3JZ3-0': [
     ['3U7Z-0', ['s192','s193','s195','s196'], '호가잔량'],
@@ -970,6 +971,7 @@ function updateOrderbookDetails(surface, plan) {
   if (!groups) return;
   const states = surface.__bsOrderbookStates || (surface.__bsOrderbookStates = new Map());
   for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  if (surface.dataset.bsBoardId === '3JZ3-0') updateExchangeDepthColumns(surface, states);
   const navigation = '[data-state-control], [data-state-board], [data-bs-orderbook-control], button, [role="button"], a[href]';
   for (const [node, slots, label] of groups) {
     const group = authoredNode(surface, node);
@@ -991,6 +993,42 @@ function updateOrderbookDetails(surface, plan) {
       note.textContent = `${label} ${slots.some(slot => states.get(slot)?.pending) ? '수신 대기' : label.endsWith('정보') ? '미제공' : '정보 미제공'}`;
       note.hidden = !compact;
     }
+  }
+}
+
+function updateExchangeDepthColumns(surface, states) {
+  const table = authoredNode(surface, '3KFV-0');
+  const inner = table?.querySelector('.bs-readable-table');
+  if (!inner) return;
+  const columns = [
+    [4, 132, 'KRX', ['s034','s041','s048','s055','s062','s069','s076','s083','s090','s097','s103','s116','s123','s130','s137','s144','s151','s158','s165','s172','s179','s185']],
+    [5, 122, 'NXT', ['s035','s042','s049','s056','s063','s070','s077','s084','s091','s098','s104','s117','s124','s131','s138','s145','s152','s159','s166','s173','s180','s186']],
+  ];
+  const notices = [];
+  let width = READABLE_TABLES['3JZ3-0'].widths.reduce((sum, value) => sum + value, 0);
+  for (const [col, size, label, slots] of columns) {
+    const unavailable = slots.every(slot => {
+      const state = states.get(slot);
+      return state && (state.pending || state.empty || state.missing);
+    });
+    for (const cell of inner.querySelectorAll(`.bs-readable-cell[data-col="${col}"]`)) {
+      cell.classList.toggle('bs-depth-column-unavailable', unavailable);
+    }
+    if (unavailable) {
+      width -= size;
+      notices.push(`${label} 잔량 ${slots.some(slot => states.get(slot)?.pending) ? '수신 대기' : '미제공'}`);
+    }
+  }
+  inner.style.setProperty('--bs-table-width', `${width}px`);
+  let note = table.querySelector(':scope > .bs-depth-column-note');
+  if (!note && notices.length) {
+    note = layoutGroup(surface.ownerDocument, 'bs-orderbook-note bs-depth-column-note');
+    note.setAttribute('role', 'status');
+    table.querySelector('.bs-readable-scroll').before(note);
+  }
+  if (note) {
+    note.textContent = notices.join(' · ');
+    note.hidden = notices.length === 0;
   }
 }
 
@@ -1250,6 +1288,7 @@ function applyRealtimeSlots(surface, contract, values, slotIds, options = {}) {
   }
   if (identityCardId(contract) === 'CC-04') {
     if (goldQuote) goldQuote.update(surface, contract, mountPlan(contract, values), { ...surface.__bsGoldOptions, ...options });
+    if (contract.board_id === '3JT4-0') collapseEmptyRows(authoredNode(surface, '3KG8-0'), [], options);
     updateEmptyTableStates(surface);
     compactReducedContent(surface, contract);
   }
@@ -2196,7 +2235,7 @@ function prepareOrderbookDetails(surface, contract) {
     '13BC-2': [['s164','상한가'], ['s165','하한가'], ['s166','전일종가']],
     '2TRW-1': [['s145','상한가'], ['s146','하한가'], ['s147','전일종가']],
     '3JZ3-0': [['s236','상한가'], ['s237','하한가'], ['s238','전일종가']],
-    '1JPU-0': [['s261','매도 호가'], ['s263','매수 호가']],
+    '1JPU-0': [['s226','현재가'], ['s261','매도 호가'], ['s263','매수 호가']],
     '3N4O-0': [['s188','매도 체결'], ['s190','매수 체결']],
     '2QRP-1': [['s060','매도 잔량'], ['s062','매수 잔량']],
   }[id] || [];
@@ -2567,7 +2606,8 @@ function updateEmptyTableStates(surface) {
       message.textContent = `표시할 ${label}이 없습니다`;
       let lastRow = rows[rows.length - 1];
       while (lastRow.parentElement !== table) lastRow = lastRow.parentElement;
-      lastRow.after(message);
+      if (surface.dataset.bsBoardId === '3JT4-0' && id === '3KG8-0') table.after(message);
+      else lastRow.after(message);
       table.__bsEmptyMessage = message;
     }
     if (message) message.hidden = !allCollapsed;

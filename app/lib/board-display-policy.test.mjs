@@ -26,7 +26,7 @@ test('generated policy exactly follows the 94 public read-only source contracts'
     for (const [slotId, [authored, role]] of Object.entries(rules)) {
       const slot = contract.slots.find((item) => item.slot_id === slotId);
       assert.equal(authored, slot.paper_text);
-      if (role !== 'caption') assert.equal(hasBinding(slot), ['price', 'price-composite', 'direction', 'bound-time', 'bound-label', 'bound-name', 'bound-format', 'bound-identifier'].includes(role), `${id}/${slotId}`);
+      if (role !== 'caption') assert.equal(hasBinding(slot), ['price', 'price-composite', 'quote-magnitude', 'direction', 'bound-time', 'bound-label', 'bound-name', 'bound-format', 'bound-identifier'].includes(role), `${id}/${slotId}`);
     }
   }
 });
@@ -56,7 +56,7 @@ test('fixed headings, controls, product descriptions and numeric labels remain a
   for (const slot of source('1JPU-0').slots.filter((s) => /52주 (최저|최고)/.test(s.paper_text) && s.kind === 'label')) {
     assert.equal(text(plan('1JPU-0'), slot.slot_id), slot.paper_text);
   }
-  assert.equal(text(plan('2SKU-1'), 's069'), '▸');
+  assert.equal(text(plan('2SKU-1'), 's069'), '정산 상세 ›');
   for (const slot of source('2SKU-1').slots.filter((s) => s.slot_id >= 's040' && s.slot_id <= 's046')) {
     assert.equal(text(plan('2SKU-1'), slot.slot_id), slot.paper_text);
   }
@@ -170,13 +170,13 @@ test('preparation is immutable and requires exact source text provenance', () =>
   assert.equal(prepareDisplayInput(changed, {}).contract.slots[0], changed.slots[0]);
 });
 
-test('regular depth navigation keeps fixed captions without replacing the observed session', () => {
+test('regular depth navigation keeps fixed session and level captions', () => {
   for (const id of ['13BC-2', '2TRW-1']) {
     for (const values of [{}, { s004: '3' }]) {
       const result = plan(id, values);
       assert.equal(text(result, 's007'), '5단');
       assert.equal(text(result, 's008'), '10단');
-      if (values.s004) assert.equal(text(result, 's004'), '3');
+      assert.equal(text(result, 's004'), '정규장');
     }
   }
 });

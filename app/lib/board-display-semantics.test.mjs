@@ -469,6 +469,18 @@ test('orderbook session controls remain captions while after-hours summaries nam
   assert.equal(text('3JT4-0', {}, 's096'), '단일가 현재가');
 });
 
+test('NXT orderbook volume caption describes its two received share quantities', () => {
+  assert.equal(text('3N4O-0', {}, 's174'), '오늘·전일 거래량');
+  const slots = source('3N4O-0').slots;
+  assert.equal(slots.find(slot => slot.slot_id === 's175').f, 'trde_qty');
+  assert.equal(slots.find(slot => slot.slot_id === 's176').f, 'pred_trde_qty');
+  for (const id of ['s175', 's176']) {
+    assert.equal(text('3N4O-0', {[id]: 0}, id), '0주');
+    assert.equal(text('3N4O-0', {[id]: {value: 12345, text: '12,345주'}}, id), '12,345주');
+  }
+  assert.equal(text('3N4O-0', {s178: 0}, 's178'), '0.00%');
+});
+
 test('ELW condition quote magnitudes preserve zero and preformatted units without changing dates or changes', () => {
   const slots = source('2ZN9-0').slots.filter(slot => ['sel_bid', 'buy_bid'].includes(slot.f));
   assert.equal(slots.length, 16);
