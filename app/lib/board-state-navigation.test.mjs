@@ -81,3 +81,23 @@ test('visible ranking actions have exact destinations and ELW lists require a se
   assert.deepEqual(registry.additionalControlLabels('ELW 거래원별 10창구 전체'), ['창구 상세 열기']);
   assert.ok(registry.directStateLinksFor('2VIN-0').some(link => link.control === '기간 수익률' && link.board_id === '2WZK-0'));
 });
+
+test('missing detail market tabs and the ETF header use existing read-only destinations', () => {
+  for (const id of ['137X-2', '2R3M-1', '2RBO-1', '2RJ7-1', '32S7-0', '32XM-0', '3DI2-0', '3FR6-0']) {
+    for (const [control, destination] of [['ETF', '15N5-2'], ['ELW', '15P5-2']]) {
+      assert.deepEqual(registry.stateLinksFor(id).filter(link => link.control === control), [{ control, board_id: destination }]);
+      assert.ok(registry.navigationTargetRequirement(destination, { surface_contract: { board_id: id }, symbol: '005930' }));
+    }
+  }
+  const expected = { 현재시세:'2R3M-1', 차트:'137X-2', 기업정보:'2RBO-1', ETF:'15N5-2', ELW:'15P5-2', 금현물:'2RJ7-1', 순위:'2VDA-0' };
+  for (const [control, destination] of Object.entries(expected)) {
+    assert.deepEqual(registry.stateLinksFor('15N5-2').filter(link => link.control === control), [{ control, board_id: destination }]);
+  }
+  for (const id of ['2VDA-0', '2VIN-0', '2VO0-0', '2WZK-0']) {
+    assert.deepEqual(registry.stateLinksFor(id).filter(link => link.control === 'ETF'), [{ control:'ETF', board_id:'2VIN-0' }]);
+    assert.deepEqual(registry.stateLinksFor(id).filter(link => link.control === 'ELW'), [{ control:'ELW', board_id:'2VO0-0' }]);
+  }
+  for (const id of ['15P5-2', '3DZ1-0']) {
+    assert.equal(registry.stateLinksFor(id).some(link => Object.hasOwn(expected, link.control)), false);
+  }
+});

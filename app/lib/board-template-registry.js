@@ -51,6 +51,13 @@ const INSTRUMENT_DETAIL_DOMAINS = Object.freeze({
   '15P5-2': 'elw', '3DZ1-0': 'elw',
 });
 const ELW_LIST_BOARDS = ['2VO0-0', '2XA5-0', '2XY6-0', '2Y47-0', '2Z49-0', '2ZN9-0'];
+// These detail headers visibly repeat the ETF/ELW tabs, but the authored graph
+// omits their destinations. Ranking headers have different ETF/ELW list links.
+const DETAIL_MARKET_TABS = ['137X-2', '2R3M-1', '2RBO-1', '2RJ7-1', '32S7-0', '32XM-0', '3DI2-0', '3FR6-0'];
+const DETAIL_MARKET_LINKS = [
+  { control: 'ETF', board_id: '15N5-2' },
+  { control: 'ELW', board_id: '15P5-2' },
+];
 // These visible buttons exist in the canonical surfaces, separately from the
 // specimen's marked KPI/footer anchors. Both must open the same read-only view.
 const ADDITIONAL_CONTROL_LABELS = Object.freeze({
@@ -64,6 +71,15 @@ function additionalControlLabels(control) {
 }
 
 function additionalStateLinks(boardId) {
+  if (DETAIL_MARKET_TABS.includes(boardId)) return DETAIL_MARKET_LINKS;
+  if (boardId === '15N5-2') return [
+    { control: '현재시세', board_id: '2R3M-1' },
+    { control: '차트', board_id: '137X-2' },
+    { control: '기업정보', board_id: '2RBO-1' },
+    ...DETAIL_MARKET_LINKS,
+    { control: '금현물', board_id: '2RJ7-1' },
+    { control: '순위', board_id: '2VDA-0' },
+  ];
   if (ELW_LIST_BOARDS.includes(boardId) && boardId !== '2Z49-0') {
     return [{ control: 'ELW 상세 열기', board_id: '15P5-2' }];
   }
@@ -267,7 +283,7 @@ function primaryRendererFor(boardId) {
 // board-mount가 연결하고, navigation 링크는 canvas가 공통 복귀 버튼으로 만든다.
 function stateLinksFor(boardId) {
   const id = String(boardId || '');
-  const entry = STATE_GRAPH[id];
+  const entry = STATE_GRAPH[id] || (hasBoard(id) ? {} : null);
   if (!entry) return [];
   const links = [];
   const seen = new Set();
