@@ -1035,6 +1035,7 @@ class BoardHydrateRequest(BaseModel):
     # 렌더러가 현재 보드에서 실제로 부족한 슬롯만 보낸다. 생략은 구버전
     # 클라이언트 호환을 위해 모든 값 바인딩 슬롯을 뜻한다.
     slot_ids: list[str] | None = Field(default=None, max_length=512)
+    ranking_operation_ref: str | None = Field(default=None, min_length=1, max_length=64)
 
 
 def _hydrate_operation_refs(board: Any, slot_ids: list[str] | None) -> tuple[str, ...]:
@@ -1429,7 +1430,15 @@ async def internal_canvas_board_hydrate(
     chained: dict[tuple[str, str, str], asyncio.Task[str | None]] = {}
     hydrated_results: dict[str, tuple[BaseModel, BaseModel]] = {}
     semaphore = asyncio.Semaphore(BOARD_HYDRATE_MAX_CONCURRENCY)
-    operation_refs = list(_hydrate_operation_refs(board, payload.slot_ids))
+    from athena_api.ranking_expanded_result import (
+        EXPANDED_BOARD, build_ranking_result, is_expanded_ranking_operation,
+    )
+    if payload.ranking_operation_ref is not None:
+        if board.board_id != EXPANDED_BOARD or not is_expanded_ranking_operation(payload.ranking_operation_ref):
+            raise HTTPException(status_code=422, detail="unsupported expanded ranking operation")
+        operation_refs = [payload.ranking_operation_ref]
+    else:
+        operation_refs = list(_hydrate_operation_refs(board, payload.slot_ids))
     primary = board.primary if isinstance(board.primary, Mapping) else {}
     if primary.get("renderer") == "athena-chart":
         for source in primary.get("props_from") or ():
@@ -1650,6 +1659,16 @@ async def internal_canvas_board_hydrate(
                 "source_operations": source_operations,
             }
 
+    ranking_result = None
+    if payload.ranking_operation_ref is not None:
+        hydrated = hydrated_results.get(payload.ranking_operation_ref)
+        if hydrated is not None:
+            result, arguments = hydrated
+            ranking_result = build_ranking_result(
+                board.board_id, payload.ranking_operation_ref,
+                result.model_dump(by_alias=True), arguments,
+            )
+
     return JSONResponse(
         content={
             "board_id": board.board_id,
@@ -1657,6 +1676,7 @@ async def internal_canvas_board_hydrate(
             "operations": operations,
             "surface_contract": surface_contract,
             "primary_envelope": primary_envelope,
+            "ranking_result": ranking_result,
         }
     )
 
@@ -2648,6 +2668,14 @@ async def canvas_render_plan(
             canvas_kind, payload, getattr(verified_plan, "arguments", None) or {}
         ),
     }
+    from athena_api.ranking_expanded_result import build_ranking_result
+    ranking_source_board = (card_contract.get("surface_contract") or {}).get("board_id", "")
+    ranking_result = build_ranking_result(
+        ranking_source_board, operation_ref, call_payload.get("data"),
+        getattr(verified_plan, "arguments", None) or {},
+    )
+    if ranking_result is not None:
+        envelope["ranking_result"] = ranking_result
     if target_label is not None:
         envelope["target_label"] = target_label
     if renderer_id is not None:
