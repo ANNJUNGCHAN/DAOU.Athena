@@ -1026,15 +1026,13 @@ function createGraphModeController(deps) {
           row.appendChild(rationale);
         }
         if (rel.excerpt) {
-          const excerpt = elp('div', 'entity-relation-excerpt');
+          const excerpt = elp('details', 'entity-relation-excerpt');
+          const summary = elp('summary', 'entity-excerpt-summary');
+          summary.textContent = rel.excerpt.meta ? `원문 발췌 · ${rel.excerpt.meta}` : '원문 발췌';
+          excerpt.appendChild(summary);
           const text = elp('div', 'entity-excerpt-text');
           text.textContent = rel.excerpt.text;
           excerpt.appendChild(text);
-          if (rel.excerpt.meta) {
-            const meta = elp('div', 'entity-excerpt-meta');
-            meta.textContent = rel.excerpt.meta;
-            excerpt.appendChild(meta);
-          }
           row.appendChild(excerpt);
         }
         panel.appendChild(row);
@@ -1295,7 +1293,7 @@ function createGraphModeController(deps) {
     // 수집·노출(보드 05)은 노드가 아니라 설정을 보는 화면이다 — 그 옆에 노드
     // 패널이 남아 있으면 무엇을 보고 있는지가 흐려진다. 선택 자체는 지우지
     // 않는다(요약·지도로 돌아오면 그대로 다시 뜬다).
-    if (state.surface === store.SURFACE_SETTINGS) {
+    if (!store.isGraphView(state) || state.surface === store.SURFACE_SETTINGS) {
       panel.hidden = true;
       return;
     }

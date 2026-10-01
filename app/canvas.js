@@ -5782,6 +5782,9 @@ for (const [surface, ids] of Object.entries(SURFACE_TAB_IDS)) {
   }
 }
 
+const graphFitView = document.getElementById('graphFitView');
+if (graphFitView) graphFitView.addEventListener('click', () => graphMode.fitView());
+
 // --- 헤더 필터 칩 배선 (보드 01/03) ----------------------------------------
 //
 // 옛 판은 `<span class="filter-chip">최근 90일</span>` 정적 라벨이라 화면이

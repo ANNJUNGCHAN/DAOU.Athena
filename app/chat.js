@@ -2391,18 +2391,15 @@ function renderGraphEditProposalCard() {
   const note = document.createElement('div');
   note.className = 'question-card-note';
   // 아직 아무것도 안 바뀌었다는 사실을 화면이 말한다 — 모델의 notice와 같은 내용이다.
-  // 문구는 **실제로 걸릴 경로**를 말한다(2026-09-03). 두 경로가 있다:
-  //   · relationId가 있으면(op=remove) 누른 순간 그래프에서 바로 사라진다.
-  //   · 없으면(추가·수정, 또는 모델이 id를 안 실은 경우) 답변 문장이 채팅으로 나가고
-  //     반영은 다음 수집 배치가 한다.
-  // 앞 판은 둘을 구분하지 않아, 즉시 지워지는데도 "다음 수집 때"라고 말했다 —
-  // 그 전 판은 반대로 "그 답이 그래프를 갱신합니다"라 즉시로 읽혔고, 숫자가 안
-  // 줄어드니 같은 카드를 계속 누르는 무한 루프처럼 느껴졌다(실제 제보). 어느 쪽이든
-  // 화면이 사실과 다르면 사람은 고장으로 읽는다.
-  const immediate = graphEditProposal.op === 'remove' && !!graphEditProposal.relationId;
-  note.textContent = immediate
+  // answerGraphEditProposal과 같은 조건으로 직접 반영과 채팅 제출을 구분한다.
+  const immediateRemove = graphEditProposal.op === 'remove' && !!graphEditProposal.relationId;
+  const immediateWrite = ['add', 'change'].includes(graphEditProposal.op)
+    && graphEditProposal.subjectId && graphEditProposal.objectId;
+  note.textContent = immediateRemove
     ? '아직 그래프는 그대로입니다. 누르면 바로 지워집니다.'
-    : '아직 그래프는 그대로입니다. 누르면 그 답이 채팅으로 보내지고, 다음 수집 때 그래프에 반영됩니다.';
+    : (immediateWrite
+      ? '아직 그래프는 그대로입니다. 적용하면 그래프에 바로 반영됩니다.'
+      : '아직 그래프는 그대로입니다. 누르면 그 답이 채팅으로 보내지고, 다음 수집 때 그래프에 반영됩니다.');
   host.appendChild(note);
 
   const actions = document.createElement('div');
