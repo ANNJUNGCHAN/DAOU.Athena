@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const registry = require('./board-template-registry');
 const controls = require('./ranking-board-controls');
+const { createLatestBoardLoad } = require('./board-mount');
 const source = fs.readFileSync(new URL('../canvas.js', import.meta.url), 'utf8');
 const cacheKeys = ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
   'emptyRowsByBoard', 'emptyColumnsByBoard', 'emptyValueSlotsByBoard', 'deferredValueSlotsByBoard'];
@@ -13,12 +14,16 @@ const cacheKeys = ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realt
 function fixture(code, name = { value: '합성 ETF' }) {
   const state = { boardId: '2VIN-0', values: { s387: code, s386: name }, links: registry.stateLinksFor('2VIN-0') };
   for (const key of cacheKeys) state[key] = new Map([['15N5-2', ['stale detail']], ['2VIN-0', ['list']]]);
-  const host = { __athenaBoard: state }, requests = [], notices = [];
+  state.load = createLatestBoardLoad();
+  const host = { __athenaBoard: state, scrollTop: 0, hidden: false }, requests = [], notices = [];
   const context = vm.createContext({
     rankingBoardControls: controls, boardTemplateRegistry: registry, boardStateOf: () => state,
     cardStkCd: envelope => envelope.stk_cd || '',
     boardMount: { boardIdentityFromEnvelope: () => ({ code: '005930', name: 'stale envelope' }) },
-    destroyBoardPrimary: () => {}, runBoardSurfaceLoad: (_host, _envelope, load) => load(() => true),
+    destroyBoardPrimary: () => {},
+    showBoardLoading: () => { host.hidden = true; },
+    showBoardReady: async () => { host.hidden = false; },
+    showBoardLoadError: () => {},
     mountBoardState: (_host, id, envelope) => {
       state.boardId = id;
       state.links = registry.stateLinksFor(id);
@@ -30,7 +35,8 @@ function fixture(code, name = { value: '합성 ETF' }) {
   });
   for (const [start, end] of [['const RANKING_BOARD_OPERATIONS =', 'function boardHydrateAccount('],
     ['function boardMountOptions(', '// 봉투가 실어온 계약'],
-    ['function switchStateBoard(', 'function wireStateControls(']]) {
+    ['function switchStateBoard(', 'function wireStateControls('],
+    ['function runBoardSurfaceLoad(', 'function renderBoardSurfaceCard(']]) {
     const a = source.indexOf(start), b = source.indexOf(end, a);
     assert.ok(a >= 0 && b > a);
     vm.runInContext(source.slice(a, b), context);
@@ -102,19 +108,67 @@ test('an ETF information request failure is surfaced even when the envelope came
 test('state navigation starts at the new header and stale loads cannot move the current card', async () => {
   const f = fixture('153270');
   f.state.loadBody = { scrollTop: 1400 };
+  f.host.scrollTop = 600;
+  let readyScroll;
+  f.context.showBoardReady = async () => {
+    readyScroll = { outer: f.state.loadBody.scrollTop, inner: f.host.scrollTop };
+    f.host.hidden = false;
+  };
   await f.context.switchStateBoard(f.host, '15N5-2', {});
+  assert.deepEqual(readyScroll, { outer: 1400, inner: 600 });
+  assert.equal(f.host.hidden, false);
+  assert.equal(f.host.scrollTop, 0);
   assert.equal(f.state.loadBody.scrollTop, 0);
 
   const settlement = fixture('153270');
   settlement.state.boardId = '2SKU-1';
   settlement.state.links = registry.stateLinksFor('2SKU-1');
   settlement.state.loadBody = { scrollTop: 900 };
+  settlement.host.scrollTop = 700;
   await settlement.context.switchStateBoard(settlement.host, '3MTJ-0', {});
   assert.equal(settlement.state.loadBody.scrollTop, 0);
+  assert.equal(settlement.host.scrollTop, 0);
 
   const stale = fixture('153270');
   stale.state.loadBody = { scrollTop: 1400 };
-  stale.context.runBoardSurfaceLoad = (_host, _envelope, load) => load(() => false);
+  stale.host.scrollTop = 600;
+  stale.context.showBoardReady = async () => { stale.state.load.invalidate(); };
   await stale.context.switchStateBoard(stale.host, '15N5-2', {});
   assert.equal(stale.state.loadBody.scrollTop, 1400);
+  assert.equal(stale.host.scrollTop, 600);
+});
+
+test('ordinary board loads preserve both scroll positions', async () => {
+  const f = fixture('153270');
+  f.state.loadBody = { scrollTop: 1400 };
+  f.host.scrollTop = 600;
+  await f.context.runBoardSurfaceLoad(f.host, {}, async () => ({}));
+  assert.equal(f.state.loadBody.scrollTop, 1400);
+  assert.equal(f.host.scrollTop, 600);
+});
+
+test('an earlier ready callback cannot reset scroll after a newer retry has finished', async () => {
+  const f = fixture('153270');
+  f.state.loadBody = { scrollTop: 250 };
+  f.host.scrollTop = 900;
+  let releaseFirst, beginRetry, readyCalls = 0, enteredFirst;
+  const firstEntered = new Promise(resolve => { enteredFirst = resolve; });
+  f.context.showBoardReady = async (_state, _host, _envelope, _mounted, retry) => {
+    f.host.hidden = false;
+    if (++readyCalls !== 1) return;
+    beginRetry = retry;
+    enteredFirst();
+    await new Promise(resolve => { releaseFirst = resolve; });
+  };
+  const first = f.context.switchStateBoard(f.host, '15N5-2', {});
+  await firstEntered;
+  await beginRetry();
+  assert.equal(f.state.loadBody.scrollTop, 0);
+  assert.equal(f.host.scrollTop, 0);
+  f.state.loadBody.scrollTop = 350;
+  f.host.scrollTop = 1250;
+  releaseFirst();
+  await first;
+  assert.equal(f.state.loadBody.scrollTop, 350);
+  assert.equal(f.host.scrollTop, 1250);
 });

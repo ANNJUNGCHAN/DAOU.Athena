@@ -1338,12 +1338,9 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   // 표면을 통째로 갈면 컨테이너가 바뀐다 — 같은 panelId를 다른 컨테이너로 열면
   // AITS adapter가 던지므로(aits-chart-panel openPanel) 먼저 닫는다.
   destroyBoardPrimary(state);
-  return runBoardSurfaceLoad(host, envelope, async (isCurrent) => {
-    const mounted = await mountBoardState(host, target, envelope, isCurrent);
-    // 상태 버튼으로 다른 카드를 열었을 때 이전 표의 스크롤 위치를 넘기지 않는다.
-    if (isCurrent() && state.loadBody) state.loadBody.scrollTop = 0;
-    return mounted;
-  });
+  return runBoardSurfaceLoad(host, envelope, (isCurrent) => (
+    mountBoardState(host, target, envelope, isCurrent)
+  ), { resetScroll: true });
 }
 
 function wireStateControls(host, envelope, mounted) {
@@ -2209,14 +2206,27 @@ function showBoardLoadError(state, host, error, retry) {
   if (state.loadCard) state.loadCard.dataset.renderState = 'error';
 }
 
-function runBoardSurfaceLoad(host, envelope, task) {
+function runBoardSurfaceLoad(host, envelope, task, options = {}) {
   const state = boardStateOf(host);
+  let isCurrentLoad = () => false;
   const handlers = {
     onLoading: () => showBoardLoading(state, host),
-    onReady: (mounted) => showBoardReady(state, host, envelope, mounted, () => state.load.run(task, handlers)),
+    onReady: async (mounted) => {
+      const isCurrent = isCurrentLoad;
+      await showBoardReady(state, host, envelope, mounted, () => state.load.run(loadTask, handlers));
+      // 숨겨진 host는 이전 위치를 보존할 수 있다. 새 카드가 표시된 뒤 두 스크롤을 맞춘다.
+      if (options.resetScroll && isCurrent()) {
+        host.scrollTop = 0;
+        if (state.loadBody) state.loadBody.scrollTop = 0;
+      }
+    },
     onError: (error, retry) => showBoardLoadError(state, host, error, retry),
   };
-  return state.load.run(task, handlers);
+  const loadTask = (isCurrent) => {
+    isCurrentLoad = isCurrent;
+    return task(isCurrent);
+  };
+  return state.load.run(loadTask, handlers);
 }
 
 function renderBoardSurfaceCard(envelope) {

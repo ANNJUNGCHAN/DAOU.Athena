@@ -1456,6 +1456,11 @@ const policy = {
         "prefix": "대상지수 코드 "
       }
     ],
+    "s067": [
+      "거래량",
+      "caption",
+      "거래량 · 거래대금"
+    ],
     "s070": [
       "대상지수 대비율",
       "caption",
@@ -15921,6 +15926,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s327": [
+      "상한 근접 상위",
+      "caption",
+      "조회 종목 등락률"
+    ],
     "s331": [
       "레인보우로보틱스",
       "bound-label",
@@ -15960,6 +15970,11 @@ const policy = {
       "0.97%",
       "unavailable",
       null
+    ],
+    "s343": [
+      "하한 근접",
+      "caption",
+      "추가 조회 종목 등락률"
     ],
     "s347": [
       "코스맥스",

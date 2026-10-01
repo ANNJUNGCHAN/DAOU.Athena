@@ -316,3 +316,30 @@ test('company expected price is won and daily flow caption uses the received dat
     assert.equal(plan.assignments.find(s => s.slotId === 's103').text, '일별주가 수급 · 기준일 미제공');
   }
 });
+
+test('ETF time-series quantities and amounts retain distinct names and source units', () => {
+  assert.equal(text('15N5-2', {}, 's067'), '거래량 · 거래대금');
+  for (const sid of ['s079', 's094', 's109']) {
+    assert.equal(text('15N5-2', {[sid]:'0'}, sid), '거래대금 0원');
+    assert.equal(text('15N5-2', {[sid]:'2'}, sid), '거래대금 200만원');
+    const slot = source('15N5-2').slots.find(s => s.slot_id === sid);
+    assert.equal(slot.mapping_id, 'base:ka40006');
+    assert.equal(slot.f, 'trde_prica');
+    assert.equal(slot.format.scale, '백만');
+    assert.deepEqual(registry.contractFor('15N5-2').slots.find(s => s.slot_id === sid).format, slot.format);
+  }
+  assert.equal(text('15N5-2', {s078:'2'}, 's078'), '2주');
+});
+
+test('price-limit query lists describe their shared response instead of upper and lower proximity', () => {
+  assert.equal(text('2YXS-0', {}, 's327'), '조회 종목 등락률');
+  assert.equal(text('2YXS-0', {}, 's343'), '추가 조회 종목 등락률');
+  for (const [upper, lower] of [['s331','s347'], ['s332','s348'], ['s334','s350'],
+    ['s335','s351'], ['s337','s353'], ['s338','s354']]) {
+    const slots = source('2YXS-0').slots;
+    const a = slots.find(s => s.slot_id === upper), b = slots.find(s => s.slot_id === lower);
+    assert.equal(a.mapping_id, b.mapping_id);
+    assert.equal(a.f, b.f);
+    assert.equal(a.table.row, b.table.row);
+  }
+});

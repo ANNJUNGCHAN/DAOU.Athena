@@ -3009,7 +3009,8 @@
       "format": {
         "kind": "korean",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "거래대금 "
       },
       "paired_with": "s078",
       "collapse_group": null,
@@ -3545,7 +3546,8 @@
       "format": {
         "kind": "korean",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "거래대금 "
       },
       "paired_with": "s093",
       "collapse_group": null,
@@ -4087,7 +4089,8 @@
       "format": {
         "kind": "korean",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "거래대금 "
       },
       "paired_with": "s108",
       "collapse_group": null,

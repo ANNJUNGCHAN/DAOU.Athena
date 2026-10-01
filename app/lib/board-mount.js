@@ -697,8 +697,10 @@ function updateInstrumentResidualDetails(surface, plan) {
     const state = states.get(sid), node = surface.querySelector(`[data-slot-id="${sid}"]`);
     if (!state || !node) continue;
     // 값이 없는 작은 그룹도 출처·항목과 대기 상태는 읽을 수 있어야 한다.
-    if (state.pending) node.textContent = '수신 대기';
-    else if (completedMissing(sid)) node.textContent = id === '2RBO-1' ? '미제공' : '—';
+    const sourcePrefix = id === '15N5-2' && sid === 's047' ? '수익률 조회 ' : '';
+    if (state.pending) node.textContent = `${sourcePrefix}수신 대기`;
+    else if (completedMissing(sid)) node.textContent = sourcePrefix
+      ? `${sourcePrefix}미제공` : id === '2RBO-1' ? '미제공' : '—';
     for (let box = node; box && box !== surface; box = box.parentElement) {
       if (box.dataset.bsUnavailableHidden === 'true' || surface.__bsEmptyValueHidden?.has(box)) {
         setHidden(box, false);
@@ -750,6 +752,45 @@ function updateAccountDetailSections(surface) {
       box.classList.toggle('bs-account-unlabelled-empty', allMissing(box)
         && !labels.some(node => node.textContent.trim()));
     }
+  }
+}
+
+function updateRankingResidualDetails(surface, plan) {
+  const groups = {
+    '2VDA-0': [['3HX8-0', '신고·신저 분포'], ['3HY6-0', '시장별 통계'], ['3HYL-0', '경신 시간대']],
+    '2YXS-0': [['3GI1-0', '상한·하한 집계'], ['3GJP-0', '도달 시각 통계'], ['3GK7-0', '업종 분포']],
+    '2ZHC-0': [['3JAN-0', '고저가 근접 집계'], ['3JBO-0', '조건별 통계'], ['3JC3-0', '잔여 폭 통계'], ['3JCI-0', '시장별 통계']],
+    '2ZZ7-0': [['3KX6-0', '급등락 집계'], ['3KYB-0', '구간 등락 분포'], ['3KYT-0', '감지 시간대'], ['3KZ8-0', '시장별 통계']],
+  }[surface.dataset?.bsBoardId];
+  if (!groups) return;
+  const states = surface.__bsRankingDetailStates || (surface.__bsRankingDetailStates = new Map());
+  for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  const sections = [[surface.querySelector('.bs-kpi'), '시장 요약 통계'],
+    ...groups.map(([node, title]) => [authoredNode(surface, node), title])];
+  for (const [section, title] of sections) {
+    if (!section) continue;
+    const slots = [...section.querySelectorAll('[data-slot-id]')].map(node => states.get(node.dataset.slotId));
+    const unavailable = slots.length > 0 && slots.every(state => state && !state.pending
+      && (state.missing || state.empty || state.designText || !state.valueSlot));
+    section.classList.toggle('bs-ranking-unavailable-group', unavailable);
+    let note = section.querySelector(':scope > .bs-ranking-unavailable-note');
+    if (unavailable && !note) {
+      note = layoutGroup(surface.ownerDocument, 'bs-ranking-unavailable-note');
+      note.textContent = title + ' 미제공';
+      section.append(note);
+    }
+    if (note) note.hidden = !unavailable;
+  }
+  surface.querySelector('.bs-rail')?.classList.add('bs-ranking-compact-rail');
+  if (surface.dataset.bsBoardId === '2YXS-0') {
+    // Both lists bind the same ka10017 rows. Retain a second list only if it
+    // actually carries different values, so later partial updates stay visible.
+    const duplicate = [['s347', 's331'], ['s348', 's332'], ['s350', 's334'],
+      ['s351', 's335'], ['s353', 's337'], ['s354', 's338']].every(([lower, upper]) => {
+      const a = states.get(lower), b = states.get(upper);
+      return a && b && a.text === b.text && a.pending === b.pending && a.empty === b.empty;
+    });
+    authoredNode(surface, '3GJ6-0')?.classList.toggle('bs-ranking-duplicate-list', duplicate);
   }
 }
 
@@ -934,6 +975,7 @@ function applyPlan(root, plan, options = {}) {
   updateInstrumentResidualDetails(root, plan);
   updateAccountDetailSections(root);
   updateAccountResidualDetails(root, plan);
+  updateRankingResidualDetails(root, plan);
   updateOrderbookKpi(root, options);
   if (options.partial) {
     return { unbound, unmapped: [], containers, collapsedRows, collapsedColumns };
@@ -1747,10 +1789,10 @@ const READABLE_TABLES = {
   "2XA5-0": {"node":"39FH-0","rows":["39FI-0","39FR-0","39GA-0","39GT-0","39HC-0","39HV-0","39IE-0","39IX-0","39JG-0","3HZP-0","3I08-0","3I0R-0","3I1A-0","3I1T-0","3I2C-0","3I2V-0","3I3E-0","3I3X-0","3I4G-0","3I4Z-0","3I5I-0"],"widths":[52,220,160,140,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "2XY6-0": {"node":"39V5-0","rows":["39V6-0","39VF-0","39VY-0","39WH-0","39X0-0","39Y2-0","39YL-0","39Z4-0","3KGH-0","3KH0-0","39XJ-0","3KHJ-0","3KI2-0","3KIL-0","3KJ4-0","3KJN-0","3KK6-0","3KKP-0","3KL8-0","3KLR-0","3KMA-0"],"widths":[52,220,160,140,160,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "2Y47-0": {"node":"3A9M-0","rows":["3A9N-0","3A9W-0","3AAF-0","3AAY-0","3ABH-0","3AC0-0","3ACJ-0","3AD2-0","3ADL-0","3MBF-0","3MBY-0","3MCH-0","3MD0-0","3MDJ-0","3ME2-0","3MEL-0","3MF4-0","3MFN-0","3MG6-0","3MGP-0","3MH8-0"],"widths":[52,220,160,160,160,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
-  "2YXS-0": {"node":"3G5L-0","rows":["3G5M-0","3G5V-0","3G6I-0","3G75-0","3G7S-0","3G8F-0","3G92-0","3G9P-0","3GAC-0","3GAZ-0","3GBM-0","3GC9-0","3GCW-0","3GDJ-0","3GE6-0","3GET-0","3GFG-0","3GG3-0","3GGQ-0","3GHD-0"],"widths":[52,220,160,120,200,160,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
-  "2ZHC-0": {"node":"3IYO-0","rows":["3IYP-0","3IZJ-0","3J04-0","3J0P-0","3J2G-0","3J1A-0","3J1V-0","3J31-0","3IYY-0","3J3M-0","3J47-0","3J4S-0","3J5D-0","3J5Y-0","3J6J-0","3J74-0","3J7P-0","3J8A-0","3J8V-0","3J9G-0","3JA1-0"],"widths":[160,220,160,200,160,160,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2YXS-0": {"node":"3G5L-0","rows":["3G5M-0","3G5V-0","3G6I-0","3G75-0","3G7S-0","3G8F-0","3G92-0","3G9P-0","3GAC-0","3GAZ-0","3GBM-0","3GC9-0","3GCW-0","3GDJ-0","3GE6-0","3GET-0","3GFG-0","3GG3-0","3GGQ-0","3GHD-0"],"widths":[0,220,160,120,200,160,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2ZHC-0": {"node":"3IYO-0","rows":["3IYP-0","3IZJ-0","3J04-0","3J0P-0","3J2G-0","3J1A-0","3J1V-0","3J31-0","3IYY-0","3J3M-0","3J47-0","3J4S-0","3J5D-0","3J5Y-0","3J6J-0","3J74-0","3J7P-0","3J8A-0","3J8V-0","3J9G-0","3JA1-0"],"widths":[0,220,160,200,160,160,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "2ZN9-0": {"node":"3B82-0","rows":["3B83-0","3B8C-0","3B8X-0","3B9I-0","3BA6-0","3BAR-0","3BBC-0","3BBX-0","3BCI-0"],"widths":[52,220,200,120,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
-  "2ZZ7-0": {"node":"3KPB-0","rows":["3KPC-0","3KPL-0","3KQ2-0","3KQJ-0","3KR0-0","3KRH-0","3KRY-0","3KSF-0","3KSW-0","3KTD-0","3KTU-0","3KUB-0","3KUS-0","3KV9-0","3KVQ-0","3KW7-0","3KWO-0"],"widths":[160,220,160,140,160,200,120,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "2ZZ7-0": {"node":"3KPB-0","rows":["3KPC-0","3KPL-0","3KQ2-0","3KQJ-0","3KR0-0","3KRH-0","3KRY-0","3KSF-0","3KSW-0","3KTD-0","3KTU-0","3KUB-0","3KUS-0","3KV9-0","3KVQ-0","3KW7-0","3KWO-0"],"widths":[0,220,160,140,160,200,120,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "30O1-0": {"node":"3RJU-0","rows":["3RJV-0","3RK4-0","3RKN-0","3RL6-0","3RLP-0","3RM8-0","3RMR-0","3RNA-0","3RNT-0","3ROC-0","3ROV-0","3RPE-0","3RPX-0","3RQG-0","3RQZ-0","3RRI-0","3RS1-0","3RSK-0","3RT3-0","3RTM-0"],"widths":[52,220,160,160,200,200,120,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "30ZW-0": {"node":"3R7U-0","rows":["3R7V-0","3R84-0","3R8P-0","3R9A-0","3R9V-0","3RAG-0","3RB1-0","3RBM-0","3RC7-0","3RCS-0","3RDD-0","3RDY-0","3REJ-0","3RF4-0","3RFP-0","3RGA-0","3RGV-0","3RHG-0","3RI1-0","3RIM-0"],"widths":[52,220,160,120,0,0,200,0],"label":"조회 순위 결과","stack":false,"compact":true},
   "316O-0": {"node":"3NJL-0","rows":["3NJM-0","3NJV-0","3NKC-0","3NKT-0","3NLA-0","3NLR-0","3NM8-0","3NMP-0","3NN6-0","3NNN-0","3NO4-0","3NOL-0","3NP2-0","3NPJ-0","3NQ0-0","3NQH-0","3NQY-0","3NRF-0","3NRW-0","3NSD-0","3NSU-0"],"widths":[160,220,160,160,0,200,140,0],"label":"조회 순위 결과","stack":false,"compact":true},
@@ -1760,7 +1802,7 @@ const READABLE_TABLES = {
   "3JZ3-0": {"node":"3KFV-0","rows":["3KFW-0","3L2Y-0","3L2O-0","3L2E-0","3L24-0","3L1U-0","3L0S-0","3L0I-0","3L08-0","3KZY-0","3KZO-0","3L38-0","3L7D-0","3L7N-0","3L7X-0","3L87-0","3L8H-0","3LAV-0","3LB5-0","3LBF-0","3LBP-0","3LBZ-0","3LC9-0"],"widths":[120,160,200,132,132,122,200],"label":"조회 상세 내역","stack":false,"compact":true},
   "3OIM-0": {"node":"3SUJ-0","rows":["3SUQ-0","3SUY-0","3SVJ-0","3SW5-0"],"widths":[130,220,120,200,200,120,120],"label":"조회 상세 내역","stack":false,"compact":true},
   "3TCO-0": {"node":"3TEG-0","rows":["3TIB-0","3THO-0","3TH1-0","3TGE-0","3TFR-0","3TF4-0","3TEH-0","3TKQ-0","3TLD-0","3TM0-0","3TMN-0","3TNA-0","3TNX-0"],"widths":[52,220,160,120,160,140,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
-  '2VDA-0': {"node":"3HMX-0","rows":["3HMY-0","3HN7-0","3HNO-0","3HO5-0","3HOM-0","3HP3-0","3HPK-0","3HQ1-0","3HQI-0","3HQZ-0","3HRG-0","3HRX-0","3HSE-0","3HSV-0","3HTC-0","3HTT-0","3HUA-0","3HUR-0","3HV8-0","3HVP-0","3HW6-0"],"widths":[52,220,150,100,170,210,130,100],"label":"종목 순위 결과","stack":false,"compact":true},
+  '2VDA-0': {"node":"3HMX-0","rows":["3HMY-0","3HN7-0","3HNO-0","3HO5-0","3HOM-0","3HP3-0","3HPK-0","3HQ1-0","3HQI-0","3HQZ-0","3HRG-0","3HRX-0","3HSE-0","3HSV-0","3HTC-0","3HTT-0","3HUA-0","3HUR-0","3HV8-0","3HVP-0","3HW6-0"],"widths":[0,220,150,100,170,210,130,100],"label":"종목 순위 결과","stack":false,"compact":true},
   "3K7K-0": {"node":"3L4J-0","rows":["3L4N-0","3L8Y-0","3L93-0","3L98-0","3L9D-0","3L9I-0","3L9N-0","3L9S-0","3L9X-0","3LA2-0","3LD0-0","3LD5-0","3LDA-0","3LDF-0","3LDK-0"],"widths":[244,200,200,200],"label":"월별 자산·부채 구성","stack":false,"compact":true},
   "2SRV-1": {"node":"3IFY-0","rows":["3IGJ-0","3JDD-0","3JDY-0","3JEJ-0","3JF4-0","3JGA-0","3JGV-0","3JHG-0"],"widths":[112,190,180,130,205,228],"label":"일자별 실현손익","stack":false,"compact":true},
   "2SKU-1": {"node":"39SW-0","widths":[112,160,160,160,160,160,160],"label":"결제 예정","rows":["39SX-0","39T5-0","39TD-0","39TL-0"],"stack":false,"compact":true,"additional":[{"node":"3A4F-0","widths":[130,150,340,190,190],"label":"입출금 내역","rows":["3A4G-0","3A4M-0","3A51-0","3A5G-0","3G1S-0","3G2A-0","3G2T-0","3GKQ-0"],"stack":false,"compact":true}]},
