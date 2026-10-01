@@ -1,7 +1,13 @@
-// Exact typed quote fields derived from the three authored regular-session contracts.
+// Exact typed quote fields for the authored regular-session tables and primary summary.
 (function () {
 'use strict';
 const bindings = {
+  "13BC-2": [
+    { "slot": "s013", "key": "sellPrices", "index": 0 },
+    { "slot": "s014", "key": "sellQuantities", "index": 0 },
+    { "slot": "s016", "key": "buyPrices", "index": 0 },
+    { "slot": "s017", "key": "buyQuantities", "index": 0 }
+  ],
   "2TRW-1": [
     {
       "slot": "s013",

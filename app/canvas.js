@@ -1848,6 +1848,8 @@ function mountAuthoredOrderbook(host, envelope, mounted) {
   const state = boardStateOf(host);
   const surface = mounted && mounted.surface;
   if (!feed || !feed.supports(state.boardId) || !surface) return;
+  // 13BC's primary ladder owns the one 0D lease and also updates its summary.
+  if (state.boardId === '13BC-2') return;
   if (state.authoredOrderbookSurface === surface && state.primaryRelease) return;
   const card = host.closest('.card');
   if (!card) return;
@@ -1865,6 +1867,29 @@ function mountAuthoredOrderbook(host, envelope, mounted) {
 }
 
 function mountBoardOrderbook(card, state, primary, envelope) {
+  const boardId = state.boardId, surface = state.surface;
+  const symbol = boardId === '13BC-2' ? resolveEnvelopeSymbol(envelope) : '';
+  const current = built => state.boardId === boardId && state.surface === surface
+    && state.primaryOrderbookEnvelope === envelope && resolveEnvelopeSymbol(envelope) === symbol
+    && surface?.isConnected && built.parentElement === primary.mountPoint && surface.contains(built);
+  const syncSummary = (built, tick) => {
+    const feed = window.AthenaLib.BoardOrderbook;
+    if (boardId !== '13BC-2' || !feed || !current(built)) return;
+    const snapshot = built.__athenaOrderbookState;
+    if (!tick && snapshot?.symbol && snapshot.symbol !== symbol) return;
+    const updates = tick ? feed.updatesFor(boardId, tick) : {
+      ...feed.updatesFor(boardId, {
+        sellPrices: [snapshot?.asks[0]?.price], sellQuantities: [snapshot?.asks[0]?.quantity],
+        buyPrices: [snapshot?.bids[0]?.price], buyQuantities: [snapshot?.bids[0]?.quantity],
+      }),
+      ...feed.updatesFor(boardId, built.__athenaPendingOrderbookTick),
+    };
+    const slots = Object.keys(updates);
+    if (!slots.length) return;
+    Object.assign(state.values, updates);
+    state.valuesByBoard.set(boardId, state.values);
+    boardMount.applyRealtimeSlots(surface, state.mountContract, state.values, slots);
+  };
   // 결측 슬롯이 없으면 mountBoardState와 showBoardReady가 같은 표면으로 두 번 온다.
   // 그때만 같은 사다리·0D 리스를 쓴다. 새 hydrate 봉투나 다른 종목이면 이전 값을
   // 보이지 않게 놓고 새 snapshot으로 다시 만든다.
@@ -1872,7 +1897,10 @@ function mountBoardOrderbook(card, state, primary, envelope) {
     (child) => child.classList.contains('card-kit-hoga-live'),
   );
   const existing = ladders.find((child) => !child.hidden);
-  if (existing && state.primaryOrderbookEnvelope === envelope) return existing;
+  if (existing && state.primaryOrderbookEnvelope === envelope) {
+    syncSummary(existing);
+    return existing;
+  }
   const release = state.primaryRelease;
   state.primaryRelease = null;
   state.primaryOrderbookEnvelope = null;
@@ -1893,8 +1921,14 @@ function mountBoardOrderbook(card, state, primary, envelope) {
   state.primaryOrderbookEnvelope = envelope;
   const hoga = window.AthenaLib.CardKindHoga;
   if (hoga.supportsLive0D(built)) {
+    syncSummary(built);
+    const applyTick = boardId === '13BC-2' ? (wrap, source, tick) => {
+      if (!current(built) || !tick || tick.symbol !== symbol) return;
+      hoga.applyLiveTick(wrap, source, tick);
+      syncSummary(built, tick);
+    } : hoga.applyLiveTick;
     state.primaryRelease = wireOrderbookRealtime(
-      card, built, envelope, hoga.applyLiveTick, { registerCardDestroyer: false },
+      card, built, envelope, applyTick, { registerCardDestroyer: false },
     );
   }
   return built;
