@@ -664,6 +664,7 @@ function hideUnavailableUnits(surface) {
   };
   for (const el of surface.querySelectorAll('[data-slot-id]')) {
     if (!isUnavailableSlotEl(el)) continue;
+    if (el.closest?.('.bs-quote-labelled-value, .bs-orderbook-managed')) continue;
     if (tableCellOf(el)) continue;
     add(el);
     const box = unitBoxForUnavailable(el, surface);
@@ -942,6 +943,56 @@ function updateOrderbookKpi(surface, options) {
   }
 }
 
+// These groups have independent response sources; zero is received data.
+const ORDERBOOK_DETAIL_GROUPS = {
+  '2TRW-1': [['3JJC-0', ['s081','s083'], '체결강도'], ['3JSS-0', ['s141','s142','s143'], '호가잔량']],
+  '3JZ3-0': [
+    ['3U7Z-0', ['s192','s193','s195','s196'], '호가잔량'],
+    ['3UBL-0', ['s201','s203','s205','s207','s209'], '잔량균형'],
+    ['3UC4-0', ['s217','s218','s219','s220','s221','s222','s223','s225','s226','s227','s228','s229','s230','s231'], '거래소별 잔량'],
+    ['3UD2-0', [], 'LP 합계'],
+  ],
+  '2QRP-1': [
+    ['3IOY-0', ['s066','s068','s070'], '정규장 구간'], ['3IQC-0', ['s073','s075','s077'], '시간외 구간'],
+    ['3IW5-0', [], 'NXT 애프터마켓'], ['2QVR-1', ['s085'], '단일가 현재가'],
+    ['2QW7-1', ['s093'], '시간외 정보'], ['33Q3-0', [], '거래소별 잔량'],
+  ],
+  '3JT4-0': [
+    ['3JV8-0', ['s080','s082','s084'], '정규장 구간'], ['3JUX-0', ['s087','s089','s091'], '시간외 구간'],
+    ['3JUP-0', [], 'NXT 애프터마켓'], ['3UIV-0', ['s099'], '단일가 현재가'],
+    ['3UJ9-0', ['s107'], '시간외 정보'], ['3UJR-0', [], '거래소별 잔량'],
+  ],
+};
+
+function updateOrderbookDetails(surface, plan) {
+  const groups = ORDERBOOK_DETAIL_GROUPS[surface.dataset?.bsBoardId];
+  if (!groups) return;
+  const states = surface.__bsOrderbookStates || (surface.__bsOrderbookStates = new Map());
+  for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  const navigation = '[data-state-control], [data-state-board], [data-bs-orderbook-control], button, [role="button"], a[href]';
+  for (const [node, slots, label] of groups) {
+    const group = authoredNode(surface, node);
+    if (!group) continue;
+    const compact = slots.every(slot => {
+      const state = states.get(slot);
+      return state && (state.pending || state.empty || state.missing);
+    });
+    group.classList.toggle('bs-orderbook-empty', compact);
+    for (const child of group.children) child.classList.toggle('bs-orderbook-navigation',
+      child.matches(navigation) || !!child.querySelector(navigation));
+    let note = group.querySelector(':scope > .bs-orderbook-note');
+    if (compact && !note) {
+      note = layoutGroup(surface.ownerDocument, 'bs-orderbook-note');
+      note.setAttribute('role', 'status');
+      group.append(note);
+    }
+    if (note) {
+      note.textContent = `${label} ${slots.some(slot => states.get(slot)?.pending) ? '수신 대기' : label.endsWith('정보') ? '미제공' : '정보 미제공'}`;
+      note.hidden = !compact;
+    }
+  }
+}
+
 // DOM 쓰기 층 — 텍스트 노드만 건드린다. 구조·인라인 스타일 원문은 손대지 않는다(D1).
 function applyPlan(root, plan, options = {}) {
   if (!options.partial) {
@@ -1053,6 +1104,7 @@ function applyPlan(root, plan, options = {}) {
   updateAccountResidualDetails(root, plan);
   updateRankingResidualDetails(root, plan);
   updateOrderbookKpi(root, options);
+  updateOrderbookDetails(root, plan);
   if (options.partial) {
     return { unbound, unmapped: [], containers, collapsedRows, collapsedColumns };
   }
@@ -2105,12 +2157,88 @@ function prepareAfterhoursDepthTable(surface) {
   table.append(inner);
 }
 
+function prepareOrderbookDetails(surface, contract) {
+  const id = contract.board_id;
+  const sideSlots = {
+    '13BC-2': [['s013','s030','s033','s036','s039','s042','s045','s048','s051','s054','s057'], ['s016','s064','s067','s070','s073','s076','s079','s082','s085','s088','s091']],
+    '2TRW-1': [['s013','s029','s032','s035','s038','s041','s143'], ['s016','s048','s051','s054','s057','s060']],
+    '3JZ3-0': [['s013','s031','s038','s045','s052','s059','s066','s073','s080','s087','s094'], ['s016','s113','s120','s127','s134','s141','s148','s155','s162','s169','s176']],
+    '1JPU-0': [['s127','s131','s135','s139','s143','s147','s151','s155','s159','s163'], ['s174','s178','s182','s186','s190','s194','s198','s202','s206','s210']],
+    '3N4O-0': [['s018','s024','s030','s036','s042','s048','s054','s060','s066','s072'], ['s089','s095','s101','s107','s113','s119','s125','s131','s137','s143']],
+    '2QRP-1': [['s014','s026','s029','s032','s035','s038'], ['s017','s045','s048','s051','s054','s057']],
+    '3JT4-0': [['s014','s031','s035','s039','s043','s047'], ['s017','s058','s062','s066','s070','s074']],
+  }[id];
+  if (!sideSlots) return;
+  const slots = new Map(contract.slots.map(slot => [slot.slot_id, slot]));
+  const anchors = nodeIndex(surface);
+  const valueNode = slot => anchors.get(anchorOf(slots.get(slot)));
+  for (const [node, ids] of ORDERBOOK_DETAIL_GROUPS[id] || []) {
+    authoredNode(surface, node)?.classList.add('bs-orderbook-managed');
+    for (const slot of ids) {
+      const value = valueNode(slot);
+      if (value) value.dataset.bsKeepMissing = 'true';
+    }
+  }
+  for (const node of { '3JZ3-0': ['3UD4-0'], '3JT4-0': ['3JV4-0'] }[id] || []) {
+    const control = authoredNode(surface, node);
+    if (control) control.dataset.bsOrderbookControl = 'true';
+  }
+  sideSlots.forEach((ids, index) => {
+    for (const slot of ids) {
+      const value = valueNode(slot);
+      if (value) value.dataset.bsQuoteSide = index === 0 ? 'ask' : 'bid';
+    }
+  });
+  const footer = {
+    '13BC-2': [['s164','상한가'], ['s165','하한가'], ['s166','전일종가']],
+    '2TRW-1': [['s145','상한가'], ['s146','하한가'], ['s147','전일종가']],
+    '3JZ3-0': [['s236','상한가'], ['s237','하한가'], ['s238','전일종가']],
+    '1JPU-0': [['s261','매도 호가'], ['s263','매수 호가']],
+    '3N4O-0': [['s188','매도 체결'], ['s190','매수 체결']],
+    '2QRP-1': [['s060','매도 잔량'], ['s062','매수 잔량']],
+  }[id] || [];
+  for (const [slot, text] of footer) {
+    const value = valueNode(slot);
+    if (!value || value.parentElement.classList.contains('bs-quote-labelled-value')) continue;
+    const item = layoutGroup(surface.ownerDocument, 'bs-quote-labelled-value');
+    const label = layoutGroup(surface.ownerDocument, 'bs-quote-value-label');
+    label.textContent = text;
+    item.dataset.bsKeepMissing = 'true';
+    value.dataset.bsKeepMissing = 'true';
+    value.before(item);
+    item.append(label, value);
+  }
+  const unsupported = {
+    '2TRW-1': ['3JSP-0'],
+    '3JZ3-0': ['3U8G-0','3UD6-0'],
+    '2QRP-1': ['2QUG-1','2QVO-1','2QVW-1','2QVY-1','2QVZ-1','2QWE-1','2QWK-1'],
+    '3JT4-0': ['3L4W-0','3UJ4-0','3UJH-0','3UJN-0'],
+  }[id] || [];
+  for (const node of unsupported) authoredNode(surface, node)?.classList.add('bs-orderbook-unsupported');
+  // After-hours history and optional money fields have no response source.
+  const unavailable = {
+    '2TRW-1': ['s026','s030','s033','s036','s039','s042','s049','s052','s055','s058','s061'],
+    '2QRP-1': ['s109'],
+    '3JT4-0': ['s098','s100','s101','s102','s103','s109','s113','s123'],
+  }[id] || [];
+  for (const slot of unavailable) valueNode(slot)?.classList.add('bs-orderbook-unsupported');
+  if (id === '2TRW-1') {
+    const summary = authoredNode(surface, '33L5-0');
+    for (const mirror of summary.querySelectorAll('.bs-paired')) mirror.remove();
+    for (const wrapper of summary.querySelectorAll('.bs-col')) wrapper.replaceWith(...wrapper.childNodes);
+    for (const node of [summary, ...summary.querySelectorAll('[data-col], [data-row]')]) {
+      delete node.dataset.row;
+      delete node.dataset.col;
+      node.classList.remove('bs-col');
+    }
+    summary.classList.add('bs-quote-totals', 'bs-orderbook-managed');
+    valueNode('s064').dataset.bsKeepMissing = 'true';
+  }
+}
+
 function prepareSessionQuoteTable(surface) {
   const table = authoredNode(surface, '2QT1-1');
-  table.classList.add('bs-table', 'bs-session-quote-scroll');
-  table.tabIndex = 0;
-  table.setAttribute('role', 'region');
-  table.setAttribute('aria-label', '시간외 단일가 호가, 좌우 방향키로 이동');
+  table.classList.add('bs-table');
   for (const property of ['overflow', 'overflow-x', 'overflow-y']) table.style.removeProperty(property);
   for (const mirror of table.querySelectorAll('.bs-paired')) mirror.remove();
   // The extracted ask/bid group is not a row: each child is one quote level.
@@ -2133,9 +2261,15 @@ function prepareSessionQuoteTable(surface) {
       cell.setAttribute('role', index === 0 ? 'columnheader' : 'cell');
     });
   });
+  const scroll = layoutGroup(surface.ownerDocument, 'bs-session-quote-scroll');
+  scroll.tabIndex = 0;
+  scroll.setAttribute('role', 'region');
+  scroll.setAttribute('aria-label', '시간외 단일가 호가, 좌우 방향키로 이동');
   const inner = layoutGroup(surface.ownerDocument, 'bs-session-quote-table');
-  inner.append(...table.childNodes);
-  table.append(inner);
+  const header = authoredNode(surface, '2QT9-1');
+  header.before(scroll);
+  inner.append(header, authoredNode(surface, '2QTH-1').parentElement, authoredNode(surface, '2QUN-1').parentElement);
+  scroll.append(inner);
 }
 
 function applyReadableBoardLayout(surface, contract) {
@@ -2927,6 +3061,7 @@ function mountBoard(root, boardId, values, options = {}) {
     surface.dataset.bsBoardId = String(boardId);
     applyResponsiveHooks(surface);
     applyReadableBoardLayout(surface, contract);
+    prepareOrderbookDetails(surface, contract);
     if (cardId === 'CC-01') {
       const links = registry.stateLinksFor(boardId);
       for (const link of links) {

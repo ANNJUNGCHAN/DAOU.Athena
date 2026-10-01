@@ -507,6 +507,9 @@
  * 모자이크 통합 카드는 패널 여러 장을 세로로 쌓는 뼈대가 그대로 맞다. */
 .card[data-board-surface="true"] .integrated-card-panels { flex: 1 1 auto; min-height: 0; }
 .card[data-board-surface="true"] .integrated-card-panel { height: 100%; min-height: 0; }
+.card[data-board-surface="true"] .integrated-card-panel:has(> .board-surface-host) { display: flex; flex-direction: column; }
+.card[data-board-surface="true"] .integrated-card-panel > .board-surface-host { height: auto; flex: 1 1 0; min-height: 0; }
+.card[data-board-surface="true"] .integrated-card-panel:has(> .board-surface-host) > :not(.board-surface-host) { flex: 0 0 auto; }
 
 /* 집중 보기는 본문 높이만 사용한다. 고정 원본 폭도 스크롤바가 차지한 폭을 양보한다. */
 .canvas-tab-panel .board-surface[data-bs-hoisted] { min-height: 0; }
@@ -1026,6 +1029,35 @@
 .bs-account-residual-empty { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
 .bs-account-residual-empty > :not(.bs-account-residual-note):not(.bs-account-detail-navigation) { display: none !important; }
 .bs-account-residual-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+
+/* Price color describes the book side, while signed changes retain their tone. */
+.board-surface [data-bs-quote-side="ask"]:not([data-missing]) { color: var(--color-down) !important; }
+.board-surface [data-bs-quote-side="bid"]:not([data-missing]) { color: var(--color-up) !important; }
+.bs-quote-labelled-value { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.board-surface .bs-footer:has(> .bs-quote-labelled-value) { flex-wrap: wrap; gap: 8px 16px; height: auto; padding-block: 12px; }
+.bs-footer > .bs-quote-labelled-value { flex: 0 0 auto; min-width: max-content; }
+.bs-quote-labelled-value > [data-node] { width: auto !important; min-width: 0; height: auto; }
+.bs-quote-value-label { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); white-space: nowrap; }
+.board-surface .bs-orderbook-unsupported { display: none !important; }
+.board-surface .bs-orderbook-empty { height: auto !important; min-height: 0 !important; flex-basis: auto !important; gap: 6px !important; }
+.bs-orderbook-empty > :not(.bs-orderbook-note):not(.bs-orderbook-navigation) { display: none !important; }
+.bs-orderbook-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; overflow-wrap: anywhere; }
+.bs-orderbook-note[hidden] { display: none; }
+.board-surface[data-bs-board-id="2TRW-1"] .bs-quote-totals { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); width: 100%; height: auto; min-height: 0; gap: 16px; }
+.bs-quote-totals > [data-node="33L6-0"] { grid-column: 1 / -1; }
+.board-surface .bs-quote-totals > [data-node] { width: auto; min-width: 0; height: auto; flex-wrap: wrap; gap: 6px; }
+.board-surface .bs-quote-totals > [data-node] > [data-node] { width: auto; min-width: 0; height: auto; }
+.board-surface[data-bs-board-id="2QRP-1"] .bs-session-quote-row > [data-col="1"] { display: none !important; }
+.board-surface[data-bs-board-id="2QRP-1"] .bs-session-quote-table { width: max(100%, 510px); min-width: 510px; }
+.board-surface[data-bs-board-id="2QRP-1"] [data-node="3IOX-0"], .board-surface[data-bs-board-id="3JT4-0"] [data-node="3JUO-0"] { height: auto; min-height: 0; flex-wrap: wrap; }
+.board-surface[data-bs-board-id="2QRP-1"] [data-node="3IOX-0"] > [data-node], .board-surface[data-bs-board-id="3JT4-0"] [data-node="3JUO-0"] > [data-node] { flex: 1 1 200px; min-width: 0; height: auto; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TS8-1"].bs-empty-table > :is(.bs-readable-scroll, .bs-readable-hint) { display: none !important; }
+.board-surface[data-bs-board-id="3JZ3-0"] [data-node="3UD2-0"].bs-orderbook-empty { flex-direction: row !important; align-items: center; }
+.board-surface[data-bs-board-id="3JZ3-0"] [data-node="3UD4-0"] { order: 1; padding-top: 0; }
+@container board (min-width: 960px) {
+  .board-surface[data-bs-board-id="3JZ3-0"] .bs-workspace > .bs-primary { flex: 1 1 0; width: auto; min-width: 0; }
+  .board-surface[data-bs-board-id="3JZ3-0"] .bs-rail { flex: 0 0 320px; min-width: 0; max-width: 100%; }
+}
 .bs-account-detail-context { color: var(--color-k-text); font: 14px/1.5 var(--font-strong); }
 .board-surface[data-bs-board-id="3GRO-0"] [data-node="3S9V-0"] { overflow-x: auto; flex-wrap: nowrap !important; max-width: 100%; }
 .board-surface[data-bs-board-id="3GRO-0"] [data-node="3S9V-0"] > [data-node] { flex: 1 0 216px !important; min-width: 216px; }

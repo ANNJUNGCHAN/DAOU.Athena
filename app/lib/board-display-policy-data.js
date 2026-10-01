@@ -357,8 +357,8 @@ const policy = {
     ],
     "s004": [
       "정규장",
-      "bound-label",
-      "215"
+      "caption",
+      "정규장"
     ],
     "s007": [
       "5단",
@@ -3827,8 +3827,8 @@ const policy = {
     ],
     "s004": [
       "정규장",
-      "status",
-      null
+      "caption",
+      "정규장"
     ],
     "s007": [
       "5단",
@@ -3982,13 +3982,18 @@ const policy = {
     ],
     "s065": [
       "정규장",
-      "status",
-      null
+      "caption",
+      "정규장"
     ],
     "s079": [
       "46,180 / 31,520",
       "unavailable",
       null
+    ],
+    "s082": [
+      "단일가 체결",
+      "caption",
+      "단일가 현재가"
     ],
     "s084": [
       "16:10",
@@ -6192,8 +6197,8 @@ const policy = {
     ],
     "s004": [
       "정규장",
-      "bound-label",
-      "215"
+      "caption",
+      "정규장"
     ],
     "s007": [
       "5단",
@@ -6327,8 +6332,8 @@ const policy = {
     ],
     "s082": [
       "최근 1분",
-      "unavailable",
-      null
+      "caption",
+      "순매수 체결량"
     ],
     "s090": [
       "09:42:21",
@@ -26724,8 +26729,18 @@ const policy = {
     ],
     "s004": [
       "정규장",
-      "status",
-      null
+      "caption",
+      "정규장"
+    ],
+    "s007": [
+      "5단",
+      "caption",
+      "5단"
+    ],
+    "s008": [
+      "10단",
+      "caption",
+      "10단"
     ],
     "s010": [
       "150,900",
@@ -26814,13 +26829,18 @@ const policy = {
     ],
     "s079": [
       "정규장",
-      "status",
-      null
+      "caption",
+      "정규장"
     ],
     "s093": [
       "46,180 / 31,520",
       "unavailable",
       null
+    ],
+    "s096": [
+      "단일가 체결",
+      "caption",
+      "단일가 현재가"
     ],
     "s098": [
       "16:10",
@@ -26886,18 +26906,18 @@ const policy = {
     ],
     "s004": [
       "정규장",
-      "bound-label",
-      "215"
+      "caption",
+      "정규장"
     ],
     "s007": [
       "5단",
-      "status",
-      null
+      "caption",
+      "5단"
     ],
     "s008": [
       "10단",
-      "status",
-      null
+      "caption",
+      "10단"
     ],
     "s010": [
       "150,850",

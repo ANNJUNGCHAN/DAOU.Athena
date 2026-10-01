@@ -453,3 +453,18 @@ test('account action captions remain actionable without asserting missing sales'
     assert.match(text('3ODO-0', {[sid]:'0'}, sid), /0/);
   }
 });
+
+test('orderbook session controls remain captions while after-hours summaries name their source', () => {
+  for (const id of ['13BC-2','2TRW-1','3JZ3-0','2QRP-1','3JT4-0']) {
+    for (const values of [{}, {s004:'0'}, {s004:'3'}]) {
+      assert.equal(text(id, values, 's004'), '정규장');
+      assert.equal(text(id, values, 's007'), '5단');
+      assert.equal(text(id, values, 's008'), '10단');
+    }
+  }
+  assert.equal(text('2TRW-1', {}, 's082'), '순매수 체결량');
+  assert.equal(text('2QRP-1', {}, 's065'), '정규장');
+  assert.equal(text('3JT4-0', {}, 's079'), '정규장');
+  assert.equal(text('2QRP-1', {}, 's082'), '단일가 현재가');
+  assert.equal(text('3JT4-0', {}, 's096'), '단일가 현재가');
+});
