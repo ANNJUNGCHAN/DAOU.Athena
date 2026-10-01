@@ -16,6 +16,23 @@ def values_for(board, responses):
     return {item['slot_id']: item['value'] for item in contract_for(board, responses)['slot_values']}
 
 
+def test_company_ohlc_and_price_history_keep_every_labelled_part():
+    responses = {
+        'detail:ka10001:daily_price_band': {'open_pric': '-10100', 'high_pric': '12200', 'low_pric': '9300'},
+        'detail:ka10001:price_range': {'250hgst': '18800', '250hgst_pric_dt': '20260918',
+                                    '250lwst': '6700', '250lwst_pric_dt': '20260821'},
+    }
+    values = values_for('2RBO-1', responses)
+    assert [p['value'] for p in values['s016']['composite']['parts']] == ['-10100', '12200', '9300']
+    assert [p['value'] for p in values['s052']['composite']['parts']] == ['18800', '20260918']
+    assert [p['value'] for p in values['s055']['composite']['parts']] == ['6700', '20260821']
+    del responses['detail:ka10001:daily_price_band']['high_pric']
+    del responses['detail:ka10001:price_range']['250hgst']
+    partial = values_for('2RBO-1', responses)
+    assert 's016' not in partial and 's052' not in partial
+    assert 's055' in partial
+
+
 PER_ROWS = [
     {'stk_cd': '100001', 'stk_nm': '합성 PER 종목', 'per': '7.25', 'cur_prc': '12340', 'pred_pre': '-60', 'flu_rt': '-0.48', 'now_trde_qty': '123456', 'sel_bid': '12350'},
     {'stk_cd': '100002', 'stk_nm': '합성 PER 둘째', 'per': '8.5', 'cur_prc': '20000', 'pred_pre': '0', 'flu_rt': '0', 'now_trde_qty': '0', 'sel_bid': '20050'},

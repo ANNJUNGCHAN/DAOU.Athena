@@ -9,6 +9,17 @@ const { formatSlot } = require('./board-format');
 const source = id => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
 const text = (id, values, slot) => mountPlan(registry.contractFor(id), values).assignments.find(x => x.slotId === slot)?.text;
 
+test('chart session label and company secondary metrics retain their meaning', () => {
+  assert.equal(text('137X-2', {}, 's109'), '장중');
+  assert.equal(text('2RBO-1', {s042: '7115'}, 's042'), 'EPS 7,115원');
+  assert.equal(text('2RBO-1', {s045: '57320'}, 's045'), 'BPS 5만 7,320원');
+  const slot = source('2RBO-1').slots.find(s => s.slot_id === 's052');
+  const composite = {composite: {...slot.composite, parts: slot.composite.parts.map((p, i) => ({...p, value: i ? '20260918' : '-123450'}))}};
+  assert.equal(text('2RBO-1', {s052: composite}, 's052'), '123,450원 · 2026-09-18');
+  composite.composite.parts[0].value = '0';
+  assert.equal(text('2RBO-1', {s052: composite}, 's052'), '—');
+});
+
 test('regular orderbook change rates keep their two decimal places in every repeated location', () => {
   for (const [board,slots] of [['13BC-2',['s011','s062']],['1JPU-0',['s169','s255']],
     ['2TRW-1',['s011','s046']],['3JZ3-0',['s011','s108']],['3N4O-0',['s085','s178']]]) {

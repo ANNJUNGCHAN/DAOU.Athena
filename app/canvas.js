@@ -2530,6 +2530,7 @@ function stampBoardRealtimeStatus(root, status) {
   const label = integratedCardSurface.workflowStateLabel(effective);
   const slotsByBoard = {
     '137X-2': { status: 's004', footer: 's136', context: '차트', session: ['s003'] },
+    '2RBO-1': { status: 's004', footer: 's112', context: '기업정보', session: ['s003'] },
     '2R3M-1': { status: 's004', footer: 's258', context: '현재가·체결', session: ['s003', 's154'] },
     '1JPU-0': { status: 's005', footer: 's262', context: '호가', session: [] },
   };
@@ -2632,9 +2633,10 @@ function stampRealtimeFallbackStatus(session, state) {
     node = document.createElement('span');
     node.className = 'realtime-fallback-status';
     node.setAttribute('role', 'status');
-    const head = card.querySelector('.card-head') || card;
-    head.appendChild(node);
   }
+  const statusOwner = card.querySelector('.bs-footer') || card.querySelector('.card-head')
+    || card.querySelector('.card-body') || card;
+  if (node.parentElement !== statusOwner) statusOwner.appendChild(node);
   const at = fallbackTimestamp(state.lastSuccessAt || state.asOf || session.lastSuccessAt);
   if (at) session.lastSuccessAt = state.lastSuccessAt || state.asOf || session.lastSuccessAt;
   const suffix = at ? ` · 마지막 갱신 ${at}` : '';

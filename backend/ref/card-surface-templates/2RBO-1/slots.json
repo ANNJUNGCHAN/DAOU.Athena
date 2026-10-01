@@ -582,36 +582,56 @@
       "font_size_px": 18.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "detail:ka10001:daily_price_band",
-      "f": "open_pric",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral",
-        "absolute": true
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "137X-2 지표 스트립 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "detail:ka10001:daily_price_band",
-          "f": "high_pric",
-          "kor": "고가",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "detail:ka10001:daily_price_band",
-          "f": "low_pric",
-          "kor": "저가",
-          "sep": " · "
-        }
-      ]
+      "composite": {
+        "separator": " · ",
+        "parts": [
+          {
+            "mapping_id": "detail:ka10001:daily_price_band",
+            "f": "open_pric",
+            "format": {
+              "kind": "number",
+              "precision": 0,
+              "absolute": true,
+              "tone": "neutral",
+              "suffix": ""
+            }
+          },
+          {
+            "mapping_id": "detail:ka10001:daily_price_band",
+            "f": "high_pric",
+            "format": {
+              "kind": "number",
+              "precision": 0,
+              "absolute": true,
+              "tone": "neutral",
+              "suffix": ""
+            }
+          },
+          {
+            "mapping_id": "detail:ka10001:daily_price_band",
+            "f": "low_pric",
+            "format": {
+              "kind": "number",
+              "precision": 0,
+              "absolute": true,
+              "tone": "neutral",
+              "suffix": ""
+            }
+          }
+        ]
+      }
     },
     {
       "slot_id": "s017",
@@ -1261,7 +1281,9 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "EPS ",
+        "suffix": "원"
       },
       "paired_with": "s041",
       "collapse_group": null,
@@ -1334,7 +1356,9 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "BPS ",
+        "suffix": "원"
       },
       "paired_with": "s044",
       "collapse_group": null,
@@ -1495,29 +1519,39 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "detail:ka10001:price_range",
-      "f": "250hgst_pric_dt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "250최고가일",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "detail:ka10001:price_range",
-          "f": "250hgst",
-          "kor": "250최고",
-          "sep": " · ",
-          "display_dup": true
-        }
-      ],
-      "note": "첫 값 153,400은 250최고(137X-2 홈), 이 보드 몫은 최고가일 08/21"
+      "composite": {
+        "separator": " · ",
+        "parts": [
+          {
+            "mapping_id": "detail:ka10001:price_range",
+            "f": "250hgst",
+            "format": {
+              "kind": "number",
+              "precision": 0,
+              "absolute": true,
+              "tone": "neutral",
+              "suffix": "원"
+            }
+          },
+          {
+            "mapping_id": "detail:ka10001:price_range",
+            "f": "250hgst_pric_dt",
+            "format": {
+              "kind": "date"
+            }
+          }
+        ]
+      }
     },
     {
       "slot_id": "s053",
@@ -1585,29 +1619,39 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "detail:ka10001:price_range",
-      "f": "250lwst_pric_dt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "250최저가일",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "detail:ka10001:price_range",
-          "f": "250lwst",
-          "kor": "250최저",
-          "sep": " · ",
-          "display_dup": true
-        }
-      ],
-      "note": "첫 값 67,700은 250최저(137X-2 홈), 이 보드 몫은 최저가일 11/03"
+      "composite": {
+        "separator": " · ",
+        "parts": [
+          {
+            "mapping_id": "detail:ka10001:price_range",
+            "f": "250lwst",
+            "format": {
+              "kind": "number",
+              "precision": 0,
+              "absolute": true,
+              "tone": "neutral",
+              "suffix": "원"
+            }
+          },
+          {
+            "mapping_id": "detail:ka10001:price_range",
+            "f": "250lwst_pric_dt",
+            "format": {
+              "kind": "date"
+            }
+          }
+        ]
+      }
     },
     {
       "slot_id": "s056",

@@ -22,6 +22,23 @@ function functionSource(name) {
   throw new Error(`${name} body did not close`);
 }
 
+test('REST fallback status stays inside the current card and disappears when WS owns it', () => {
+  const footer = {appendChild(node) { node.parentElement = this; this.node = node; }};
+  const oldRoot = {};
+  const node = {parentElement: oldRoot, textContent: '', remove() { this.removed = true; }};
+  const card = {isConnected: true, querySelector(selector) {
+    return selector === '.realtime-fallback-status' ? node : selector === '.bs-footer' ? footer : null;
+  }};
+  const context = vm.createContext({ Date, document: {createElement() { throw Error('Existing node must be reused'); }} });
+  vm.runInContext(functionSource('fallbackTimestamp') + '\n' + functionSource('stampRealtimeFallbackStatus'), context);
+  const stamp = vm.runInContext('stampRealtimeFallbackStatus', context);
+  stamp({card}, {status: 'api-fallback'});
+  assert.equal(node.parentElement, footer);
+  assert.equal(node.textContent, 'API 대체 조회');
+  stamp({card}, {status: 'ws-active'});
+  assert.equal(node.removed, true);
+});
+
 test('first fallback registration obtains the authoritative account generation before register', async () => {
   const calls = [];
   const context = vm.createContext({

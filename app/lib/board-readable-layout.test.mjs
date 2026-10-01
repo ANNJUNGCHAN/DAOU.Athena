@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { inapplicableBasketRows, collapseEmptyRows, collapseEmptyColumns, applyPlan } = require('./board-mount.js');
+const { inapplicableBasketRows, collapseEmptyRows, collapseEmptyColumns, applyPlan, mountPlan } = require('./board-mount.js');
 const contract = { board_id: '3DZ1-0' };
 const plan = (values) => ({ assignments: Object.entries(values).map(([slotId, text]) => ({ slotId, text })) });
 
@@ -104,4 +104,20 @@ test('pending values and fixed settlement schedule rows stay visible', () => {
   const { row, surface } = missingRowFixture([{ text: '—', dataset: { missing: 'true' } }], true);
   assert.equal(collapseEmptyRows(surface, []).length, 0);
   assert.equal(row.hidden, false);
+});
+
+test('deferred text and number value slots stay pending until a response arrives', () => {
+  const contract = { slots: [
+    { slot_id: 'name', node: 'name', kind: 'value', format: { unit: 'text' } },
+    { slot_id: 'amount', node: 'amount', kind: 'value', format: { unit: 'krw_ko' } },
+    { slot_id: 'label', node: 'label', kind: 'label', paper_text: '종목' },
+  ] };
+  const options = { deferredValueSlots: ['name', 'amount'] };
+  const pending = mountPlan(contract, {}, options).assignments;
+  assert.deepEqual(pending.map(item => item.pending), [true, true, false]);
+  const received = mountPlan(contract, { name: '합성 종목', amount: '0' }, options).assignments;
+  assert.deepEqual(received.map(item => item.pending), [false, false, false]);
+  assert.equal(received[0].text, '합성 종목');
+  assert.equal(received[1].missing, false);
+  assert.match(received[1].text, /0/);
 });

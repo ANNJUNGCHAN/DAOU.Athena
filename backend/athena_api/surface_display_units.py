@@ -86,7 +86,11 @@ def annotate_surface_display_units(surface: dict[str, Any],
         arguments = arguments_by_operation.get(operation, {})
         description = field.description or ''
         investor_chart = operation == 'base:ka10060' and field.json_path.rsplit('.', 1)[-1] in _KA10060_INVESTORS
-        if '주' in description or investor_chart:
+        if operation.split(':')[1] == 'ka10001' and field.json_path == '$.flo_stk':
+            # The public contract labels this share count as currency. Preserve
+            # the raw count until the source's contradictory unit is resolved.
+            unit = ''
+        elif '주' in description or investor_chart:
             unit = _unit(operation, arguments)
         else:
             fixed = re.search(r'단위:\s*(천원|백만원|억원|원)', description)

@@ -315,8 +315,8 @@ const policy = {
     ],
     "s109": [
       "장중",
-      "status",
-      null
+      "caption",
+      "장중"
     ],
     "s136": [
       "● 차트 실시간 갱신 중",
@@ -4649,8 +4649,12 @@ const policy = {
     ],
     "s016": [
       "149,200 · 152,400 · 148,100",
-      "price",
-      "open_pric"
+      "price-composite",
+      [
+        "open_pric",
+        "high_pric",
+        "low_pric"
+      ]
     ],
     "s022": [
       "업종 11.2배",
@@ -4666,6 +4670,20 @@ const policy = {
       "전년 7.9%",
       "unavailable",
       null
+    ],
+    "s052": [
+      "153,400 · 08/21",
+      "price-composite",
+      [
+        "250hgst"
+      ]
+    ],
+    "s055": [
+      "67,700 · 11/03",
+      "price-composite",
+      [
+        "250lwst"
+      ]
     ],
     "s058": [
       "149,000",

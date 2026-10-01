@@ -796,6 +796,11 @@
 .board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQH-0"] { font-size: 18px !important; line-height: 24px !important; }
 .board-surface[data-bs-board-id="137X-2"] [data-node="14OR-2"] { min-width: 270px; }
 .board-surface[data-bs-board-id="137X-2"] :is([data-node="3C2X-0"], [data-node="3C34-0"]) { min-width: 124px; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="33C2-0"] > :not(.bs-unavailable-graphic-message) { display: none !important; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="3SKY-0"] { display: none !important; }
+.board-surface[data-bs-board-id="137X-2"] .bs-session-columns { display: grid; grid-template-columns: 46px 162px 162px; color: var(--color-k-dim); font-size: 11px; line-height: 18px; text-align: right; }
+.board-surface[data-bs-board-id="137X-2"] .bs-session-columns > :first-child { text-align: left; }
+.board-surface[data-bs-board-id="2RBO-1"] [data-node="2RG0-1"] { min-width: 270px; }
 .board-surface[data-bs-board-id="2TRW-1"] [data-node="2TZE-1"]:has([data-missing="true"]) { display: none; }
 .board-surface[data-bs-board-id="2TRW-1"] [data-node="2TU5-1"] { height: auto; min-height: 0; align-self: flex-start; }
 .board-surface:is([data-bs-board-id="2X5N-0"], [data-bs-board-id="30C1-0"]) .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
@@ -942,3 +947,21 @@
 .bs-depth-table .bs-depth-row > [data-col="4"] { width:120px; min-width:120px; flex-basis:120px; }
 
 .board-surface .bs-depth-table [data-bs-hoisted] { height:auto !important;min-height:0 !important;max-height:none !important; }
+
+/* 계좌 하단의 값 쌍은 결측 자리와 읽을 수 있는 행 높이를 함께 유지한다. */
+.bs-holdings-rail .bs-account-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 8px 16px; height: auto; min-height: 36px; padding-block: 6px; }
+.bs-holdings-rail .bs-account-detail-grid > [data-bs-hoisted] { width: auto; min-width: 0; min-height: 28px; }
+.bs-holdings-rail :is([data-node="38IV-0"], [data-node="3UP9-0"], [data-node="3UPE-0"], [data-node="38J5-0"], [data-node="3UNQ-0"]) { height: auto; min-height: 40px; padding-block: 6px; }
+.bs-holdings-rail [data-node="3UNR-0"] { font-size: 12px !important; line-height: 18px !important; }
+.board-surface[data-bs-board-id="2SKU-1"] :is([data-node="3U9L-0"], [data-node="3U9S-0"], [data-node="3U9Z-0"], [data-node="3UA6-0"], [data-node="3UAB-0"], [data-node="3UB6-0"]) { font-size: 14px !important; line-height: 20px !important; min-width: 20px; }
+
+.board-surface .bs-account-empty-section { height: auto; min-height: 0; flex: 0 0 auto; }
+.bs-account-empty-section > :not(:first-child):not(.bs-account-empty-note), .bs-account-unlabelled-empty { display: none !important; }
+.bs-account-empty-note { color: var(--color-k-dim); font-size: 12px; line-height: 18px; padding-block: 6px; }
+
+/* 순위 결과의 원본 8열을 유지하고 종목명을 왼쪽 정렬한다. */
+.board-surface[data-bs-board-id="2VDA-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; } .board-surface[data-bs-board-id="2VDA-0"] [data-node="3HMX-0"] > .bs-readable-hint { order: -1; padding: 0 0 6px; }
+
+/* 월별 대여 수량은 좁은 레일에서 두 개의 값 묶음을 차례로 배치한다. */
+.board-surface[data-bs-board-id="3K7K-0"] :is([data-node="3US4-0"], [data-node="3USB-0"], [data-node="3USI-0"], [data-node="3USV-0"], [data-node="3UT2-0"]) { flex-wrap: wrap; height: auto; gap: 8px 16px !important; }
+.board-surface[data-bs-board-id="3K7K-0"] :is([data-node="3US4-0"], [data-node="3USB-0"], [data-node="3USI-0"], [data-node="3USV-0"], [data-node="3UT2-0"]) > [data-node] { flex: 1 1 240px; min-width: 0; }

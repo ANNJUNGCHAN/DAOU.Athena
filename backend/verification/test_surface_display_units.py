@@ -40,6 +40,25 @@ def test_unknown_arguments_are_explicit_and_never_guessed_from_the_paper_unit():
     assert foreign_value(result)['text'] == '-1,234 (단위 미확인)'
 
 
+def test_listed_share_count_cannot_inherit_contradictory_currency_metadata():
+    from athena_api.semantic_presentation_registry import get_semantic_presentation_registry
+    for operation in ['detail:ka10001:identity_and_capital']:
+        field = next(f for f in get_semantic_presentation_registry().for_operation(operation)
+                     if f.json_path == '$.flo_stk')
+        for raw in ['1234567', '0', None]:
+            source = {'slot_values': [{'slot_id': 'shares', 'value': raw,
+                       'format': {'kind': 'korean'}, 'occurrence_id': field.wire_occurrence_id}]}
+            before = copy.deepcopy(source)
+            actual = annotate_surface_display_units(source, {operation: {}})['slot_values'][0]['value']
+            if raw is None:
+                assert actual is None
+            else:
+                assert actual['value'] == raw
+                assert actual['text'] == ('1,234,567' if raw != '0' else '0') + ' (단위 미확인)'
+                assert actual['display_unit'] == 'unknown'
+            assert source == before
+
+
 def test_true_zero_quantity_remains_visible_with_its_received_unit():
     result = annotate_surface_display_units(flow_surface(), {'base:ka10059': {'amt_qty_tp': '2', 'unit_tp': '1'}})
     observed = [entry['value'] for entry in result['slot_values'] if '.orgn|' in entry.get('occurrence_id', '')]

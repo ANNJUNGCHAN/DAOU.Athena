@@ -294,6 +294,7 @@ function mountPlan(contract, values, options = {}) {
       valueAtomic: slot.static !== true && slot.kind !== 'label'
         && slot.kind !== 'static' && isValueSlot(slot),
       valueSlot: slot.kind === 'value' && !slot.static,
+      pending: missingBound && pending.has(String(slot.slot_id)) && slot.kind === 'value' && !slot.static,
       pairedWith: slot.paired_with || null,
       expandedBoard: slot.expanded_board || null,
     });
@@ -580,6 +581,7 @@ function hideEmptyValueUnits(surface, plan) {
     const slots = [...box.querySelectorAll('[data-slot-id]')];
     const live = slots.some((node) => {
       const id = node.dataset ? node.dataset.slotId : '';
+      if (node.dataset?.bsKeepMissing === 'true') return true;
       if (!id || emptyIds.has(id)) return false;
       if (node.dataset && node.dataset.missing) return false;
       if (node.dataset && node.dataset.bsDesignText) return false;
@@ -673,6 +675,35 @@ function hideUnavailableUnits(surface) {
   surface.__bsUnavailableHidden = next;
 }
 
+// 값이 일부라도 있는 계좌 상세는 각 자리를 유지하고, 완전 미제공 묶음만 한 줄로 알린다.
+function updateAccountDetailSections(surface) {
+  if (registry.cardIdFor(surface.dataset?.bsBoardId) !== 'CC-01') return;
+  const missing = (node) => node.dataset.missing === 'true'
+    && ['—', '미제공', '시각 미제공'].includes(node.textContent.trim());
+  const values = (box) => [...box.querySelectorAll('[data-bs-value-slot="true"]')];
+  const allMissing = (box) => { const nodes = values(box); return nodes.length > 0 && nodes.every(missing); };
+  for (const section of surface.querySelectorAll('.bs-rail > [data-node]')) {
+    if (section.matches('.bs-table')) continue;
+    const navigation = '[data-bs-account-navigation], [data-state-control], button, [role="button"], a[href]';
+    const empty = allMissing(section) && !section.querySelector(navigation);
+    section.classList.toggle('bs-account-empty-section', empty);
+    let note = section.querySelector(':scope > .bs-account-empty-note');
+    if (empty && !note) {
+      note = layoutGroup(surface.ownerDocument, 'bs-account-empty-note');
+      note.setAttribute('role', 'status');
+      note.textContent = '제공된 데이터가 없습니다';
+      section.append(note);
+    }
+    if (note) note.hidden = !empty;
+    for (const box of [...section.children, ...section.querySelectorAll('.bs-account-detail-grid > [data-node]')]) {
+      if (box === section.firstElementChild || box === note) continue;
+      const labels = [...box.querySelectorAll('[data-bs-design-text="true"]')];
+      box.classList.toggle('bs-account-unlabelled-empty', allMissing(box)
+        && !labels.some(node => node.textContent.trim()));
+    }
+  }
+}
+
 function updateOrderbookKpi(surface, options) {
   if (registry.cardIdFor(surface.dataset?.bsBoardId) !== 'CC-04') return;
   if (!options.partial) surface.__bsKpiPending = new Set(options.deferredValueSlots || []);
@@ -718,17 +749,29 @@ function applyPlan(root, plan, options = {}) {
     }
     const compactTime = assignment.missing && assignment.text === '시각 미제공'
       && typeof el.closest === 'function' && !!el.closest('.bs-kpi-cell, .bs-table');
-    el.textContent = compactTime || (assignment.missing && assignment.text === boardFormat.missingText() && tableCellOf(el)) ? '—' : assignment.text;
-    if (compactTime) {
-      el.setAttribute('title', assignment.text);
-      el.setAttribute('aria-label', assignment.text);
+    // 계좌 상세는 값이 없어도 라벨 옆 자리를 유지한다. 반복 빈 행은 별도로 접는다.
+    const accountDetail = registry.cardIdFor(root.dataset?.bsBoardId) === 'CC-01'
+      && assignment.valueSlot && (tableCellOf(el) || el.closest?.('.bs-rail'));
+    if (accountDetail) el.dataset.bsKeepMissing = 'true';
+    if (registry.cardIdFor(root.dataset?.bsBoardId) === 'CC-01' && assignment.expandedBoard) {
+      el.dataset.bsAccountNavigation = 'true';
+      el.dataset.bsKeepMissing = 'true';
+    }
+    const accountPending = accountDetail && assignment.pending;
+    const missingValue = assignment.missing && assignment.text === boardFormat.missingText();
+    el.textContent = accountPending ? '조회 중'
+      : compactTime || (missingValue && (tableCellOf(el) || accountDetail)) ? '—' : assignment.text;
+    if (compactTime || (accountDetail && (missingValue || accountPending))) {
+      el.setAttribute('title', accountPending ? '조회 중' : assignment.text);
+      el.setAttribute('aria-label', accountPending ? '조회 중' : assignment.text);
       el.dataset.bsMissingDescription = 'true';
     } else if (el.dataset && el.dataset.bsMissingDescription) {
       el.removeAttribute('title');
       el.removeAttribute('aria-label');
       delete el.dataset.bsMissingDescription;
     }
-    setTone(el, assignment.tone, assignment.forceFlatTone);
+    setTone(el, accountDetail && (assignment.missing || accountPending) ? 'flat' : assignment.tone,
+      Boolean(accountDetail && (assignment.missing || accountPending)) || assignment.forceFlatTone);
     if (assignment.text === '상태 미확인'
       || (assignment.missing && assignment.text === '시각 미제공' && el.closest?.('.bs-header'))) setStatusAppearance(el, false);
     if (el.dataset) {
@@ -777,6 +820,7 @@ function applyPlan(root, plan, options = {}) {
     hideEmptyValueUnits(root, plan);
   }
   hideUnavailableUnits(root);
+  updateAccountDetailSections(root);
   updateOrderbookKpi(root, options);
   if (options.partial) {
     return { unbound, unmapped: [], containers, collapsedRows, collapsedColumns };
@@ -1572,6 +1616,12 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  '2VDA-0': {"node":"3HMX-0","rows":["3HMY-0","3HN7-0","3HNO-0","3HO5-0","3HOM-0","3HP3-0","3HPK-0","3HQ1-0","3HQI-0","3HQZ-0","3HRG-0","3HRX-0","3HSE-0","3HSV-0","3HTC-0","3HTT-0","3HUA-0","3HUR-0","3HV8-0","3HVP-0","3HW6-0"],"widths":[52,220,150,100,170,210,130,100],"label":"종목 순위 결과","stack":false,"compact":true},
+  "3K7K-0": {"node":"3L4J-0","rows":["3L4N-0","3L8Y-0","3L93-0","3L98-0","3L9D-0","3L9I-0","3L9N-0","3L9S-0","3L9X-0","3LA2-0","3LD0-0","3LD5-0","3LDA-0","3LDF-0","3LDK-0"],"widths":[244,200,200,200],"label":"월별 자산·부채 구성","stack":false,"compact":true},
+  "2SRV-1": {"node":"3IFY-0","rows":["3IGJ-0","3JDD-0","3JDY-0","3JEJ-0","3JF4-0","3JGA-0","3JGV-0","3JHG-0"],"widths":[112,190,180,130,205,228],"label":"일자별 실현손익","stack":false,"compact":true},
+  "2SKU-1": {"node":"39SW-0","widths":[112,160,160,160,160,160,160],"label":"결제 예정","rows":["39SX-0","39T5-0","39TD-0","39TL-0"],"stack":false,"compact":true,"additional":[{"node":"3A4F-0","widths":[130,150,340,190,190],"label":"입출금 내역","rows":["3A4G-0","3A4M-0","3A51-0","3A5G-0","3G1S-0","3G2A-0","3G2T-0","3GKQ-0"],"stack":false,"compact":true}]},
+  "3GRO-0": {"node":"3I8U-0","widths":[110,180,180,180],"label":"증거금율 구간별 주문가능","rows":["3I8V-0","3I93-0","3I9B-0","3I9J-0","3I9R-0","3I9Z-0","3IA7-0","3IAF-0"],"stack":false,"compact":true,"additional":[{"node":"3IAR-0","widths":[110,200,180,180,180],"label":"보증금율 구간별 주문가능","rows":["3IAS-0","3IB2-0","3IBC-0","3IBM-0","3IBW-0"],"stack":false,"compact":true}]},
+  "3IGR-0": {"node":"3U6J-0","widths":[170,190,190],"label":"신용·추가 담보","rows":["3U6K-0","3U6Q-0","3U6W-0","3U72-0"],"stack":false,"compact":true},
   '32XM-0': { node: '3RU8-0', rows: ['3RU9-0', '3RUI-0', '3RV1-0', '3RVK-0', '3RW3-0', '3RWM-0', '3RX5-0', '3RXO-0', '3RY7-0', '3RYQ-0', '3RZ9-0', '3RZS-0', '3S0B-0', '3S0U-0', '3S1D-0'], widths: [52, 220, 130, 130, 170, 170, 0, 0], label: '신주인수권 조회 목록', stack: false, compact: true },
   '2X5N-0': { node: '34X2-0', rows: ['34X7-0', '34XF-0', '34XV-0', '34YB-0', '34YR-0', '34Z7-0'], widths: [52, 190, 130, 130, 190, 210, 130], label: '순위 결과', stack: false, compact: true },
   '30C1-0': { node: '3LY6-0', rows: ['3LY7-0', '3LYG-0', '3LYZ-0', '3LZI-0', '3M01-0', '3M0K-0', '3M13-0', '3M1M-0', '3M25-0', '3M2O-0', '3M37-0', '3M3Q-0', '3M49-0', '3M4S-0', '3M5B-0', '3M5U-0', '3M6D-0', '3M6W-0', '3M7F-0', '3M7Y-0', '3M8H-0'], widths: [52, 190, 130, 160, 140, 210, 130, 100], label: '거래량 갱신 결과', stack: false, compact: true },
@@ -1823,8 +1873,20 @@ function applyReadableBoardLayout(surface, contract) {
     const rail = surface.querySelector('.bs-rail');
     rail.style.removeProperty('display');
     rail.classList.add('bs-holdings-rail');
+    for (const id of ['388U-0', '3895-0', '38JG-0', '38JN-0', '38JY-0']) {
+      const row = authoredNode(surface, id);
+      row.classList.add('bs-account-detail-grid');
+      row.style.removeProperty('display');
+      row.style.removeProperty('gap');
+    }
   }
-  if (id === '2SKU-1') authoredNode(surface, '39SW-0').dataset.bsKeepEmptyRows = 'true';
+  const fixedAccountTables = { '2SKU-1': ['39SW-0'], '3GRO-0': ['3I8U-0', '3IAR-0'], '3IGR-0': ['3U6J-0'], '3K7K-0': ['3L4J-0'] };
+  if (id === '3K7K-0') {
+    for (const [heading, row] of [['3L4S-0', '3L8Y-0'], ['3LCX-0', '3LD0-0']]) {
+      authoredNode(surface, row).before(authoredNode(surface, heading));
+    }
+  }
+  for (const tableId of fixedAccountTables[id] || []) authoredNode(surface, tableId).dataset.bsKeepEmptyRows = 'true';
   if (id === '15N5-2') {
     // 이 템플릿의 선·구성 막대는 응답에 연결되지 않은 고정 예시다. 앵커는 보존한다.
     for (const [nodeId, message] of [
@@ -1900,6 +1962,16 @@ function applyReadableBoardLayout(surface, contract) {
     sessions.tabIndex = 0;
     sessions.setAttribute('role', 'region');
     sessions.setAttribute('aria-label', '세션별 거래, 좌우 방향키로 이동');
+    if (!sessions.querySelector('.bs-session-columns')) {
+      const columns = layoutGroup(surface.ownerDocument, 'bs-session-row bs-session-columns');
+      for (const label of ['구분', '거래량 · 비중', '거래대금 · 비중']) {
+        const cell = surface.ownerDocument.createElement('span');
+        cell.textContent = label;
+        columns.append(cell);
+      }
+      const firstRow = authoredNode(surface, '38LH-0');
+      firstRow.parentElement.insertBefore(columns, firstRow);
+    }
     for (const rowId of ['38LH-0', '38LP-0', '38LX-0', '38M5-0']) {
       const row = authoredNode(surface, rowId);
       row.classList.add('bs-session-row');
@@ -2530,6 +2602,13 @@ function mountBoard(root, boardId, values, options = {}) {
     surface.dataset.bsBoardId = String(boardId);
     applyResponsiveHooks(surface);
     applyReadableBoardLayout(surface, contract);
+    if (cardId === 'CC-01') {
+      const links = registry.stateLinksFor(boardId);
+      for (const link of links) {
+        const node = findStateControlNode(surface, link.control, { links });
+        if (node) node.dataset.bsAccountNavigation = 'true';
+      }
+    }
     prepareInvestorGrid(surface, contract);
     if (flowLayout) flowLayout.prepare(surface, contract);
     if (goldQuote) goldQuote.prepare(surface, contract);
