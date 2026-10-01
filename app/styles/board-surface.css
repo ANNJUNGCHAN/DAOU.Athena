@@ -667,6 +667,7 @@
 .bs-empty-table-message[hidden] { display: none; }
 :is([data-bs-layout="133H-2"], [data-bs-layout="2R3M-1"], [data-bs-layout="2VDA-0"], [data-bs-layout="2SKU-1"]) .bs-rail { flex-direction: var(--bs-rail-direction, column); }
 .bs-has-empty-table .bs-workspace { flex-direction: column; }
+.bs-has-empty-table [data-bs-primary-row="true"] { flex-wrap: wrap; }
 .bs-has-empty-table :is(.bs-primary, .bs-rail) { width: 100%; min-width: 0; flex: 0 0 auto; }
 .bs-has-empty-table .bs-rail { flex-direction: row; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
 .bs-has-empty-table .bs-rail > * { width: auto; min-width: min(100%, 320px); height: auto; min-height: 0; flex: 1 1 auto; }
@@ -713,3 +714,8 @@
 @container board (min-width: 960px) {
   .bs-holdings-rail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
 }
+
+/* 비어 접힌 데이터의 조상 상자에 저작 시 고정 높이가 남지 않게 한다. */
+.board-surface .bs-reduced-content[data-bs-hoisted] { height: auto; min-height: 0; }
+.bs-workspace.bs-reduced-content { align-items: flex-start; }
+.board-surface .bs-rail > .bs-reduced-content { flex-basis: auto; }

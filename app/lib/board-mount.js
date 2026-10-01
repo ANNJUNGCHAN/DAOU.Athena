@@ -1724,6 +1724,29 @@ function applyReadableBoardLayout(surface, contract) {
   }
 }
 
+function compactReducedContent(surface, contract) {
+  for (const box of surface.querySelectorAll('.bs-reduced-content')) {
+    box.classList.remove('bs-reduced-content');
+    if (box.dataset.bsGrowBox === 'true') box.style.setProperty('min-height', box.style.getPropertyValue('--bs-height'));
+  }
+  // 실제 차트·호가 모듈의 높이는 해당 렌더러가 소유한다.
+  if (contract.primary && contract.primary.renderer) return;
+  const hidden = [
+    ...surface.querySelectorAll('[data-bs-row-collapsed="true"]'),
+    ...(surface.__bsEmptyValueHidden || []),
+    ...(surface.__bsUnavailableHidden || []),
+  ];
+  for (const unit of hidden) {
+    if (!unit.hidden) continue;
+    for (let box = unit.parentElement; box && box !== surface; box = box.parentElement) {
+      if (box.matches('.bs-header, .bs-strip, .bs-footer')) break;
+      // 원래 접힌 값/행을 담던 상자의 높이만 풀고 글자와 앵커는 그대로 둔다.
+      box.classList.add('bs-reduced-content');
+      if (box.dataset.bsGrowBox === 'true') box.style.setProperty('min-height', '0');
+    }
+  }
+}
+
 function updateEmptyTableStates(surface) {
   const tables = surface.dataset.bsLayout === '2R3M-1'
     ? [['3CRW-0', '체결 내역']]
@@ -1767,6 +1790,11 @@ function updateEmptyTableStates(surface) {
   }
   surface.classList.toggle('bs-has-empty-table', empty);
   surface.classList.toggle('bs-has-short-table', short);
+  // 원본 inline 가로 방향은 빈 상태의 세로 배치를 이기므로 응답 상태에 맞춰 되돌린다.
+  for (const workspace of surface.querySelectorAll('.bs-workspace')) {
+    if (workspace.__bsEmptyDirection === undefined) workspace.__bsEmptyDirection = workspace.style.flexDirection;
+    workspace.style.flexDirection = empty ? 'column' : workspace.__bsEmptyDirection;
+  }
 }
 
 // 결측 자료와 해당 없음은 다르다. 구성종목 이름과 비중 모두 명시적으로 해당 없음인
@@ -1970,7 +1998,7 @@ function relaxOverflowHeights(surface) {
     if (getComputedStyle(el).overflowY !== 'visible') continue;
     if (el.scrollHeight <= el.clientHeight + 1) continue;
     el.style.setProperty('height', 'auto');
-    el.style.setProperty('min-height', paperHeight);
+    el.style.setProperty('min-height', el.classList.contains('bs-reduced-content') ? '0' : paperHeight);
     el.dataset.bsGrowBox = 'true';
     grown.push(el.dataset.node || '');
   }
@@ -2227,9 +2255,12 @@ function mountBoard(root, boardId, values, options = {}) {
   const report = applyPlan(surface, plan, options);
   updateBasketRows(surface, contract, plan, values);
   updateEmptyTableStates(surface);
+  compactReducedContent(surface, contract);
   // 값이 실린 뒤에 잰다 — 목업보다 긴 값이 들어오면 줄이 그때 넘친다. 폭이 바뀌면
   // 표면의 관찰자가 다시 잰다.
   relaxOverflowHeights(surface);
+  // 같은 폭이어도 새 응답으로 행·레일 구성이 바뀌면 다시 측정한다.
+  delete surface.__bsRelaxWidth;
   relaxOverflowRows(surface);
   watchSurfaceWidth(surface);
   // 렌더러가 저작된 보드에서만 자리를 딸려 보낸다 — 그 자리에 앱 렌더러를 얹는 것은
