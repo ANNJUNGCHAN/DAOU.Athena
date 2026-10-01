@@ -2,6 +2,9 @@
 
 import copy
 
+import pytest
+
+from athena_api.semantic_presentation_registry import get_semantic_presentation_registry
 from athena_api.surface_display_units import annotate_surface_display_units
 
 
@@ -97,3 +100,48 @@ def test_million_won_alternative_does_not_inherit_the_primary_unscaled_won_unit(
     result = annotate_surface_display_units(source, {'base:ka90008': {}})
     assert result['slot_values'][0]['value']['text'] == '1,234백만원'
     assert result['slot_values'][0]['value']['value'] == '1234'
+
+
+@pytest.mark.parametrize('operation', ['base:ka10059', 'base:ka10060', 'base:ka10061'])
+@pytest.mark.parametrize('args,suffix', [({}, ' (단위 미확인)'), ({'amt_qty_tp':'1'}, '백만원'), ({'amt_qty_tp':'2','unit_tp':'1'}, '주'), ({'amt_qty_tp':'2','unit_tp':'1000'}, '천주')])
+def test_natn_inherits_exact_request_measure_and_preserves_zero(operation, args, suffix):
+    field = next(f for f in get_semantic_presentation_registry().for_operation(operation) if f.json_path.endswith('.natn'))
+    for raw in ['0', '-1234', {'value':'0','text':'old specimen'}]:
+        source = {'slot_values':[{'slot_id':'s073','occurrence_id':field.wire_occurrence_id,'value':raw,'format':{'tone':'change'}}]}
+        value = annotate_surface_display_units(source,{operation:args})['slot_values'][0]['value']
+        assert value['value'] == (raw['value'] if isinstance(raw,dict) else raw)
+        assert value['text'] == ('-1,234' if raw == '-1234' else '0') + suffix
+
+
+def investor_source(operation, field='frgnr_invsr'):
+    occurrence = next(f for f in get_semantic_presentation_registry().for_operation(operation) if f.json_path.endswith('.'+field))
+    return {'board_id':'2QFO-2','slot_values':[{'slot_id':'s038','occurrence_id':occurrence.wire_occurrence_id,'value':'0','format':{'tone':'change'}}]}
+
+
+def test_caption_context_follows_actual_source_and_excludes_private_keys():
+    source=investor_source('base:ka10061')
+    args={'stk_cd':'123456','strt_dt':'20260901','end_dt':'20261002','trde_tp':'0','amt_qty_tp':'2','unit_tp':'1','account_no':'synthetic-private','token':'synthetic-secret','nested':{'any':'value'}}
+    context=annotate_surface_display_units(source,{'base:ka10059':{'stk_cd':'654321','amt_qty_tp':'1'},'base:ka10061':args})['flow_query_context']
+    assert context['operation_ref']=='base:ka10061'
+    assert context['operation_args']=={k:v for k,v in args.items() if k not in {'account_no','token','nested'}}
+    assert 'flow_query_context' not in source
+
+
+def test_empty_reply_uses_only_one_unambiguous_successful_investor_request():
+    source={'board_id':'2QFO-2','slot_values':[]}
+    assert annotate_surface_display_units(source,{'base:ka10059':{'stk_cd':'123456'}})['flow_query_context']['operation_ref']=='base:ka10059'
+    assert annotate_surface_display_units(source,{'base:ka10059':{},'base:ka10061':{}})['flow_query_context'] is None
+    assert annotate_surface_display_units(source,{'base:ka10066':{}})['flow_query_context'] is None
+
+
+def test_mixed_investor_sources_are_not_reported_as_one_query():
+    source=investor_source('base:ka10059')
+    source['slot_values'].extend(investor_source('base:ka10061','orgn')['slot_values'])
+    assert annotate_surface_display_units(source,{'base:ka10059':{},'base:ka10061':{}})['flow_query_context'] is None
+
+
+def test_context_is_limited_to_exact_investor_board():
+    for board in ['137X-2','2QM7-2','2S4E-1',None]:
+        source=investor_source('base:ka10059')
+        source['board_id']=board
+        assert 'flow_query_context' not in annotate_surface_display_units(source,{'base:ka10059':{'stk_cd':'123456'}})

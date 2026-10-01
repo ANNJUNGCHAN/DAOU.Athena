@@ -13,6 +13,7 @@ const semanticDetailSheet = window.AthenaLib.SemanticDetailSheet;
 const semanticWorkspace = window.AthenaLib.SemanticWorkspace;
 const paperCardRouting = window.AthenaLib.PaperCardRouting;
 const boardMount = window.AthenaLib.BoardMount;
+const boardFlowLayout = window.AthenaLib.BoardFlowLayout;
 const boardTemplateRegistry = window.AthenaLib.BoardTemplateRegistry;
 const boardCardActions = window.AthenaLib.BoardCardActions;
 const canvasTabs = window.AthenaLib.CanvasTabs;
@@ -1092,6 +1093,9 @@ function boardStateOf(host) {
 function seedBoardState(state, contract, envelope) {
   if (!contract || !contract.board_id) return;
   const boardId = String(contract.board_id);
+  if (boardId === '2QFO-2' && Object.prototype.hasOwnProperty.call(contract, 'flow_query_context')) {
+    (state.flowQueryContextByBoard ||= new Map()).set(boardId, contract.flow_query_context);
+  }
   state.valuesByBoard.set(boardId, slotValuesOf(contract));
   state.unboundByBoard.set(
     boardId, Array.isArray(contract.unbound_slots) ? contract.unbound_slots.slice() : [],
@@ -1145,12 +1149,19 @@ function activateBoardState(state, boardId) {
 // 마운트 계약(어느 노드에 어떤 슬롯이 앉는가)은 정적이라 board-template-registry가
 // 갖고 있다. 봉투는 값(slot_values)과 상태 보드 목록만 나른다.
 function boardMountOptions(host, envelope) {
+  const state = boardStateOf(host);
+  const target = boardHydrateTarget(envelope, host);
+  const identity = state.boardId === '15N5-2' && state.etfDetailIdentity
+    || state.boardId === '2WZK-0' && state.etfReturnIdentity
+    || boardMount.boardIdentityFromEnvelope(envelope, state.values);
+  const flowBoard = ['2QFO-2','2QM7-2','2ROJ-1','2RWK-1','2S4E-1'].includes(state.boardId);
   return {
-    identity: boardStateOf(host).boardId === '15N5-2' && boardStateOf(host).etfDetailIdentity
-      || boardStateOf(host).boardId === '2WZK-0' && boardStateOf(host).etfReturnIdentity
-      || boardMount.boardIdentityFromEnvelope(envelope, boardStateOf(host).values),
+    identity: flowBoard ? boardFlowLayout.identityFor(state.boardId, envelope, state.values, identity) : identity,
     operationRef: String((envelope && (envelope.operation_ref || envelope.operationRef)) || '').trim(),
-    operationArgs: boardHydrateTarget(envelope, host),
+    operationArgs: target,
+    flowQueryContext: state.boardId === '2QFO-2' && state.flowQueryContextByBoard?.has(state.boardId) ? boardFlowLayout.queryContextFor({
+      board_id: state.boardId, flow_query_context: state.flowQueryContextByBoard?.get(state.boardId),
+    }, target.stk_cd) : undefined,
     rankingResult: boardStateOf(host).boardId === '4B22-1' ? boardStateOf(host).rankingResult : null,
     rankingOperationRef: boardStateOf(host).boardId === '4B22-1' ? expandedRankingOperation(boardStateOf(host)) : null,
     onEtfPeriodChange: (dt) => selectEtfReturnPeriod(host, envelope, dt),
@@ -2127,6 +2138,10 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   const contract = reply.surface_contract;
   let metadataReceived = false;
   if (contract && (!contract.board_id || String(contract.board_id) === boardId)) {
+    if (boardId === '2QFO-2' && Object.prototype.hasOwnProperty.call(contract, 'flow_query_context')) {
+      (state.flowQueryContextByBoard ||= new Map()).set(boardId, contract.flow_query_context);
+      metadataReceived = true;
+    }
     for (const [field, property] of [
       ['empty_rows', 'emptyRows'], ['empty_columns', 'emptyColumns'],
       ['empty_value_slots', 'emptyValueSlots'], ['deferred_value_slots', 'deferredValueSlots'],

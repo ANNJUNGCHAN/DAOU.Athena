@@ -8,15 +8,65 @@ const BROKERS = {
   sell: [['s039','s040','s043'],['s051','s052','s055'],['s063','s064','s067'],['s074','s075','s078'],['s085','s086','s089']],
 };
 
+const FLOW_TITLES = {
+  '2QFO-2':'투자자별 매매', '2QM7-2':'거래원별 매매', '2ROJ-1':'프로그램 매매',
+  '2RWK-1':'신용·대차·공매도', '2S4E-1':'종목 동향',
+};
+function receivedText(raw) {
+  if (raw && typeof raw === 'object') {
+    if (raw.missing || raw.pending || raw.empty) return '';
+    raw = raw.value;
+  }
+  return typeof raw === 'string' ? raw.trim() : '';
+}
+function stockCode(raw) {
+  const code = receivedText(raw).replace(/_(?:AL|NX)$/, '');
+  return /^\d{6}$/.test(code) && code !== '000000' ? code : '';
+}
+function identityFor(boardId, envelope, values, fallback) {
+  if (!FLOW_TITLES[boardId]) return fallback;
+  const code = stockCode(fallback && fallback.code);
+  const args = envelope.operation_args || envelope.arguments || {};
+  const data = envelope.data || {};
+  const fields = Array.isArray(data.fields) ? data.fields : [];
+  const field = key => (fields.find(item => item && item.key === key) || {}).value;
+  const topCode = envelope.stk_cd || envelope.symbol || args.stk_cd || args.symbol;
+  const candidates = [
+    [envelope.stk_nm, topCode],
+    [args.stk_nm, args.stk_cd || args.symbol],
+    [data.stk_nm, data.stk_cd || topCode],
+    [field('stk_nm'), field('stk_cd')],
+    [values && values.s001, values && values.s003],
+  ];
+  const pair = code && candidates.find(([name, symbol]) => receivedText(name) && stockCode(symbol) === code);
+  return { name: pair ? receivedText(pair[0]) : FLOW_TITLES[boardId], code };
+}
+function queryContextFor(contract, targetCode) {
+  const context = contract && contract.board_id === '2QFO-2' && contract.flow_query_context;
+  if (!context || !['base:ka10059','base:ka10061'].includes(context.operation_ref)) return null;
+  const args = context.operation_args;
+  const code = stockCode(targetCode);
+  if (!args || typeof args !== 'object' || Array.isArray(args) || !code || stockCode(args.stk_cd) !== code) return null;
+  const clean = { stk_cd: code };
+  for (const key of ['dt','strt_dt','end_dt','trde_tp','amt_qty_tp','unit_tp']) {
+    if (typeof args[key] === 'string') clean[key] = args[key];
+  }
+  return { operation_ref: context.operation_ref, operation_args: clean };
+}
+
 function dateText(raw) {
   const value = String(raw || '');
   return /^\d{8}$/.test(value) ? `${value.slice(0,4)}-${value.slice(4,6)}-${value.slice(6)}` : '';
 }
 
 function investorCaption(plan, options) {
-  const args = options.operationArgs || {};
+  const context = options.flowQueryContext;
+  // Explicitly ambiguous or rejected metadata cannot borrow an older request.
+  if (context === null) return '조회 기간 미제공 · 매매구분 미제공 · 금액·수량 구분 미제공';
+  const args = context ? context.operation_args : options.operationArgs || {};
+  const operation = context ? context.operation_ref : options.operationRef;
   const date = plan.assignments.find(item => item.slotId === 's027');
-  const period = options.operationRef === 'base:ka10061'
+  const period = operation === 'base:ka10061'
     ? [dateText(args.strt_dt), dateText(args.end_dt)].filter(Boolean).join(' ~ ')
     : date && !date.missing ? date.text : dateText(args.dt);
   const trade = { '0':'순매수', '1':'매수', '2':'매도' }[args.trde_tp] || '매매구분 미제공';
@@ -133,7 +183,7 @@ function update(surface, contract, plan, options = {}) {
   }
 }
 
-const api = { INVESTORS, BROKERS, investorCaption, prepare, update };
+const api = { INVESTORS, BROKERS, investorCaption, identityFor, queryContextFor, prepare, update };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 else { window.AthenaLib = window.AthenaLib || {}; window.AthenaLib.BoardFlowLayout = api; }
 })();

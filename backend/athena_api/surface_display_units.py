@@ -7,13 +7,37 @@ from typing import Any
 
 from athena_api.semantic_presentation_registry import get_semantic_presentation_registry
 
-# ka10060's response descriptions say 백만원, while its request explicitly
-# selects amount/quantity and the quantity unit. Only investor fields vary;
-# acc_trde_prica remains a fixed monetary observation.
-_KA10060_INVESTORS = frozenset({
+# These investor requests select amount/quantity for the whole participant set,
+# including natn whose ka10059/61 field description omits the unit metadata.
+# Other fields such as acc_trde_prica keep their own fixed monetary unit.
+_INVESTOR_OPERATIONS = frozenset({'base:ka10059', 'base:ka10060', 'base:ka10061'})
+_INVESTOR_FIELDS = frozenset({
     'ind_invsr', 'frgnr_invsr', 'orgn', 'fnnc_invt', 'insrnc', 'invtrt',
     'etc_fnnc', 'bank', 'penfnd_etc', 'samo_fund', 'natn', 'etc_corp', 'natfor',
 })
+
+
+def _flow_query_context(surface: dict[str, Any], arguments_by_operation: Mapping) -> dict | None:
+    """The one observed investor source, with public query keys only."""
+    operations = {'base:ka10059', 'base:ka10061'}
+    sources = set()
+    for entry in surface.get('slot_values') or []:
+        parts = str(entry.get('occurrence_id', '')).split('|')
+        if len(parts) >= 2 and parts[0] in operations and parts[1].rsplit('.', 1)[-1] in _INVESTOR_FIELDS:
+            sources.add(parts[0])
+    if not sources:
+        sources = operations.intersection(arguments_by_operation)
+    if len(sources) != 1:
+        return None
+    operation = next(iter(sources))
+    arguments = arguments_by_operation.get(operation)
+    if not isinstance(arguments, Mapping):
+        return None
+    keys = ('stk_cd', 'dt', 'strt_dt', 'end_dt', 'trde_tp', 'amt_qty_tp', 'unit_tp')
+    public_args = {key: str(arguments[key]) for key in keys
+                   if key in arguments and isinstance(arguments[key], (str, int))
+                   and not isinstance(arguments[key], bool)}
+    return {'operation_ref': operation, 'operation_args': public_args}
 
 
 def _unit(operation: str, arguments: Mapping[str, Any]) -> str:
@@ -74,7 +98,9 @@ def annotate_surface_display_units(surface: dict[str, Any],
         field.wire_occurrence_id: field
         for operation in arguments_by_operation
         for field in registry.for_operation(operation)
-        if '단위' in (field.description or '') and '원' in (field.description or '')
+        if ('단위' in (field.description or '') and '원' in (field.description or ''))
+        or (operation in _INVESTOR_OPERATIONS
+            and field.json_path.rsplit('.', 1)[-1] in _INVESTOR_FIELDS)
     }
     values = []
     for entry in surface.get('slot_values') or []:
@@ -85,12 +111,12 @@ def annotate_surface_display_units(surface: dict[str, Any],
         operation = field.wire_occurrence_id.split('|', 1)[0]
         arguments = arguments_by_operation.get(operation, {})
         description = field.description or ''
-        investor_chart = operation == 'base:ka10060' and field.json_path.rsplit('.', 1)[-1] in _KA10060_INVESTORS
+        investor_measure = operation in _INVESTOR_OPERATIONS and field.json_path.rsplit('.', 1)[-1] in _INVESTOR_FIELDS
         if operation.split(':')[1] == 'ka10001' and field.json_path == '$.flo_stk':
             # The public contract labels this share count as currency. Preserve
             # the raw count until the source's contradictory unit is resolved.
             unit = ''
-        elif '주' in description or investor_chart:
+        elif '주' in description or investor_measure:
             unit = _unit(operation, arguments)
         else:
             fixed = re.search(r'단위:\s*(천원|백만원|억원|원)', description)
@@ -109,4 +135,7 @@ def annotate_surface_display_units(surface: dict[str, Any],
         wrapped = _display(entry.get('value'), unit,
                            entry.get('format', {}).get('tone') in {'signed', 'change'})
         values.append({**entry, 'value': wrapped})
-    return {**surface, 'slot_values': values}
+    result = {**surface, 'slot_values': values}
+    if surface.get('board_id') == '2QFO-2':
+        result['flow_query_context'] = _flow_query_context(surface, arguments_by_operation)
+    return result

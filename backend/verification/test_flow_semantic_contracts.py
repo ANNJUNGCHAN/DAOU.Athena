@@ -76,3 +76,30 @@ def test_realtime_broker_fields_use_the_same_rank_and_side():
     # Surface registry reads the normalized data row after wire FID flattening.
     values = values_for('2QM7-2', {'base:0F': {'data': [{'151':'매수 1', '156':'001', '171':'111', '145':'매도 5', '150':'005', '165':'555'}]}})
     assert values == {'s036':'매수 1', 's037':'001', 's042':'111', 's085':'매도 5', 's086':'005', 's089':'555'}
+
+
+def test_stock_trend_broker_names_match_the_side_and_rank_of_their_quantities():
+    responses = {}
+    for side, prefix in [('buy', 'buy'), ('sell', 'sel')]:
+        row = {}
+        for rank in range(1, 4):
+            row[f'{prefix}_trde_ori_{rank}'] = f'합성 {side} 거래원 {rank}'
+            row[f'{prefix}_trde_ori_qty_{rank}'] = str(rank * (101 if side == 'buy' else -307))
+        responses[f'detail:ka10040:{side}_brokers'] = row
+    values = values_for('2S4E-1', responses)
+    for side, slots in [('buy', [('s114','s115'), ('s116','s117'), ('s118','s119')]),
+                        ('sell', [('s121','s122'), ('s123','s124'), ('s125','s126')])]:
+        for rank, (name, quantity) in enumerate(slots, 1):
+            assert values[name] == f'합성 {side} 거래원 {rank}'
+            assert values[quantity] == str(rank * (101 if side == 'buy' else -307))
+
+
+def test_stock_trend_missing_broker_names_never_inherit_specimens_and_keep_zero_quantity():
+    values = values_for('2S4E-1', {
+        'detail:ka10040:buy_brokers': {'buy_trde_ori_qty_1':'0'},
+        'detail:ka10040:sell_brokers': {'sel_trde_ori_2':'합성 매도2', 'sel_trde_ori_qty_2':'-5'},
+    })
+    assert values['s115'] == '0'
+    assert values['s123'] == '합성 매도2'
+    assert values['s124'] == '-5'
+    assert all(slot not in values for slot in ['s114','s116','s118','s121','s125'])
