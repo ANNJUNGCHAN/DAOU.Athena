@@ -287,7 +287,7 @@ function mountPlan(contract, values, options = {}) {
       text: formatted.text,
       tone: formatted.tone,
       forceFlatTone: Boolean(verifiedTone && verifiedTone.forceFlat)
-        || observedZero,
+        || observedZero || (!formatted.missing && bound && typeof bound === 'object' && bound.tone === 'flat'),
       missing: formatted.missing,
       // 값이 아니라 디자인이 정한 글자(Paper 라벨·static 문면·빈 칸).
       designText: !override && staticText !== null,

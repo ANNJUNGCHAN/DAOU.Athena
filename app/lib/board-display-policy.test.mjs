@@ -224,3 +224,27 @@ test('subscription-right quotes label response order and keep first observed val
   assert.equal(text(result, 's049'), '0주');
   for (const id of ['s020', 's021', 's051', 's052', 's053']) assert.equal(text(result, id), '—');
 });
+
+test('condition result captions identify calculated rates without claiming watchlist membership', () => {
+  const result = plan('15L8-2', {
+    s018: { value: '999', text: '+1.00%', tone: 'up', display_calculation: 'current_price_previous_change' },
+    s028: { value: '-888', text: '-1.00%', tone: 'down', display_calculation: 'current_price_previous_change' },
+    s038: { value: '123', text: '0.00%', tone: 'flat', display_calculation: 'current_price_previous_change' },
+    s048: { value: '777', missing: 'unavailable' },
+  });
+  assert.equal(text(result, 's001'), '조건검색 결과 종목');
+  assert.equal(text(result, 's003'), '조건검색 결과');
+  assert.equal(text(result, 's005'), '일회 검색 결과');
+  assert.equal(text(result, 's009'), '등락률(계산)');
+  assert.equal(text(result, 's095'), '첫 결과 · 누적거래량');
+  for (const id of ['s100', 's106', 's110', 's111', 's112']) assert.equal(text(result, id), '');
+  assert.equal(text(result, 's018'), '+1.00%');
+  assert.equal(text(result, 's028'), '-1.00%');
+  assert.equal(text(result, 's038'), '0.00%');
+  assert.equal(text(result, 's048'), '미제공');
+  const zero = result.assignments.find(a => a.slotId === 's038');
+  assert.equal(zero.tone, 'flat');
+  assert.equal(zero.forceFlatTone, true);
+  assert.equal(result.assignments.find(a => a.slotId === 's018').tone, 'up');
+  assert.equal(result.assignments.find(a => a.slotId === 's028').tone, 'down');
+});

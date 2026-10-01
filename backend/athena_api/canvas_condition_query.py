@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from typing import Any
 
 from fastapi import HTTPException
@@ -23,6 +24,36 @@ def is_condition_read_plan(document: Any, plan: Any) -> bool:
         return (arguments.get("trnm") == "CNSRREQ"
                 and arguments.get("search_type") == "0")
     return False
+
+
+def _condition_rate_display(row: dict[str, Any], raw_rate: Any) -> dict[str, Any]:
+    # CNSRREQ FID 12's documented scale and observed delivery disagree. Derive
+    # this labelled display from the same row's price/change; retain its raw FID.
+    display = {"value": raw_rate, "display_calculation": "current_price_previous_change"}
+    try:
+        price_raw, change_raw = row.get("10"), row.get("11")
+        if any(isinstance(value, bool) or not isinstance(value, (str, int, float))
+               for value in (price_raw, change_raw)):
+            raise InvalidOperation
+        price, change = abs(Decimal(str(price_raw))), Decimal(str(change_raw))
+        if not price.is_finite() or not change.is_finite() or price <= 0 or price - change <= 0:
+            raise InvalidOperation
+        rate = (100 * change / (price - change)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    except InvalidOperation:
+        return {**display, "missing": "unavailable"}
+    if rate == 0:
+        rate = abs(rate)
+    return {**display, "text": f"{'+' if rate > 0 else ''}{rate:.2f}%",
+            "tone": "up" if rate > 0 else "down" if rate < 0 else "flat"}
+
+
+def _annotate_condition_rates(surface: dict[str, Any], rows: list[Any]) -> None:
+    for entry in surface["slot_values"]:
+        if entry.get("occurrence_id") != "base:ka10172|$.data[].12|1":
+            continue
+        index = entry.get("row_index")
+        row = rows[index] if isinstance(index, int) and 0 <= index < len(rows) else {}
+        entry["value"] = _condition_rate_display(row if isinstance(row, dict) else {}, entry["value"])
 
 
 async def render_condition_query(payload, request, response, ws_client, selector, account):
@@ -84,6 +115,7 @@ async def render_condition_query(payload, request, response, ws_client, selector
             "15L8-2", bound_values=bind_surface_values(plan.operation_ref, data),
             active_operation_refs=[plan.operation_ref],
         )
+        _annotate_condition_rates(contract["initial_surface_contract"], rows)
         contract["initial_surface_contract"]["hydration_slot_ids"] = []
     if not _apply_workspace_reservation(request.app, contract, reservation):
         return _stale_workspace_response(operation_ref=plan.operation_ref, reservation=reservation)
