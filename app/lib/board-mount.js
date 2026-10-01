@@ -1572,6 +1572,12 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  '15R0-2': { node: '170E-2', rows: ['36HF-0', '36IS-0', '36J5-0', '36JI-0'], widths: [190, 90, 140, 120], label: 'VI 영향 종목', stack: false, compact: true },
+  "3FR6-0": {"node":"3T8I-0","rows":["3T8S-0","3T91-0","3T9C-0","3T9M-0","3T9W-0","3TA6-0","3TAG-0","3TAQ-0","3TB0-0","3TBA-0","3TBK-0","3TBU-0","3TC4-0","3TCE-0"],"widths":[210,130,130,130,130,190,200],"label":"분봉 표","stack":false,"compact":true,"additional":[{"node":"3SP2-0","rows":["3SP7-0","3SPG-0","3SPR-0","3SQ1-0"],"widths":[120,130,130,130,130,190,200],"label":"일자별 시세","stack":false,"compact":true}]},
+  "15N5-2": {"node":"3CXU-0","rows":["3CXV-0","3CY4-0","3CYR-0","3CZE-0"],"widths":[112,130,130,180,190,0,0,130],"label":"ETF 시간대별 시세","stack":false,"compact":true,"additional":[{"node":"3D05-0","rows":["3D06-0","3D0C-0","3D0M-0","3D0W-0"],"widths":[120,130,120,180,190],"label":"ETF 일별 시세","stack":false,"compact":true}]},
+  "3ODO-0": {"node":"3P48-0","rows":["3P4C-0","3P4J-0","3P51-0","3P5I-0"],"widths":[120,150,190,190,190,100],"label":"금현물 거래내역","stack":false,"compact":true,"additional":[{"node":"3P3G-0","rows":["3P3K-0","3P3R-0"],"widths":[190,190,190,190,190,130],"label":"금현물 잔고","stack":false,"compact":true}]},
+  "3063-0": {"node":"35L4-0","rows":["35L5-0","35M1-0","35MO-0","35UQ-0","35VD-0","35W0-0","35LE-0","35WN-0","35XA-0"],"widths":[52,190,130,200,200,200,200,190],"label":"순위 결과","stack":false,"compact":true,"additional":[{"node":"3TYN-0","rows":["3TYO-0","3TYT-0","3TZ4-0","3TZF-0","3TZQ-0"],"widths":[110,200,200,200],"label":"투자자 표","stack":false,"compact":true}]},
+  "30TY-0": {"node":"362Z-0","rows":["3630-0","3639-0","363U-0","364F-0","3650-0","36A6-0","36AR-0","36BC-0","36BX-0"],"widths":[52,190,130,210,210,210,190,130],"label":"순위 결과","stack":false,"compact":true},
   '4A9H-1': { node: '4ABV-1', rows: ['4AE9-1', '4ADS-1', '4ADC-1', '4ACW-1', '4ACG-1', '4AC0-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
   '4AGN-1': { node: '4AJB-1', rows: ['4ALP-1', '4AL8-1', '4AKS-1', '4AKC-1', '4AJW-1', '4AJG-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
   '4ANS-1': { node: '4AQG-1', rows: ['4ASU-1', '4ASD-1', '4ARX-1', '4ARH-1', '4AR1-1', '4AQL-1'], widths: [52, 190, 130, 110, 190, 210, 130], label: '필터 결과', stack: false, compact: true },
@@ -1789,7 +1795,9 @@ function applyReadableBoardLayout(surface, contract) {
   if (READABLE_TABLES[id] && READABLE_TABLES[id].stack !== false) {
     surface.querySelector('.bs-workspace').style.removeProperty('flex-direction');
   }
-  if (READABLE_TABLES[id]) readableTable(surface, contract, READABLE_TABLES[id]);
+  if (READABLE_TABLES[id]) {
+    for (const table of [READABLE_TABLES[id], ...(READABLE_TABLES[id].additional || [])]) readableTable(surface, contract, table);
+  }
   if (id === '2SCE-1') {
     const rail = surface.querySelector('.bs-rail');
     rail.style.removeProperty('display');
@@ -2447,10 +2455,17 @@ function boardIdentityFromEnvelope(envelope = {}, values = null) {
 
 function applyQueryContext(surface, contract, options) {
   const id = contract.board_id;
-  if (!['31UD-0', '2Z49-0', '3TOM-0'].includes(id)) return;
+  if (!['31UD-0', '2Z49-0', '3TOM-0', '15R0-2'].includes(id)) return;
+  if (id === '15R0-2') surface.classList.toggle('bs-vi-snapshot', options.operationRef === 'base:ka10054');
+  if (id === '15R0-2' && options.operationRef !== 'base:ka10054') {
+    surface.querySelector('.bs-query-context')?.remove();
+    return;
+  }
   const args = options.operationArgs || {};
   let text;
-  if (id === '31UD-0') {
+  if (id === '15R0-2') {
+    text = 'VI 조회 결과 · 지수는 별도 조회가 필요합니다';
+  } else if (id === '31UD-0') {
     const target = [options.identity?.name, args.stk_cd || options.identity?.code].filter(Boolean).join(' · ');
     const day = { '1': '당일', '2': '전일' }[String(args.tdy_pred)] || '조회일 미확인';
     text = `${target || '조회 종목 미확인'} · ${day} 체결 내역`;
