@@ -1090,6 +1090,7 @@
 .board-surface[data-bs-board-id="2ZHC-0"] [data-node="3IYO-0"] .bs-readable-cell[data-col="0"],
 .board-surface[data-bs-board-id="2ZZ7-0"] [data-node="3KPB-0"] .bs-readable-cell[data-col="0"] { display: none; }
 .bs-ranking-unavailable-group { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface[data-bs-board-id="2R3M-1"] [data-node="3CRW-0"] :is([data-slot-id="s057"], [data-slot-id="s065"], [data-slot-id="s073"], [data-slot-id="s081"], [data-slot-id="s089"], [data-slot-id="s097"], [data-slot-id="s105"], [data-slot-id="s113"], [data-slot-id="s121"]) { display: none !important; }
 .bs-ranking-unavailable-group > :not(.bs-ranking-unavailable-note) { display: none !important; }
 .bs-ranking-unavailable-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
 .bs-kpi.bs-ranking-unavailable-group > .bs-ranking-unavailable-note { padding-inline: 28px; }

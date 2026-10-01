@@ -664,11 +664,12 @@ function hideUnavailableUnits(surface) {
   };
   for (const el of surface.querySelectorAll('[data-slot-id]')) {
     if (!isUnavailableSlotEl(el)) continue;
-    if (el.closest?.('.bs-quote-labelled-value, .bs-orderbook-managed')) continue;
+    if (el.closest?.('.bs-quote-labelled-value, .bs-orderbook-managed, .bs-ranking-managed')) continue;
     if (tableCellOf(el)) continue;
     add(el);
     const box = unitBoxForUnavailable(el, surface);
-    if (box && !unitHasLiveSlot(box)) add(box);
+    const tradeDayControls = surface.dataset?.bsBoardId === '2R3M-1' && box?.dataset.node === '3CRZ-0';
+    if (box && !tradeDayControls && !unitHasLiveSlot(box)) add(box);
   }
   const prev = Array.isArray(surface.__bsUnavailableHidden) ? surface.__bsUnavailableHidden : [];
   for (const el of prev) {
@@ -788,7 +789,7 @@ function updateRankingResidualDetails(surface, plan) {
     '2YXS-0': [['3GI1-0', '상한·하한 집계'], ['3GJP-0', '도달 시각 통계'], ['3GK7-0', '업종 분포']],
     '2ZHC-0': [['3JAN-0', '고저가 근접 집계'], ['3JBO-0', '조건별 통계'], ['3JC3-0', '잔여 폭 통계'], ['3JCI-0', '시장별 통계']],
     '2ZZ7-0': [['3KX6-0', '급등락 집계'], ['3KYB-0', '구간 등락 분포'], ['3KYT-0', '감지 시간대'], ['3KZ8-0', '시장별 통계']],
-    '2VIN-0': [['3O7G-0', '시장 요약 통계'], ['3O7U-0', '조회 수익률', ['s411', 's413', 's415', 's417']]],
+    '2VIN-0': [['3O76-0', '과세 기준', ['s399', 's400']], ['3O7G-0', '시장 요약 통계', ['s404', 's406', 's408']], ['3O7U-0', '조회 수익률', ['s411', 's413', 's415', 's417']]],
     '30C1-0': [['3M91-0', '갱신 요약'], ['3M9J-0', '배율 상위 통계'], ['3MAK-0', '거래대금 상위 통계'], ['3MAZ-0', '시장별 통계']],
     '30O1-0': [['3ORF-0', '집중 요약'], ['3ORT-0', '가격대 분포']],
   }[surface.dataset?.bsBoardId];
@@ -1966,7 +1967,8 @@ const READABLE_TABLES = {
   '15J9-2': { node: '355R-0', rows: ['355S-0', '355Z-0', '356G-0', '356X-0'], widths: [166, 160, 126, 210, 180, 160], gap: 12, label: '조회 업종 종목' },
   '2SCE-1': { node: '375G-0', rows: ['375K-0', '379R-0', '37EU-0', '37FJ-0', '37G8-0', '37GX-0', '37HM-0', '37IB-0', '37J0-0'], widths: [168, 186, 144, 190, 222, 160], label: '보유종목' },
   '3LGC-0': { node: '3LVJ-0', rows: ['3LVN-0', '3MHR-0', '3MI8-0', '3MIO-0', '3MJ5-0', '3MJL-0', '3MK3-0', '3MKJ-0', '3ML0-0', '3MLG-0'], widths: [112, 148, 390, 204, 216], label: '매매일지' },
-  '2R3M-1': { node: '3DFG-0', rows: ['3DG5-0', '3DGK-0', '3DGZ-0', '3DHE-0'], widths: [64, 80, 80, 80, 80, 96, 160, 144], label: '일별 시세', stack: false, compact: true },
+  '2R3M-1': { node: '3DFG-0', rows: ['3DG5-0', '3DGK-0', '3DGZ-0', '3DHE-0'], widths: [64, 80, 80, 80, 80, 96, 160, 144], label: '일별 시세', stack: false, compact: true,
+    additional: [{ node: '3CRW-0', rows: ['3CS8-0','3CSF-0','3CSQ-0','3CSZ-0','3CT8-0','3CTH-0','3CTQ-0','3CTZ-0','3CU8-0','3CUH-0'], widths: [110,210,130,130,90,120], label: '실시간 체결', stack: false, compact: true }] },
 };
 const BASKET_ROWS = ['3ECU-0', '3EE8-0', '3EEF-0', '3EEM-0', '3EET-0'];
 const BASKET_SLOTS = [['s031', 's033'], ['s036', 's037'], ['s040', 's041'], ['s044', 's045'], ['s048', 's049']];
@@ -2167,6 +2169,7 @@ function prepareOrderbookDetails(surface, contract) {
     '3N4O-0': [['s018','s024','s030','s036','s042','s048','s054','s060','s066','s072'], ['s089','s095','s101','s107','s113','s119','s125','s131','s137','s143']],
     '2QRP-1': [['s014','s026','s029','s032','s035','s038'], ['s017','s045','s048','s051','s054','s057']],
     '3JT4-0': [['s014','s031','s035','s039','s043','s047'], ['s017','s058','s062','s066','s070','s074']],
+    '2ZN9-0': [['s060','s074','s089','s103','s117','s131','s145','s160'], ['s061','s075','s090','s104','s118','s132','s146','s161']],
   }[id];
   if (!sideSlots) return;
   const slots = new Map(contract.slots.map(slot => [slot.slot_id, slot]));
@@ -2274,6 +2277,17 @@ function prepareSessionQuoteTable(surface) {
 
 function applyReadableBoardLayout(surface, contract) {
   const id = contract.board_id;
+  if (id === '2R3M-1') {
+    // The day selectors remain available when the adjacent venue/time is absent.
+    for (const node of ['3CS2-0', '3CS4-0']) authoredNode(surface, node).dataset.bsKeepMissing = 'true';
+  }
+  if (id === '2VIN-0') {
+    for (const node of ['3O76-0', '3O7G-0']) {
+      const group = authoredNode(surface, node);
+      group.classList.add('bs-ranking-managed');
+      for (const slot of nodeIndex(group).values()) slot.dataset.bsKeepMissing = 'true';
+    }
+  }
   if (id === '3JT4-0') prepareAfterhoursDepthTable(surface);
   if (id === '2QRP-1') prepareSessionQuoteTable(surface);
   if (id === '3NVG-0') {

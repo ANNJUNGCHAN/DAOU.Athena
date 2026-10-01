@@ -468,3 +468,41 @@ test('orderbook session controls remain captions while after-hours summaries nam
   assert.equal(text('2QRP-1', {}, 's082'), '단일가 현재가');
   assert.equal(text('3JT4-0', {}, 's096'), '단일가 현재가');
 });
+
+test('ELW condition quote magnitudes preserve zero and preformatted units without changing dates or changes', () => {
+  const slots = source('2ZN9-0').slots.filter(slot => ['sel_bid', 'buy_bid'].includes(slot.f));
+  assert.equal(slots.length, 16);
+  for (const slot of slots) {
+    assert.equal(slot.mapping_id, 'base:ka30005');
+    for (const raw of [-25, '-25', '+25', '-000025', '+000025', {value:-25, text:'-25', tone:'down'}]) {
+      assert.equal(text('2ZN9-0', {[slot.slot_id]:raw}, slot.slot_id), '25');
+    }
+    assert.equal(text('2ZN9-0', {[slot.slot_id]:{value:-1250,text:'−1,250원'}}, slot.slot_id), '1,250원');
+    for (const raw of [0, '0', {value:0,text:'0'}]) {
+      const value = mountPlan(registry.contractFor('2ZN9-0'), {[slot.slot_id]:raw}).assignments.find(a => a.slotId === slot.slot_id);
+      assert.equal(value.text, '0');
+      assert.equal(value.missing, false);
+    }
+    assert.equal(mountPlan(registry.contractFor('2ZN9-0'), {[slot.slot_id]:null}).assignments.find(a => a.slotId === slot.slot_id).missing, true);
+  }
+  assert.equal(text('2ZN9-0', {s054:'-25'}, 's054'), '-25');
+  assert.equal(text('2ZN9-0', {s062:'37'}, 's062'), '37');
+  assert.equal(text('2ZN9-0', {s063:'20260930'}, 's063'), '2026-09-30');
+});
+
+test('ETF tax and optional summary metrics preserve supplied zero', () => {
+  for (const slot of ['s399','s400','s404','s406','s408']) {
+    const value = mountPlan(registry.contractFor('2VIN-0'), {[slot]:0}).assignments.find(a => a.slotId === slot);
+    assert.equal(value.text, '0');
+    assert.equal(value.missing, false);
+  }
+});
+
+test('trade flow keeps source exchange strength and bid-ask composite beneath a truthful header', () => {
+  assert.equal(text('2R3M-1', {}, 's049'), '거래소');
+  assert.equal(text('2R3M-1', {s058:'KRX'}, 's058'), 'KRX');
+  assert.equal(text('2R3M-1', {s059:'157.6'}, 's059'), '157.6%');
+  const slot = source('2R3M-1').slots.find(s => s.slot_id === 's053');
+  const composite = {composite:{...slot.composite,parts:slot.composite.parts.map((p,i)=>({...p,value:i?'12300':'12400'}))}};
+  assert.match(text('2R3M-1', {s053:composite}, 's053'), /12,400.*12,300/);
+});

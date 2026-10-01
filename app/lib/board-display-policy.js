@@ -69,6 +69,16 @@ function prepareDisplayInput(contract, values) {
       changedValues[slot.slot_id] = label ? { value, text: label } : null;
       return next;
     }
+    if (role === 'quote-magnitude') {
+      next.format.absolute = true;
+      // These exact ELW quote fields retain a received zero. Preformatted units
+      // remain intact; only a leading wire direction is removed from their text.
+      if (bound && typeof bound === 'object' && typeof bound.text === 'string') {
+        if (changedValues === values) changedValues = { ...values };
+        changedValues[slot.slot_id] = { ...bound, text: bound.text.replace(/^([+−-])(?=\d)/, '') };
+      }
+      return next;
+    }
     if (role === 'price') {
       next.format.absolute = true;
       next.format.missing_text = '—';

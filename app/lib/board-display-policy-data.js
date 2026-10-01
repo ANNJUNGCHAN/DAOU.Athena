@@ -4398,6 +4398,11 @@ const policy = {
       "bound-time",
       "tm"
     ],
+    "s049": [
+      "구분",
+      "caption",
+      "거래소"
+    ],
     "s051": [
       "09:42:18",
       "bound-time",
@@ -17839,6 +17844,16 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s060": [
+      "418",
+      "quote-magnitude",
+      "sel_bid"
+    ],
+    "s061": [
+      "412",
+      "quote-magnitude",
+      "buy_bid"
+    ],
     "s065": [
       "SK하이닉스 콜",
       "bound-label",
@@ -17849,10 +17864,30 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s074": [
+      "288",
+      "quote-magnitude",
+      "sel_bid"
+    ],
+    "s075": [
+      "283",
+      "quote-magnitude",
+      "buy_bid"
+    ],
     "s082": [
       "190",
       "price",
       "cur_prc"
+    ],
+    "s089": [
+      "192",
+      "quote-magnitude",
+      "sel_bid"
+    ],
+    "s090": [
+      "188",
+      "quote-magnitude",
+      "buy_bid"
     ],
     "s094": [
       "삼성전자 풋",
@@ -17864,6 +17899,16 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s103": [
+      "147",
+      "quote-magnitude",
+      "sel_bid"
+    ],
+    "s104": [
+      "143",
+      "quote-magnitude",
+      "buy_bid"
+    ],
     "s108": [
       "현대차 콜",
       "bound-label",
@@ -17873,6 +17918,16 @@ const policy = {
       "520",
       "price",
       "cur_prc"
+    ],
+    "s117": [
+      "524",
+      "quote-magnitude",
+      "sel_bid"
+    ],
+    "s118": [
+      "517",
+      "quote-magnitude",
+      "buy_bid"
     ],
     "s122": [
       "NAVER 콜",
@@ -17884,10 +17939,30 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s131": [
+      "89",
+      "quote-magnitude",
+      "sel_bid"
+    ],
+    "s132": [
+      "87",
+      "quote-magnitude",
+      "buy_bid"
+    ],
     "s138": [
       "305",
       "price",
       "cur_prc"
+    ],
+    "s145": [
+      "307",
+      "quote-magnitude",
+      "sel_bid"
+    ],
+    "s146": [
+      "303",
+      "quote-magnitude",
+      "buy_bid"
     ],
     "s150": [
       "기아 풋",
@@ -17903,6 +17978,16 @@ const policy = {
       "35",
       "price",
       "cur_prc"
+    ],
+    "s160": [
+      "36",
+      "quote-magnitude",
+      "sel_bid"
+    ],
+    "s161": [
+      "34",
+      "quote-magnitude",
+      "buy_bid"
     ],
     "s165": [
       "16개 더 보기",

@@ -94,6 +94,7 @@ const LABELS = {
   '2XA5-0': { s016: '첫 결과 등락률', s018: '등락률 조회', s019: '첫 결과 근접률', s021: '근접률 별도 조회' },
   '2Y47-0': { s016: '첫 결과 등락률', s018: '등락률 별도 조회', s019: '첫 결과 근접률', s021: '근접률 별도 조회', s044: '거래량' },
   '2ZN9-0': { s014: '표시 순서', s015: '조회 응답 순서', s016: '첫 결과 등락률', s018: '조건검색 조회' },
+  '2R3M-1': { s049: '거래소' },
   '30C1-0': { s045: '이전 거래량', s047: '현재 거래량', s330: '조회 종목' },
   '30O1-0': { s022: '조회 종목 비중', s024: '조회 응답' },
   "13K0-2": {"s130":"조회 종목","s143":"다른 조회 결과"},
@@ -137,6 +138,10 @@ const PRICE_FIELDS = new Set(['cur_prc', 'cur_prc_n', 'open_pric', 'high_pric', 
   'upl_pric', 'lst_pric', 'oyr_hgst', 'oyr_lwst', '250hgst', '250lwst', 'exp_cntr_pric',
   '52wk_hgst_pric', '52wk_lwst_pric']);
 const TIME_FIELDS = /^(?:tm|cntr_tm|cntr_time|trde_tm|time|last_cntr_tm)$/;
+const ELW_QUOTE_MAGNITUDES = {
+  s060: 'sel_bid', s074: 'sel_bid', s089: 'sel_bid', s103: 'sel_bid', s117: 'sel_bid', s131: 'sel_bid', s145: 'sel_bid', s160: 'sel_bid',
+  s061: 'buy_bid', s075: 'buy_bid', s090: 'buy_bid', s104: 'buy_bid', s118: 'buy_bid', s132: 'buy_bid', s146: 'buy_bid', s161: 'buy_bid',
+};
 
 export function buildPolicy() {
   const policies = {};
@@ -148,6 +153,10 @@ export function buildPolicy() {
     for (const slot of source.slots) {
       const caption = LABELS[entry.board_id]?.[slot.slot_id];
       if (caption !== undefined) { slots[slot.slot_id] = [slot.paper_text, 'caption', caption]; continue; }
+      if (entry.board_id === '2ZN9-0' && slot.mapping_id === 'base:ka30005'
+        && ELW_QUOTE_MAGNITUDES[slot.slot_id] && ELW_QUOTE_MAGNITUDES[slot.slot_id] === slot.f) {
+        slots[slot.slot_id] = [slot.paper_text, 'quote-magnitude', slot.f]; continue;
+      }
       const format = FORMATS[entry.board_id]?.[slot.slot_id];
       if (format && slot.f === format[0] && hasBinding(slot)) {
         slots[slot.slot_id] = [slot.paper_text, 'bound-format', format[1]]; continue;
