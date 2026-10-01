@@ -331,6 +331,24 @@ test('ETF time-series quantities and amounts retain distinct names and source un
   assert.equal(text('15N5-2', {s078:'2'}, 's078'), '2주');
 });
 
+test('minute-chart header uses the first received candle time instead of the authored example', () => {
+  const contract = source('3FR6-0');
+  const header = contract.slots.find(slot => slot.slot_id === 's007');
+  assert.equal(header.mapping_id, 'base:ka10080');
+  assert.equal(header.f, 'cntr_tm');
+  assert.equal(header.row_index, 0);
+  assert.equal(registry.contractFor('3FR6-0').slots.find(slot => slot.slot_id === 's007').static, undefined);
+  for (const [input, expected] of [['20261001192300', '2026-10-01 19:23:00'],
+    ['092318', '09:23:18'], ['000000', '시각 미제공'], [undefined, '시각 미제공']]) {
+    assert.equal(text('3FR6-0', {s007:input}, 's007'), expected);
+  }
+  const firstRow = contract.slots.find(slot => slot.f === header.f && slot.mapping_id === header.mapping_id
+    && String(slot.table?.row) === '0');
+  assert.ok(firstRow);
+  const values = {s007:'20261001192300', [firstRow.slot_id]:'20261001192300'};
+  assert.equal(text('3FR6-0', values, 's007'), text('3FR6-0', values, firstRow.slot_id));
+});
+
 test('price-limit query lists describe their shared response instead of upper and lower proximity', () => {
   assert.equal(text('2YXS-0', {}, 's327'), '조회 종목 등락률');
   assert.equal(text('2YXS-0', {}, 's343'), '추가 조회 종목 등락률');
@@ -342,4 +360,40 @@ test('price-limit query lists describe their shared response instead of upper an
     assert.equal(a.f, b.f);
     assert.equal(a.table.row, b.table.row);
   }
+});
+
+test('ETF whole-quotes hero binds one coherent response row and return labels do not invent periods', () => {
+  const slots = source('2VIN-0').slots;
+  for (const sid of ['s386','s387','s388','s389','s391','s395','s399','s400']) {
+    const slot = slots.find(s => s.slot_id === sid);
+    assert.equal(slot.mapping_id, 'base:ka40004');
+    assert.equal(slot.row_index, 0);
+  }
+  assert.equal(text('2VIN-0', {}, 's409'), '조회 수익률');
+  for (const sid of ['s410','s412','s414','s416']) assert.equal(text('2VIN-0', {}, sid), '수익률');
+  for (const sid of ['s411','s413','s415','s417']) {
+    assert.match(text('2VIN-0', {[sid]:'0'}, sid), /0/);
+    assert.equal(slots.find(s => s.slot_id === sid).mapping_id, 'base:ka40001');
+  }
+});
+
+test('volume renewal and concentration captions describe available response fields', () => {
+  assert.equal(text('30C1-0', {}, 's045'), '이전 거래량');
+  assert.equal(text('30C1-0', {}, 's047'), '현재 거래량');
+  assert.equal(text('30C1-0', {}, 's330'), '조회 종목');
+  assert.equal(text('30O1-0', {}, 's022'), '조회 종목 비중');
+  assert.equal(text('30O1-0', {}, 's024'), '조회 응답');
+  assert.equal(text('30O1-0', {s023:'0'}, 's023'), '0.0%');
+});
+
+test('PER rows preserve actual PER without authored sector comparison examples', () => {
+  const slots = source('30ZW-0').slots;
+  const examples = slots.filter(s => /^업종\s.*배$/.test(s.paper_text) && !s.mapping_id);
+  assert.equal(examples.length, 19);
+  for (const slot of examples) {
+    assert.equal(slot.static, 'blank');
+    assert.equal(registry.contractFor('30ZW-0').slots.find(s => s.slot_id === slot.slot_id).static, 'blank');
+    assert.equal(text('30ZW-0', {}, slot.slot_id), '');
+  }
+  assert.match(text('30ZW-0', {s056:'0'}, 's056'), /0/);
 });

@@ -12829,6 +12829,7 @@
     },
     {
       "slot_id": "s386",
+      "row_index": 0,
       "node_id": "3O6O-0",
       "node_name": "선택 ETF · KODEX 2차전지산업",
       "node_path": "2/1/0/0/0",
@@ -12857,6 +12858,7 @@
     },
     {
       "slot_id": "s387",
+      "row_index": 0,
       "node_id": "3O6P-0",
       "node_name": "305720 · 1위",
       "node_path": "2/1/0/0/1",
@@ -12885,6 +12887,7 @@
     },
     {
       "slot_id": "s388",
+      "row_index": 0,
       "node_id": "3O6R-0",
       "node_name": "12,485",
       "node_path": "2/1/0/1/0",
@@ -12913,6 +12916,7 @@
     },
     {
       "slot_id": "s389",
+      "row_index": 0,
       "node_id": "3O6S-0",
       "node_name": "+3.12%",
       "node_path": "2/1/0/1/1",
@@ -12961,6 +12965,7 @@
     },
     {
       "slot_id": "s391",
+      "row_index": 0,
       "node_id": "3O6W-0",
       "node_name": "12,462",
       "node_path": "2/1/0/2/0/1",
@@ -13059,6 +13064,7 @@
     },
     {
       "slot_id": "s395",
+      "row_index": 0,
       "node_id": "3O72-0",
       "node_name": "0.42%",
       "node_path": "2/1/0/2/2/1",
@@ -13157,6 +13163,7 @@
     },
     {
       "slot_id": "s399",
+      "row_index": 0,
       "node_id": "3O79-0",
       "node_name": "12,430",
       "node_path": "2/1/0/2/4/1/0",
@@ -13183,6 +13190,7 @@
     },
     {
       "slot_id": "s400",
+      "row_index": 0,
       "node_id": "3O7A-0",
       "node_name": "배당전기준 12,462 · 전일배당금 0원",
       "node_path": "2/1/0/2/4/1/1",

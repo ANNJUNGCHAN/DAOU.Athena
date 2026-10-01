@@ -71,3 +71,28 @@ def test_invalid_or_missing_nested_array_leaf_preserves_all_row_positions():
     source = {'rows': [{}, {'item': {'price': '0'}}, {'item': None}, {'item': {'price': '42'}}]}
     assert json_path_values(source, '$.rows[].item.price', preserve_array_rows=True) == [None, '0', None, '42']
     assert json_path_values({'rows': []}, '$.rows[].item.price', preserve_array_rows=True) == []
+
+
+def test_etf_whole_quote_hero_uses_first_response_row_without_borrowing_missing_leaves():
+    board = get_registry().boards['2VIN-0']
+    hero_slots = ['s386', 's387', 's388', 's389', 's391', 's395', 's399', 's400']
+    rows = [
+        {'stk_nm': '합성 ETF A', 'stk_cd': '000001', 'close_pric': '12000',
+         'pre_rt': '0', 'nav': '12001', 'trace_eor_rt': '0', 'txbs': '12002', 'dvid_bf_base': '12003'},
+        {'stk_nm': '합성 ETF B', 'stk_cd': '000002', 'close_pric': '23000',
+         'pre_rt': '2', 'nav': '23001', 'trace_eor_rt': '3', 'txbs': '23002', 'dvid_bf_base': '23003'},
+    ]
+    bound = bind_surface_values('base:ka40004', {'etfall_mrpr': rows})
+    contract = build_board_surface_contract(board.board_id, bound, active_operation_refs=['base:ka40004'])
+    values = {slot['slot_id']: slot['value'] for slot in contract['slot_values']}
+    for sid in hero_slots:
+        slot = board.slot(sid)
+        assert slot.row_index == 0
+        assert values[sid] == rows[0][slot.f]
+    del rows[0]['stk_nm']
+    bound = bind_surface_values('base:ka40004', {'etfall_mrpr': rows})
+    contract = build_board_surface_contract(board.board_id, bound, active_operation_refs=['base:ka40004'])
+    values = {slot['slot_id']: slot['value'] for slot in contract['slot_values']}
+    assert 's386' not in values
+    assert 's386' in contract['empty_value_slots']
+    assert values['s387'] == '000001'

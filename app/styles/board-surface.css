@@ -1039,6 +1039,8 @@
 .bs-instrument-empty-note { color:var(--color-k-dim); font-size:12px; line-height:1.6; }
 .board-surface[data-bs-board-id="137X-2"] .bs-empty-chart-flow { height:auto!important; min-height:0!important; }
 .board-surface[data-bs-board-id="137X-2"] .bs-empty-chart-flow :is([data-node="14SS-2"], [data-node="14SY-2"], [data-slot-id="s072"]) { display:none!important; }
+.board-surface[data-bs-board-id="3FR6-0"] .bs-empty-minute-summary { height:auto!important; min-height:0!important; }
+.board-surface[data-bs-board-id="3FR6-0"] .bs-empty-minute-summary > :not([data-node="3HAP-0"]):not(.bs-instrument-empty-note) { display:none!important; }
 .board-surface[data-bs-board-id="15N5-2"] [data-slot-id="s046"],
 .board-surface[data-bs-board-id="2RBO-1"] [data-slot-id="s065"] { display:none!important; }
 .board-surface[data-bs-board-id="15N5-2"] :is([data-node="3CWV-0"], [data-node="3CX0-0"]) { width:auto!important; min-width:0!important; height:auto!important; text-align:right; }
@@ -1056,3 +1058,11 @@
 .bs-ranking-compact-rail { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
 .bs-ranking-duplicate-list { display: none !important; }
 .board-surface[data-bs-board-id="2YXS-0"] :is([data-slot-id="s330"], [data-slot-id="s333"], [data-slot-id="s336"], [data-slot-id="s339"], [data-slot-id="s342"], [data-slot-id="s346"], [data-slot-id="s349"], [data-slot-id="s352"], [data-slot-id="s355"]) { display: none !important; }
+
+/* Hide only source-confirmed absent ranking columns and specimen KPI cells. */
+.board-surface[data-bs-board-id="30C1-0"] [data-node="3LY6-0"] .bs-readable-cell:is([data-col="0"], [data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="30O1-0"] [data-node="3RJU-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="30ZW-0"] [data-node="3R7U-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="316O-0"] [data-node="3NJL-0"] .bs-readable-cell[data-col="0"] { display: none !important; }
+.bs-ranking-unavailable-cell { display: none !important; }
+.board-surface[data-bs-board-id="30C1-0"] :is([data-slot-id="s332"], [data-slot-id="s333"], [data-slot-id="s335"], [data-slot-id="s336"], [data-slot-id="s338"], [data-slot-id="s339"], [data-slot-id="s341"], [data-slot-id="s342"], [data-slot-id="s343"], [data-slot-id="s344"]) { display: none !important; }

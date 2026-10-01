@@ -9708,6 +9708,31 @@ const policy = {
       "-1.18%",
       "unavailable",
       null
+    ],
+    "s409": [
+      "KODEX 2차전지산업 기간 수익률",
+      "caption",
+      "조회 수익률"
+    ],
+    "s410": [
+      "1주",
+      "caption",
+      "수익률"
+    ],
+    "s412": [
+      "1달",
+      "caption",
+      "수익률"
+    ],
+    "s414": [
+      "3달",
+      "caption",
+      "수익률"
+    ],
+    "s416": [
+      "1년",
+      "caption",
+      "수익률"
     ]
   },
   "2VO0-0": {
@@ -19052,6 +19077,16 @@ const policy = {
       "unavailable",
       null
     ],
+    "s045": [
+      "5일 평균 대비",
+      "caption",
+      "이전 거래량"
+    ],
+    "s047": [
+      "오늘 거래량 · 대금",
+      "caption",
+      "현재 거래량"
+    ],
     "s051": [
       "이수페타시스",
       "bound-label",
@@ -19702,6 +19737,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s330": [
+      "경신 시각",
+      "caption",
+      "조회 종목"
+    ],
     "s334": [
       "이수페타시스",
       "bound-label",
@@ -20101,10 +20141,15 @@ const policy = {
       "unavailable",
       null
     ],
+    "s022": [
+      "최대 비중",
+      "caption",
+      "조회 종목 비중"
+    ],
     "s024": [
       "1위 종목",
-      "unavailable",
-      null
+      "caption",
+      "조회 응답"
     ],
     "s042": [
       "전체 50건 · 19건 표시",

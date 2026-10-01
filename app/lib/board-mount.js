@@ -685,7 +685,8 @@ function hideUnavailableUnits(surface) {
 // 수급·예상체결의 빈 응답도 항목명과 상태를 함께 남긴다.
 function updateInstrumentResidualDetails(surface, plan) {
   const id = surface.dataset?.bsBoardId;
-  const slots = { '137X-2': ['s070', 's072', 's075'], '15N5-2': ['s043', 's044', 's047'], '2RBO-1': ['s064'] }[id];
+  const slots = { '137X-2': ['s070', 's072', 's075'], '15N5-2': ['s043', 's044', 's047'], '2RBO-1': ['s064'],
+    '3FR6-0': ['s183', 's185', 's187', 's189', 's191'] }[id];
   if (!slots) return;
   const states = surface.__bsInstrumentDetailStates || (surface.__bsInstrumentDetailStates = new Map());
   for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
@@ -693,6 +694,25 @@ function updateInstrumentResidualDetails(surface, plan) {
     const state = states.get(sid);
     return state && !state.pending && (state.missing || state.empty);
   };
+  if (id === '3FR6-0') {
+    const section = authoredNode(surface, '3HAO-0');
+    const empty = slots.every(completedMissing);
+    const pending = slots.some(sid => states.get(sid)?.pending)
+      && slots.every(sid => states.get(sid)?.pending || completedMissing(sid));
+    const compact = empty || pending;
+    section.classList.toggle('bs-empty-minute-summary', compact);
+    let note = section.querySelector(':scope > .bs-instrument-empty-note');
+    if (compact && !note) {
+      note = layoutGroup(surface.ownerDocument, 'bs-instrument-empty-note');
+      note.setAttribute('role', 'status');
+      section.append(note);
+    }
+    if (note) {
+      note.hidden = !compact;
+      note.textContent = pending ? '분 요약 수신 대기' : '분 요약 데이터가 제공되지 않았습니다';
+    }
+    return;
+  }
   for (const sid of slots) {
     const state = states.get(sid), node = surface.querySelector(`[data-slot-id="${sid}"]`);
     if (!state || !node) continue;
@@ -761,25 +781,47 @@ function updateRankingResidualDetails(surface, plan) {
     '2YXS-0': [['3GI1-0', '상한·하한 집계'], ['3GJP-0', '도달 시각 통계'], ['3GK7-0', '업종 분포']],
     '2ZHC-0': [['3JAN-0', '고저가 근접 집계'], ['3JBO-0', '조건별 통계'], ['3JC3-0', '잔여 폭 통계'], ['3JCI-0', '시장별 통계']],
     '2ZZ7-0': [['3KX6-0', '급등락 집계'], ['3KYB-0', '구간 등락 분포'], ['3KYT-0', '감지 시간대'], ['3KZ8-0', '시장별 통계']],
+    '2VIN-0': [['3O7G-0', '시장 요약 통계'], ['3O7U-0', '조회 수익률', ['s411', 's413', 's415', 's417']]],
+    '30C1-0': [['3M91-0', '갱신 요약'], ['3M9J-0', '배율 상위 통계'], ['3MAK-0', '거래대금 상위 통계'], ['3MAZ-0', '시장별 통계']],
+    '30O1-0': [['3ORF-0', '집중 요약'], ['3ORT-0', '가격대 분포']],
   }[surface.dataset?.bsBoardId];
   if (!groups) return;
   const states = surface.__bsRankingDetailStates || (surface.__bsRankingDetailStates = new Map());
   for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
   const sections = [[surface.querySelector('.bs-kpi'), '시장 요약 통계'],
-    ...groups.map(([node, title]) => [authoredNode(surface, node), title])];
-  for (const [section, title] of sections) {
+    ...groups.map(([node, title, valueSlots]) => [authoredNode(surface, node), title, valueSlots])];
+  for (const [section, title, valueSlots] of sections) {
     if (!section) continue;
-    const slots = [...section.querySelectorAll('[data-slot-id]')].map(node => states.get(node.dataset.slotId));
+    const slots = (valueSlots || [...section.querySelectorAll('[data-slot-id]')].map(node => node.dataset.slotId))
+      .map(slot => states.get(slot));
     const unavailable = slots.length > 0 && slots.every(state => state && !state.pending
-      && (state.missing || state.empty || state.designText || !state.valueSlot));
-    section.classList.toggle('bs-ranking-unavailable-group', unavailable);
+      && (state.missing || state.empty || state.designText || !state.text));
+    const pending = !!valueSlots && slots.some(state => state?.pending)
+      && slots.every(state => state && (state.pending || state.missing || state.empty));
+    section.classList.toggle('bs-ranking-unavailable-group', unavailable || pending);
     let note = section.querySelector(':scope > .bs-ranking-unavailable-note');
-    if (unavailable && !note) {
+    if ((unavailable || pending) && !note) {
       note = layoutGroup(surface.ownerDocument, 'bs-ranking-unavailable-note');
-      note.textContent = title + ' 미제공';
       section.append(note);
     }
-    if (note) note.hidden = !unavailable;
+    if (note) {
+      note.textContent = title + (pending ? ' 수신 대기' : ' 미제공');
+      note.hidden = !unavailable && !pending;
+    }
+  }
+  if (surface.dataset.bsBoardId === '2VIN-0') {
+    for (const sid of ['s411', 's413', 's415', 's417']) {
+      const state = states.get(sid), node = surface.querySelector(`[data-slot-id="${sid}"]`);
+      if (!node || !state) continue;
+      node.parentElement.classList.toggle('bs-ranking-unavailable-cell', !state.pending && (state.empty || state.missing));
+      if (state.pending) node.textContent = '수신 대기';
+    }
+  }
+  if (surface.dataset.bsBoardId === '30O1-0') {
+    // Only the received concentration ratio has a source in this KPI strip.
+    for (const cell of surface.querySelectorAll('.bs-kpi-cell')) {
+      cell.classList.toggle('bs-ranking-unavailable-cell', !cell.querySelector('[data-slot-id="s023"]'));
+    }
   }
   surface.querySelector('.bs-rail')?.classList.add('bs-ranking-compact-rail');
   if (surface.dataset.bsBoardId === '2YXS-0') {
@@ -815,7 +857,10 @@ function updateAccountResidualDetails(surface, plan) {
       ['3UM3-0', ['s163','s164','s165','s166','s167','s168','s169','s170','s171','s172'], '체결 주문 정보 미제공'],
       ['3UMP-0', ['s174','s176','s177','s179','s180','s182'], '주문 상태·경로 정보 미제공'],
     ],
-    '3LGC-0': [['3UE1-0', ['s114','s116','s118','s120','s122','s124','s126','s128'], '외화 정산 정보 미제공']],
+    '3LGC-0': [
+      ['3UE1-0', ['s114','s116','s118','s120','s122','s124','s126','s128'], '외화 정산 정보 미제공'],
+      ['3MNE-0', ['s149','s151','s153','s155','s157','s159','s161','s163'], '거래 성격 정보 미제공'],
+    ],
     '3NVG-0': [
       ['3PAQ-0', ['s049','s051','s053','s055'], '외화 예수금 정보 미제공'],
       ['3PC2-0', ['s067','s069'], '원화 표시 정보 미제공'],
@@ -829,7 +874,8 @@ function updateAccountResidualDetails(surface, plan) {
       const state = states.get(slot);
       return state && !state.pending && (state.empty || state.missing);
     });
-    const pending = id === '2SYW-1' && slots.some(slot => states.get(slot)?.pending)
+    const pending = (id === '2SYW-1' || (id === '3LGC-0' && node === '3MNE-0'))
+      && slots.some(slot => states.get(slot)?.pending)
       && slots.every(slot => {
         const state = states.get(slot);
         return state && (state.pending || state.empty || state.missing);
@@ -1793,9 +1839,9 @@ const READABLE_TABLES = {
   "2ZHC-0": {"node":"3IYO-0","rows":["3IYP-0","3IZJ-0","3J04-0","3J0P-0","3J2G-0","3J1A-0","3J1V-0","3J31-0","3IYY-0","3J3M-0","3J47-0","3J4S-0","3J5D-0","3J5Y-0","3J6J-0","3J74-0","3J7P-0","3J8A-0","3J8V-0","3J9G-0","3JA1-0"],"widths":[0,220,160,200,160,160,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "2ZN9-0": {"node":"3B82-0","rows":["3B83-0","3B8C-0","3B8X-0","3B9I-0","3BA6-0","3BAR-0","3BBC-0","3BBX-0","3BCI-0"],"widths":[52,220,200,120,200,200,160,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "2ZZ7-0": {"node":"3KPB-0","rows":["3KPC-0","3KPL-0","3KQ2-0","3KQJ-0","3KR0-0","3KRH-0","3KRY-0","3KSF-0","3KSW-0","3KTD-0","3KTU-0","3KUB-0","3KUS-0","3KV9-0","3KVQ-0","3KW7-0","3KWO-0"],"widths":[0,220,160,140,160,200,120,120],"label":"조회 순위 결과","stack":false,"compact":true},
-  "30O1-0": {"node":"3RJU-0","rows":["3RJV-0","3RK4-0","3RKN-0","3RL6-0","3RLP-0","3RM8-0","3RMR-0","3RNA-0","3RNT-0","3ROC-0","3ROV-0","3RPE-0","3RPX-0","3RQG-0","3RQZ-0","3RRI-0","3RS1-0","3RSK-0","3RT3-0","3RTM-0"],"widths":[52,220,160,160,200,200,120,120],"label":"조회 순위 결과","stack":false,"compact":true},
-  "30ZW-0": {"node":"3R7U-0","rows":["3R7V-0","3R84-0","3R8P-0","3R9A-0","3R9V-0","3RAG-0","3RB1-0","3RBM-0","3RC7-0","3RCS-0","3RDD-0","3RDY-0","3REJ-0","3RF4-0","3RFP-0","3RGA-0","3RGV-0","3RHG-0","3RI1-0","3RIM-0"],"widths":[52,220,160,120,0,0,200,0],"label":"조회 순위 결과","stack":false,"compact":true},
-  "316O-0": {"node":"3NJL-0","rows":["3NJM-0","3NJV-0","3NKC-0","3NKT-0","3NLA-0","3NLR-0","3NM8-0","3NMP-0","3NN6-0","3NNN-0","3NO4-0","3NOL-0","3NP2-0","3NPJ-0","3NQ0-0","3NQH-0","3NQY-0","3NRF-0","3NRW-0","3NSD-0","3NSU-0"],"widths":[160,220,160,160,0,200,140,0],"label":"조회 순위 결과","stack":false,"compact":true},
+  "30O1-0": {"node":"3RJU-0","rows":["3RJV-0","3RK4-0","3RKN-0","3RL6-0","3RLP-0","3RM8-0","3RMR-0","3RNA-0","3RNT-0","3ROC-0","3ROV-0","3RPE-0","3RPX-0","3RQG-0","3RQZ-0","3RRI-0","3RS1-0","3RSK-0","3RT3-0","3RTM-0"],"widths":[0,220,160,160,200,200,120,120],"label":"조회 순위 결과","stack":false,"compact":true},
+  "30ZW-0": {"node":"3R7U-0","rows":["3R7V-0","3R84-0","3R8P-0","3R9A-0","3R9V-0","3RAG-0","3RB1-0","3RBM-0","3RC7-0","3RCS-0","3RDD-0","3RDY-0","3REJ-0","3RF4-0","3RFP-0","3RGA-0","3RGV-0","3RHG-0","3RI1-0","3RIM-0"],"widths":[0,220,160,120,0,0,200,0],"label":"조회 순위 결과","stack":false,"compact":true},
+  "316O-0": {"node":"3NJL-0","rows":["3NJM-0","3NJV-0","3NKC-0","3NKT-0","3NLA-0","3NLR-0","3NM8-0","3NMP-0","3NN6-0","3NNN-0","3NO4-0","3NOL-0","3NP2-0","3NPJ-0","3NQ0-0","3NQH-0","3NQY-0","3NRF-0","3NRW-0","3NSD-0","3NSU-0"],"widths":[0,220,160,160,0,200,140,0],"label":"조회 순위 결과","stack":false,"compact":true},
   "31CL-0": {"node":"37AW-0","rows":["37AX-0","37B6-0","37BR-0","37CC-0","37L8-0","37LT-0","37ME-0","37MZ-0","37NK-0"],"widths":[52,220,160,200,200,200,200,200],"label":"조회 순위 결과","stack":false,"compact":true},
   "31II-0": {"node":"3ARB-0","rows":["3ARC-0","3ARL-0","3AS8-0","3ASV-0","3T6K-0","3T78-0","3T7V-0"],"widths":[52,220,160,120,160,140,200,120],"label":"조회 순위 결과","stack":false,"compact":true},
   "31OF-0": {"node":"3A7P-0","rows":["3A7Q-0","3A7Z-0","3A8E-0","3A8T-0","3AF3-0","3AFI-0","3AFX-0","3AGC-0","3AGR-0"],"widths":[52,220,160,160,140,140,140,200],"label":"조회 순위 결과","stack":false,"compact":true},
@@ -1810,7 +1856,7 @@ const READABLE_TABLES = {
   "3IGR-0": {"node":"3U6J-0","widths":[170,190,190],"label":"신용·추가 담보","rows":["3U6K-0","3U6Q-0","3U6W-0","3U72-0"],"stack":false,"compact":true},
   '32XM-0': { node: '3RU8-0', rows: ['3RU9-0', '3RUI-0', '3RV1-0', '3RVK-0', '3RW3-0', '3RWM-0', '3RX5-0', '3RXO-0', '3RY7-0', '3RYQ-0', '3RZ9-0', '3RZS-0', '3S0B-0', '3S0U-0', '3S1D-0'], widths: [52, 220, 130, 130, 170, 170, 0, 0], label: '신주인수권 조회 목록', stack: false, compact: true },
   '2X5N-0': {"node":"34X2-0","rows":["34X7-0","34XF-0","34XV-0","34YB-0","34YR-0","34Z7-0"],"widths":[52,190,130,130,190,210,130],"label":"순위 결과","stack":false,"compact":true,"additional":[{"node":"34ZR-0","rows":["34ZV-0","3501-0","3507-0","350D-0"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
-  '30C1-0': { node: '3LY6-0', rows: ['3LY7-0', '3LYG-0', '3LYZ-0', '3LZI-0', '3M01-0', '3M0K-0', '3M13-0', '3M1M-0', '3M25-0', '3M2O-0', '3M37-0', '3M3Q-0', '3M49-0', '3M4S-0', '3M5B-0', '3M5U-0', '3M6D-0', '3M6W-0', '3M7F-0', '3M7Y-0', '3M8H-0'], widths: [52, 190, 130, 160, 140, 210, 130, 100], label: '거래량 갱신 결과', stack: false, compact: true },
+  '30C1-0': { node: '3LY6-0', rows: ['3LY7-0', '3LYG-0', '3LYZ-0', '3LZI-0', '3M01-0', '3M0K-0', '3M13-0', '3M1M-0', '3M25-0', '3M2O-0', '3M37-0', '3M3Q-0', '3M49-0', '3M4S-0', '3M5B-0', '3M5U-0', '3M6D-0', '3M6W-0', '3M7F-0', '3M7Y-0', '3M8H-0'], widths: [0, 190, 130, 160, 140, 210, 0, 0], label: '거래량 갱신 결과', stack: false, compact: true },
   '15R0-2': { node: '170E-2', rows: ['36HF-0', '36IS-0', '36J5-0', '36JI-0'], widths: [190, 90, 140, 120], label: 'VI 영향 종목', stack: false, compact: true },
   "3FR6-0": {"node":"3T8I-0","rows":["3T8S-0","3T91-0","3T9C-0","3T9M-0","3T9W-0","3TA6-0","3TAG-0","3TAQ-0","3TB0-0","3TBA-0","3TBK-0","3TBU-0","3TC4-0","3TCE-0"],"widths":[210,130,130,130,130,190,200],"label":"분봉 표","stack":false,"compact":true,"additional":[{"node":"3SP2-0","rows":["3SP7-0","3SPG-0","3SPR-0","3SQ1-0"],"widths":[120,130,130,130,130,190,200],"label":"일자별 시세","stack":false,"compact":true}]},
   "15N5-2": {"node":"3CXU-0","rows":["3CXV-0","3CY4-0","3CYR-0","3CZE-0"],"widths":[112,130,130,180,190,0,0,130],"label":"ETF 시간대별 시세","stack":false,"compact":true,"additional":[{"node":"3D05-0","rows":["3D06-0","3D0C-0","3D0M-0","3D0W-0"],"widths":[120,130,120,180,190],"label":"ETF 일별 시세","stack":false,"compact":true}]},
@@ -2188,6 +2234,9 @@ function applyReadableBoardLayout(surface, contract) {
     }
   }
   if (id === '137X-2') {
+    const institutionDetail = authoredNode(surface, '3C3E-0');
+    institutionDetail.dataset.stateControl = '투자자 12주체';
+    institutionDetail.setAttribute('aria-label', '기관별 상세 열기');
     const flowHeading = authoredNode(surface, '14SR-2');
     const flowDate = authoredNode(surface, '3C3J-0');
     flowHeading.parentElement.insertBefore(flowDate, flowHeading.nextSibling);
