@@ -518,6 +518,11 @@ html.is-boot-expanding #winControls { opacity: 0; }
    않게 상속으로 고정한다 — 렌더러는 하나(lib/markdown.js), 표면별 차이는 CSS로만. */
 .turn-a .md-p { margin: 0 0 8px; font-size: inherit; line-height: inherit; color: inherit; }
 .turn-a .md-p:last-child { margin-bottom: 0; }
+.turn-a .md-table-scroll { max-width: 100%; min-width: 0; overflow-x: auto; }
+.turn-a .md-table-scroll:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+.turn-a .md-table { width: max-content; min-width: 100%; }
+.turn-a .md-table td { min-width: 8ch; max-width: 32ch; overflow-wrap: normal; word-break: normal; }
+.turn-a .md-table-number { white-space: nowrap; }
 .turn-a .md-strong { font-family: var(--font-strong, "Daki B", system-ui, sans-serif); font-weight: 700; }
 .turn-a .md-h {
   margin: 12px 0 6px;

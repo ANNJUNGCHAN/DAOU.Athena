@@ -46,6 +46,21 @@ test('restored assistant Markdown uses safe DOM rendering; user input stays lite
   assert.equal(user.children.length, 0);
 });
 
+test('Markdown tables preserve numeric units and literal text through rerendering', () => {
+  const ctx = context();
+  const host = ctx.document.createElement('div');
+  const source = '| 이름 | 가격 | 비율 | 수량 |\n|---|---|---|---|\n| <img src=x> | 74,200원 | -3.56% | 5,846,278,608,123주 |';
+  ctx.window.AthenaLib.Markdown.render(host, source);
+  ctx.window.AthenaLib.Markdown.render(host, source);
+  const scroll = host.querySelector('.md-table-scroll');
+  assert.equal(host.children.length, 1);
+  assert.equal(scroll.tabIndex, 0);
+  assert.equal(scroll.getAttribute('role'), 'region');
+  assert.deepEqual(Array.from(host.querySelectorAll('.md-table-number'), (cell) => cell.textContent), ['74,200원', '-3.56%', '5,846,278,608,123주']);
+  assert.equal(host.querySelector('img'), null);
+  assert.ok(host.textContent.includes('<img src=x>'));
+});
+
 test('opening saved Aegis conversation refreshes tasks after workspace restoration', () => {
   const calls = [];
   const ctx = context({
