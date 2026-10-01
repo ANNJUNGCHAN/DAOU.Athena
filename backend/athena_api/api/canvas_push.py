@@ -673,7 +673,7 @@ def _bind_semantic_values(
             continue
         indexed_values = [
             (index, value)
-            for index, value in enumerate(_json_path_values(source, contract.json_path))
+            for index, value in enumerate(_json_path_values(source, contract.json_path, preserve_array_rows=True))
             if not isinstance(value, (dict, list, tuple, set))
         ]
         is_array_field = "[]" in contract.json_path

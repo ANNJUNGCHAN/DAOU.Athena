@@ -39,3 +39,35 @@ def test_empty_cell_in_selected_list_cannot_fall_back_to_another_list_price():
     assert '합성 근접 A' in values
     assert '999' not in values
     assert contract['empty_value_slots']
+
+
+def test_absent_leaf_does_not_move_the_next_stock_price_into_the_previous_row():
+    from athena_api.card_surface_contract import json_path_values
+    source = {'elwalacc_rt': [
+        {'stk_nm': '합성 가격 미제공', 'stk_cd': 'A10001'},
+        {'stk_nm': '합성 가격 수신', 'stk_cd': 'A10002', 'cur_prc': '202'},
+    ]}
+    # The shared semantic observation evaluator keeps its established behavior.
+    assert json_path_values(source, '$.elwalacc_rt[].cur_prc') == ['202']
+    bound = bind_surface_values('base:ka30011', source)
+    contract = build_board_surface_contract('2XY6-0', bound, active_operation_refs=['base:ka30011'])
+    values = {s['slot_id']: s['value'] for s in contract['slot_values']}
+    assert values['s048'] == '합성 가격 미제공'
+    assert 's050' not in values and 's050' in contract['empty_value_slots']
+    assert values['s061'] == '합성 가격 수신'
+    assert values['s063'] == '202'
+    assert 'cur_prc' not in source['elwalacc_rt'][0]
+    from athena_api.api.canvas_push import _bind_semantic_values, _integrated_card_contract
+    card = _integrated_card_contract('base:ka30011')
+    _bind_semantic_values(card, 'base:ka30011', source)
+    observed = next(s for s in card['semantic_observations'] if s['value'] == '202')
+    assert observed['array_index'] == 1
+    projected = next(s for s in card['surface_contract']['slot_values'] if s['slot_id'] == 's063')
+    assert projected['observation_id'] == observed['observation_id']
+
+
+def test_invalid_or_missing_nested_array_leaf_preserves_all_row_positions():
+    from athena_api.card_surface_contract import json_path_values
+    source = {'rows': [{}, {'item': {'price': '0'}}, {'item': None}, {'item': {'price': '42'}}]}
+    assert json_path_values(source, '$.rows[].item.price', preserve_array_rows=True) == [None, '0', None, '42']
+    assert json_path_values({'rows': []}, '$.rows[].item.price', preserve_array_rows=True) == []

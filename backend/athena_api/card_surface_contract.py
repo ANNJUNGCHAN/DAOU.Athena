@@ -50,7 +50,7 @@ def observation_id_for(wire_occurrence_id: str, array_index: int | None = None) 
     return f"obs_{digest}"
 
 
-def json_path_values(source: Any, json_path: str) -> list[Any]:
+def json_path_values(source: Any, json_path: str, *, preserve_array_rows: bool = False) -> list[Any]:
     """Evaluate the registry's small ``$.key`` / ``$.rows[].key`` path subset.
 
     canvas_push._bind_semantic_values가 쓰는 것과 **같은** 평가기다(그쪽이 이 함수를
@@ -62,20 +62,26 @@ def json_path_values(source: Any, json_path: str) -> list[Any]:
     if not json_path.startswith("$."):
         return []
     nodes = [source]
+    inside_array = False
     for raw_part in json_path[2:].split("."):
         expands_array = raw_part.endswith("[]")
         key = raw_part[:-2] if expands_array else raw_part
         next_nodes: list[Any] = []
         for node in nodes:
             if not isinstance(node, dict) or key not in node:
+                if preserve_array_rows and inside_array:
+                    next_nodes.append(None)
                 continue
             value = node[key]
             if expands_array:
                 if isinstance(value, list):
                     next_nodes.extend(value)
+                elif preserve_array_rows and inside_array:
+                    next_nodes.append(None)
             else:
                 next_nodes.append(value)
         nodes = next_nodes
+        inside_array = inside_array or expands_array
         if not nodes:
             break
     return nodes
@@ -86,11 +92,15 @@ def bind_surface_values(operation_ref: str, source: Any) -> dict[str, Any]:
 
     bound: dict[str, Any] = {}
     for contract in visible_contracts(operation_ref):
-        values = [
-            value
-            for value in json_path_values(source, contract.json_path)
-            if not isinstance(value, (dict, list, tuple, set))
-        ]
+        values = json_path_values(source, contract.json_path, preserve_array_rows=True)
+        if "[]" in contract.json_path:
+            # Columns must retain the same row positions. A missing/invalid
+            # leaf belongs to that row; deleting it shifts the next stock up.
+            values = [None if isinstance(value, (dict, list, tuple, set)) else value
+                      for value in values]
+        else:
+            values = [value for value in values
+                      if not isinstance(value, (dict, list, tuple, set))]
         if not values:
             continue
         if "[]" in contract.json_path:
