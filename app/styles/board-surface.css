@@ -510,6 +510,9 @@
 
 /* 집중 보기는 본문 높이만 사용한다. 고정 원본 폭도 스크롤바가 차지한 폭을 양보한다. */
 .canvas-tab-panel .board-surface[data-bs-hoisted] { min-height: 0; }
+.board-surface > [data-bs-hoisted] { max-width: 100%; min-width: 0; }
+.board-surface .bs-quote-scroll { overflow-x: auto; max-width: 100%; height: auto; min-height: 0; }
+.bs-quote-table { width: 990px; min-width: 990px; }
 @container board (min-width: 1280px) {
   .canvas-tab-panel .board-surface .bs-workspace > .bs-primary { flex-shrink: 1; }
 }
@@ -666,12 +669,6 @@
 .bs-empty-table-message { padding: 20px 0; color: var(--color-k-dim); font-size: 13px; line-height: 20px; }
 .bs-empty-table-message[hidden] { display: none; }
 :is([data-bs-layout="133H-2"], [data-bs-layout="2R3M-1"], [data-bs-layout="2VDA-0"], [data-bs-layout="2SKU-1"]) .bs-rail { flex-direction: var(--bs-rail-direction, column); }
-.bs-has-empty-table .bs-workspace { flex-direction: column; }
-.bs-has-empty-table [data-bs-primary-row="true"] { flex-wrap: wrap; }
-.bs-has-empty-table :is(.bs-primary, .bs-rail) { width: 100%; min-width: 0; flex: 0 0 auto; }
-.bs-has-empty-table .bs-rail { flex-direction: row; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
-.bs-has-empty-table .bs-rail > * { width: auto; min-width: min(100%, 320px); height: auto; min-height: 0; flex: 1 1 auto; }
-[data-bs-layout="2R3M-1"].bs-has-empty-table .bs-rail > * { min-width: min(100%, 480px); flex-basis: 480px; }
 
 /* 자료에 연결되지 않은 ETF 예시 그래프는 안내로 대체한다. 주변 통계는 유지한다. */
 [data-bs-layout="15N5-2"] :is(.bs-workspace, .bs-primary, .bs-rail, .bs-unavailable-graphic) { height: auto; min-height: 0; }

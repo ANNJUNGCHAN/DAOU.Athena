@@ -1640,6 +1640,27 @@ function readableTable(surface, contract, config) {
 
 function applyReadableBoardLayout(surface, contract) {
   const id = contract.board_id;
+  if (id === '3N4O-0') {
+    // This authored ladder has no table metadata. Missing quotes still occupy
+    // their own column so the received quantity cannot move under the price.
+    const table = authoredNode(surface, '3OSI-0');
+    table.classList.add('bs-table', 'bs-quote-scroll');
+    table.style.removeProperty('overflow');
+    table.tabIndex = 0;
+    table.setAttribute('role', 'region');
+    table.setAttribute('aria-label', '단계별 호가 표, 좌우 방향키로 이동');
+    for (const row of table.querySelectorAll('[data-name]')) {
+      const name = row.dataset.name;
+      if (name !== '열 제목' && !/^(매도|매수) (10|[1-9])$/.test(name)) continue;
+      row.dataset.row = name === '열 제목' ? 'head' : name;
+      delete row.dataset.bsWrapRow;
+      row.style.flexWrap = 'nowrap';
+      [...row.children].forEach((cell, index) => { cell.dataset.col = String(index); });
+    }
+    const inner = layoutGroup(surface.ownerDocument, 'bs-quote-table');
+    inner.append(...table.childNodes);
+    table.append(inner);
+  }
   if (!READABLE_TABLES[id] && !['3D4I-0', '3EWN-0', '3JZ3-0', '3DZ1-0', '137X-2', '2VDA-0', '133H-2', '2SKU-1', '2SYW-1', '3MTJ-0', '15N5-2'].includes(id)) return;
   surface.dataset.bsLayout = id;
   if (['2R3M-1', '2VDA-0', '133H-2', '2SKU-1', '15N5-2'].includes(id)) {
@@ -1825,11 +1846,6 @@ function updateEmptyTableStates(surface) {
   }
   surface.classList.toggle('bs-has-empty-table', empty);
   surface.classList.toggle('bs-has-short-table', short);
-  // 원본 inline 가로 방향은 빈 상태의 세로 배치를 이기므로 응답 상태에 맞춰 되돌린다.
-  for (const workspace of surface.querySelectorAll('.bs-workspace')) {
-    if (workspace.__bsEmptyDirection === undefined) workspace.__bsEmptyDirection = workspace.style.flexDirection;
-    workspace.style.flexDirection = empty ? 'column' : workspace.__bsEmptyDirection;
-  }
 }
 
 // 결측 자료와 해당 없음은 다르다. 구성종목 이름과 비중 모두 명시적으로 해당 없음인
