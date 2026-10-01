@@ -936,6 +936,7 @@ body { margin: 0; overflow: hidden; }
   font-size: var(--text-xs);
 }
 .backtest-run-button,
+.backtest-adjustment-refresh,
 .backtest-approval-confirm {
   border: none;
   border-radius: 999px;
@@ -6825,7 +6826,30 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
   gap: 8px;
   min-height: 0;
 }
-.backtest-technique-nodes-host { min-height: 0; }
+.backtest-technique-nodes-host { flex: 1 1 auto; min-height: 0; min-width: 0; }
+.backtest-body:has(.backtest-technique-nodes-host) {
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+}
+.backtest-design:has(.backtest-technique-nodes-host),
+.backtest-nodes-tab:has(.backtest-technique-nodes-host) {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+.backtest-tnodes-body { min-width: 0; }
+.backtest-tnodes-rail { min-width: 0; }
+.backtest-tnodes-rail-item { min-width: 0; }
+@container (max-width: 760px) {
+  .backtest-tnodes-body { flex-direction: column; }
+  .backtest-tnodes-rail { flex: 0 0 auto; max-height: 124px; }
+  .backtest-tnodes-rail-note { display: none; }
+  .backtest-tnodes-canvas { flex: 1 1 auto; min-height: 0; }
+}
+.backtest-change-row { overflow-wrap: anywhere; }
 .backtest-nodes-load {
   align-self: flex-start;
   padding: 6px 14px;

@@ -5373,6 +5373,7 @@ window.addEventListener('athena:plugin-out-of-mode', (event) => {
 // 구독은 이 파일 하나뿐이다(canvas.js에서 같은 채널을 또 들으면 액션이 두 번
 // 적용된다). 캔버스 API는 canvas.js가 window.AthenaBacktestCanvas로 올려둔다.
 const BACKTEST_CHANGE_TITLES = {
+  file_written: '파일 저장',
   spec_draft: '설정 반영',
   code_draft: '코드 반영',
   file_draft: '파일 반영',
@@ -5655,8 +5656,8 @@ function renderBacktestChangeCard(receipt) {
   // 파일 초안은 실패한 게 아니라 아직 안 쓴 것이다 — 같은 '반영 안 됨'으로 적으면
   // 사람이 "안 됐구나"로 읽고 다시 시키게 된다(디스크에 쓰는 건 아래 [적용]이다).
   statePill.textContent = receipt.applied
-    ? '반영됨'
-    : (receipt.canApply ? '적용 대기' : '반영 안 됨');
+    ? (receipt.saved ? '저장됨' : '반영됨')
+    : (receipt.saved ? '저장됨 · 편집 보존' : (receipt.canApply ? '적용 대기' : '반영 안 됨'));
   head.appendChild(statePill);
   // 지도가 몇 판이 됐는가(보드 14-B) — 반영 한 번이 지도 한 판이다.
   if (receipt.version && receipt.version.from != null && receipt.version.to != null) {
@@ -5666,6 +5667,13 @@ function renderBacktestChangeCard(receipt) {
     head.appendChild(versionPill);
   }
   card.appendChild(head);
+
+  if (receipt.kind === 'file_written' && receipt.path) {
+    const path = document.createElement('div');
+    path.className = 'backtest-change-row';
+    path.textContent = receipt.path;
+    card.appendChild(path);
+  }
 
   if (receipt.note) {
     const note = document.createElement('div');
@@ -5716,6 +5724,16 @@ function renderBacktestChangeCard(receipt) {
   const status = document.createElement('span');
   status.className = 'agent-mode';
   const canvasApi = () => window.AthenaBacktestCanvas;
+
+  if (receipt.kind === 'file_written' && receipt.applied && receipt.action) {
+    const open = _btn(receipt.action.label_ko, 'routine-btn');
+    open.addEventListener('click', () => {
+      if (canvasApi()?.openStep(receipt.action) === false) {
+        status.textContent = '이후 변경으로 이 diff는 더 이상 열 수 없습니다.';
+      }
+    });
+    actions.appendChild(open);
+  }
 
   if (receipt.canUndo) {
     const undo = _btn('되돌리기', 'routine-btn');
@@ -5839,23 +5857,43 @@ function renderBacktestChangeCard(receipt) {
   // "반영 안 됨"이라 적어놓고 탐색만 시작되는 갈라짐을 막는다.
   if (receipt.kind === 'optimize_request' && receipt.applied) {
     const start = _btn('탐색 시작', 'routine-btn routine-btn-approve');
-    start.addEventListener('click', () => {
+    start.addEventListener('click', async () => {
       const api = canvasApi();
       if (!api || typeof api.startOptimizeFromChat !== 'function') return;
-      api.startOptimizeFromChat();
       start.disabled = true;
-      start.textContent = '탐색 시작됨';
+      start.textContent = '탐색 중…';
+      showErrors([]);
+      status.textContent = '';
+      try {
+        const result = await api.startOptimizeFromChat();
+        if (result?.ok) {
+          start.textContent = '탐색 완료';
+          status.textContent = '최적화 화면에서 결과를 확인하세요.';
+        } else {
+          start.disabled = false;
+          start.textContent = '탐색 시작';
+          showErrors(result?.errors || ['탐색이 완료되지 않았습니다. 최적화 화면을 확인하세요.']);
+        }
+      } catch (err) {
+        start.disabled = false;
+        start.textContent = '탐색 시작';
+        showErrors([String(err?.message || err)]);
+      }
     });
     actions.appendChild(start);
   }
 
-  actions.appendChild(status);
-  card.appendChild(actions);
+  if (actions.childElementCount) {
+    actions.appendChild(status);
+    card.appendChild(actions);
+  }
 
-  const notice = document.createElement('div');
-  notice.className = 'agent-source';
-  notice.textContent = '실행·수집·저장·활성화·배포는 버튼으로만 됩니다';
-  card.appendChild(notice);
+  if (receipt.kind !== 'file_written' && receipt.kind !== 'navigate') {
+    const notice = document.createElement('div');
+    notice.className = 'agent-source';
+    notice.textContent = '실행·수집은 버튼으로 시작합니다';
+    card.appendChild(notice);
+  }
 
   _mountTurn(line, card);
 }

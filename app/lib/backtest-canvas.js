@@ -2076,13 +2076,15 @@ function createBacktestCanvas(options) {
     const generation = workspaceGeneration;
     const errors = spec ? runErrors() : ['최적화할 기법을 먼저 고르세요'];
     if (errors.length) {
-      setState({ view: 'design', tab: 'design', designTab: 'form',
-        formErrors: ['최적화 전에 종목·기간과 실행 조건을 확인해 주세요.', ...errors],
-        optimizeBusy: false, optimizeError: '' });
-      return;
+      setState({ view: 'design', tab: 'optimize',
+        optimizeBusy: false, optimizeError: ['최적화 전에 종목·기간과 실행 조건을 확인해 주세요.', ...errors].join(' ') });
+      return { ok: false, errors };
     }
     const ranges = optimizeRanges();
-    if (!ranges.length) { setState({ optimizeError: '훑을 파라미터가 없습니다' }); return; }
+    if (!ranges.length) {
+      setState({ optimizeError: '훑을 파라미터가 없습니다' });
+      return { ok: false, errors: ['훑을 파라미터가 없습니다'] };
+    }
     setState({ optimizeBusy: true, optimizeError: '', formErrors: [] });
     try {
       const body = {
@@ -2104,9 +2106,11 @@ function createBacktestCanvas(options) {
       const res = await deps.optimize(body);
       if (generation !== workspaceGeneration) return;
       setState({ optimizeBusy: false, optimizeResult: res });
+      return { ok: true };
     } catch (err) {
       if (generation !== workspaceGeneration) return;
       setState({ optimizeBusy: false, optimizeError: String((err && err.message) || err) });
+      return { ok: false, errors: [String((err && err.message) || err)] };
     }
   }
 
@@ -2359,29 +2363,31 @@ function createBacktestCanvas(options) {
       || String(envelope.project_id || '') !== String(project.id)
       || receiptRoot !== root || !path || /^(?:[A-Za-z]:|\/)/.test(path)
       || path.split('/').includes('..') || (root && !path.startsWith(`${root}/`))) {
-      return { applied: false, path: path || null };
+      return null;
     }
 
     const before = codeSource;
     if (typeof ide.hasDirtyFile === 'function' && ide.hasDirtyFile(path)) {
       setState({ codeErrors: [`${path}의 디스크 내용이 바뀌었지만 저장하지 않은 편집은 덮지 않았습니다`] });
-      return { applied: false, path };
+      return makeReceipt('file_written', { path, saved: true,
+        errors: ['디스크에는 저장됐지만 저장하지 않은 편집은 보존했습니다.'] });
     }
     const open = ide.activeFile();
     const adopted = typeof ide.adoptExternalWrite === 'function'
       ? ide.adoptExternalWrite(path, envelope.source) : false;
     if (open && open.path === path && open.dirty && !adopted) {
       setState({ codeErrors: [`${path}의 디스크 내용이 바뀌었지만 저장하지 않은 편집은 덮지 않았습니다`] });
-      return { applied: false, path };
+      return makeReceipt('file_written', { path, saved: true,
+        errors: ['디스크에는 저장됐지만 저장하지 않은 편집은 보존했습니다.'] });
     }
 
     if (typeof ide.refreshTree === 'function') await ide.refreshTree();
     const stillCurrent = () => generation === workspaceGeneration
       && ide.currentProject() && String(ide.currentProject().id) === String(project.id)
       && normalizeRoot(ide.currentRootPath()) === root;
-    if (!stillCurrent()) return { applied: false, path };
+    if (!stillCurrent()) return null;
     await loadProjectFiles(project.id, root);
-    if (!stillCurrent()) return { applied: false, path };
+    if (!stillCurrent()) return null;
     const entry = userStrategyId ? userStrategies.find((item) => item.id === userStrategyId) : null;
     const strategyPath = (entry && entry.path) || techniqueState().path || TECHNIQUE_STRATEGY_PATH;
     if (path === strategyPath) {
@@ -2395,7 +2401,13 @@ function createBacktestCanvas(options) {
       scheduleTechniqueCheck();
       void loadMap();
     } else render();
-    return { applied: true, path };
+    return remember(makeReceipt('file_written', {
+      applied: true, saved: true, path,
+      note: path === strategyPath ? '저장한 내용을 편집기에 반영했습니다.' : '저장한 파일 목록을 새로고쳤습니다.',
+      rows: path === strategyPath ? [codeRow(before, envelope.source)] : [],
+      action: path === strategyPath
+        ? { label_ko: 'diff 보기', open: 'diff', ref: { path, before, after: envelope.source, projectId: project.id } } : null,
+    }));
   }
 
   function envelopeNote(envelope) {
@@ -2747,7 +2759,7 @@ function createBacktestCanvas(options) {
       setState({ view: tab === 'result' && state.result ? 'result' : 'design', tab });
     }
     return remember(makeReceipt('navigate', {
-      applied: true, note: envelopeNote(payload),
+      applied: true, note: envelopeNote(payload) || `${MODE_TABS.find(([key]) => key === tab)[1]} 화면을 열었습니다.`,
       tab: state.tab, designTab: state.designTab,
     }));
   }
@@ -2829,7 +2841,7 @@ function createBacktestCanvas(options) {
 
   // 채팅 카드의 [탐색 시작] — 화면의 [탐색 시작]과 같은 자리.
   function startOptimizeFromChat() {
-    if (state.optimizeSuggested) setState({ optimizeSuggested: null });
+    setState({ view: 'design', tab: 'optimize', optimizeSuggested: null });
     if (state.optimizeBusy) return Promise.resolve();
     return runOptimize();
   }
@@ -3121,12 +3133,11 @@ function createBacktestCanvas(options) {
     return MODE_TABS_LIST;
   }
 
-  // 기법 하나의 화면 하위 탭(보드 20~23) — 초안은 코드·노드뿐이고, 목록에 오른 기법은
-  // 폼 뒤로 이력·최적화까지 여기 선다(규칙 32-04). 결과는 돌려본 뒤에만 문이 열린다.
+  // 폴더 초안도 실행 이력과 최적화 상태를 볼 수 있다. 폼은 등록된 기법에만 선다.
   function workspaceTabs() {
     let tabs = techniqueDraft ? TECHNIQUE_DRAFT_TABS : USER_TECHNIQUE_TABS;
     if (state.result) tabs = tabs.concat([['result', '결과']]);
-    if (!techniqueDraft) tabs = tabs.concat(WORKSPACE_EXTRA_TABS);
+    tabs = tabs.concat(WORKSPACE_EXTRA_TABS);
     return tabs;
   }
 
@@ -3241,10 +3252,8 @@ function createBacktestCanvas(options) {
       return wrap;
     }
     const subtabs = el('div', 'backtest-subtabs');
-    // 초안에서는 하위 탭이 둘뿐이다 — 폼도 아직 없다(보드 20). 목록에서 고른 내
-    // 기법은 폼과 이력·최적화까지 여기 선다(workspaceTabs). 결과는 어느 쪽이든
-    // 돌려본 뒤에만 하위 탭으로 선다(단계 카드의 [결과 보기]가 여는 자리 — 모드 탭이
-    // 없으니 여기가 그 문이다).
+    // 폴더 초안도 이력·최적화를 이 화면에서 연다. 폼은 등록된 기법에만,
+    // 결과는 돌려본 뒤에만 선다. 채팅 이동도 같은 하위 탭을 사용한다.
     const tabs = workspaceTabs();
     const designTab = workspaceTabKey(tabs);
     tabs.forEach(([key, label]) => {
@@ -3758,7 +3767,11 @@ function createBacktestCanvas(options) {
     if (!action || typeof action !== 'object') return false;
     const open = String(action.open || '');
     if (open === 'diff') {
-      if (!techniqueState().lastDiff) return false;
+      const diff = techniqueState().lastDiff;
+      if (!diff || (action.ref?.path && action.ref.path !== diff.path)
+        || (action.ref?.projectId && action.ref.projectId !== projectIde?.currentProject()?.id)
+        || (action.ref?.before != null && action.ref.before !== diff.before)
+        || (action.ref?.after != null && action.ref.after !== diff.after)) return false;
       techniqueDiffOpen = true;
       setState({ view: 'design', tab: 'design', designTab: 'code' });
       return true;
