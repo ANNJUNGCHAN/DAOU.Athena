@@ -757,6 +757,20 @@
 .board-surface[data-bs-board-id="3FR6-0"] [data-node="3T8J-0"] { flex-wrap: wrap; gap: 8px; height: auto; min-height: 0; }
 .board-surface[data-bs-board-id="3FR6-0"] [data-node="3T8J-0"] > * { min-width: max-content; }
 .board-surface[data-bs-board-id="3ODO-0"] [data-node="3P3G-0"] .bs-readable-cell[data-col="0"] { align-items: flex-start; text-align: left; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3E9G-0"] { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; flex-direction: column; }
+.board-surface[data-bs-board-id="3DI2-0"] :is([data-node="3E9H-0"], [data-node="3E9I-0"]) { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; }
+.board-surface[data-bs-board-id="3DI2-0"] .bs-investor-group-title { width: 100%; min-width: var(--bs-table-width); height: auto; min-height: 32px; }
+.board-surface[data-bs-board-id="3DI2-0"] .bs-empty-table .bs-investor-group-title { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] .bs-empty-table > :is(.bs-readable-scroll, .bs-readable-hint) { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] :is([data-node="3DQK-0"], [data-node="3DQC-0"], [data-node="3DQ8-0"], [data-node="3DQ4-0"], [data-node="3DQI-0"]) { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQ3-0"] { height: auto; min-height: 0; padding-block: 16px; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQG-0"] { flex-direction: row !important; align-items: baseline; flex-wrap: wrap; gap: 16px; height: auto; min-height: 0; width: 100%; flex: 1 1 auto; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQH-0"] { font-size: 18px !important; line-height: 24px !important; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="14OR-2"] { min-width: 270px; }
+.board-surface[data-bs-board-id="137X-2"] :is([data-node="3C2X-0"], [data-node="3C34-0"]) { min-width: 124px; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TZE-1"]:has([data-missing="true"]) { display: none; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TU5-1"] { height: auto; min-height: 0; align-self: flex-start; }
+.board-surface:is([data-bs-board-id="2X5N-0"], [data-bs-board-id="30C1-0"]) .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
 /* These source panels describe aggregates or fields the declared query never returns. */
 .board-surface[data-bs-board-id="31UD-0"] .bs-kpi,
 .board-surface[data-bs-board-id="31UD-0"] .bs-rail,

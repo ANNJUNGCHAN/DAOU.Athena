@@ -1572,6 +1572,8 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  '2X5N-0': { node: '34X2-0', rows: ['34X7-0', '34XF-0', '34XV-0', '34YB-0', '34YR-0', '34Z7-0'], widths: [52, 190, 130, 130, 190, 210, 130], label: '순위 결과', stack: false, compact: true },
+  '30C1-0': { node: '3LY6-0', rows: ['3LY7-0', '3LYG-0', '3LYZ-0', '3LZI-0', '3M01-0', '3M0K-0', '3M13-0', '3M1M-0', '3M25-0', '3M2O-0', '3M37-0', '3M3Q-0', '3M49-0', '3M4S-0', '3M5B-0', '3M5U-0', '3M6D-0', '3M6W-0', '3M7F-0', '3M7Y-0', '3M8H-0'], widths: [52, 190, 130, 160, 140, 210, 130, 100], label: '거래량 갱신 결과', stack: false, compact: true },
   '15R0-2': { node: '170E-2', rows: ['36HF-0', '36IS-0', '36J5-0', '36JI-0'], widths: [190, 90, 140, 120], label: 'VI 영향 종목', stack: false, compact: true },
   "3FR6-0": {"node":"3T8I-0","rows":["3T8S-0","3T91-0","3T9C-0","3T9M-0","3T9W-0","3TA6-0","3TAG-0","3TAQ-0","3TB0-0","3TBA-0","3TBK-0","3TBU-0","3TC4-0","3TCE-0"],"widths":[210,130,130,130,130,190,200],"label":"분봉 표","stack":false,"compact":true,"additional":[{"node":"3SP2-0","rows":["3SP7-0","3SPG-0","3SPR-0","3SQ1-0"],"widths":[120,130,130,130,130,190,200],"label":"일자별 시세","stack":false,"compact":true}]},
   "15N5-2": {"node":"3CXU-0","rows":["3CXV-0","3CY4-0","3CYR-0","3CZE-0"],"widths":[112,130,130,180,190,0,0,130],"label":"ETF 시간대별 시세","stack":false,"compact":true,"additional":[{"node":"3D05-0","rows":["3D06-0","3D0C-0","3D0M-0","3D0W-0"],"widths":[120,130,120,180,190],"label":"ETF 일별 시세","stack":false,"compact":true}]},
@@ -1722,6 +1724,24 @@ function readableTable(surface, contract, config) {
   viewport.after(hint);
   owner.classList.add('bs-readable-owner');
   if (config.compact) owner.classList.add('bs-readable-compact');
+}
+
+function prepareInvestorGrid(surface, contract) {
+  if (contract.board_id !== '3DI2-0') return;
+  const groups = [
+    { node: '3E9H-0', rows: ['3ED5-0','3EDR-0','3EDZ-0','3ESA-0','3ESI-0','3ESQ-0','3ESY-0','3ET6-0','3ETE-0','3ETM-0','3ETU-0','3EV7-0','3EVF-0','3EVN-0','3EVV-0'], widths: [130,190,190,190,190,190,190], label: '일자별 투자자', headings: [['3EDP-0','3EDR-0'],['3ES8-0','3ESA-0'],['3EV5-0','3EV7-0']] },
+    { node: '3E9I-0', rows: ['3F58-0','3F5L-0','3F5Q-0','3F5X-0','3F62-0','3F67-0','3F6C-0','3F6H-0','3F6M-0','3F6R-0','3F6W-0','3F7M-0','3F7R-0','3F7W-0','3F81-0'], widths: [130,190,190,190], label: '장중 투자자', headings: [['3F5J-0','3F5L-0'],['3F5V-0','3F5X-0'],['3F7K-0','3F7M-0']] },
+  ];
+  for (const group of groups) {
+    const owner = authoredNode(surface, group.node);
+    owner.classList.add('bs-table');
+    readableTable(surface, contract, { ...group, compact: true });
+    for (const [headingId, rowId] of group.headings) {
+      const heading = authoredNode(surface, headingId);
+      authoredNode(surface, rowId).before(heading);
+      heading.classList.add('bs-investor-group-title');
+    }
+  }
 }
 
 function prepareAfterhoursDepthTable(surface) {
@@ -2509,6 +2529,7 @@ function mountBoard(root, boardId, values, options = {}) {
     surface.dataset.bsBoardId = String(boardId);
     applyResponsiveHooks(surface);
     applyReadableBoardLayout(surface, contract);
+    prepareInvestorGrid(surface, contract);
     if (flowLayout) flowLayout.prepare(surface, contract);
     if (goldQuote) goldQuote.prepare(surface, contract);
     suppressStaticGraphics(surface, contract);
