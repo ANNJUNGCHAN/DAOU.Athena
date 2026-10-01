@@ -9,7 +9,7 @@
  * 키움 보드 카드에 대해서만 쓰지 않는다. */
 .grid:has(> .canvas-tab-deck) {
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
+  grid-template-rows: 100%;
 }
 
 .canvas-tab-deck {
