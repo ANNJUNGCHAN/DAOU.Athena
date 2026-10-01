@@ -8,6 +8,7 @@ const boardFormat = isCjs ? require('./board-format') : lib.BoardFormat;
 const registry = isCjs ? require('./board-template-registry') : lib.BoardTemplateRegistry;
 const displayPolicy = isCjs ? require('./board-display-policy') : lib.BoardDisplayPolicy;
 const staticGraphics = isCjs ? require('./board-static-graphics-data') : lib.BoardStaticGraphicsData;
+const etfPeriod = isCjs ? require('./board-etf-period') : lib.BoardEtfPeriod;
 
 const ROLLUP_MARK = '▸';
 
@@ -2200,6 +2201,9 @@ function collapsePrimaryMockup(mountPoint) {
   if (!mountPoint || !mountPoint.children) return [];
   const collapsed = [];
   for (const child of Array.from(mountPoint.children)) {
+    // Hydration may restore an empty row even after a renderer failed. Keep
+    // authored children folded until an explicit restoration is requested.
+    if (child.dataset) child.dataset.bsPrimaryMockup = 'true';
     if (child.hidden) continue;
     setHidden(child, true);
     collapsed.push(child);
@@ -2208,7 +2212,10 @@ function collapsePrimaryMockup(mountPoint) {
 }
 
 function restorePrimaryMockup(collapsed) {
-  for (const child of collapsed || []) setHidden(child, false);
+  for (const child of collapsed || []) {
+    if (child.dataset) delete child.dataset.bsPrimaryMockup;
+    setHidden(child, false);
+  }
   return (collapsed || []).length;
 }
 
@@ -2258,6 +2265,30 @@ function boardIdentityFromEnvelope(envelope = {}, values = null) {
   return displayPolicy.correctBoardIdentity(envelope, values, { name, code });
 }
 
+function applyQueryContext(surface, contract, options) {
+  const id = contract.board_id;
+  if (!['31UD-0', '2Z49-0', '3TOM-0'].includes(id)) return;
+  const args = options.operationArgs || {};
+  let text;
+  if (id === '31UD-0') {
+    const target = [options.identity?.name, args.stk_cd || options.identity?.code].filter(Boolean).join(' · ');
+    const day = { '1': '당일', '2': '전일' }[String(args.tdy_pred)] || '조회일 미확인';
+    text = `${target || '조회 종목 미확인'} · ${day} 체결 내역`;
+  } else {
+    const issuer = args.isscomp_cd ? `거래원 코드 ${args.isscomp_cd}` : '거래원 미확인';
+    const period = { '1': '전일', '5': '5일', '10': '10일', '40': '40일', '60': '60일' }[String(args.dt)] || '기간 미확인';
+    const direction = { '1': '순매수', '2': '순매도' }[String(args.trde_tp)] || '순매매';
+    text = `${issuer} · ${period} · 종목별 ${direction}`;
+  }
+  let note = surface.querySelector('.bs-query-context');
+  if (!note) {
+    note = surface.ownerDocument.createElement('div');
+    note.className = 'bs-query-context';
+    surface.insertBefore(note, surface.querySelector('.bs-workspace'));
+  }
+  note.textContent = text;
+}
+
 function mountBoard(root, boardId, values, options = {}) {
   const doc = options.doc || (typeof document !== 'undefined' ? document : null);
   if (!root || !doc) return null;
@@ -2279,6 +2310,7 @@ function mountBoard(root, boardId, values, options = {}) {
     root.replaceChildren(template.content.cloneNode(true));
     surface = surfaceRoot(root);
     if (!surface) throw new Error(`board.html에 보드 루트가 없다 — ${boardId}`);
+    surface.dataset.bsBoardId = String(boardId);
     applyResponsiveHooks(surface);
     applyReadableBoardLayout(surface, contract);
     suppressStaticGraphics(surface, contract);
@@ -2291,6 +2323,8 @@ function mountBoard(root, boardId, values, options = {}) {
   updateBasketRows(surface, contract, plan, values);
   updateEmptyTableStates(surface);
   compactReducedContent(surface, contract);
+  applyQueryContext(surface, contract, options);
+  if (etfPeriod) etfPeriod.mount(surface, contract, plan, options);
   // 값이 실린 뒤에 잰다 — 목업보다 긴 값이 들어오면 줄이 그때 넘친다. 폭이 바뀌면
   // 표면의 관찰자가 다시 잰다.
   relaxOverflowHeights(surface);

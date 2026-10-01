@@ -719,3 +719,55 @@
 .board-surface .bs-reduced-content[data-bs-hoisted] { height: auto; min-height: 0; }
 .bs-workspace.bs-reduced-content { align-items: flex-start; }
 .board-surface .bs-rail > .bs-reduced-content { flex-basis: auto; }
+.board-surface .bs-etf-period-original { display: none !important; }
+.board-surface [data-bs-primary-mockup="true"] { display: none !important; }
+.bs-query-context { padding: 14px 24px 0; font-size: 13px; line-height: 20px; color: var(--color-k-dim); overflow-wrap: anywhere; }
+/* These source panels describe aggregates or fields the declared query never returns. */
+.board-surface[data-bs-board-id="31UD-0"] .bs-kpi,
+.board-surface[data-bs-board-id="31UD-0"] .bs-rail,
+.board-surface[data-bs-board-id="30ZW-0"] .bs-kpi,
+.board-surface[data-bs-board-id="30ZW-0"] .bs-rail,
+.board-surface[data-bs-board-id="316O-0"] .bs-kpi,
+.board-surface[data-bs-board-id="316O-0"] .bs-rail,
+.board-surface[data-bs-board-id="2Z49-0"] .bs-kpi,
+.board-surface[data-bs-board-id="2Z49-0"] .bs-rail,
+.board-surface[data-bs-board-id="3TOM-0"] .bs-kpi,
+.board-surface[data-bs-board-id="3TOM-0"] .bs-rail,
+.board-surface [data-node="3QES-0"] [data-col="1"],
+.board-surface [data-node="3QES-0"] [data-col="7"],
+.board-surface [data-node="3R7U-0"] [data-col="4"],
+.board-surface [data-node="3R7U-0"] [data-col="5"],
+.board-surface [data-node="3R7U-0"] [data-col="7"],
+.board-surface [data-node="3NJL-0"] [data-col="4"],
+.board-surface [data-node="3NJL-0"] [data-col="7"],
+.board-surface [data-node="3AXF-0"] [data-col="1"],
+.board-surface [data-node="3AXF-0"] [data-col="7"],
+.board-surface [data-node="3TS6-0"] [data-col="1"],
+.board-surface [data-node="3TS6-0"] [data-col="7"],
+.board-surface [data-node="3O8M-0"] { display: none !important; }
+.board-surface [data-node="3CXU-0"] :is([data-col="5"], [data-col="6"]) { display: none !important; }
+.board-surface:is([data-bs-board-id="31UD-0"], [data-bs-board-id="30ZW-0"], [data-bs-board-id="316O-0"], [data-bs-board-id="2Z49-0"], [data-bs-board-id="3TOM-0"]) :is(.bs-workspace, .bs-primary) { height: auto; min-height: 0; width: 100%; flex-basis: auto; }
+.bs-etf-period { display: flex; flex-direction: column; gap: 20px; padding: 20px 24px; min-width: 0; }
+.bs-etf-target { font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
+.bs-etf-period-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.bs-etf-period-label { padding-right: 8px; font-size: 13px; }
+.bs-etf-period-button { padding: 8px 16px; border: 1px solid var(--color-k-line); border-radius: 6px; background: var(--color-k-panel); color: var(--color-k-text); font: inherit; font-size: 13px; line-height: 20px; cursor: pointer; }
+.bs-etf-period-button[aria-pressed="true"] { background: var(--color-k-text); color: var(--color-k-panel); }
+.bs-etf-period-button:disabled { opacity: .6; cursor: default; }
+.bs-etf-period-button:focus-visible { outline: 2px solid var(--color-k-text); outline-offset: 3px; }
+.bs-etf-metrics { display: flex; flex-wrap: wrap; gap: 24px; padding: 20px 0; border-block: 1px solid var(--color-k-line-soft); }
+.bs-etf-metric { display: flex; flex: 1 1 180px; min-width: 0; flex-direction: column; gap: 10px; }
+.bs-etf-metric-label { font-size: 13px; line-height: 20px; color: var(--color-k-dim); }
+.bs-etf-metric-value { font-family: var(--font-mono); font-size: 20px; line-height: 34px; font-weight: 600; overflow-wrap: anywhere; }
+.bs-etf-metric-value.is-prominent { font-size: 28px; }
+.bs-etf-metric-value[data-tone="up"] { color: var(--color-up); }
+.bs-etf-metric-value[data-tone="down"] { color: var(--color-down); }
+.bs-etf-period-note { font-size: 12px; line-height: 20px; color: var(--color-k-dim); }
+@container board (max-width: 600px) {
+  .board-surface :is([data-node="2X5I-0"], [data-node="3205-0"], [data-node="2ZA5-0"], [data-node="3TWQ-0"], [data-node="315O-0"], [data-node="3NHF-0"]) { flex-wrap: wrap; gap: 8px; height: auto; }
+  .board-surface :is([data-node="2X5M-0"], [data-node="3209-0"], [data-node="2ZA9-0"], [data-node="3TWU-0"], [data-node="315S-0"], [data-node="3NHG-0"]) { flex: 0 0 100%; font-size: 20px; line-height: 28px; }
+  .bs-etf-period { padding: 16px; }
+  .bs-etf-period-label { width: 100%; }
+  .bs-etf-metrics { gap: 20px; }
+  .bs-etf-metric { flex-basis: calc(50% - 10px); }
+}

@@ -1008,6 +1008,9 @@ function boardHydrateTarget(envelope, host) {
   const stkCd = cardStkCd(envelope) || args.stk_cd || (envelope && envelope.symbol) || args.symbol;
   if (stkCd) target.stk_cd = stkCd;
   const state = host && host.__athenaBoard;
+  if (state && state.boardId === '2WZK-0' && state.etfReturnPeriod !== undefined) {
+    target.dt = state.etfReturnPeriod;
+  }
   if (rankingBoardControls && state && rankingBoardControls.isFamilyBoard(state.boardId)) {
     return rankingBoardControls.targetFor(target, state.rankingCriteria, state.boardId);
   }
@@ -1118,6 +1121,8 @@ function boardMountOptions(host, envelope) {
   return {
     identity: boardMount.boardIdentityFromEnvelope(envelope, boardStateOf(host).values),
     operationRef: String((envelope && (envelope.operation_ref || envelope.operationRef)) || '').trim(),
+    operationArgs: boardHydrateTarget(envelope, host),
+    onEtfPeriodChange: (dt) => selectEtfReturnPeriod(host, envelope, dt),
     // 백엔드가 「자료가 한 칸도 없다」고 표시한 줄. 마운트가 그 줄만 감춘다.
     emptyRows: boardStateOf(host).emptyRows || [],
     // 실시간 프레임·주문 응답이 오기 전에는 빈 칸으로 두는 잎.
@@ -1346,6 +1351,23 @@ function clearRankingBoardCache(state) {
       if (rankingBoardControls.isFamilyBoard(boardId)) cache.delete(boardId);
     }
   }
+}
+
+function selectEtfReturnPeriod(host, envelope, value) {
+  const state = boardStateOf(host);
+  const period = String(value);
+  if (state.boardId !== '2WZK-0' || !['0', '1', '2', '3'].includes(period)) return null;
+  if (String(boardHydrateTarget(envelope, host).dt) === period) return null;
+  state.etfReturnPeriod = period;
+  for (const cache of [
+    state.valuesByBoard, state.unboundByBoard, state.hydrationByBoard, state.realtimeByBoard,
+    state.emptyRowsByBoard, state.emptyColumnsByBoard, state.emptyValueSlotsByBoard,
+    state.deferredValueSlotsByBoard,
+  ]) cache.delete('2WZK-0');
+  destroyBoardPrimary(state);
+  return runBoardSurfaceLoad(host, envelope, (isCurrent) => (
+    mountBoardState(host, '2WZK-0', envelope, isCurrent)
+  ));
 }
 
 function selectRankingFilter(host, envelope, selection) {

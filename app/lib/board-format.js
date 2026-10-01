@@ -342,7 +342,11 @@ function formatSlot(format, raw) {
     || (kind === 'text' && wire && (wire.padded || wire.plus))
     ? Math.abs(numeric)
     : numeric;
-  const scaled = displayNumeric * scale;
+  // A few official ELW Greek fields are fixed-point integers, explicitly
+  // authored with their source divisor. Other numeric fields keep their scale.
+  const divisor = spec.divisor === undefined ? 1 : spec.divisor;
+  if (!Number.isFinite(divisor) || divisor <= 0) return missingResult(spec);
+  const scaled = displayNumeric * scale / divisor;
 
   if (kind === 'korean') {
     return applyAffixes(spec, {
