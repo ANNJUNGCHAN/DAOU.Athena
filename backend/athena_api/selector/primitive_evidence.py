@@ -831,6 +831,24 @@ def analyze_question(
         add(temporal_scopes, TemporalScope.REALTIME)
         add(result_shapes, RoutingResultShape.COLLECTION, RoutingResultShape.STREAM)
 
+    # A saved formula's one-shot result uses the condition websocket transport;
+    # "조회" describes the read action, not a REST-only execution constraint.
+    condition_once = (
+        EntityKind.CONDITION in entity_kinds
+        and stated("1회", "일회", "한 번", "일반 조회", "요청 일반", "run once", "one-shot")
+        and not condition_list
+        and not condition_lifecycle
+        and not stated("실시간", "감시", "등록", "해제", "중지", "종료", "취소",
+                       "realtime", "monitor", "subscribe", "unsubscribe", "stop", "end", "cancel")
+    )
+    if condition_once:
+        subject = RoutingSubject.COLLECTION
+        execution = ExecutionKind.WEBSOCKET
+        add(entity_kinds, EntityKind.STOCK)
+        add(data_intents, DataIntent.SUBSCRIPTION, DataIntent.SCREENING)
+        discard(result_shapes, RoutingResultShape.COLLECTION)
+        add(result_shapes, RoutingResultShape.STREAM)
+
     explicit_historical_period = stated(
         "by trading day",
         "each trading day",

@@ -14,7 +14,7 @@ from athena_api.selector.catalog import build_operation_catalog
 from athena_api.selector.errors import OrderTicketRequiredError, PlanAlreadyUsedError, QueryPlanRequiredError
 from athena_api.selector.plans import PlanSigner
 from athena_api.selector.service import SelectorService
-from athena_api.selector.errors import InvalidArgumentsError, OperationNotFoundError
+from athena_api.selector.errors import InvalidArgumentsError, OperationNotFoundError, NoConfidentMatchError
 from athena_api.selector.schemas import DescribeRequest, DiscoveryIntent, ResolveRequest, SearchRequest
 
 
@@ -204,6 +204,10 @@ def test_discovery_exposes_only_the_two_read_only_condition_operations(intent):
      {"return_code": 0, "trnm": "CNSRLST", "data": [["1", "합성 조건"]]}),
     ("ka10172", "base:ka10172", {"trnm": "CNSRREQ", "seq": "1", "search_type": "0", "stex_tp": "K"},
      {"return_code": 0, "trnm": "CNSRREQ", "seq": "1", "data": []}),
+    ("ka10172", "0번 조건검색 1회 조회", {"trnm": "CNSRREQ", "seq": "0", "search_type": "0", "stex_tp": "K"},
+     {"return_code": 0, "trnm": "CNSRREQ", "seq": "0", "data": []}),
+    ("ka10172", "0번 조건검색 일반 조회", {"trnm": "CNSRREQ", "seq": "0", "search_type": "0", "stex_tp": "K"},
+     {"return_code": 0, "trnm": "CNSRREQ", "seq": "0", "data": []}),
 ])
 async def test_read_discovery_resolve_and_signed_canvas_delivery(intent, operation, question, arguments, body):
     selector, request, client, payload = fixture(operation, arguments, body)
@@ -228,3 +232,20 @@ def test_read_intent_cannot_sign_condition_registration_or_removal(intent, opera
     selector = fixture()[0]
     with pytest.raises(InvalidArgumentsError):
         selector.resolve(ResolveRequest(question=f"base:{operation}", intent=intent, arguments=arguments))
+
+
+@pytest.mark.parametrize("question", [
+    "0번 조건검색 1회 조회 후 실시간 감시 등록",
+    "0번 조건검색 1회 조회 후 실시간 감시 해제",
+    "0번 조건검색 1회 조회 후 중지",
+    "0번 조건검색 1회 조회 후 종료",
+    "0번 조건검색 1회 조회 후 취소",
+    "조건검색 run once then stop",
+    "조건검색 run once then end",
+])
+def test_one_shot_words_do_not_turn_monitoring_requests_into_read_queries(question):
+    selector = fixture()[0]
+    with pytest.raises(NoConfidentMatchError):
+        selector.resolve(ResolveRequest(question=question, intent="query", arguments={
+            "trnm": "CNSRREQ", "seq": "0", "search_type": "0", "stex_tp": "K",
+        }))
