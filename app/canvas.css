@@ -260,7 +260,8 @@ html, body { background: transparent; }
 #graphSummaryBody { display: flex; flex: 1 1 auto; min-height: 0; }
 /* position: relative — 브레인 미기동 안내(.graph-mode-unavailable)가 절대 배치라
  * 컨테이닝 블록이 없으면 요약 헤더의 탭 클릭 영역까지 덮는다(#graphBody와 같은 이유). */
-#graphSummaryMain { position: relative; flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; overflow: auto; }
+#graphSummaryMain { position: relative; flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; overflow: auto; container: graph-summary / inline-size; }
+#canvasRegion:has(> #graphSummaryTable:not([hidden])) { container: graph-region / inline-size; }
 /* 미기동 안내 > 0건 히어로 — 둘이 겹쳐 읽히지 않게 안내가 선 동안 나머지를 접는다. */
 #graphSummaryMain[data-unavailable="true"] > :not(.graph-mode-unavailable) { display: none; }
 
@@ -537,9 +538,8 @@ html, body { background: transparent; }
   font-family: var(--font-strong); font-size: var(--text-sm); color: #fff;
 }
 
-/* 700px Snap에서는 펼친 사이드바 뒤 캔버스가 약 400px, 최소폭에서는 약 290px다.
- * 고정 한 줄을 유지하면 배너 본문과 수집 스위치가 한 글자 폭까지 눌린다. */
-@media (max-width: 900px) {
+/* 상세 패널을 열면 큰 창에서도 요약 본문은 330px까지 줄어든다. */
+@container graph-summary (max-width: 700px) {
   .summary-hero {
     align-items: stretch;
     flex-direction: column;
@@ -575,7 +575,9 @@ html, body { background: transparent; }
   .confirm-banner-cta {
     justify-self: end;
   }
+}
 
+@media (max-width: 900px) {
   .graph-settings-source-row {
     align-items: flex-start;
     flex-wrap: wrap;
@@ -677,6 +679,26 @@ html, body { background: transparent; }
 #canvasRegion:has(> .graph-panel:not([hidden])) .summary-col-relation,
 #canvasRegion:has(> .graph-panel:not([hidden])) .summary-row-relation {
   width: 60px;
+}
+
+/* 좁은 요약에서 대상·관계·보강은 한 줄, 근거는 바로 아래에서 읽는다. */
+@container graph-summary (max-width: 700px) {
+  #graphSummaryTable :is(.summary-table-columns, .summary-row) { display: grid; grid-template-columns: 16px minmax(0, 1fr) 60px 36px; gap: 8px; }
+  #canvasRegion #graphSummaryTable :is(.summary-col-target, .summary-row-target, .summary-col-relation, .summary-row-relation, .summary-col-reinforcement, .summary-row-reinforcement) { width: auto; min-width: 0; }
+  #graphSummaryTable :is(.summary-col-icon, .summary-row-dot) { grid-column: 1; grid-row: 1; }
+  #graphSummaryTable :is(.summary-col-target, .summary-row-target) { grid-column: 2; grid-row: 1; }
+  #graphSummaryTable :is(.summary-col-relation, .summary-row-relation) { grid-column: 3; grid-row: 1; }
+  #graphSummaryTable :is(.summary-col-reinforcement, .summary-row-reinforcement) { grid-column: 4; grid-row: 1; }
+  #graphSummaryTable :is(.summary-col-rationale, .summary-row-rationale) { grid-column: 2 / -1; grid-row: 2; white-space: normal; overflow-wrap: anywhere; }
+  #graphSummaryTable :is(.summary-col-source, .summary-row-source, .summary-col-recent, .summary-row-recent) { display: none; }
+  #graphSummaryTable :is(.summary-table-head, .theme-clusters-head, .hidden-links-head, .hidden-link-pair) { flex-wrap: wrap; }
+  #canvasRegion #graphSummaryTable .theme-cluster-cards { flex-direction: column; }
+}
+
+/* 두 영역을 함께 읽을 폭이 없으면 선택 상세가 요약 자리를 사용한다. 선택 해제로 복귀한다. */
+@container graph-region (max-width: 599px) {
+  #canvasRegion:has(> .graph-panel:not([hidden])) #graphSummaryTable { display: none; }
+  #canvasRegion > .graph-panel { width: 100%; border-left: 0; }
 }
 
 .summary-row.is-selected {
