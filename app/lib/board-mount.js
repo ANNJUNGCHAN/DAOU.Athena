@@ -620,7 +620,7 @@ function setStatusAppearance(el, receiving) {
   el.style.color = receiving ? 'var(--color-ok)' : 'var(--color-k-dim)';
   const chip = el.parentElement;
   const dots = chip && typeof chip.querySelectorAll === 'function'
-    ? chip.querySelectorAll('[data-node="34NM-0"], [data-node="34NW-0"], [data-node="2QFW-2"], [data-node="2QKN-2"], [data-node="2QNK-2"], [data-node="153F-2"], [data-node="15BT-2"], [data-node="2TZL-1"], [data-node="2TS6-1"], [data-node="3K7I-0"], [data-node="3LV0-0"], [data-node="1JQ8-0"], [data-node="3NH2-0"], [data-node="2QX8-1"], [data-node="2QYE-1"]') : [];
+    ? chip.querySelectorAll('[data-node="34NM-0"], [data-node="34NW-0"], [data-node="2QFW-2"], [data-node="2QKN-2"], [data-node="2QNK-2"], [data-node="153F-2"], [data-node="15BT-2"], [data-node="2TZL-1"], [data-node="2TS6-1"], [data-node="3K7I-0"], [data-node="3LV0-0"], [data-node="1JQ8-0"], [data-node="3NH2-0"], [data-node="2QX8-1"], [data-node="2QYE-1"], [data-node="2S2R-1"]') : [];
   if (chip && (chip.children.length === 1 || dots.length) && chip.style.backgroundColor
     && typeof chip.closest === 'function' && chip.closest('.bs-header')) {
     chip.style.backgroundColor = receiving ? '#5FCE3F1F' : 'var(--color-k-panel3)';
@@ -1597,7 +1597,7 @@ const READABLE_TABLES = {
   '2XTO-0': { node: '365N-0', rows: ['365S-0', '3660-0', '366I-0', '3670-0', '367I-0', '3680-0'], widths: [52, 180, 120, 100, 180, 180, 180], label: '잔량 순위', stack: false, compact: true },
   '2UN6-1': { node: '34NC-0', rows: ['34O8-0', '34OG-0', '34P0-0', '34PK-0', '34Q4-0', '34QO-0', '34R8-0'], widths: [130, 200, 140, 100, 100, 140, 130], label: '조건검색 결과', stack: false, compact: true },
   '3MTJ-0': { node: '3OP4-0', rows: ['3OP8-0', '3OPM-0', '3OQ2-0', '3OQJ-0'], widths: [112, 150, 150, 150, 150, 150, 150], label: '결제 예정' },
-  '15J9-2': { node: '355R-0', rows: ['355S-0', '355Z-0', '356G-0', '356X-0'], widths: [166, 160, 126, 210, 180, 160], gap: 12, label: '주도 종목' },
+  '15J9-2': { node: '355R-0', rows: ['355S-0', '355Z-0', '356G-0', '356X-0'], widths: [166, 160, 126, 210, 180, 160], gap: 12, label: '조회 업종 종목' },
   '2SCE-1': { node: '375G-0', rows: ['375K-0', '379R-0', '37EU-0', '37FJ-0', '37G8-0', '37GX-0', '37HM-0', '37IB-0', '37J0-0'], widths: [168, 186, 144, 190, 222, 160], label: '보유종목' },
   '3LGC-0': { node: '3LVJ-0', rows: ['3LVN-0', '3MHR-0', '3MI8-0', '3MIO-0', '3MJ5-0', '3MJL-0', '3MK3-0', '3MKJ-0', '3ML0-0', '3MLG-0'], widths: [112, 148, 390, 204, 216], label: '매매일지' },
   '2R3M-1': { node: '3DFG-0', rows: ['3DG5-0', '3DGK-0', '3DGZ-0', '3DHE-0'], widths: [64, 80, 80, 80, 80, 96, 160, 144], label: '일별 시세', stack: false, compact: true },

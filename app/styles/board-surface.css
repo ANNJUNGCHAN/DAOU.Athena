@@ -612,6 +612,18 @@
 .bs-theme-evidence-columns > [data-bs-hoisted], .bs-theme-metrics { flex: 1 1 300px; width: 0; min-width: 0; }
 .bs-theme-metrics { display: flex; flex-direction: column; gap: 14px; }
 [data-bs-layout="15J9-2"] .bs-readable-cell { padding-inline: 0; }
+/* 업종별 주가 응답에는 업종 강도·테마 확산·기여도 자료가 없다. 실제 종목 표만 남긴다. */
+[data-bs-layout="15J9-2"] :is([data-node="15JM-2"], [data-node="15JK-2"], .bs-readable-cell[data-col="5"]) { display: none !important; }
+[data-bs-layout="15J9-2"] .bs-readable-table { --bs-table-width: 890px !important; }
+[data-bs-layout="15J9-2"] .bs-workspace { flex: 0 0 auto; }
+
+/* 신용·대차 표의 100% 폭이 보조 영역을 누르지 않게 각 영역의 몫을 정한다. */
+[data-bs-board-id="2RWK-1"] :is(.bs-workspace, .bs-primary, .bs-rail) { height: auto; min-height: 0; }
+[data-bs-board-id="2RWK-1"] .bs-workspace { flex: 0 0 auto; align-items: flex-start; }
+@container board (min-width: 960px) {
+  [data-bs-board-id="2RWK-1"] .bs-primary { width: auto; flex: 1 1 0; }
+  [data-bs-board-id="2RWK-1"] .bs-rail { width: 360px; min-width: 0; flex: 0 0 360px; }
+}
 
 /* 펼친 종목의 두 패널은 본문 폭 안에서 균등 분할하고, 333px보다 작아지면 한 열. */
 :is([data-bs-layout="3D4I-0"], [data-bs-layout="3EWN-0"]) :is(.bs-workspace, .bs-primary, .bs-rail) {
