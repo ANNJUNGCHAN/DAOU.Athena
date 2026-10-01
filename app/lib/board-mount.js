@@ -218,25 +218,26 @@ function mountPlan(contract, values, options = {}) {
   const identity = options.identity;
   const orderbook = identityCardId(contract) === 'CC-04';
   const identitySlots = new Set();
+  const flowIdentityTitle = ['2ROJ-1', '2RWK-1', '2S4E-1'].includes(contract.board_id);
   if (identity && (identity.name || identity.code)
-    && (orderbook || slotList(contract).some((slot) => slot.slot_id === 's001' && slot.kind === 'value'))) {
+    && (orderbook || flowIdentityTitle || slotList(contract).some((slot) => slot.slot_id === 's001' && slot.kind === 'value'))) {
     values = { ...values };
     const byId = new Map(slotList(contract).map((slot) => [slot.slot_id, slot]));
     const nameSlot = byId.get('s001');
     // 호가의 s002는 상태 또는 종목명이다. 금현물 s003도 종목코드가 아니다.
     const codeSlot = byId.get(orderbook
       ? (['13BC-2', '2TRW-1', '3JZ3-0', '2QRP-1', '3JT4-0'].includes(contract.board_id) ? 's003' : null)
-      : (['2QFO-2', '2QM7-2'].includes(contract.board_id) ? 's003' : 's002'));
+      : (['2QFO-2', '2QM7-2', '2ROJ-1', '2RWK-1', '2S4E-1'].includes(contract.board_id) ? 's003' : 's002'));
     // static blank: ETF 탭처럼 응답에 종목코드가 없어 빈 칸인 헤더 — 카드 주제로 채운다.
     // static true/text: 금현물처럼 고정 표기 — 주식 identity로 덮지 않는다.
     const stampIdentity = (slot) => slot && slot.kind === 'value'
       && (!slot.static || slot.static === 'blank');
-    if (identity.name && stampIdentity(nameSlot)) {
+    if (identity.name && (stampIdentity(nameSlot) || (flowIdentityTitle && nameSlot?.slot_id === 's001'))) {
       values.s001 = identity.name;
       identitySlots.add('s001');
     }
     if (identity.code && stampIdentity(codeSlot)) {
-      values[codeSlot.slot_id] = contract.board_id === '15N5-2'
+      values[codeSlot.slot_id] = ['15N5-2', '2QFO-2', '2QM7-2', '2ROJ-1', '2RWK-1', '2S4E-1'].includes(contract.board_id)
         ? { value: identity.code, text: identity.code } : identity.code;
       identitySlots.add(codeSlot.slot_id);
     }
@@ -283,6 +284,9 @@ function mountPlan(contract, values, options = {}) {
     }
     const verifiedTone = verifiedChartHeaderTone(contract, slot, bound);
     if (verifiedTone) formatted = { ...formatted, tone: verifiedTone.tone };
+    const brokerQuantity = contract.board_id === '2QM7-2' && !formatted.missing
+      && ['s042','s054','s066','s077','s088','s043','s055','s067','s078','s089'].includes(slot.slot_id);
+    if (brokerQuantity) formatted = { ...formatted, tone: 'flat' };
     const observedZero = staticText === null && !formatted.missing && isValueSlot(slot)
       && boardFormat.toNumber(bound && typeof bound === 'object' ? bound.value : bound) === 0;
     if (observedZero) formatted = { ...formatted, tone: 'flat' };
@@ -292,7 +296,7 @@ function mountPlan(contract, values, options = {}) {
       text: formatted.text,
       tone: formatted.tone,
       forceFlatTone: Boolean(verifiedTone && verifiedTone.forceFlat)
-        || observedZero || (!formatted.missing && bound && typeof bound === 'object' && bound.tone === 'flat'),
+        || observedZero || brokerQuantity || (!formatted.missing && bound && typeof bound === 'object' && bound.tone === 'flat'),
       missing: formatted.missing,
       // 값이 아니라 디자인이 정한 글자(Paper 라벨·static 문면·빈 칸).
       designText: !override && staticText !== null,
@@ -1193,6 +1197,7 @@ function applyPlan(root, plan, options = {}) {
   }
   hideUnavailableUnits(root);
   updateInstrumentResidualDetails(root, plan);
+  updateFlowResidualDetails(root, plan);
   updateAccountDetailSections(root);
   updateAccountResidualDetails(root, plan);
   updateRankingResidualDetails(root, plan);
@@ -2002,7 +2007,7 @@ const READABLE_TABLES = {
   "13K0-2": {"node":"33Z2-0","rows":["33Z6-0","33ZD-0","33ZO-0","33ZZ-0"],"widths":[0,220,106,86,160,216],"label":"조회 순위 결과","stack":false,"compact":true,"additional":[{"node":"33WD-0","rows":["33WI-0","33WQ-0","33X6-0","33XM-0","33Y2-0","33YI-0"],"widths":[100,200,160,100,165,190,0],"label":"거래대금 상위","stack":false}]},
   "15P5-2": {"node":"3D17-0","rows":["3D1B-0","3D22-0","3D2M-0","3D35-0","3D3O-0"],"widths":[130,160,200,140,120,120,120,140],"label":"조회 상세 내역","stack":false,"compact":true,"additional":[{"node":"3CCM-0","rows":["3CCQ-0","3CFC-0","3CJ3-0","3CJH-0","3CJV-0"],"widths":[52,220,200,140,200],"label":"ELW 종목 시세","stack":false,"compact":true}]},
   "2RJ7-1": {"node":"3HC9-0","rows":["3HCF-0","3HCO-0","3HDD-0","3HE2-0","3HER-0"],"widths":[150,200,200,200,200,200,200,200],"label":"조회 상세 내역","stack":false,"compact":true},
-  "2ROJ-1": {"node":"33JM-0","rows":["33JN-0","33JV-0","33KB-0","33KQ-0"],"widths":[120,200,200,200,200,140],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2ROJ-1": {"node":"33JM-0","rows":["33JN-0","33JV-0","33KB-0","33KQ-0"],"widths":[120,200,200,200,200,0],"label":"조회 상세 내역","stack":false,"compact":true,"additional":[{"node":"2RQD-1","rows":["33RX-0","33SM-0","33TX-0","33U8-0","33UJ-0","33UU-0","33V5-0"],"widths":[110,200,200,220,120,110,110],"label":"프로그램 시간대별 조회","stack":false,"compact":true}]},
   "2S4E-1": {"node":"2S68-1","rows":["33M0-0","33M8-0","33R1-0","33RH-0","33S6-0","33SX-0"],"widths":[130,160,200,200,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
   "2SYW-1": {"node":"3Q8R-0","rows":["3Q9T-0","3QA1-0","3QAS-0","3QBH-0","3QC6-0","3QCV-0"],"widths":[120,220,120,200,160,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
   "2TZN-1": {"node":"2U3G-1","rows":["340B-0","340J-0","3411-0","341J-0","3421-0","342J-0","3431-0"],"widths":[220,120,160,140,200,155,140],"label":"조회 상세 내역","stack":false,"compact":true},
@@ -2127,6 +2132,119 @@ function updateRankFour(surface, plan) {
     cell.classList.toggle('bs-ranking-unavailable-cell',!watched.some(received)&&!watched.some(state=>state?.pending));
   }
   surface.querySelector('.bs-rail')?.classList.add('bs-ranking-compact-rail');
+}
+
+// Keep supplementary flow values separate when their queries have different bases.
+function prepareFlowResidualLists(surface, contract) {
+  if (contract.board_id === '2S4E-1') {
+    const chart = authoredNode(surface, '3SL4-0');
+    if (!chart || chart.querySelector('.bs-flow-source-lists')) return;
+    const nodes = nodeIndex(surface);
+    const source = new Map(contract.slots.map(slot => [slot.slot_id, nodes.get(slot.node || slot.node_id)]));
+    const lists = layoutGroup(surface.ownerDocument, 'bs-flow-source-lists');
+    for (const [id, title, rows] of [
+      ['flow-close-investors', '장마감 후 투자자별 조회', [['외국인','s098'],['기관','s101'],['개인','s104']]],
+      ['flow-cumulative-investors', '기관·외국인 기간누적 조회', [['외국인','s099'],['기관','s102']]],
+      ['flow-total-investors', '투자자별 합계 조회', [['개인','s105']]],
+      ['flow-cumulative-dates', '기관·외국인 조회일자', [['조회일','s106'],['조회일','s107'],['조회일','s108'],['조회일','s109'],['조회일','s110']]],
+    ]) {
+      const group = layoutGroup(surface.ownerDocument, 'bs-flow-source-list');
+      group.dataset.node = id;
+      const heading = layoutGroup(surface.ownerDocument, 'bs-flow-source-title');
+      heading.textContent = title;
+      group.append(heading);
+      for (const [label, slot] of rows) {
+        const value = source.get(slot);
+        if (!value) continue;
+        const row = layoutGroup(surface.ownerDocument, 'bs-flow-source-row');
+        const caption = layoutGroup(surface.ownerDocument, 'bs-flow-source-label');
+        caption.textContent = label;
+        row.append(caption, value);
+        group.append(row);
+      }
+      lists.append(group);
+    }
+    chart.append(lists);
+    chart.classList.add('bs-flow-replaced-graphic');
+    authoredNode(surface, '3SNA-0')?.classList.add('bs-flow-replaced-date-axis');
+    chart.querySelector(':scope > .bs-unavailable-graphic-message')?.remove();
+    return;
+  }
+  if (contract.board_id !== '2RWK-1') return;
+  // Keep the received numeric leaves; the authored rectangles are still suppressed.
+  for (const id of ['3PB6-0', '3SH9-0']) {
+    const group = authoredNode(surface, id);
+    group?.querySelector(':scope > .bs-unavailable-graphic-message')?.remove();
+  }
+  for (const id of ['3PB6-0', '3FQ5-0', '3FQD-0']) {
+    authoredNode(surface, id)?.classList.add('bs-flow-numeric-list');
+  }
+  // Do not associate ka10013 credit ratios with ka10014 dates by visual position.
+  const axis = authoredNode(surface, '3FQB-0');
+  if (axis && !axis.querySelector('.bs-flow-date-heading')) {
+    const label = layoutGroup(surface.ownerDocument, 'bs-flow-date-heading');
+    label.textContent = '공매도 조회일자';
+    axis.prepend(label);
+  }
+}
+
+function updateFlowResidualDetails(surface, plan) {
+  const id = surface.dataset?.bsBoardId;
+  const groups = {
+    '2ROJ-1': [
+      ['2RPL-1', ['s127','s129','s131','s134','s136','s138'], '거래원 조회 자료'],
+      ['3DWA-0', ['s166','s167','s168','s170','s171','s172'], '차익잔고·미결제'],
+    ],
+    '2RWK-1': [
+      ['2RXM-1', ['s118','s120','s122','s125','s127','s129'], '거래원 조회 자료'],
+      ['3PB4-0', ['s098','s099','s100','s101','s102'], '공매도 비중'],
+      ['3FQ3-0', ['s104','s105','s106','s107','s108'], '신용잔고율'],
+      ['3SH5-0', ['s150','s152','s154','s156','s158'], '공매도 대금'],
+    ],
+    '2S4E-1': [
+      ['2S5G-1', ['s114','s115','s116','s117','s118','s119','s121','s122','s123','s124','s125','s126'], '거래원 조회 자료'],
+      ['33W6-0', ['s160','s161'], '연속 순매매'],
+      ['flow-close-investors', ['s098','s101','s104'], '장마감 후 투자자별 조회'],
+      ['flow-cumulative-investors', ['s099','s102'], '기관·외국인 기간누적 조회'],
+      ['flow-total-investors', ['s105'], '투자자별 합계 조회'],
+      ['flow-cumulative-dates', ['s106','s107','s108','s109','s110'], '기관·외국인 조회일자'],
+    ],
+  }[id];
+  if (!groups) return;
+  const states = surface.__bsFlowResidualStates || (surface.__bsFlowResidualStates = new Map());
+  for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  for (const [nodeId, slots, label] of groups) {
+    const group = authoredNode(surface, nodeId);
+    if (!group) continue;
+    const values = slots.map(slot => states.get(slot));
+    const known = values.every(Boolean);
+    const received = values.some(value => value && !value.missing && !value.pending && !value.empty
+      && !value.designText && String(value.text).trim());
+    const compact = known && !received;
+    const pending = compact && values.some(value => value.pending);
+    group.classList.toggle('bs-flow-residual-empty', compact);
+    // Generic empty-leaf collapsing must not hide the explanatory group or a later zero.
+    for (let box = group; box && box !== surface; box = box.parentElement) {
+      if (surface.__bsEmptyValueHidden?.has(box) || box.dataset.bsUnavailableHidden === 'true'
+        || box.dataset.bsRowCollapsed === 'true') {
+        setHidden(box, false);
+        surface.__bsEmptyValueHidden?.delete(box);
+        delete box.dataset.bsUnavailableHidden;
+        delete box.dataset.bsRowCollapsed;
+      }
+      if (box.matches('.bs-rail, .bs-primary')) break;
+    }
+    let note = group.querySelector(':scope > .bs-flow-residual-note');
+    if (compact && !note) {
+      note = layoutGroup(surface.ownerDocument, 'bs-flow-residual-note');
+      note.setAttribute('role', 'status');
+      group.append(note);
+    }
+    if (note) {
+      note.hidden = !compact;
+      note.textContent = `${label} ${pending ? '수신 대기' : '미제공'}`;
+    }
+  }
 }
 
 function suppressStaticGraphics(surface, contract) {
@@ -3220,7 +3338,7 @@ function mountBoard(root, boardId, values, options = {}) {
   // 조회에서도 그 제목이 남았다. 카드 주제(identity)로만 고친다.
   const cardId = registry.cardIdFor(boardId);
   const identity = (cardId === 'CC-03' || cardId === 'CC-04'
-    || ['2QFO-2', '2QM7-2'].includes(String(boardId))) ? options.identity : null;
+    || ['2QFO-2', '2QM7-2', '2ROJ-1', '2RWK-1', '2S4E-1'].includes(String(boardId))) ? options.identity : null;
   const plan = mountPlan(contract, values, { ...options, identity });
   let surface = root.__bsSurface;
   if (!surface || root.__bsBoardId !== String(boardId) || !root.contains(surface)) {
@@ -3253,6 +3371,7 @@ function mountBoard(root, boardId, values, options = {}) {
     if (flowLayout) flowLayout.prepare(surface, contract);
     if (goldQuote) goldQuote.prepare(surface, contract);
     suppressStaticGraphics(surface, contract);
+    prepareFlowResidualLists(surface, contract);
     prepareRankFour(surface, contract);
     scrubRawIdentityNames(surface);
     root.__bsSurface = surface;

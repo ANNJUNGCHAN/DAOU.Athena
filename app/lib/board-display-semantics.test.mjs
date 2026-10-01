@@ -558,3 +558,70 @@ test('trade flow keeps source exchange strength and bid-ask composite beneath a 
   const composite = {composite:{...slot.composite,parts:slot.composite.parts.map((p,i)=>({...p,value:i?'12300':'12400'}))}};
   assert.match(text('2R3M-1', {s053:composite}, 's053'), /12,400.*12,300/);
 });
+
+// Exact five-tab FLOW residual regressions.
+{
+const flow = require('./board-flow-layout');
+const boards = ['2QFO-2','2QM7-2','2ROJ-1','2RWK-1','2S4E-1'];
+const assignment = (board, values, options, id) => mountPlan(registry.contractFor(board), values, options).assignments.find(slot => slot.slotId === id);
+
+test('all five flow headers keep an identifier code and separate status', () => {
+  for (const board of boards) {
+    const status = assignment(board, {}, {}, 's002').text;
+    const options = { identity: { name: '공개 합성 종목', code: '123456' } };
+    assert.equal(assignment(board, {}, options, 's001').text, '공개 합성 종목');
+    assert.equal(assignment(board, {}, options, 's003').text, '123456');
+    assert.equal(assignment(board, {}, options, 's002').text, status);
+  }
+});
+
+test('rejected received names use neutral titles and matching wrapped identity propagates', () => {
+  for (const board of boards) {
+    const fallback = { code: '123456', name: '' };
+    const neutral = flow.identityFor(board, { data: { fields: [
+      { key: 'stk_cd', value: '999999' }, { key: 'stk_nm', value: '다른 종목' },
+    ] } }, {}, fallback);
+    assert.notEqual(neutral.name, '다른 종목');
+    assert.equal(assignment(board, {}, { identity: neutral }, 's001').text, neutral.name);
+    const accepted = flow.identityFor(board, {}, { s001: { value: '수신된 종목명' }, s003: { value: '123456_AL' } }, fallback);
+    assert.equal(assignment(board, {}, { identity: accepted }, 's001').text, '수신된 종목명');
+    assert.equal(assignment(board, {}, { identity: accepted }, 's003').text, '123456');
+  }
+});
+
+test('broker quantities preserve wire signs and units while using the same neutral tone', () => {
+  const contract = registry.contractFor('2QM7-2');
+  for (const raw of ['+123','-123','-000123',0,{ value:'-123', text:'-123주', tone:'down' }]) {
+    for (const id of ['s042','s054','s066','s077','s088','s043','s055','s067','s078','s089']) {
+      const slot = contract.slots.find(s => s.slot_id === id);
+      const result = assignment('2QM7-2', { [id]: raw }, {}, id);
+      assert.equal(result.text, formatSlot(slot.format, raw).text);
+      assert.equal(result.tone, 'flat');
+      assert.equal(result.forceFlatTone, true);
+      assert.equal(result.missing, false);
+    }
+  }
+});
+
+test('numeric list dates retain full date text and raw wrapped amount units', () => {
+  for (const id of ['s149','s151','s153','s155','s157']) {
+    assert.equal(assignment('2RWK-1', { [id]:'20261002' }, {}, id).text, '2026-10-02');
+  }
+  for (const [board, ids] of [['2ROJ-1',['s074','s075','s076','s166','s170']],['2RWK-1',['s150','s152','s154','s156','s158']]]) {
+    for (const id of ids) assert.equal(assignment(board, { [id]: { value:'0', text:'0백만원', display_unit:'백만원' } }, {}, id).text, '0백만원');
+  }
+});
+
+test('received personal and fourth KPI zeros remain distinct from missing and pending', () => {
+  for (const [board, ids] of [['2RWK-1',['s029','s031','s033','s035']],['2S4E-1',['s029','s031','s033','s035','s036','s052','s062','s072','s082','s092','s160','s161']]]) {
+    for (const id of ids) {
+      const zero = assignment(board, { [id]:0 }, {}, id);
+      assert.equal(zero.missing, false);
+      assert.ok(zero.text.includes('0'));
+      assert.equal(assignment(board, {}, { deferredValueSlots:[id] }, id).pending, true);
+      assert.equal(assignment(board, {}, { emptyValueSlots:[id] }, id).empty, true);
+    }
+  }
+});
+
+}
