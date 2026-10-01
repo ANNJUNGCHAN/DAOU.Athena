@@ -3,6 +3,7 @@
 'use strict';
 const cjs = typeof module !== 'undefined' && module.exports;
 const policies = cjs ? require('./board-display-policy-data') : window.AthenaLib.BoardDisplayPolicyData;
+const RANK_NINE_IDS = ["2X5N-0","2XG6-0","2XKO-0","2XP6-0","2XTO-0","2YA8-0","2YEQ-0","2YJ8-0","2YNQ-0"];
 const isPresent = (value) => value !== undefined && value !== null && value !== '';
 const rawValue = (value) => value && typeof value === 'object' && 'value' in value ? value.value : value;
 const zeroPrice = (value) => isPresent(value) && /^[+−-]?0+(?:\.0+)?$/.test(String(value).trim());
@@ -33,16 +34,18 @@ function prepareDisplayInput(contract, values) {
       next.format = { ...rule[2], missing_text: '—' };
       // These paired values need their meaning even when a response already
       // supplies display text. Keep the global preformatted-text contract intact.
-      if (contract.board_id === '13K0-2' && bound && typeof bound === 'object'
+      if ((contract.board_id === '13K0-2' || RANK_NINE_IDS.includes(contract.board_id)) && bound && typeof bound === 'object'
         && typeof bound.text === 'string' && bound.text && !bound.missing) {
         const format = rule[2];
         let text = bound.text;
-        if (text.startsWith(format.prefix)) text = text.slice(format.prefix.length);
+        if (format.prefix && text.startsWith(format.prefix)) text = text.slice(format.prefix.length);
         const numeric = Number(String(value).replace(/,/g, '').replace('−', '-'));
         if (format.sign && Number.isFinite(numeric) && numeric < 0 && !/^[-−]/.test(text)) text = '-' + text.replace(/^\+/, '');
-        if (format.suffix && !text.endsWith(format.suffix)) text += format.suffix;
+        if (format.absolute) text = text.replace(/^([+−-])(?=\d)/, '');
+        const suffix = format.suffix || (format.unit === 'shares' ? '주' : format.unit === 'percent' ? '%' : '');
+        if (suffix && !text.endsWith(suffix)) text += suffix;
         if (changedValues === values) changedValues = { ...values };
-        changedValues[slot.slot_id] = { ...bound, text: format.prefix + text };
+        changedValues[slot.slot_id] = { ...bound, text: (format.prefix || '') + text };
       }
       return next;
     }
@@ -76,11 +79,12 @@ function prepareDisplayInput(contract, values) {
       return next;
     }
     if (role === 'direction') {
+      if (RANK_NINE_IDS.includes(contract.board_id)) { delete next.static; next.kind = 'value'; }
       next.format = { kind: 'text', missing_text: '—' };
       const label = { '1': '상한가', '2': '상승', '3': '보합', '4': '하한가', '5': '하락' }[String(value ?? '').trim()];
       if (changedValues === values) changedValues = { ...values };
       changedValues[slot.slot_id] = label ? { value, text: label } : null;
-      if (contract.board_id === '13K0-2' && slot.slot_id === 's132' && label) {
+      if (((contract.board_id === '13K0-2' && slot.slot_id === 's132') || RANK_NINE_IDS.includes(contract.board_id)) && label) {
         changedValues[slot.slot_id].tone = { '1': 'up', '2': 'up', '3': 'flat', '4': 'down', '5': 'down' }[String(value).trim()];
       }
       return next;

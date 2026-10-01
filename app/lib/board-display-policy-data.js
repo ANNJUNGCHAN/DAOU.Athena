@@ -10662,8 +10662,8 @@ const policy = {
     ],
     "s026": [
       "유동성 정상",
-      "status",
-      null
+      "caption",
+      "유동성 정상"
     ],
     "s028": [
       "정규장",
@@ -10690,6 +10690,40 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s043": [
+      "+1,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s046": [
+      "전일 1.2배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
+      }
+    ],
+    "s048": [
+      "회전율 0.24%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "회전율 "
+      }
+    ],
     "s049": [
       "108.4%",
       "unavailable",
@@ -10709,6 +10743,40 @@ const policy = {
       "198,400",
       "price",
       "cur_prc"
+    ],
+    "s054": [
+      "+3,990",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s057": [
+      "전일 1.2배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
+      }
+    ],
+    "s059": [
+      "회전율 0.68%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "회전율 "
+      }
     ],
     "s060": [
       "116.2%",
@@ -10730,6 +10798,40 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s065": [
+      "-1,220",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s068": [
+      "전일 1.1배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
+      }
+    ],
+    "s070": [
+      "회전율 1.52%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "회전율 "
+      }
+    ],
     "s071": [
       "93.8%",
       "unavailable",
@@ -10749,6 +10851,40 @@ const policy = {
       "214,000",
       "price",
       "cur_prc"
+    ],
+    "s076": [
+      "+1,800",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s079": [
+      "전일 1.2배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
+      }
+    ],
+    "s081": [
+      "회전율 1.94%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "회전율 "
+      }
     ],
     "s082": [
       "104.1%",
@@ -10770,6 +10906,40 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s087": [
+      "+23,700",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s090": [
+      "전일 1.2배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "전일비 "
+      }
+    ],
+    "s092": [
+      "회전율 1.61%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "회전율 "
+      }
+    ],
     "s093": [
       "127.5%",
       "unavailable",
@@ -10782,8 +10952,8 @@ const policy = {
     ],
     "s108": [
       "장중",
-      "status",
-      null
+      "caption",
+      "장중"
     ],
     "s114": [
       "집계 전",
@@ -10814,6 +10984,11 @@ const policy = {
       "005930 · KOSPI",
       "bound-identifier",
       "stk_cd"
+    ],
+    "s120": [
+      "선택됨",
+      "caption",
+      "첫 번째 결과"
     ],
     "s121": [
       "150,850",
@@ -11381,8 +11556,8 @@ const policy = {
     ],
     "s026": [
       "유동성 정상",
-      "status",
-      null
+      "caption",
+      "유동성 정상"
     ],
     "s028": [
       "정규장",
@@ -11393,6 +11568,11 @@ const policy = {
       "업데이트 09:42:18",
       "time",
       null
+    ],
+    "s036": [
+      "전일 거래량",
+      "caption",
+      "전일 거래량"
     ],
     "s040": [
       "삼성전자",
@@ -11408,6 +11588,18 @@ const policy = {
       "150,850",
       "price",
       "cur_prc"
+    ],
+    "s043": [
+      "+1,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
     "s044": [
       "+1.24%",
@@ -11444,6 +11636,18 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s054": [
+      "+3,990",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s055": [
       "+2.05%",
       "unavailable",
@@ -11478,6 +11682,18 @@ const policy = {
       "232,500",
       "price",
       "cur_prc"
+    ],
+    "s065": [
+      "-1,220",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
     "s066": [
       "-0.52%",
@@ -11514,6 +11730,18 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s076": [
+      "+1,800",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s077": [
       "+0.85%",
       "unavailable",
@@ -11549,6 +11777,18 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s087": [
+      "+23,700",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s088": [
       "+3.01%",
       "unavailable",
@@ -11569,175 +11809,75 @@ const policy = {
       "unavailable",
       null
     ],
-    "s098": [
-      "이수페타시스",
-      "bound-label",
-      "name"
-    ],
     "s099": [
       "007660",
       "bound-identifier",
-      "code"
+      "stk_cd"
     ],
     "s100": [
       "+29.90%",
       "unavailable",
       null
     ],
-    "s101": [
-      "한미반도체",
-      "bound-label",
-      "name"
-    ],
     "s102": [
       "042700",
       "bound-identifier",
-      "code"
+      "stk_cd"
     ],
     "s103": [
       "+4.18%",
       "unavailable",
       null
     ],
-    "s104": [
-      "한화에어로스페이스",
-      "bound-label",
-      "name"
-    ],
     "s105": [
       "012450",
       "bound-identifier",
-      "code"
+      "stk_cd"
     ],
     "s106": [
       "+3.01%",
       "unavailable",
       null
     ],
-    "s107": [
-      "SK하이닉스",
-      "bound-label",
-      "name"
-    ],
-    "s108": [
-      "000660",
-      "bound-identifier",
-      "code"
-    ],
     "s109": [
       "+2.05%",
       "unavailable",
       null
-    ],
-    "s110": [
-      "삼성전자",
-      "bound-label",
-      "name"
-    ],
-    "s111": [
-      "005930",
-      "bound-identifier",
-      "code"
     ],
     "s112": [
       "+1.24%",
       "unavailable",
       null
     ],
-    "s114": [
-      "069500",
-      "bound-identifier",
-      "code"
-    ],
     "s115": [
       "+0.86%",
       "unavailable",
       null
-    ],
-    "s116": [
-      "NAVER",
-      "bound-label",
-      "name"
-    ],
-    "s117": [
-      "035420",
-      "bound-identifier",
-      "code"
     ],
     "s118": [
       "+0.85%",
       "unavailable",
       null
     ],
-    "s119": [
-      "DB하이텍",
-      "bound-label",
-      "name"
-    ],
-    "s120": [
-      "000990",
-      "bound-identifier",
-      "code"
-    ],
     "s121": [
       "-0.34%",
       "unavailable",
       null
-    ],
-    "s122": [
-      "현대차",
-      "bound-label",
-      "name"
-    ],
-    "s123": [
-      "005380",
-      "bound-identifier",
-      "code"
     ],
     "s124": [
       "-0.52%",
       "unavailable",
       null
     ],
-    "s125": [
-      "기아",
-      "bound-label",
-      "name"
-    ],
-    "s126": [
-      "000270",
-      "bound-identifier",
-      "code"
-    ],
     "s127": [
       "-0.70%",
       "unavailable",
       null
     ],
-    "s128": [
-      "카카오",
-      "bound-label",
-      "name"
-    ],
-    "s129": [
-      "035720",
-      "bound-identifier",
-      "code"
-    ],
     "s130": [
       "-0.83%",
       "unavailable",
       null
-    ],
-    "s131": [
-      "삼성SDI",
-      "bound-label",
-      "name"
-    ],
-    "s132": [
-      "006400",
-      "bound-identifier",
-      "code"
     ],
     "s133": [
       "-1.12%",
@@ -11843,8 +11983,8 @@ const policy = {
     ],
     "s026": [
       "유동성 정상",
-      "status",
-      null
+      "caption",
+      "유동성 정상"
     ],
     "s028": [
       "정규장",
@@ -11876,15 +12016,47 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s047": [
-      "1,900억",
-      "unavailable",
-      null
+    "s044": [
+      "+14,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s046": [
+      "340만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
     ],
     "s048": [
       "매도 해당 없음",
-      "bound-label",
-      "sel_req"
+      "bound-format",
+      {
+        "kind": "number",
+        "prefix": "매도 "
+      }
+    ],
+    "s049": [
+      "매수 96.0만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s052": [
       "한미반도체",
@@ -11906,10 +12078,50 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s059": [
-      "4,780억",
-      "unavailable",
-      null
+    "s056": [
+      "+7,900",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s058": [
+      "242만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
+    ],
+    "s060": [
+      "매도 2.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s061": [
+      "매수 3.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s064": [
       "한화에어로스페이스",
@@ -11931,10 +12143,50 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s071": [
-      "5,980억",
-      "unavailable",
-      null
+    "s068": [
+      "+23,700",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s070": [
+      "73.8만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
+    ],
+    "s072": [
+      "매도 1.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s073": [
+      "매수 1.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s076": [
       "SK하이닉스",
@@ -11956,10 +12208,50 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s083": [
-      "9,860억",
-      "unavailable",
-      null
+    "s080": [
+      "+3,990",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s082": [
+      "497만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
+    ],
+    "s084": [
+      "매도 4.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s085": [
+      "매수 6.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s088": [
       "삼성전자",
@@ -11981,128 +12273,68 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s095": [
-      "2.14조",
-      "unavailable",
-      null
+    "s092": [
+      "+1,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s094": [
+      "1,420만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
+    ],
+    "s096": [
+      "매도 8.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s097": [
+      "매수 11.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s102": [
       "전체 100개 중 12개 · 09:42 기준",
       "time",
       null
     ],
-    "s103": [
-      "이수페타시스",
-      "bound-label",
-      "stk_nm"
-    ],
     "s104": [
       "007660",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s106": [
-      "한미반도체",
-      "bound-label",
-      "stk_nm"
     ],
     "s107": [
       "042700",
       "bound-identifier",
       "stk_cd"
     ],
-    "s109": [
-      "한화에어로스페이스",
-      "bound-label",
-      "stk_nm"
-    ],
     "s110": [
       "012450",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s112": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s113": [
-      "000660",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s115": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s116": [
-      "005930",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s119": [
-      "069500",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s121": [
-      "NAVER",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s122": [
-      "035420",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s124": [
-      "DB하이텍",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s125": [
-      "000990",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s127": [
-      "현대차",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s128": [
-      "005380",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s130": [
-      "기아",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s131": [
-      "000270",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s133": [
-      "카카오",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s134": [
-      "035720",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s136": [
-      "삼성SDI",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s137": [
-      "006400",
       "bound-identifier",
       "stk_cd"
     ],
@@ -12120,6 +12352,18 @@ const policy = {
       "64,500",
       "price",
       "cur_prc"
+    ],
+    "s143": [
+      "+14,850 · +29.90% · 상한가",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
     "s144": [
       "같이 비교해볼 종목",
@@ -12185,8 +12429,8 @@ const policy = {
     ],
     "s026": [
       "유동성 정상",
-      "status",
-      null
+      "caption",
+      "유동성 정상"
     ],
     "s028": [
       "정규장",
@@ -12215,8 +12459,58 @@ const policy = {
     ],
     "s043": [
       "기준가 49,650",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "기준 "
+      }
+    ],
+    "s046": [
+      "매도 54,600",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매도 "
+      }
+    ],
+    "s047": [
+      "매수 54,500",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매수 "
+      }
+    ],
+    "s048": [
+      "매도 6.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s049": [
+      "매수 41.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s051": [
       "한화에어로스페이스",
@@ -12235,8 +12529,58 @@ const policy = {
     ],
     "s054": [
       "기준가 786,300",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "기준 "
+      }
+    ],
+    "s057": [
+      "매도 803,000",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매도 "
+      }
+    ],
+    "s058": [
+      "매수 802,000",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매수 "
+      }
+    ],
+    "s059": [
+      "매도 0.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s060": [
+      "매수 1.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s062": [
       "SK하이닉스",
@@ -12255,8 +12599,58 @@ const policy = {
     ],
     "s065": [
       "기준가 194,410",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "기준 "
+      }
+    ],
+    "s068": [
+      "매도 196,600",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매도 "
+      }
+    ],
+    "s069": [
+      "매수 196,500",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매수 "
+      }
+    ],
+    "s070": [
+      "매도 3.6만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s071": [
+      "매수 5.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s073": [
       "한미반도체",
@@ -12275,8 +12669,58 @@ const policy = {
     ],
     "s076": [
       "기준가 189,500",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "기준 "
+      }
+    ],
+    "s079": [
+      "매도 191,300",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매도 "
+      }
+    ],
+    "s080": [
+      "매수 191,200",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매수 "
+      }
+    ],
+    "s081": [
+      "매도 1.6만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s082": [
+      "매수 2.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s084": [
       "삼성전자",
@@ -12295,126 +12739,76 @@ const policy = {
     ],
     "s087": [
       "기준가 149,000",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "기준 "
+      }
+    ],
+    "s090": [
+      "매도 149,950",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매도 "
+      }
+    ],
+    "s091": [
+      "매수 149,900",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "매수 "
+      }
+    ],
+    "s092": [
+      "매도 9.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s093": [
+      "매수 14.6만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
     ],
     "s097": [
       "전체 100개 중 12개 · 예상체결 08:50 기준",
       "time",
       null
     ],
-    "s098": [
-      "이수페타시스",
-      "bound-label",
-      "stk_nm"
-    ],
     "s099": [
       "007660",
       "bound-identifier",
       "stk_cd"
-    ],
-    "s101": [
-      "한화에어로스페이스",
-      "bound-label",
-      "stk_nm"
     ],
     "s102": [
       "012450",
       "bound-identifier",
       "stk_cd"
     ],
-    "s104": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
-    ],
     "s105": [
       "000660",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s107": [
-      "한미반도체",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s108": [
-      "042700",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s110": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s111": [
-      "005930",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s114": [
-      "069500",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s116": [
-      "NAVER",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s117": [
-      "035420",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s119": [
-      "DB하이텍",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s120": [
-      "000990",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s122": [
-      "현대차",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s123": [
-      "005380",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s125": [
-      "기아",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s126": [
-      "000270",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s128": [
-      "카카오",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s129": [
-      "035720",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s131": [
-      "삼성SDI",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s132": [
-      "006400",
       "bound-identifier",
       "stk_cd"
     ],
@@ -12432,6 +12826,18 @@ const policy = {
       "149,900",
       "price",
       "exp_cntr_pric"
+    ],
+    "s138": [
+      "+900 · +0.60%",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
     "s139": [
       "같이 비교해볼 종목",
@@ -12472,8 +12878,8 @@ const policy = {
     ],
     "s026": [
       "유동성 정상",
-      "status",
-      null
+      "caption",
+      "유동성 정상"
     ],
     "s029": [
       "정규장",
@@ -12484,6 +12890,11 @@ const policy = {
       "업데이트 09:42:18",
       "time",
       null
+    ],
+    "s036": [
+      "등락률",
+      "caption",
+      "전일 방향"
     ],
     "s041": [
       "삼성전자",
@@ -12500,15 +12911,55 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s044": [
+      "+1,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s045": [
       "+1.24%",
       "direction",
       "pred_pre_sig"
     ],
-    "s051": [
-      "2.14조",
-      "unavailable",
-      null
+    "s046": [
+      "매수 11.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s047": [
+      "매도 8.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s049": [
+      "매수비율 58.2%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수비율 "
+      }
     ],
     "s053": [
       "SK하이닉스",
@@ -12525,15 +12976,55 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s056": [
+      "+3,990",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s057": [
       "+2.05%",
       "direction",
       "pred_pre_sig"
     ],
-    "s063": [
-      "9,860억",
-      "unavailable",
-      null
+    "s058": [
+      "매수 6.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s059": [
+      "매도 4.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s061": [
+      "매수비율 58.1%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수비율 "
+      }
     ],
     "s065": [
       "현대차",
@@ -12550,15 +13041,55 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s068": [
+      "-1,220",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s069": [
       "-0.52%",
       "direction",
       "pred_pre_sig"
     ],
-    "s075": [
-      "7,420억",
-      "unavailable",
-      null
+    "s070": [
+      "매수 4.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s071": [
+      "매도 5.6만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s073": [
+      "매수비율 42.3%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수비율 "
+      }
     ],
     "s077": [
       "NAVER",
@@ -12575,15 +13106,55 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s080": [
+      "+1,800",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s081": [
       "+0.85%",
       "direction",
       "pred_pre_sig"
     ],
-    "s087": [
-      "6,810억",
-      "unavailable",
-      null
+    "s082": [
+      "매수 3.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s083": [
+      "매도 2.7만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s085": [
+      "매수비율 54.2%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수비율 "
+      }
     ],
     "s089": [
       "한화에어로스페이스",
@@ -12600,25 +13171,60 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s092": [
+      "+23,700",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s093": [
       "+3.01%",
       "direction",
       "pred_pre_sig"
     ],
-    "s099": [
-      "5,980억",
-      "unavailable",
-      null
+    "s094": [
+      "매수 1.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s095": [
+      "매도 1.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
+    "s097": [
+      "매수비율 61.3%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수비율 "
+      }
     ],
     "s103": [
       "전체 100개 중 12개 · 09:42 기준",
       "time",
       null
-    ],
-    "s104": [
-      "이수페타시스",
-      "bound-label",
-      "stk_nm"
     ],
     "s105": [
       "007660",
@@ -12630,11 +13236,6 @@ const policy = {
       "direction",
       "pred_pre_sig"
     ],
-    "s107": [
-      "한미반도체",
-      "bound-label",
-      "stk_nm"
-    ],
     "s108": [
       "042700",
       "bound-identifier",
@@ -12645,11 +13246,6 @@ const policy = {
       "direction",
       "pred_pre_sig"
     ],
-    "s110": [
-      "한화에어로스페이스",
-      "bound-label",
-      "stk_nm"
-    ],
     "s111": [
       "012450",
       "bound-identifier",
@@ -12657,136 +13253,6 @@ const policy = {
     ],
     "s112": [
       "+3.01%",
-      "direction",
-      "pred_pre_sig"
-    ],
-    "s113": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s114": [
-      "000660",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s115": [
-      "+2.05%",
-      "direction",
-      "pred_pre_sig"
-    ],
-    "s116": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s117": [
-      "005930",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s118": [
-      "+1.24%",
-      "direction",
-      "pred_pre_sig"
-    ],
-    "s120": [
-      "069500",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s121": [
-      "+0.86%",
-      "direction",
-      "pred_pre_sig"
-    ],
-    "s122": [
-      "NAVER",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s123": [
-      "035420",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s124": [
-      "+0.85%",
-      "direction",
-      "pred_pre_sig"
-    ],
-    "s125": [
-      "DB하이텍",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s126": [
-      "000990",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s127": [
-      "-0.34%",
-      "direction",
-      "pred_pre_sig"
-    ],
-    "s128": [
-      "현대차",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s129": [
-      "005380",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s130": [
-      "-0.52%",
-      "direction",
-      "pred_pre_sig"
-    ],
-    "s131": [
-      "기아",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s132": [
-      "000270",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s133": [
-      "-0.70%",
-      "direction",
-      "pred_pre_sig"
-    ],
-    "s134": [
-      "카카오",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s135": [
-      "035720",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s136": [
-      "-0.83%",
-      "direction",
-      "pred_pre_sig"
-    ],
-    "s137": [
-      "삼성SDI",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s138": [
-      "006400",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s139": [
-      "-1.12%",
       "direction",
       "pred_pre_sig"
     ],
@@ -12804,6 +13270,18 @@ const policy = {
       "150,850",
       "price",
       "cur_prc"
+    ],
+    "s144": [
+      "+1,850 · +1.24%",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
     "s145": [
       "같이 비교해볼 종목",
@@ -13913,8 +14391,8 @@ const policy = {
     ],
     "s026": [
       "유동성 정상",
-      "status",
-      null
+      "caption",
+      "유동성 정상"
     ],
     "s029": [
       "정규장",
@@ -13926,10 +14404,15 @@ const policy = {
       "time",
       null
     ],
-    "s040": [
-      "01",
-      "unavailable",
-      null
+    "s036": [
+      "등락률",
+      "caption",
+      "전일 방향"
+    ],
+    "s037": [
+      "잔량 증가율(5분)",
+      "caption",
+      "잔량 급증률"
     ],
     "s041": [
       "삼성전자",
@@ -13946,20 +14429,54 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s044": [
+      "+1,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s045": [
       "+1.24%",
       "direction",
       "pred_pre_sig"
     ],
-    "s050": [
-      "108.4%",
-      "unavailable",
-      null
+    "s046": [
+      "+212%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s051": [
-      "02",
-      "unavailable",
-      null
+    "s047": [
+      "3.65만 → 11.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "기준량 "
+      }
+    ],
+    "s049": [
+      "총매수 11.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "총매수 "
+      }
     ],
     "s052": [
       "SK하이닉스",
@@ -13976,20 +14493,54 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s055": [
+      "+3,990",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s056": [
       "+2.05%",
       "direction",
       "pred_pre_sig"
     ],
-    "s061": [
-      "116.2%",
-      "unavailable",
-      null
+    "s057": [
+      "+183%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s062": [
-      "03",
-      "unavailable",
-      null
+    "s058": [
+      "2.4만 → 6.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "기준량 "
+      }
+    ],
+    "s060": [
+      "총매수 6.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "총매수 "
+      }
     ],
     "s063": [
       "현대차",
@@ -14006,20 +14557,54 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s066": [
+      "-1,220",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s067": [
       "-0.52%",
       "direction",
       "pred_pre_sig"
     ],
-    "s072": [
-      "93.8%",
-      "unavailable",
-      null
+    "s068": [
+      "+156%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s073": [
-      "04",
-      "unavailable",
-      null
+    "s069": [
+      "1.6만 → 4.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "기준량 "
+      }
+    ],
+    "s071": [
+      "총매수 4.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "총매수 "
+      }
     ],
     "s074": [
       "NAVER",
@@ -14036,20 +14621,54 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s077": [
+      "+1,800",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s078": [
       "+0.85%",
       "direction",
       "pred_pre_sig"
     ],
-    "s083": [
-      "104.1%",
-      "unavailable",
-      null
+    "s079": [
+      "+129%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s084": [
-      "05",
-      "unavailable",
-      null
+    "s080": [
+      "1.4만 → 3.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "기준량 "
+      }
+    ],
+    "s082": [
+      "총매수 3.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "총매수 "
+      }
     ],
     "s085": [
       "한화에어로스페이스",
@@ -14066,190 +14685,69 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s088": [
+      "+23,700",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s089": [
       "+3.01%",
       "direction",
       "pred_pre_sig"
     ],
-    "s094": [
-      "127.5%",
-      "unavailable",
-      null
+    "s090": [
+      "+111%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s099": [
-      "이수페타시스",
-      "bound-label",
-      "name"
+    "s091": [
+      "0.9만 → 1.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "기준량 "
+      }
+    ],
+    "s093": [
+      "총매수 1.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "총매수 "
+      }
     ],
     "s100": [
       "007660",
       "bound-identifier",
-      "code"
-    ],
-    "s101": [
-      "+29.90%",
-      "unavailable",
-      null
-    ],
-    "s102": [
-      "한미반도체",
-      "bound-label",
-      "name"
+      "stk_cd"
     ],
     "s103": [
       "042700",
       "bound-identifier",
-      "code"
-    ],
-    "s104": [
-      "+4.18%",
-      "unavailable",
-      null
-    ],
-    "s105": [
-      "한화에어로스페이스",
-      "bound-label",
-      "name"
+      "stk_cd"
     ],
     "s106": [
       "012450",
       "bound-identifier",
-      "code"
-    ],
-    "s107": [
-      "+3.01%",
-      "unavailable",
-      null
-    ],
-    "s108": [
-      "SK하이닉스",
-      "bound-label",
-      "name"
-    ],
-    "s109": [
-      "000660",
-      "bound-identifier",
-      "code"
-    ],
-    "s110": [
-      "+2.05%",
-      "unavailable",
-      null
-    ],
-    "s111": [
-      "삼성전자",
-      "bound-label",
-      "name"
-    ],
-    "s112": [
-      "005930",
-      "bound-identifier",
-      "code"
-    ],
-    "s113": [
-      "+1.24%",
-      "unavailable",
-      null
-    ],
-    "s115": [
-      "069500",
-      "bound-identifier",
-      "code"
-    ],
-    "s116": [
-      "+0.86%",
-      "unavailable",
-      null
-    ],
-    "s117": [
-      "NAVER",
-      "bound-label",
-      "name"
-    ],
-    "s118": [
-      "035420",
-      "bound-identifier",
-      "code"
-    ],
-    "s119": [
-      "+0.85%",
-      "unavailable",
-      null
-    ],
-    "s120": [
-      "DB하이텍",
-      "bound-label",
-      "name"
-    ],
-    "s121": [
-      "000990",
-      "bound-identifier",
-      "code"
-    ],
-    "s122": [
-      "-0.34%",
-      "unavailable",
-      null
-    ],
-    "s123": [
-      "현대차",
-      "bound-label",
-      "name"
-    ],
-    "s124": [
-      "005380",
-      "bound-identifier",
-      "code"
-    ],
-    "s125": [
-      "-0.52%",
-      "unavailable",
-      null
-    ],
-    "s126": [
-      "기아",
-      "bound-label",
-      "name"
-    ],
-    "s127": [
-      "000270",
-      "bound-identifier",
-      "code"
-    ],
-    "s128": [
-      "-0.70%",
-      "unavailable",
-      null
-    ],
-    "s129": [
-      "카카오",
-      "bound-label",
-      "name"
-    ],
-    "s130": [
-      "035720",
-      "bound-identifier",
-      "code"
-    ],
-    "s131": [
-      "-0.83%",
-      "unavailable",
-      null
-    ],
-    "s132": [
-      "삼성SDI",
-      "bound-label",
-      "name"
-    ],
-    "s133": [
-      "006400",
-      "bound-identifier",
-      "code"
-    ],
-    "s134": [
-      "-1.12%",
-      "unavailable",
-      null
+      "stk_cd"
     ],
     "s136": [
       "005930 · KOSPI",
@@ -14265,6 +14763,18 @@ const policy = {
       "150,850",
       "price",
       "cur_prc"
+    ],
+    "s139": [
+      "+1,850 · +1.24%",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
     "s140": [
       "같이 비교해볼 종목",
@@ -14345,8 +14855,8 @@ const policy = {
     ],
     "s026": [
       "유동성 정상",
-      "status",
-      null
+      "caption",
+      "유동성 정상"
     ],
     "s029": [
       "정규장",
@@ -14358,10 +14868,10 @@ const policy = {
       "time",
       null
     ],
-    "s040": [
-      "01",
-      "unavailable",
-      null
+    "s036": [
+      "등락률",
+      "caption",
+      "전일 방향"
     ],
     "s041": [
       "삼성전자",
@@ -14378,20 +14888,65 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s044": [
+      "+1,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s045": [
       "+1.24%",
       "direction",
       "pred_pre_sig"
     ],
-    "s050": [
-      "108.4%",
-      "unavailable",
-      null
+    "s046": [
+      "+37.6%p",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s051": [
-      "02",
-      "unavailable",
-      null
+    "s047": [
+      "101.4% → 139.0%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
+      }
+    ],
+    "s048": [
+      "매수 11.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s049": [
+      "매도 8.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
     ],
     "s052": [
       "SK하이닉스",
@@ -14408,20 +14963,65 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s055": [
+      "+3,990",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s056": [
       "+2.05%",
       "direction",
       "pred_pre_sig"
     ],
-    "s061": [
-      "116.2%",
-      "unavailable",
-      null
+    "s057": [
+      "+32.4%p",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s062": [
-      "03",
-      "unavailable",
-      null
+    "s058": [
+      "106.4% → 138.8%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
+      }
+    ],
+    "s059": [
+      "매수 6.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s060": [
+      "매도 4.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
     ],
     "s063": [
       "현대차",
@@ -14438,20 +15038,65 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s066": [
+      "-1,220",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s067": [
       "-0.52%",
       "direction",
       "pred_pre_sig"
     ],
-    "s072": [
-      "93.8%",
-      "unavailable",
-      null
+    "s068": [
+      "+21.6%p",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s073": [
-      "04",
-      "unavailable",
-      null
+    "s069": [
+      "51.6% → 73.2%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
+      }
+    ],
+    "s070": [
+      "매수 4.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s071": [
+      "매도 5.6만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
     ],
     "s074": [
       "NAVER",
@@ -14468,20 +15113,65 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s077": [
+      "+1,800",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s078": [
       "+0.85%",
       "direction",
       "pred_pre_sig"
     ],
-    "s083": [
-      "104.1%",
-      "unavailable",
-      null
+    "s079": [
+      "+16.3%p",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s084": [
-      "05",
-      "unavailable",
-      null
+    "s080": [
+      "102.2% → 118.5%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
+      }
+    ],
+    "s081": [
+      "매수 3.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s082": [
+      "매도 2.7만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
     ],
     "s085": [
       "한화에어로스페이스",
@@ -14498,190 +15188,80 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s088": [
+      "+23,700",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
     "s089": [
       "+3.01%",
       "direction",
       "pred_pre_sig"
     ],
-    "s094": [
-      "127.5%",
-      "unavailable",
-      null
+    "s090": [
+      "+12.1%p",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
     ],
-    "s099": [
-      "이수페타시스",
-      "bound-label",
-      "name"
+    "s091": [
+      "146.2% → 158.3%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
+      }
+    ],
+    "s092": [
+      "매수 1.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s093": [
+      "매도 1.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
     ],
     "s100": [
       "007660",
       "bound-identifier",
-      "code"
-    ],
-    "s101": [
-      "+29.90%",
-      "unavailable",
-      null
-    ],
-    "s102": [
-      "한미반도체",
-      "bound-label",
-      "name"
+      "stk_cd"
     ],
     "s103": [
       "042700",
       "bound-identifier",
-      "code"
-    ],
-    "s104": [
-      "+4.18%",
-      "unavailable",
-      null
-    ],
-    "s105": [
-      "한화에어로스페이스",
-      "bound-label",
-      "name"
+      "stk_cd"
     ],
     "s106": [
       "012450",
       "bound-identifier",
-      "code"
-    ],
-    "s107": [
-      "+3.01%",
-      "unavailable",
-      null
-    ],
-    "s108": [
-      "SK하이닉스",
-      "bound-label",
-      "name"
-    ],
-    "s109": [
-      "000660",
-      "bound-identifier",
-      "code"
-    ],
-    "s110": [
-      "+2.05%",
-      "unavailable",
-      null
-    ],
-    "s111": [
-      "삼성전자",
-      "bound-label",
-      "name"
-    ],
-    "s112": [
-      "005930",
-      "bound-identifier",
-      "code"
-    ],
-    "s113": [
-      "+1.24%",
-      "unavailable",
-      null
-    ],
-    "s115": [
-      "069500",
-      "bound-identifier",
-      "code"
-    ],
-    "s116": [
-      "+0.86%",
-      "unavailable",
-      null
-    ],
-    "s117": [
-      "NAVER",
-      "bound-label",
-      "name"
-    ],
-    "s118": [
-      "035420",
-      "bound-identifier",
-      "code"
-    ],
-    "s119": [
-      "+0.85%",
-      "unavailable",
-      null
-    ],
-    "s120": [
-      "DB하이텍",
-      "bound-label",
-      "name"
-    ],
-    "s121": [
-      "000990",
-      "bound-identifier",
-      "code"
-    ],
-    "s122": [
-      "-0.34%",
-      "unavailable",
-      null
-    ],
-    "s123": [
-      "현대차",
-      "bound-label",
-      "name"
-    ],
-    "s124": [
-      "005380",
-      "bound-identifier",
-      "code"
-    ],
-    "s125": [
-      "-0.52%",
-      "unavailable",
-      null
-    ],
-    "s126": [
-      "기아",
-      "bound-label",
-      "name"
-    ],
-    "s127": [
-      "000270",
-      "bound-identifier",
-      "code"
-    ],
-    "s128": [
-      "-0.70%",
-      "unavailable",
-      null
-    ],
-    "s129": [
-      "카카오",
-      "bound-label",
-      "name"
-    ],
-    "s130": [
-      "035720",
-      "bound-identifier",
-      "code"
-    ],
-    "s131": [
-      "-0.83%",
-      "unavailable",
-      null
-    ],
-    "s132": [
-      "삼성SDI",
-      "bound-label",
-      "name"
-    ],
-    "s133": [
-      "006400",
-      "bound-identifier",
-      "code"
-    ],
-    "s134": [
-      "-1.12%",
-      "unavailable",
-      null
+      "stk_cd"
     ],
     "s136": [
       "005930 · KOSPI",
@@ -14697,6 +15277,18 @@ const policy = {
       "150,850",
       "price",
       "cur_prc"
+    ],
+    "s139": [
+      "+1,850 · +1.24%",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
     "s140": [
       "같이 비교해볼 종목",
@@ -14777,8 +15369,8 @@ const policy = {
     ],
     "s026": [
       "유동성 정상",
-      "status",
-      null
+      "caption",
+      "유동성 정상"
     ],
     "s028": [
       "정규장",
@@ -14790,10 +15382,10 @@ const policy = {
       "time",
       null
     ],
-    "s039": [
-      "01",
-      "unavailable",
-      null
+    "s036": [
+      "거래량 배율(5분)",
+      "caption",
+      "거래량 급증률"
     ],
     "s040": [
       "삼성전자",
@@ -14810,15 +15402,49 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s049": [
-      "108.4%",
-      "unavailable",
-      null
+    "s043": [
+      "+1,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
-    "s050": [
-      "02",
-      "unavailable",
-      null
+    "s045": [
+      "6.4배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
+    ],
+    "s046": [
+      "22만 → 141만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "이전 "
+      }
+    ],
+    "s048": [
+      "누적 1,420만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
     ],
     "s051": [
       "SK하이닉스",
@@ -14835,15 +15461,49 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s060": [
-      "116.2%",
-      "unavailable",
-      null
+    "s054": [
+      "+3,990",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
-    "s061": [
-      "03",
-      "unavailable",
-      null
+    "s056": [
+      "5.2배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
+    ],
+    "s057": [
+      "9.8만 → 51만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "이전 "
+      }
+    ],
+    "s059": [
+      "누적 497만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
     ],
     "s062": [
       "현대차",
@@ -14860,15 +15520,49 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s071": [
-      "93.8%",
-      "unavailable",
-      null
+    "s065": [
+      "-1,220",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
-    "s072": [
-      "04",
-      "unavailable",
-      null
+    "s067": [
+      "4.1배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
+    ],
+    "s068": [
+      "7.2만 → 29.5만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "이전 "
+      }
+    ],
+    "s070": [
+      "누적 319만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
     ],
     "s073": [
       "NAVER",
@@ -14885,15 +15579,49 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s082": [
-      "104.1%",
-      "unavailable",
-      null
+    "s076": [
+      "+1,800",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
-    "s083": [
-      "05",
-      "unavailable",
-      null
+    "s078": [
+      "3.6배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
+    ],
+    "s079": [
+      "6.4만 → 23만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "이전 "
+      }
+    ],
+    "s081": [
+      "누적 318만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
     ],
     "s084": [
       "한화에어로스페이스",
@@ -14910,125 +15638,64 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s093": [
-      "127.5%",
-      "unavailable",
-      null
+    "s087": [
+      "+23,700",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
-    "s098": [
-      "이수페타시스",
-      "bound-label",
-      "name"
+    "s089": [
+      "2.8배",
+      "bound-format",
+      {
+        "unit": "percent",
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
+      }
+    ],
+    "s090": [
+      "1.5만 → 4.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "이전 "
+      }
+    ],
+    "s092": [
+      "누적 73.8만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
     ],
     "s099": [
       "007660",
       "bound-identifier",
-      "code"
-    ],
-    "s101": [
-      "한미반도체",
-      "bound-label",
-      "name"
+      "stk_cd"
     ],
     "s102": [
       "042700",
       "bound-identifier",
-      "code"
-    ],
-    "s104": [
-      "한화에어로스페이스",
-      "bound-label",
-      "name"
+      "stk_cd"
     ],
     "s105": [
       "012450",
       "bound-identifier",
-      "code"
-    ],
-    "s107": [
-      "SK하이닉스",
-      "bound-label",
-      "name"
-    ],
-    "s108": [
-      "000660",
-      "bound-identifier",
-      "code"
-    ],
-    "s110": [
-      "삼성전자",
-      "bound-label",
-      "name"
-    ],
-    "s111": [
-      "005930",
-      "bound-identifier",
-      "code"
-    ],
-    "s114": [
-      "069500",
-      "bound-identifier",
-      "code"
-    ],
-    "s116": [
-      "NAVER",
-      "bound-label",
-      "name"
-    ],
-    "s117": [
-      "035420",
-      "bound-identifier",
-      "code"
-    ],
-    "s119": [
-      "DB하이텍",
-      "bound-label",
-      "name"
-    ],
-    "s120": [
-      "000990",
-      "bound-identifier",
-      "code"
-    ],
-    "s122": [
-      "현대차",
-      "bound-label",
-      "name"
-    ],
-    "s123": [
-      "005380",
-      "bound-identifier",
-      "code"
-    ],
-    "s125": [
-      "기아",
-      "bound-label",
-      "name"
-    ],
-    "s126": [
-      "000270",
-      "bound-identifier",
-      "code"
-    ],
-    "s128": [
-      "카카오",
-      "bound-label",
-      "name"
-    ],
-    "s129": [
-      "035720",
-      "bound-identifier",
-      "code"
-    ],
-    "s131": [
-      "삼성SDI",
-      "bound-label",
-      "name"
-    ],
-    "s132": [
-      "006400",
-      "bound-identifier",
-      "code"
+      "stk_cd"
     ],
     "s135": [
       "005930 · KOSPI",
@@ -15114,8 +15781,8 @@ const policy = {
     ],
     "s026": [
       "유동성 정상",
-      "status",
-      null
+      "caption",
+      "유동성 정상"
     ],
     "s028": [
       "정규장",
@@ -15142,6 +15809,63 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s042": [
+      "당일 종가 150,850",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "정규장 "
+      }
+    ],
+    "s044": [
+      "+350",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s046": [
+      "거래대금 187억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s047": [
+      "매수 4.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s048": [
+      "매도 3.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
     "s050": [
       "SK하이닉스",
       "bound-label",
@@ -15156,6 +15880,63 @@ const policy = {
       "198,800",
       "price",
       "cur_prc"
+    ],
+    "s053": [
+      "당일 종가 198,400",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "정규장 "
+      }
+    ],
+    "s055": [
+      "+400",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s057": [
+      "거래대금 115억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s058": [
+      "매수 2.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s059": [
+      "매도 1.6만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
     ],
     "s061": [
       "현대차",
@@ -15172,6 +15953,63 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s064": [
+      "당일 종가 232,500",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "정규장 "
+      }
+    ],
+    "s066": [
+      "+400",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s068": [
+      "거래대금 74.5억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s069": [
+      "매수 1.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s070": [
+      "매도 1.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
+    ],
     "s072": [
       "NAVER",
       "bound-label",
@@ -15186,6 +16024,63 @@ const policy = {
       "214,250",
       "price",
       "cur_prc"
+    ],
+    "s075": [
+      "당일 종가 214,000",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "정규장 "
+      }
+    ],
+    "s077": [
+      "+250",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s079": [
+      "거래대금 55.7억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s080": [
+      "매수 1.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s081": [
+      "매도 0.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
     ],
     "s083": [
       "한화에어로스페이스",
@@ -15202,118 +16097,75 @@ const policy = {
       "price",
       "cur_prc"
     ],
-    "s097": [
-      "삼성전자",
-      "bound-label",
-      "stk_nm"
+    "s086": [
+      "당일 종가 810,000",
+      "bound-format",
+      {
+        "kind": "number",
+        "absolute": true,
+        "precision": 0,
+        "suffix": "원",
+        "prefix": "정규장 "
+      }
+    ],
+    "s088": [
+      "+500",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
+    ],
+    "s090": [
+      "거래대금 56.7억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s091": [
+      "매수 0.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매수 "
+      }
+    ],
+    "s092": [
+      "매도 0.3만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 1,
+        "tone": "neutral",
+        "prefix": "매도 "
+      }
     ],
     "s098": [
       "005930",
       "bound-identifier",
       "stk_cd"
     ],
-    "s100": [
-      "SK하이닉스",
-      "bound-label",
-      "stk_nm"
-    ],
     "s101": [
       "000660",
       "bound-identifier",
       "stk_cd"
     ],
-    "s103": [
-      "현대차",
-      "bound-label",
-      "stk_nm"
-    ],
     "s104": [
       "005380",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s106": [
-      "NAVER",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s107": [
-      "035420",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s109": [
-      "한화에어로스페이스",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s110": [
-      "012450",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s112": [
-      "이수페타시스",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s113": [
-      "007660",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s115": [
-      "한미반도체",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s116": [
-      "042700",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s119": [
-      "069500",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s121": [
-      "기아",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s122": [
-      "000270",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s124": [
-      "DB하이텍",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s125": [
-      "000990",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s127": [
-      "카카오",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s128": [
-      "035720",
-      "bound-identifier",
-      "stk_cd"
-    ],
-    "s130": [
-      "삼성SDI",
-      "bound-label",
-      "stk_nm"
-    ],
-    "s131": [
-      "006400",
       "bound-identifier",
       "stk_cd"
     ],
@@ -15331,6 +16183,18 @@ const policy = {
       "151,200",
       "price",
       "cur_prc"
+    ],
+    "s137": [
+      "+350 · +0.23%",
+      "bound-format",
+      {
+        "kind": "number",
+        "sign": true,
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
+      }
     ],
     "s138": [
       "같이 비교해볼 종목",

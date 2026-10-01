@@ -1688,10 +1688,16 @@ function wireCardActions(host, envelope, mounted) {
   const surface = mounted && mounted.surface;
   if (!surface || !boardCardActions) return 0;
   let wired = 0;
+  const guarded = ["2X5N-0","2XG6-0","2XKO-0","2XP6-0","2XTO-0","2YA8-0","2YEQ-0","2YJ8-0","2YNQ-0"].includes(surface.dataset.bsBoardId);
   for (const { node, action } of boardCardActions.actionNodes(surface)) {
+    const needsTarget=guarded && ['종목 상세 열기','비교에 추가'].includes(action.control);
+    if(needsTarget)node.__bsRankingActionContext={surface,envelope,action};
+    const disabled=needsTarget && !cardActionStock(node,surface,envelope,action);
+    if(needsTarget){node.setAttribute('aria-disabled',String(disabled));if(disabled)node.title='조회 종목이 있으면 열 수 있습니다';else node.removeAttribute('title');}
+
     const didWire = boardMount.wireStateControlActivation(
       node,
-      () => { void runCardAction(node, surface, envelope, action); },
+      () => { const context=needsTarget?node.__bsRankingActionContext:{surface,envelope,action};if(needsTarget&&!cardActionStock(node,context.surface,context.envelope,context.action))return;void runCardAction(node,context.surface,context.envelope,context.action); },
       { keyboard: true },
     );
     if (!didWire) continue;

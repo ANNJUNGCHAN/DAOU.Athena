@@ -1278,3 +1278,50 @@
 .bs-flow-source-row { display:grid; grid-template-columns:minmax(48px,.6fr) minmax(0,1.4fr); align-items:baseline; gap:12px; padding-block:5px; min-width:0; }
 .bs-flow-source-label { color:var(--color-k-dim); font-size:12px; line-height:1.5; }
 .board-surface[data-bs-board-id="2S4E-1"] .bs-flow-source-row > [data-slot-id] { width:100% !important; height:auto !important; min-width:0 !important; white-space:normal !important; overflow-wrap:anywhere; line-height:1.5 !important; text-align:right; }
+
+/* Exact CC06 reviewed ranking lists. Other ranking/flow boards are unaffected. */
+.bs-rank-nine .bs-rank-nine-unsupported,.bs-rank-nine .bs-rank-nine-empty-row {display:none!important}
+.bs-rank-nine :is(.bs-workspace,.bs-primary,.bs-rail) {min-height:0!important;height:auto!important;align-self:start}
+.bs-rank-nine .bs-workspace {align-items:start}
+.bs-rank-nine .bs-rail {width:100%!important;max-width:100%!important}
+.bs-rank-nine .bs-rail > [data-node],.bs-rank-nine .bs-rank-nine-info {min-width:0!important;max-width:100%!important;width:100%!important;height:auto!important;min-height:0!important}
+.bs-rank-nine .bs-rank-nine-info > [data-node] {width:100%!important;min-width:0!important;height:auto!important;min-height:0!important}
+.bs-rank-nine .bs-rank-nine-info-row {display:flex!important;flex-wrap:wrap;gap:8px;align-items:baseline}
+.bs-rank-nine .bs-rank-nine-info-row.bs-rank-nine-empty-row {display:none!important}
+.bs-rank-nine .bs-rank-nine-info-row > [data-node] {width:auto!important;min-width:0!important;max-width:100%!important;height:auto!important;flex:1 1 130px}
+.bs-rank-nine .bs-rail [data-slot-id] {height:auto!important;min-width:0!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
+.bs-rank-nine .bs-rail .bs-paired {display:none!important}
+.bs-rank-nine [data-missing],.bs-rank-nine [data-pending] {color:var(--color-k-dim)!important}
+.bs-rank-nine .bs-ranking-unavailable-group {display:block!important;min-height:0!important;height:auto!important;width:100%!important;max-width:100%!important;overflow:visible!important}
+.bs-rank-nine .bs-ranking-unavailable-note {white-space:normal;overflow-wrap:anywhere;max-width:100%;width:100%;box-sizing:border-box}
+.bs-rank-nine .bs-readable-cell[data-col="1"] {align-items:flex-start;text-align:left}
+.bs-rank-nine .bs-readable-cell [data-slot-id] {max-width:100%;white-space:normal!important;overflow-wrap:anywhere;height:auto!important;line-height:1.5!important}
+.bs-rank-nine .bs-readable-cell > [data-node] {min-width:0!important;max-width:100%!important;height:auto!important}
+.bs-rank-nine .bs-readable-owner .bs-empty-table-message {display:none!important}
+.bs-rank-nine .bs-rank-nine-mini {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));width:100%!important;gap:12px;min-height:0!important}
+.bs-rank-nine .bs-rank-nine-mini-tile {width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;display:flex!important;flex-wrap:wrap;gap:8px;align-items:baseline}
+.bs-rank-nine .bs-rank-nine-mini-tile > [data-node] {width:auto!important;min-width:0!important;max-width:100%!important;height:auto!important}
+.bs-rank-nine .bs-rank-nine-mini-tile [data-slot-id] {max-width:100%!important;min-width:0!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
+.bs-rank-nine .bs-rank-nine-mini-title {font-size:13px;font-weight:600;margin-bottom:12px}
+.bs-rank-nine [data-card-action][aria-disabled="true"] {opacity:.5;cursor:not-allowed}
+@container board (max-width:600px) {
+ .bs-rank-nine .bs-workspace {grid-template-columns:minmax(0,1fr)!important;flex-direction:column!important}
+ .bs-rank-nine .bs-primary,.bs-rank-nine .bs-rail {width:100%!important;max-width:100%!important;flex-basis:auto!important}
+ .bs-rank-nine .bs-rank-nine-mini {grid-template-columns:minmax(0,1fr)}
+}
+
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="34X2-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="34X2-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="3"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="5"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2XKO-0"] [data-node="3DRG-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2XP6-0"] [data-node="3FC5-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2XTO-0"] [data-node="365N-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YA8-0"] [data-node="36EP-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YA8-0"] [data-node="36EP-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2YEQ-0"] [data-node="36JX-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YEQ-0"] [data-node="36JX-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2YJ8-0"] [data-node="36QC-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YJ8-0"] [data-node="36QC-0"] .bs-readable-cell[data-col="6"]{display:none!important}

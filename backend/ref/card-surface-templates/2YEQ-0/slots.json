@@ -1151,8 +1151,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 — ka10022 응답에 순위 필드가 없다(목록 순서에서 파생)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s041",
@@ -1264,10 +1264,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s043",
       "collapse_group": null,
@@ -1325,9 +1327,9 @@
       "kor": "급증률",
       "format": {
         "unit": "percent",
-        "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1356,8 +1358,9 @@
       "format": {
         "unit": "percent",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
       },
       "paired_with": "s046",
       "collapse_group": null,
@@ -1395,7 +1398,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1425,7 +1429,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매도 "
       },
       "paired_with": "s048",
       "collapse_group": null,
@@ -1460,8 +1465,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "체결강도 — ka10022 응답에 없다(본자리는 등락률 상위 보드 2XKO-0 ka10027 '체결강도' 열)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s051",
@@ -1492,8 +1497,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 — ka10022 응답에 순위 필드가 없다(목록 순서에서 파생)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s052",
@@ -1605,10 +1610,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s054",
       "collapse_group": null,
@@ -1667,9 +1674,9 @@
       "kor": "급증률",
       "format": {
         "unit": "percent",
-        "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1699,8 +1706,9 @@
       "format": {
         "unit": "percent",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
       },
       "paired_with": "s057",
       "collapse_group": null,
@@ -1739,7 +1747,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1770,7 +1779,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매도 "
       },
       "paired_with": "s059",
       "collapse_group": null,
@@ -1806,8 +1816,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "체결강도 — ka10022 응답에 없다(본자리는 등락률 상위 보드 2XKO-0 ka10027 '체결강도' 열)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s062",
@@ -1838,8 +1848,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 — ka10022 응답에 순위 필드가 없다(목록 순서에서 파생)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s063",
@@ -1951,10 +1961,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s065",
       "collapse_group": null,
@@ -2013,9 +2025,9 @@
       "kor": "급증률",
       "format": {
         "unit": "percent",
-        "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2045,8 +2057,9 @@
       "format": {
         "unit": "percent",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
       },
       "paired_with": "s068",
       "collapse_group": null,
@@ -2085,7 +2098,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2116,7 +2130,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매도 "
       },
       "paired_with": "s070",
       "collapse_group": null,
@@ -2152,8 +2167,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "체결강도 — ka10022 응답에 없다(본자리는 등락률 상위 보드 2XKO-0 ka10027 '체결강도' 열)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s073",
@@ -2184,8 +2199,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 — ka10022 응답에 순위 필드가 없다(목록 순서에서 파생)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s074",
@@ -2297,10 +2312,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s076",
       "collapse_group": null,
@@ -2359,9 +2376,9 @@
       "kor": "급증률",
       "format": {
         "unit": "percent",
-        "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2391,8 +2408,9 @@
       "format": {
         "unit": "percent",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
       },
       "paired_with": "s079",
       "collapse_group": null,
@@ -2431,7 +2449,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2462,7 +2481,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매도 "
       },
       "paired_with": "s081",
       "collapse_group": null,
@@ -2498,8 +2518,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "체결강도 — ka10022 응답에 없다(본자리는 등락률 상위 보드 2XKO-0 ka10027 '체결강도' 열)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s084",
@@ -2530,8 +2550,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 — ka10022 응답에 순위 필드가 없다(목록 순서에서 파생)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s085",
@@ -2643,10 +2663,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s087",
       "collapse_group": null,
@@ -2705,9 +2727,9 @@
       "kor": "급증률",
       "format": {
         "unit": "percent",
-        "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "sign": false,
+        "precision": 2,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2737,8 +2759,9 @@
       "format": {
         "unit": "percent",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "prefix": "기준률 "
       },
       "paired_with": "s090",
       "collapse_group": null,
@@ -2777,7 +2800,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2808,7 +2832,8 @@
         "unit": "shares",
         "precision": 0,
         "sign": false,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매도 "
       },
       "paired_with": "s092",
       "collapse_group": null,
@@ -2844,8 +2869,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "체결강도 — ka10022 응답에 없다(본자리는 등락률 상위 보드 2XKO-0 ka10027 '체결강도' 열)"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s095",
@@ -2952,21 +2977,24 @@
       "node_path": "2/0/1/1/0/0/0/0",
       "paper_text": "이수페타시스",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": "base:ka10022",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s100",
@@ -2980,21 +3008,19 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": "base:ka10022",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s101",
@@ -3021,8 +3047,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s102",
@@ -3031,21 +3057,24 @@
       "node_path": "2/0/1/1/0/1/0/0",
       "paper_text": "한미반도체",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": "base:ka10022",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s103",
@@ -3059,21 +3088,19 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": "base:ka10022",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s104",
@@ -3100,8 +3127,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s105",
@@ -3110,21 +3137,24 @@
       "node_path": "2/0/1/1/0/2/0/0",
       "paper_text": "한화에어로스페이스",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": "base:ka10022",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s106",
@@ -3138,21 +3168,19 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": "base:ka10022",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s107",
@@ -3179,8 +3207,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s108",
@@ -3189,13 +3217,13 @@
       "node_path": "2/0/1/1/1/0/0/0",
       "paper_text": "SK하이닉스",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3203,7 +3231,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s109",
@@ -3217,8 +3247,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3231,7 +3261,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s110",
@@ -3258,8 +3290,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s111",
@@ -3268,13 +3300,13 @@
       "node_path": "2/0/1/1/1/1/0/0",
       "paper_text": "삼성전자",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3282,7 +3314,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s112",
@@ -3296,8 +3330,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3310,7 +3344,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s113",
@@ -3337,8 +3373,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s114",
@@ -3352,8 +3388,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": {
@@ -3366,7 +3402,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s115",
@@ -3380,8 +3418,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3394,7 +3432,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s116",
@@ -3421,8 +3461,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s117",
@@ -3431,13 +3471,13 @@
       "node_path": "2/0/1/1/2/0/0/0",
       "paper_text": "NAVER",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3445,7 +3485,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s118",
@@ -3459,8 +3501,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3473,7 +3515,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s119",
@@ -3500,8 +3544,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s120",
@@ -3510,13 +3554,13 @@
       "node_path": "2/0/1/1/2/1/0/0",
       "paper_text": "DB하이텍",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3524,7 +3568,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s121",
@@ -3538,8 +3584,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3552,7 +3598,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s122",
@@ -3579,8 +3627,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s123",
@@ -3589,13 +3637,13 @@
       "node_path": "2/0/1/1/2/2/0/0",
       "paper_text": "현대차",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3603,7 +3651,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s124",
@@ -3617,8 +3667,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3631,7 +3681,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s125",
@@ -3658,8 +3710,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s126",
@@ -3668,13 +3720,13 @@
       "node_path": "2/0/1/1/3/0/0/0",
       "paper_text": "기아",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3682,7 +3734,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s127",
@@ -3696,8 +3750,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3710,7 +3764,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s128",
@@ -3737,8 +3793,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s129",
@@ -3747,13 +3803,13 @@
       "node_path": "2/0/1/1/3/1/0/0",
       "paper_text": "카카오",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3761,7 +3817,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s130",
@@ -3775,8 +3833,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3789,7 +3847,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s131",
@@ -3816,8 +3876,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s132",
@@ -3826,13 +3886,13 @@
       "node_path": "2/0/1/1/3/2/0/0",
       "paper_text": "삼성SDI",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3840,7 +3900,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s133",
@@ -3854,8 +3916,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3868,7 +3930,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "본자리는 종목 리스트 보드 2XG6-0 '조회 대상' 블록",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s134",
@@ -3895,8 +3959,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "등락률 — ka10022·종목 리스트(ka10099) 응답에 등락률 필드가 없다"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s135",
@@ -4019,10 +4083,12 @@
       "table": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": null,
       "collapse_group": null,

@@ -1202,6 +1202,7 @@ function applyPlan(root, plan, options = {}) {
   updateAccountResidualDetails(root, plan);
   updateRankingResidualDetails(root, plan);
   updateRankFour(root, plan);
+  updateRankNine(root, plan);
   updateCurrentQuoteDetails(root, plan);
   updateOrderbookKpi(root, options);
   updateOrderbookDetails(root, plan);
@@ -2001,6 +2002,13 @@ function applyResponsiveHooks(surface) {
 
 // 실측으로 확인한 표만 보정한다. 원본 잎을 옮겨 슬롯·상태 조작은 유지한다.
 const READABLE_TABLES = {
+  "2YNQ-0": {"node":"3721-0","rows":["3726-0","372E-0","372W-0","373E-0","373W-0","374E-0"],"widths":[70,220,170,170,220,210],"label":"조회 결과","stack":false,"compact":true},
+  "2YJ8-0": {"node":"36QC-0","rows":["36QH-0","36QP-0","36R5-0","36RL-0","36S1-0","36SH-0"],"widths":[0,220,170,130,210,210,0],"label":"조회 결과","stack":false,"compact":true},
+  "2YEQ-0": {"node":"36JX-0","rows":["36K2-0","36KA-0","36KQ-0","36L6-0","36LM-0","36M2-0"],"widths":[0,220,170,130,210,210,0],"label":"조회 결과","stack":false,"compact":true},
+  "2YA8-0": {"node":"36EP-0","rows":["36EU-0","36F2-0","36FI-0","36FY-0","36GE-0","36GU-0"],"widths":[0,220,170,130,210,210,0],"label":"조회 결과","stack":false,"compact":true},
+  "2XP6-0": {"node":"3FC5-0","rows":["3FCA-0","3FCI-0","3FCY-0","3FDE-0","3FDU-0","3FEA-0"],"widths":[0,220,170,130,180,210,210],"label":"조회 결과","stack":false,"compact":true},
+  "2XKO-0": {"node":"3DRG-0","rows":["3DRL-0","3DRT-0","3DSC-0","3DSV-0","3DTE-0","3DTX-0"],"widths":[0,220,170,130,180,210,140],"label":"조회 결과","stack":false,"compact":true},
+  "2XG6-0": {"node":"352Q-0","rows":["352V-0","3533-0","353J-0","353Z-0","354F-0","354V-0"],"widths":[0,220,170,0,180,0,0],"label":"조회 결과","stack":false,"compact":true},
   '30HY-0': {"node":"34IW-0","rows":["34IX-0","34JR-0","34J6-0","34KC-0","34S0-0","34SL-0","34T6-0","34VB-0","34VW-0"],"widths":[80,240,0,210,210,210,200,0],"label":"외국인·기관 순위","stack":false,"compact":true},
   '3UTA-0': {"node":"3V3D-0","rows":["3V3G-0","3V3K-0","3V3O-0","3V3S-0","3V3W-0","3V40-0","3V44-0","3V48-0","3V4C-0","3V4G-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true,"additional":[{"node":"3V4K-0","rows":["3V4N-0","3V4R-0","3V4V-0","3V4Z-0","3V53-0","3V57-0","3V5B-0","3V5F-0","3V5J-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true},{"node":"3V5P-0","rows":["3V5S-0","3V5W-0","3V60-0","3V64-0","3V68-0","3V6C-0","3V6G-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true},{"node":"3V6K-0","rows":["3V6N-0","3V6R-0","3V6V-0","3V6Z-0","3V73-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true}]},
   '3NVG-0': {"node":"3P9I-0","rows":["3P9M-0","3P9W-0","3PA8-0"],"widths":[160,200,200,200,200],"label":"통화별 예수금","stack":false,"compact":true},
@@ -2039,7 +2047,7 @@ const READABLE_TABLES = {
   "3GRO-0": {"node":"3I8U-0","widths":[110,180,180,180],"label":"증거금율 구간별 주문가능","rows":["3I8V-0","3I93-0","3I9B-0","3I9J-0","3I9R-0","3I9Z-0","3IA7-0","3IAF-0"],"stack":false,"compact":true,"additional":[{"node":"3IAR-0","widths":[110,200,180,180,180],"label":"보증금율 구간별 주문가능","rows":["3IAS-0","3IB2-0","3IBC-0","3IBM-0","3IBW-0"],"stack":false,"compact":true}]},
   "3IGR-0": {"node":"3U6J-0","widths":[170,190,190],"label":"신용·추가 담보","rows":["3U6K-0","3U6Q-0","3U6W-0","3U72-0"],"stack":false,"compact":true},
   '32XM-0': { node: '3RU8-0', rows: ['3RU9-0', '3RUI-0', '3RV1-0', '3RVK-0', '3RW3-0', '3RWM-0', '3RX5-0', '3RXO-0', '3RY7-0', '3RYQ-0', '3RZ9-0', '3RZS-0', '3S0B-0', '3S0U-0', '3S1D-0'], widths: [52, 220, 130, 130, 170, 170, 0, 0], label: '신주인수권 조회 목록', stack: false, compact: true },
-  '2X5N-0': {"node":"34X2-0","rows":["34X7-0","34XF-0","34XV-0","34YB-0","34YR-0","34Z7-0"],"widths":[52,190,130,130,190,210,130],"label":"순위 결과","stack":false,"compact":true,"additional":[{"node":"34ZR-0","rows":["34ZV-0","3501-0","3507-0","350D-0"],"widths":[150,200,120,140,264],"label":"세션별 거래","stack":false,"compact":true}]},
+  "2X5N-0": {"node":"34X2-0","rows":["34X7-0","34XF-0","34XV-0","34YB-0","34YR-0","34Z7-0"],"widths":[0,220,170,130,180,210,0],"label":"조회 결과","stack":false,"compact":true,"additional":[{"node":"34ZR-0","rows":["34ZV-0","3501-0","3507-0","350D-0"],"widths":[100,160,140,140,180],"label":"세션별 거래 내역","compact":true}]},
   '30C1-0': { node: '3LY6-0', rows: ['3LY7-0', '3LYG-0', '3LYZ-0', '3LZI-0', '3M01-0', '3M0K-0', '3M13-0', '3M1M-0', '3M25-0', '3M2O-0', '3M37-0', '3M3Q-0', '3M49-0', '3M4S-0', '3M5B-0', '3M5U-0', '3M6D-0', '3M6W-0', '3M7F-0', '3M7Y-0', '3M8H-0'], widths: [0, 190, 130, 160, 140, 210, 0, 0], label: '거래량 갱신 결과', stack: false, compact: true },
   '15R0-2': { node: '170E-2', rows: ['36HF-0', '36IS-0', '36J5-0', '36JI-0'], widths: [190, 90, 140, 120], label: 'VI 영향 종목', stack: false, compact: true },
   "3FR6-0": {"node":"3T8I-0","rows":["3T8S-0","3T91-0","3T9C-0","3T9M-0","3T9W-0","3TA6-0","3TAG-0","3TAQ-0","3TB0-0","3TBA-0","3TBK-0","3TBU-0","3TC4-0","3TCE-0"],"widths":[210,130,130,130,130,190,0],"label":"분봉 표","stack":false,"compact":true,"additional":[{"node":"3SP2-0","rows":["3SP7-0","3SPG-0","3SPR-0","3SQ1-0"],"widths":[120,130,130,130,130,190,200],"label":"일자별 시세","stack":false,"compact":true}]},
@@ -2061,7 +2069,7 @@ const READABLE_TABLES = {
   '1JPU-0': { node: '1JQF-0', rows: ['3KMT-0', '3L53-0', '3L5C-0', '3L5L-0', '3L5U-0', '3L63-0', '3L6C-0', '3L6L-0', '3L6U-0', '3LDS-0', '3LE1-0', '3LEA-0', '3LEJ-0', '3LES-0', '3LF1-0', '3LFA-0', '3LFJ-0'], widths: [96, 120, 120, 180, 88, 110], label: '최근 체결', stack: false, compact: true },
   '2RWK-1': { node: '2RYE-1', rows: ['3AUO-0', '3AUW-0', '3AVA-0', '3AVO-0', '3AW2-0', '3AWG-0'], widths: [120, 180, 180, 120, 140, 180, 120], label: '신용·대차', stack: false, compact: true },
   '2ZTA-0': { node: '38MX-0', rows: ['38MY-0', '38NS-0', '38OD-0', '38Y7-0', '38YS-0', '38ZD-0', '38ZY-0', '38N7-0', '390J-0'], widths: [52, 180, 110, 96, 110, 180, 180, 170], label: '한도 소진율', stack: false, compact: true },
-  '2XTO-0': { node: '365N-0', rows: ['365S-0', '3660-0', '366I-0', '3670-0', '367I-0', '3680-0'], widths: [52, 180, 120, 100, 180, 180, 180], label: '잔량 순위', stack: false, compact: true },
+  "2XTO-0": {"node":"365N-0","rows":["365S-0","3660-0","366I-0","3670-0","367I-0","3680-0"],"widths":[0,220,170,130,210,210,160],"label":"조회 결과","stack":false,"compact":true},
   '2UN6-1': { node: '34NC-0', rows: ['34O8-0', '34OG-0', '34P0-0', '34PK-0', '34Q4-0', '34QO-0', '34R8-0'], widths: [130, 200, 140, 100, 100, 140, 130], label: '조건검색 결과', stack: false, compact: true },
   '3MTJ-0': { node: '3OP4-0', rows: ['3OP8-0', '3OPM-0', '3OQ2-0', '3OQJ-0'], widths: [112, 150, 150, 150, 150, 150, 150], label: '결제 예정' },
   '15J9-2': { node: '355R-0', rows: ['355S-0', '355Z-0', '356G-0', '356X-0'], widths: [166, 160, 126, 210, 180, 160], gap: 12, label: '조회 업종 종목' },
@@ -2245,6 +2253,80 @@ function updateFlowResidualDetails(surface, plan) {
       note.textContent = `${label} ${pending ? '수신 대기' : '미제공'}`;
     }
   }
+}
+
+const RANK_NINE = {
+  "2X5N-0": {"table":"34X2-0","omitted":["s039","s049","s050","s060","s061","s071","s072","s082","s083","s093","s124","s125","s126","s127","s128","s129","s130"],"omittedNodes":["34XG-0","34XU-0","34XW-0","34YA-0","34YC-0","34YQ-0","34YS-0","34Z6-0","34Z8-0","34ZM-0","2X6C-0","2X6A-0","2X69-0","2X67-0","2X66-0","2X64-0","2X63-0"],"hiddenNodes":["2X60-0","3SAQ-0","3SAT-0","3SAW-0","3SB0-0","3SB2-0","3SB4-0","3SB6-0"],"info":"3SAO-0","infoRows":[],"mini":null,"groups":[["34X2-0","조회 내역",["s040","s041","s042","s043","s044","s045","s046","s047","s048","s051","s052","s053","s054","s055","s056","s057","s058","s059","s062","s063","s064","s065","s066","s067","s068","s069","s070","s073","s074","s075","s076","s077","s078","s079","s080","s081","s084","s085","s086","s087","s088","s089","s090","s091","s092"]],["3SAO-0","추가 종목 정보",[]],["2X6E-0","첫 조회 종목",["s118","s119","s121","s122"]],["34ZR-0","세션별 거래 내역",["s104","s105","s106","s107","s109","s110","s111","s112","s114","s115","s116","s117"]]],"optionalRows":[["3501-0",["s104","s105","s106","s107"]],["3507-0",["s109","s110","s111","s112"]],["350D-0",["s114","s115","s116","s117"]]],"readable":{"node":"34X2-0","rows":["34X7-0","34XF-0","34XV-0","34YB-0","34YR-0","34Z7-0"],"widths":[0,220,170,130,180,210,0],"label":"조회 결과","stack":false,"compact":true,"additional":[{"node":"34ZR-0","rows":["34ZV-0","3501-0","3507-0","350D-0"],"widths":[100,160,140,140,180],"label":"세션별 거래 내역","compact":true}]}},
+  "2XG6-0": {"table":"352Q-0","omitted":["s039","s044","s046","s047","s048","s049","s050","s055","s057","s058","s059","s060","s061","s066","s068","s069","s070","s071","s072","s077","s079","s080","s081","s082","s083","s088","s090","s091","s092","s093","s100","s103","s106","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s140"],"omittedNodes":["3534-0","353B-0","353E-0","353G-0","353H-0","353I-0","353K-0","353R-0","353U-0","353W-0","353X-0","353Y-0","3540-0","3547-0","354A-0","354C-0","354D-0","354E-0","354G-0","354N-0","354Q-0","354S-0","354T-0","354U-0","354W-0","3553-0","3556-0","3558-0","3559-0","355A-0","3C8X-0","3C92-0","3C97-0","3C9B-0","3C9C-0","3C9D-0","3C9G-0","3C9H-0","3C9I-0","3C9L-0","3C9M-0","3C9N-0","3C9R-0","3C9S-0","3C9T-0","3C9W-0","3C9X-0","3C9Y-0","3CA1-0","3CA2-0","3CA3-0","3CA7-0","3CA8-0","3CA9-0","3CAC-0","3CAD-0","3CAE-0","3CAH-0","3CAI-0","3CAJ-0","2XGV-0"],"hiddenNodes":["3SBP-0","3SBM-0","3SBJ-0","3SBH-0","3SBF-0","3SBD-0","3SBB-0"],"info":"3SB9-0","infoRows":[],"mini":{"node":"3C8N-0","tiles":["3C8T-0","3C8Y-0","3C93-0"]},"groups":[["352Q-0","조회 내역",["s040","s041","s042","s043","s045","s051","s052","s053","s054","s056","s062","s063","s064","s065","s067","s073","s074","s075","s076","s078","s084","s085","s086","s087","s089"]],["3SB9-0","추가 종목 정보",[]],["3C8N-0","조회 종목",["s098","s099","s101","s102","s104","s105"]],["2XGX-0","첫 조회 종목",["s134","s135","s137","s138"]],["2XGJ-0","다른 조회 종목",["s141","s143","s145"]]],"optionalRows":[],"readable":{"node":"352Q-0","rows":["352V-0","3533-0","353J-0","353Z-0","354F-0","354V-0"],"widths":[0,220,170,0,180,0,0],"label":"조회 결과","stack":false,"compact":true}},
+  "2XKO-0": {"table":"3DRG-0","omitted":["s039","s047","s051","s059","s063","s071","s075","s083","s087","s095","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s135","s136","s137","s138","s145"],"omittedNodes":["3DRU-0","3DS7-0","3DSD-0","3DSQ-0","3DSW-0","3DT9-0","3DTF-0","3DTS-0","3DTY-0","3DUB-0","3DYB-0","3DYA-0","3DY8-0","3DY6-0","3DY5-0","3DY3-0","3DY1-0","3DY0-0","3DXY-0","3DXV-0","3DXU-0","3DXS-0","3DXQ-0","3DXP-0","3DXN-0","3DXL-0","3DXK-0","3DXI-0","3DXF-0","3DXE-0","3DXC-0","3DXA-0","3DX9-0","3DX7-0","3DX5-0","3DX4-0","3DX2-0","2XLD-0"],"hiddenNodes":["3SF1-0","3SEY-0","3SEV-0","3SET-0","3SER-0","3SEP-0","3T5P-0"],"info":"3SEL-0","infoRows":[],"mini":{"node":"3DWY-0","tiles":["3DYN-0","3DYI-0","3DYD-0"]},"groups":[["3DRG-0","조회 내역",["s040","s041","s042","s043","s044","s045","s046","s048","s049","s050","s052","s053","s054","s055","s056","s057","s058","s060","s061","s062","s064","s065","s066","s067","s068","s069","s070","s072","s073","s074","s076","s077","s078","s079","s080","s081","s082","s084","s085","s086","s088","s089","s090","s091","s092","s093","s094","s096","s097","s098"]],["3SEL-0","추가 종목 정보",[]],["3DWY-0","조회 종목",["s103","s104","s105","s106","s107","s108","s109","s110","s111"]],["2XLF-0","첫 조회 종목",["s139","s140","s142","s143"]],["2XL1-0","다른 조회 종목",["s146","s147","s148","s149","s150","s151"]]],"optionalRows":[],"readable":{"node":"3DRG-0","rows":["3DRL-0","3DRT-0","3DSC-0","3DSV-0","3DTE-0","3DTX-0"],"widths":[0,220,170,130,180,210,140],"label":"조회 결과","stack":false,"compact":true}},
+  "2XP6-0": {"table":"3FC5-0","omitted":["s039","s050","s061","s072","s083","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s140"],"omittedNodes":["3FCJ-0","3FCZ-0","3FDF-0","3FDV-0","3FEB-0","3EPR-0","3EPQ-0","3EPO-0","3EPM-0","3EPL-0","3EPJ-0","3EPH-0","3EPG-0","3EPE-0","3EPB-0","3EPA-0","3EP8-0","3EP6-0","3EP5-0","3EP3-0","3EP1-0","3EP0-0","3EOY-0","3EOV-0","3EOU-0","3EOS-0","3EOQ-0","3EOP-0","3EON-0","3EOL-0","3EOK-0","3EOI-0","2XPV-0"],"hiddenNodes":["3S9F-0","3S9I-0"],"info":"3S94-0","infoRows":["3S96-0","3S99-0","3S9C-0"],"mini":{"node":"3EOE-0","tiles":["3EQ3-0","3EPY-0","3EPT-0"]},"groups":[["3FC5-0","조회 내역",["s040","s041","s042","s043","s044","s045","s046","s047","s048","s049","s051","s052","s053","s054","s055","s056","s057","s058","s059","s060","s062","s063","s064","s065","s066","s067","s068","s069","s070","s071","s073","s074","s075","s076","s077","s078","s079","s080","s081","s082","s084","s085","s086","s087","s088","s089","s090","s091","s092","s093"]],["3S94-0","추가 종목 정보",["s149","s151","s153"]],["3EOE-0","조회 종목",["s098","s099","s100","s101","s102","s103","s104","s105","s106"]],["2XPX-0","첫 조회 종목",["s134","s135","s137","s138"]],["2XPJ-0","다른 조회 종목",["s141","s142","s143","s144","s145","s146"]]],"optionalRows":[["3S96-0",["s149"]],["3S99-0",["s151"]],["3S9C-0",["s153"]]],"readable":{"node":"3FC5-0","rows":["3FCA-0","3FCI-0","3FCY-0","3FDE-0","3FDU-0","3FEA-0"],"widths":[0,220,170,130,180,210,210],"label":"조회 결과","stack":false,"compact":true}},
+  "2XTO-0": {"table":"365N-0","omitted":["s040","s051","s052","s063","s064","s075","s076","s087","s088","s099","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s135","s136","s137","s138","s139","s146"],"omittedNodes":["3661-0","366H-0","366J-0","366Z-0","3671-0","367H-0","367J-0","367Z-0","3681-0","368H-0","3EGD-0","3EGC-0","3EGA-0","3EG8-0","3EG7-0","3EG5-0","3EG3-0","3EG2-0","3EG0-0","3EFX-0","3EFW-0","3EFU-0","3EFS-0","3EFR-0","3EFP-0","3EFN-0","3EFM-0","3EFK-0","3EFH-0","3EFG-0","3EFE-0","3EFC-0","3EFB-0","3EF9-0","3EF7-0","3EF6-0","3EF4-0","2XUD-0"],"hiddenNodes":["3SC9-0","3SC6-0","3SC3-0","3SC1-0","3SBZ-0","3SBX-0","3SBV-0"],"info":"3SBT-0","infoRows":[],"mini":{"node":"3EF0-0","tiles":["3EGP-0","3EGK-0","3EGF-0"]},"groups":[["365N-0","조회 내역",["s041","s042","s043","s044","s045","s046","s047","s048","s049","s050","s053","s054","s055","s056","s057","s058","s059","s060","s061","s062","s065","s066","s067","s068","s069","s070","s071","s072","s073","s074","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s089","s090","s091","s092","s093","s094","s095","s096","s097","s098"]],["3SBT-0","추가 종목 정보",[]],["3EF0-0","조회 종목",["s104","s105","s106","s107","s108","s109","s110","s111","s112"]],["2XUF-0","첫 조회 종목",["s140","s141","s143","s144"]],["2XU1-0","다른 조회 종목",["s147","s148","s149","s150","s151","s152"]]],"optionalRows":[],"readable":{"node":"365N-0","rows":["365S-0","3660-0","366I-0","3670-0","367I-0","3680-0"],"widths":[0,220,170,130,210,210,160],"label":"조회 결과","stack":false,"compact":true}},
+  "2YA8-0": {"table":"36EP-0","omitted":["s040","s050","s051","s061","s062","s072","s073","s083","s084","s094","s101","s104","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s141"],"omittedNodes":["36F3-0","36FH-0","36FJ-0","36FX-0","36FZ-0","36GD-0","36GF-0","36GT-0","36GV-0","36H9-0","3EIN-0","3EII-0","3EID-0","3EIA-0","3EI9-0","3EI7-0","3EI5-0","3EI4-0","3EI2-0","3EI0-0","3EHZ-0","3EHX-0","3EHU-0","3EHT-0","3EHR-0","3EHP-0","3EHO-0","3EHM-0","3EHK-0","3EHJ-0","3EHH-0","3EHE-0","3EHD-0","3EHB-0","3EH9-0","3EH8-0","3EH6-0","3EH4-0","3EH3-0","3EH1-0","2YAX-0"],"hiddenNodes":["3SCT-0","3SCQ-0","3SCN-0","3SCL-0","3SCJ-0","3SCH-0","3SCF-0"],"info":"3SCD-0","infoRows":[],"mini":{"node":"3EGX-0","tiles":["3EIM-0","3EIH-0","3EIC-0"]},"groups":[["36EP-0","조회 내역",["s041","s042","s043","s044","s045","s046","s047","s048","s049","s052","s053","s054","s055","s056","s057","s058","s059","s060","s063","s064","s065","s066","s067","s068","s069","s070","s071","s074","s075","s076","s077","s078","s079","s080","s081","s082","s085","s086","s087","s088","s089","s090","s091","s092","s093"]],["3SCD-0","추가 종목 정보",[]],["3EGX-0","조회 종목",["s099","s100","s102","s103","s105","s106"]],["2YAZ-0","첫 조회 종목",["s135","s136","s138","s139"]],["2YAL-0","다른 조회 종목",["s142","s144","s146"]]],"optionalRows":[],"readable":{"node":"36EP-0","rows":["36EU-0","36F2-0","36FI-0","36FY-0","36GE-0","36GU-0"],"widths":[0,220,170,130,210,210,0],"label":"조회 결과","stack":false,"compact":true}},
+  "2YEQ-0": {"table":"36JX-0","omitted":["s040","s050","s051","s061","s062","s072","s073","s083","s084","s094","s101","s104","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s141"],"omittedNodes":["36KB-0","36KP-0","36KR-0","36L5-0","36L7-0","36LL-0","36LN-0","36M1-0","36M3-0","36MH-0","3EKK-0","3EKF-0","3EKA-0","3EK7-0","3EK6-0","3EK4-0","3EK2-0","3EK1-0","3EJZ-0","3EJX-0","3EJW-0","3EJU-0","3EJR-0","3EJQ-0","3EJO-0","3EJM-0","3EJL-0","3EJJ-0","3EJH-0","3EJG-0","3EJE-0","3EJB-0","3EJA-0","3EJ8-0","3EJ6-0","3EJ5-0","3EJ3-0","3EJ1-0","3EJ0-0","3EIY-0","2YFF-0"],"hiddenNodes":["3SDD-0","3SDA-0","3SD7-0","3SD5-0","3SD3-0","3SD1-0","3SCZ-0"],"info":"3SCX-0","infoRows":[],"mini":{"node":"3EIU-0","tiles":["3EKJ-0","3EKE-0","3EK9-0"]},"groups":[["36JX-0","조회 내역",["s041","s042","s043","s044","s045","s046","s047","s048","s049","s052","s053","s054","s055","s056","s057","s058","s059","s060","s063","s064","s065","s066","s067","s068","s069","s070","s071","s074","s075","s076","s077","s078","s079","s080","s081","s082","s085","s086","s087","s088","s089","s090","s091","s092","s093"]],["3SCX-0","추가 종목 정보",[]],["3EIU-0","조회 종목",["s099","s100","s102","s103","s105","s106"]],["2YFH-0","첫 조회 종목",["s135","s136","s138","s139"]],["2YF3-0","다른 조회 종목",["s142","s144","s146"]]],"optionalRows":[],"readable":{"node":"36JX-0","rows":["36K2-0","36KA-0","36KQ-0","36L6-0","36LM-0","36M2-0"],"widths":[0,220,170,130,210,210,0],"label":"조회 결과","stack":false,"compact":true}},
+  "2YJ8-0": {"table":"36QC-0","omitted":["s039","s049","s050","s060","s061","s071","s072","s082","s083","s093","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s140"],"omittedNodes":["36QQ-0","36R4-0","36R6-0","36RK-0","36RM-0","36S0-0","36S2-0","36SG-0","36SI-0","36SW-0","3EM4-0","3EM3-0","3EM1-0","3ELZ-0","3ELY-0","3ELW-0","3ELU-0","3ELT-0","3ELR-0","3ELO-0","3ELN-0","3ELL-0","3ELJ-0","3ELI-0","3ELG-0","3ELE-0","3ELD-0","3ELB-0","3EL8-0","3EL7-0","3EL5-0","3EL3-0","3EL2-0","3EL0-0","3EKY-0","3EKX-0","3EKV-0","2YJX-0"],"hiddenNodes":["3SDX-0","3SDU-0","3SDR-0","3SDP-0","3SDN-0","3SDL-0","3SDJ-0"],"info":"3SDH-0","infoRows":[],"mini":{"node":"3EKR-0","tiles":["3EMG-0","3EMB-0","3EM6-0"]},"groups":[["36QC-0","조회 내역",["s040","s041","s042","s043","s044","s045","s046","s047","s048","s051","s052","s053","s054","s055","s056","s057","s058","s059","s062","s063","s064","s065","s066","s067","s068","s069","s070","s073","s074","s075","s076","s077","s078","s079","s080","s081","s084","s085","s086","s087","s088","s089","s090","s091","s092"]],["3SDH-0","추가 종목 정보",[]],["3EKR-0","조회 종목",["s098","s099","s100","s101","s102","s103","s104","s105","s106"]],["2YJZ-0","첫 조회 종목",["s134","s135","s137","s138"]],["2YJL-0","다른 조회 종목",["s141","s142","s143","s144","s145","s146"]]],"optionalRows":[],"readable":{"node":"36QC-0","rows":["36QH-0","36QP-0","36R5-0","36RL-0","36S1-0","36SH-0"],"widths":[0,220,170,130,210,210,0],"label":"조회 결과","stack":false,"compact":true}},
+  "2YNQ-0": {"table":"3721-0","omitted":["s106","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s139"],"omittedNodes":["3ERO-0","3ERN-0","3ERL-0","3ERJ-0","3ERI-0","3ERG-0","3ERE-0","3ERD-0","3ERB-0","3ER8-0","3ER7-0","3ER5-0","3ER3-0","3ER2-0","3ER0-0","3EQY-0","3EQX-0","3EQV-0","3EQS-0","3EQR-0","3EQP-0","3EQN-0","3EQM-0","3EQK-0","3EQI-0","3EQH-0","3EQF-0","2YOF-0"],"hiddenNodes":["3SEH-0","3SEB-0","3SE9-0","3SE7-0","3SE5-0","3SE3-0"],"info":"3SE1-0","infoRows":["3SEE-0"],"mini":{"node":"3EQB-0","tiles":["3ES0-0","3ERV-0","3ERQ-0"]},"groups":[["3721-0","조회 내역",["s038","s039","s040","s041","s042","s043","s044","s045","s046","s047","s048","s049","s050","s051","s052","s053","s054","s055","s056","s057","s058","s059","s060","s061","s062","s063","s064","s065","s066","s067","s068","s069","s070","s071","s072","s073","s074","s075","s076","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s087","s088","s089","s090","s091","s092"]],["3SE1-0","추가 종목 정보",["s150"]],["3EQB-0","조회 종목",["s097","s098","s099","s100","s101","s102","s103","s104","s105"]],["2YOH-0","첫 조회 종목",["s133","s134","s136","s137"]],["2YO3-0","다른 조회 종목",["s140","s141","s142","s143","s144","s145"]]],"optionalRows":[["3SEE-0",["s150"]]],"readable":{"node":"3721-0","rows":["3726-0","372E-0","372W-0","373E-0","373W-0","374E-0"],"widths":[70,220,170,170,220,210],"label":"조회 결과","stack":false,"compact":true}},
+};
+function prepareRankNine(surface, contract) {
+  const config = RANK_NINE[contract.board_id];
+  if (!config) return;
+  surface.classList.add('bs-rank-nine');
+  for (const node of config.hiddenNodes) authoredNode(surface,node)?.classList.add('bs-rank-nine-unsupported');
+  for (const slot of config.omitted) surface.querySelector(`[data-slot-id="${slot}"]`)?.classList.add('bs-rank-nine-unsupported');
+  if (config.mini) {
+    const group=authoredNode(surface,config.mini.node);
+    const list=layoutGroup(surface.ownerDocument,'bs-rank-nine-mini');
+    for (const id of config.mini.tiles) {
+      const tile=authoredNode(surface,id);
+      tile.classList.add('bs-rank-nine-mini-tile');list.append(tile);
+    }
+    for (const child of [...group.children]) child.classList.add('bs-rank-nine-unsupported');
+    const title=layoutGroup(surface.ownerDocument,'bs-rank-nine-mini-title');title.textContent='첫3개 조회 종목';
+    group.append(title,list);
+  }
+  for (const [id] of config.groups) authoredNode(surface,id)?.classList.add('bs-ranking-managed');
+  for (const id of config.infoRows) authoredNode(surface,id)?.classList.add('bs-rank-nine-info-row');
+  authoredNode(surface,config.info)?.classList.add('bs-rank-nine-info');
+}
+
+function updateRankNine(surface, plan) {
+  const config=RANK_NINE[surface.dataset?.bsBoardId];
+  if (!config) return;
+  const states=surface.__bsRankNineStates||(surface.__bsRankNineStates=new Map());
+  for (const assignment of plan.assignments) states.set(assignment.slotId,assignment);
+  for (const id of config.omittedNodes) for(const node of surface.querySelectorAll(`[data-node="${id}"]`)) node.classList.add('bs-rank-nine-unsupported');
+  const received=s=>s&&!s.pending&&!s.missing&&!s.empty&&!s.designText&&String(s.text).trim();
+  for (const [id,title,slots] of config.groups) {
+    const group=authoredNode(surface,id);if(!group)continue;
+    const watched=slots.map(s=>states.get(s));
+    const empty=!watched.some(received),pending=watched.some(s=>s?.pending);
+    group.classList.toggle('bs-ranking-unavailable-group',empty);
+    for(let box=group;box&&box!==surface;box=box.parentElement) {
+      if(surface.__bsEmptyValueHidden?.has(box)||box.dataset.bsUnavailableHidden==='true'
+        ||box.dataset.bsRowCollapsed==='true') {
+        setHidden(box,false);surface.__bsEmptyValueHidden?.delete(box);delete box.dataset.bsUnavailableHidden;
+        delete box.dataset.bsRowCollapsed;
+      }
+      if(box.matches('.bs-rail,.bs-primary'))break;
+    }
+    let note=group.querySelector(':scope > .bs-ranking-unavailable-note');
+    if(empty&&!note){note=layoutGroup(surface.ownerDocument,'bs-ranking-unavailable-note');note.setAttribute('role','status');group.append(note);}
+    if(note){note.hidden=!empty;note.textContent=title+(pending?' 수신 대기':' 미제공');}
+  }
+  // Each session and actual info row restores independently when even one zero arrives.
+  for(const [id,slots] of config.optionalRows) {
+    const row=authoredNode(surface,id);if(!row)continue;
+    const empty=!slots.some(s=>received(states.get(s)));
+    row.classList.toggle('bs-rank-nine-empty-row',empty);
+    if(!empty){delete row.dataset.bsRowCollapsed;row.classList.remove('bs-row-collapsed');setHidden(row,false);}
+  }
+  for(const row of authoredNode(surface,config.table)?.querySelectorAll('[data-row]')||[]) {
+    if(row.dataset.row==='head')continue;
+    const slots=[...row.querySelectorAll('[data-slot-id]')].map(e=>e.dataset.slotId);
+    const empty=!slots.some(s=>received(states.get(s)));
+    row.classList.toggle('bs-rank-nine-empty-row',empty);
+    if(!empty){delete row.dataset.bsRowCollapsed;row.classList.remove('bs-row-collapsed');setHidden(row,false);}
+  }
+  surface.querySelector('.bs-rail')?.classList.add('bs-ranking-compact-rail');
 }
 
 function suppressStaticGraphics(surface, contract) {
@@ -3373,6 +3455,7 @@ function mountBoard(root, boardId, values, options = {}) {
     suppressStaticGraphics(surface, contract);
     prepareFlowResidualLists(surface, contract);
     prepareRankFour(surface, contract);
+    prepareRankNine(surface, contract);
     scrubRawIdentityNames(surface);
     root.__bsSurface = surface;
     root.__bsBoardId = String(boardId);

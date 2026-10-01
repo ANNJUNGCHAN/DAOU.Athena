@@ -213,7 +213,62 @@ test('ELW fixed-point volatility and LP metrics cannot appear as unscaled percen
   for(const id of ['s046','s060']) assert.ok(!slots.find(s=>s.slot_id===id).alt_mappings.some(a=>a.mapping_id==='base:ka10050'));
   assert.equal(text('15P5-2',{},'s160'),'상태 미확인');
   assert.notEqual(text('2ZN9-0',{},'s188'),'활성');
-  for(const slot of ['s026','s159','s160','s161'])assert.equal(text('2XKO-0',{},slot),'상태 미확인');
+  assert.equal(text('2XKO-0',{},'s026'),'유동성 정상');
+  for(const slot of ['s159','s160','s161'])assert.equal(text('2XKO-0',{},slot),'상태 미확인');
+});
+
+test('ranking filter names stay actionable while actual unknown direction codes stay missing', () => {
+  const boards=['2X5N-0','2XG6-0','2XKO-0','2XP6-0','2XTO-0','2YA8-0','2YEQ-0','2YJ8-0','2YNQ-0'];
+  for(const board of boards) {
+    const contract=registry.contractFor(board);
+    assert.equal(text(board,{},'s026'),'유동성 정상');
+    for(const slot of source(board).slots.filter(s=>s.f==='pred_pre_sig')) {
+      for(const[value,tone]of [['1','up'],['2','up'],['3','flat'],['4','down'],['5','down']]) {
+        const assignment=mountPlan(contract,{[slot.slot_id]:{value,text:'wire'}}).assignments.find(a=>a.slotId===slot.slot_id);
+        assert.equal(assignment.tone,tone,board+'/'+slot.slot_id+'/'+value);
+      }
+      for(const value of [null,'0','unknown']) {
+        const assignment=mountPlan(contract,{[slot.slot_id]:value}).assignments.find(a=>a.slotId===slot.slot_id);
+        assert.equal(assignment.missing,true);
+        assert.equal(assignment.text,'—');
+      }
+    }
+  }
+});
+
+test('ranking price differences preserve wrapped negatives and label a real zero once', () => {
+  for(const board of ['2X5N-0','2XG6-0','2XKO-0','2XP6-0','2XTO-0','2YA8-0','2YEQ-0','2YJ8-0','2YNQ-0']) {
+    for(const slot of source(board).slots.filter(s=>s.mapping_id&&s.f==='pred_pre')) {
+      const wrapped={value:-12345,text:'12,345'},before=JSON.stringify(wrapped);
+      assert.equal(text(board,{[slot.slot_id]:wrapped},slot.slot_id),'전일비 -12,345원');
+      assert.equal(JSON.stringify(wrapped),before);
+      assert.equal(text(board,{[slot.slot_id]:{value:0,text:'전일비 0원'}},slot.slot_id),'전일비 0원');
+      assert.equal(text(board,{[slot.slot_id]:null},slot.slot_id),'—');
+    }
+  }
+});
+
+test('ranking increase headers remain labels when all response rows are absent', () => {
+  for(const[board,slot,caption]of [['2YA8-0','s037','잔량 급증률'],['2YJ8-0','s036','거래량 급증률']]) {
+    const contract=registry.contractFor(board),generated=contract.slots.find(s=>s.slot_id===slot);
+    assert.equal(source(board).slots.find(s=>s.slot_id===slot).kind,'label');
+    assert.equal(generated.kind,'label');
+    assert.equal(generated.table.row,'head');
+    for(const options of [{},{emptyValueSlots:[slot]},{deferredValueSlots:[slot]}]) {
+      const assignment=mountPlan(contract,{},options).assignments.find(a=>a.slotId===slot);
+      assert.equal(assignment.text,caption);
+      assert.equal(assignment.missing,false);
+    }
+  }
+});
+
+test('ranking bid and ask prices keep positive amounts and zero without losing their side', () => {
+  for(const[slot,caption]of [['s046','매도 '],['s047','매수 ']]) {
+    for(const value of [-12345,{value:-12345,text:'-12,345원'}]) {
+      assert.equal(text('2XP6-0',{[slot]:value},slot),caption+'12,345원');
+    }
+    assert.equal(text('2XP6-0',{[slot]:0},slot),caption+'0원');
+  }
 });
 
 test('zero date/time sentinels are missing and leading-zero clocks are formatted before identifier handling', () => {
