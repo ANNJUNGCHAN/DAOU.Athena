@@ -819,9 +819,14 @@
       "font_size_px": 24.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0C",
-      "f": "27",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_1bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_fpr_bid"
+        }
+      ],
       "kor": "(최우선)매도호가",
       "format": {
         "unit": "text",
@@ -832,7 +837,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "base:0D",
@@ -864,9 +868,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "61",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "sel_1bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_fpr_req"
+        }
+      ],
       "kor": "매도호가수량1",
       "format": {
         "unit": "shares",
@@ -877,7 +886,6 @@
       "paired_with": "s013",
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -913,9 +921,14 @@
       "font_size_px": 24.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0C",
-      "f": "28",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_1bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_fpr_bid"
+        }
+      ],
       "kor": "(최우선)매수호가",
       "format": {
         "unit": "text",
@@ -926,7 +939,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "base:0D",
@@ -958,9 +970,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "71",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "buy_1bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_fpr_req"
+        }
+      ],
       "kor": "매수호가수량1",
       "format": {
         "unit": "shares",
@@ -971,7 +988,6 @@
       "paired_with": "s016",
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -1037,12 +1053,10 @@
       "table": null,
       "mapping_id": "base:0D",
       "f": "21",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "호가시간",
       "format": {
-        "unit": "shares",
-        "sign": false,
-        "precision": 0,
+        "kind": "time",
         "tone": "neutral"
       },
       "paired_with": null,
@@ -1292,9 +1306,14 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "45",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_5bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_5th_pre_bid"
+        }
+      ],
       "kor": "매도호가5",
       "format": {
         "unit": "text",
@@ -1305,7 +1324,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:sell_bid_prices",
@@ -1368,9 +1386,14 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "65",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "sel_5bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_5th_pre_req"
+        }
+      ],
       "kor": "매도호가수량5",
       "format": {
         "unit": "text",
@@ -1381,7 +1404,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -1400,9 +1422,14 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "44",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_4bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_4th_pre_bid"
+        }
+      ],
       "kor": "매도호가4",
       "format": {
         "unit": "text",
@@ -1413,7 +1440,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:sell_bid_prices",
@@ -1476,9 +1502,14 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "64",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "sel_4bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_4th_pre_req"
+        }
+      ],
       "kor": "매도호가수량4",
       "format": {
         "unit": "text",
@@ -1489,7 +1520,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -1508,9 +1538,14 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "43",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_3bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_3th_pre_bid"
+        }
+      ],
       "kor": "매도호가3",
       "format": {
         "unit": "text",
@@ -1521,7 +1556,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:sell_bid_prices",
@@ -1584,9 +1618,14 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "63",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "sel_3bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_3th_pre_req"
+        }
+      ],
       "kor": "매도호가수량3",
       "format": {
         "unit": "text",
@@ -1597,7 +1636,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -1616,9 +1654,14 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "42",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_2bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_2th_pre_bid"
+        }
+      ],
       "kor": "매도호가2",
       "format": {
         "unit": "text",
@@ -1629,7 +1672,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:sell_bid_prices",
@@ -1692,9 +1734,14 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "62",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "sel_2bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_2th_pre_req"
+        }
+      ],
       "kor": "매도호가수량2",
       "format": {
         "unit": "text",
@@ -1705,7 +1752,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -1724,9 +1770,14 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "41",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_1bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_fpr_bid"
+        }
+      ],
       "kor": "매도호가1",
       "format": {
         "unit": "text",
@@ -1737,7 +1788,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:sell_bid_prices",
@@ -1800,9 +1850,14 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "61",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "sel_1bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_fpr_req"
+        }
+      ],
       "kor": "매도호가수량1",
       "format": {
         "unit": "text",
@@ -1813,7 +1868,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -1878,13 +1932,13 @@
       "anchor": null,
       "table": null,
       "mapping_id": "detail:ka10007:expected_market",
-      "f": "smbol",
+      "f": "flu_rt",
       "alt_mappings": null,
       "kor": "부호",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s045",
@@ -1949,9 +2003,14 @@
         "row": "5",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "51",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_1bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_fpr_bid"
+        }
+      ],
       "kor": "매수호가1",
       "format": {
         "unit": "text",
@@ -1962,7 +2021,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:buy_bid_prices",
@@ -2025,9 +2083,14 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "71",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "buy_1bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_fpr_req"
+        }
+      ],
       "kor": "매수호가수량1",
       "format": {
         "unit": "text",
@@ -2038,7 +2101,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -2057,9 +2119,14 @@
         "row": "6",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "52",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_2bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_2th_pre_bid"
+        }
+      ],
       "kor": "매수호가2",
       "format": {
         "unit": "text",
@@ -2070,7 +2137,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:buy_bid_prices",
@@ -2133,9 +2199,14 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "72",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "buy_2bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_2th_pre_req"
+        }
+      ],
       "kor": "매수호가수량2",
       "format": {
         "unit": "text",
@@ -2146,7 +2217,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -2165,9 +2235,14 @@
         "row": "7",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "53",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_3bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_3th_pre_bid"
+        }
+      ],
       "kor": "매수호가3",
       "format": {
         "unit": "text",
@@ -2178,7 +2253,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:buy_bid_prices",
@@ -2241,9 +2315,14 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "73",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "buy_3bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_3th_pre_req"
+        }
+      ],
       "kor": "매수호가수량3",
       "format": {
         "unit": "text",
@@ -2254,7 +2333,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -2273,9 +2351,14 @@
         "row": "8",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "54",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_4bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_4th_pre_bid"
+        }
+      ],
       "kor": "매수호가4",
       "format": {
         "unit": "text",
@@ -2286,7 +2369,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:buy_bid_prices",
@@ -2349,9 +2431,14 @@
         "row": "8",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "74",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "buy_4bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_4th_pre_req"
+        }
+      ],
       "kor": "매수호가수량4",
       "format": {
         "unit": "text",
@@ -2362,7 +2449,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -2381,9 +2467,14 @@
         "row": "9",
         "col": 0
       },
-      "mapping_id": "base:0D",
-      "f": "55",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_5bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_5th_pre_bid"
+        }
+      ],
       "kor": "매수호가5",
       "format": {
         "unit": "text",
@@ -2394,7 +2485,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10004:buy_bid_prices",
@@ -2457,9 +2547,14 @@
         "row": "9",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "75",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_quantities",
+      "f": "buy_5bid_req",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_5th_pre_req"
+        }
+      ],
       "kor": "매수호가수량5",
       "format": {
         "unit": "text",
@@ -2470,7 +2565,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true
     },
     {
@@ -2574,9 +2668,9 @@
         "row": "10",
         "col": 1
       },
-      "mapping_id": "base:0D",
-      "f": "121",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:totals",
+      "f": "tot_sel_req",
+      "alt_mappings": [],
       "kor": "매도호가총잔량",
       "format": {
         "unit": "text",
@@ -2587,7 +2681,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10087:aggregate_totals",
@@ -2682,9 +2775,9 @@
         "row": "10",
         "col": 2
       },
-      "mapping_id": "base:0D",
-      "f": "125",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:totals",
+      "f": "tot_buy_req",
+      "alt_mappings": [],
       "kor": "매수호가총잔량",
       "format": {
         "unit": "text",
@@ -2695,7 +2788,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "also_from": [
         {
           "mapping_id": "detail:ka10087:aggregate_totals",
@@ -4835,9 +4927,9 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "121",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:totals",
+      "f": "tot_sel_req",
+      "alt_mappings": [],
       "kor": "매도호가총잔량",
       "format": {
         "unit": "shares",
@@ -4862,9 +4954,9 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "125",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:totals",
+      "f": "tot_buy_req",
+      "alt_mappings": [],
       "kor": "매수호가총잔량",
       "format": {
         "unit": "shares",
@@ -4889,9 +4981,14 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0C",
-      "f": "27",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_1bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_fpr_bid"
+        }
+      ],
       "kor": "(최우선)매도호가",
       "format": {
         "unit": "krw_ko",

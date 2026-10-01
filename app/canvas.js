@@ -1535,6 +1535,7 @@ function destroyBoardPrimary(state) {
   state.primaryRefreshing = false;
   state.primaryEnvelope = null;
   state.primaryOrderbookEnvelope = null;
+  state.authoredOrderbookSurface = null;
   // 상태 보드/카드가 바뀐 뒤에는 이전 봉투가 만든 descriptor와 대기 promise도
   // 더 이상 권위가 없다. 남겨두면 다음 보드가 새 primary_envelope 대신 이전
   // stock/sector 패널 신원을 재사용할 수 있다.
@@ -1758,6 +1759,27 @@ function boardPrimaryAcceptsEnvelope(primary, envelope) {
 // 0D 호가잔량은 통합 카드 리스가 나르지 않는다 — 호가는 카드가 실제로 열려 있을
 // 때만 REG를 쓰므로 여기서 명시로 acquire하고, 보드를 갈아타거나 카드를 닫을 때
 // destroyBoardPrimary가 같은 문으로 놓아준다.
+function mountAuthoredOrderbook(host, envelope, mounted) {
+  const feed = window.AthenaLib.BoardOrderbook;
+  const state = boardStateOf(host);
+  const surface = mounted && mounted.surface;
+  if (!feed || !feed.supports(state.boardId) || !surface) return;
+  if (state.authoredOrderbookSurface === surface && state.primaryRelease) return;
+  const card = host.closest('.card');
+  if (!card) return;
+  const boardId = state.boardId;
+  state.authoredOrderbookSurface = surface;
+  state.primaryRelease = wireOrderbookRealtime(card, surface, envelope, (_surface, _envelope, tick) => {
+    if (state.boardId !== boardId || state.surface !== surface) return;
+    const updates = feed.updatesFor(boardId, tick);
+    const slots = Object.keys(updates);
+    if (!slots.length) return;
+    Object.assign(state.values, updates);
+    state.valuesByBoard.set(boardId, state.values);
+    boardMount.applyRealtimeSlots(surface, state.mountContract, state.values, slots);
+  }, { registerCardDestroyer: false, fallbackKind: 'integrated-board' });
+}
+
 function mountBoardOrderbook(card, state, primary, envelope) {
   // 결측 슬롯이 없으면 mountBoardState와 showBoardReady가 같은 표면으로 두 번 온다.
   // 그때만 같은 사다리·0D 리스를 쓴다. 새 hydrate 봉투나 다른 종목이면 이전 값을
@@ -2052,6 +2074,7 @@ async function showBoardReady(state, host, envelope, mounted, retry) {
     state.loadNode = partial;
   }
   if (mounted) await mountBoardPrimary(host, state.primaryEnvelope || envelope, mounted, retry);
+  if (mounted) mountAuthoredOrderbook(host, envelope, mounted);
   window.AthenaLib.ConditionQueryList?.render(host, state.boardId === '2UN6-1' ? envelope : null);
 }
 
@@ -3442,7 +3465,7 @@ function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
   const symbol = resolveEnvelopeSymbol(envelope);
   if (!symbol || typeof applyTick !== 'function') return null;
   card.__athenaRealtimeFallbackCapable = true;
-  card.__athenaRealtimeFallbackKind = 'orderbook';
+  card.__athenaRealtimeFallbackKind = options.fallbackKind || 'orderbook';
   if (typeof installCardRealtimeStatusRelay === 'function') installCardRealtimeStatusRelay(card);
   stampOrderbookRealtimeStatus(card, wrap, 'connecting');
   const session = { card, wrap, symbol, released: false, acceptsTicks: false };

@@ -372,9 +372,7 @@
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
+        "kind": "date",
         "tone": "neutral"
       },
       "paired_with": null,
@@ -675,9 +673,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "50",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_10bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_10th_pre_bid"
+        }
+      ],
       "kor": "매도호가10",
       "format": {
         "unit": "text",
@@ -688,7 +691,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -719,7 +721,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_10bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_10th_pre_req"
+        }
+      ],
       "kor": "매도10호가잔량",
       "format": {
         "unit": "shares",
@@ -827,7 +834,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_10bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도10호가잔량",
       "format": {
         "unit": "text",
@@ -879,9 +886,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "49",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_9bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_9th_pre_bid"
+        }
+      ],
       "kor": "매도호가9",
       "format": {
         "unit": "text",
@@ -892,7 +904,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -923,7 +934,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_9bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_9th_pre_req"
+        }
+      ],
       "kor": "매도9호가잔량",
       "format": {
         "unit": "shares",
@@ -1031,7 +1047,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_9bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도9호가잔량",
       "format": {
         "unit": "text",
@@ -1083,9 +1099,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "48",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_8bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_8th_pre_bid"
+        }
+      ],
       "kor": "매도호가8",
       "format": {
         "unit": "text",
@@ -1096,7 +1117,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -1127,7 +1147,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_8bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_8th_pre_req"
+        }
+      ],
       "kor": "매도8호가잔량",
       "format": {
         "unit": "shares",
@@ -1235,7 +1260,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_8bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도8호가잔량",
       "format": {
         "unit": "text",
@@ -1287,9 +1312,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "47",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_7bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_7th_pre_bid"
+        }
+      ],
       "kor": "매도호가7",
       "format": {
         "unit": "text",
@@ -1300,7 +1330,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -1331,7 +1360,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_7bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_7th_pre_req"
+        }
+      ],
       "kor": "매도7호가잔량",
       "format": {
         "unit": "shares",
@@ -1439,7 +1473,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_7bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도7호가잔량",
       "format": {
         "unit": "text",
@@ -1491,9 +1525,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "46",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_6bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_6th_pre_bid"
+        }
+      ],
       "kor": "매도호가6",
       "format": {
         "unit": "text",
@@ -1504,7 +1543,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -1535,7 +1573,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_6bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_6th_pre_req"
+        }
+      ],
       "kor": "매도6호가잔량",
       "format": {
         "unit": "shares",
@@ -1643,7 +1686,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_6bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도6호가잔량",
       "format": {
         "unit": "text",
@@ -1695,9 +1738,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "45",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_5bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_5th_pre_bid"
+        }
+      ],
       "kor": "매도호가5",
       "format": {
         "unit": "text",
@@ -1708,7 +1756,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -1739,7 +1786,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_5bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_5th_pre_req"
+        }
+      ],
       "kor": "매도5호가잔량",
       "format": {
         "unit": "shares",
@@ -1852,7 +1904,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_5bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도5호가잔량",
       "format": {
         "unit": "text",
@@ -1904,9 +1956,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "44",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_4bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_4th_pre_bid"
+        }
+      ],
       "kor": "매도호가4",
       "format": {
         "unit": "text",
@@ -1917,7 +1974,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -1948,7 +2004,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_4bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_4th_pre_req"
+        }
+      ],
       "kor": "매도4호가잔량",
       "format": {
         "unit": "shares",
@@ -2061,7 +2122,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_4bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도4호가잔량",
       "format": {
         "unit": "text",
@@ -2113,9 +2174,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "43",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_3bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_3th_pre_bid"
+        }
+      ],
       "kor": "매도호가3",
       "format": {
         "unit": "text",
@@ -2126,7 +2192,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -2157,7 +2222,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_3bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_3th_pre_req"
+        }
+      ],
       "kor": "매도3호가잔량",
       "format": {
         "unit": "shares",
@@ -2270,7 +2340,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_3bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도3호가잔량",
       "format": {
         "unit": "text",
@@ -2322,9 +2392,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "42",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_2bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_2th_pre_bid"
+        }
+      ],
       "kor": "매도호가2",
       "format": {
         "unit": "text",
@@ -2335,7 +2410,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -2366,7 +2440,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_2bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_2th_pre_req"
+        }
+      ],
       "kor": "매도2호가잔량",
       "format": {
         "unit": "shares",
@@ -2479,7 +2558,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_2bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도2호가잔량",
       "format": {
         "unit": "text",
@@ -2531,9 +2610,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "41",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "sel_1bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_prices",
+          "f": "sel_fpr_bid"
+        }
+      ],
       "kor": "매도호가1",
       "format": {
         "unit": "text",
@@ -2544,7 +2628,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -2575,7 +2658,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "sel_1bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:sell_bid_quantities",
+          "f": "sel_fpr_req"
+        }
+      ],
       "kor": "매도1호가잔량",
       "format": {
         "unit": "shares",
@@ -2688,7 +2776,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpsel_1bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매도1호가잔량",
       "format": {
         "unit": "text",
@@ -2763,7 +2851,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:totals",
       "f": "tot_sel_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "총매도잔량",
       "format": {
         "unit": "shares",
@@ -3059,9 +3147,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "51",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_1bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_fpr_bid"
+        }
+      ],
       "kor": "매수호가1",
       "format": {
         "unit": "text",
@@ -3072,7 +3165,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -3103,7 +3195,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_1bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_fpr_req"
+        }
+      ],
       "kor": "매수1호가잔량",
       "format": {
         "unit": "shares",
@@ -3216,7 +3313,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_1bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수1호가잔량",
       "format": {
         "unit": "text",
@@ -3268,9 +3365,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "52",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_2bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_2th_pre_bid"
+        }
+      ],
       "kor": "매수호가2",
       "format": {
         "unit": "text",
@@ -3281,7 +3383,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -3312,7 +3413,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_2bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_2th_pre_req"
+        }
+      ],
       "kor": "매수2호가잔량",
       "format": {
         "unit": "shares",
@@ -3425,7 +3531,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_2bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수2호가잔량",
       "format": {
         "unit": "text",
@@ -3477,9 +3583,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "53",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_3bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_3th_pre_bid"
+        }
+      ],
       "kor": "매수호가3",
       "format": {
         "unit": "text",
@@ -3490,7 +3601,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -3521,7 +3631,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_3bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_3th_pre_req"
+        }
+      ],
       "kor": "매수3호가잔량",
       "format": {
         "unit": "shares",
@@ -3634,7 +3749,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_3bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수3호가잔량",
       "format": {
         "unit": "text",
@@ -3686,9 +3801,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "54",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_4bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_4th_pre_bid"
+        }
+      ],
       "kor": "매수호가4",
       "format": {
         "unit": "text",
@@ -3699,7 +3819,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -3730,7 +3849,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_4bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_4th_pre_req"
+        }
+      ],
       "kor": "매수4호가잔량",
       "format": {
         "unit": "shares",
@@ -3843,7 +3967,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_4bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수4호가잔량",
       "format": {
         "unit": "text",
@@ -3895,9 +4019,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "55",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_5bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_5th_pre_bid"
+        }
+      ],
       "kor": "매수호가5",
       "format": {
         "unit": "text",
@@ -3908,7 +4037,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -3939,7 +4067,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_5bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_5th_pre_req"
+        }
+      ],
       "kor": "매수5호가잔량",
       "format": {
         "unit": "shares",
@@ -4052,7 +4185,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_5bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수5호가잔량",
       "format": {
         "unit": "text",
@@ -4104,9 +4237,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "56",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_6bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_6th_pre_bid"
+        }
+      ],
       "kor": "매수호가6",
       "format": {
         "unit": "text",
@@ -4117,7 +4255,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -4148,7 +4285,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_6bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_6th_pre_req"
+        }
+      ],
       "kor": "매수6호가잔량",
       "format": {
         "unit": "shares",
@@ -4256,7 +4398,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_6bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수6호가잔량",
       "format": {
         "unit": "text",
@@ -4308,9 +4450,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "57",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_7bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_7th_pre_bid"
+        }
+      ],
       "kor": "매수호가7",
       "format": {
         "unit": "text",
@@ -4321,7 +4468,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -4352,7 +4498,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_7bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_7th_pre_req"
+        }
+      ],
       "kor": "매수7호가잔량",
       "format": {
         "unit": "shares",
@@ -4460,7 +4611,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_7bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수7호가잔량",
       "format": {
         "unit": "text",
@@ -4512,9 +4663,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "58",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_8bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_8th_pre_bid"
+        }
+      ],
       "kor": "매수호가8",
       "format": {
         "unit": "text",
@@ -4525,7 +4681,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -4556,7 +4711,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_8bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_8th_pre_req"
+        }
+      ],
       "kor": "매수8호가잔량",
       "format": {
         "unit": "shares",
@@ -4664,7 +4824,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_8bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수8호가잔량",
       "format": {
         "unit": "text",
@@ -4716,9 +4876,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "59",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_9bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_9th_pre_bid"
+        }
+      ],
       "kor": "매수호가9",
       "format": {
         "unit": "text",
@@ -4729,7 +4894,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -4760,7 +4924,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_9bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_9th_pre_req"
+        }
+      ],
       "kor": "매수9호가잔량",
       "format": {
         "unit": "shares",
@@ -4868,7 +5037,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_9bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수9호가잔량",
       "format": {
         "unit": "text",
@@ -4920,9 +5089,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0D",
-      "f": "60",
-      "alt_mappings": null,
+      "mapping_id": "detail:ka10007:bid_prices",
+      "f": "buy_10bid",
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_prices",
+          "f": "buy_10th_pre_bid"
+        }
+      ],
       "kor": "매수호가10",
       "format": {
         "unit": "text",
@@ -4933,7 +5107,6 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
       "display_dup": true,
       "extra_fields": [
         {
@@ -4964,7 +5137,12 @@
       "table": null,
       "mapping_id": "detail:ka10007:bid_quantities",
       "f": "buy_10bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "detail:ka10004:buy_bid_quantities",
+          "f": "buy_10th_pre_req"
+        }
+      ],
       "kor": "매수10호가잔량",
       "format": {
         "unit": "shares",
@@ -5072,7 +5250,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:liquidity_provider",
       "f": "lpbuy_10bid_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "LP매수10호가잔량",
       "format": {
         "unit": "text",
@@ -5147,7 +5325,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:totals",
       "f": "tot_buy_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "총매수잔량",
       "format": {
         "unit": "shares",
@@ -5355,7 +5533,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:totals",
       "f": "tot_sel_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "총매도잔량",
       "format": {
         "unit": "shares",
@@ -5410,7 +5588,7 @@
       "table": null,
       "mapping_id": "detail:ka10007:totals",
       "f": "tot_buy_req",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "총매수잔량",
       "format": {
         "unit": "shares",

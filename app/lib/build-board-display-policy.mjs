@@ -118,7 +118,7 @@ export function buildPolicy() {
       }
       const role = staticDisplayRole(slot)
         || (UNANNOTATED[entry.board_id]?.includes(slot.slot_id) ? 'unavailable' : null);
-      const price = PRICE_FIELDS.has(slot.f) && hasBinding(slot);
+      const price = (PRICE_FIELDS.has(slot.f) || /^(?:sel|buy)_(?:[1-9]|10)bid$/.test(slot.f || '')) && hasBinding(slot);
       const direction = /^(?:pred_pre_sig(?:_n)?|pre_sig|pre_tp)$/.test(slot.f || '') && hasBinding(slot);
       const time = hasBinding(slot) && (TIME_FIELDS.test(slot.f || '')
         || (slot.f === '20' && /^base:0/.test(slot.mapping_id || '')));

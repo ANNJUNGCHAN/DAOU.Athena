@@ -5879,25 +5879,60 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s013": [
+      "150,850",
+      "price",
+      "sel_1bid"
+    ],
+    "s016": [
+      "150,840",
+      "price",
+      "buy_1bid"
+    ],
+    "s029": [
+      "150,890",
+      "price",
+      "sel_5bid"
+    ],
     "s030": [
       "+40",
       "unavailable",
       null
+    ],
+    "s032": [
+      "150,880",
+      "price",
+      "sel_4bid"
     ],
     "s033": [
       "+30",
       "unavailable",
       null
     ],
+    "s035": [
+      "150,870",
+      "price",
+      "sel_3bid"
+    ],
     "s036": [
       "+20",
       "unavailable",
       null
     ],
+    "s038": [
+      "150,860",
+      "price",
+      "sel_2bid"
+    ],
     "s039": [
       "+10",
       "unavailable",
       null
+    ],
+    "s041": [
+      "150,850",
+      "price",
+      "sel_1bid"
     ],
     "s042": [
       "0",
@@ -5909,25 +5944,50 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s048": [
+      "150,840",
+      "price",
+      "buy_1bid"
+    ],
     "s049": [
       "−10",
       "unavailable",
       null
+    ],
+    "s051": [
+      "150,830",
+      "price",
+      "buy_2bid"
     ],
     "s052": [
       "−20",
       "unavailable",
       null
     ],
+    "s054": [
+      "150,820",
+      "price",
+      "buy_3bid"
+    ],
     "s055": [
       "−30",
       "unavailable",
       null
     ],
+    "s057": [
+      "150,810",
+      "price",
+      "buy_4bid"
+    ],
     "s058": [
       "−40",
       "unavailable",
       null
+    ],
+    "s060": [
+      "150,800",
+      "price",
+      "buy_5bid"
     ],
     "s061": [
       "−50",
@@ -6028,6 +6088,11 @@ const policy = {
       "실시간",
       "status",
       null
+    ],
+    "s143": [
+      "최우선 매도 150,850원 · 매수 150,840원",
+      "price",
+      "sel_1bid"
     ],
     "s144": [
       "장중 실시간 · 갱신 중",
@@ -25058,6 +25123,11 @@ const policy = {
       "status",
       null
     ],
+    "s003": [
+      "005930 · KOSPI · 정규장",
+      "bound-identifier",
+      "stk_cd"
+    ],
     "s004": [
       "정규장",
       "bound-label",
@@ -25078,55 +25148,115 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s013": [
+      "150,850",
+      "price",
+      "sel_1bid"
+    ],
+    "s016": [
+      "150,840",
+      "price",
+      "buy_1bid"
+    ],
+    "s031": [
+      "150,940",
+      "price",
+      "sel_10bid"
+    ],
     "s036": [
       "—",
       "bound-label",
-      "630"
+      "lpsel_10bid_req"
+    ],
+    "s038": [
+      "150,930",
+      "price",
+      "sel_9bid"
     ],
     "s043": [
       "—",
       "bound-label",
-      "629"
+      "lpsel_9bid_req"
+    ],
+    "s045": [
+      "150,920",
+      "price",
+      "sel_8bid"
     ],
     "s050": [
       "—",
       "bound-label",
-      "628"
+      "lpsel_8bid_req"
+    ],
+    "s052": [
+      "150,910",
+      "price",
+      "sel_7bid"
     ],
     "s057": [
       "—",
       "bound-label",
-      "627"
+      "lpsel_7bid_req"
+    ],
+    "s059": [
+      "150,900",
+      "price",
+      "sel_6bid"
     ],
     "s064": [
       "—",
       "bound-label",
-      "626"
+      "lpsel_6bid_req"
+    ],
+    "s066": [
+      "150,890",
+      "price",
+      "sel_5bid"
     ],
     "s071": [
       "—",
       "bound-label",
-      "625"
+      "lpsel_5bid_req"
+    ],
+    "s073": [
+      "150,880",
+      "price",
+      "sel_4bid"
     ],
     "s078": [
       "—",
       "bound-label",
-      "624"
+      "lpsel_4bid_req"
+    ],
+    "s080": [
+      "150,870",
+      "price",
+      "sel_3bid"
     ],
     "s085": [
       "—",
       "bound-label",
-      "623"
+      "lpsel_3bid_req"
+    ],
+    "s087": [
+      "150,860",
+      "price",
+      "sel_2bid"
     ],
     "s092": [
       "—",
       "bound-label",
-      "622"
+      "lpsel_2bid_req"
+    ],
+    "s094": [
+      "150,850",
+      "price",
+      "sel_1bid"
     ],
     "s099": [
       "—",
       "bound-label",
-      "621"
+      "lpsel_1bid_req"
     ],
     "s105": [
       "—",
@@ -25138,55 +25268,105 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s113": [
+      "150,840",
+      "price",
+      "buy_1bid"
+    ],
     "s118": [
       "—",
       "bound-label",
-      "631"
+      "lpbuy_1bid_req"
+    ],
+    "s120": [
+      "150,830",
+      "price",
+      "buy_2bid"
     ],
     "s125": [
       "—",
       "bound-label",
-      "632"
+      "lpbuy_2bid_req"
+    ],
+    "s127": [
+      "150,820",
+      "price",
+      "buy_3bid"
     ],
     "s132": [
       "—",
       "bound-label",
-      "633"
+      "lpbuy_3bid_req"
+    ],
+    "s134": [
+      "150,810",
+      "price",
+      "buy_4bid"
     ],
     "s139": [
       "—",
       "bound-label",
-      "634"
+      "lpbuy_4bid_req"
+    ],
+    "s141": [
+      "150,800",
+      "price",
+      "buy_5bid"
     ],
     "s146": [
       "—",
       "bound-label",
-      "635"
+      "lpbuy_5bid_req"
+    ],
+    "s148": [
+      "150,790",
+      "price",
+      "buy_6bid"
     ],
     "s153": [
       "—",
       "bound-label",
-      "636"
+      "lpbuy_6bid_req"
+    ],
+    "s155": [
+      "150,780",
+      "price",
+      "buy_7bid"
     ],
     "s160": [
       "—",
       "bound-label",
-      "637"
+      "lpbuy_7bid_req"
+    ],
+    "s162": [
+      "150,770",
+      "price",
+      "buy_8bid"
     ],
     "s167": [
       "—",
       "bound-label",
-      "638"
+      "lpbuy_8bid_req"
+    ],
+    "s169": [
+      "150,760",
+      "price",
+      "buy_9bid"
     ],
     "s174": [
       "—",
       "bound-label",
-      "639"
+      "lpbuy_9bid_req"
+    ],
+    "s176": [
+      "150,750",
+      "price",
+      "buy_10bid"
     ],
     "s181": [
       "—",
       "bound-label",
-      "640"
+      "lpbuy_10bid_req"
     ],
     "s187": [
       "—",
@@ -25801,6 +25981,56 @@ const policy = {
       "bound-time",
       "tm"
     ],
+    "s018": [
+      "150,940",
+      "price",
+      "sel_10bid"
+    ],
+    "s024": [
+      "150,930",
+      "price",
+      "sel_9bid"
+    ],
+    "s030": [
+      "150,920",
+      "price",
+      "sel_8bid"
+    ],
+    "s036": [
+      "150,910",
+      "price",
+      "sel_7bid"
+    ],
+    "s042": [
+      "150,900",
+      "price",
+      "sel_6bid"
+    ],
+    "s048": [
+      "150,890",
+      "price",
+      "sel_5bid"
+    ],
+    "s054": [
+      "150,880",
+      "price",
+      "sel_4bid"
+    ],
+    "s060": [
+      "150,870",
+      "price",
+      "sel_3bid"
+    ],
+    "s066": [
+      "150,860",
+      "price",
+      "sel_2bid"
+    ],
+    "s072": [
+      "150,850",
+      "price",
+      "sel_1bid"
+    ],
     "s082": [
       "0",
       "unavailable",
@@ -25810,6 +26040,56 @@ const policy = {
       "150,850원",
       "price",
       "cur_prc"
+    ],
+    "s089": [
+      "150,840",
+      "price",
+      "buy_1bid"
+    ],
+    "s095": [
+      "150,830",
+      "price",
+      "buy_2bid"
+    ],
+    "s101": [
+      "150,820",
+      "price",
+      "buy_3bid"
+    ],
+    "s107": [
+      "150,810",
+      "price",
+      "buy_4bid"
+    ],
+    "s113": [
+      "150,800",
+      "price",
+      "buy_5bid"
+    ],
+    "s119": [
+      "150,790",
+      "price",
+      "buy_6bid"
+    ],
+    "s125": [
+      "150,780",
+      "price",
+      "buy_7bid"
+    ],
+    "s131": [
+      "150,770",
+      "price",
+      "buy_8bid"
+    ],
+    "s137": [
+      "150,760",
+      "price",
+      "buy_9bid"
+    ],
+    "s143": [
+      "150,750",
+      "price",
+      "buy_10bid"
     ],
     "s153": [
       "0",
