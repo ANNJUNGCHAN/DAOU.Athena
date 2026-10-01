@@ -298,6 +298,11 @@ const policy = {
         "250hgst"
       ]
     ],
+    "s068": [
+      "오늘의 수급",
+      "caption",
+      "일별 거래상세 · 순매수"
+    ],
     "s082": [
       "09:00",
       "bound-time",
@@ -5643,13 +5648,13 @@ const policy = {
     ],
     "s175": [
       "입금",
-      "bound-label",
-      "io_tp_nm"
+      "caption",
+      "기간 입금"
     ],
     "s178": [
       "출금",
-      "bound-label",
-      "io_tp"
+      "caption",
+      "기간 출금"
     ],
     "s198": [
       "● 예수금·결제 실시간 반영 중",

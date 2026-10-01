@@ -1090,7 +1090,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "총매입 "
       },
       "paired_with": "s021",
       "collapse_group": null,
@@ -5623,10 +5624,10 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:kt00015",
-      "f": "io_tp_nm",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
-      "kor": "입출구분명",
+      "kor": null,
       "format": null,
       "paired_with": null,
       "collapse_group": null,
@@ -5678,7 +5679,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "일별 입금 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5697,10 +5699,10 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:kt00015",
-      "f": "io_tp",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
-      "kor": "입출구분",
+      "kor": null,
       "format": null,
       "paired_with": null,
       "collapse_group": null,
@@ -5749,10 +5751,11 @@
       "alt_mappings": null,
       "kor": "출금금액",
       "format": {
-        "unit": "date",
+        "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "일별 출금 "
       },
       "paired_with": null,
       "collapse_group": null,

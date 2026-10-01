@@ -9,6 +9,23 @@ const { formatSlot } = require('./board-format');
 const source = id => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
 const text = (id, values, slot) => mountPlan(registry.contractFor(id), values).assignments.find(x => x.slotId === slot)?.text;
 
+test('chart flow captions show each received date and preserve missing source context', () => {
+  assert.equal(text('137X-2', {}, 's068'), '일별 거래상세 · 순매수');
+  assert.equal(text('137X-2', {s076:'20260102',s091:'20251231'}, 's076'), '기준일 2026-01-02');
+  assert.equal(text('137X-2', {s076:'20260102',s091:'20251231'}, 's091'), '투자자별 조회 · 2025-12-31');
+  for (const options of [{}, {emptyValueSlots:['s076','s091']}, {deferredValueSlots:['s076','s091']}]) {
+    const plan = mountPlan(registry.contractFor('137X-2'), {}, options);
+    assert.equal(plan.assignments.find(x => x.slotId === 's076').text, '기준일 미제공');
+    assert.equal(plan.assignments.find(x => x.slotId === 's091').text, '투자자별 조회 · 기준일 미제공');
+  }
+  const slots = source('137X-2').slots;
+  for (const id of ['s070','s072','s075','s076','s091','s093','s096','s099']) {
+    const slot = slots.find(s => s.slot_id === id);
+    assert.equal(slot.row_index, 0);
+    assert.deepEqual(registry.contractFor('137X-2').slots.find(s => s.slot_id === id).format, slot.format);
+  }
+});
+
 test('chart session label and company secondary metrics retain their meaning', () => {
   assert.equal(text('137X-2', {}, 's109'), '장중');
   assert.equal(text('137X-2', {}, 's122'), '기간중 거래량');
@@ -218,4 +235,37 @@ test('settlement summary keeps its caption without specimen calendar dates', () 
   assert.equal(text('3MTJ-0', {}, 's026'), '결제 예정');
   assert.equal(text('2QRP-1', {}, 's007'), '5단');
   assert.equal(text('2QRP-1', {}, 's008'), '10단');
+});
+
+test('account secondary amounts retain exact names without changing their values or signs', () => {
+  for (const id of ['133H-2','2SCE-1','2SKU-1','2SRV-1','2SYW-1','3GRO-0','3IGR-0','3K7K-0','3LGC-0','3MTJ-0','3NVG-0','3UTA-0']) {
+    const slot=source(id).slots.find(s=>s.region==='kpi'&&s.f==='tot_pur_amt');
+    assert.equal(text(id,{[slot.slot_id]:'0'},slot.slot_id),'총매입 0');
+    assert.equal(text(id,{[slot.slot_id]:'12345'},slot.slot_id),'총매입 1만 2,345');
+  }
+  const prefixes={trde_able_qty:'가능 ',pur_amt:'매입 ',pred_close_pric:'전일 종가 ',poss_rt:'보유 비중 ',tdy_buyq:'오늘 매수 ',pred_buyq:'전일 매수 '};
+  for(const s of source('2SCE-1').slots.filter(s=>s.table?.table==='375G-0'&&prefixes[s.f])) {
+    for(const value of ['0','123']) {
+      const expected=formatSlot({...s.format,prefix:undefined},value);
+      assert.equal(text('2SCE-1',{[s.slot_id]:value},s.slot_id),prefixes[s.f]+expected.text);
+    }
+  }
+  for(const [slot,prefix] of Object.entries({s155:'평가액 합계 ',s156:'매수금액 합계 ',s187:'세금 ',s190:'수수료 상세 ',s192:'전일 매수 ',s193:'전일 매도 '})) {
+    const spec=source('2SCE-1').slots.find(s=>s.slot_id===slot).format;
+    for(const value of ['0','-12345','12345']) {
+      const before=formatSlot({...spec,prefix:undefined},value);
+      const after=formatSlot(spec,value);
+      assert.equal(after.text,prefix+before.text);
+      assert.equal(after.tone,before.tone);
+    }
+  }
+});
+
+test('cash-flow row captions stay fixed and daily money is not formatted as a date', () => {
+  assert.equal(text('2SKU-1',{},'s175'),'기간 입금');
+  assert.equal(text('2SKU-1',{},'s178'),'기간 출금');
+  assert.equal(text('2SKU-1',{s175:'다른 거래명',s178:'2'},'s175'),'기간 입금');
+  assert.equal(text('2SKU-1',{s175:'다른 거래명',s178:'2'},'s178'),'기간 출금');
+  assert.equal(text('2SKU-1',{s177:'0'},'s177'),'일별 입금 0');
+  assert.equal(text('2SKU-1',{s180:'12345678'},'s180'),'일별 출금 1,234만 5,678');
 });

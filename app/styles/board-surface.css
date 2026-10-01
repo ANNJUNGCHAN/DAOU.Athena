@@ -1002,3 +1002,5 @@
 
 /* ETF 이름·배수·분류 칩은 종목 칸 안에서 줄을 나눌 수 있다. */
 .board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="1"] > [data-bs-col-item] { flex-wrap: wrap; max-width: 100%; }
+
+.board-surface[data-bs-board-id="15P5-2"] [data-node="3CCM-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }

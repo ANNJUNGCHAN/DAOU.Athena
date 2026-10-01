@@ -1013,7 +1013,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "총매입 "
       },
       "paired_with": "s025",
       "collapse_group": null,

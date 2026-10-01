@@ -16,6 +16,36 @@ def values_for(board, responses):
     return {item['slot_id']: item['value'] for item in contract_for(board, responses)['slot_values']}
 
 
+def test_chart_flow_blocks_keep_their_own_first_response_date_and_source():
+    responses = {
+        'base:ka10064': {'opmr_invsr_trde_chart': [{'tm': '090000', 'frgnr_invsr': '707', 'orgn': '808'}]},
+        'base:ka10015': {'daly_trde_dtl': [
+            {'dt': '20260102', 'for_netprps': '0', 'orgn_netprps': '0', 'ind_netprps': '0'},
+            {'dt': '20260101', 'for_netprps': '999', 'orgn_netprps': '888', 'ind_netprps': '777'},
+        ]},
+        'base:ka10060': {'stk_invsr_orgn_chart': [
+            {'dt': '20251231', 'frgnr_invsr': '101', 'orgn': '202', 'ind_invsr': '-303'},
+            {'dt': '20251230', 'frgnr_invsr': '111', 'orgn': '222', 'ind_invsr': '-333'},
+        ]},
+    }
+    values = values_for('137X-2', responses)
+    assert [values[s] for s in ['s070', 's072', 's075', 's076']] == ['0', '0', '0', '20260102']
+    assert [values[s] for s in ['s093', 's096', 's099', 's091']] == ['101', '202', '-303', '20251231']
+    del responses['base:ka10015']
+    partial = values_for('137X-2', responses)
+    assert not {'s070', 's072', 's075', 's076'} & partial.keys()
+    assert partial['s093'] == '101'
+
+
+def test_chart_flow_missing_dates_and_values_are_not_inferred_or_zero_filled():
+    values = values_for('137X-2', {
+        'base:ka10015': {'daly_trde_dtl': [{'for_netprps': '0'}]},
+        'base:ka10060': {'stk_invsr_orgn_chart': [{'orgn': '0'}]},
+    })
+    assert values['s070'] == '0' and values['s096'] == '0'
+    assert not {'s072', 's075', 's076', 's091', 's093', 's099'} & values.keys()
+
+
 def test_company_ohlc_and_price_history_keep_every_labelled_part():
     responses = {
         'detail:ka10001:daily_price_band': {'open_pric': '-10100', 'high_pric': '12200', 'low_pric': '9300'},

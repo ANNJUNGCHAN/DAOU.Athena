@@ -2117,12 +2117,7 @@
       "table": null,
       "mapping_id": "base:ka10015",
       "f": "for_netprps",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10064",
-          "f": "frgnr_invsr"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "외인순매수",
       "format": {
         "unit": "krw_ko",
@@ -2133,13 +2128,7 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10064",
-          "f": "frgnr_invsr",
-          "kor": "외국인투자자"
-        }
-      ]
+      "row_index": 0
     },
     {
       "slot_id": "s071",
@@ -2176,12 +2165,7 @@
       "table": null,
       "mapping_id": "base:ka10015",
       "f": "orgn_netprps",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10064",
-          "f": "orgn"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "기관순매수",
       "format": {
         "unit": "krw_ko",
@@ -2192,13 +2176,7 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10064",
-          "f": "orgn",
-          "kor": "기관계"
-        }
-      ]
+      "row_index": 0
     },
     {
       "slot_id": "s073",
@@ -2266,7 +2244,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s076",
@@ -2280,19 +2259,19 @@
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10064",
-      "f": "opmr_invsr_trde_chart",
+      "mapping_id": "base:ka10015",
+      "f": "dt",
       "alt_mappings": null,
-      "kor": "장중투자자별매매차트",
+      "kor": "일자",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date",
+        "prefix": "기준일 ",
+        "missing_text": "기준일 미제공"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s077",
@@ -2681,18 +2660,18 @@
       "anchor": null,
       "table": null,
       "mapping_id": "base:ka10060",
-      "f": "stk_invsr_orgn_chart",
+      "f": "dt",
       "alt_mappings": null,
-      "kor": "종목별투자자기관별차트",
+      "kor": "일자",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date",
+        "prefix": "투자자별 조회 · ",
+        "missing_text": "투자자별 조회 · 기준일 미제공"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s092",
@@ -2740,7 +2719,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s094",
@@ -2809,7 +2789,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s097",
@@ -2878,7 +2859,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s100",

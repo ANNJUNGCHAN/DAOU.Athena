@@ -134,3 +134,27 @@ def test_all_account_surfaces_remain_valid_after_semantic_mapping_repairs():
     registry = get_registry()
     assert not registry.excluded_boards
     assert sum(board.card_id == "CC-01" for board in registry.boards.values()) == 14
+
+
+def test_cash_flow_headings_are_not_overwritten_by_a_transaction_type():
+    values = contract_values("2SKU-1", {
+        "base:kt00015": {"trst_ovrl_trde_prps": [{"io_tp_nm": "합성 거래명", "io_tp": "2"}]},
+        "detail:kt00016:period_flows": {"termin_tot_trns": "101", "termin_tot_pymn": "202"},
+        "detail:kt00017:daily_cash_and_trading_flows": {"ina_amt": "303", "outa": "404"},
+    })
+    assert "s175" not in values
+    assert "s178" not in values
+    # These optional TRs are unavailable in mock mode; captions must not turn into values.
+    assert not {"s176", "s179", "s177", "s180"} & values.keys()
+    slots = {s.slot_id: s for s in get_registry().boards["2SKU-1"].slots}
+    assert all(slots[s].omitted_unsupported for s in ["s176", "s179", "s177", "s180"])
+
+
+def test_secondary_caption_changes_preserve_account_field_sources_and_zero():
+    values = contract_values("2SCE-1", {
+        "detail:kt00018:holdings": {"acnt_evlt_remn_indv_tot": [{
+            "stk_nm": "합성 보유종목", "stk_cd": "A100001", "trde_able_qty": "0",
+            "pur_amt": "11", "pred_close_pric": "22", "poss_rt": "33", "tdy_buyq": "44", "pred_buyq": "55",
+        }]},
+    })
+    assert [values[s] for s in ["s039", "s041", "s043", "s045", "s048", "s049"]] == ["0", "11", "22", "33", "44", "55"]

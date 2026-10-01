@@ -258,8 +258,10 @@ function mountPlan(contract, values, options = {}) {
     // 카드 자신의 종목 이름·코드는 응답이 채우는 자리가 아니라 **카드의 주제**다.
     // 「응답에 그 값이 없다」는 빈 칸(`static: "blank"`)보다 이쪽이 앞선다 — 실측
     // 15N5-2 `s002`를 빈 칸으로 덮으면 탭을 옮길 때 종목 코드가 사라졌다.
+    const flowSourceDate = contract.board_id === '137X-2' && ['s076', 's091'].includes(slot.slot_id)
+      && slot.format?.kind === 'date';
     const authoredText = (missingBound || (slot.static && !identitySlots.has(slot.slot_id)))
-      ? (missingBound && pending.has(String(slot.slot_id)) ? '' : staticTextOf(slot))
+      ? (missingBound && pending.has(String(slot.slot_id)) && !flowSourceDate ? '' : staticTextOf(slot))
       : null;
     const staticText = verifiedOrderbookRailLabel(contract, slot, authoredText);
     let formatted = override
@@ -1625,7 +1627,7 @@ const READABLE_TABLES = {
   '3UTA-0': {"node":"3V3D-0","rows":["3V3G-0","3V3K-0","3V3O-0","3V3S-0","3V3W-0","3V40-0","3V44-0","3V48-0","3V4C-0","3V4G-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true,"additional":[{"node":"3V4K-0","rows":["3V4N-0","3V4R-0","3V4V-0","3V4Z-0","3V53-0","3V57-0","3V5B-0","3V5F-0","3V5J-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true},{"node":"3V5P-0","rows":["3V5S-0","3V5W-0","3V60-0","3V64-0","3V68-0","3V6C-0","3V6G-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true},{"node":"3V6K-0","rows":["3V6N-0","3V6R-0","3V6V-0","3V6Z-0","3V73-0"],"widths":[180,200,150],"label":"대출·신용 상세","stack":false,"compact":true}]},
   '3NVG-0': {"node":"3P9I-0","rows":["3P9M-0","3P9W-0","3PA8-0"],"widths":[160,200,200,200,200],"label":"통화별 예수금","stack":false,"compact":true},
   "13K0-2": {"node":"33Z2-0","rows":["33Z6-0","33ZD-0","33ZO-0","33ZZ-0"],"widths":[52,220,106,86,160,216],"label":"조회 순위 결과","stack":false,"compact":true},
-  "15P5-2": {"node":"3D17-0","rows":["3D1B-0","3D22-0","3D2M-0","3D35-0","3D3O-0"],"widths":[130,160,200,140,120,120,120,140],"label":"조회 상세 내역","stack":false,"compact":true},
+  "15P5-2": {"node":"3D17-0","rows":["3D1B-0","3D22-0","3D2M-0","3D35-0","3D3O-0"],"widths":[130,160,200,140,120,120,120,140],"label":"조회 상세 내역","stack":false,"compact":true,"additional":[{"node":"3CCM-0","rows":["3CCQ-0","3CFC-0","3CJ3-0","3CJH-0","3CJV-0"],"widths":[52,220,200,140,200],"label":"ELW 종목 시세","stack":false,"compact":true}]},
   "2RJ7-1": {"node":"3HC9-0","rows":["3HCF-0","3HCO-0","3HDD-0","3HE2-0","3HER-0"],"widths":[150,200,200,200,200,200,200,200],"label":"조회 상세 내역","stack":false,"compact":true},
   "2ROJ-1": {"node":"33JM-0","rows":["33JN-0","33JV-0","33KB-0","33KQ-0"],"widths":[120,200,200,200,200,140],"label":"조회 상세 내역","stack":false,"compact":true},
   "2S4E-1": {"node":"2S68-1","rows":["33M0-0","33M8-0","33R1-0","33RH-0","33S6-0","33SX-0"],"widths":[130,160,200,200,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
@@ -2037,6 +2039,9 @@ function applyReadableBoardLayout(surface, contract) {
     }
   }
   if (id === '137X-2') {
+    const flowHeading = authoredNode(surface, '14SR-2');
+    const flowDate = authoredNode(surface, '3C3J-0');
+    flowHeading.parentElement.insertBefore(flowDate, flowHeading.nextSibling);
     const sessions = authoredNode(surface, '38LB-0');
     sessions.classList.add('bs-session-scroll');
     sessions.tabIndex = 0;

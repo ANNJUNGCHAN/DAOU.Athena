@@ -1427,7 +1427,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "총매입 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2152,7 +2153,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s038",
       "collapse_group": null,
@@ -2286,7 +2288,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s040",
       "collapse_group": null,
@@ -2392,7 +2395,8 @@
         "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s042",
       "collapse_group": null,
@@ -2471,7 +2475,8 @@
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s044",
       "collapse_group": null,
@@ -2622,7 +2627,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2659,7 +2665,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s048",
       "collapse_group": null,
@@ -2879,7 +2886,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s053",
       "collapse_group": null,
@@ -2985,7 +2993,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s055",
       "collapse_group": null,
@@ -3083,7 +3092,8 @@
         "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s057",
       "collapse_group": null,
@@ -3165,7 +3175,8 @@
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s059",
       "collapse_group": null,
@@ -3296,7 +3307,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3335,7 +3347,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s063",
       "collapse_group": null,
@@ -3561,7 +3574,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s068",
       "collapse_group": null,
@@ -3667,7 +3681,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s070",
       "collapse_group": null,
@@ -3765,7 +3780,8 @@
         "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s072",
       "collapse_group": null,
@@ -3847,7 +3863,8 @@
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s074",
       "collapse_group": null,
@@ -3978,7 +3995,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4017,7 +4035,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s078",
       "collapse_group": null,
@@ -4238,7 +4257,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s083",
       "collapse_group": null,
@@ -4344,7 +4364,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s085",
       "collapse_group": null,
@@ -4442,7 +4463,8 @@
         "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s087",
       "collapse_group": null,
@@ -4524,7 +4546,8 @@
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s089",
       "collapse_group": null,
@@ -4655,7 +4678,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4694,7 +4718,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s093",
       "collapse_group": null,
@@ -4915,7 +4940,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s098",
       "collapse_group": null,
@@ -5021,7 +5047,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s100",
       "collapse_group": null,
@@ -5119,7 +5146,8 @@
         "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s102",
       "collapse_group": null,
@@ -5201,7 +5229,8 @@
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s104",
       "collapse_group": null,
@@ -5332,7 +5361,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5371,7 +5401,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s108",
       "collapse_group": null,
@@ -5592,7 +5623,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s113",
       "collapse_group": null,
@@ -5698,7 +5730,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s115",
       "collapse_group": null,
@@ -5796,7 +5829,8 @@
         "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s117",
       "collapse_group": null,
@@ -5878,7 +5912,8 @@
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s119",
       "collapse_group": null,
@@ -6009,7 +6044,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6048,7 +6084,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s123",
       "collapse_group": null,
@@ -6269,7 +6306,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s128",
       "collapse_group": null,
@@ -6375,7 +6413,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s130",
       "collapse_group": null,
@@ -6473,7 +6512,8 @@
         "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s132",
       "collapse_group": null,
@@ -6555,7 +6595,8 @@
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s134",
       "collapse_group": null,
@@ -6686,7 +6727,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6725,7 +6767,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s138",
       "collapse_group": null,
@@ -6946,7 +6989,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s143",
       "collapse_group": null,
@@ -7052,7 +7096,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s145",
       "collapse_group": null,
@@ -7150,7 +7195,8 @@
         "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s147",
       "collapse_group": null,
@@ -7232,7 +7278,8 @@
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s149",
       "collapse_group": null,
@@ -7363,7 +7410,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7402,7 +7450,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s153",
       "collapse_group": null,
@@ -7439,7 +7488,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "평가액 합계 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7467,7 +7517,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수금액 합계 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8345,7 +8396,8 @@
         "unit": "text",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "세금 "
       },
       "paired_with": "s186",
       "collapse_group": null,
@@ -8441,7 +8493,8 @@
         "unit": "text",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수수료 상세 "
       },
       "paired_with": "s189",
       "collapse_group": null,
@@ -8497,7 +8550,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8523,7 +8577,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매도 "
       },
       "paired_with": "s192",
       "collapse_group": {
