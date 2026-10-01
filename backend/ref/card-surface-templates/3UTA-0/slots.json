@@ -1002,7 +1002,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "출금가능 "
       },
       "paired_with": "s017",
       "collapse_group": null,

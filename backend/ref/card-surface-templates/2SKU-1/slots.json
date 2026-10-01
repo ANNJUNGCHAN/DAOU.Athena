@@ -838,7 +838,8 @@
         "unit": "percent",
         "sign": true,
         "precision": 2,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "총수익률 "
       },
       "paired_with": "s012",
       "collapse_group": null,
@@ -923,7 +924,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "인출가능 "
       },
       "paired_with": "s015",
       "collapse_group": null,
@@ -1330,7 +1332,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "랩 출금가능 "
       },
       "paired_with": "s029",
       "collapse_group": null,
@@ -1407,10 +1410,12 @@
       "alt_mappings": null,
       "kor": "d+1매도매수정산금",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "매도·매수 정산 ",
+        "suffix": "원"
       },
       "paired_with": "s032",
       "collapse_group": null,
@@ -1492,10 +1497,12 @@
       "alt_mappings": null,
       "kor": "d+2매도매수정산금",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "매도·매수 정산 ",
+        "suffix": "원"
       },
       "paired_with": "s035",
       "collapse_group": null,
@@ -1568,7 +1575,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "익일 인출가능 "
       },
       "paired_with": "s038",
       "collapse_group": null,

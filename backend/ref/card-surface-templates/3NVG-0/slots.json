@@ -579,7 +579,8 @@
         "unit": "percent",
         "sign": true,
         "precision": 2,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "총수익률 "
       },
       "paired_with": "s012",
       "collapse_group": null,
@@ -665,7 +666,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "출금가능 "
       },
       "paired_with": "s015",
       "collapse_group": null,

@@ -866,7 +866,8 @@
         "unit": "percent",
         "sign": true,
         "precision": 2,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "총수익률 "
       },
       "paired_with": "s012",
       "collapse_group": null,
@@ -951,7 +952,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "출금가능 "
       },
       "paired_with": "s015",
       "collapse_group": null,
@@ -1326,7 +1328,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "약정금액 "
       },
       "paired_with": "s029",
       "collapse_group": null,
@@ -1399,7 +1402,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "체결량 "
       },
       "paired_with": "s032",
       "collapse_group": null,
@@ -1487,7 +1491,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "미체결량 "
       },
       "paired_with": "s035",
       "collapse_group": null,

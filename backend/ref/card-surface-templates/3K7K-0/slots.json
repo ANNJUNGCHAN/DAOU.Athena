@@ -548,7 +548,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "기초 순자산 "
       },
       "paired_with": "s014",
       "collapse_group": null,
@@ -643,7 +644,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "출금가능 "
       },
       "paired_with": "s017",
       "collapse_group": null,

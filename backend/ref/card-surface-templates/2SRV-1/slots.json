@@ -751,7 +751,8 @@
         "unit": "percent",
         "sign": true,
         "precision": 2,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "총수익률 "
       },
       "paired_with": "s012",
       "collapse_group": null,
@@ -834,7 +835,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "출금가능 "
       },
       "paired_with": "s015",
       "collapse_group": null,
@@ -1201,7 +1203,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "당일 투자원금 "
       },
       "paired_with": "s029",
       "collapse_group": null,
@@ -1273,7 +1276,8 @@
       "format": {
         "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "당월 투자원금 "
       },
       "paired_with": "s032",
       "collapse_group": null,
@@ -1350,10 +1354,12 @@
       "alt_mappings": [],
       "kor": "누적투자원금",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "누적 투자원금 ",
+        "suffix": "원"
       },
       "paired_with": "s035",
       "collapse_group": null,
@@ -1445,7 +1451,8 @@
         "unit": "text",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수수료 "
       },
       "paired_with": "s038",
       "collapse_group": null,
