@@ -24924,6 +24924,11 @@ const policy = {
       "unavailable",
       null
     ],
+    "s017": [
+      "거래량",
+      "caption",
+      "누적 거래대금"
+    ],
     "s018": [
       "1,420만주",
       "unavailable",

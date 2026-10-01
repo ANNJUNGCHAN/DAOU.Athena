@@ -180,3 +180,12 @@ test('regular depth navigation keeps fixed captions without replacing the observ
     }
   }
 });
+
+test('the investor KPI caption describes its received accumulated trading amount', () => {
+  const value = { value: 1234, text: '1,234백만원', display_unit: '백만원' };
+  const result = plan('3DI2-0', { s019: value });
+  assert.equal(text(result, 's017'), '누적 거래대금');
+  assert.equal(text(result, 's018'), '—');
+  assert.equal(text(result, 's019'), value.text);
+  assert.equal(source('3DI2-0').slots.find(s => s.slot_id === 's019').f, 'acc_trde_prica');
+});
