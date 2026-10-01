@@ -862,7 +862,7 @@ function updateRankingResidualDetails(surface, plan) {
 
 function updateAccountResidualDetails(surface, plan) {
   const id = surface.dataset?.bsBoardId;
-  if (!['2SYW-1', '3LGC-0', '3NVG-0', '3OIM-0'].includes(id)) return;
+  if (!['2SYW-1', '3LGC-0', '3NVG-0', '3OIM-0', '3ODO-0'].includes(id)) return;
   const states = surface.__bsAccountDetailStates || (surface.__bsAccountDetailStates = new Map());
   for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
   if (id === '3OIM-0') {
@@ -887,7 +887,11 @@ function updateAccountResidualDetails(surface, plan) {
     ],
     '3NVG-0': [
       ['3PAQ-0', ['s049','s051','s053','s055'], '외화 예수금 정보 미제공'],
+      ['3PBO-0', ['s059','s061','s063'], '외화 미수·연체 정보 미제공'],
       ['3PC2-0', ['s067','s069'], '원화 표시 정보 미제공'],
+    ],
+    '3ODO-0': [
+      ['3P5Z-0', ['s090','s092','s094','s096','s098','s100','s103','s105','s107'], '계좌 요약 정보 미제공'],
     ],
   }[id] || [];
   const navigation = '[data-bs-account-navigation], [data-state-control], [data-state-board], button, [role="button"], a[href]';
@@ -898,7 +902,8 @@ function updateAccountResidualDetails(surface, plan) {
       const state = states.get(slot);
       return state && !state.pending && (state.empty || state.missing);
     });
-    const pending = (id === '2SYW-1' || (id === '3LGC-0' && node === '3MNE-0'))
+    const pending = (id === '2SYW-1' || id === '3ODO-0'
+      || (id === '3LGC-0' && node === '3MNE-0') || (id === '3NVG-0' && node === '3PBO-0'))
       && slots.some(slot => states.get(slot)?.pending)
       && slots.every(slot => {
         const state = states.get(slot);
@@ -970,7 +975,8 @@ function applyPlan(root, plan, options = {}) {
     // 계좌 상세는 값이 없어도 라벨 옆 자리를 유지한다. 반복 빈 행은 별도로 접는다.
     const nestedAccountDetail = (root.dataset?.bsBoardId === '3LGC-0'
       && el.closest?.('[data-node="3UE1-0"]')) || (root.dataset?.bsBoardId === '3NVG-0'
-      && el.closest?.('[data-node="3PAQ-0"], [data-node="3PC2-0"]'));
+      && el.closest?.('[data-node="3PAQ-0"], [data-node="3PBO-0"], [data-node="3PC2-0"]'))
+      || (root.dataset?.bsBoardId === '3ODO-0' && el.closest?.('[data-node="3P5Z-0"]'));
     const accountDetail = registry.cardIdFor(root.dataset?.bsBoardId) === 'CC-01'
       && assignment.valueSlot && (tableCellOf(el) || el.closest?.('.bs-rail') || nestedAccountDetail);
     if (accountDetail) el.dataset.bsKeepMissing = 'true';
@@ -1184,6 +1190,7 @@ function applyRealtimeSlots(surface, contract, values, slotIds, options = {}) {
   if (!surface || !slotIds || !slotIds.length) return { touched: [], plan: null };
   const plan = realtimePlan(contract, values, slotIds);
   const report = applyPlan(surface, plan, { ...options, partial: true });
+  if (contract.board_id === '3ODO-0') updateEmptyTableStates(surface);
   if (flowLayout && ['2QFO-2', '2QM7-2'].includes(contract.board_id)) {
     flowLayout.update(surface, contract, mountPlan(contract, values), { ...surface.__bsFlowOptions, ...options });
     updateEmptyTableStates(surface);
@@ -2387,7 +2394,8 @@ function updateEmptyTableStates(surface) {
         : surface.dataset.bsLayout === '2SCE-1' ? [['375G-0', '보유 종목']]
           : surface.dataset.bsLayout === '2SKU-1' ? [['3A4F-0', '입출금 내역']]
             : surface.dataset.bsLayout === '2SYW-1' ? [['3Q8R-0', '주문·체결 내역']]
-              : surface.dataset.bsLayout === '3MTJ-0' ? [['3OP4-0', '결제 예정 내역']] : [];
+              : surface.dataset.bsLayout === '3MTJ-0' ? [['3OP4-0', '결제 예정 내역']]
+                : surface.dataset.bsLayout === '3ODO-0' ? [['3P3G-0', '금현물 잔고 내역'], ['3P48-0', '금현물 거래 내역']] : [];
   const known = new Set(tables.map(([id]) => id));
   for (const table of surface.querySelectorAll('.bs-table')) {
     if (table.dataset.node && !known.has(table.dataset.node)) {

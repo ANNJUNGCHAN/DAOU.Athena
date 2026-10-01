@@ -440,3 +440,16 @@ test('ELW summaries remove saved-search specimens while retaining received perce
   assert.equal(text('2XY6-0', {}, 's044'), '거래량');
   assert.equal(text('2Y47-0', {}, 's044'), '거래량');
 });
+
+test('account action captions remain actionable without asserting missing sales', () => {
+  for (const values of [{}, {s068:'0'}, {s068:'12345'}]) {
+    assert.equal(text('2SKU-1', values, 's069'), '정산 상세 ›');
+  }
+  assert.equal(registry.contractFor('2SKU-1').slots.find(s => s.slot_id === 's069').expanded_board, '3MTJ-0');
+  for (const values of [{}, {s100:'0'}, {s100:'12345'}]) {
+    assert.equal(text('3ODO-0', values, 's101'), '');
+  }
+  for (const sid of ['s090','s092','s094','s096','s098','s100','s103','s105','s107']) {
+    assert.match(text('3ODO-0', {[sid]:'0'}, sid), /0/);
+  }
+});

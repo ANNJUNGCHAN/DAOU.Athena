@@ -65,6 +65,7 @@ const UNANNOTATED = {
 // Observed native defects: captions described several specimen values while
 // their source mapping supplies only the named field below. Do not infer extras.
 const LABELS = {
+  '3ODO-0': { s101: '' },
   '2YXS-0': { s327: '조회 종목 등락률', s343: '추가 조회 종목 등락률' },
   '3LGC-0': { s026: '입출고 내역' },
   '137X-2': { s068: '일별 거래상세 · 순매수', s109: '장중', s122: '기간중 거래량' },
@@ -115,7 +116,7 @@ const LABELS = {
     s048: 'D+1', s050: 'D+2', s052: 'D+3', s054: 'D+4' },
   '3K7K-0': { s029: '기간 미제공', s031: '기초', s032: '기말', s113: '기간 미제공' },
   '2TZN-1': { s145: '선택 업종', s147: '지수', s149: '거래대금', s151: '구성 종목', s153: '시가', s155: '52주 최저' },
-  '2SKU-1': { s047: '오늘', s054: 'D+1', s061: 'D+2', s175: '기간 입금', s178: '기간 출금' },
+  '2SKU-1': { s047: '오늘', s054: 'D+1', s061: 'D+2', s069: '정산 상세 ›', s175: '기간 입금', s178: '기간 출금' },
   '3MTJ-0': { s026: '결제 예정', s035: '오늘', s043: 'D+1', s052: 'D+2', s036: '', s044: '', s053: '',
     s064: 'D+2 자산', s067: 'D+2 금액', s106: '오늘', s108: 'D+1', s110: 'D+2' },
 };
