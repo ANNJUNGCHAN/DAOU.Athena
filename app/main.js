@@ -79,6 +79,11 @@ const { createChartFollowupTracker } = require('./lib/main/chart-followup');
 const simpleChartFastPath = require('./lib/main/simple-chart-fast-path');
 const selectorFastPath = require('./lib/main/selector-fast-path');
 const activeCardQna = require('./lib/main/active-card-context');
+const layaRouting = require('./lib/main/laya-routing');
+const layaClient = layaRouting.createLayaRouting({
+  getBackendUrl: () => BACKEND_HTTP_BASE,
+  getBearerToken: () => historySink.getBearerToken(),
+});
 const selectorColdHedge = require('./lib/main/selector-cold-hedge');
 const { createClaudeSelectorWorkerPool } = require('./lib/main/claude-selector-worker-pool');
 const chartReload = require('./lib/main/chart-reload');
@@ -941,6 +946,8 @@ const chartSeries = require('./lib/main/chart-series');
 // 백테스트 REST 프록시(P4, backtest-mode-plan.md §8.1) — routineHttp와 같은 원칙이지만
 // main.js 밖 순수 함수라 단위 테스트(backtest-bridge.test.js)를 직접 붙일 수 있다.
 const backtestBridge = require('./lib/main/backtest-bridge');
+const { prepareNaturalStrategy } = require('./lib/main/natural-strategy-author');
+const naturalAuthorRequests = new Map();
 
 let chartRealtimeFeed = null;
 let chartRealtimeRegistrar = null;
@@ -1868,6 +1875,29 @@ ipcMain.handle('athena:backtest-plan', async (_e, body = {}) => {
   return callBacktestBridge(backtestBridge.planBacktest, body);
 });
 ipcMain.handle('athena:backtest-run', async (_e, body = {}) => {
+  if (body.decision_mode === 'natural' && body.operation === 'prepare') {
+    const senderId = _e.sender.id;
+    naturalAuthorRequests.get(senderId)?.abort();
+    const controller = new AbortController();
+    naturalAuthorRequests.set(senderId, controller);
+    const abort = () => controller.abort();
+    _e.sender.once('destroyed', abort);
+    app.once('before-quit', abort);
+    try {
+      const backendBase = await backendEndpoint.waitForBackendUrl({
+        timeoutMs: backendLauncher.STARTUP_HARD_TIMEOUT_MS + 5_000,
+      });
+      return await prepareNaturalStrategy({ strategy: body.strategy, backendBase,
+        selection: resolveActiveModelSelection(), userDataPath: app.getPath('userData'),
+        fetchImpl: fetch, runClaudeQuery, signal: controller.signal });
+    } catch (error) {
+      return { ok: false, status: 0, error: String(error.message || error) };
+    } finally {
+      _e.sender.removeListener('destroyed', abort);
+      app.removeListener('before-quit', abort);
+      if (naturalAuthorRequests.get(senderId) === controller) naturalAuthorRequests.delete(senderId);
+    }
+  }
   const res = await callBacktestBridge(backtestBridge.runBacktest, body);
   attachSessionJob(res, 'run_id', 'backtest.run');
   return res;
@@ -5833,6 +5863,9 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         preflight: selectorResult.preflight,
         signal: selectorController.signal,
         isCurrent: () => runtime.activeSelectorFastRun === selectorController,
+        selectOperation: layaRouting.isLayaEnabled() ? ({ question, candidates, signal, isCurrent }) => layaClient.operation_selection({
+          text: question, candidates, signal, isCurrent,
+        }) : undefined,
         classify: ({ prompt, signal }) => selectorClaudePool.run({
           prompt,
           timeoutMs: 12_000,
@@ -5873,14 +5906,14 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         }),
       });
       if (coldResult.handled) {
-        mdlog(`Selector 병렬 분류 적중 — ${coldResult.operationRef || coldResult.classifiedOperationRef} (모델 2회, dispatch 1회)`);
+        mdlog(`Selector 후보 선택 적중 — ${coldResult.operationRef || coldResult.classifiedOperationRef} (CLI ${coldResult.modelCalls || 0}회${coldResult.layaSelected ? ', LAYA 선택' : ''}, dispatch 1회)`);
         return finishCardProducingResult(coldResult, selectorDisplayedCards);
       }
       mdlog(`Selector 병렬 분류 폴백 — ${coldResult.reason}`);
     }
     mdlog(`Selector 단일 dispatch 폴백 — ${selectorResult.reason}`);
   } catch (error) {
-    if (selectorController.signal.aborted) {
+    if (selectorController.signal.aborted || liveSubmitContexts.get(turnConversationId) !== submit) {
       return {
         ok: false,
         source: 'selector-fast',

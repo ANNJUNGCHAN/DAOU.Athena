@@ -1569,3 +1569,11 @@ table.common-table { min-width: 420px; font-size: 13px; line-height: 20px; }
   outline: 2px solid var(--color-k-text);
   outline-offset: 2px;
 }
+.backtest-natural .backtest-natural-table-scroll { max-height: 520px; }
+.backtest-natural .backtest-natural-table { min-width: 760px; table-layout: fixed; }
+.backtest-natural .backtest-natural-table th:nth-child(1) { width: 104px; }
+.backtest-natural .backtest-natural-table th:nth-child(2) { width: 64px; }
+.backtest-natural .backtest-natural-table th:nth-child(3) { width: 190px; }
+.backtest-natural .backtest-natural-table th:nth-child(4) { width: 82px; }
+.backtest-natural .backtest-natural-table th:last-child { width: 320px; }
+.backtest-natural .backtest-natural-table td { overflow-wrap: anywhere; }

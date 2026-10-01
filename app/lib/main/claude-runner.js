@@ -18,7 +18,7 @@ const DEFAULT_TIMEOUT_MS = 180_000;
 
 const MAX_STDOUT_BYTES = 5_000_000;
 
-function buildArgs({ prompt, configFile, allowedTools, resumeSessionId, model, effort, disableAllTools = false }) {
+function buildArgs({ prompt, configFile, allowedTools, resumeSessionId, model, effort, disableAllTools = false, isolateMcp = false }) {
   const args = [
     '-p', '--input-format', 'text',
     '--output-format', 'stream-json',
@@ -41,7 +41,7 @@ function buildArgs({ prompt, configFile, allowedTools, resumeSessionId, model, e
     // 좁혀도 mcp__athena 카드 렌더가 그대로 깨졌다 — 결론 안 바뀜, --tools는
     // 계속 안 쓴다.
   ];
-  if (!disableAllTools) args.push('--mcp-config', configFile, '--strict-mcp-config');
+  if (!disableAllTools || isolateMcp) args.push('--mcp-config', configFile, '--strict-mcp-config');
   args.push('--setting-sources', '');
   if (disableAllTools) {
     // Selector cold-path 분류기는 JSON 분류만 한다. MCP와 빌트인 툴 표면을
@@ -94,6 +94,7 @@ function runClaudeQuery({
   onThinkingDelta,
   signal,
   disableAllTools = false,
+  isolateMcp = false,
 } = {}) {
   return new Promise((resolve) => {
     if (!prompt || !String(prompt).trim()) {
@@ -105,7 +106,7 @@ function runClaudeQuery({
       return;
     }
 
-    const args = buildArgs({ prompt, configFile, allowedTools, resumeSessionId, model, effort, disableAllTools });
+    const args = buildArgs({ prompt, configFile, allowedTools, resumeSessionId, model, effort, disableAllTools, isolateMcp });
     const session = new StreamJsonSession();
     let child;
     try {

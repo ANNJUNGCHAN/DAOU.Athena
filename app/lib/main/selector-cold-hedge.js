@@ -1,5 +1,7 @@
 'use strict';
 
+const { isDeepStrictEqual } = require('node:util');
+
 const CLASSIFIERS_PER_TURN = 2;
 const GLOBAL_CLASSIFIER_LIMIT = 4;
 
@@ -149,6 +151,11 @@ function schemaGatedProposal(preflight) {
     if (!valueMatches(bound[name], specs.get(name) || {})) return null;
     args[name] = bound[name];
   }
+  for (const [name, value] of Object.entries(bound)) {
+    if (!specs.has(name)) continue;
+    if (!valueMatches(value, specs.get(name))) return null;
+    args[name] = value;
+  }
   const operationRef = String(candidate.operation_ref || candidate.ref || '').trim();
   const detailGroup = candidate.detail_group == null
     ? (operationRef.startsWith('detail:') ? operationRef.split(':').slice(2).join(':') || null : null)
@@ -181,6 +188,27 @@ function buildClassificationPrompt(question, preflight) {
     `Bound arguments: ${JSON.stringify(compactBoundArguments(preflight && preflight.bound_arguments))}`,
     `Candidates: ${JSON.stringify(candidates)}`,
   ].join('\n');
+}
+
+function buildArgumentExtractionPrompt(question, preflight) {
+  const candidate = compactCandidate(preflight.candidates[0]);
+  return [
+    'Extract arguments for the already selected read-only operation. Do not choose a route or call tools.',
+    'Return exactly one JSON object: {"arguments":{}}. Fill only fields in the contract; do not invent missing values.',
+    `Question: ${String(question || '')}`,
+    `Bound arguments: ${JSON.stringify(compactBoundArguments(preflight.bound_arguments))}`,
+    `Argument contract: ${JSON.stringify(candidate)}`,
+  ].join('\n');
+}
+
+function buildOperationChoices(preflight) {
+  return (preflight.candidates || []).filter((candidate) => candidateKind(candidate)).map((candidate, index) => ({
+    id: `candidate_${index + 1}`,
+    label: String(candidate.name || candidate.title || candidate.operation_ref || candidate.ref),
+    description: [candidate.operation_ref || candidate.ref, candidate.detail_group,
+      candidate.group_title_ko || candidate.group_title_en, candidate.description || candidate.summary]
+      .filter(Boolean).join(' · '),
+  }));
 }
 
 function strictJson(value) {
@@ -258,6 +286,21 @@ function valueMatches(value, spec) {
     }
   }
   return true;
+}
+
+function mergeSelectedArguments(extracted, candidate, boundArguments) {
+  if (!extracted || typeof extracted !== 'object' || Array.isArray(extracted)) {
+    throw new Error('arguments_object_required');
+  }
+  const { specs } = collectArgumentContract(candidate);
+  const validBound = Object.entries(compactBoundArguments(boundArguments))
+    .filter(([name, value]) => specs.has(name) && valueMatches(value, specs.get(name)));
+  for (const [name, value] of validBound) {
+    if (Object.hasOwn(extracted, name) && !isDeepStrictEqual(extracted[name], value)) {
+      throw new Error('bound_argument_conflict');
+    }
+  }
+  return { ...Object.fromEntries(validBound), ...extracted };
 }
 
 function validateProposal(raw, preflight) {
@@ -338,6 +381,7 @@ function createSelectorColdHedge({
     question,
     preflight,
     classify,
+    selectOperation,
     dispatchProposal,
     signal,
     isCurrent = () => true,
@@ -387,6 +431,32 @@ function createSelectorColdHedge({
       });
     }
 
+    let classificationPreflight = preflight;
+    let layaSelected = false;
+    const selectable = candidates.filter((candidate) => candidateKind(candidate));
+    if (typeof selectOperation === 'function' && selectable.length >= 2) {
+      const choices = buildOperationChoices(preflight);
+      let selection = null;
+      try { selection = await selectOperation({ question, candidates: choices, signal, isCurrent }); }
+      catch (error) {
+        if ((signal && signal.aborted) || !isCurrent() || error.name === 'AbortError') throw abortError(signal);
+      }
+      if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
+      const index = selection && selection.task === 'operation_selection'
+        ? choices.findIndex((choice) => choice.id === selection.choice) : -1;
+      if (index >= 0) {
+        classificationPreflight = { ...preflight, candidates: [selectable[index]] };
+        layaSelected = true;
+        const selectedProposal = schemaGatedProposal(classificationPreflight);
+        if (selectedProposal) {
+          return dispatchValidated(selectedProposal, {
+            dispatchProposal, signal, isCurrent, decisionCache, question, preflight,
+            modelCalls: 0, extras: { layaSelected: true },
+          });
+        }
+      }
+    }
+
     const release = await limiter.acquire(CLASSIFIERS_PER_TURN, signal);
     if ((signal && signal.aborted) || !isCurrent()) {
       release();
@@ -397,11 +467,27 @@ function createSelectorColdHedge({
       if (!controller.signal.aborted) controller.abort(signal && signal.reason);
     });
     if (signal) signal.addEventListener('abort', abortChildren, { once: true });
-    const prompt = buildClassificationPrompt(question, preflight);
+    // A finite selection never supplies dates, symbols or other free arguments.
+    // The existing CLI fills missing values under the selected candidate schema.
+    const prompt = layaSelected
+      ? buildArgumentExtractionPrompt(question, classificationPreflight)
+      : buildClassificationPrompt(question, classificationPreflight);
     const tasks = controllers.map((controller, index) => Promise.resolve()
       .then(() => classify({ prompt, signal: controller.signal, index }))
       .then(extractClassifierText)
-      .then((text) => validateProposal(text, preflight)));
+      .then((text) => {
+        if (!layaSelected) return validateProposal(text, classificationPreflight);
+        const extracted = strictJson(text);
+        if (Object.keys(extracted).some((key) => key !== 'arguments')) throw new Error('arguments_only_required');
+        const selected = classificationPreflight.candidates[0];
+        const selectedRef = String(selected.operation_ref || selected.ref);
+        return validateProposal({
+          intent: 'query', operation_ref: selectedRef,
+          detail_group: selected.detail_group || (selectedRef.startsWith('detail:')
+            ? selectedRef.split(':').slice(2).join(':') || null : null),
+          arguments: mergeSelectedArguments(extracted.arguments, selected, classificationPreflight.bound_arguments),
+        }, classificationPreflight);
+      }));
     Promise.allSettled(tasks).finally(() => {
       if (signal) signal.removeEventListener('abort', abortChildren);
       release();
@@ -430,6 +516,7 @@ function createSelectorColdHedge({
       question,
       preflight,
       modelCalls: CLASSIFIERS_PER_TURN,
+      extras: { layaSelected },
     });
   };
 }
@@ -442,6 +529,8 @@ module.exports = {
   DEFAULT_DECISION_TTL_MS,
   GLOBAL_CLASSIFIER_LIMIT,
   buildClassificationPrompt,
+  buildArgumentExtractionPrompt,
+  buildOperationChoices,
   createDecisionCache,
   createPairLimiter,
   createSelectorColdHedge,

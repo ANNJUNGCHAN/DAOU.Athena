@@ -1,12 +1,14 @@
 """Environment-backed application configuration."""
 
 import hashlib
+import ipaddress
 import json
 import re
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal, Self
+from urllib.parse import urlsplit
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -99,6 +101,34 @@ class Settings(BaseSettings):
     local_bearer_token: SecretStr | None = None
     request_timeout_seconds: float = 10.0
     max_rate_limit_retries: int = 1
+    # Evaluation opt-in: baseline accuracy does not yet justify automatic routing.
+    # Unavailability keeps the existing CLI path usable.
+    laya_enabled: bool = False
+    laya_base_url: str = "http://127.0.0.1:8768"
+    laya_timeout_seconds: float = Field(default=1.2, ge=0.1, le=5.0)
+    laya_circuit_seconds: float = Field(default=20.0, ge=1.0, le=120.0)
+    laya_min_confidence: float = Field(default=0.8, ge=0.5, le=1.0)
+    laya_min_margin: float = Field(default=0.15, ge=0.0, le=1.0)
+
+    @field_validator("laya_base_url")
+    @classmethod
+    def validate_laya_base_url(cls, value: str) -> str:
+        parsed = urlsplit(value)
+        try:
+            local = ipaddress.ip_address(parsed.hostname or "").is_loopback
+            valid_port = parsed.port is None or 1 <= parsed.port <= 65535
+        except ValueError:
+            local = valid_port = False
+        if (
+            parsed.scheme != "http" or not local or not valid_port or parsed.username
+            or parsed.password or parsed.path not in {"", "/"}
+            or parsed.query or parsed.fragment
+        ):
+            raise ValueError(
+                "LAYA endpoint must be an HTTP loopback IP with no path or credentials"
+            )
+        return value.rstrip("/")
+
     instrument_db_path: Path = Field(
         default_factory=lambda: Path.home() / ".athena" / "instruments.sqlite3"
     )

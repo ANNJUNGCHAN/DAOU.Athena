@@ -1865,6 +1865,8 @@ def _selector_preflight(
                 "operation_ref": description.operation_ref,
                 "kind": description.kind,
                 "name": description.name,
+                "group_title_ko": description.group_title_ko,
+                "group_title_en": description.group_title_en,
                 "required_arguments": required_arguments,
             }
         )

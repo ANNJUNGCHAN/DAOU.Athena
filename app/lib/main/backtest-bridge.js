@@ -71,6 +71,13 @@ function backfillBacktest({ backendBase, fetchImpl, backendAccountAlias, ...body
 }
 
 function runBacktest({ backendBase, fetchImpl, ...body }) {
+  if (body.decision_mode === 'natural') {
+    const { decision_mode, operation, ...payload } = body;
+    if (!['create', 'step', 'run', 'pause', 'result'].includes(operation)) {
+      return { ok: false, status: 400, error: '지원하지 않는 자연어 모의 감시 작업입니다.' };
+    }
+    return backtestHttp('POST', `/api/v1/backtest/natural/${operation}`, payload, { backendBase, fetchImpl });
+  }
   return backtestHttp('POST', '/api/v1/backtest/runs', body, { backendBase, fetchImpl });
 }
 
