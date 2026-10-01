@@ -183,3 +183,85 @@ test('complete code watch adoption keeps automatic draft checking without activa
   assert.equal(h.drafts[0].options.autoCheck, true);
   assert.equal(h.submitted.length, 0);
 });
+
+function cardChoiceHarness() {
+  class Element {
+    children = [];
+    listeners = new Map();
+    disabled = false;
+    textContent = '';
+    append(...children) { this.children.push(...children); }
+    appendChild(child) { this.children.push(child); }
+    addEventListener(type, callback) { this.listeners.set(type, callback); }
+    click() { if (!this.disabled) this.listeners.get('click')?.(); }
+  }
+  const calls = [];
+  const seeds = [];
+  const routine = { ...onceProposal, id: 'choice', status: 'draft', main_card_pending: true };
+  const confirmations = routineMainCardLib.createConfirmationController();
+  confirmations.setCurrentConversation('origin');
+  const context = vm.createContext({
+    window: { athena: { invoke: async (channel, args) => {
+      calls.push({ channel, args });
+      return { ok: false, error: 'synthetic failure' };
+    } }, AthenaShell: { seedChatInput: text => seeds.push(text) } },
+    document: { createElement: () => new Element() },
+    _btn: text => Object.assign(new Element(), { textContent: text }),
+    routineMainCardLib,
+    routineMainCardConfirmations: confirmations,
+    activeConversationScopeId: 'origin',
+    routineDraftViewsById: new Map(),
+    firstSeenSignatureById: new Map(),
+  });
+  for (const prefix of ['function registerRoutineDraftView(', 'function retireRoutineDraftViews(',
+    'function registerTypedMainCardConfirmation(', 'function appendMainCardConfirmation(']) {
+    const start = source.indexOf(prefix);
+    assert.ok(start >= 0);
+    vm.runInContext(source.slice(start, source.indexOf('\n}', start) + 2), context);
+  }
+  const card = new Element();
+  const view = context.appendMainCardConfirmation(card, routine, 'origin');
+  const [yes, other, status] = card.children[0].children[1].children;
+  return { context, routine, view, yes, other, status, calls, seeds, confirmations };
+}
+
+test('choosing another main card prepares input without claiming proposal or confirming the old candidate', async () => {
+  const h = cardChoiceHarness();
+  h.other.click();
+  assert.equal(h.status.textContent, '변경할 카드를 입력해 주세요');
+  assert.equal(h.view.retired, false);
+  assert.equal(h.yes.disabled, false);
+  assert.equal(h.other.disabled, false);
+  assert.equal(h.seeds.length, 1);
+  assert.ok(h.seeds[0].includes(h.routine.note));
+  assert.ok(h.seeds[0].includes(h.routine.id));
+  assert.match(h.seeds[0], /조건은 유지/);
+  assert.doesNotMatch(h.seeds[0], /propose_main_card/);
+  assert.equal((await h.confirmations.handleAffirmative('네')).handled, false);
+  assert.equal(h.calls.length, 0, 'input preparation must never submit, approve, or save');
+  h.context.registerTypedMainCardConfirmation(h.view);
+  assert.equal((await h.confirmations.handleAffirmative('네')).handled, false);
+});
+
+test('explicitly confirming the displayed candidate remains available after preparing another-card input', async () => {
+  const h = cardChoiceHarness();
+  h.other.click();
+  await h.view.confirm();
+  assert.equal(h.calls.length, 1);
+  assert.equal(h.calls[0].channel, 'athena:routine-main-card-confirm');
+  assert.deepEqual(h.calls[0].args.expected_candidate, h.routine.main_card_candidate);
+  assert.equal(h.yes.disabled, false, 'failed explicit confirmation remains retryable');
+});
+
+test('arrival of a replacement candidate still retires and disables the old confirmation view', async () => {
+  const h = cardChoiceHarness();
+  h.other.click();
+  h.context.retireRoutineDraftViews(h.routine.id);
+  assert.equal(h.view.retired, true);
+  assert.equal(h.yes.disabled, true);
+  assert.equal(h.other.disabled, true);
+  assert.equal(h.status.textContent, '새 카드 후보가 제안됐습니다');
+  assert.equal((await h.view.confirm()).ok, false);
+  assert.equal((await h.confirmations.handleAffirmative('네')).handled, false);
+  assert.equal(h.calls.length, 0);
+});

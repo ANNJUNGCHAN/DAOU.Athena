@@ -4737,9 +4737,9 @@ function appendMainCardConfirmation(card, r, conversationId) {
   yes.addEventListener('click', () => { void view.confirm(); });
   other.addEventListener('click', () => {
     view.typedEligible = false;
-    view.retire();
     routineMainCardConfirmations.remove(r.id, view.originConversationId, candidate);
-    const seed = `루틴 ID ${r.id}의 메인 카드 후보를 다른 카드로 제안해줘. propose_main_card로 같은 초안을 갱신해줘 — `;
+    status.textContent = '변경할 카드를 입력해 주세요';
+    const seed = `「${r.note || '이 알림'}」의 메인 카드 후보를 바꾸고 싶어. 같은 초안(루틴 ID ${r.id})의 조건은 유지해줘. 원하는 카드: `;
     if (window.AthenaShell && typeof window.AthenaShell.seedChatInput === 'function') {
       window.AthenaShell.seedChatInput(seed);
     }
