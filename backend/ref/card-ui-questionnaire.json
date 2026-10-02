@@ -38,7 +38,8 @@
       "582–668행87개 관측 추가, 원581행 불변.614–634 예상 참조는 공개 소스 전환 대상에 따라 별도 정정하며 실제template ID는 미확인. 모든 새UI관측 실패. 합성검사와 소스적용 승인은 실제 앱 전체 통과가 아니다.658의 일시 mini밀집은659안정화 후 분산배치로 해소돼 지속결함으로 계산하지 않는다.665외부가림 화면은 전체표시 증거로 계산하지 않는다.",
       "668행까지의 기존 관측과 입력은 보존했다. 669–704행 36개 관측을 추가했으며 670–673행의 예상 참조는 2U5L-1로 정정했다. 실제 화면 ID는 모두 미확인이다. 관심·업종 7개 크기 검증 경로는 실패다. 일반 표 700·703행의 축소 통과는 해당 예시·폭에 한정되며 최대·재최대화는 실패했다. 678행의 버튼 숨김 해석은 679·680행에서 철회됐다. 실제 값이 없는 ELW·VI·조건검색은 값이 채워진 상태를 검증한 것으로 계산하지 않는다. 최신 소스의94개 전체 반응형 통과 수는0이다.",
       "704행 스냅샷 작성 당시 기록 범위는704행까지였으며 당시705행 이후는 포함하지 않았다. 669–694행은0343c7e,695–704행은메뉴수정전f66addf 런타임의 관측이다. 작성 기준9616c9e나 합성 검사·커밋을 실제 앱 통과로 계산하지 않는다.",
-      "현재 실행 부록은801행까지이며705–801행97개 공개 안전 메타데이터를 추가했다. 기존704행 스냅샷·101개참조/94개대상과7개제외·12개입력·31개추가흐름·LAYA 과거 기록은 보존한다. 실제template ID는 모두 미확인이다. scoped PASS는 해당 조작만의 통과이며 전체 카드나94개최신반응형통과로 합산하지 않는다. 728–730·800·801은 호출FAIL/UI미실행이다. 742–744의 별도 정상 경로 도착은 이전 호출실패를 지우지 않으며 전체UI FAIL이다. 최신94개전체반응형완료는 미완료다."
+      "801행 스냅샷 작성 당시 실행 부록은801행까지였으며705–801행97개 공개 안전 메타데이터를 추가했다. 기존704행 스냅샷·101개참조/94개대상과7개제외·12개입력·31개추가흐름·LAYA 과거 기록은 보존한다. 실제template ID는 모두 미확인이다. scoped PASS는 해당 조작만의 통과이며 전체 카드나94개최신반응형통과로 합산하지 않는다. 728–730·800·801은 호출FAIL/UI미실행이다. 742–744의 별도 정상 경로 도착은 이전 호출실패를 지우지 않으며 전체UI FAIL이다. 최신94개전체반응형완료는 미완료다.",
+      "현재 추가 실행 부록은853행까지다. 기존801행까지의 스냅샷·94개 과거 집계·101개 참조/94개 대상·최소12개 입력·31개 흐름과 LAYA 과거 기록은 보존했다.802–853행52개를 추가했으며 실제template ID는 모두null이다. scoped PASS와 호출 성공은 카드 전체 UI 통과가 아니다.809가림은 제외하고833–837·853은 호출FAIL/UI미실행을 유지한다. 최신94개 전체 반응형 검증은 미완료다."
     ],
     "minimal_card_family_smoke": [
       "seed-account",
@@ -33882,6 +33883,2967 @@
         "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
         "VI 최소 입력은 증권사 시세 서버 요청의 반복 실패로 카드 미도착이다. CALL FAIL / UI NOT_RUN.800의 경로 미지원과 별도 호출 실패이며 예상2UHM-1은 참조만이다."
       ]
+    },
+    {
+      "id": "802",
+      "phase": "condition-list-max",
+      "expected_template_id": "2UN6-1",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:28:22.308Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 802,
+      "safe_metadata": {
+        "id": 802,
+        "phase": "condition-list-max",
+        "expected_template_id": "2UN6-1",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:28:22.308Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "저장 조건 목록 도착과 종목 상세 수신 대기를 구분한다. 보조 빈 영역·최대 폭의 짧은 행 간격·작은 코드와 상태 표기가 남아 전체 UI 실패다. 조건 수정·실행은 검증하지 않았다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "803",
+      "phase": "condition-list-narrow-footer",
+      "expected_template_id": "2UN6-1",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:29:56.615Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 803,
+      "safe_metadata": {
+        "id": 803,
+        "phase": "condition-list-narrow-footer",
+        "expected_template_id": "2UN6-1",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:29:56.615Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "저장 조건 목록 도착과 종목 상세 수신 대기를 구분한다. 보조 빈 영역·최대 폭의 짧은 행 간격·작은 코드와 상태 표기가 남아 전체 UI 실패다. 조건 수정·실행은 검증하지 않았다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "804",
+      "phase": "condition-list-remax-footer",
+      "expected_template_id": "2UN6-1",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:30:18.848Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 804,
+      "safe_metadata": {
+        "id": 804,
+        "phase": "condition-list-remax-footer",
+        "expected_template_id": "2UN6-1",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:30:18.848Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "저장 조건 목록 도착과 종목 상세 수신 대기를 구분한다. 보조 빈 영역·최대 폭의 짧은 행 간격·작은 코드와 상태 표기가 남아 전체 UI 실패다. 조건 수정·실행은 검증하지 않았다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "805",
+      "phase": "watch-normal-tab-max",
+      "expected_template_id": "2U5L-1",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:30:55.803Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 805,
+      "safe_metadata": {
+        "id": 805,
+        "phase": "watch-normal-tab-max",
+        "expected_template_id": "2U5L-1",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:30:55.803Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "관심 탭의 목록 도착은800행 최소 입력 호출 실패와 별도다. 두 번째 행 선택의 종목·상세·버튼 정합과 마지막 열 접근은 해당 조작만의 통과다. 작은 보조 글자·넓은 간격·최대에서도 필요한 가로 스크롤로 전체 실패를 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "806",
+      "phase": "watch-max-horizontal-end",
+      "expected_template_id": "2U5L-1",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:31:27.096Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 806,
+      "safe_metadata": {
+        "id": 806,
+        "phase": "watch-max-horizontal-end",
+        "expected_template_id": "2U5L-1",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:31:27.096Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "evidence_scope": "scoped_retest",
+      "reported_verdict_scope": "scoped_retest",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "관심 탭의 목록 도착은800행 최소 입력 호출 실패와 별도다. 두 번째 행 선택의 종목·상세·버튼 정합과 마지막 열 접근은 해당 조작만의 통과다. 작은 보조 글자·넓은 간격·최대에서도 필요한 가로 스크롤로 전체 실패를 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "807",
+      "phase": "watch-second-row-selection-max",
+      "expected_template_id": "2U5L-1",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:32:01.810Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 807,
+      "safe_metadata": {
+        "id": 807,
+        "phase": "watch-second-row-selection-max",
+        "expected_template_id": "2U5L-1",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:32:01.810Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "evidence_scope": "scoped_retest",
+      "reported_verdict_scope": "scoped_retest",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "관심 탭의 목록 도착은800행 최소 입력 호출 실패와 별도다. 두 번째 행 선택의 종목·상세·버튼 정합과 마지막 열 접근은 해당 조작만의 통과다. 작은 보조 글자·넓은 간격·최대에서도 필요한 가로 스크롤로 전체 실패를 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "808",
+      "phase": "watch-selected-narrow-footer",
+      "expected_template_id": "2U5L-1",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:32:27.710Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 808,
+      "safe_metadata": {
+        "id": 808,
+        "phase": "watch-selected-narrow-footer",
+        "expected_template_id": "2U5L-1",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:32:27.710Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "관심 탭의 목록 도착은800행 최소 입력 호출 실패와 별도다. 두 번째 행 선택의 종목·상세·버튼 정합과 마지막 열 접근은 해당 조작만의 통과다. 작은 보조 글자·넓은 간격·최대에서도 필요한 가로 스크롤로 전체 실패를 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "809",
+      "phase": "watch-selected-narrow-horizontal-end",
+      "expected_template_id": "2U5L-1",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:33:12.350Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 809,
+      "safe_metadata": {
+        "id": 809,
+        "phase": "watch-selected-narrow-horizontal-end",
+        "expected_template_id": "2U5L-1",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:33:12.350Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": null,
+      "ui_status": null,
+      "evidence_scope": "excluded_occluded_observation",
+      "reported_verdict_scope": "excluded_occluded_observation",
+      "verdict_provenance": {
+        "call": "not_provided",
+        "ui": "not_provided",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "excluded_observation",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "관심 탭의 목록 도착은800행 최소 입력 호출 실패와 별도다. 두 번째 행 선택의 종목·상세·버튼 정합과 마지막 열 접근은 해당 조작만의 통과다. 작은 보조 글자·넓은 간격·최대에서도 필요한 가로 스크롤로 전체 실패를 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다.",
+        "다른 앱 가림이 있어 유효 UI 증거에서 제외한다. 원809 판정은 보존하고 안정810의 별도 범위 관측과 구분한다."
+      ],
+      "evidence_status": "excluded_from_corrected_ui_accounting",
+      "exclusion_basis": "root_public_correction"
+    },
+    {
+      "id": "810",
+      "phase": "watch-selected-narrow-horizontal-end-stable",
+      "expected_template_id": "2U5L-1",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:33:31.441Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 810,
+      "safe_metadata": {
+        "id": 810,
+        "phase": "watch-selected-narrow-horizontal-end-stable",
+        "expected_template_id": "2U5L-1",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:33:31.441Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "evidence_scope": "scoped_retest",
+      "reported_verdict_scope": "scoped_retest",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "관심 탭의 목록 도착은800행 최소 입력 호출 실패와 별도다. 두 번째 행 선택의 종목·상세·버튼 정합과 마지막 열 접근은 해당 조작만의 통과다. 작은 보조 글자·넓은 간격·최대에서도 필요한 가로 스크롤로 전체 실패를 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "811",
+      "phase": "watch-selected-remax-footer",
+      "expected_template_id": "2U5L-1",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:33:56.855Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 811,
+      "safe_metadata": {
+        "id": 811,
+        "phase": "watch-selected-remax-footer",
+        "expected_template_id": "2U5L-1",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:33:56.855Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "관심 탭의 목록 도착은800행 최소 입력 호출 실패와 별도다. 두 번째 행 선택의 종목·상세·버튼 정합과 마지막 열 접근은 해당 조작만의 통과다. 작은 보조 글자·넓은 간격·최대에서도 필요한 가로 스크롤로 전체 실패를 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "812",
+      "phase": "watch-expanded-first-row-max-footer",
+      "expected_template_id": "3D4I-0",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:35:11.369Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 812,
+      "safe_metadata": {
+        "id": 812,
+        "phase": "watch-expanded-first-row-max-footer",
+        "expected_template_id": "3D4I-0",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:35:11.369Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "실제 수신 행의 펼침 상태와 하단 접근을 확인했다. 정수 수량 표시 개선은 유지되지만 좁은 이름 칸·작은 라벨·밀집한 호가·조회 종목 문맥 부족이 남았다. 실제 수신값이나 부호는 공개하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "813",
+      "phase": "watch-expanded-first-row-narrow",
+      "expected_template_id": "3D4I-0",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:36:01.336Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 813,
+      "safe_metadata": {
+        "id": 813,
+        "phase": "watch-expanded-first-row-narrow",
+        "expected_template_id": "3D4I-0",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:36:01.336Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "실제 수신 행의 펼침 상태와 하단 접근을 확인했다. 정수 수량 표시 개선은 유지되지만 좁은 이름 칸·작은 라벨·밀집한 호가·조회 종목 문맥 부족이 남았다. 실제 수신값이나 부호는 공개하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "814",
+      "phase": "watch-expanded-narrow-final-footer",
+      "expected_template_id": "3D4I-0",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:37:39.772Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 814,
+      "safe_metadata": {
+        "id": 814,
+        "phase": "watch-expanded-narrow-final-footer",
+        "expected_template_id": "3D4I-0",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:37:39.772Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "실제 수신 행의 펼침 상태와 하단 접근을 확인했다. 정수 수량 표시 개선은 유지되지만 좁은 이름 칸·작은 라벨·밀집한 호가·조회 종목 문맥 부족이 남았다. 실제 수신값이나 부호는 공개하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "815",
+      "phase": "watch-expanded-first-row-remax-footer",
+      "expected_template_id": "3D4I-0",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:38:11.023Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 815,
+      "safe_metadata": {
+        "id": 815,
+        "phase": "watch-expanded-first-row-remax-footer",
+        "expected_template_id": "3D4I-0",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:38:11.023Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "ui": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+        "scope": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "실제 수신 행의 펼침 상태와 하단 접근을 확인했다. 정수 수량 표시 개선은 유지되지만 좁은 이름 칸·작은 라벨·밀집한 호가·조회 종목 문맥 부족이 남았다. 실제 수신값이나 부호는 공개하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "816",
+      "phase": "quote10-open-from-watch-max-footer",
+      "expected_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:41:54.387Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 816,
+      "safe_metadata": {
+        "id": 816,
+        "phase": "quote10-open-from-watch-max-footer",
+        "expected_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:41:54.387Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+        "ui": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+        "scope": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "읽기 전용10단 호가의 행·합계·하단 접근은 유지됐다. 식별자 쉼표·LP 값 줄바꿈과 고정 행 높이 충돌·작은 보조 글씨·빈 체결 보조 공간이 남아 전체 실패다. 부분 수신 실패를 완료된 빈 상태로 단정하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "817",
+      "phase": "quote10-same-card-narrow",
+      "expected_template_id": null,
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:42:21.896Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 817,
+      "safe_metadata": {
+        "id": 817,
+        "phase": "quote10-same-card-narrow",
+        "expected_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:42:21.896Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+        "ui": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+        "scope": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "읽기 전용10단 호가의 행·합계·하단 접근은 유지됐다. 식별자 쉼표·LP 값 줄바꿈과 고정 행 높이 충돌·작은 보조 글씨·빈 체결 보조 공간이 남아 전체 실패다. 부분 수신 실패를 완료된 빈 상태로 단정하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "818",
+      "phase": "quote10-narrow-final-footer",
+      "expected_template_id": null,
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:42:53.283Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 818,
+      "safe_metadata": {
+        "id": 818,
+        "phase": "quote10-narrow-final-footer",
+        "expected_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:42:53.283Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+        "ui": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+        "scope": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "읽기 전용10단 호가의 행·합계·하단 접근은 유지됐다. 식별자 쉼표·LP 값 줄바꿈과 고정 행 높이 충돌·작은 보조 글씨·빈 체결 보조 공간이 남아 전체 실패다. 부분 수신 실패를 완료된 빈 상태로 단정하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "819",
+      "phase": "quote10-same-card-remax-footer",
+      "expected_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:44:23.005Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 819,
+      "safe_metadata": {
+        "id": 819,
+        "phase": "quote10-same-card-remax-footer",
+        "expected_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:44:23.005Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "actual_template_id": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+        "ui": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+        "scope": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "읽기 전용10단 호가의 행·합계·하단 접근은 유지됐다. 식별자 쉼표·LP 값 줄바꿈과 고정 행 높이 충돌·작은 보조 글씨·빈 체결 보조 공간이 남아 전체 실패다. 부분 수신 실패를 완료된 빈 상태로 단정하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "820",
+      "phase": "quote5-max",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:54:41.576Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 820,
+      "safe_metadata": {
+        "id": 820,
+        "phase": "quote5-max",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:54:41.576Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+        "ui": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+        "scope": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "같은 카드의5단 선택과 크기 복원에서 행·총량·하단이 유지됐다. 넓은 열 간격·식별자 쉼표·단위와 이름 없는 값의 의미·작은 라벨이 남아 전체 실패다. 체결 대기와 빈 안내를 완료된 빈 상태로 합치지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "821",
+      "phase": "quote5-narrow",
+      "actual_template_id": null,
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:54:56.357Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 821,
+      "safe_metadata": {
+        "id": 821,
+        "phase": "quote5-narrow",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:54:56.357Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+        "ui": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+        "scope": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "같은 카드의5단 선택과 크기 복원에서 행·총량·하단이 유지됐다. 넓은 열 간격·식별자 쉼표·단위와 이름 없는 값의 의미·작은 라벨이 남아 전체 실패다. 체결 대기와 빈 안내를 완료된 빈 상태로 합치지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "822",
+      "phase": "quote5-narrow-bottom",
+      "actual_template_id": null,
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T14:55:12.559Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 822,
+      "safe_metadata": {
+        "id": 822,
+        "phase": "quote5-narrow-bottom",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T14:55:12.559Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+        "ui": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+        "scope": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "같은 카드의5단 선택과 크기 복원에서 행·총량·하단이 유지됐다. 넓은 열 간격·식별자 쉼표·단위와 이름 없는 값의 의미·작은 라벨이 남아 전체 실패다. 체결 대기와 빈 안내를 완료된 빈 상태로 합치지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "823",
+      "phase": "quote5-remax",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:55:29.565Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 823,
+      "safe_metadata": {
+        "id": 823,
+        "phase": "quote5-remax",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T14:55:29.565Z",
+        "ui_scale": 1,
+        "source_commit": "601cc2901380faebcd7daa0f7d388de3c3c029ce"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+        "ui": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+        "scope": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "같은 카드의5단 선택과 크기 복원에서 행·총량·하단이 유지됐다. 넓은 열 간격·식별자 쉼표·단위와 이름 없는 값의 의미·작은 라벨이 남아 전체 실패다. 체결 대기와 빈 안내를 완료된 빈 상태로 합치지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "824",
+      "phase": "general17-short-max",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:15:00.960Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 824,
+      "safe_metadata": {
+        "id": 824,
+        "phase": "general17-short-max",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:15:00.960Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "ui": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "scope": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "짧은 일반 표의 내부 열 압축과 값·제목 보존은 개선됐다. 바깥 카드의 큰 공백이 남아 최대·축소·재최대 전체 실패다. 내부 표 개선을 외부 카드 폭 해결로 계산하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "825",
+      "phase": "general17-short-narrow",
+      "actual_template_id": null,
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T15:15:38.673Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 825,
+      "safe_metadata": {
+        "id": 825,
+        "phase": "general17-short-narrow",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T15:15:38.673Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "ui": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "scope": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "짧은 일반 표의 내부 열 압축과 값·제목 보존은 개선됐다. 바깥 카드의 큰 공백이 남아 최대·축소·재최대 전체 실패다. 내부 표 개선을 외부 카드 폭 해결로 계산하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "826",
+      "phase": "general17-short-remax",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:15:54.307Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 826,
+      "safe_metadata": {
+        "id": 826,
+        "phase": "general17-short-remax",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:15:54.307Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "ui": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "scope": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "짧은 일반 표의 내부 열 압축과 값·제목 보존은 개선됐다. 바깥 카드의 큰 공백이 남아 최대·축소·재최대 전체 실패다. 내부 표 개선을 외부 카드 폭 해결로 계산하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "827",
+      "phase": "general17-empty-max",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:18:25.043Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 827,
+      "safe_metadata": {
+        "id": 827,
+        "phase": "general17-empty-max",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:18:25.043Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "ui": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "scope": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "빈 일반 표의 두 열 제목과 중립 안내·하단은 같은 크기 순환에서 보존됐다. 바깥 카드 공백은 남아 전체 실패이며 다른 표나 복수 카드 배치 검증으로 확대하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "828",
+      "phase": "general17-empty-narrow",
+      "actual_template_id": null,
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T15:18:40.163Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 828,
+      "safe_metadata": {
+        "id": 828,
+        "phase": "general17-empty-narrow",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T15:18:40.163Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "ui": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "scope": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "빈 일반 표의 두 열 제목과 중립 안내·하단은 같은 크기 순환에서 보존됐다. 바깥 카드 공백은 남아 전체 실패이며 다른 표나 복수 카드 배치 검증으로 확대하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "829",
+      "phase": "general17-empty-remax",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:19:01.866Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 829,
+      "safe_metadata": {
+        "id": 829,
+        "phase": "general17-empty-remax",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:19:01.866Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "ui": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+        "scope": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "빈 일반 표의 두 열 제목과 중립 안내·하단은 같은 크기 순환에서 보존됐다. 바깥 카드 공백은 남아 전체 실패이며 다른 표나 복수 카드 배치 검증으로 확대하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "830",
+      "phase": "general17-long-max",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:28:39.799Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 830,
+      "safe_metadata": {
+        "id": 830,
+        "phase": "general17-long-max",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:28:39.799Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md",
+        "ui": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md",
+        "scope": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "공개 긴 일반 표의 줄바꿈·숫자·마지막 열·하단을 확인했다.831행 축소 통과는 해당 공개 예시와 폭만의 scoped PASS다. 최대·재최대 외부 공백 실패는 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "831",
+      "phase": "general17-long-narrow",
+      "actual_template_id": null,
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T15:29:12.656Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 831,
+      "safe_metadata": {
+        "id": 831,
+        "phase": "general17-long-narrow",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T15:29:12.656Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "evidence_scope": "scoped_retest",
+      "reported_verdict_scope": "scoped_retest",
+      "verdict_provenance": {
+        "call": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md",
+        "ui": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md",
+        "scope": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "공개 긴 일반 표의 줄바꿈·숫자·마지막 열·하단을 확인했다.831행 축소 통과는 해당 공개 예시와 폭만의 scoped PASS다. 최대·재최대 외부 공백 실패는 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "832",
+      "phase": "general17-long-remax",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:29:26.307Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 832,
+      "safe_metadata": {
+        "id": 832,
+        "phase": "general17-long-remax",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:29:26.307Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md",
+        "ui": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md",
+        "scope": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "공개 긴 일반 표의 줄바꿈·숫자·마지막 열·하단을 확인했다.831행 축소 통과는 해당 공개 예시와 폭만의 scoped PASS다. 최대·재최대 외부 공백 실패는 유지한다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "833",
+      "phase": "gold-quote-max-call-fail",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:39:52.245Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 833,
+      "safe_metadata": {
+        "id": 833,
+        "phase": "gold-quote-max-call-fail",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:39:52.245Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "evidence_scope": "invocation_only",
+      "reported_verdict_scope": "invocation_only",
+      "verdict_provenance": {
+        "call": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "ui": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "scope": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md"
+      },
+      "target_coverage": "not_reached",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+      "observations": [
+        "금·ELW·계좌 및 계좌 추가 질문은 카드에 도착하지 않아 호출 실패/UI 미실행이다. 공개 합성 selector/schema 통과는 실제 호출 성공이나 실제 실패 원인 확정이 아니다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "834",
+      "phase": "gold-explicit-code-max-call-fail",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:42:35.497Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 834,
+      "safe_metadata": {
+        "id": 834,
+        "phase": "gold-explicit-code-max-call-fail",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:42:35.497Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "evidence_scope": "invocation_only",
+      "reported_verdict_scope": "invocation_only",
+      "verdict_provenance": {
+        "call": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "ui": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "scope": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md"
+      },
+      "target_coverage": "not_reached",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+      "observations": [
+        "금·ELW·계좌 및 계좌 추가 질문은 카드에 도착하지 않아 호출 실패/UI 미실행이다. 공개 합성 selector/schema 통과는 실제 호출 성공이나 실제 실패 원인 확정이 아니다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "835",
+      "phase": "elw-minimal-max-call-fail",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:49:56.765Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 835,
+      "safe_metadata": {
+        "id": 835,
+        "phase": "elw-minimal-max-call-fail",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:49:56.765Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "evidence_scope": "invocation_only",
+      "reported_verdict_scope": "invocation_only",
+      "verdict_provenance": {
+        "call": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "ui": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "scope": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md"
+      },
+      "target_coverage": "not_reached",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+      "observations": [
+        "금·ELW·계좌 및 계좌 추가 질문은 카드에 도착하지 않아 호출 실패/UI 미실행이다. 공개 합성 selector/schema 통과는 실제 호출 성공이나 실제 실패 원인 확정이 아니다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "836",
+      "phase": "account-minimal-max-needs-criteria",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T15:58:17.859Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 836,
+      "safe_metadata": {
+        "id": 836,
+        "phase": "account-minimal-max-needs-criteria",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T15:58:17.859Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "evidence_scope": "invocation_only",
+      "reported_verdict_scope": "invocation_only",
+      "verdict_provenance": {
+        "call": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "ui": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "scope": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md"
+      },
+      "target_coverage": "not_reached",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+      "observations": [
+        "금·ELW·계좌 및 계좌 추가 질문은 카드에 도착하지 않아 호출 실패/UI 미실행이다. 공개 합성 selector/schema 통과는 실제 호출 성공이나 실제 실패 원인 확정이 아니다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "837",
+      "phase": "account-summary-max-call-fail",
+      "actual_template_id": null,
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:00:37.240Z",
+      "ui_scale": 1,
+      "source_commit": {
+        "value": "17fcea8af7db070deaa8ba8904ae3783c06598cc",
+        "basis": "explicit_safe_metadata",
+        "original_field": "source_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      },
+      "ledger_row": 837,
+      "safe_metadata": {
+        "id": 837,
+        "phase": "account-summary-max-call-fail",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:00:37.240Z",
+        "ui_scale": 1,
+        "source_commit": "17fcea8af7db070deaa8ba8904ae3783c06598cc"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "evidence_scope": "invocation_only",
+      "reported_verdict_scope": "invocation_only",
+      "verdict_provenance": {
+        "call": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "ui": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+        "scope": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md"
+      },
+      "target_coverage": "not_reached",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md",
+      "observations": [
+        "금·ELW·계좌 및 계좌 추가 질문은 카드에 도착하지 않아 호출 실패/UI 미실행이다. 공개 합성 selector/schema 통과는 실제 호출 성공이나 실제 실패 원인 확정이 아니다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ]
+    },
+    {
+      "id": "838",
+      "phase": "flow5dd-max",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:23:59.178Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 838,
+      "safe_metadata": {
+        "id": 838,
+        "phase": "flow5dd-max",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:23:59.178Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "FLOW5DD-NATIVE838-840-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "FLOW5DD-NATIVE838-840-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "명시한 날짜·매매 구분·금액 조건, 투자자 행·원천 단위·음수와0·마지막 행·하단은 유지됐다. 회사명 누락·상태 미확인·일부 작업 미완료·최대 폭 여백으로 전체 UI 실패다. 실제 backend 메모리 버전이나 실패 원인을 추정하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "839",
+      "phase": "flow5dd-narrow-bottom",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T16:24:36.893Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 839,
+      "safe_metadata": {
+        "id": 839,
+        "phase": "flow5dd-narrow-bottom",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T16:24:36.893Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "FLOW5DD-NATIVE838-840-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "FLOW5DD-NATIVE838-840-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "명시한 날짜·매매 구분·금액 조건, 투자자 행·원천 단위·음수와0·마지막 행·하단은 유지됐다. 회사명 누락·상태 미확인·일부 작업 미완료·최대 폭 여백으로 전체 UI 실패다. 실제 backend 메모리 버전이나 실패 원인을 추정하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "840",
+      "phase": "flow5dd-remax",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:24:54.280Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 840,
+      "safe_metadata": {
+        "id": 840,
+        "phase": "flow5dd-remax",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:24:54.280Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "FLOW5DD-NATIVE838-840-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "FLOW5DD-NATIVE838-840-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "명시한 날짜·매매 구분·금액 조건, 투자자 행·원천 단위·음수와0·마지막 행·하단은 유지됐다. 회사명 누락·상태 미확인·일부 작업 미완료·최대 폭 여백으로 전체 UI 실패다. 실제 backend 메모리 버전이나 실패 원인을 추정하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "841",
+      "phase": "program5dd-max",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:27:20.067Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 841,
+      "safe_metadata": {
+        "id": 841,
+        "phase": "program5dd-max",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:27:20.067Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "프로그램 수량 원천 단위와 불필요한 소수 제거, 보조 설명 폭·축소 재배치·표 끝·하단 접근 개선은 유지됐다. 회사명·조회 날짜 문맥·하단 가격 열 제목/단위·상태·요약 출처 문맥이 남아 전체 실패다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "842",
+      "phase": "program5dd-max-right",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:28:06.757Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 842,
+      "safe_metadata": {
+        "id": 842,
+        "phase": "program5dd-max-right",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:28:06.757Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "프로그램 수량 원천 단위와 불필요한 소수 제거, 보조 설명 폭·축소 재배치·표 끝·하단 접근 개선은 유지됐다. 회사명·조회 날짜 문맥·하단 가격 열 제목/단위·상태·요약 출처 문맥이 남아 전체 실패다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "843",
+      "phase": "program5dd-narrow-top",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T16:28:39.560Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 843,
+      "safe_metadata": {
+        "id": 843,
+        "phase": "program5dd-narrow-top",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T16:28:39.560Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "프로그램 수량 원천 단위와 불필요한 소수 제거, 보조 설명 폭·축소 재배치·표 끝·하단 접근 개선은 유지됐다. 회사명·조회 날짜 문맥·하단 가격 열 제목/단위·상태·요약 출처 문맥이 남아 전체 실패다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "844",
+      "phase": "program5dd-narrow-bottom",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T16:28:53.758Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 844,
+      "safe_metadata": {
+        "id": 844,
+        "phase": "program5dd-narrow-bottom",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T16:28:53.758Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "프로그램 수량 원천 단위와 불필요한 소수 제거, 보조 설명 폭·축소 재배치·표 끝·하단 접근 개선은 유지됐다. 회사명·조회 날짜 문맥·하단 가격 열 제목/단위·상태·요약 출처 문맥이 남아 전체 실패다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "845",
+      "phase": "program5dd-narrow-right",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T16:29:07.254Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 845,
+      "safe_metadata": {
+        "id": 845,
+        "phase": "program5dd-narrow-right",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T16:29:07.254Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "프로그램 수량 원천 단위와 불필요한 소수 제거, 보조 설명 폭·축소 재배치·표 끝·하단 접근 개선은 유지됐다. 회사명·조회 날짜 문맥·하단 가격 열 제목/단위·상태·요약 출처 문맥이 남아 전체 실패다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "846",
+      "phase": "program5dd-remax",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:29:54.262Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 846,
+      "safe_metadata": {
+        "id": 846,
+        "phase": "program5dd-remax",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:29:54.262Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "프로그램 수량 원천 단위와 불필요한 소수 제거, 보조 설명 폭·축소 재배치·표 끝·하단 접근 개선은 유지됐다. 회사명·조회 날짜 문맥·하단 가격 열 제목/단위·상태·요약 출처 문맥이 남아 전체 실패다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "847",
+      "phase": "credit5dd-max-top",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:33:06.285Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 847,
+      "safe_metadata": {
+        "id": 847,
+        "phase": "credit5dd-max-top",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:33:06.285Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "대차 정수 수량·신용 잔고율·각 별도 조회와 날짜 안내·좁은 화면의 재배치·마지막 열/행/하단은 유지됐다. 회사명·조회 날짜 문맥·상태·최대 하단 공백과 요약 출처 문맥이 남아 전체 실패다. 실제 금융값은 복사하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "848",
+      "phase": "credit5dd-max-bottom",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:33:22.463Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 848,
+      "safe_metadata": {
+        "id": 848,
+        "phase": "credit5dd-max-bottom",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:33:22.463Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "대차 정수 수량·신용 잔고율·각 별도 조회와 날짜 안내·좁은 화면의 재배치·마지막 열/행/하단은 유지됐다. 회사명·조회 날짜 문맥·상태·최대 하단 공백과 요약 출처 문맥이 남아 전체 실패다. 실제 금융값은 복사하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "849",
+      "phase": "credit5dd-narrow-mid",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T16:33:37.366Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 849,
+      "safe_metadata": {
+        "id": 849,
+        "phase": "credit5dd-narrow-mid",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T16:33:37.366Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "대차 정수 수량·신용 잔고율·각 별도 조회와 날짜 안내·좁은 화면의 재배치·마지막 열/행/하단은 유지됐다. 회사명·조회 날짜 문맥·상태·최대 하단 공백과 요약 출처 문맥이 남아 전체 실패다. 실제 금융값은 복사하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "850",
+      "phase": "credit5dd-narrow-right",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T16:33:54.046Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 850,
+      "safe_metadata": {
+        "id": 850,
+        "phase": "credit5dd-narrow-right",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T16:33:54.046Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "대차 정수 수량·신용 잔고율·각 별도 조회와 날짜 안내·좁은 화면의 재배치·마지막 열/행/하단은 유지됐다. 회사명·조회 날짜 문맥·상태·최대 하단 공백과 요약 출처 문맥이 남아 전체 실패다. 실제 금융값은 복사하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "851",
+      "phase": "credit5dd-narrow-bottom",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T16:34:07.497Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 851,
+      "safe_metadata": {
+        "id": 851,
+        "phase": "credit5dd-narrow-bottom",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T16:34:07.497Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "대차 정수 수량·신용 잔고율·각 별도 조회와 날짜 안내·좁은 화면의 재배치·마지막 열/행/하단은 유지됐다. 회사명·조회 날짜 문맥·상태·최대 하단 공백과 요약 출처 문맥이 남아 전체 실패다. 실제 금융값은 복사하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "852",
+      "phase": "credit5dd-remax-bottom",
+      "actual_template_id": null,
+      "call_result": "PASS",
+      "ui_result": "FAIL",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:34:54.878Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 852,
+      "safe_metadata": {
+        "id": 852,
+        "phase": "credit5dd-remax-bottom",
+        "actual_template_id": null,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:34:54.878Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "evidence_scope": "whole_observed_card",
+      "reported_verdict_scope": "whole_observed_card",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "대차 정수 수량·신용 잔고율·각 별도 조회와 날짜 안내·좁은 화면의 재배치·마지막 열/행/하단은 유지됐다. 회사명·조회 날짜 문맥·상태·최대 하단 공백과 요약 출처 문맥이 남아 전체 실패다. 실제 금융값은 복사하지 않는다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
+    },
+    {
+      "id": "853",
+      "phase": "account5dd-explicit-final-callfail",
+      "actual_template_id": null,
+      "call_result": "FAIL",
+      "ui_result": "NOT_RUN",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T16:39:03.963Z",
+      "ui_scale": 1,
+      "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+      "ledger_row": 853,
+      "safe_metadata": {
+        "id": 853,
+        "phase": "account5dd-explicit-final-callfail",
+        "actual_template_id": null,
+        "call_result": "FAIL",
+        "ui_result": "NOT_RUN",
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T16:39:03.963Z",
+        "ui_scale": 1,
+        "runtime_commit": "5dd654abada5f30529a8de9ed4e069927f9b1f10"
+      },
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "evidence_scope": "invocation_only",
+      "reported_verdict_scope": "invocation_only",
+      "verdict_provenance": {
+        "call": "safe_metadata",
+        "ui": "safe_metadata",
+        "scope": "ACCOUNT5DD-NATIVE853-PUBLIC-FOLLOWUP.md"
+      },
+      "target_coverage": "not_reached",
+      "publication_policy": "Whitelisted metadata and sanitized public summaries only; no raw input, private financial values or screenshots",
+      "metadata_source": "questionnaire853/safe-metadata-802-853.json",
+      "public_summary_source": "ACCOUNT5DD-NATIVE853-PUBLIC-FOLLOWUP.md",
+      "observations": [
+        "거래소와 합산을 원질문에 함께 명시한 계좌 입력도 카드0으로 호출 실패/UI 미실행이다.836–837 실패를 보존하며 합성 계획 발급 성공을 실제 도달 성공으로 바꾸지 않는다. 창축소·재최대 UI검증은 수행되지 않았다.",
+        "예상 참조는 실제 화면 ID 확인이 아니다. 이 추가 관측은 과거94개 집계와 최신 전체 반응형 완료 수에 합산하지 않는다."
+      ],
+      "source_commit": {
+        "value": "5dd654abada5f30529a8de9ed4e069927f9b1f10",
+        "basis": "explicit_safe_metadata",
+        "original_field": "runtime_commit",
+        "verification": "Explicit loaded-runtime metadata; never inferred from phase or document HEAD"
+      }
     }
   ],
   "native_snapshot": {
@@ -43812,5 +46774,42 @@
     "window_dimensions": "Normalized arrays retain window_size_original and window_size_original_format; original ledger unchanged",
     "actual_template_ids": "All97 null;800/801 missing fields remain unconfirmed",
     "limitations": "Metadata appendix only. No additional IDs assigned from phase; no new source runtime inferred; no new native or renderer verification. All new rows remain additional evidence outside historical94 summary."
+  },
+  "native_execution_appendix_802_853": {
+    "cutoff_row": 853,
+    "previous_snapshot_row": 801,
+    "new_rows": {
+      "from": 802,
+      "to": 853,
+      "count": 52
+    },
+    "previous_snapshot_preserved": true,
+    "template_aggregate_recomputed": false,
+    "latest_responsive_94_status": "incomplete",
+    "safe_metadata_sha256": "cd1e6d948fbe04c4a99d2312bed19e9811ec600e647e1df56cd8808433bc6bb3",
+    "public_summary_sha256": {
+      "WATCH-NATIVE802-815-PUBLIC-FOLLOWUP.md": "4b3b65e73638401199ac640a27197c0ec39f87131d4572d8ccf24289821e2291",
+      "QUOTE10-NATIVE816-819-PUBLIC-FOLLOWUP.md": "a7aa176251516278da28512e18196abd54190d26e9c25a8be3ff7cf63541c213",
+      "QUOTE5-NATIVE820-823-PUBLIC-FOLLOWUP.md": "3a4fb4beed57a158460dcf0bcf7cdbddebc9d449e9b4af1e8861ba84f3f2a40a",
+      "GENERAL17-NATIVE824-826-PUBLIC-FOLLOWUP.md": "10a52b653895dd4c71d6bb8331cc8dee4fd264931ce444cbcb45f2fbce89bcc6",
+      "GENERAL17-NATIVE830-832-PUBLIC-FOLLOWUP.md": "f483542b6dc5be350d4fda4560f481b740f62ddf7d50a40480379193e2f489f7",
+      "ROUTING-NATIVE833-837-PUBLIC-DIAGNOSIS.md": "d00859ce8c94222e4368003c8e0b2a0881910c84cc5fe029978c68ec3219b8b8",
+      "FLOW5DD-NATIVE838-840-PUBLIC-FOLLOWUP.md": "0c3a2d4a0826ce29a1c7d88414fca0eb28ec158cb9aaf274289ec03cfd791950",
+      "PROGRAM5DD-NATIVE841-846-PUBLIC-FOLLOWUP.md": "4a985a19e5c68b7d871270861fec208256de66c4fe055a2316281b29e91df7f1",
+      "CREDIT5DD-NATIVE847-852-PUBLIC-FOLLOWUP.md": "68698684fe1356279cb650554a44b504b0b84377f91664141fbb85a18ec96b32",
+      "ACCOUNT5DD-NATIVE853-PUBLIC-FOLLOWUP.md": "be9e04fe3e5b0d204f36ec3504a7f1383c5f99c1fa9a6228a7a2af9c8e1b3400"
+    },
+    "actual_template_ids": "All52 null; expected references never promoted to confirmed IDs",
+    "corrections": [
+      {
+        "ledger_rows": [
+          809,
+          810
+        ],
+        "type": "foreign_surface_exclusion_and_stable_scoped_retest",
+        "meaning": "809 excluded; original status retained;810 separate scoped evidence only"
+      }
+    ],
+    "limitation": "Metadata-only appendix. No native invocation, private reads, inference of runtime from phase, or whole-card promotion."
   }
 }
