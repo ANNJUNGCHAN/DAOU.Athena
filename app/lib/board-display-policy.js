@@ -34,7 +34,7 @@ function prepareDisplayInput(contract, values) {
       next.kind = 'value';
       next.format = { ...rule[2], missing_text: '—' };
       // Exact reviewed CC06 quantities use the received number, including zero and sign.
-      if (["2X5N-0:s089","2XG6-0:s089","2XKO-0:s048","2XKO-0:s070","2XTO-0:s098","2YJ8-0:s058","2YJ8-0:s069","2YJ8-0:s080","2YJ8-0:s091","2YJ8-0:s092"].includes(contract.board_id + ':' + slot.slot_id)
+      if (["2X5N-0:s089","2XG6-0:s089","2XKO-0:s048","2XKO-0:s070","2XTO-0:s098","2YJ8-0:s058","2YJ8-0:s069","2YJ8-0:s080","2YJ8-0:s091","2YJ8-0:s092","3D4I-0:s068","3D4I-0:s069","3D4I-0:s094"].includes(contract.board_id + ':' + slot.slot_id)
         && bound && typeof bound === 'object' && !bound.missing && isPresent(value)
         && boardFormat.toNumber(value) !== null) {
         if (changedValues === values) changedValues = { ...values };

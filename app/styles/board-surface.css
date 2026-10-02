@@ -1492,6 +1492,38 @@
 /* Keep each received credit date whole when the independent row wraps. */
 .board-surface[data-bs-board-id="2RWK-1"] [data-node="flow-credit-source"] :is([data-slot-id="s109"],[data-slot-id="s110"],[data-slot-id="s111"],[data-slot-id="s112"],[data-slot-id="s113"]) {min-width:max-content!important;flex:0 0 auto!important;white-space:nowrap!important;overflow-wrap:normal!important;}
 
+/* WATCH received-content follow-up: keep source values, collapse only absent sections. */
+.bs-watch-six .bs-watch-empty-rail{display:block!important;padding:18px 24px!important;min-height:0!important;height:auto!important}
+.bs-watch-six .bs-watch-empty-rail>:not(.bs-watch-rail-note):not(.bs-watch-selection-note){display:none!important}
+.bs-watch-six :is(.bs-watch-duplicate-note,.bs-watch-original-selection){display:none!important}
+.board-surface.bs-watch-six .bs-watch-empty-detail{display:none!important}
+.bs-watch-six .bs-watch-empty-owner>.bs-readable-scroll,.bs-watch-six .bs-watch-empty-owner>.bs-readable-hint{display:none!important}
+.bs-watch-six :is(.bs-watch-table-note,.bs-watch-primary-note){padding-block:16px!important;box-sizing:border-box!important;max-width:100%!important}
+.board-surface.bs-watch-six .bs-watch-primary-empty>:not(.bs-watch-primary-note){display:none!important}
+.canvas-tab-panel .board-surface.bs-watch-six.bs-watch-all-empty .bs-workspace{display:block!important}
+.canvas-tab-panel .board-surface.bs-watch-six.bs-watch-all-empty .bs-rail{display:none!important}
+.canvas-tab-panel .board-surface.bs-watch-six.bs-watch-all-empty .bs-primary{width:100%!important}
+.bs-watch-six .bs-watch-selection-note{margin-bottom:12px}
+.bs-watch-six .bs-watch-selected-field{display:flex;justify-content:space-between;gap:16px;padding-block:8px;flex-wrap:wrap}
+.bs-watch-six .bs-watch-selected-field>:last-child{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.bs-watch-six .bs-watch-selected-row{background:var(--color-k-panel2)!important;outline:1px solid var(--color-k-line);outline-offset:-1px}
+.bs-watch-six [data-bs-watch-select]{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMO-0"]{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))!important;gap:24px!important;width:100%!important;min-width:0!important;height:auto!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] :is([data-node="3EMP-0"],[data-node="3ENE-0"]){width:100%!important;min-width:0!important;height:auto!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMT-0"]>[data-node]{display:grid!important;grid-template-columns:minmax(90px,1fr) repeat(2,minmax(100px,1fr))!important;gap:12px!important;height:auto!important;min-height:30px!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMT-0"]>[data-node]>*{width:auto!important;min-width:0!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMT-0"] [data-slot-id]{width:auto!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3ENI-0"]{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))!important;gap:20px!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3ENI-0"]>[data-node]{width:auto!important;min-width:0!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3ENI-0"]>[data-node]>[data-node]{gap:12px!important;height:auto!important;min-height:30px!important;flex-wrap:wrap!important}
+.bs-watch-six[data-bs-board-id="2UBO-1"] [data-node="34AI-0"] .bs-readable-cell [data-slot-id]{max-width:100%!important;width:auto!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere!important}
+
+/* Received watch-group context needs two readable lines; absent siblings add no placeholder. */
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-missing{display:none!important}
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-row{height:auto!important;min-height:0!important;align-items:flex-start!important}
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-row>[data-node]{min-width:0!important;max-width:100%!important}
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-row [data-slot-id]{font-size:12px!important;line-height:18px!important;color:var(--color-k-dim)!important}
+
 /* Day-volume sorting keeps every existing choice reachable inside its own row. */
 .board-surface[data-bs-board-id="2X5N-0"] [data-node="2X8Y-0"] {min-width:0;width:100%;gap:12px;flex-wrap:wrap;}
 .board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] {flex:1 1 0%!important;min-width:0!important;max-width:100%;overflow-x:auto!important;overflow-y:hidden;flex-wrap:nowrap!important;padding-block:2px 6px;}

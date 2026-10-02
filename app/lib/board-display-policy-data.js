@@ -29872,6 +29872,26 @@ const policy = {
       "unavailable",
       null
     ],
+    "s068": [
+      "1.7만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral"
+      }
+    ],
+    "s069": [
+      "2.4만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral"
+      }
+    ],
     "s074": [
       "8.2만주",
       "bound-format",
@@ -29908,6 +29928,16 @@ const policy = {
       "해당 없음",
       "bound-label",
       "exp_cntr_qty"
+    ],
+    "s094": [
+      "59.7억주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "tone": "neutral"
+      }
     ],
     "s099": [
       "삼성전자 — 선택",

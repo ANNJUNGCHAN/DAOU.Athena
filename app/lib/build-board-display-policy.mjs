@@ -1424,6 +1424,36 @@ const WATCH_FORMATS = {
   }
 };
 
+Object.assign(WATCH_FORMATS['3D4I-0'], {
+  "s068": [
+    "pri_sel_req",
+    {
+      "unit": "shares",
+      "precision": 0,
+      "sign": false,
+      "tone": "neutral"
+    }
+  ],
+  "s069": [
+    "pri_buy_req",
+    {
+      "unit": "shares",
+      "precision": 0,
+      "sign": false,
+      "tone": "neutral"
+    }
+  ],
+  "s094": [
+    "stkcnt",
+    {
+      "unit": "shares",
+      "precision": 0,
+      "sign": false,
+      "tone": "neutral"
+    }
+  ]
+});
+
 export function buildPolicy() {
   const policies = {};
   for (const entry of index.boards) {

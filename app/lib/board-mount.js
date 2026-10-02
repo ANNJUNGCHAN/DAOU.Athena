@@ -2105,7 +2105,7 @@ const READABLE_TABLES = {
   "2SYW-1": {"node":"3Q8R-0","rows":["3Q9T-0","3QA1-0","3QAS-0","3QBH-0","3QC6-0","3QCV-0"],"widths":[120,220,120,200,160,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
   "2TZN-1": {"node":"2U3G-1","rows":["340B-0","340J-0","3411-0","341J-0","3421-0","342J-0","3431-0"],"widths":[220,120,160,140,200,155,140],"label":"조회 상세 내역","stack":false,"compact":true},
   "2U5L-1": {"node":"3C0K-0","rows":["3C0L-0","3C5D-0","3CFR-0","3CGS-0","3CHT-0","3CNW-0","3COV-0","3CPU-0","3CQT-0"],"widths":[220,160,160,160,160,240,200],"label":"조회 상세 내역","stack":false,"compact":true},
-  "2UBO-1": {"node":"34AI-0","rows":["34AM-0","34AT-0","34BA-0","34BR-0"],"widths":[220,160,140,200,200,200],"label":"조회 상세 내역","stack":false,"compact":true},
+  "2UBO-1": {"node":"34AI-0","rows":["34AM-0","34AT-0","34BA-0","34BR-0"],"widths":[220,160,220,200,200,200],"label":"조회 상세 내역","stack":false,"compact":true},
   "2UHM-1": {"node":"2ULF-1","rows":["359Q-0","359Y-0","35AN-0","35BC-0"],"widths":[120,220,180,140,160,200,120],"label":"조회 상세 내역","stack":false,"compact":true},
   "2VIN-0": {"node":"3QN3-0","rows":["3QN4-0","3QND-0","3QO4-0","3QOV-0","3QPM-0","3QQD-0","3QR4-0","3QRV-0","3QSM-0","3QTD-0","3QU4-0","3QUV-0","3QVM-0","3QWD-0","3QX4-0","3QXV-0","3QYM-0","3QZD-0","3R04-0","3R0V-0","3R1M-0"],"widths":[0,220,160,140,140,200,140,0],"label":"ETF 전체 시세","stack":false,"compact":true},
   "2VO0-0": {"node":"38TO-0","rows":["38TP-0","38TY-0","38UH-0","38V0-0","38VJ-0","38W2-0","38WL-0","38X4-0","38XN-0","3GLC-0","3GLV-0","3GME-0","3GMX-0","3GNG-0","3GNZ-0","3GOI-0","3GP1-0","3GPK-0","3GQ3-0","3GQM-0","3GR5-0"],"widths":[52,220,160,200,200,200,0,0],"label":"조회 순위 결과","stack":false,"compact":true},
@@ -2846,6 +2846,73 @@ function prepareWatchDetails(surface, contract) {
   if(id==='15L8-2')for(const row of surface.querySelectorAll('[data-node="15LI-2"] [data-row]'))if(row.children[5])row.children[5].classList.add('bs-watch-unsupported');
 }
 
+function updateWatchNativeResiduals(surface, states, received, restore, caption) {
+  const id=surface.dataset.bsBoardId;
+  if(!['2U5L-1','2UBO-1','3D4I-0','3EWN-0','2UHM-1','2UN6-1'].includes(id))return;
+  const nodes=slot=>surface.querySelectorAll('[data-slot-id="'+slot+'"]');
+  for(const [nodeId,slots]of WATCH_DETAIL_CONFIG[id].groups)if(!slots.length)authoredNode(surface,nodeId)?.classList.add('bs-watch-empty-detail');
+  if(['2U5L-1','3D4I-0','3EWN-0'].includes(id)){
+    for(const slot of ['s011','s012','s013','s014'])for(const node of nodes(slot))node.parentElement.classList.toggle('bs-watch-missing-pill',!received(states.get(slot)));
+    for(const node of nodes('s010'))node.parentElement.classList.toggle('bs-watch-missing-pill',!['s011','s012','s013','s014'].some(slot=>received(states.get(slot))));
+  }
+  if(['3D4I-0','3EWN-0'].includes(id)){
+    for(const [slot,label]of [['s002','체결 시각 '],['s027','조회 일자 '],['s043','호가 시각 '],[id==='3D4I-0'?'s127':'s128','체결 시각 ']])if(received(states.get(slot)))caption(slot,label+states.get(slot).text);
+  }
+  const rail=surface.querySelector('.bs-rail');
+  if(rail){
+    const actual=!!surface.__bsWatchSelectedValues||[...rail.querySelectorAll('[data-slot-id]')].some(node=>received(states.get(node.dataset.slotId))&&!node.closest('.bs-watch-unsupported,.bs-watch-original-selection'));
+    const pending=[...rail.querySelectorAll('[data-slot-id]')].some(node=>states.get(node.dataset.slotId)?.pending);
+    rail.classList.toggle('bs-watch-empty-rail',!actual);restore(rail);
+    let note=rail.querySelector(':scope > .bs-watch-rail-note');
+    if(!note){note=layoutGroup(surface.ownerDocument,'bs-watch-note bs-watch-rail-note');note.setAttribute('role','status');rail.prepend(note);}
+    note.hidden=actual;
+    const label={'2U5L-1':'관심 상세 자료','2UBO-1':'테마 상세 자료','3D4I-0':'종목 상세 자료','3EWN-0':'ELW 상세 자료','2UHM-1':'VI 상세 자료','2UN6-1':'조건검색 상세 자료'}[id];
+    note.textContent=label+(pending?' 수신 대기':' 미제공');
+    if(id==='2U5L-1'){
+      for(const [nodeId,slots]of [['33QL-0',['s208','s209']],['33QQ-0',['s211','s212']],['33QV-0',['s214','s215']],['3D4C-0',['s217','s218']]]){
+        const row=authoredNode(surface,nodeId);if(!row)continue;
+        row.classList.add('bs-watch-group-row');
+        row.classList.toggle('bs-watch-group-missing',!slots.some(slot=>received(states.get(slot))));
+        for(const slot of slots)for(const node of nodes(slot))node.classList.toggle('bs-watch-group-missing',!received(states.get(slot)));
+      }
+      const absent=!surface.__bsWatchActionStock;
+      for(const nodeId of ['2UB1-1','2UB4-1','2UB7-1','2UBA-1','2UBD-1'])authoredNode(surface,nodeId)?.classList.add('bs-watch-original-selection');
+      authoredNode(surface,'2UBI-1')?.classList.toggle('bs-watch-empty-detail',absent);
+      let guide=rail.querySelector(':scope > .bs-watch-selection-note');
+      if(!guide){guide=layoutGroup(surface.ownerDocument,'bs-watch-note bs-watch-selection-note');guide.setAttribute('role','status');rail.prepend(guide);}
+      guide.hidden=!absent;guide.textContent='표에서 종목을 선택하면 해당 종목의 상세와 차트·호가 열기가 표시됩니다.';
+      let detail=rail.querySelector(':scope > .bs-watch-selected-detail');
+      if(!detail){detail=layoutGroup(surface.ownerDocument,'bs-watch-selected-detail');rail.prepend(detail);}
+      detail.hidden=absent;detail.replaceChildren();
+      if(!absent)for(const [index,label]of ['선택 종목','종목코드','현재가','거래량'].entries()){
+        const line=layoutGroup(surface.ownerDocument,'bs-watch-selected-field'),term=surface.ownerDocument.createElement('span'),value=surface.ownerDocument.createElement('span');
+        term.textContent=label;value.textContent=surface.__bsWatchSelectedValues[index]?.text||'미제공';line.append(term,value);detail.append(line);
+      }
+    }
+  }
+  for(const table of surface.querySelectorAll('.bs-readable-owner')){
+    const rows=[...table.querySelectorAll('[data-row]')].filter(row=>row.dataset.row!=='head');
+    const actual=rows.some(row=>[...row.querySelectorAll('[data-slot-id]')].some(node=>received(states.get(node.dataset.slotId))));
+    const pending=rows.some(row=>[...row.querySelectorAll('[data-slot-id]')].some(node=>states.get(node.dataset.slotId)?.pending));
+    const empty=rows.length>0&&!actual;
+    table.classList.toggle('bs-watch-empty-owner',empty);
+    let note=table.__bsWatchTableNote;
+    if(!note){note=layoutGroup(surface.ownerDocument,'bs-watch-note bs-watch-table-note');note.setAttribute('role','status');table.querySelector('.bs-readable-scroll').after(note);table.__bsWatchTableNote=note;}
+    note.hidden=!empty;note.textContent=pending?'조회 내역 수신 대기':'표시할 조회 내역이 없습니다';
+    if(table.__bsEmptyMessage)table.__bsEmptyMessage.classList.toggle('bs-watch-duplicate-note',empty);
+  }
+  const primary=surface.querySelector('.bs-primary');
+  if(primary){
+    const actual=[...primary.querySelectorAll('[data-slot-id]')].some(node=>received(states.get(node.dataset.slotId))&&!node.closest('.bs-watch-unsupported'));
+    const pending=[...primary.querySelectorAll('[data-slot-id]')].some(node=>states.get(node.dataset.slotId)?.pending);
+    primary.classList.toggle('bs-watch-primary-empty',!actual);restore(primary);
+    let note=primary.querySelector(':scope > .bs-watch-primary-note');
+    if(!note){note=layoutGroup(surface.ownerDocument,'bs-watch-note bs-watch-primary-note');note.setAttribute('role','status');primary.prepend(note);}
+    note.hidden=actual;note.textContent=pending?'조회 자료 수신 대기':'표시할 조회 자료가 없습니다';
+    surface.classList.toggle('bs-watch-all-empty',!actual&&!!rail?.classList.contains('bs-watch-empty-rail'));
+  }
+}
+
 function updateWatchDetails(surface, plan, options={}) {
   const id=surface.dataset.bsBoardId,config=WATCH_DETAIL_CONFIG[id];if(!config)return;
   const states=surface.__bsWatchStates ||= new Map();for(const assignment of plan.assignments)states.set(assignment.slotId,assignment);
@@ -2868,9 +2935,17 @@ function updateWatchDetails(surface, plan, options={}) {
   for(const [slot,assignment]of states)if(received(assignment))for(const node of nodes(slot))restore(node);
   if(id!=='15L8-2')for(const node of nodes('s002'))node.parentElement.classList.toggle('bs-watch-missing-pill',!received(states.get('s002')));
   for(const nodeId of {'3D4I-0':['3EAY-0','3EMO-0'],'3EWN-0':['3EZV-0']}[id]||[]){const group=authoredNode(surface,nodeId);if(group){const absent=![...group.querySelectorAll('[data-slot-id]')].some(n=>received(states.get(n.dataset.slotId)));group.classList.toggle('bs-watch-empty-detail',absent);}}
-  const identitySlots={'2U5L-1':['s071','s193'],'3D4I-0':['s023','s022'],'3EWN-0':['s023','s022']}[id];
+  const identitySlots={'3D4I-0':['s023','s022'],'3EWN-0':['s023','s022']}[id];
   surface.__bsWatchActionStock=null;
   if(identitySlots){const [code,name]=identitySlots.map(slot=>states.get(slot));if(received(code)&&received(name)&&/^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(code.text)&&code.text!=='000000')surface.__bsWatchActionStock={stkCd:code.text,stockName:name.text};}
+  surface.__bsWatchSelectedValues=null;
+  if(id==='2U5L-1'&&Array.isArray(options.watchlistSelection)){
+    const selected=options.watchlistSelection.map(slot=>states.get(slot)),[name,code]=selected;
+    if(received(name)&&received(code)&&/^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(code.text)&&code.text!=='000000'){
+      surface.__bsWatchSelectedValues=selected;
+      surface.__bsWatchActionStock={stkCd:code.text,stockName:name.text};
+    }
+  }
   for(const node of surface.querySelectorAll('[data-card-action]')){const context=node.__bsRankingActionContext;if(!context||!['open-card','compare-add'].includes(context.action?.kind))continue;const disabled=!surface.__bsWatchActionStock;node.setAttribute('aria-disabled',String(disabled));node.parentElement?.classList.toggle('bs-watch-disabled-action',disabled);if(disabled)node.title='조회 종목이 있으면 열 수 있습니다';else node.removeAttribute('title');}
   if(id==='2UN6-1')for(const node of nodes('s120')){const control=node.closest('[role="button"],button')||node.parentElement;control.setAttribute('aria-disabled','true');control.title='조회 종목을 선택한 상태가 아닙니다';}
   if(id==='2UBO-1'){
@@ -2892,6 +2967,7 @@ function updateWatchDetails(surface, plan, options={}) {
   for(const table of surface.querySelectorAll('.bs-readable-owner')){
     const message=table.__bsEmptyMessage;if(message&&table.contains(message))table.after(message);
   }
+  updateWatchNativeResiduals(surface, states, received, restore, caption);
 }
 
 

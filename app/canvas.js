@@ -1373,6 +1373,7 @@ function boardMountOptions(host, envelope) {
       && state.sectorChangeSourceKey === [envelope.operation_ref || envelope.operationRef || '', target.inds_cd || ''].join('|')
       ? state.sectorChangeOccurrence : '',
     watchSourceContext: state.watchSourceStateByBoard?.get(state.boardId)?.context || null,
+    watchlistSelection: state.boardId === '2U5L-1' ? watchlistSelectedRow(state) : null,
     flowQueryContext: state.boardId === '2QFO-2' && state.flowQueryContextByBoard?.has(state.boardId) ? boardFlowLayout.queryContextFor({
       board_id: state.boardId, flow_query_context: state.flowQueryContextByBoard?.get(state.boardId),
     }, target.stk_cd) : undefined,
@@ -1693,6 +1694,47 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   ), { resetScroll: true });
 }
 
+const WATCHLIST_DETAIL_SLOTS = [["s028","s029","s031","s047"],["s049","s050","s052","s068"],["s070","s071","s073","s089"],["s091","s092","s093","s109"],["s111","s112","s113","s129"],["s131","s132","s133","s149"],["s151","s152","s153","s169"],["s171","s172","s173","s189"]];
+function watchlistSelectedRow(state) {
+  const selected=state.watchlistSelection, current=state.watchlistStateByBoard?.get('2U5L-1');
+  if(!selected)return null;
+  if(!current||selected.group!==current.group){state.watchlistSelection=null;return null;}
+  const index=current.rows.findIndex(row=>row.code===selected.code);
+  if(index<0){state.watchlistSelection=null;return null;}
+  const slots=WATCHLIST_DETAIL_SLOTS[index],raw=state.values[slots[1]];
+  const code=raw&&typeof raw==='object'?(raw.missing?undefined:raw.value):raw;
+  if(code!==selected.code){state.watchlistSelection=null;return null;}
+  return slots;
+}
+function wireWatchlistRowSelection(host, envelope, mounted) {
+  const state=boardStateOf(host),surface=mounted?.surface;
+  if(state.boardId!=='2U5L-1'||!surface)return;
+  const current=state.watchlistStateByBoard?.get('2U5L-1');
+  for(const [index,slots]of WATCHLIST_DETAIL_SLOTS.entries()){
+    const leaf=surface.querySelector('[data-slot-id="'+slots[0]+'"]'),row=leaf?.closest('[data-row]');
+    if(!row)continue;
+    const code=current?.rows[index]?.code,raw=state.values[slots[1]];
+    const actual=raw&&typeof raw==='object'?(raw.missing?undefined:raw.value):raw;
+    const valid=watchlistCode(code)&&code===actual;
+    row.classList.toggle('bs-watch-selected-row',!!valid&&state.watchlistSelection?.group===current.group&&state.watchlistSelection?.code===code);
+    row.__bsWatchSelect=valid?()=>{
+      if(state.boardId!=='2U5L-1')return;
+      state.watchlistSelection={group:current.group,code};
+      const next=boardMount.mountBoard(host,state.boardId,state.values,boardMountOptions(host,envelope));
+      rememberMountedBoard(state,next);wireMountedBoardControls(host,envelope,next);
+    }:null;
+    if(!row.__bsWatchSelectWired){row.addEventListener('click',event=>{
+      if(event.target.closest('button,[role="button"],[data-state-board]'))return;
+      row.__bsWatchSelect?.();
+    });row.__bsWatchSelectWired=true;}
+    if(valid){
+      boardMount.wireStateControlActivation(leaf,()=>row.__bsWatchSelect?.(),{keyboard:true});
+      leaf.setAttribute('aria-label',leaf.textContent.trim()+' 상세 선택');
+      leaf.dataset.bsWatchSelect='true';
+    }
+  }
+}
+
 function wireStateControls(host, envelope, mounted) {
   const state = boardStateOf(host);
   const surface = mounted && mounted.surface;
@@ -1711,7 +1753,7 @@ function wireStateControls(host, envelope, mounted) {
     }
     return true;
   };
-  const navigation = state.links.filter(link => link.navigation);
+  const navigation = state.links.filter(link => link.navigation && state.boardId !== '2U5L-1');
   if (navigation.length && !surface.querySelector('.board-state-return')) {
     const rail = document.createElement('nav');
     rail.className = 'board-state-return';
@@ -1729,12 +1771,14 @@ function wireStateControls(host, envelope, mounted) {
     const control = String(link.control || '').trim();
     if (!control) continue;
     // 칩 찾기(표식·같은 문구·별칭 문구)는 board-mount가 갖는다 — 단위 테스트가 걸린다.
+    if (state.boardId === '2U5L-1' && link.navigation) continue;
     const linkKey = `${link.board_id}|${control}`;
     let node = boardMount.findStateControlNode(surface, control, { links: state.links });
     const aliases = boardTemplateRegistry.additionalControlLabels(control)
       .map(label => boardMount.findStateControlNode(surface, label, { links: state.links }))
       .filter(isAvailable);
     if (!isAvailable(node) && aliases.length) node = aliases.shift();
+    if (!isAvailable(node) && state.boardId === '2U5L-1' && link.board_id === '3EWN-0') continue;
     if (!isAvailable(node) && direct.some(item => item.board_id === link.board_id && item.control === control)) {
       let rail = surface.querySelector('.board-state-return');
       if (!rail) {
@@ -1767,6 +1811,13 @@ function wireStateControls(host, envelope, mounted) {
         if (!targetNode.getAttribute('title')) targetNode.setAttribute('title', control);
       }
       // 표시는 CSS가 한다([data-state-board], board-surface.css) — 인라인 원문은 안 건드린다(D1).
+      if (state.boardId === '2U5L-1' && link.board_id === '3D4I-0') {
+        const value = state.values.s028;
+        const name = String(value && typeof value === 'object' ? value.value ?? value.text ?? '' : value ?? '').trim();
+        const label = name ? name + ' 행 펼침' : '첫 번째 관심종목 행 펼침';
+        targetNode.setAttribute('aria-label', label);
+        targetNode.setAttribute('title', label);
+      }
       targetNode.dataset.stateBoard = link.board_id;
       wired += 1;
     }
@@ -1775,6 +1826,7 @@ function wireStateControls(host, envelope, mounted) {
   if (rail && !rail.children.length) rail.remove();
   delete surface.__bsRelaxWidth;
   boardMount.relaxOverflowRows(surface);
+  wireWatchlistRowSelection(host, envelope, mounted);
   return wired;
 }
 
