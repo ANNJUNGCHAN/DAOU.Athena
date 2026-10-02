@@ -859,6 +859,7 @@ class GrokAcpSession {
       finalResult: null,
       stderr: extra.stderr || '',
       diagnostics: extra.diagnostics || null,
+      code: reason && reason.code != null ? reason.code : null,
       causeCode: reason && reason.causeCode != null ? reason.causeCode : null,
       metrics,
       ...metrics,
