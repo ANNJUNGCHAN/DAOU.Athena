@@ -1304,6 +1304,15 @@
 .bs-rank-nine .bs-rank-nine-mini-tile [data-slot-id] {max-width:100%!important;min-width:0!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
 .bs-rank-nine .bs-rank-nine-mini-title {font-size:13px;font-weight:600;margin-bottom:12px}
 .bs-rank-nine [data-card-action][aria-disabled="true"] {opacity:.5;cursor:not-allowed}
+@container board (min-width:960px) {
+ .bs-rank-nine .bs-workspace {min-width:0!important}
+ .bs-rank-nine .bs-primary {flex:1 1 0!important;width:0!important;min-width:0!important}
+ .bs-rank-nine .bs-rail {flex:0 0 360px!important;width:360px!important;min-width:0!important;box-sizing:border-box}
+}
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-empty > :not(.bs-ranking-unavailable-note) {display:none!important}
+.bs-rank-nine.bs-rank-nine-empty .bs-workspace {display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;height:auto!important;min-height:0!important}
+.bs-rank-nine.bs-rank-nine-empty :is(.bs-primary,.bs-rail) {width:100%!important;max-width:100%!important;flex:0 0 auto!important;height:auto!important;min-height:0!important}
+.bs-rank-nine.bs-rank-nine-empty .bs-ranking-unavailable-group > :not(.bs-ranking-unavailable-note) {display:none!important}
 @container board (max-width:600px) {
  .bs-rank-nine .bs-workspace {grid-template-columns:minmax(0,1fr)!important;flex-direction:column!important}
  .bs-rank-nine .bs-primary,.bs-rank-nine .bs-rail {width:100%!important;max-width:100%!important;flex-basis:auto!important}

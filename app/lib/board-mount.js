@@ -2296,11 +2296,13 @@ function updateRankNine(surface, plan) {
   for (const assignment of plan.assignments) states.set(assignment.slotId,assignment);
   for (const id of config.omittedNodes) for(const node of surface.querySelectorAll(`[data-node="${id}"]`)) node.classList.add('bs-rank-nine-unsupported');
   const received=s=>s&&!s.pending&&!s.missing&&!s.empty&&!s.designText&&String(s.text).trim();
+  surface.classList.toggle('bs-rank-nine-empty',!config.groups.some(([, , slots])=>slots.some(s=>received(states.get(s)))));
   for (const [id,title,slots] of config.groups) {
     const group=authoredNode(surface,id);if(!group)continue;
     const watched=slots.map(s=>states.get(s));
     const empty=!watched.some(received),pending=watched.some(s=>s?.pending);
     group.classList.toggle('bs-ranking-unavailable-group',empty);
+    if(surface.dataset.bsBoardId==='2YNQ-0'&&id===config.mini.node)group.classList.toggle('bs-rank-nine-mini-empty',empty);
     for(let box=group;box&&box!==surface;box=box.parentElement) {
       if(surface.__bsEmptyValueHidden?.has(box)||box.dataset.bsUnavailableHidden==='true'
         ||box.dataset.bsRowCollapsed==='true') {
