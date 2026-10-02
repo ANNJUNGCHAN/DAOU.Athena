@@ -2788,7 +2788,8 @@ function projectRealtimeFallbackResult(descriptor, result) {
       ? raw.filter((entry) => requested.has(String(entry && entry.slot_id || '')))
       : Object.fromEntries(Object.entries(raw || {}).filter(([slotId]) => requested.has(slotId)));
     const filled = Array.isArray(slotValues) ? slotValues.length : Object.keys(slotValues).length;
-    if (!filled) return { ok: false, error: '요청한 보드 슬롯의 API 대체 값이 없다' };
+    const watchlistMetadata = contract?.board_id === descriptor.boardId && (descriptor.boardId === '2U5L-1' && contract.watchlist_rows && Array.isArray(contract.watchlist_rows.rows) || ['2UBO-1','3D4I-0','3EWN-0'].includes(descriptor.boardId) && contract.watch_source_context && Array.isArray(contract.watch_source_context.slots));
+    if (!filled && !watchlistMetadata) return { ok: false, error: '요청한 보드 슬롯의 API 대체 값이 없다' };
     return {
       ok: true,
       mode: 'slot-patch',

@@ -782,6 +782,10 @@ def _bind_semantic_values(
         surface_source = elw_detail_source(board_id, operation_ref, source, surface_target)
         surface_source = stock_detail_source(board_id, surface_source, surface_target)
     attach_surface_contract(card_contract, operation_ref, surface_source)
+    from athena_api.watch_surface_identity import project_watch_surface
+    if isinstance(card_contract.get('surface_contract'), dict):
+        card_contract['surface_contract'] = project_watch_surface(
+            card_contract['surface_contract'], {operation_ref: (source, surface_target or {})}, surface_target or {})
     if operation_ref == 'base:ka10054':
         from athena_api.canvas_vi_snapshot import vi_snapshot_surface
         snapshot = vi_snapshot_surface(operation_ref, surface_source)
@@ -1138,6 +1142,8 @@ def _initial_surface_contract(
     if contract is None:
         return None
     from athena_api.surface_display_units import annotate_surface_display_units
+    from athena_api.watch_surface_identity import project_watch_surface
+    contract = project_watch_surface(contract, {ref: (source, target) for ref in queried_refs}, target)
     contract = annotate_surface_display_units(contract, {ref: target for ref in queried_refs})
     filled = {entry["slot_id"] for entry in contract["slot_values"]}
     contract["hydration_slot_ids"] = [
@@ -1320,6 +1326,20 @@ async def _hydrate_operation(
     if not document.generic_callable:
         return unbound("not_generic_callable")
     target: Mapping[str, Any] = payload.target
+    if payload.board_id == '2U5L-1' and operation_ref == 'base:ka10095':
+        from athena_api.watch_surface_identity import member_codes
+        if selector is None or hydrated_results is None:
+            return unbound('membership_unavailable')
+        member_status, _ = await _hydrate_operation(
+            'base:ka01301', selector.catalog.find_exact('base:ka01301'), payload,
+            request, client, fetched, semaphore, selector, chained, hydrated_results)
+        member_result = hydrated_results.get('base:ka01301')
+        if not member_result:
+            return unbound(member_status.get('reason') or 'membership_unavailable')
+        codes = member_codes(member_result[0])
+        if not codes:
+            return unbound('membership_empty')
+        target = {**target, 'stk_cd': '|'.join(codes)}
     if selector is not None and chained is not None:
         chain_values = await _resolve_chained_arguments(
             document, target, request, client, selector, chained, semaphore
@@ -1527,6 +1547,8 @@ async def internal_canvas_board_hydrate(
     )
     assert surface_contract is not None
     from athena_api.surface_display_units import annotate_surface_display_units
+    from athena_api.watch_surface_identity import project_watch_surface
+    surface_contract = project_watch_surface(surface_contract, hydrated_results, payload.target)
     surface_contract = annotate_surface_display_units(surface_contract, {
         operation: arguments.model_dump(by_alias=True)
         for operation, (_result, arguments) in hydrated_results.items()

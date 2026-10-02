@@ -17,6 +17,7 @@ test(`a cached ${childId} alternate opens and returns without a new hydrate requ
   });
   for (const [start, end] of [
     ['function slotValuesOf(', '// 상태 보드 링크'],
+    ['const WATCHLIST_SLOT_GROUPS =', 'function seedBoardState('],
     ['function seedBoardState(', 'function boardMountOptions('],
     ['async function hydrateBoardSlots(', '// 마운트 결과에서'],
   ]) {

@@ -1166,7 +1166,137 @@ function boardStateOf(host) {
   return host.__athenaBoard;
 }
 
+const WATCHLIST_SLOT_GROUPS = [{"slot_ids":["s028","s029","s030","s031","s032","s033","s035","s036","s037","s039","s041","s043","s046","s047","s048","s002","s192"],"quote_slot_ids":["s028","s031","s032","s033","s035","s036","s037","s039","s041","s043","s046","s047","s048","s002","s192"],"member_slot_ids":["s029","s030"]},{"slot_ids":["s049","s050","s051","s052","s053","s054","s056","s057","s058","s060","s062","s064","s067","s068","s069"],"quote_slot_ids":["s049","s052","s053","s054","s056","s057","s058","s060","s062","s064","s067","s068","s069"],"member_slot_ids":["s050","s051"]},{"slot_ids":["s070","s071","s072","s073","s074","s075","s077","s078","s079","s081","s083","s085","s088","s089","s090","s193","s196","s198"],"quote_slot_ids":["s070","s073","s074","s075","s077","s078","s079","s081","s083","s085","s088","s089","s090","s193","s196","s198"],"member_slot_ids":["s071","s072"]},{"slot_ids":["s091","s092","s093","s094","s095","s097","s098","s099","s101","s103","s105","s108","s109","s110"],"quote_slot_ids":["s091","s093","s094","s095","s097","s098","s099","s101","s103","s105","s108","s109","s110"],"member_slot_ids":["s092"]},{"slot_ids":["s111","s112","s113","s114","s115","s117","s118","s119","s121","s123","s125","s128","s129","s130"],"quote_slot_ids":["s111","s113","s114","s115","s117","s118","s119","s121","s123","s125","s128","s129","s130"],"member_slot_ids":["s112"]},{"slot_ids":["s131","s132","s133","s134","s135","s137","s138","s139","s141","s143","s145","s148","s149","s150"],"quote_slot_ids":["s131","s133","s134","s135","s137","s138","s139","s141","s143","s145","s148","s149","s150"],"member_slot_ids":["s132"]},{"slot_ids":["s151","s152","s153","s154","s155","s157","s158","s159","s161","s163","s165","s168","s169","s170"],"quote_slot_ids":["s151","s153","s154","s155","s157","s158","s159","s161","s163","s165","s168","s169","s170"],"member_slot_ids":["s152"]},{"slot_ids":["s171","s172","s173","s174","s175","s177","s178","s179","s181","s183","s185","s188","s189","s190"],"quote_slot_ids":["s171","s173","s174","s175","s177","s178","s179","s181","s183","s185","s188","s189","s190"],"member_slot_ids":["s172"]}];
+const WATCH_SOURCE_SLOTS = {"2UBO-1":["s003","s017","s023","s024","s025","s027","s028","s029","s030","s031","s032","s034","s035","s036","s037","s038","s039","s041","s042","s043","s044","s045","s046","s048","s049","s050","s051","s052","s053","s055","s056","s057","s058","s059","s060","s062","s063","s064","s065","s067","s075","s076","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s087","s088","s089","s090","s091","s092","s093","s094","s095","s096","s097","s098","s099","s100","s101","s102","s103","s104","s105","s106","s107","s108","s111","s113","s114","s115","s119","s122","s123","s124","s125","s126","s127","s128","s129","s130"],"3D4I-0":["s002","s022","s023","s025","s026","s027","s029","s031","s033","s035","s037","s039","s041","s043","s048","s049","s051","s052","s054","s055","s057","s058","s060","s061","s068","s069","s071","s072","s074","s075","s077","s078","s083","s085","s087","s089","s092","s094","s096","s098","s102","s104","s109","s127"],"3EWN-0":["s002","s022","s023","s025","s026","s027","s029","s031","s033","s035","s037","s039","s041","s043","s048","s049","s051","s052","s054","s055","s057","s058","s060","s061","s065","s067","s069","s071","s073","s075","s080","s082","s084","s086","s088","s091","s093","s095","s097","s099","s100","s103","s105","s110","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s128"]};
+  const watchlistCode = v => typeof v === 'string' && /^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(v) && v !== '000000' ? v : null;
+  function reconcileWatchlistContract(previous, contract, config) {
+    if (contract?.board_id !== '2U5L-1') return { contract, state: previous };
+    const all = new Set(config.flatMap(r => r.slot_ids));
+    const entries = new Map((previous?.entries || []).map(e => [e.slot_id, { ...e }]));
+    const oldRows = previous?.rows || [];
+    const retired = new Set(previous?.retired || []);
+    const metadata = contract.watchlist_rows;
+    const rows = Array.isArray(metadata?.rows) ? metadata.rows : [];
+    const valid = rows.length === 8 && typeof metadata.membership_received === 'boolean'
+      && (metadata.group == null || typeof metadata.group === 'string')
+      && rows.every((r, i) => r.row === i && (r.code === null || watchlistCode(r.code))
+        && ['received', 'absent', 'empty', 'ambiguous'].includes(r.quote_state)
+        && ['slot_ids', 'quote_slot_ids', 'member_slot_ids'].every(k => Array.isArray(r[k]) && JSON.stringify(r[k]) === JSON.stringify(config[i][k]))
+        && ['present_slots', 'empty_slots'].every(k => Array.isArray(r[k]) && r[k].every(s => config[i].slot_ids.includes(s))));
+    const clear = ids => ids.forEach(id => {
+      if (entries.has(id)) retired.add(id);
+      entries.delete(id);
+    });
+    const incoming = new Map((contract.slot_values || []).map(e => [e.slot_id, e]));
+    // A rejected/explicit-null identity contract cannot revive legacy sample
+    // values or apply arbitrary row updates. An absent legacy contract is also
+    // refused for managed slots; non-managed groups retain normal behavior.
+    if (!valid) clear(all);
+    else {
+      if (previous?.group != null && metadata.group != null && previous.group !== metadata.group) clear(all);
+      if (metadata.membership_received) rows.forEach((r, index) => {
+        if (!r.code || r.code !== oldRows[index]?.code) clear(config[index].slot_ids);
+        if (r.quote_state === 'empty' || r.quote_state === 'ambiguous') clear(config[index].quote_slot_ids);
+        clear(r.empty_slots);
+        for (const id of r.present_slots) {
+          const e = incoming.get(id);
+          if (!e || e.value == null || r.empty_slots.includes(id)) continue;
+          const prior = entries.get(id);
+          if (prior?.observation_id && prior.observation_id !== e.observation_id) retired.add(id);
+          entries.set(id, { ...e });
+        }
+      });
+    }
+    for (const [id, e] of incoming) if (!all.has(id)) entries.set(id, { ...e });
+    const filled = new Set(entries.keys());
+    const empty = new Set((contract.empty_value_slots || []).filter(id => !filled.has(id)));
+    for (const id of all) if (!filled.has(id)) empty.add(id);
+    const visible = groups => (groups || []).filter(group => !group.slot_ids?.some(id => filled.has(id)));
+    const next = { ...contract, slot_values: [...entries.values()],
+      empty_value_slots: [...empty], empty_rows: visible(contract.empty_rows),
+      empty_columns: visible(contract.empty_columns),
+      unbound_slots: (contract.unbound_slots || []).filter(id => !filled.has(id)) };
+    return { contract: next, state: { entries: [...entries.values()],
+      rows: valid && metadata.membership_received ? rows : oldRows,
+      group: valid ? metadata.group : null, retired: [...retired] } };
+  }
+
+function reconcileWatchSourceState(state, contract, reset = false) {
+  const id = contract?.board_id, managed = WATCH_SOURCE_SLOTS[id];
+  if (!managed) return contract;
+  const cache = state.watchSourceStateByBoard ||= new Map(), previous = reset ? null : cache.get(id);
+  const context = contract.watch_source_context;
+  const valid = context && Array.isArray(context.slots) && Array.isArray(context.presence)
+    && context.slots.every(row => managed.includes(row.slot_id))
+    && context.presence.every(row => managed.includes(row.slot_id));
+  const key = valid ? JSON.stringify([context.kind, context.requested_code || null,
+    context.detail_requested_code || context.source_requested_code || null,
+    context.list_period || null, context.detail_period || null]) : '';
+  const same = previous?.key === key && valid;
+  const entries = same ? new Map(previous.entries) : new Map();
+  const identities = same ? new Map(previous.identities) : new Map(), retired = new Set();
+  const present = new Map((valid ? context.presence : []).map(row => [row.slot_id, row]));
+  const incoming = new Map((contract.slot_values || []).filter(row => managed.includes(row.slot_id)).map(row => [row.slot_id, row]));
+  if (!same) for (const slot of managed) retired.add(slot);
+  for (const row of valid ? context.slots : []) {
+    if (same && row.row_state === 'absent') continue;
+    const identity = [row.mapping_id, row.identity || ''].join('|'), old = identities.get(row.slot_id);
+    if (old !== identity || row.row_state === 'empty' || present.get(row.slot_id)?.empty) {
+      entries.delete(row.slot_id); retired.add(row.slot_id);
+    }
+    identities.set(row.slot_id, identity);
+    if (row.row_state !== 'empty' && !present.get(row.slot_id)?.empty && incoming.has(row.slot_id)) {
+      const next = incoming.get(row.slot_id), last = entries.get(row.slot_id);
+      if (last?.observation_id !== next.observation_id || last?.row_index !== next.row_index) retired.add(row.slot_id);
+      entries.set(row.slot_id, next);
+    }
+  }
+  const populated = new Set(entries.keys()), empties = new Set(contract.empty_value_slots || []);
+  for (const slot of managed) populated.has(slot) ? empties.delete(slot) : empties.add(slot);
+  const emptyGroups = groups => (groups || []).filter(group => !group.slot_ids?.some(slot => populated.has(slot)));
+  const result = {...contract, slot_values: [...(contract.slot_values || []).filter(row => !managed.includes(row.slot_id)), ...entries.values()],
+    empty_value_slots:[...empties], empty_rows:emptyGroups(contract.empty_rows), empty_columns:emptyGroups(contract.empty_columns),
+    unbound_slots:(contract.unbound_slots || []).filter(slot => !populated.has(slot))};
+  cache.set(id, {key, entries, identities, retired, context: valid ? context : null});
+  return result;
+}
+
+function reconcileWatchlistState(state, contract, reset = false) {
+  if (contract?.board_id !== '2U5L-1') return reconcileWatchSourceState(state, contract, reset);
+  const store = state.watchlistStateByBoard ||= new Map();
+  const result = reconcileWatchlistContract(reset ? null : store.get('2U5L-1'), contract, WATCHLIST_SLOT_GROUPS);
+  store.set('2U5L-1', result.state);
+  return result.contract;
+}
+
+function excludeRetiredWatchlistSlots(state) {
+  if (state.boardId !== '2U5L-1' && !WATCH_SOURCE_SLOTS[state.boardId]) return;
+  const retired = new Set(state.watchlistStateByBoard?.get(state.boardId)?.retired
+    || state.watchSourceStateByBoard?.get(state.boardId)?.retired || []);
+  for (const [bindingId, slots] of state.realtimeSlots) {
+    const keep = slots.filter(slotId => !retired.has(slotId));
+    if (keep.length) state.realtimeSlots.set(bindingId, keep);
+    else {
+      state.realtimeSlots.delete(bindingId);
+      state.realtimeSlots.observationByBinding?.delete(bindingId);
+    }
+  }
+}
+
+function receiveWatchlistMetadata(state, contract) {
+  for (const [field, property] of [
+    ['empty_rows', 'emptyRows'], ['empty_columns', 'emptyColumns'],
+    ['empty_value_slots', 'emptyValueSlots'], ['deferred_value_slots', 'deferredValueSlots'],
+  ]) {
+    if (!Array.isArray(contract[field])) continue;
+    state[property] = contract[field].slice();
+    state[property + 'ByBoard'].set(state.boardId, state[property]);
+  }
+}
+
+
 function seedBoardState(state, contract, envelope) {
+  contract = reconcileWatchlistState(state, contract, true);
   if (!contract || !contract.board_id) return;
   const boardId = String(contract.board_id);
   if (boardId === '13K0-2') {
@@ -1242,6 +1372,7 @@ function boardMountOptions(host, envelope) {
     sectorChangeOccurrence: state.boardId === '32S7-0'
       && state.sectorChangeSourceKey === [envelope.operation_ref || envelope.operationRef || '', target.inds_cd || ''].join('|')
       ? state.sectorChangeOccurrence : '',
+    watchSourceContext: state.watchSourceStateByBoard?.get(state.boardId)?.context || null,
     flowQueryContext: state.boardId === '2QFO-2' && state.flowQueryContextByBoard?.has(state.boardId) ? boardFlowLayout.queryContextFor({
       board_id: state.boardId, flow_query_context: state.flowQueryContextByBoard?.get(state.boardId),
     }, target.stk_cd) : undefined,
@@ -1765,7 +1896,16 @@ function cardStockFromCard(envelope, surface) {
   return stkCd ? { stkCd, stockName: cardStockName(surface) } : null;
 }
 
+function watchCardActionStock(node, surface, action) {
+  if (!['2U5L-1','2UBO-1','3D4I-0','3EWN-0','2UHM-1','15L8-2','2UN6-1'].includes(surface?.dataset.bsBoardId)) return undefined;
+  if (action.stock === 'row') return boardCardActions.rowStock(node, surface) || surface.__bsWatchActionStock || null;
+  return surface.__bsWatchActionStock || null;
+}
+
+
 function cardActionStock(node, surface, envelope, action) {
+  const watchStock = watchCardActionStock(node, surface, action);
+  if (watchStock !== undefined) return watchStock;
   if (action.stock === 'row') {
     return boardCardActions.rowStock(node, surface) || cardStockFromCard(envelope, surface);
   }
@@ -1832,9 +1972,11 @@ function wireCardActions(host, envelope, mounted) {
   let wired = 0;
   const guarded = ["2X5N-0","2XG6-0","2XKO-0","2XP6-0","2XTO-0","2YA8-0","2YEQ-0","2YJ8-0","2YNQ-0"].includes(surface.dataset.bsBoardId);
   for (const { node, action } of boardCardActions.actionNodes(surface)) {
-    const needsTarget=guarded && ['종목 상세 열기','비교에 추가'].includes(action.control);
+    const watchGuarded = ['2U5L-1','2UBO-1','3D4I-0','3EWN-0','2UHM-1','15L8-2','2UN6-1'].includes(surface.dataset.bsBoardId);
+    const needsTarget=guarded && ['종목 상세 열기','비교에 추가'].includes(action.control) || watchGuarded && ['open-card','compare-add'].includes(action.kind);
     if(needsTarget)node.__bsRankingActionContext={surface,envelope,action};
     const disabled=needsTarget && !cardActionStock(node,surface,envelope,action);
+    if(watchGuarded&&needsTarget)node.parentElement?.classList.toggle('bs-watch-disabled-action',disabled);
     if(needsTarget){node.setAttribute('aria-disabled',String(disabled));if(disabled)node.title='조회 종목이 있으면 열 수 있습니다';else node.removeAttribute('title');}
 
     const didWire = boardMount.wireStateControlActivation(
@@ -2361,6 +2503,12 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     if (!reply.ranking_result) throw new Error('전체 조회 목록을 받지 못했습니다. 다시 시도해 주세요.');
     state.rankingResult = reply.ranking_result;
   }
+  if (boardId === '2U5L-1' || WATCH_SOURCE_SLOTS[boardId]) {
+    const incoming = reply.surface_contract?.board_id === boardId ? reply.surface_contract
+      : {board_id: boardId, slot_values: []};
+    const projected = reconcileWatchlistState(state, incoming);
+    reply = {...reply, surface_contract: projected, slot_values: slotValuesOf(projected)};
+  }
   const filled = reply && reply.ok && reply.slot_values ? reply.slot_values : {};
   state.hydrationByBoard.set(
     boardId,
@@ -2395,13 +2543,14 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     }
   }
   if ((!filled || !Object.keys(filled).length) && !state.rankingResult && !metadataReceived) return mounted;
-  state.values = boardId === '13K0-2'
+  state.values = boardId === '2U5L-1' || WATCH_SOURCE_SLOTS[boardId] ? slotValuesOf(contract) : boardId === '13K0-2'
     ? mergeRankingRailValues(state, filled, contract) : { ...state.values, ...filled };
   state.valuesByBoard.set(boardId, state.values);
   state.unbound = state.unbound.filter((slotId) => !(slotId in filled));
   state.unboundByBoard.set(boardId, state.unbound);
   // 하이드레이션이 채운 슬롯도 실시간 프레임을 받아야 한다 — 응답 계약으로 색인을
   // 다시 만들어 덧댄다. 안 하면 이 슬롯들은 첫 값에서 영영 멈춘다.
+  excludeRetiredWatchlistSlots(state);
   const hydratedRealtimeSlots = boardMount.realtimeSlotIndex(
     reply.surface_contract, realtimeBindingsOf(envelope),
   );
@@ -3072,9 +3221,19 @@ async function applyRealtimeFallbackData(session, payload) {
     if (!state || state.boardId !== String(payload.boardId || '')) return false;
     if (payload.mode !== 'slot-patch') return false;
     const values = slotValuesOf({ slot_values: payload.slotValues });
-    if (!Object.keys(values).length) return false;
+    const watchContract = payload.surfaceContract || payload.surface_contract;
+    const watchMetadata = watchContract?.board_id === state.boardId && (state.boardId === '2U5L-1' && watchContract.watchlist_rows || WATCH_SOURCE_SLOTS[state.boardId] && watchContract.watch_source_context);
+    if (!Object.keys(values).length && !watchMetadata) return false;
     if (Object.keys(values).some((slotId) => !session.slotIds.includes(slotId))) return false;
-    state.values = state.boardId === '13K0-2'
+    if (state.boardId === '2U5L-1' || WATCH_SOURCE_SLOTS[state.boardId]) {
+      const incoming = watchContract?.board_id === state.boardId ? {...watchContract,
+        slot_values: (watchContract.slot_values || []).filter(entry => session.slotIds.includes(entry.slot_id))}
+        : {board_id: state.boardId, slot_values: []};
+      const projected = reconcileWatchlistState(state, incoming);
+      state.values = slotValuesOf(projected);
+      receiveWatchlistMetadata(state, projected);
+      excludeRetiredWatchlistSlots(state);
+    } else state.values = state.boardId === '13K0-2'
       ? mergeRankingRailValues(state, values, payload.surfaceContract || payload.surface_contract) : { ...state.values, ...values };
     excludeRetiredRankingRailSlots(state);
     state.valuesByBoard.set(state.boardId, state.values);

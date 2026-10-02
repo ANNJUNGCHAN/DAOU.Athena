@@ -1431,3 +1431,34 @@
 .board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-primary {padding:12px 28px!important;gap:8px!important}
 .board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-rail {padding:0 28px 16px!important;gap:8px!important}
 .board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-ranking-unavailable-group {padding:0!important;border:0!important;margin:0!important}
+
+/* Exact WATCH query states; no inferred monitoring state or data. */
+.bs-watch-six .bs-watch-unsupported{display:none!important}
+.bs-watch-six :is(.bs-watch-missing-pill,.bs-watch-empty-detail){display:none!important}
+.bs-watch-six .bs-watch-disabled-action{opacity:.42;cursor:not-allowed!important}
+.bs-watch-six .bs-header{min-height:0!important;height:auto!important;align-items:center!important;gap:12px!important;flex-wrap:wrap!important;padding-block:20px!important}
+.bs-watch-six .bs-header>[data-node]{min-width:0!important;height:auto!important;max-width:100%!important;flex:0 1 auto!important}
+.bs-watch-six .bs-header [data-slot-id]{white-space:normal!important;overflow-wrap:anywhere!important;height:auto!important;max-width:100%!important}
+.bs-watch-six .bs-strip{height:auto!important;min-height:0!important;overflow:visible!important;flex-wrap:wrap!important;gap:10px!important}
+.bs-watch-six .bs-strip>[data-node]{width:auto!important;min-width:0!important;max-width:100%!important;height:auto!important;flex-wrap:wrap!important;overflow:visible!important}
+.bs-watch-six .bs-strip [data-slot-id]{height:auto!important;white-space:normal!important}
+.bs-watch-six .bs-workspace{min-width:0!important;min-height:0!important;height:auto!important;align-items:start!important}
+.bs-watch-six :is(.bs-primary,.bs-rail){min-width:0!important;min-height:0!important;height:auto!important;box-sizing:border-box!important;max-width:100%!important}
+.bs-watch-six .bs-rail>[data-node]{width:100%!important;max-width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;box-sizing:border-box}
+.bs-watch-six .bs-rail [data-slot-id]{max-width:100%!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.bs-watch-six .bs-watch-managed{min-width:0!important;max-width:100%!important;height:auto!important;min-height:0!important}
+.bs-watch-six .bs-watch-empty{display:block!important;padding-block:6px!important;min-height:0!important;max-height:none!important;height:auto!important;flex:0 0 auto!important}
+.bs-watch-six .bs-watch-empty>:not(.bs-watch-note){display:none!important}
+.bs-watch-six .bs-watch-note{font:12px/1.5 var(--font-body);color:var(--color-k-dim);white-space:normal;overflow-wrap:anywhere}
+.bs-watch-six .bs-watch-managed.bs-watch-empty{align-self:start!important}
+.board-surface.bs-watch-six :is(.bs-primary,.bs-rail){display:flex!important;flex-direction:column!important}
+.board-surface.bs-watch-six[data-bs-board-id="2UN6-1"][data-bs-condition-read]:not([data-bs-condition-read=""]) .bs-rail{display:none!important}
+.bs-watch-six .bs-readable-cell[style*="--bs-cell-width: 0px"]{display:none!important}
+.bs-watch-six .bs-empty-table-message{width:auto!important;min-width:0!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;box-sizing:border-box}
+.bs-watch-six [aria-disabled="true"]{opacity:.5;cursor:not-allowed!important}
+.bs-watch-six .bs-watch-unselected-monitor{background:transparent!important;border-color:var(--color-k-line)!important;color:var(--color-k-text)!important}
+.bs-watch-six .bs-watch-unselected-monitor *{color:var(--color-k-text)!important}
+.bs-watch-six[data-bs-board-id="2UHM-1"] [data-node="357F-0"]{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr))!important;gap:12px!important;height:auto!important;min-height:0!important}
+.bs-watch-six[data-bs-board-id="2UHM-1"] [data-node="357F-0"]>[data-node]{width:auto!important;min-width:0!important}
+@container board (min-width:960px){.canvas-tab-panel .bs-watch-six .bs-workspace{display:grid!important;grid-template-columns:minmax(0,1fr) 340px!important;gap:24px!important}.canvas-tab-panel .bs-watch-six :is(.bs-primary,.bs-rail){width:100%!important;flex:none!important}}
+@container board (max-width:959px){.canvas-tab-panel .bs-watch-six .bs-workspace{display:flex!important;flex-direction:column!important}.canvas-tab-panel .bs-watch-six :is(.bs-primary,.bs-rail){width:100%!important;flex:none!important}}

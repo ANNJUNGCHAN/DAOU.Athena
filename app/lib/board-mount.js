@@ -1286,6 +1286,7 @@ function applyPlan(root, plan, options = {}) {
   updateOrderbookKpi(root, options);
   updateOrderbookDetails(root, plan);
   updateSectorDetails(root, plan, options);
+  updateWatchDetails(root, plan, options);
   if (options.partial) {
     return { unbound, unmapped: [], containers, collapsedRows, collapsedColumns };
   }
@@ -2752,7 +2753,80 @@ function prepareSessionQuoteTable(surface) {
   scroll.append(inner);
 }
 
+const WATCH_DETAIL_CONFIG = {
+ '2U5L-1':{hide:['s003','s016','s017','s018','s019','s020','s191','s194','s200','s202','s203','s207','s210','s213','s216','s219','s220','s221'],captions:{s195:'현재가',s197:'거래량',s206:'조회 그룹'},groups:[['2UBA-1',[],'편입 기준'],['2UBD-1',[],'관심 신호'],['33QH-0',['s208','s209','s211','s212','s214','s215','s217','s218'],'그룹 자료']]},
+ '2UBO-1':{hide:['s003','s014','s016','s017','s065','s067','s068','s109','s116','s117','s120','s133','s134'],captions:{s021:'상승 · 하락 종목',s110:'당일 등락률',s118:'응답 주요 종목',s121:'다른 조회 테마'},groups:[['3DUL-0',['s111','s113','s114','s115','s119'],'테마 자료'],['3DVR-0',['s122','s123','s124','s125','s126','s127','s128','s129','s130'],'다른 테마']]},
+ '3D4I-0':{hide:['s003','s016','s017','s018','s019','s020','s024','s063','s080','s100','s108'],hideNodes:['3D5O-0'],captions:{s099:'조회 종목',s101:'현재가',s103:'거래량',s107:'거래대금'},groups:[['3D4Q-0',[],'그룹 자료']]},
+ '3EWN-0':{hide:['s003','s016','s017','s018','s019','s020','s024','s063','s077','s101','s108','s109','s114'],captions:{s102:'현재가',s104:'거래량'},groups:[['3FEV-0',['s065','s067','s069','s071','s073','s075'],'ELW 조건'],['3FN1-0',['s080','s082','s084','s086','s088','s091','s093','s095','s097','s099'],'ELW 위험·미결제'],['3EXT-0',[],'LP 보유 정보'],['3EXO-0',['s110'],'만기'],['3FO7-0',['s115','s116','s117','s118','s119','s120','s121','s122','s123','s124','s125','s126'],'다른 조회 종목']]},
+ '2UHM-1':{hide:['s003','s011','s012','s014','s015','s016','s017','s082','s103','s104',...Array.from({length:18},(_,i)=>'s'+String(85+i).padStart(3,'0')),'s120'],captions:{s024:'장 상태 응답',s083:'장 상태 수신 시각',s105:'VI 구분 코드',s107:'정적 괴리율',s109:'해제 시각 응답',s111:'다른 조회 종목'},groups:[['357G-0',[],'KOSPI 지수'],['357K-0',[],'KOSDAQ 지수'],['357O-0',['s025','s026'],'장 상태'],['357S-0',[],'VI 집계'],['3FB3-0',['s084'],'장 상태 시각'],['2UMO-1',['s106'],'VI 구분'],['2UMR-1',['s108'],'정적 괴리율'],['2UMU-1',['s110'],'해제 시각'],['3FP8-0',['s112','s113','s114','s115','s116','s117'],'다른 조회 종목']]},
+ '2UN6-1':{hide:['s003','s011','s015','s016','s017','s018','s019','s021','s023','s024','s025','s027','s029','s030','s032','s034','s035','s112','s123','s141','s142'],captions:{s036:'응답 시각',s040:'매매 구분',s042:'응답 등락률',s122:'응답 시각 목록'},groups:[['34ND-0',['s020','s022','s026','s028','s031','s033'],'저장된 조건검색 자료'],['2USC-1',['s113'],'응답 시각'],['2USF-1',['s115'],'5분 거래대금'],['2USI-1',['s117'],'체결강도'],['2USL-1',['s119'],'감지 가격'],['3H8D-0',['s124','s127','s130'],'응답 시각'],['33HP-0',[],'감시 상태']]},
+ '15L8-2':{hide:['s045','s055','s065','s075','s085'],hideNodes:['15LC-2','15LF-2','15LN-2','1VAO-1'],captions:{s005:'조건검색 조회 결과'},groups:[['15MN-2',[],'조건 신호'],['15MT-2',[],'조건 기준'],['3IMH-0',[],'조건 이력']]},
+};
+
+function prepareWatchDetails(surface, contract) {
+  const id=contract.board_id,config=WATCH_DETAIL_CONFIG[id];if(!config)return;
+  surface.classList.add('bs-watch-six');
+  for(const [node,slots]of config.groups)for(const slot of slots){const source=contract.slots.find(s=>s.slot_id===slot);const value=source&&authoredNode(surface,anchorOf(source));if(value)value.dataset.bsKeepMissing='true';}
+  if(id==='2UBO-1'){
+    const rows=['348K-0','348Q-0','3490-0','349A-0','349K-0','349U-0','34A4-0'];
+    const owner=layoutGroup(surface.ownerDocument,'bs-watch-theme-owner');owner.dataset.node='watch-theme-list';
+    authoredNode(surface,rows[0]).before(owner);for(const row of rows)owner.append(authoredNode(surface,row));
+    readableTable(surface,contract,{node:'watch-theme-list',rows,widths:[240,150,0,210,180],label:'조회 테마',compact:true});
+  }
+  if(id==='15L8-2')for(const row of surface.querySelectorAll('[data-node="15LI-2"] [data-row]'))if(row.children[5])row.children[5].classList.add('bs-watch-unsupported');
+}
+
+function updateWatchDetails(surface, plan, options={}) {
+  const id=surface.dataset.bsBoardId,config=WATCH_DETAIL_CONFIG[id];if(!config)return;
+  const states=surface.__bsWatchStates ||= new Map();for(const assignment of plan.assignments)states.set(assignment.slotId,assignment);
+  const received=a=>a?.valueSlot&&!a.pending&&!a.missing&&!a.empty&&!a.designText&&String(a.text).trim();
+  const nodes=slot=>surface.querySelectorAll('[data-slot-id="'+slot+'"]');
+  const caption=(slot,text)=>{for(const node of nodes(slot))if(!node.children.length)node.textContent=text;};
+  const restore=node=>{for(let at=node;at&&at!==surface;at=at.parentElement){if(at.hidden||at.style.display==='none'||at.dataset.bsRowCollapsed==='true'||at.dataset.bsUnavailableHidden==='true'){setHidden(at,false);delete at.dataset.bsRowCollapsed;delete at.dataset.bsUnavailableHidden;surface.__bsEmptyValueHidden?.delete(at);if(Array.isArray(surface.__bsUnavailableHidden))surface.__bsUnavailableHidden=surface.__bsUnavailableHidden.filter(item=>item!==at);else surface.__bsUnavailableHidden?.delete?.(at);}}};
+  for(const slot of config.hide)for(const node of nodes(slot))node.classList.add('bs-watch-unsupported');
+  for(const slot of config.hide)for(const node of nodes(slot)){let parent=node.parentElement;while(parent&&parent.closest('.bs-strip')&&!parent.matches('.bs-strip')){if([...parent.children].every(child=>child.classList.contains('bs-watch-unsupported')||child.hidden))parent.classList.add('bs-watch-unsupported');else break;parent=parent.parentElement;}}
+  for(const id of config.hideNodes||[])authoredNode(surface,id)?.classList.add('bs-watch-unsupported');
+  for(const [slot,text]of Object.entries(config.captions||{}))caption(slot,text);
+  for(const [nodeId,slots,label]of config.groups){
+    const group=authoredNode(surface,nodeId);if(!group)continue;
+    const empty=!slots.some(slot=>received(states.get(slot))),pending=slots.some(slot=>states.get(slot)?.pending);
+    group.classList.add('bs-watch-managed');group.classList.toggle('bs-watch-empty',empty);restore(group);
+    let note=group.querySelector(':scope > .bs-watch-note');if(!note){note=layoutGroup(surface.ownerDocument,'bs-watch-note');note.setAttribute('role','status');group.append(note);}
+    note.hidden=!empty;note.textContent=label+(pending?' 수신 대기':' 미제공');
+  }
+  const primary=surface.querySelector('.bs-primary');if(primary&&['3D4I-0','3EWN-0'].includes(id)){restore(primary);const actual=[...primary.querySelectorAll('[data-slot-id]')].some(n=>received(states.get(n.dataset.slotId)));let note=primary.querySelector(':scope > .bs-watch-main-note');if(!note){note=layoutGroup(surface.ownerDocument,'bs-watch-note bs-watch-main-note');note.setAttribute('role','status');primary.prepend(note);}note.hidden=actual;note.textContent=[...states.values()].some(a=>a.pending)?'조회 종목 자료 수신 대기':'조회 종목 자료 미제공';}
+  for(const [slot,assignment]of states)if(received(assignment))for(const node of nodes(slot))restore(node);
+  if(id!=='15L8-2')for(const node of nodes('s002'))node.parentElement.classList.toggle('bs-watch-missing-pill',!received(states.get('s002')));
+  for(const nodeId of {'3D4I-0':['3EAY-0','3EMO-0'],'3EWN-0':['3EZV-0']}[id]||[]){const group=authoredNode(surface,nodeId);if(group){const absent=![...group.querySelectorAll('[data-slot-id]')].some(n=>received(states.get(n.dataset.slotId)));group.classList.toggle('bs-watch-empty-detail',absent);}}
+  const identitySlots={'2U5L-1':['s071','s193'],'3D4I-0':['s023','s022'],'3EWN-0':['s023','s022']}[id];
+  surface.__bsWatchActionStock=null;
+  if(identitySlots){const [code,name]=identitySlots.map(slot=>states.get(slot));if(received(code)&&received(name)&&/^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(code.text)&&code.text!=='000000')surface.__bsWatchActionStock={stkCd:code.text,stockName:name.text};}
+  for(const node of surface.querySelectorAll('[data-card-action]')){const context=node.__bsRankingActionContext;if(!context||!['open-card','compare-add'].includes(context.action?.kind))continue;const disabled=!surface.__bsWatchActionStock;node.setAttribute('aria-disabled',String(disabled));node.parentElement?.classList.toggle('bs-watch-disabled-action',disabled);if(disabled)node.title='조회 종목이 있으면 열 수 있습니다';else node.removeAttribute('title');}
+  if(id==='2UN6-1')for(const node of nodes('s120')){const control=node.closest('[role="button"],button')||node.parentElement;control.setAttribute('aria-disabled','true');control.title='조회 종목을 선택한 상태가 아닙니다';}
+  if(id==='2UBO-1'){
+    const context=options.watchSourceContext||{},period=value=>/^\d+$/.test(String(value??''))?String(Number(value))+'일 수익률':'조회 기간 수익률';
+    caption('s015',context.list_period?String(Number(context.list_period))+'일 조회':'조회 기간 미제공');
+    caption('s022',period(context.list_period));caption('s112',period(context.detail_period));for(const slot of ['s080','s091','s102'])if(received(states.get(slot)))caption(slot,period(context.detail_period)+' '+states.get(slot).text);
+  }
+  if(id==='2UHM-1'){
+    const sessions={'0':'장 시작 전','3':'장 시작','2':'장 마감 전','4':'장 마감','8':'정규장 마감','9':'전체장 마감',a:'시간외 종가매매 시작',b:'시간외 종가매매 종료',c:'시간외 단일가 시작',d:'시간외 단일가 종료',e:'선옵 마감 전 동시호가 종료',f:'선옵 장 운영시간 알림',o:'선옵 장 시작',s:'선옵 마감 전 동시호가 시작',P:'NXT 프리마켓 시작',Q:'NXT 프리마켓 종료',R:'NXT 메인마켓 시작',S:'NXT 메인마켓 종료',T:'NXT 애프터마켓 단일가 시작',U:'NXT 애프터마켓 시작',V:'NXT 애프터마켓 종료'};
+    for(const slot of ['s002','s025']){const a=states.get(slot);if(received(a))caption(slot,sessions[a.text]||'장 상태 코드 '+a.text);}
+  }
+  if(id==='2UN6-1'){
+    const once=options.operationRef==='base:ka10172',list=options.operationRef==='base:ka10171';
+    caption('s013','실시간 감시');caption('s014','1회 조회');
+    const context=surface.querySelector('.bs-condition-query-context');if(context){context.hidden=false;context.textContent=once?'조건검색 1회 조회 결과':list?'저장된 조건검색 목록':'감시 상태 미확인';}
+    for(const node of surface.querySelectorAll('.bs-condition-empty'))node.textContent='저장된 조건검색 자료 미제공';
+    for(const code of ['32OZ-0','32P0-0']){const node=authoredNode(surface,code);if(node){node.style.removeProperty('background-color');node.style.removeProperty('color');node.parentElement?.classList.add('bs-watch-unselected-monitor');}}
+  }
+  for(const table of surface.querySelectorAll('.bs-readable-owner')){
+    const message=table.__bsEmptyMessage;if(message&&table.contains(message))table.after(message);
+  }
+}
+
+
 function applyReadableBoardLayout(surface, contract) {
+  prepareWatchDetails(surface, contract);
   const id = contract.board_id;
   if (id === '2R3M-1') {
     // The day selectors remain available when the adjacent venue/time is absent.
@@ -3610,6 +3684,7 @@ function mountBoard(root, boardId, values, options = {}) {
   updateEmptyTableStates(surface);
   compactReducedContent(surface, contract);
   applyQueryContext(surface, contract, options);
+  updateWatchDetails(surface, plan, options);
   if (etfPeriod) etfPeriod.mount(surface, contract, plan, options);
   if (rankingResult) rankingResult.mount(surface, contract, plan, options);
   // 값이 실린 뒤에 잰다 — 목업보다 긴 값이 들어오면 줄이 그때 넘친다. 폭이 바뀌면

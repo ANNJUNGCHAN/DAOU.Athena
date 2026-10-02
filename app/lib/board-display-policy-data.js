@@ -1381,6 +1381,26 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s020": [
+      "고 152,400",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s021": [
+      "저 149,100",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
     "s022": [
       "조건 충족",
       "status",
@@ -1395,6 +1415,26 @@ const policy = {
       "000660",
       "bound-identifier",
       "9001"
+    ],
+    "s030": [
+      "고 199,100",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s031": [
+      "저 194,800",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
     ],
     "s032": [
       "조건 충족",
@@ -1416,6 +1456,26 @@ const policy = {
       "bound-label",
       "name"
     ],
+    "s040": [
+      "고 198,000",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s041": [
+      "저 189,800",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
     "s042": [
       "조건 충족",
       "status",
@@ -1430,6 +1490,26 @@ const policy = {
       "관찰 중",
       "unavailable",
       null
+    ],
+    "s050": [
+      "고 48,420",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s051": [
+      "저 47,980",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
     ],
     "s052": [
       "해당 없음",
@@ -1451,6 +1531,26 @@ const policy = {
       "unavailable",
       null
     ],
+    "s060": [
+      "고 234,000",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s061": [
+      "저 232,000",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
     "s062": [
       "해당 없음",
       "status",
@@ -1470,6 +1570,26 @@ const policy = {
       "관찰 중",
       "unavailable",
       null
+    ],
+    "s070": [
+      "고 214,800",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s071": [
+      "저 212,300",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
     ],
     "s072": [
       "해당 없음",
@@ -1491,6 +1611,26 @@ const policy = {
       "unavailable",
       null
     ],
+    "s080": [
+      "고 42,300",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s081": [
+      "저 41,750",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
     "s082": [
       "해당 없음",
       "status",
@@ -1510,6 +1650,26 @@ const policy = {
       "관찰 중",
       "unavailable",
       null
+    ],
+    "s090": [
+      "고 100,300",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s091": [
+      "저 99,300",
+      "bound-format",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
     ],
     "s092": [
       "해당 없음",
@@ -7575,8 +7735,10 @@ const policy = {
     ],
     "s030": [
       "거래대금 급증",
-      "bound-label",
-      "bgb"
+      "bound-format",
+      {
+        "prefix": "분류 코드 "
+      }
     ],
     "s031": [
       "150,850",
@@ -7585,8 +7747,15 @@ const policy = {
     ],
     "s033": [
       "149,000",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s035": [
       "149,200",
@@ -7595,13 +7764,66 @@ const policy = {
     ],
     "s036": [
       "152,400",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s037": [
       "148,100",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s043": [
+      "11.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s046": [
+      "8.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s047": [
+      "1,420만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s048": [
+      "2.14조",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
     ],
     "s049": [
       "SK하이닉스",
@@ -7615,8 +7837,10 @@ const policy = {
     ],
     "s051": [
       "신고가",
-      "bound-label",
-      "bgb"
+      "bound-format",
+      {
+        "prefix": "분류 코드 "
+      }
     ],
     "s052": [
       "198,400",
@@ -7625,8 +7849,15 @@ const policy = {
     ],
     "s054": [
       "194,410",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s056": [
       "195,000",
@@ -7635,13 +7866,66 @@ const policy = {
     ],
     "s057": [
       "199,100",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s058": [
       "194,800",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s064": [
+      "6.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s067": [
+      "4.9만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s068": [
+      "497만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s069": [
+      "9,860억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
     ],
     "s070": [
       "한미반도체",
@@ -7655,8 +7939,10 @@ const policy = {
     ],
     "s072": [
       "거래대금 급증",
-      "bound-label",
-      "bgb"
+      "bound-format",
+      {
+        "prefix": "분류 코드 "
+      }
     ],
     "s073": [
       "197,400",
@@ -7665,8 +7951,15 @@ const policy = {
     ],
     "s075": [
       "189,500",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s077": [
       "190,200",
@@ -7675,13 +7968,66 @@ const policy = {
     ],
     "s078": [
       "198,000",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s079": [
       "189,800",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s085": [
+      "3.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s088": [
+      "2.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s089": [
+      "242만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s090": [
+      "4,780억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
     ],
     "s092": [
       "069500",
@@ -7695,8 +8041,15 @@ const policy = {
     ],
     "s095": [
       "47,950",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s097": [
       "48,000",
@@ -7705,13 +8058,66 @@ const policy = {
     ],
     "s098": [
       "48,420",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s099": [
       "47,980",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s105": [
+      "2.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s108": [
+      "2.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s109": [
+      "340만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s110": [
+      "1,640억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
     ],
     "s111": [
       "현대차",
@@ -7730,8 +8136,15 @@ const policy = {
     ],
     "s115": [
       "233,720",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s117": [
       "233,500",
@@ -7740,13 +8153,66 @@ const policy = {
     ],
     "s118": [
       "234,000",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s119": [
       "232,000",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s125": [
+      "4.1만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s128": [
+      "5.6만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s129": [
+      "319만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s130": [
+      "7,420억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
     ],
     "s131": [
       "NAVER",
@@ -7765,8 +8231,15 @@ const policy = {
     ],
     "s135": [
       "212,200",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s137": [
       "212,500",
@@ -7775,13 +8248,66 @@ const policy = {
     ],
     "s138": [
       "214,800",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s139": [
       "212,300",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s145": [
+      "3.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s148": [
+      "2.7만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s149": [
+      "318만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s150": [
+      "6,810억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
     ],
     "s151": [
       "카카오",
@@ -7800,8 +8326,15 @@ const policy = {
     ],
     "s155": [
       "42,200",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s157": [
       "42,150",
@@ -7810,13 +8343,66 @@ const policy = {
     ],
     "s158": [
       "42,300",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s159": [
       "41,750",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s165": [
+      "2.2만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s168": [
+      "3.0만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s169": [
+      "680만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s170": [
+      "2,850억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
     ],
     "s171": [
       "기아",
@@ -7835,8 +8421,15 @@ const policy = {
     ],
     "s175": [
       "100,100",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s177": [
       "100,000",
@@ -7845,13 +8438,66 @@ const policy = {
     ],
     "s178": [
       "100,300",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s179": [
       "99,100",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s185": [
+      "1.8만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s188": [
+      "2.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s189": [
+      "130만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s190": [
+      "1,296억",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
     ],
     "s193": [
       "한미반도체 — 선택",
@@ -7867,6 +8513,15 @@ const policy = {
       "197,400 · +4.18%",
       "price",
       "cur_prc"
+    ],
+    "s198": [
+      "242만주 · 2.4배",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
     ],
     "s200": [
       "2026.08.12",
@@ -7890,8 +8545,14 @@ const policy = {
     ],
     "s209": [
       "G001",
-      "bound-identifier",
-      "gcod"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "그룹 코드 "
+      }
     ],
     "s211": [
       "배당주",
@@ -7900,8 +8561,14 @@ const policy = {
     ],
     "s212": [
       "G002",
-      "bound-identifier",
-      "gcod"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "그룹 코드 "
+      }
     ],
     "s214": [
       "ETF 모음",
@@ -7910,8 +8577,14 @@ const policy = {
     ],
     "s215": [
       "G003",
-      "bound-identifier",
-      "gcod"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "그룹 코드 "
+      }
     ],
     "s217": [
       "ELW 관찰",
@@ -7920,8 +8593,14 @@ const policy = {
     ],
     "s218": [
       "G004",
-      "bound-identifier",
-      "gcod"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "그룹 코드 "
+      }
     ],
     "s220": [
       "● 관심종목 시세 실시간 갱신 중",
@@ -7965,6 +8644,28 @@ const policy = {
       "unavailable",
       null
     ],
+    "s027": [
+      "18 / 24",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s028": [
+      "하락 6",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
     "s030": [
       "전력 설비",
       "bound-label",
@@ -7980,6 +8681,28 @@ const policy = {
       "unavailable",
       null
     ],
+    "s034": [
+      "11 / 16",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s035": [
+      "하락 5",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
     "s038": [
       "T0053",
       "bound-identifier",
@@ -7989,6 +8712,28 @@ const policy = {
       "0.9조",
       "unavailable",
       null
+    ],
+    "s041": [
+      "14 / 22",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s042": [
+      "하락 8",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
     ],
     "s044": [
       "로봇",
@@ -8005,6 +8750,28 @@ const policy = {
       "unavailable",
       null
     ],
+    "s048": [
+      "9 / 18",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s049": [
+      "하락 9",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
     "s051": [
       "조선 기자재",
       "bound-label",
@@ -8020,6 +8787,28 @@ const policy = {
       "unavailable",
       null
     ],
+    "s055": [
+      "6 / 15",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s056": [
+      "하락 9",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
     "s058": [
       "저PBR 가치",
       "bound-label",
@@ -8034,6 +8823,28 @@ const policy = {
       "0.7조",
       "unavailable",
       null
+    ],
+    "s062": [
+      "12 / 31",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s063": [
+      "하락 19",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
     ],
     "s067": [
       "AI 반도체 구성 상위",
@@ -8060,6 +8871,44 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s080": [
+      "종목 5일 +8.2%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "precision": 2,
+        "sign": true
+      }
+    ],
+    "s081": [
+      "497만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s083": [
+      "잔량 1.0만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
+    "s085": [
+      "잔량 1.4만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
     "s086": [
       "한미반도체",
       "bound-label",
@@ -8074,6 +8923,44 @@ const policy = {
       "197,400",
       "price",
       "cur_prc"
+    ],
+    "s091": [
+      "종목 5일 +18.6%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "precision": 2,
+        "sign": true
+      }
+    ],
+    "s092": [
+      "242만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s094": [
+      "잔량 0.5만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
+    "s096": [
+      "잔량 0.7만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
     ],
     "s097": [
       "이수페타시스",
@@ -8090,6 +8977,24 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s102": [
+      "종목 5일 +38.5%",
+      "bound-format",
+      {
+        "unit": "percent",
+        "precision": 2,
+        "sign": true
+      }
+    ],
+    "s103": [
+      "340만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
     "s104": [
       "해당 없음",
       "bound-label",
@@ -8097,13 +9002,50 @@ const policy = {
     ],
     "s105": [
       "잔량 해당 없음",
-      "bound-label",
-      "sel_req"
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
+    "s107": [
+      "잔량 96.0만",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
     ],
     "s108": [
       "AI 반도체 — 선택 테마",
       "bound-label",
       "thema_nm"
+    ],
+    "s114": [
+      "구성 24종목",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "구성 "
+      }
+    ],
+    "s115": [
+      "상승 18 · 보합 0 · 하락 6",
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
     ],
     "s117": [
       "2.8조",
@@ -8658,6 +9600,15 @@ const policy = {
       "+4.17%",
       "unavailable",
       null
+    ],
+    "s109": [
+      "오늘 감지 6건 전체 표시 · 추가 없음 · 이어보기 기준 09:07:31",
+      "bound-format",
+      {
+        "unit": "text",
+        "kind": "text",
+        "prefix": "연속 조회 여부 "
+      }
     ],
     "s115": [
       "842억 · 평균 3.1배",
@@ -28847,8 +29798,15 @@ const policy = {
     ],
     "s029": [
       "기준가 149,000",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s031": [
       "149,200",
@@ -28857,8 +29815,15 @@ const policy = {
     ],
     "s033": [
       "148,100",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
     ],
     "s035": [
       "193,700",
@@ -28867,8 +29832,15 @@ const policy = {
     ],
     "s037": [
       "152,400",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s039": [
       "집계 전",
@@ -28884,6 +29856,33 @@ const policy = {
       "매수비율 58.2%",
       "unavailable",
       null
+    ],
+    "s074": [
+      "8.2만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s075": [
+      "11.4만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s083": [
+      "3,200주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": true
+      }
     ],
     "s087": [
       "해당 없음",
@@ -28910,6 +29909,15 @@ const policy = {
       "price",
       "cur_prc"
     ],
+    "s104": [
+      "1,420만주 · 1.2배",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
     "s106": [
       "2026.07.03",
       "unavailable",
@@ -28919,6 +29927,18 @@ const policy = {
       "09:38 감지",
       "time",
       null
+    ],
+    "s109": [
+      "거래대금 2.14조 · 전일 대비 1.6배",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
     ],
     "s113": [
       "전체 4그룹 · 29종목",
@@ -29553,8 +30573,15 @@ const policy = {
     ],
     "s029": [
       "기준가 1,210",
-      "price",
-      "base_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
     ],
     "s031": [
       "1,215",
@@ -29563,8 +30590,15 @@ const policy = {
     ],
     "s033": [
       "1,205",
-      "price",
-      "low_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
     ],
     "s035": [
       "1,570",
@@ -29573,8 +30607,15 @@ const policy = {
     ],
     "s037": [
       "1,260",
-      "price",
-      "high_pric"
+      "bound-format",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
     ],
     "s039": [
       "집계 전",
@@ -29610,6 +30651,15 @@ const policy = {
       "1,245 · +2.89%",
       "price",
       "cur_prc"
+    ],
+    "s105": [
+      "48만주 · 5.9억원",
+      "bound-format",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
     ],
     "s107": [
       "642만주 · 64.2%",

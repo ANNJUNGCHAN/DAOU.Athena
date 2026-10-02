@@ -288,6 +288,1142 @@ const CC06_INTEGER_QUANTITIES = {
     ]
   }
 };
+const WATCH_FORMATS = {
+  "2U5L-1": {
+    "s030": [
+      "bgb",
+      {
+        "prefix": "분류 코드 "
+      }
+    ],
+    "s033": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s036": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s037": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s043": [
+      "tot_buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s046": [
+      "tot_sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s047": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s048": [
+      "trde_prica",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s051": [
+      "bgb",
+      {
+        "prefix": "분류 코드 "
+      }
+    ],
+    "s054": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s057": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s058": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s064": [
+      "tot_buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s067": [
+      "tot_sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s068": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s069": [
+      "trde_prica",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s072": [
+      "bgb",
+      {
+        "prefix": "분류 코드 "
+      }
+    ],
+    "s075": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s078": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s079": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s085": [
+      "tot_buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s088": [
+      "tot_sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s089": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s090": [
+      "trde_prica",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s095": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s098": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s099": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s105": [
+      "tot_buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s108": [
+      "tot_sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s109": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s110": [
+      "trde_prica",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s115": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s118": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s119": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s125": [
+      "tot_buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s128": [
+      "tot_sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s129": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s130": [
+      "trde_prica",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s135": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s138": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s139": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s145": [
+      "tot_buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s148": [
+      "tot_sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s149": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s150": [
+      "trde_prica",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s155": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s158": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s159": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s165": [
+      "tot_buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s168": [
+      "tot_sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s169": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s170": [
+      "trde_prica",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s175": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s178": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s179": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s185": [
+      "tot_buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s188": [
+      "tot_sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s189": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s190": [
+      "trde_prica",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ],
+    "s198": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s209": [
+      "gcod",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "그룹 코드 "
+      }
+    ],
+    "s212": [
+      "gcod",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "그룹 코드 "
+      }
+    ],
+    "s215": [
+      "gcod",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "그룹 코드 "
+      }
+    ],
+    "s218": [
+      "gcod",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "그룹 코드 "
+      }
+    ]
+  },
+  "2UBO-1": {
+    "s027": [
+      "rising_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s028": [
+      "fall_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
+    "s034": [
+      "rising_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s035": [
+      "fall_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
+    "s041": [
+      "rising_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s042": [
+      "fall_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
+    "s048": [
+      "rising_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s049": [
+      "fall_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
+    "s055": [
+      "rising_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s056": [
+      "fall_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
+    "s062": [
+      "rising_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ],
+    "s063": [
+      "fall_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "하락 "
+      }
+    ],
+    "s080": [
+      "dt_prft_rt_n",
+      {
+        "unit": "percent",
+        "precision": 2,
+        "sign": true
+      }
+    ],
+    "s081": [
+      "acc_trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s083": [
+      "sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
+    "s085": [
+      "buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
+    "s091": [
+      "dt_prft_rt_n",
+      {
+        "unit": "percent",
+        "precision": 2,
+        "sign": true
+      }
+    ],
+    "s092": [
+      "acc_trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s094": [
+      "sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
+    "s096": [
+      "buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
+    "s102": [
+      "dt_prft_rt_n",
+      {
+        "unit": "percent",
+        "precision": 2,
+        "sign": true
+      }
+    ],
+    "s103": [
+      "acc_trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s105": [
+      "sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
+    "s107": [
+      "buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false,
+        "prefix": "잔량 "
+      }
+    ],
+    "s114": [
+      "stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "구성 "
+      }
+    ],
+    "s115": [
+      "rising_stk_num",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "상승 "
+      }
+    ]
+  },
+  "3D4I-0": {
+    "s029": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s033": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s037": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s074": [
+      "tot_sel_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s075": [
+      "tot_buy_req",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s083": [
+      "cntr_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": true
+      }
+    ],
+    "s104": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ],
+    "s109": [
+      "trde_prica",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
+      }
+    ]
+  },
+  "3EWN-0": {
+    "s029": [
+      "base_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "기준 "
+      }
+    ],
+    "s033": [
+      "low_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s037": [
+      "high_pric",
+      {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "change",
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s105": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "precision": 0,
+        "sign": false
+      }
+    ]
+  },
+  "15L8-2": {
+    "s020": [
+      "17",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s021": [
+      "18",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s030": [
+      "17",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s031": [
+      "18",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s040": [
+      "17",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s041": [
+      "18",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s050": [
+      "17",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s051": [
+      "18",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s060": [
+      "17",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s061": [
+      "18",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s070": [
+      "17",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s071": [
+      "18",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s080": [
+      "17",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s081": [
+      "18",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ],
+    "s090": [
+      "17",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "고가 "
+      }
+    ],
+    "s091": [
+      "18",
+      {
+        "unit": "won",
+        "precision": 0,
+        "absolute": true,
+        "prefix": "저가 "
+      }
+    ]
+  },
+  "2UN6-1": {
+    "s109": [
+      "cont_yn",
+      {
+        "unit": "text",
+        "kind": "text",
+        "prefix": "연속 조회 여부 "
+      }
+    ]
+  }
+};
+
 export function buildPolicy() {
   const policies = {};
   for (const entry of index.boards) {
@@ -302,7 +1438,7 @@ export function buildPolicy() {
         && ELW_QUOTE_MAGNITUDES[slot.slot_id] && ELW_QUOTE_MAGNITUDES[slot.slot_id] === slot.f) {
         slots[slot.slot_id] = [slot.paper_text, 'quote-magnitude', slot.f]; continue;
       }
-      const format = CC06_INTEGER_QUANTITIES[entry.board_id]?.[slot.slot_id] || FORMATS[entry.board_id]?.[slot.slot_id];
+      const format = CC06_INTEGER_QUANTITIES[entry.board_id]?.[slot.slot_id] || WATCH_FORMATS[entry.board_id]?.[slot.slot_id] || FORMATS[entry.board_id]?.[slot.slot_id];
       if (format && slot.f === format[0] && hasBinding(slot)) {
         slots[slot.slot_id] = [slot.paper_text, 'bound-format', format[1]]; continue;
       }
