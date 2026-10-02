@@ -46811,5 +46811,440 @@
       }
     ],
     "limitation": "Metadata-only appendix. No native invocation, private reads, inference of runtime from phase, or whole-card promotion."
+  },
+  "native_execution_appendix_854_894": {
+    "cutoff_row": 894,
+    "previous_snapshot_row": 853,
+    "new_rows": {
+      "from": 854,
+      "to": 894,
+      "count": 41
+    },
+    "previous_snapshot_preserved": true,
+    "template_aggregate_recomputed": false,
+    "latest_responsive_94_status": "incomplete",
+    "safe_metadata_sha256": "b9452c5ba4413c7064163e8c56e751d0a1e1b0b354b92215edb4521ce0b56689",
+    "safe_metadata_approval_sha256": "c140543dc90cdeaaa1d3114a406c0a16ed0390ed000a653e8355170f089322f5",
+    "approval_scope": "Public metadata schema only; original observations were not independently re-proven.",
+    "actual_template_ids": "All41 null; kind is source metadata, not a confirmed template ID.",
+    "excluded_ui_rows": [
+      882,
+      890
+    ],
+    "runtime_policy": "Each original runtime_commit string is preserved. Observations from different runtimes are not combined into a current complete cycle.",
+    "evidence_scope": "The approved eight-field input contains no whole/scoped/cycle evidence scope. PASS is retained only as the original per-observation result; no whole-card or latest94 promotion.",
+    "historical_cutoff_notice": "All prior current/snapshot statements retain their original cutoff801 or853. This appendix adds854–894 without changing their evidence or aggregates.",
+    "rows": [
+      {
+        "id": 854,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "PASS",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 855,
+        "kind": "UNCONFIRMED",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "PASS",
+        "ui_result": "PASS",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 856,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "PASS",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 857,
+        "kind": "table",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "PASS",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 858,
+        "kind": "table",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "PASS",
+        "ui_result": "PASS",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 859,
+        "kind": "table",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "PASS",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 860,
+        "kind": "table",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 861,
+        "kind": "table",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "PASS",
+        "ui_result": "PASS",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 862,
+        "kind": "table",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 863,
+        "kind": "UNCONFIRMED",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "UNCONFIRMED",
+        "ui_result": "NOT_RUN",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 864,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "FAIL",
+        "ui_result": "NOT_RUN",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 865,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "NOT_RUN",
+        "ui_result": "FAIL",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 866,
+        "kind": "UNCONFIRMED",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "NOT_RUN",
+        "ui_result": "FAIL",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 867,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "NOT_RUN",
+        "ui_result": "FAIL",
+        "runtime_commit": "e4ebf74c7b442f8a527cd6312af6c4ec88805115",
+        "actual_template_id": null
+      },
+      {
+        "id": 868,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 869,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 870,
+        "kind": "UNCONFIRMED",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 871,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 872,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "NOT_RUN",
+        "ui_result": "UNCONFIRMED",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 873,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 874,
+        "kind": "UNCONFIRMED",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 875,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 876,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 877,
+        "kind": "UNCONFIRMED",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 878,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 879,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "FAIL",
+        "ui_result": "NOT_RUN",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 880,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "FAIL",
+        "ui_result": "NOT_RUN",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 881,
+        "kind": "UNCONFIRMED",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "FAIL",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 882,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "NOT_RUN",
+        "ui_result": "EXCLUDED",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 883,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "FAIL",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 884,
+        "kind": "UNCONFIRMED",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "FAIL",
+        "ui_result": "FAIL",
+        "runtime_commit": "e27c1162ccbc452468d656d5340e3bd7f8944c4d",
+        "actual_template_id": null
+      },
+      {
+        "id": 885,
+        "kind": "GENERAL",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "NOT_RUN",
+        "ui_result": "FAIL",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      },
+      {
+        "id": 886,
+        "kind": "GENERAL",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "NOT_RUN",
+        "ui_result": "FAIL",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      },
+      {
+        "id": 887,
+        "kind": "BACKTEST",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      },
+      {
+        "id": 888,
+        "kind": "BACKTEST",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      },
+      {
+        "id": 889,
+        "kind": "BACKTEST",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      },
+      {
+        "id": 890,
+        "kind": "BACKTEST",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "EXCLUDED",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      },
+      {
+        "id": 891,
+        "kind": "BACKTEST",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      },
+      {
+        "id": 892,
+        "kind": "BACKTEST",
+        "width": 1411,
+        "height": 1166,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      },
+      {
+        "id": 893,
+        "kind": "BACKTEST",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "PASS",
+        "ui_result": "FAIL",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      },
+      {
+        "id": 894,
+        "kind": "GENERAL",
+        "width": 2560,
+        "height": 1392,
+        "call_result": "FAIL",
+        "ui_result": "NOT_RUN",
+        "runtime_commit": "62bf76d",
+        "actual_template_id": null
+      }
+    ]
   }
 }
