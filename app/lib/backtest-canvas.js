@@ -906,11 +906,26 @@ function backtestResultTarget(result) {
     ? targetFromYaml(result.source || '') : {};
 }
 
-function backtestQuantityText(value) {
-  if (value === null || value === undefined || value === '') return '—';
-  const number = Number(value);
-  return Number.isFinite(number)
-    ? number.toLocaleString('ko-KR', { maximumFractionDigits: 20 }) : String(value);
+function backtestTradeCell(value, unit, digits) {
+  const missing = value === null || value === undefined || value === '';
+  const raw = missing ? '—' : String(value);
+  const number = missing ? NaN : Number(value);
+  if (!Number.isFinite(number)) return el('td', 'backtest-trades-cell', raw);
+  const tiny = number !== 0 && Math.abs(number) < 10 ** -digits;
+  const shown = number.toLocaleString('ko-KR', tiny
+    ? { notation: 'scientific', maximumSignificantDigits: 6 }
+    : { maximumFractionDigits: digits });
+  const approximate = Number(shown.replace(/,/g, '')) !== number;
+  const label = (approximate ? '≈ ' : '') + shown;
+  const cell = el('td', 'backtest-trades-cell');
+  const detail = el('details', 'backtest-trade-value');
+  const summary = el('summary', 'backtest-trade-value-summary', label);
+  summary.title = '원값 ' + raw + ' ' + unit;
+  summary.setAttribute('aria-label', '표시 ' + (approximate ? '약 ' : '') + shown + ' ' + unit + ', 원값 ' + raw + ' ' + unit + '. 펼쳐서 원값 확인');
+  detail.appendChild(summary);
+  detail.appendChild(el('span', 'backtest-trade-raw', '원값 ' + raw + ' ' + unit));
+  cell.appendChild(detail);
+  return cell;
 }
 
 function backtestContextText(target, result) {
@@ -5333,9 +5348,14 @@ function createBacktestCanvas(options) {
 
   function renderStdout(text = (state.result && state.result.stdout) || restoredLog || '') {
     const wrap = el('div', 'backtest-stdout');
+    if (!text) {
+      wrap.classList.add('is-empty');
+      wrap.appendChild(el('div', 'backtest-stdout-empty', '코드 출력이 없습니다'));
+      return wrap;
+    }
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-card-title', '코드 출력'));
-    head.appendChild(el('div', 'backtest-card-note', 'print 그대로'));
+    head.appendChild(el('div', 'backtest-card-note', '실행 중 출력한 내용'));
     wrap.appendChild(head);
     wrap.appendChild(el('pre', 'backtest-stdout-text', text || '출력이 없습니다'));
     return wrap;
@@ -5348,6 +5368,7 @@ function createBacktestCanvas(options) {
     head.appendChild(el('div', 'backtest-trades-title', `체결 ${formatNumeric(trades.length)}건`));
     head.appendChild(el('div', 'backtest-card-note', '모의 수량은 소수 허용 · 수수료·세금 반영 후 손익'));
     wrap.appendChild(head);
+    if (trades.length) wrap.appendChild(el('div', 'backtest-trades-precision', '수량은 최대 소수 6자리, 금액은 최대 소수 2자리로 표시합니다. 더 작은 값은 지수 표기하며 반올림된 값은 ≈로 표시합니다. 숫자를 펼치면 원값을 볼 수 있습니다.'));
     if (!trades.length) {
       wrap.appendChild(el('div', 'backtest-trades-empty', '체결이 없습니다'));
       return wrap;
@@ -5362,12 +5383,12 @@ function createBacktestCanvas(options) {
       const row = el('tr', 'backtest-trades-row');
       row.appendChild(el('td', 'backtest-trades-cell', formatDatetime(trade.dt)));
       row.appendChild(el('td', `backtest-trades-cell is-${trade.side}`, SIDE_LABEL[trade.side] || trade.side));
-      row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(trade.price)));
-      row.appendChild(el('td', 'backtest-trades-cell', backtestQuantityText(trade.qty)));
+      row.appendChild(backtestTradeCell(trade.price, '원', 2));
+      row.appendChild(backtestTradeCell(trade.qty, '주', 6));
       // 비용은 수수료+세금이다 — 수수료만 보여주면 매도 거래세가 사라진 것처럼 읽힌다.
       const cost = (Number(trade.fee) || 0) + (Number(trade.tax) || 0);
-      row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(cost)));
-      row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(trade.pnl)));
+      row.appendChild(backtestTradeCell(cost, '원', 2));
+      row.appendChild(backtestTradeCell(trade.pnl, '원', 2));
       row.appendChild(el('td', 'backtest-trades-cell', REASON_LABEL[trade.reason] || trade.reason));
       table.appendChild(row);
     });
@@ -5383,7 +5404,7 @@ function createBacktestCanvas(options) {
       ? result.flags
       : (result.metrics && Array.isArray(result.metrics.flags) ? result.metrics.flags : []);
     if (flags.length) {
-      wrap.appendChild(el('div', 'backtest-assumptions-flags', `플래그 · ${flags.join(' · ')}`));
+      wrap.appendChild(el('div', 'backtest-assumptions-flags', `실행 참고 · ${flags.join(' · ')}`));
     }
     return wrap;
   }

@@ -7966,3 +7966,16 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
 #backtestCanvas :is(.backtest-user-strategy-path, .backtest-technique-desc, .backtest-technique-meta, .backtest-technique-foot, .backtest-field-label, .backtest-card-note, .backtest-symbol-hint, .backtest-metric-label, .backtest-metric-sub, .backtest-equity-note, .backtest-equity-axis, .backtest-equity-values) { font-size: 13px; line-height: 20px; color: var(--color-k-dim); }
 #backtestCanvas .backtest-symbol-hint { margin: 6px 0 12px; }
 #backtestCanvas .backtest-metric-sub { word-break: keep-all; overflow-wrap: normal; }
+
+/* Backtest result display precision and captions; calculations and received values are unchanged. */
+#backtestCanvas :is(.backtest-crumb, .backtest-crumb-sep, .backtest-head-folder-sub, .backtest-head-sub, .backtest-head-strategy, .backtest-head-version, .backtest-result-runpath, .backtest-stdout-text, .backtest-stdout-empty, .backtest-assumptions-title, .backtest-assumptions-text, .backtest-assumptions-flags, .backtest-trades-precision) { font-size: 13px; line-height: 20px; }
+#backtestCanvas :is(.backtest-crumb, .backtest-head-folder-sub, .backtest-head-sub, .backtest-head-strategy, .backtest-head-version, .backtest-result-runpath, .backtest-stdout-empty, .backtest-trades-precision) { color: var(--color-k-dim); }
+#backtestCanvas .backtest-crumbs { flex-wrap: wrap; }
+#backtestCanvas .backtest-head-folder-sub { white-space: normal; overflow-wrap: anywhere; }
+#backtestCanvas .backtest-stdout.is-empty { margin: 8px 0 16px; }
+#backtestCanvas .backtest-trades-precision { max-width: 80ch; margin-bottom: 10px; word-break: keep-all; }
+#backtestCanvas .backtest-trades-table { width: max-content; }
+#backtestCanvas .backtest-trades-cell { font-size: 13px; line-height: 20px; vertical-align: top; }
+#backtestCanvas .backtest-trade-value-summary { width: max-content; max-width: 100%; cursor: pointer; font-variant-numeric: tabular-nums; }
+#backtestCanvas .backtest-trade-value-summary:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; border-radius: 3px; }
+#backtestCanvas .backtest-trade-raw { display: block; max-width: 24ch; white-space: normal; overflow-wrap: anywhere; color: var(--color-k-dim); }
