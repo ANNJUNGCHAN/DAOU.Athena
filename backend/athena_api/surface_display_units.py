@@ -85,6 +85,25 @@ def _display(value: Any, unit: str, signed_tone: bool) -> Any:
     return result
 
 
+
+_PACKED_SECTOR_CHARTS = frozenset('base:' + tr for tr in
+    ('ka20004', 'ka20005', 'ka20006', 'ka20007', 'ka20008', 'ka20019'))
+_PACKED_SECTOR_PRICES = frozenset(('cur_prc', 'open_pric', 'high_pric', 'low_pric'))
+
+def sector_chart_index(operation: str, field: str, value: Any) -> Decimal | None:
+    """Only the documented packed OHLC index fields; never percent or volume."""
+    if operation not in _PACKED_SECTOR_CHARTS or field not in _PACKED_SECTOR_PRICES:
+        return None
+    raw = value.get('value') if isinstance(value, Mapping) else value
+    if raw is None or isinstance(raw, (bool, dict, list)):
+        return None
+    try:
+        number = Decimal(str(raw).strip().replace(',', ''))
+    except InvalidOperation:
+        return None
+    return abs(number) / 100 if number.is_finite() else None
+
+
 def annotate_surface_display_units(surface: dict[str, Any],
                                    arguments_by_operation: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
     """Keep raw values/observations intact; only wrap affected surface displays.
@@ -106,6 +125,13 @@ def annotate_surface_display_units(surface: dict[str, Any],
     for entry in surface.get('slot_values') or []:
         occurrence = str(entry.get('occurrence_id', '')).split('|')
         field_name = occurrence[1].rsplit('.', 1)[-1] if len(occurrence) > 1 else ''
+        if surface.get('board_id') == '32S7-0':
+            number = sector_chart_index(occurrence[0], field_name, entry.get('value'))
+            if number is not None:
+                raw = entry['value'].get('value') if isinstance(entry['value'], Mapping) else entry['value']
+                values.append({**entry, 'value': {'value': raw, 'text': format(number, ',.2f'),
+                                                'display_unit': '지수', 'tone': 'flat'}})
+                continue
         if surface.get('board_id') == '31CL-0' and occurrence[0] == 'base:ka10062':
             if field_name in {'for_nettrde_avg_pric', 'orgn_nettrde_avg_pric'}:
                 wrapped = _display(entry.get('value'), '', False)

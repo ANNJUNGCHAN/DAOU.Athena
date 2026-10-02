@@ -185,6 +185,7 @@ function rendererOptions(body, context) {
     symbol: meta.stock || meta.symbol || 'UNKNOWN',
     name: meta.name,
     trId: body.trId,
+    target: body.target,
     ohlcv: body.candles,
     initial: {
       period: initialPeriod,

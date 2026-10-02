@@ -1365,3 +1365,39 @@
 .bs-flow-rank-five .bs-flow-five-summary-row > [data-slot-id]:last-child{text-align:right}
 .board-surface[data-bs-board-id="2ZTA-0"] [data-node="38MX-0"] .bs-readable-cell[data-col="6"],.board-surface[data-bs-board-id="30TY-0"] [data-node="362Z-0"] .bs-readable-cell[data-col="7"]{display:none!important}
 @container board (max-width:600px){.bs-flow-rank-five .bs-workspace{grid-template-columns:minmax(0,1fr)!important;flex-direction:column!important}.bs-flow-rank-five :is(.bs-primary,.bs-rail){width:100%!important;max-width:100%!important;flex-basis:auto!important}.bs-flow-rank-five .bs-flow-five-mini-row{grid-template-columns:minmax(0,1fr);gap:3px}.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]:last-child{text-align:left}}
+
+/* Exact industry list and chart received-state layout. */
+.bs-sector-hidden { display:none!important; }
+.bs-sector-note { color:var(--color-k-dim);font:12px/1.6 var(--font-body);padding:12px 0;white-space:normal;overflow-wrap:anywhere; }
+.bs-sector-compact { height:auto!important;min-height:0!important;flex:0 0 auto!important; }
+.bs-sector-label { color:var(--color-k-dim);font:10px/1.4 var(--font-body);white-space:nowrap; }
+.bs-sector-labelled { height:auto!important;line-height:1.5!important;white-space:normal!important;overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail { overflow-x:auto!important;min-width:0!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail-row { display:grid!important;grid-template-columns:140px 150px 110px 160px 100px;min-width:660px!important;width:100%!important;align-items:center!important;gap:0!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail-cell { display:flex!important;min-width:0!important;width:auto!important;max-width:none!important;flex-direction:column!important;align-items:flex-end;justify-content:center;min-height:32px!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail-cell:first-child { align-items:flex-start; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-time { display:block!important;min-height:16px!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-rail { width:100%!important;min-width:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"] [data-node="3PSD-0"] { width:100%!important;min-width:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"] [data-node="3PSD-0"] > * { width:100%!important;min-width:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"].bs-sector-list-empty { height:auto!important;min-height:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"].bs-sector-list-empty .bs-workspace { height:auto!important;min-height:0!important;flex:0 0 auto!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-strip,
+.board-surface[data-bs-board-id="3BQB-0"] .bs-strip { height:auto!important;min-height:0!important;padding-block:12px!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-program-row { display:grid!important;grid-template-columns:44px repeat(3,minmax(0,1fr));gap:8px!important;height:auto!important;min-height:32px!important;width:100%!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-program-row > * { width:auto!important;min-width:0!important;height:auto!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-program-row [data-slot-id] { width:auto!important;min-width:0!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere; }
+
+.board-surface[data-bs-board-id="2TZN-1"] .bs-workspace { display:grid!important;grid-template-columns:minmax(0,1fr);width:100%!important;min-width:0!important;align-items:start; }
+.board-surface[data-bs-board-id="2TZN-1"] :is(.bs-primary,.bs-rail) { width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box; }
+@container board (min-width:1100px) { .board-surface[data-bs-board-id="2TZN-1"] .bs-workspace { grid-template-columns:minmax(0,1fr) 360px; } }
+.board-surface:is([data-bs-board-id="2TZN-1"],[data-bs-board-id="3BQB-0"],[data-bs-board-id="32S7-0"]) .bs-sector-compact > :not(.bs-sector-note) { display:none!important; }
+
+.board-surface[data-bs-board-id="32S7-0"] .bs-workspace {display:grid!important;grid-template-columns:minmax(0,1fr);width:100%!important;min-width:0!important;align-items:start}
+.board-surface[data-bs-board-id="32S7-0"] :is(.bs-primary,.bs-rail,.chart-card-body,.chart-price-pane) {width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box}
+@container board (min-width:1100px){.board-surface[data-bs-board-id="32S7-0"] .bs-workspace {grid-template-columns:minmax(0,1fr) 360px}}
+
+/* Industry chart summary values keep their full text inside each KPI cell. */
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] { display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));height:auto!important;min-height:0!important;align-items:start; }
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > .bs-kpi-cell { width:auto!important;min-width:0!important;max-width:100%;height:auto!important;min-height:0!important;box-sizing:border-box; }
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > .bs-kpi-cell > [data-slot-id] { width:100%!important;max-width:100%;height:auto!important;min-height:0!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.4!important; }

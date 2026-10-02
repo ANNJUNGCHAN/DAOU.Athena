@@ -9,6 +9,19 @@ const { formatSlot } = require('./board-format');
 const source = id => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
 const text = (id, values, slot) => mountPlan(registry.contractFor(id), values).assignments.find(x => x.slotId === slot)?.text;
 
+test('sector detail captions preserve raw units, wrapped zero and low-date meaning', () => {
+  assert.equal(text('2TZN-1', {s033:0}, 's033'), '거래량 0천주');
+  assert.equal(text('2TZN-1', {s106:12}, 's106'), '12천주');
+  assert.equal(text('2TZN-1', {s157:'20260202'}, 's157'), '52주 최저가일 2026-02-02');
+  for (const shown of ['0천주', '누적 0천주']) {
+    const value = {value:0,text:shown,display_unit:'천주'};
+    assert.equal(text('2TZN-1', {s107:value}, 's107'), '누적 0천주');
+    assert.equal(value.text, shown);
+  }
+  assert.equal(text('32S7-0', {s024:{value:0,text:'0주'}}, 's024'), '이전 일봉 거래량 0주');
+  assert.equal(text('32S7-0', {}, 's056'), '조회 연봉 저가 · 고가');
+});
+
 test('five flow rankings retain labels without replacing received conditional units', () => {
   for (const board of ['2YS8-0','2ZBB-0','2ZTA-0','30TY-0','31CL-0']) {
     for (const slot of source(board).slots.filter(s => s.mapping_id && s.format?.prefix)) {

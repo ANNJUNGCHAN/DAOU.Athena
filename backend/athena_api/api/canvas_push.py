@@ -1042,6 +1042,7 @@ class BoardHydrateRequest(BaseModel):
     # 클라이언트 호환을 위해 모든 값 바인딩 슬롯을 뜻한다.
     slot_ids: list[str] | None = Field(default=None, max_length=512)
     ranking_operation_ref: str | None = Field(default=None, min_length=1, max_length=64)
+    chart_operation_ref: str | None = Field(default=None, min_length=1, max_length=64)
 
 
 def _hydrate_operation_refs(board: Any, slot_ids: list[str] | None) -> tuple[str, ...]:
@@ -1424,6 +1425,10 @@ async def internal_canvas_board_hydrate(
     if data_client is None or not data_client.is_ready:
         raise KiwoomNotReadyError("Kiwoom data service is not ready")
 
+    if payload.chart_operation_ref is not None:
+        allowed = {source.get('mapping_id') for source in ((board.primary or {}).get('props_from') or ())}
+        if board.board_id != '32S7-0' or payload.chart_operation_ref not in allowed:
+            raise HTTPException(status_code=422, detail='unsupported sector chart operation')
     operations: list[dict[str, Any]] = []
     bound: dict[str, Any] = {}
     # 한 실제 TR은 detail group이 여러 개여도 요청 인자와 upstream 응답이 같다.
@@ -1440,6 +1445,8 @@ async def internal_canvas_board_hydrate(
         EXPANDED_BOARD, build_ranking_result, is_expanded_ranking_operation,
     )
     active_operation_refs: tuple[str, ...] = ()
+    if board.board_id == '32S7-0' and payload.chart_operation_ref:
+        active_operation_refs = (payload.chart_operation_ref,)
     if payload.ranking_operation_ref is not None and board.board_id == EXPANDED_BOARD:
         if not is_expanded_ranking_operation(payload.ranking_operation_ref):
             raise HTTPException(status_code=422, detail="unsupported expanded ranking operation")
@@ -1574,6 +1581,8 @@ async def internal_canvas_board_hydrate(
     if primary.get("renderer") == "athena-chart":
         for source in primary.get("props_from") or ():
             operation_ref = source.get("mapping_id") if isinstance(source, Mapping) else None
+            if board.board_id == '32S7-0' and payload.chart_operation_ref and operation_ref != payload.chart_operation_ref:
+                continue
             hydrated = (
                 hydrated_results.get(operation_ref) if isinstance(operation_ref, str) else None
             )
@@ -1584,7 +1593,7 @@ async def internal_canvas_board_hydrate(
                 operation_ref,
                 {
                     "data": result.model_dump(by_alias=True),
-                    "canvas_context": {"symbol": payload.target.get("stk_cd")},
+                    "canvas_context": {"symbol": arguments.model_dump(by_alias=True).get("inds_cd") if board.board_id == "32S7-0" else payload.target.get("stk_cd")},
                 },
             )
             if isinstance(built, str):

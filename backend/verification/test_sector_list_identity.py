@@ -4,6 +4,30 @@ from athena_api.card_surface_contract import bind_surface_values, build_board_su
 from athena_api.card_surface_templates import get_registry
 
 
+def test_sector_index_rows_keep_names_prices_and_zero_from_the_same_response():
+    own = {'all_inds_idex': [dict(stk_nm='합성 지수', stk_cd='001', cur_prc='2721.27', pred_pre='0', trde_qty='0')]}
+    foreign = {'list': [dict(name='다른 목록', code='101')]}
+    bound = bind_surface_values('base:ka20003', own)
+    bound.update(bind_surface_values('base:ka10101', foreign))
+    bound.update(bind_surface_values('base:0J', {'data': [{'type': '0J', 'item': '101', '10': '999999', '13': '999'}]}))
+    contract = build_board_surface_contract('2TZN-1', bound)
+    values = {s['slot_id']: s['value'] for s in contract['slot_values']}
+    assert (values['s026'], values['s027'], values['s029'], values['s030'], values['s033']) == ('합성 지수', '001', '2721.27', '0', '0')
+    no_own = build_board_surface_contract('2TZN-1', bind_surface_values('base:ka10101', foreign))
+    assert not {'s026', 's027', 's029'} & {s['slot_id'] for s in no_own['slot_values']}
+
+
+def test_sector_low_date_and_daily_chart_rows_keep_their_actual_field_and_row():
+    source = {'52wk_hgst_pric_dt': '20260101', '52wk_lwst_pric_dt': '20260202'}
+    low = build_board_surface_contract('2TZN-1', bind_surface_values('detail:ka20001:fifty_two_week_range', source))
+    assert next(s for s in low['slot_values'] if s['slot_id'] == 's157')['value'] == '20260202'
+    bars = {'inds_dt_pole_qry': [dict(dt=f'2026100{3-i}', cur_prc=str(272127-i)) for i in range(3)]}
+    daily = build_board_surface_contract('32S7-0', bind_surface_values('base:ka20006', bars), active_operation_refs=['base:ka20006'])
+    values = {s['slot_id']: s['value'] for s in daily['slot_values']}
+    assert [values[s] for s in ['s062', 's064', 's066']] == ['20261003', '20261002', '20261001']
+    assert [values[s] for s in ['s063', 's065', 's067']] == ['272127', '272126', '272125']
+
+
 def _project(rows):
     bound = bind_surface_values('base:ka10101', {'list': rows})
     contract = build_board_surface_contract('3BQB-0', bound, active_operation_refs=['base:ka10101'])

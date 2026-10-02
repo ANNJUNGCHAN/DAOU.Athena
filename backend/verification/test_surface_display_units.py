@@ -8,6 +8,34 @@ from athena_api.semantic_presentation_registry import get_semantic_presentation_
 from athena_api.surface_display_units import annotate_surface_display_units
 
 
+@pytest.mark.parametrize('operation', ['ka20004', 'ka20005', 'ka20006', 'ka20007', 'ka20008', 'ka20019'])
+def test_sector_chart_prices_use_documented_packed_units_without_scaling_other_fields(operation):
+    from decimal import Decimal
+    from athena_api.surface_display_units import sector_chart_index
+    op = 'base:' + operation
+    for field in ['cur_prc', 'open_pric', 'high_pric', 'low_pric']:
+        assert sector_chart_index(op, field, '-272127') == Decimal('2721.27')
+        assert sector_chart_index(op, field, {'value': 0, 'text': 'stale'}) == 0
+    for field in ['pred_pre', 'flu_rt', 'trde_qty', 'trde_prica', 'dt']:
+        assert sector_chart_index(op, field, '272127') is None
+    for value in [None, True, '', 'NaN', 'Infinity', {'value': None, 'text': '2721.27'}]:
+        assert sector_chart_index(op, 'cur_prc', value) is None
+
+
+def test_sector_slot_annotation_preserves_raw_observation_and_unrelated_decimal_sources():
+    from athena_api.surface_display_units import sector_chart_index
+    occurrence = 'base:ka20006|$.inds_dt_pole_qry[].cur_prc|1'
+    entry = {'slot_id': 's004', 'value': '-272127', 'observation_id': 'obs_public', 'occurrence_id': occurrence}
+    source = {'board_id': '32S7-0', 'slot_values': [entry]}
+    result = annotate_surface_display_units(source, {'base:ka20006': {}})
+    assert result['slot_values'][0]['value'] == {'value': '-272127', 'text': '2,721.27', 'display_unit': '지수', 'tone': 'flat'}
+    assert result['slot_values'][0]['occurrence_id'] == occurrence
+    assert result['slot_values'][0]['observation_id'] == 'obs_public'
+    assert source['slot_values'][0]['value'] == '-272127'
+    for op in ['base:ka20003', 'base:0J', 'base:ka10081']:
+        assert sector_chart_index(op, 'cur_prc', '2721.27') is None
+
+
 def flow_surface():
     # Public occurrence identities, independent of a particular card's row layout.
     return {'slot_values': [

@@ -224,6 +224,7 @@ function initialVisibleLogicalRange(bars, visibleFrom) {
 // ChartTickDelta의 진행봉 경로이며 현재 줌·팬 viewport를 보존한다.
 async function createChartCard(container, opts) {
   const o = opts || {};
+  const priceFormat = o.target === 'sector' ? DECIMAL_PRICE_FORMAT : PRICE_FORMAT;
   const loaded = await __loadChartLibrary();
   if (typeof o.onChartLibraryReady === 'function') o.onChartLibraryReady(loaded.readyAt);
   const { createChart, CandlestickSeries, BarSeries, LineSeries, AreaSeries, HistogramSeries, CrosshairMode, LineStyle } =
@@ -382,11 +383,11 @@ async function createChartCard(container, opts) {
         wickUpColor: UP_COLOR,
         wickDownColor: DOWN_COLOR,
         borderVisible: true,
-        priceFormat: PRICE_FORMAT,
+        priceFormat,
       }, 0);
     } else if (form === 'bar') {
       // 바 = 등락색(§2 표) — 캔들과 같은 UP/DOWN을 그대로 쓴다.
-      next = chart.addSeries(def, { upColor: UP_COLOR, downColor: DOWN_COLOR, priceFormat: PRICE_FORMAT }, 0);
+      next = chart.addSeries(def, { upColor: UP_COLOR, downColor: DOWN_COLOR, priceFormat }, 0);
     } else {
       // 라인·영역 = 중립 네이비(§2 표) — 등락색 재사용 금지, NAVY_COLOR 고정.
       next = chart.addSeries(def, {
@@ -394,7 +395,7 @@ async function createChartCard(container, opts) {
         lineColor: NAVY_COLOR,
         topColor: withAlpha(NAVY_COLOR, 0.3),
         bottomColor: withAlpha(NAVY_COLOR, 0),
-        priceFormat: PRICE_FORMAT,
+        priceFormat,
       }, 0);
     }
     if (priceSeries) chart.removeSeries(priceSeries); // 새 시리즈가 이미 pane 0을 차지한 뒤 지운다 — pane 0이 비는 순간이 없다.
@@ -459,7 +460,7 @@ async function createChartCard(container, opts) {
     LineSeries,
     HistogramSeries,
     LineStyle,
-    priceFormat: PRICE_FORMAT,
+    priceFormat,
     decimalFormat: DECIMAL_PRICE_FORMAT,
     volumePaneIndex: 1,
     ownPaneHeight: 90,

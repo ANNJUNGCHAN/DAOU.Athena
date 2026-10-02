@@ -15,9 +15,9 @@
     960
   ],
   "operation_refs": [
+    "base:ka20006",
     "base:ka20004",
     "base:ka20005",
-    "base:ka20006",
     "base:ka20007",
     "base:ka20008",
     "base:ka20019"
@@ -394,7 +394,8 @@
           "kor": "현재가",
           "period": "년"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s005",
@@ -447,7 +448,8 @@
           "kor": "전일대비 기호",
           "period": "분"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s006",
@@ -481,7 +483,8 @@
           "kor": "체결시간",
           "period": "분"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s007",
@@ -791,7 +794,8 @@
           "kor": "시가",
           "period": "년"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s016",
@@ -872,7 +876,8 @@
           "kor": "거래대금",
           "period": "년"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s018",
@@ -901,7 +906,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "직전 봉(전일)의 거래대금"
+      "note": "직전 봉(전일)의 거래대금",
+      "row_index": 1
     },
     {
       "slot_id": "s019",
@@ -1090,7 +1096,8 @@
           "kor": "누적거래량",
           "period": "분"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s024",
@@ -1118,7 +1125,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "직전 봉(전일)의 거래량"
+      "note": "직전 봉(전일)의 거래량",
+      "row_index": 1
     },
     {
       "slot_id": "s025",
@@ -1515,7 +1523,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "차트 시세 표기 — 주기 6종(틱·분·일·주·월·년) 캔들 배열이 같은 자리를 나눠 쓴다"
+      "note": "차트 시세 표기 — 주기 6종(틱·분·일·주·월·년) 캔들 배열이 같은 자리를 나눠 쓴다",
+      "row_index": 0
     },
     {
       "slot_id": "s042",
@@ -1542,7 +1551,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s043",
@@ -1928,7 +1938,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "년봉(ka20019) 저가 = 52주 최저"
+      "note": "년봉(ka20019) 저가 = 52주 최저",
+      "row_index": 0
     },
     {
       "slot_id": "s058",
@@ -1956,7 +1967,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "년봉(ka20019) 고가 = 52주 최고"
+      "note": "년봉(ka20019) 고가 = 52주 최고",
+      "row_index": 0
     },
     {
       "slot_id": "s059",
@@ -2005,7 +2017,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s061",
@@ -2085,7 +2098,8 @@
           "kor": "일자",
           "period": "년"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s063",
@@ -2113,7 +2127,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s064",
@@ -2140,7 +2155,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s065",
@@ -2168,7 +2184,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s066",
@@ -2195,7 +2212,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s067",
@@ -2223,7 +2241,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s068",
@@ -2313,7 +2332,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     }
   ],
   "unbound_fields": [

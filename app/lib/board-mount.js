@@ -215,6 +215,11 @@ function mountPlan(contract, values, options = {}) {
   const pending = pendingSet(options);
   const deferred = new Set(options.deferredValueSlots || []);
   const answeredEmpty = new Set(options.emptyValueSlots || []);
+  if(contract.board_id==='32S7-0') {
+    const selected=options.identity||{name:'업종 이름 미제공',code:''};
+    contract={...contract,slots:contract.slots.map(s=>['s001','s002'].includes(s.slot_id)?{...s,kind:'value',static:null,format:{kind:'text'}}:s)};
+    values={...values,s001:selected.name||'업종 이름 미제공',s002:selected.code||null};
+  }
   const identity = options.identity;
   const orderbook = identityCardId(contract) === 'CC-04';
   const identitySlots = new Set();
@@ -237,7 +242,7 @@ function mountPlan(contract, values, options = {}) {
       identitySlots.add('s001');
     }
     if (identity.code && stampIdentity(codeSlot)) {
-      values[codeSlot.slot_id] = ['15N5-2', '2QFO-2', '2QM7-2', '2ROJ-1', '2RWK-1', '2S4E-1'].includes(contract.board_id)
+      values[codeSlot.slot_id] = ['32S7-0', '15N5-2', '2QFO-2', '2QM7-2', '2ROJ-1', '2RWK-1', '2S4E-1'].includes(contract.board_id)
         ? { value: identity.code, text: identity.code } : identity.code;
       identitySlots.add(codeSlot.slot_id);
     }
@@ -689,6 +694,79 @@ function hideUnavailableUnits(surface) {
 }
 
 // 수급·예상체결의 빈 응답도 항목명과 상태를 함께 남긴다.
+function sectorChangeCaption(occurrence) {
+ const source = String(occurrence || '');
+ if (/^base:ka20004\|\$\.inds_tic_chart_qry\[\]\.pred_pre\|[1-9]\d*$/.test(source)) return '틱 응답 전일대비 · 단위 확인 필요';
+ if (/^base:ka20005\|\$\.inds_min_pole_qry\[\]\.pred_pre\|[1-9]\d*$/.test(source)) return '분봉 응답 전일대비 · 단위 확인 필요';
+ return '전일대비 · 원천·단위 확인 필요';
+}
+// 업종의 실제 수신 상태에 맞춰 상세 영역과 원천 문구를 갱신한다.
+function updateSectorDetails(root, plan, options = {}) {
+ const id=root.dataset?.bsBoardId;if(!['2TZN-1','3BQB-0','32S7-0'].includes(id))return;
+ const states=root.__bsSectorStates||(root.__bsSectorStates=new Map());for(const item of plan.assignments)states.set(item.slotId,item);
+ if(!options.partial)root.__bsSectorOptions=options;else options={...root.__bsSectorOptions,...options};
+ const node=n=>root.querySelector('[data-node="'+n+'"]');
+ const leaf=s=>[...root.querySelectorAll('[data-slot-id="'+s+'"]')].find(x=>!x.children.length);
+ const received=s=>{const item=states.get(s);return !!item&&item.valueSlot&&!item.missing&&!item.empty&&!item.pending;};
+ const hide=(el,yes)=>el?.classList.toggle('bs-sector-hidden',yes);
+ const text=(sid,str)=>{const el=leaf(sid);if(el)el.textContent=str;};
+ const note=(owner,label,empty)=>{if(!owner)return;
+  for(let box=owner;box&&box!==root;box=box.parentElement){if(box.dataset.bsRowCollapsed==='true'||box.dataset.bsUnavailableHidden==='true'||root.__bsEmptyValueHidden?.has(box)){setHidden(box,false);delete box.dataset.bsRowCollapsed;delete box.dataset.bsUnavailableHidden;root.__bsEmptyValueHidden?.delete(box);}if(box.matches('.bs-primary,.bs-rail'))break;}let n=owner.querySelector(':scope > .bs-sector-note');if(!n){n=document.createElement('div');n.className='bs-sector-note';n.setAttribute('role','status');owner.append(n)}n.textContent=label;hide(n,!empty);owner.classList.toggle('bs-sector-compact',empty);};
+ const compact=(nid,slots,label)=>{const owner=node(nid);if(!owner)return;const empty=!slots.some(received);for(const child of owner.children)if(!child.classList.contains('bs-sector-note'))hide(child,empty);note(owner,label,empty);return empty;};
+ const label=(sid,caption)=>{const el=leaf(sid);if(!el)return;if(received(sid)&&!el.textContent.startsWith(caption+' '))el.textContent=caption+' '+el.textContent;el.classList.add('bs-sector-labelled');};
+ const slots=(a,b)=>Array.from({length:b-a+1},(_,i)=>'s'+String(a+i).padStart(3,'0'));
+ if(['2TZN-1','3BQB-0'].includes(id)){
+  hide(leaf('s002')?.parentElement,!received('s002'));
+  for(const s of ['s010','s011','s012','s015','s016','s017','s018']){const e=leaf(s);if(e)hide(s==='s010'?e:e.parentElement,true)}
+ }
+ if(id==='2TZN-1'){
+  for(let r=0;r<6;r++)for(const offset of [30,33,34,35])leaf('s'+String(offset+r*11).padStart(3,'0'))?.classList.add('bs-sector-labelled');
+  for(let r=0;r<3;r++)for(const offset of [104,107,126,129])leaf('s'+String(offset+r*7).padStart(3,'0'))?.classList.add('bs-sector-labelled');
+  const pill=node('2U2O-1');pill.dataset.stateControl='업종 목록 펼침';pill.setAttribute('aria-label','전체 업종 목록 펼침');node('3BQ9-0')?.removeAttribute('data-state-control');
+  const table=node('2U3G-1');
+  for(const col of [1,6]){const ids=Array.from({length:6},(_,r)=>'s'+String((col===1?28:36)+r*11).padStart(3,'0'));const empty=!ids.some(received);for(const e of table.querySelectorAll('[data-col="'+col+'"]'))hide(e,empty)}
+  const widths=[220,120,160,140,200,155,140];const header=table.querySelector('[data-row="head"]');
+  if(header){const width=[...header.querySelectorAll('[data-col]')].reduce((sum,e)=>sum+(e.classList.contains('bs-sector-hidden')?0:widths[Number(e.dataset.col)]||0),0);table.querySelector('.bs-readable-table')?.style.setProperty('--bs-table-width',width+'px');}
+  const detail=node('345C-0');detail.classList.add('bs-sector-detail');
+  for(const rid of ['345G-0','345N-0','345X-0','3467-0','346J-0','346T-0','3473-0']){
+   const row=node(rid);row.classList.add('bs-sector-detail-row');
+   for(const child of row.children){child.hidden=false;child.classList.add('bs-sector-detail-cell')}
+  }
+  // Blank time remains an empty cell; no fabricated time is supplied.
+  for(const s of ['s102','s109','s116','s124','s131','s138'])leaf(s)?.classList.add('bs-sector-time');
+  const sector=options.identity;
+  text('s145',sector?.code?(sector.name||'업종 '+sector.code)+' · 조회 업종':'조회 업종 · 이름 미제공');
+  compact('34F9-0',slots(213,218),'주도 종목 정보가 제공되지 않았습니다.');
+  for(const rowId of ['34CX-0','34D2-0','34DD-0','34DO-0']){const row=node(rowId);row.classList.add('bs-sector-program-row');for(const wrapper of row.querySelectorAll(':scope > .bs-col'))wrapper.replaceWith(...wrapper.childNodes);}
+  compact('34CV-0',[166,167,168,169,170,171,173,174,175,176,177,178,180,181,182,183,184,185].map(n=>'s'+n),'프로그램 매매 정보가 제공되지 않았습니다.');
+  node('2U4R-1')?.classList.add('bs-sector-rail');
+ }
+ if(id==='3BQB-0'){
+  const actual=[...states.keys()].some(sid=>/^s0(2[4-9]|[3-6]\d|70)$/.test(sid)&&received(sid));
+  const body=node('3PSD-0');for(const child of body.children)if(!child.classList.contains('bs-sector-note'))hide(child,!actual);
+  root.classList.toggle('bs-sector-list-empty',!actual);
+  const pending=options.loadStatus==='pending'||(!options.loadStatus&&[...states].some(([sid,item])=>/^s0(2[4-9]|[3-6]\d|70)$/.test(sid)&&item.valueSlot&&item.pending));
+  note(body,options.loadStatus==='failed'?'업종 목록을 불러오지 못했습니다. 위의 다시 시도로 재조회할 수 있습니다.':pending?'업종 목록을 불러오는 중입니다.':'조회된 업종 목록이 없습니다.',!actual);
+ }
+ if(id==='32S7-0'){
+  for(const sid of ['s018','s024'])leaf(sid)?.classList.add('bs-sector-labelled');
+  text('s001',options.identity?.name||'업종 이름 미제공');
+  const change = leaf('s005');
+  const occurrence = options.sectorChangeOccurrence;
+  const caption = sectorChangeCaption(occurrence);
+  if (change) {
+   const previous = change.dataset.sectorChangeCaption;
+   if (previous && change.textContent.startsWith(previous + ' ')) change.textContent = change.textContent.slice(previous.length + 1);
+   change.dataset.sectorChangeCaption = caption;
+  }
+  label('s005', caption);
+  for(const n of ['32WL-0','32WD-0','32T6-0'])hide(node(n),true);
+  for(const s of ['s003','s049'])hide(leaf(s)?.parentElement,true);
+  compact('32SK-0',['s062','s063','s064','s065','s066','s067'],'일별 업종 지수가 제공되지 않았습니다.');
+ }
+ return {received,leaf,node};
+};
+
 function updateInstrumentResidualDetails(surface, plan) {
   const id = surface.dataset?.bsBoardId;
   const slots = { '137X-2': ['s070', 's072', 's075'], '15N5-2': ['s043', 's044', 's047'], '2RBO-1': ['s064'],
@@ -1207,6 +1285,7 @@ function applyPlan(root, plan, options = {}) {
   updateCurrentQuoteDetails(root, plan);
   updateOrderbookKpi(root, options);
   updateOrderbookDetails(root, plan);
+  updateSectorDetails(root, plan, options);
   if (options.partial) {
     return { unbound, unmapped: [], containers, collapsedRows, collapsedColumns };
   }
@@ -3403,6 +3482,15 @@ function nameFromBoundValues(values) {
   return '';
 }
 
+function sectorIdentityFromEnvelope(envelope = {}) {
+ const args=envelope.operation_args||envelope.operationArgs||{}, op=envelope.operation_ref||envelope.operationRef||'';
+ if(!/^base:ka200(?:0[1-9]|19)$/.test(op)&&!/^detail:ka20001:/.test(op))return {name:'업종 이름 미제공',code:''};
+ const requested=String(args.inds_cd||'').trim(), actual=String(envelope.data?.symbol||'').trim();
+ if(!/^\d{3}$/.test(requested)||(actual&&actual!==requested))return {name:'업종 이름 미제공',code:''};
+ const known={'001':'KOSPI 종합','101':'KOSDAQ 종합'};
+ return {code:requested,name:known[requested]||'업종 '+requested};
+}
+
 function boardIdentityFromEnvelope(envelope = {}, values = null) {
   const stringValue = (value) => typeof value === 'string' ? value.trim() : '';
   const args = envelope.operation_args || envelope.arguments || {};
@@ -3615,7 +3703,7 @@ const __exports = {
   primaryMountPoint, collapsePrimaryMockup, restorePrimaryMockup, mountBoard, mountBoardAsync,
   markPrimaryRows,
   inapplicableBasketRows,
-  boardIdentityFromEnvelope,
+  sectorIdentityFromEnvelope, boardIdentityFromEnvelope,
   createLatestBoardLoad, nextHydrationSlots,
   RAW_IDENTITY_NAME, scrubRawIdentityNames,
   slotValueEntries, observationIdsOfSlotEntry, realtimeSlotIndex, updateRealtimeValue,

@@ -110,7 +110,7 @@ test('verified industry fields use their own units and the caption describes tha
   assert.equal(text(result, 's152'), '777개');
   assert.equal(text(result, 's154'), '4,100.50');
   assert.equal(text(result, 's156'), '2,100.25');
-  assert.equal(text(result, 's157'), '52주 최고가일 2026-03-17');
+  assert.equal(text(result, 's157'), '52주 최저가일 2026-03-17');
   for (const id of ['s213', 's215', 's217']) assert.equal(text(result, id), '—');
   const settlement = plan('2SKU-1', {}, { emptyValueSlots: ['s047', 's054', 's061'] });
   // The day labels stay meaningful independently of a missing settlement date.

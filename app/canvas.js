@@ -1231,7 +1231,7 @@ function activateBoardState(state, boardId) {
 function boardMountOptions(host, envelope) {
   const state = boardStateOf(host);
   const target = boardHydrateTarget(envelope, host);
-  const identity = state.boardId === '15N5-2' && state.etfDetailIdentity
+  const identity = ['32S7-0','2TZN-1'].includes(state.boardId) ? boardMount.sectorIdentityFromEnvelope(envelope) : state.boardId === '15N5-2' && state.etfDetailIdentity
     || state.boardId === '2WZK-0' && state.etfReturnIdentity
     || boardMount.boardIdentityFromEnvelope(envelope, state.values);
   const flowBoard = ['2QFO-2','2QM7-2','2ROJ-1','2RWK-1','2S4E-1'].includes(state.boardId);
@@ -1239,6 +1239,9 @@ function boardMountOptions(host, envelope) {
     identity: flowBoard ? boardFlowLayout.identityFor(state.boardId, envelope, state.values, identity) : identity,
     operationRef: String((envelope && (envelope.operation_ref || envelope.operationRef)) || '').trim(),
     operationArgs: target,
+    sectorChangeOccurrence: state.boardId === '32S7-0'
+      && state.sectorChangeSourceKey === [envelope.operation_ref || envelope.operationRef || '', target.inds_cd || ''].join('|')
+      ? state.sectorChangeOccurrence : '',
     flowQueryContext: state.boardId === '2QFO-2' && state.flowQueryContextByBoard?.has(state.boardId) ? boardFlowLayout.queryContextFor({
       board_id: state.boardId, flow_query_context: state.flowQueryContextByBoard?.get(state.boardId),
     }, target.stk_cd) : undefined,
@@ -2187,6 +2190,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     reply = await window.athena.invoke('athena:canvas-board-hydrate', {
       boardId,
       slotIds: pending,
+      chartOperationRef: boardId==='32S7-0' ? envelope.operation_ref : undefined,
       rankingOperationRef: boardId === '4B22-1' ? expandedRankingOperation(state)
         : boardId === '13K0-2' ? selectedRankingRailSource(state) : undefined,
       target: boardHydrateTarget(envelope, host),
@@ -2226,6 +2230,14 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   // 갱신하며, 옛 응답이 메타를 생략한 경우에는 기존 상태를 유지한다.
   const contract = reply.surface_contract;
   let metadataReceived = false;
+  if (boardId === '32S7-0' && (!contract?.board_id || String(contract.board_id) === boardId)) {
+      const change = Array.isArray(contract?.slot_values) ? contract.slot_values.find(item => item.slot_id === 's005') : null;
+      if (change || pending.includes('s005') || Object.prototype.hasOwnProperty.call(filled, 's005')) {
+        state.sectorChangeOccurrence = typeof change?.occurrence_id === 'string' ? change.occurrence_id : '';
+        state.sectorChangeSourceKey = [envelope.operation_ref || envelope.operationRef || '', boardHydrateTarget(envelope, host).inds_cd || ''].join('|');
+        metadataReceived = true;
+      }
+    }
   if (contract && (!contract.board_id || String(contract.board_id) === boardId)) {
     if (boardId === '13K0-2' && rankingRailRows(contract)) metadataReceived = true;
     if (boardId === '2QFO-2' && Object.prototype.hasOwnProperty.call(contract, 'flow_query_context')) {
@@ -3383,6 +3395,7 @@ function describeAitsChartPanel(data, envelope, source) {
     const panelId = panelIdFor(context);
     const active = aitsChartPanels.snapshot().find((session) => session.panelId === panelId);
     const generation = active ? active.generation + 1 : 1;
+    if(snapshot.body.target==='sector')context.name=boardMount.sectorIdentityFromEnvelope(chartEnvelope).name;
     context.operationRef = chartEnvelope.operation_ref || chartEnvelope.operationRef;
     context.operationArgs = chartEnvelope.operation_args || chartEnvelope.operationArgs;
     // 분·틱 탭을 열 근거는 "이 패널의 reload 계약에 min·tick TR이 있는가" 하나다
