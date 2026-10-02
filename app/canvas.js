@@ -1513,7 +1513,7 @@ function mountBoardState(host, boardId, envelope, isCurrent = () => true) {
 
 // Ignored feasibility candidate: keep the actual parent surface and query state.
 // Reuse only the authored menu, never its specimen volume table or slot values.
-function openParentRankingMenu(surface, filterBoardId, {registry, mount, popover, controls, onSelection, onClose, unavailableReason}) {
+function openParentRankingMenu(surface, filterBoardId, {registry, mount, popover, controls, onSelection, onClose, unavailableReason, criteria}) {
   const spec=popover.MENUS[filterBoardId];
   if(!spec)throw new Error('unsupported ranking filter');
   const previousMenu=surface.querySelector('.bs-parent-ranking-menu');
@@ -1522,7 +1522,7 @@ function openParentRankingMenu(surface, filterBoardId, {registry, mount, popover
   const menu=holder.content.querySelector('[data-node="'+spec[0]+'"]');
   if(!menu)throw new Error('authored filter menu missing');
   const triggerText=({'4A9H-1':'KOSPI','4AGN-1':'등락 전체','4ANS-1':'시가총액 전체','4AUX-1':'유동성 정상'})[filterBoardId];
-  const trigger=surface.querySelector('[data-state-control="'+triggerText+'"]')||mount.findStateControlNode(surface,triggerText);
+  const trigger=mount.findStateControlNode(surface,triggerText);
   if(!trigger)throw new Error('actual parent trigger missing');
   const activationOwner=trigger.closest('[role="button"],button,[role="tab"]')||trigger;
   menu.classList.add('bs-filter-popover','bs-parent-ranking-menu');menu.setAttribute('role','menu');menu.setAttribute('aria-label',triggerText);
@@ -1536,14 +1536,22 @@ function openParentRankingMenu(surface, filterBoardId, {registry, mount, popover
   const schedulePosition=()=>{if(!closed&&!pendingFrame)pendingFrame=view.requestAnimationFrame(()=>{pendingFrame=0;position();});};
   const close=()=>{if(closed)return;closed=true;observer?.disconnect();view.removeEventListener('resize',schedulePosition);if(pendingFrame)view.cancelAnimationFrame(pendingFrame);menu.remove();if(needsPosition){if(oldPosition)surface.style.setProperty('position',oldPosition,oldPriority);else surface.style.removeProperty('position');}};
   surface.append(menu);
+  let selectionMarked=false;
   for(const label of controls.selectionLabels(filterBoardId)){
     const owner=controls.selectionOwner(menu,label),selection=controls.selectionFor(filterBoardId,label);if(!owner)throw new Error('authored option missing: '+label);
     if(unavailableReason || selection.unavailable){owner.setAttribute('aria-disabled','true');owner.title=unavailableReason || selection.unavailable;}
     if(unavailableReason){owner.style.opacity='0.55';owner.style.cursor='default';owner.style.background='transparent';owner.tabIndex=-1;for(const leaf of owner.querySelectorAll('*'))if(!leaf.children.length&&leaf.textContent.trim()==='선택됨')leaf.hidden=true;}
     else mount.wireStateControlActivation(owner,()=>onSelection(selection),{keyboard:true});
+    const checked=!unavailableReason&&!selection.unavailable&&!selectionMarked&&selection.criteria
+      && Object.entries(selection.criteria).every(([key,value])=>criteria?.[key]===value);
     owner.setAttribute('role','menuitem');
+    if(checked)owner.setAttribute('aria-current','true');else owner.removeAttribute('aria-current');
+    const markers=[...owner.querySelectorAll('*')].filter(leaf=>!leaf.children.length&&leaf.textContent.trim()==='선택됨');
+    for(const marker of markers)marker.hidden=!checked;
+    owner.style.background=checked?'var(--color-k-panel2)':'transparent';
+    if(checked){selectionMarked=true;if(!markers.length){const marker=surface.ownerDocument.createElement('span');marker.textContent='선택됨';marker.style.cssText='flex-shrink:0;font-size:11px;color:var(--color-k-dim)';owner.append(marker);}}
   }
-  menu.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();if(onClose)onClose();else close();if(activationOwner.isConnected)activationOwner.focus();}});
+  menu.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();if(onClose)onClose();else close();if(activationOwner.isConnected)activationOwner.focus();}});
   if(unavailableReason){const note=surface.ownerDocument.createElement('div');note.className='bs-parent-ranking-filter-reason';note.setAttribute('role','status');note.textContent=unavailableReason;Object.assign(note.style,{fontSize:'12px',lineHeight:'1.5',padding:'8px 12px',whiteSpace:'normal'});menu.append(note);}
   menu.closeParentRankingMenu=close;
   menu.repositionParentRankingMenu=position;
@@ -1577,6 +1585,7 @@ async function showParentRankingFilter(host, filterBoardId, envelope) {
   pending.handle = openParentRankingMenu(state.surface, filterBoardId, {
     registry: boardTemplateRegistry, mount: boardMount,
     popover: window.AthenaLib.BoardPopoverLayout, controls: rankingBoardControls,
+    criteria: state.rankingCriteria,
     unavailableReason: operation === 'base:ka00198' && ['4A9H-1','4AUX-1'].includes(filterBoardId)
       ? '실시간 종목 조회 순위는 시장·관리종목 필터를 지원하지 않습니다.' : '',
     onSelection: selection => selectRankingFilter(host, envelope, selection),
@@ -1736,6 +1745,11 @@ function wireStateControls(host, envelope, mounted) {
         () => switchStateBoard(host, link.board_id, envelope, control),
         { keyboard: true },
       );
+      if (rankingBoardControls?.isFamilyBoard(state.boardId) && rankingBoardControls.isFilterBoard(link.board_id)) {
+        const caption = [targetNode, ...targetNode.querySelectorAll('*')]
+          .find(leaf => !leaf.children.length && leaf.textContent.trim() === control);
+        if (caption) caption.dataset.stateControl = control;
+      }
       if (!didWire) continue;
       const visibleControl = String(targetNode.textContent || '').trim();
       if (!visibleControl || /^[▸▶›»→▾▼⌄]+$/.test(visibleControl)) {
@@ -1829,7 +1843,7 @@ function applyRankingCriteriaLabels(surface, criteria, context = {}) {
     '등락 전체': criteria.direction === 'up' ? '상승만' : (criteria.direction === 'down' ? '하락만' : '등락 전체'),
     '유동성 정상': criteria.liquidity === 'all' ? '전체 포함' : '유동성 정상',
   };
-  if (context.boardId === '13K0-2') {
+  if (['13K0-2', '2X5N-0'].includes(context.boardId)) {
     const operation = context.operation;
     const target = context.target || {};
     if (operation === 'base:ka00198') {
