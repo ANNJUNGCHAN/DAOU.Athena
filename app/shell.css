@@ -7992,3 +7992,11 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
 
 #backtestCanvas .backtest-optimize { text-align: left; }
 #backtestCanvas .backtest-optimize :is(.backtest-optimize-warn-text, .backtest-optimize-plateau, .backtest-optimize-neighbour) { word-break: keep-all; }
+
+/* A single intrinsic general table and its conversation share a compact workspace. */
+@media (min-width: 1280px) and (min-height: 621px) {
+  #shell:has(#canvasRegion[data-general-table-workspace] > #mosaic:not([hidden]) > #grid > .card.mcp-table.general-table-intrinsic:only-child:not(.is-expanded)) #canvasRegion { flex: 0 1 var(--general-table-workspace-width); margin-left: auto; }
+  #shell:has(#canvasRegion[data-general-table-workspace] > #mosaic:not([hidden]) > #grid > .card.mcp-table.general-table-intrinsic:only-child:not(.is-expanded)) #mosaic { bottom: auto; height: var(--general-table-workspace-height); max-height: 100%; }
+  #shell:has(#canvasRegion[data-general-table-workspace] > #mosaic:not([hidden]) > #grid > .card.mcp-table.general-table-intrinsic:only-child:not(.is-expanded)) #chatRegion { margin-right: auto; }
+  #shell:has(#canvasRegion[data-general-table-workspace] > #mosaic:not([hidden]) > #grid > .card.mcp-table.general-table-intrinsic:only-child:not(.is-expanded)) #chatRegion > .app { top: 12px; bottom: auto; max-height: calc(100% - 24px); }
+}

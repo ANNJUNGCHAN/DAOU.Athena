@@ -4287,13 +4287,31 @@ function fitGeneralTableCard(card, layoutHint) {
   let pending = 0;
   let closed = false;
   let lastWidth = -1;
+  const region = grid.closest('#canvasRegion');
+  const resetWorkspace = () => {
+    if (!region) return;
+    delete region.dataset.generalTableWorkspace;
+    region.style.removeProperty('--general-table-workspace-width');
+    region.style.removeProperty('--general-table-workspace-height');
+  };
   const fit = () => {
     pending = 0;
-    if (closed || card.parentElement !== grid || card.classList.contains('is-expanded')) return;
+    if (closed || card.parentElement !== grid || card.classList.contains('is-expanded') || !grid.getClientRects().length) {
+      resetWorkspace();
+      return;
+    }
     card.classList.remove('general-table-half');
     const tracks = getComputedStyle(grid).gridTemplateColumns.split(' ').map(Number.parseFloat);
     const preferred = card.getBoundingClientRect().width;
-    card.classList.toggle('general-table-half', tracks.length === 2 && preferred <= Math.min(...tracks));
+    card.classList.toggle('general-table-half', grid.children.length > 1 && tracks.length === 2 && preferred <= Math.min(...tracks));
+    if (region && grid.children.length === 1) {
+      const style = getComputedStyle(grid);
+      const width = Math.ceil(preferred + parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + grid.offsetWidth - grid.clientWidth);
+      region.style.setProperty('--general-table-workspace-width', width + 'px');
+      const height = Math.ceil(card.getBoundingClientRect().height + parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
+      region.style.setProperty('--general-table-workspace-height', height + 'px');
+      region.dataset.generalTableWorkspace = 'true';
+    } else resetWorkspace();
   };
   const schedule = () => { if (!closed && !pending) pending = requestAnimationFrame(fit); };
   const observer = new ResizeObserver(() => {
@@ -4306,6 +4324,10 @@ function fitGeneralTableCard(card, layoutHint) {
     if (current !== expanded) { expanded = current; schedule(); }
   });
   expansion.observe(card, { attributes: true, attributeFilter: ['class'] });
+  const contents = new MutationObserver(schedule);
+  contents.observe(grid, { childList: true });
+  const resizeWorkspace = () => { resetWorkspace(); schedule(); };
+  window.addEventListener('resize', resizeWorkspace);
   observer.observe(grid);
   schedule();
   if (document.fonts) document.fonts.ready.then(schedule);
@@ -4314,6 +4336,9 @@ function fitGeneralTableCard(card, layoutHint) {
     closed = true;
     observer.disconnect();
     expansion.disconnect();
+    contents.disconnect();
+    window.removeEventListener('resize', resizeWorkspace);
+    resetWorkspace();
     if (pending) cancelAnimationFrame(pending);
     if (previous) previous();
   });
