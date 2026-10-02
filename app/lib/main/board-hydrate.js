@@ -72,10 +72,11 @@ function buildTargetBag(target) {
 }
 
 // 요청 몸체는 계약이 정한 세 필드뿐이다. 값이 없는 필드는 아예 싣지 않는다.
-function buildHydrateBody({ boardId, target, account, slotIds, rankingOperationRef, chartOperationRef } = {}) {
+function buildHydrateBody({ boardId, target, account, slotIds, rankingOperationRef, chartOperationRef, flowOperationRef } = {}) {
   const board = clean(boardId);
   if (!board) throw new TypeError('board_id가 없다');
   const body = { board_id: board };
+  if (board === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(flowOperationRef)) body.flow_operation_ref = flowOperationRef;
   if(board==='32S7-0'&&clean(chartOperationRef))body.chart_operation_ref=clean(chartOperationRef);
   if ((board === '4B22-1' || board === '13K0-2') && clean(rankingOperationRef)) body.ranking_operation_ref = clean(rankingOperationRef);
   const bag = buildTargetBag(target);
@@ -176,10 +177,10 @@ function raceWithAbort(promise, signal) {
   });
 }
 
-async function hydrateBoard({ backendBase, fetchImpl, token, boardId, target, account, slotIds, rankingOperationRef, chartOperationRef, timeoutMs = 12_000 } = {}) {
+async function hydrateBoard({ backendBase, fetchImpl, token, boardId, target, account, slotIds, rankingOperationRef, chartOperationRef, flowOperationRef, timeoutMs = 12_000 } = {}) {
   let body;
   try {
-    body = buildHydrateBody({ boardId, target, account, slotIds, rankingOperationRef, chartOperationRef });
+    body = buildHydrateBody({ boardId, target, account, slotIds, rankingOperationRef, chartOperationRef, flowOperationRef });
   } catch (error) {
     return { ok: false, status: 'invalid', error: String((error && error.message) || error) };
   }

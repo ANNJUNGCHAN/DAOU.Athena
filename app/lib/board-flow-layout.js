@@ -41,9 +41,10 @@ function identityFor(boardId, envelope, values, fallback) {
   const pair = code && candidates.find(([name, symbol]) => receivedText(name) && stockCode(symbol) === code);
   return { name: pair ? receivedText(pair[0]) : FLOW_TITLES[boardId], code };
 }
-function queryContextFor(contract, targetCode) {
+function queryContextFor(contract, targetCode, requestedOperation) {
   const context = contract && contract.board_id === '2QFO-2' && contract.flow_query_context;
   if (!context || !['base:ka10059','base:ka10061'].includes(context.operation_ref)) return null;
+  if (['base:ka10059','base:ka10061'].includes(requestedOperation) && context.operation_ref !== requestedOperation) return null;
   const args = context.operation_args;
   const code = stockCode(targetCode);
   if (!args || typeof args !== 'object' || Array.isArray(args) || !code || stockCode(args.stk_cd) !== code) return null;
@@ -52,6 +53,14 @@ function queryContextFor(contract, targetCode) {
     if (typeof args[key] === 'string') clean[key] = args[key];
   }
   return { operation_ref: context.operation_ref, operation_args: clean };
+}
+
+function investorSnapshotValues(current, incoming, contract, targetCode, operation) {
+  if (!['base:ka10059', 'base:ka10061'].includes(operation)) return { ...current, ...incoming };
+  if (!queryContextFor(contract, targetCode, operation)) return current;
+  const next = { ...current };
+  for (const id of ['s027', ...INVESTORS.map(row => row[1])]) delete next[id];
+  return { ...next, ...incoming };
 }
 
 function dateText(raw) {
@@ -68,7 +77,7 @@ function investorCaption(plan, options) {
   const date = plan.assignments.find(item => item.slotId === 's027');
   const period = operation === 'base:ka10061'
     ? [dateText(args.strt_dt), dateText(args.end_dt)].filter(Boolean).join(' ~ ')
-    : date && !date.missing ? date.text : dateText(args.dt);
+    : date && !date.missing && date.text.trim() ? date.text : dateText(args.dt);
   const trade = { '0':'순매수', '1':'매수', '2':'매도' }[args.trde_tp] || '매매구분 미제공';
   const unit = args.amt_qty_tp === '1' ? '금액'
     : args.amt_qty_tp === '2' ? '수량' : '금액·수량 구분 미제공';
@@ -183,7 +192,7 @@ function update(surface, contract, plan, options = {}) {
   }
 }
 
-const api = { INVESTORS, BROKERS, investorCaption, identityFor, queryContextFor, prepare, update };
+const api = { INVESTORS, BROKERS, investorCaption, identityFor, queryContextFor, investorSnapshotValues, prepare, update };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 else { window.AthenaLib = window.AthenaLib || {}; window.AthenaLib.BoardFlowLayout = api; }
 })();

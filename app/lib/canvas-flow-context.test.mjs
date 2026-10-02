@@ -19,6 +19,10 @@ function fixture(boardId='2QFO-2') {
   const context=vm.createContext({Map,Set,boardFlowLayout:flow,boardStateOf:()=>state,boardHydrateTarget:e=>({stk_cd:e.stk_cd}),
     slotValuesOf:contract=>Object.fromEntries((contract.slot_values||[]).map(entry=>[entry.slot_id,entry.value])),realtimeBindingsOf:()=>[],
     boardHydrateAccount:()=>'',RETRYABLE_BOARD_HYDRATE_REASONS:new Set(['upstream_error']),
+    // These unrelated board helpers are dependencies of the extracted production functions.
+    reconcileWatchlistState:(_state,contract)=>contract,WATCH_SOURCE_SLOTS:{},
+    sectorHydratedPrimaryEnvelope:(_board,_envelope,reply)=>reply.primary_envelope||null,
+    excludeRetiredWatchlistSlots(){},excludeRetiredRankingRailSlots(){},
     boardMount:{...mount,mountBoard:(_host,id,values,options)=>{const result={plan:mount.mountPlan(registry.contractFor(id),values,options),options};remounts.push(result);return result;}},
     rememberMountedBoard(){},wireMountedBoardControls(){},selectEtfReturnPeriod(){},switchStateBoard(){},
     boardHydrationError:()=>new Error('hydrate error'),
@@ -86,4 +90,29 @@ test('the production IPC adapter retains the bounded surface query context', asy
   await f.context.hydrateBoardSlots(f.host,f.envelope,{});
   assert.equal(f.remounts[0].options.flowQueryContext.operation_args.amt_qty_tp,'1');
   assert.equal(f.remounts[0].plan.assignments.find(s=>s.slotId==='s038').text,'0백만원');
+});
+
+test('active investor source reaches renderer IPC and bridge without changing target arguments',async()=>{
+  const f=fixture();let sent;
+  f.context.window={athena:{invoke:async(_name,body)=>{sent=body;return {ok:true,slot_values:{},surface_contract:{board_id:'2QFO-2',flow_query_context:argumentContext}};}}};
+  await f.context.hydrateBoardSlots(f.host,f.envelope,{});
+  assert.equal(sent.flowOperationRef,'base:ka10059');
+  const {buildHydrateBody}=require('./main/board-hydrate');
+  const body=buildHydrateBody(sent);assert.equal(body.flow_operation_ref,'base:ka10059');assert.equal(body.target.stk_cd,'123456');
+});
+test('complete active investor snapshots replace participant values and preserve identity',async()=>{
+  const f=fixture();f.state.values={s001:'합성 종목',s038:10,s124:99};
+  for(const values of [{s038:{value:0,text:'0백만원'}},{},{s038:{value:12,text:'12백만원'}}]){
+    f.state.hydrationByBoard.set('2QFO-2',['s038']);
+    f.reply({ok:true,operations:[],slot_values:values,surface_contract:{board_id:'2QFO-2',flow_query_context:argumentContext}});
+    await f.context.hydrateBoardSlots(f.host,f.envelope,{});
+    assert.equal(f.state.values.s001,'합성 종목');assert.equal(Object.hasOwn(f.state.values,'s124'),false);
+    assert.deepEqual(f.state.values.s038,values.s038);
+  }
+});
+test('a different active investor source cannot replace the requested source values',async()=>{
+  const f=fixture();f.state.values={s038:10};
+  f.reply({ok:true,operations:[],slot_values:{s038:999},surface_contract:{board_id:'2QFO-2',flow_query_context:{...argumentContext,operation_ref:'base:ka10061'}}});
+  await f.context.hydrateBoardSlots(f.host,f.envelope,{});
+  assert.equal(f.state.values.s038,10);assert.equal(f.remounts.at(-1).options.flowQueryContext,null);
 });

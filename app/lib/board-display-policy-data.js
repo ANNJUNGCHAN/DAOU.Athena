@@ -5376,6 +5376,34 @@ const policy = {
       "unavailable",
       null
     ],
+    "s023": [
+      "거래대금",
+      "caption",
+      "거래 정보"
+    ],
+    "s024": [
+      "2.14조원",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "금액 "
+      }
+    ],
+    "s025": [
+      "거래량 1,420만주 · 체결강도 108.4",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "거래량 "
+      }
+    ],
     "s045": [
       "20.5%",
       "unavailable",
@@ -5507,6 +5535,34 @@ const policy = {
       "4거래일 연속 순매도",
       "unavailable",
       null
+    ],
+    "s023": [
+      "거래대금",
+      "caption",
+      "거래 정보"
+    ],
+    "s024": [
+      "2.14조원",
+      "bound-format",
+      {
+        "kind": "korean",
+        "sign": false,
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "금액 "
+      }
+    ],
+    "s025": [
+      "거래량 1,420만주 · 체결강도 108.4",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "거래량 "
+      }
     ],
     "s034": [
       "신용잔고율",

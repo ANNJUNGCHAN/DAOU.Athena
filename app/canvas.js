@@ -1376,7 +1376,7 @@ function boardMountOptions(host, envelope) {
     watchlistSelection: state.boardId === '2U5L-1' ? watchlistSelectedRow(state) : null,
     flowQueryContext: state.boardId === '2QFO-2' && state.flowQueryContextByBoard?.has(state.boardId) ? boardFlowLayout.queryContextFor({
       board_id: state.boardId, flow_query_context: state.flowQueryContextByBoard?.get(state.boardId),
-    }, target.stk_cd) : undefined,
+    }, target.stk_cd, envelope.operation_ref) : undefined,
     rankingResult: boardStateOf(host).boardId === '4B22-1' ? boardStateOf(host).rankingResult : null,
     rankingOperationRef: boardStateOf(host).boardId === '4B22-1' ? expandedRankingOperation(boardStateOf(host)) : null,
     onEtfPeriodChange: (dt) => selectEtfReturnPeriod(host, envelope, dt),
@@ -2569,6 +2569,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
       boardId,
       slotIds: pending,
       chartOperationRef: boardId==='32S7-0' ? envelope.operation_ref : undefined,
+      flowOperationRef: boardId === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(envelope.operation_ref) ? envelope.operation_ref : undefined,
       rankingOperationRef: boardId === '4B22-1' ? expandedRankingOperation(state)
         : boardId === '13K0-2' ? selectedRankingRailSource(state) : undefined,
       target: boardHydrateTarget(envelope, host),
@@ -2639,7 +2640,8 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     }
   }
   if ((!filled || !Object.keys(filled).length) && !state.rankingResult && !metadataReceived) return mounted;
-  state.values = boardId === '2U5L-1' || WATCH_SOURCE_SLOTS[boardId] ? slotValuesOf(contract) : boardId === '13K0-2'
+  state.values = boardId === '2QFO-2' ? boardFlowLayout.investorSnapshotValues(state.values, filled, contract, boardHydrateTarget(envelope, host).stk_cd, envelope.operation_ref)
+    : boardId === '2U5L-1' || WATCH_SOURCE_SLOTS[boardId] ? slotValuesOf(contract) : boardId === '13K0-2'
     ? mergeRankingRailValues(state, filled, contract) : { ...state.values, ...filled };
   state.valuesByBoard.set(boardId, state.values);
   state.unbound = state.unbound.filter((slotId) => !(slotId in filled));
@@ -3321,7 +3323,9 @@ async function applyRealtimeFallbackData(session, payload) {
     const values = slotValuesOf({ slot_values: payload.slotValues });
     const watchContract = payload.surfaceContract || payload.surface_contract;
     const watchMetadata = watchContract?.board_id === state.boardId && (state.boardId === '2U5L-1' && watchContract.watchlist_rows || WATCH_SOURCE_SLOTS[state.boardId] && watchContract.watch_source_context);
-    if (!Object.keys(values).length && !watchMetadata) return false;
+    const flowMetadata = state.boardId === '2QFO-2' && boardFlowLayout.queryContextFor(watchContract, boardHydrateTarget(session.envelope, host).stk_cd, session.envelope.operation_ref);
+    if (state.boardId === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(session.envelope.operation_ref) && !flowMetadata) return false;
+    if (!Object.keys(values).length && !watchMetadata && !flowMetadata) return false;
     if (Object.keys(values).some((slotId) => !session.slotIds.includes(slotId))) return false;
     if (state.boardId === '2U5L-1' || WATCH_SOURCE_SLOTS[state.boardId]) {
       const incoming = watchContract?.board_id === state.boardId ? {...watchContract,
@@ -3331,6 +3335,16 @@ async function applyRealtimeFallbackData(session, payload) {
       state.values = slotValuesOf(projected);
       receiveWatchlistMetadata(state, projected);
       excludeRetiredWatchlistSlots(state);
+    } else if (state.boardId === '2QFO-2') {
+      state.values = boardFlowLayout.investorSnapshotValues(state.values, values, watchContract, boardHydrateTarget(session.envelope, host).stk_cd, session.envelope.operation_ref);
+      if (flowMetadata) {
+        (state.flowQueryContextByBoard ||= new Map()).set(state.boardId, watchContract.flow_query_context);
+        for (const [field, property] of [['empty_rows', 'emptyRows'], ['empty_columns', 'emptyColumns'], ['empty_value_slots', 'emptyValueSlots'], ['deferred_value_slots', 'deferredValueSlots']]) {
+          if (!Array.isArray(watchContract[field])) continue;
+          state[property] = watchContract[field].slice();
+          state[property + 'ByBoard'].set(state.boardId, state[property]);
+        }
+      }
     } else state.values = state.boardId === '13K0-2'
       ? mergeRankingRailValues(state, values, payload.surfaceContract || payload.surface_contract) : { ...state.values, ...values };
     excludeRetiredRankingRailSlots(state);

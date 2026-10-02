@@ -121,10 +121,22 @@ def annotate_surface_display_units(surface: dict[str, Any],
         or (operation in _INVESTOR_OPERATIONS
             and field.json_path.rsplit('.', 1)[-1] in _INVESTOR_FIELDS)
     }
+    flow_quantities = surface.get('board_id') in {'2ROJ-1', '2RWK-1'}
+    quantity_metadata = {field.wire_occurrence_id: field
+                         for operation in arguments_by_operation
+                         for field in registry.for_operation(operation)} if flow_quantities else {}
     values = []
     for entry in surface.get('slot_values') or []:
         occurrence = str(entry.get('occurrence_id', '')).split('|')
         field_name = occurrence[1].rsplit('.', 1)[-1] if len(occurrence) > 1 else ''
+        if flow_quantities and entry.get('format', {}).get('unit') == 'shares':
+            field = quantity_metadata.get(entry.get('occurrence_id'))
+            description = field.description if field is not None else ''
+            fixed = re.search(r'단위:\s*(1000주|1주)(?:\D|$)', description or '')
+            unit = {'1000주': '천주', '1주': '주'}.get(fixed[1], '') if fixed else ''
+            values.append({**entry, 'value': _display(entry.get('value'), unit,
+                           entry.get('format', {}).get('tone') in {'signed', 'change'})})
+            continue
         if surface.get('board_id') == '32S7-0':
             number = sector_chart_index(occurrence[0], field_name, entry.get('value'))
             if number is not None:

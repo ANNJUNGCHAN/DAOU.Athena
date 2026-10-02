@@ -2705,6 +2705,7 @@ function rememberRealtimeFallbackAuthority(payload = {}) {
   const boardId = String(surfaceContract && surfaceContract.board_id || '').trim();
   const boardHydrateAuthority = boardId
     ? Object.freeze({ boardId, target: Object.freeze({ ...operationArgs }),
+      ...(boardId === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(operationRef) ? { flowOperationRef: operationRef } : {}),
       ...(boardId === '13K0-2' ? { rankingOperationRef: operationRef === 'base:ka00198' ? operationRef : 'base:ka10032' } : {}),
     })
     : null;
@@ -2789,7 +2790,10 @@ function projectRealtimeFallbackResult(descriptor, result) {
       : Object.fromEntries(Object.entries(raw || {}).filter(([slotId]) => requested.has(slotId)));
     const filled = Array.isArray(slotValues) ? slotValues.length : Object.keys(slotValues).length;
     const watchlistMetadata = contract?.board_id === descriptor.boardId && (descriptor.boardId === '2U5L-1' && contract.watchlist_rows && Array.isArray(contract.watchlist_rows.rows) || ['2UBO-1','3D4I-0','3EWN-0'].includes(descriptor.boardId) && contract.watch_source_context && Array.isArray(contract.watch_source_context.slots));
-    if (!filled && !watchlistMetadata) return { ok: false, error: '요청한 보드 슬롯의 API 대체 값이 없다' };
+    const investorMetadata = descriptor.boardId === '2QFO-2' && contract?.board_id === descriptor.boardId
+      && ['base:ka10059', 'base:ka10061'].includes(contract.flow_query_context?.operation_ref)
+      && contract.flow_query_context.operation_ref === realtimeFallbackAuthorities.get(descriptor.authorityKey)?.boardHydrate?.flowOperationRef;
+    if (!filled && !watchlistMetadata && !investorMetadata) return { ok: false, error: '요청한 보드 슬롯의 API 대체 값이 없다' };
     return {
       ok: true,
       mode: 'slot-patch',
@@ -2817,6 +2821,7 @@ async function refreshRealtimeFallback(descriptor, { signal } = {}) {
       boardId: hydrate.boardId,
       target: hydrate.target,
       slotIds: descriptor.slotIds,
+      flowOperationRef: hydrate.boardId === '2QFO-2' ? hydrate.flowOperationRef : undefined,
       rankingOperationRef: hydrate.boardId === '13K0-2'
         && ['base:ka10032', 'base:ka00198'].includes(hydrate.rankingOperationRef)
         ? hydrate.rankingOperationRef : undefined,
@@ -3322,6 +3327,7 @@ async function hydrateCanvasBoardForActiveAccount(payload = {}) {
     account: options.backendAccountAlias,
     slotIds: payload.slotIds || payload.slot_ids,
     rankingOperationRef: payload.rankingOperationRef,
+    flowOperationRef: (payload.boardId || payload.board_id) === '2QFO-2' ? payload.flowOperationRef : undefined,
   }), requestedAccountId);
   if (!bound.ok) return { ok: false, status: 'error', errorCode: 'backend_account_unavailable', error: bound.error };
   if (generation !== realtimeAccountGeneration || bound.accountId !== activeRestAccountId()) {
@@ -3367,6 +3373,7 @@ ipcMain.handle('athena:canvas-board-hydrate', async (event, payload = {}) => {
         }),
         boardHydrate: Object.freeze({
           boardId,
+          ...(boardId === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(payload.flowOperationRef) ? { flowOperationRef: payload.flowOperationRef } : {}),
           ...(boardId === '13K0-2' ? {
             rankingOperationRef: payload.rankingOperationRef === 'base:ka00198' ? 'base:ka00198' : 'base:ka10032',
           } : {}),

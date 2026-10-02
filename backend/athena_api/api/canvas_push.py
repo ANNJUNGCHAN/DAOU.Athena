@@ -1047,6 +1047,7 @@ class BoardHydrateRequest(BaseModel):
     slot_ids: list[str] | None = Field(default=None, max_length=512)
     ranking_operation_ref: str | None = Field(default=None, min_length=1, max_length=64)
     chart_operation_ref: str | None = Field(default=None, min_length=1, max_length=64)
+    flow_operation_ref: str | None = Field(default=None, min_length=1, max_length=64)
 
 
 def _hydrate_operation_refs(board: Any, slot_ids: list[str] | None) -> tuple[str, ...]:
@@ -1445,6 +1446,10 @@ async def internal_canvas_board_hydrate(
     if data_client is None or not data_client.is_ready:
         raise KiwoomNotReadyError("Kiwoom data service is not ready")
 
+    if payload.flow_operation_ref is not None:
+        if board.board_id != '2QFO-2' or payload.flow_operation_ref not in {'base:ka10059', 'base:ka10061'}:
+            raise HTTPException(status_code=422, detail='unsupported investor query source')
+
     if payload.chart_operation_ref is not None:
         allowed = {source.get('mapping_id') for source in ((board.primary or {}).get('props_from') or ())}
         if board.board_id != '32S7-0' or payload.chart_operation_ref not in allowed:
@@ -1465,6 +1470,8 @@ async def internal_canvas_board_hydrate(
         EXPANDED_BOARD, build_ranking_result, is_expanded_ranking_operation,
     )
     active_operation_refs: tuple[str, ...] = ()
+    if payload.flow_operation_ref is not None:
+        active_operation_refs = (payload.flow_operation_ref,)
     if board.board_id == '32S7-0' and payload.chart_operation_ref:
         active_operation_refs = (payload.chart_operation_ref,)
     if payload.ranking_operation_ref is not None and board.board_id == EXPANDED_BOARD:
@@ -1473,6 +1480,8 @@ async def internal_canvas_board_hydrate(
         operation_refs = [payload.ranking_operation_ref]
     else:
         operation_refs = list(_hydrate_operation_refs(board, payload.slot_ids))
+        if payload.flow_operation_ref is not None:
+            operation_refs = [payload.flow_operation_ref]
         if payload.ranking_operation_ref is not None:
             if board.board_id != "13K0-2" or payload.ranking_operation_ref not in {"base:ka10032", "base:ka00198"}:
                 raise HTTPException(status_code=422, detail="unsupported board ranking source")
