@@ -1513,7 +1513,7 @@ function mountBoardState(host, boardId, envelope, isCurrent = () => true) {
 
 // Ignored feasibility candidate: keep the actual parent surface and query state.
 // Reuse only the authored menu, never its specimen volume table or slot values.
-function openParentRankingMenu(surface, filterBoardId, {registry, mount, popover, controls, onSelection, onClose, unavailableReason, criteria}) {
+function openParentRankingMenu(surface, filterBoardId, {registry, mount, popover, controls, onSelection, onClose, unavailableReason, criteria, operation}) {
   const spec=popover.MENUS[filterBoardId];
   if(!spec)throw new Error('unsupported ranking filter');
   const previousMenu=surface.querySelector('.bs-parent-ranking-menu');
@@ -1536,9 +1536,19 @@ function openParentRankingMenu(surface, filterBoardId, {registry, mount, popover
   const schedulePosition=()=>{if(!closed&&!pendingFrame)pendingFrame=view.requestAnimationFrame(()=>{pendingFrame=0;position();});};
   const close=()=>{if(closed)return;closed=true;observer?.disconnect();view.removeEventListener('resize',schedulePosition);if(pendingFrame)view.cancelAnimationFrame(pendingFrame);menu.remove();if(needsPosition){if(oldPosition)surface.style.setProperty('position',oldPosition,oldPriority);else surface.style.removeProperty('position');}};
   surface.append(menu);
+  const managementMenu = filterBoardId === '4AUX-1' && !unavailableReason
+    && ['base:ka10032', 'base:ka10030'].includes(operation);
+  if (managementMenu) menu.setAttribute('aria-label', '관리종목 포함 조건');
   let selectionMarked=false;
   for(const label of controls.selectionLabels(filterBoardId)){
     const owner=controls.selectionOwner(menu,label),selection=controls.selectionFor(filterBoardId,label);if(!owner)throw new Error('authored option missing: '+label);
+    if (managementMenu && label === '관리·경고 제외') { owner.hidden = true; continue; }
+    if (managementMenu) {
+      const caption = [...owner.querySelectorAll('*')].find(leaf => !leaf.children.length && leaf.textContent.trim() === label);
+      const displayLabel = label === '전체 포함' ? '관리종목 포함' : '관리종목 제외';
+      if (caption) caption.textContent = displayLabel;
+      owner.setAttribute('aria-label', displayLabel);
+    }
     if(unavailableReason || selection.unavailable){owner.setAttribute('aria-disabled','true');owner.title=unavailableReason || selection.unavailable;}
     if(unavailableReason){owner.style.opacity='0.55';owner.style.cursor='default';owner.style.background='transparent';owner.tabIndex=-1;for(const leaf of owner.querySelectorAll('*'))if(!leaf.children.length&&leaf.textContent.trim()==='선택됨')leaf.hidden=true;}
     else mount.wireStateControlActivation(owner,()=>onSelection(selection),{keyboard:true});
@@ -1585,7 +1595,7 @@ async function showParentRankingFilter(host, filterBoardId, envelope) {
   pending.handle = openParentRankingMenu(state.surface, filterBoardId, {
     registry: boardTemplateRegistry, mount: boardMount,
     popover: window.AthenaLib.BoardPopoverLayout, controls: rankingBoardControls,
-    criteria: state.rankingCriteria,
+    criteria: state.rankingCriteria, operation,
     unavailableReason: operation === 'base:ka00198' && ['4A9H-1','4AUX-1'].includes(filterBoardId)
       ? '실시간 종목 조회 순위는 시장·관리종목 필터를 지원하지 않습니다.' : '',
     onSelection: selection => selectRankingFilter(host, envelope, selection),

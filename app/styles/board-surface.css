@@ -1491,3 +1491,14 @@
 
 /* Keep each received credit date whole when the independent row wraps. */
 .board-surface[data-bs-board-id="2RWK-1"] [data-node="flow-credit-source"] :is([data-slot-id="s109"],[data-slot-id="s110"],[data-slot-id="s111"],[data-slot-id="s112"],[data-slot-id="s113"]) {min-width:max-content!important;flex:0 0 auto!important;white-space:nowrap!important;overflow-wrap:normal!important;}
+
+/* Day-volume sorting keeps every existing choice reachable inside its own row. */
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X8Y-0"] {min-width:0;width:100%;gap:12px;flex-wrap:wrap;}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] {flex:1 1 0%!important;min-width:0!important;max-width:100%;overflow-x:auto!important;overflow-y:hidden;flex-wrap:nowrap!important;padding-block:2px 6px;}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] > * {flex:0 0 auto!important;min-width:max-content;white-space:nowrap;}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] > * > * {white-space:nowrap!important;}
+.board-surface[data-bs-board-id="2X5N-0"] .bs-day-volume-sort-hint {display:none;color:var(--color-k-dim);font-size:12px;line-height:1.5;}
+@container board (max-width:959px) {
+  .board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] {flex-basis:100%!important;}
+  .board-surface[data-bs-board-id="2X5N-0"] .bs-day-volume-sort-hint {display:block;}
+}

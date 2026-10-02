@@ -2898,6 +2898,27 @@ function updateWatchDetails(surface, plan, options={}) {
 function applyReadableBoardLayout(surface, contract) {
   prepareWatchDetails(surface, contract);
   const id = contract.board_id;
+  if (id === '2X5N-0') {
+    const sorts = authoredNode(surface, '2X92-0');
+    sorts.classList.add('bs-r-scroll');
+    sorts.tabIndex = 0;
+    sorts.setAttribute('role', 'region');
+    sorts.setAttribute('aria-label', '종목 순위 정렬, 좌우 방향키로 이동');
+    sorts.addEventListener('keyup', event => {
+      if (event.key !== 'Tab') return;
+      const choice = event.target.closest('[role="button"]');
+      if (!choice || !sorts.contains(choice)) return;
+      const viewport = sorts.getBoundingClientRect();
+      const item = choice.getBoundingClientRect();
+      if (item.left < viewport.left) sorts.scrollLeft += item.left - viewport.left;
+      else if (item.right > viewport.right) sorts.scrollLeft += item.right - viewport.right;
+    });
+    if (!surface.querySelector('.bs-day-volume-sort-hint')) {
+      const hint = layoutGroup(surface.ownerDocument, 'bs-day-volume-sort-hint');
+      hint.textContent = '정렬 항목을 좌우로 이동해 모두 확인하세요';
+      sorts.parentElement.after(hint);
+    }
+  }
   if (id === '2R3M-1') {
     // The day selectors remain available when the adjacent venue/time is absent.
     for (const node of ['3CS2-0', '3CS4-0']) authoredNode(surface, node).dataset.bsKeepMissing = 'true';
