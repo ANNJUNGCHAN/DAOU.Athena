@@ -36,7 +36,8 @@
       "매크로/직접 DOM 주입/백엔드 테스트 응답을 computer use 실호출로 기록하지 않는다.",
       "윈도 크기, UI 배율, 카드 스크롤, 실제 카드 id, 에러 상태, 스크린샷 경로를 함께 기록한다.",
       "582–668행87개 관측 추가, 원581행 불변.614–634 예상 참조는 공개 소스 전환 대상에 따라 별도 정정하며 실제template ID는 미확인. 모든 새UI관측 실패. 합성검사와 소스적용 승인은 실제 앱 전체 통과가 아니다.658의 일시 mini밀집은659안정화 후 분산배치로 해소돼 지속결함으로 계산하지 않는다.665외부가림 화면은 전체표시 증거로 계산하지 않는다.",
-      "현재 원장은668행까지 고정했다. 기존581행 관측 배열과 최소 입력은 보존했고582–668행을 추가했다.669행 이후는 포함하지 않으며 합성 검사·커밋을 실제 앱 통과로 계산하지 않는다.577행 버튼 실패와578행 직접 질문 도착은 기존의 별도 경로로 유지한다."
+      "668행까지의 기존 관측과 입력은 보존했다. 669–704행 36개 관측을 추가했으며 670–673행의 예상 참조는 2U5L-1로 정정했다. 실제 화면 ID는 모두 미확인이다. 관심·업종 7개 크기 검증 경로는 실패다. 일반 표 700·703행의 축소 통과는 해당 예시·폭에 한정되며 최대·재최대화는 실패했다. 678행의 버튼 숨김 해석은 679·680행에서 철회됐다. 실제 값이 없는 ELW·VI·조건검색은 값이 채워진 상태를 검증한 것으로 계산하지 않는다. 최신 소스의94개 전체 반응형 통과 수는0이다.",
+      "현재 기록 범위는704행까지다. 705행 이후는 포함하지 않는다. 669–694행은0343c7e,695–704행은메뉴수정전f66addf 런타임의 관측이다. 작성 기준9616c9e나 합성 검사·커밋을 실제 앱 통과로 계산하지 않는다."
     ],
     "minimal_card_family_smoke": [
       "seed-account",
@@ -4043,6 +4044,39 @@
             "verification": "ledger reported runtime source; not inferred from repository HEAD"
           },
           "publication_policy": "Public UI status only; raw native notes, financial values and embedded screenshots excluded"
+        },
+        {
+          "ledger_row": 669,
+          "observation_id": "669",
+          "phase": "0343c7e-fresh-seed-max",
+          "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "13K0-2",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:06:03.950Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 새 기본 질문에서 카드가 도착했으나 전체 UI는 실패였다. 이 회차는 최대 화면의 도착·표시 관측이며 다른 크기의 통과 근거가 아니다."
+          ],
+          "acquisition": "fresh_question_reported_by_root",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
         }
       ],
       "call_status": "passed",
@@ -4050,18 +4084,18 @@
       "observed_template_id": null,
       "target_coverage": "visual_reference_only",
       "last_whole_observation": {
-        "ledger_row": 623,
-        "phase": "4a8f6b5-ranking-explicit-remax-footer",
+        "ledger_row": 669,
+        "phase": "0343c7e-fresh-seed-max",
         "call_status": "passed",
         "ui_status": "failed",
-        "tested_at": "2026-10-02T08:35:17.425Z",
+        "tested_at": "2026-10-02T10:06:03.950Z",
         "evidence_scope": "whole_observed_card"
       },
       "native_review_classification": "whole_failure_awaiting_retest",
       "last_scoped_failure": null,
       "reachability": {
         "status": "observed_reference_arrival",
-        "last_arrival_row": 623,
+        "last_arrival_row": 669,
         "actual_template_id": null
       }
     },
@@ -10053,6 +10087,162 @@
             "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
           },
           "publication_policy": "Public status and UI issue summary; no raw native financial values, private traces, or embedded screenshots"
+        },
+        {
+          "ledger_row": 670,
+          "observation_id": "670",
+          "phase": "0343c7e-watch-max",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2U5L-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:07:05.897Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 목록에서 반복 표시, 빈 그룹과 보조 영역의 공백 문제가 남았다. 실제 행 선택·펼침은 도착이 확인된 후속 관측과 구분한다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "original_expected_reference": "2U5L-0",
+          "reference_correction": {
+            "source": "NATIVE670-673-REFERENCE-CORRECTIONS.json",
+            "basis": "backend/ref/card-ui-questionnaire.json template2U5L-1 이름과 관심 ui_steps 대조",
+            "meaning": "Expected reference correction only; original ledger unchanged; actual UI ID remains null"
+          }
+        },
+        {
+          "ledger_row": 671,
+          "observation_id": "671",
+          "phase": "0343c7e-watch-narrow",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2U5L-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:08:18.937Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 목록에서 반복 표시, 빈 그룹과 보조 영역의 공백 문제가 남았다. 실제 행 선택·펼침은 도착이 확인된 후속 관측과 구분한다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "original_expected_reference": "2U5L-0",
+          "reference_correction": {
+            "source": "NATIVE670-673-REFERENCE-CORRECTIONS.json",
+            "basis": "backend/ref/card-ui-questionnaire.json template2U5L-1 이름과 관심 ui_steps 대조",
+            "meaning": "Expected reference correction only; original ledger unchanged; actual UI ID remains null"
+          }
+        },
+        {
+          "ledger_row": 672,
+          "observation_id": "672",
+          "phase": "0343c7e-watch-narrow-right-end",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2U5L-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "scoped_retest",
+          "reported_verdict_scope": "scoped_retest",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:09:11.591Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 목록에서 반복 표시, 빈 그룹과 보조 영역의 공백 문제가 남았다. 실제 행 선택·펼침은 도착이 확인된 후속 관측과 구분한다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "original_expected_reference": "2U5L-0",
+          "reference_correction": {
+            "source": "NATIVE670-673-REFERENCE-CORRECTIONS.json",
+            "basis": "backend/ref/card-ui-questionnaire.json template2U5L-1 이름과 관심 ui_steps 대조",
+            "meaning": "Expected reference correction only; original ledger unchanged; actual UI ID remains null"
+          }
+        },
+        {
+          "ledger_row": 673,
+          "observation_id": "673",
+          "phase": "0343c7e-watch-remax",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2U5L-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:10:27.275Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 목록에서 반복 표시, 빈 그룹과 보조 영역의 공백 문제가 남았다. 실제 행 선택·펼침은 도착이 확인된 후속 관측과 구분한다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "original_expected_reference": "2U5L-0",
+          "reference_correction": {
+            "source": "NATIVE670-673-REFERENCE-CORRECTIONS.json",
+            "basis": "backend/ref/card-ui-questionnaire.json template2U5L-1 이름과 관심 ui_steps 대조",
+            "meaning": "Expected reference correction only; original ledger unchanged; actual UI ID remains null"
+          }
         }
       ],
       "call_status": "passed",
@@ -10060,18 +10250,18 @@
       "observed_template_id": null,
       "target_coverage": "visual_reference_only",
       "last_whole_observation": {
-        "ledger_row": 553,
-        "phase": "6845ae9-remax-2560-cycle",
+        "ledger_row": 673,
+        "phase": "0343c7e-watch-remax",
         "call_status": "passed",
         "ui_status": "failed",
-        "tested_at": "2026-10-02T05:28:52.356Z",
+        "tested_at": "2026-10-02T10:10:27.275Z",
         "evidence_scope": "whole_observed_card"
       },
       "native_review_classification": "whole_failure_awaiting_retest",
       "last_scoped_failure": null,
       "reachability": {
         "status": "observed_reference_arrival",
-        "last_arrival_row": 553,
+        "last_arrival_row": 673,
         "actual_template_id": null
       }
     },
@@ -10321,6 +10511,204 @@
             "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
           },
           "publication_policy": "Public status and UI issue summary; no raw native financial values, private traces, or embedded screenshots"
+        },
+        {
+          "ledger_row": 681,
+          "observation_id": "681",
+          "phase": "0343c7e-theme-max",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UBO-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:25:14.239Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 테마 구성 종목의 보조 문구가 두 폭에서 겹쳤다. 본표와 보조 표의 기간 수익률은 출처 확인이 필요하며 서로 같아야 한다고 단정하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 682,
+          "observation_id": "682",
+          "phase": "0343c7e-theme-narrow",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UBO-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:25:48.128Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 테마 구성 종목의 보조 문구가 두 폭에서 겹쳤다. 본표와 보조 표의 기간 수익률은 출처 확인이 필요하며 서로 같아야 한다고 단정하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 683,
+          "observation_id": "683",
+          "phase": "0343c7e-theme-narrow-theme-table-end",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UBO-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "scoped_retest",
+          "reported_verdict_scope": "scoped_retest",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:26:21.784Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 테마 구성 종목의 보조 문구가 두 폭에서 겹쳤다. 본표와 보조 표의 기간 수익률은 출처 확인이 필요하며 서로 같아야 한다고 단정하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 684,
+          "observation_id": "684",
+          "phase": "0343c7e-theme-narrow-members-table-end",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UBO-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "scoped_retest",
+          "reported_verdict_scope": "scoped_retest",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:27:09.052Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 테마 구성 종목의 보조 문구가 두 폭에서 겹쳤다. 본표와 보조 표의 기간 수익률은 출처 확인이 필요하며 서로 같아야 한다고 단정하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 685,
+          "observation_id": "685",
+          "phase": "0343c7e-theme-narrow-footer",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UBO-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "scoped_retest",
+          "reported_verdict_scope": "scoped_retest",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:29:15.337Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 테마 구성 종목의 보조 문구가 두 폭에서 겹쳤다. 본표와 보조 표의 기간 수익률은 출처 확인이 필요하며 서로 같아야 한다고 단정하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 686,
+          "observation_id": "686",
+          "phase": "0343c7e-theme-remax",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UBO-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:29:54.739Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 테마 구성 종목의 보조 문구가 두 폭에서 겹쳤다. 본표와 보조 표의 기간 수익률은 출처 확인이 필요하며 서로 같아야 한다고 단정하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
         }
       ],
       "call_status": "passed",
@@ -10328,18 +10716,18 @@
       "observed_template_id": null,
       "target_coverage": "visual_reference_only",
       "last_whole_observation": {
-        "ledger_row": 558,
-        "phase": "6845ae9-remax-restored-2560",
+        "ledger_row": 686,
+        "phase": "0343c7e-theme-remax",
         "call_status": "passed",
         "ui_status": "failed",
-        "tested_at": "2026-10-02T05:44:03.662Z",
+        "tested_at": "2026-10-02T10:29:54.739Z",
         "evidence_scope": "whole_observed_card"
       },
       "native_review_classification": "whole_failure_awaiting_retest",
       "last_scoped_failure": null,
       "reachability": {
         "status": "observed_reference_arrival",
-        "last_arrival_row": 558,
+        "last_arrival_row": 686,
         "actual_template_id": null
       }
     },
@@ -10556,6 +10944,138 @@
             "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
           },
           "publication_policy": "Public status and UI issue summary; no raw native financial values, private traces, or embedded screenshots"
+        },
+        {
+          "ledger_row": 687,
+          "observation_id": "687",
+          "phase": "0343c7e-marketvi-max",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UHM-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:30:49.208Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 시장·VI의 빈 결과와 보조 영역을 관측했으며 UI 실패가 남았다. 실제 VI 데이터가 채워진 상태의 검증으로 계산하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 688,
+          "observation_id": "688",
+          "phase": "0343c7e-marketvi-narrow",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UHM-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:31:24.684Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 시장·VI의 빈 결과와 보조 영역을 관측했으며 UI 실패가 남았다. 실제 VI 데이터가 채워진 상태의 검증으로 계산하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 689,
+          "observation_id": "689",
+          "phase": "0343c7e-marketvi-narrow-table-end",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UHM-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "scoped_retest",
+          "reported_verdict_scope": "scoped_retest",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:31:54.005Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 시장·VI의 빈 결과와 보조 영역을 관측했으며 UI 실패가 남았다. 실제 VI 데이터가 채워진 상태의 검증으로 계산하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 690,
+          "observation_id": "690",
+          "phase": "0343c7e-marketvi-remax",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UHM-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:32:47.789Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 시장·VI의 빈 결과와 보조 영역을 관측했으며 UI 실패가 남았다. 실제 VI 데이터가 채워진 상태의 검증으로 계산하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
         }
       ],
       "call_status": "passed",
@@ -10563,18 +11083,18 @@
       "observed_template_id": null,
       "target_coverage": "visual_reference_only",
       "last_whole_observation": {
-        "ledger_row": 562,
-        "phase": "6845ae9-remax-restored-2560",
+        "ledger_row": 690,
+        "phase": "0343c7e-marketvi-remax",
         "call_status": "passed",
         "ui_status": "failed",
-        "tested_at": "2026-10-02T05:48:45.482Z",
+        "tested_at": "2026-10-02T10:32:47.789Z",
         "evidence_scope": "whole_observed_card"
       },
       "native_review_classification": "whole_failure_awaiting_retest",
       "last_scoped_failure": null,
       "reachability": {
         "status": "observed_reference_arrival",
-        "last_arrival_row": 562,
+        "last_arrival_row": 690,
         "actual_template_id": null
       }
     },
@@ -10899,6 +11419,138 @@
             "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
           },
           "publication_policy": "Public status and UI issue summary; no raw native financial values, private traces, or embedded screenshots"
+        },
+        {
+          "ledger_row": 691,
+          "observation_id": "691",
+          "phase": "0343c7e-condition-max",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UN6-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:33:27.667Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 조건검색의 빈 결과·대기 상태와 보조 영역을 관측했으며 UI 실패가 남았다. 실제 조건 결과가 채워진 상태의 검증으로 계산하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 692,
+          "observation_id": "692",
+          "phase": "0343c7e-condition-narrow",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UN6-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:34:04.663Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 조건검색의 빈 결과·대기 상태와 보조 영역을 관측했으며 UI 실패가 남았다. 실제 조건 결과가 채워진 상태의 검증으로 계산하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 693,
+          "observation_id": "693",
+          "phase": "0343c7e-condition-narrow-table-end",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UN6-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "scoped_retest",
+          "reported_verdict_scope": "scoped_retest",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:34:35.670Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 조건검색의 빈 결과·대기 상태와 보조 영역을 관측했으며 UI 실패가 남았다. 실제 조건 결과가 채워진 상태의 검증으로 계산하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 694,
+          "observation_id": "694",
+          "phase": "0343c7e-condition-remax",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "2UN6-1",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:35:23.211Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 조건검색의 빈 결과·대기 상태와 보조 영역을 관측했으며 UI 실패가 남았다. 실제 조건 결과가 채워진 상태의 검증으로 계산하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
         }
       ],
       "call_status": "passed",
@@ -10906,18 +11558,18 @@
       "observed_template_id": null,
       "target_coverage": "visual_reference_only",
       "last_whole_observation": {
-        "ledger_row": 566,
-        "phase": "6845ae9-remax-restored-2560",
+        "ledger_row": 694,
+        "phase": "0343c7e-condition-remax",
         "call_status": "passed",
         "ui_status": "failed",
-        "tested_at": "2026-10-02T05:57:56.489Z",
+        "tested_at": "2026-10-02T10:35:23.211Z",
         "evidence_scope": "whole_observed_card"
       },
       "native_review_classification": "whole_failure_awaiting_retest",
       "last_scoped_failure": null,
       "reachability": {
         "status": "observed_reference_arrival",
-        "last_arrival_row": 566,
+        "last_arrival_row": 694,
         "actual_template_id": null
       }
     },
@@ -20201,6 +20853,138 @@
             "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
           },
           "publication_policy": "Public status and UI issue summary; no raw native financial values, private traces, or embedded screenshots"
+        },
+        {
+          "ledger_row": 695,
+          "observation_id": "695",
+          "phase": "F66ADDF-SECTOR-MAXIMUM",
+          "prompt": "코스피 종합 지수 최근 3개월 일봉 차트",
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "32S7-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:10:44.566Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 일봉 지수는 읽을 수 있고 하단 잘림은 관측되지 않았다. 틱 응답의 단위 미확정 문구와 알림 버튼이 남았고, 요청한 최근 3개월 대비 차트의 표시 기간이 창 크기에 따라 달랐다. 초기 도구 실패 뒤 차트가 도착한 회차이며 전체 UI는 실패다."
+          ],
+          "acquisition": "question_arrival_reported_by_root",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 696,
+          "observation_id": "696",
+          "phase": "F66ADDF-SECTOR-NARROW",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "32S7-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:12:10.531Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 일봉 지수는 읽을 수 있고 하단 잘림은 관측되지 않았다. 틱 응답의 단위 미확정 문구와 알림 버튼이 남았고, 요청한 최근 3개월 대비 차트의 표시 기간이 창 크기에 따라 달랐다. 초기 도구 실패 뒤 차트가 도착한 회차이며 전체 UI는 실패다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 697,
+          "observation_id": "697",
+          "phase": "F66ADDF-SECTOR-NARROW-FOOTER",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "32S7-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "scoped_retest",
+          "reported_verdict_scope": "scoped_retest",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:12:51.255Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 일봉 지수는 읽을 수 있고 하단 잘림은 관측되지 않았다. 틱 응답의 단위 미확정 문구와 알림 버튼이 남았고, 요청한 최근 3개월 대비 차트의 표시 기간이 창 크기에 따라 달랐다. 초기 도구 실패 뒤 차트가 도착한 회차이며 전체 UI는 실패다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 698,
+          "observation_id": "698",
+          "phase": "F66ADDF-SECTOR-REMAXIMUM",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "32S7-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:13:25.088Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 일봉 지수는 읽을 수 있고 하단 잘림은 관측되지 않았다. 틱 응답의 단위 미확정 문구와 알림 버튼이 남았고, 요청한 최근 3개월 대비 차트의 표시 기간이 창 크기에 따라 달랐다. 초기 도구 실패 뒤 차트가 도착한 회차이며 전체 UI는 실패다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
         }
       ],
       "call_status": "passed",
@@ -20208,11 +20992,11 @@
       "observed_template_id": null,
       "target_coverage": "visual_reference_only",
       "last_whole_observation": {
-        "ledger_row": 571,
-        "phase": "35c3a4b-same-card-remax-2560-footer",
+        "ledger_row": 698,
+        "phase": "F66ADDF-SECTOR-REMAXIMUM",
         "call_status": "passed",
         "ui_status": "failed",
-        "tested_at": "2026-10-02T06:30:22.018Z",
+        "tested_at": "2026-10-02T11:13:25.088Z",
         "evidence_scope": "whole_observed_card"
       },
       "native_review_classification": "whole_failure_awaiting_retest",
@@ -20224,7 +21008,7 @@
       "last_scoped_failure": null,
       "reachability": {
         "status": "observed_reference_arrival",
-        "last_arrival_row": 571,
+        "last_arrival_row": 698,
         "actual_template_id": null
       }
     },
@@ -20784,6 +21568,138 @@
           ],
           "acquisition": "existing_card_or_navigation",
           "publication_policy": "New raw native notes and actual financial values omitted; public status/scope summary only"
+        },
+        {
+          "ledger_row": 674,
+          "observation_id": "674",
+          "phase": "0343c7e-watch-expand-max",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "3D4I-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:17:23.495Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 종목 펼침 화면은 최대 폭에서 이웃 영역의 값·라벨이 겹쳤다. 축소 폭의 세로 배치에서는 해당 겹침이 완화됐으나 전체 UI 실패 판정은 유지한다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 675,
+          "observation_id": "675",
+          "phase": "0343c7e-watch-expand-narrow",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "3D4I-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:18:39.522Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 종목 펼침 화면은 최대 폭에서 이웃 영역의 값·라벨이 겹쳤다. 축소 폭의 세로 배치에서는 해당 겹침이 완화됐으나 전체 UI 실패 판정은 유지한다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 676,
+          "observation_id": "676",
+          "phase": "0343c7e-watch-expand-narrow-footer",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "3D4I-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "scoped_retest",
+          "reported_verdict_scope": "scoped_retest",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:19:10.601Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 종목 펼침 화면은 최대 폭에서 이웃 영역의 값·라벨이 겹쳤다. 축소 폭의 세로 배치에서는 해당 겹침이 완화됐으나 전체 UI 실패 판정은 유지한다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 677,
+          "observation_id": "677",
+          "phase": "0343c7e-watch-expand-remax",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "3D4I-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:19:48.409Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 종목 펼침 화면은 최대 폭에서 이웃 영역의 값·라벨이 겹쳤다. 축소 폭의 세로 배치에서는 해당 겹침이 완화됐으나 전체 UI 실패 판정은 유지한다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
         }
       ],
       "call_status": "passed",
@@ -20791,18 +21707,18 @@
       "observed_template_id": null,
       "target_coverage": "visual_reference_only",
       "last_whole_observation": {
-        "ledger_row": 456,
-        "phase": "4af7ec9-watch-row-whole",
+        "ledger_row": 677,
+        "phase": "0343c7e-watch-expand-remax",
         "call_status": "passed",
         "ui_status": "failed",
-        "tested_at": "2026-10-01T19:05:34.596Z",
+        "tested_at": "2026-10-02T10:19:48.409Z",
         "evidence_scope": "whole_observed_card"
       },
       "native_review_classification": "whole_failure_awaiting_retest",
       "last_scoped_failure": null,
       "reachability": {
         "status": "observed_reference_arrival",
-        "last_arrival_row": 456,
+        "last_arrival_row": 677,
         "actual_template_id": null
       }
     },
@@ -21113,6 +22029,105 @@
           ],
           "acquisition": "existing_card_or_navigation",
           "publication_policy": "New raw native notes and actual financial values omitted; public status/scope summary only"
+        },
+        {
+          "ledger_row": 678,
+          "observation_id": "678",
+          "phase": "0343c7e-watch-elw-max",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "3EWN-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:21:41.142Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 ELW 화면의 빈 상태와 보조 영역을 관측했다. 실제 값이 채워진 상태의 검증으로 계산하지 않는다. 678행의 버튼 숨김 해석은 679·680행에서 철회됐으며 크기 변경 때문에 숨겨졌다고 단정하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 679,
+          "observation_id": "679",
+          "phase": "0343c7e-watch-elw-narrow",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "3EWN-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:22:14.946Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 ELW 화면의 빈 상태와 보조 영역을 관측했다. 실제 값이 채워진 상태의 검증으로 계산하지 않는다. 678행의 버튼 숨김 해석은 679·680행에서 철회됐으며 크기 변경 때문에 숨겨졌다고 단정하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
+        },
+        {
+          "ledger_row": 680,
+          "observation_id": "680",
+          "phase": "0343c7e-watch-elw-remax",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": null,
+          "actual_template_id": null,
+          "expected_template_id": "3EWN-0",
+          "target_coverage": "visual_reference_only",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T10:23:42.355Z",
+          "observations": [
+            "이 설명은 해당 카드의 이번 검증 묶음 요약이다. 각 행에서 확인한 경계는 phase와 evidence_scope를 따른다. 관심 ELW 화면의 빈 상태와 보조 영역을 관측했다. 실제 값이 채워진 상태의 검증으로 계산하지 않는다. 678행의 버튼 숨김 해석은 679·680행에서 철회됐으며 크기 변경 때문에 숨겨졌다고 단정하지 않는다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json"
         }
       ],
       "call_status": "passed",
@@ -21120,18 +22135,18 @@
       "observed_template_id": null,
       "target_coverage": "visual_reference_only",
       "last_whole_observation": {
-        "ledger_row": 457,
-        "phase": "4af7ec9-watch-elw-empty-whole",
+        "ledger_row": 680,
+        "phase": "0343c7e-watch-elw-remax",
         "call_status": "passed",
         "ui_status": "failed",
-        "tested_at": "2026-10-01T19:06:45.503Z",
+        "tested_at": "2026-10-02T10:23:42.355Z",
         "evidence_scope": "whole_observed_card"
       },
       "native_review_classification": "whole_failure_awaiting_retest",
       "last_scoped_failure": null,
       "reachability": {
         "status": "observed_reference_arrival",
-        "last_arrival_row": 457,
+        "last_arrival_row": 680,
         "actual_template_id": null
       }
     },
@@ -24298,7 +25313,7 @@
         "선택된 AI 제공자와 캔버스 도구"
       ],
       "ui_steps": [],
-      "status": "in_progress",
+      "status": "failed",
       "coverage_source": [
         "backend/athena_mcp/canvas.py",
         "app/canvas.js:951",
@@ -24306,7 +25321,8 @@
       ],
       "notes": [
         "사용자가 준 예시 자료이며 실제 금융 데이터로 주장하지 않는다. 모델이 본문 표만 답하면 카드 미호출로 기록한다.",
-        "현재 스냅샷에서 관측한 창 크기: 2122×1166. 해당 크기의 기록된 내용만 검증했다. 개별 변형은 근거가 있는 회차만 반영하며, 관측하지 않은 상태는 미실행이다."
+        "초기 149행 회차에서 관측한 창 크기: 2122×1166. 해당 크기의 기록된 내용만 검증했다. 개별 변형은 근거가 있는 회차만 반영하며, 관측하지 않은 상태는 미실행이다.",
+        "699–704행은 일반 표의 별도 실제 관측이다. 최대·재최대 UI 실패, 축소 700·703행은 기록된 예시에 한정해 통과했다. empty 변형은 미실행이며 94개 디자인 통과 수에 포함하지 않는다."
       ],
       "native_evidence": [
         {
@@ -24337,13 +25353,241 @@
           ],
           "kind_evidence_basis": "explicit native kind or exact phase and observation text",
           "acquisition": "not_explicitly_recorded"
+        },
+        {
+          "ledger_row": 699,
+          "observation_id": "699",
+          "phase": "F66ADDF-GENERAL-TABLE-MAXIMUM",
+          "prompt": "다음 자료를 표 카드로 보여줘: 사과 3개, 배 2개.",
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "table",
+          "actual_template_id": null,
+          "expected_template_id": null,
+          "target_coverage": "card_kind_observed",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:22:03.141Z",
+          "observations": [
+            "2560px 창에서 표의 열 사이 간격이 지나치게 넓어 전체 UI는 실패였다. 최대화와 재최대화에서 같은 간격 문제가 관측됐다."
+          ],
+          "acquisition": "question_arrival_reported_by_root",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "variant": "populated",
+          "actual_card_kinds": [
+            "table"
+          ],
+          "pass_scope_limit": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+        },
+        {
+          "ledger_row": 700,
+          "observation_id": "700",
+          "phase": "F66ADDF-GENERAL-TABLE-NARROW",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "passed",
+          "actual_card_kind": "table",
+          "actual_template_id": null,
+          "expected_template_id": null,
+          "target_coverage": "card_kind_observed",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:22:23.462Z",
+          "observations": [
+            "1411px 창의 이 두 열·두 행 예시에서는 잘림·겹침이 관측되지 않았다. 해당 예시와 창 크기에 한정된 통과이며 최대·복원 또는 전체 디자인 통과가 아니다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "variant": "populated",
+          "actual_card_kinds": [
+            "table"
+          ],
+          "pass_scope_limit": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+        },
+        {
+          "ledger_row": 701,
+          "observation_id": "701",
+          "phase": "F66ADDF-GENERAL-TABLE-REMAXIMUM",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "table",
+          "actual_template_id": null,
+          "expected_template_id": null,
+          "target_coverage": "card_kind_observed",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:22:57.786Z",
+          "observations": [
+            "2560px 창에서 표의 열 사이 간격이 지나치게 넓어 전체 UI는 실패였다. 최대화와 재최대화에서 같은 간격 문제가 관측됐다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "variant": "populated",
+          "actual_card_kinds": [
+            "table"
+          ],
+          "pass_scope_limit": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+        },
+        {
+          "ledger_row": 702,
+          "observation_id": "702",
+          "phase": "general-table-long-cell-max",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "table",
+          "actual_template_id": null,
+          "expected_template_id": null,
+          "target_coverage": "card_kind_observed",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:41:33.603Z",
+          "observations": [
+            "2560px 창에서 표의 열 사이 간격이 지나치게 넓어 전체 UI는 실패였다. 최대화와 재최대화에서 같은 간격 문제가 관측됐다."
+          ],
+          "acquisition": "question_arrival_reported_by_root",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "variant": "long-cell",
+          "actual_card_kinds": [
+            "table"
+          ],
+          "pass_scope_limit": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+        },
+        {
+          "ledger_row": 703,
+          "observation_id": "703",
+          "phase": "general-table-long-cell-narrow",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "passed",
+          "actual_card_kind": "table",
+          "actual_template_id": null,
+          "expected_template_id": null,
+          "target_coverage": "card_kind_observed",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            1411,
+            1166
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:41:52.111Z",
+          "observations": [
+            "1411px 창에서 3개 헤더·2개 행과 표 끝을 확인했다. 긴 문자열은 3줄, 문장은 2줄로 줄바꿈됐으며 잘림·겹침은 관측되지 않았다. 이 창 크기의 해당 예시만 통과이며 최대·복원 또는 전체 디자인 통과가 아니다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "variant": "long-cell",
+          "actual_card_kinds": [
+            "table"
+          ],
+          "pass_scope_limit": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+        },
+        {
+          "ledger_row": 704,
+          "observation_id": "704",
+          "phase": "general-table-long-cell-remax",
+          "prompt": null,
+          "action": null,
+          "call_status": "passed",
+          "ui_status": "failed",
+          "actual_card_kind": "table",
+          "actual_template_id": null,
+          "expected_template_id": null,
+          "target_coverage": "card_kind_observed",
+          "evidence_scope": "whole_observed_card",
+          "reported_verdict_scope": "whole_observed_card",
+          "screenshot_path": null,
+          "window_size": [
+            2560,
+            1392
+          ],
+          "ui_scale": "100% (settings observed)",
+          "tested_at": "2026-10-02T11:42:50.692Z",
+          "observations": [
+            "2560px 창에서 표의 열 사이 간격이 지나치게 넓어 전체 UI는 실패였다. 최대화와 재최대화에서 같은 간격 문제가 관측됐다."
+          ],
+          "acquisition": "existing_card_or_navigation",
+          "source_commit": {
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "publication_policy": "Sanitized root audit metadata and public UI issue summary only; no new raw notes, financial values, images or screenshot paths",
+          "metadata_source": "questionnaire704/safe-observations.json",
+          "variant": "long-cell",
+          "actual_card_kinds": [
+            "table"
+          ],
+          "pass_scope_limit": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
         }
       ],
       "call_status": "passed",
-      "ui_status": "passed",
+      "ui_status": "failed",
       "variant_status": {
-        "populated": "passed",
-        "long-cell": "not_run",
+        "populated": "failed",
+        "long-cell": "failed",
         "empty": "not_run"
       },
       "variant_evidence": {
@@ -24353,15 +25597,127 @@
             "status": "passed",
             "screenshot_path": ".omc/artifacts/card-ui-audit/native/general-table-populated.jpg",
             "tested_at": "2026-10-01T02:40:15.530Z"
+          },
+          {
+            "ledger_row": 699,
+            "phase": "F66ADDF-GENERAL-TABLE-MAXIMUM",
+            "status": "failed",
+            "window_size": [
+              2560,
+              1392
+            ],
+            "evidence_scope": "whole_observed_card",
+            "tested_at": "2026-10-02T11:22:03.141Z",
+            "source_commit": {
+              "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+              "basis": "root_sanitized_export_explicit_loaded_runtime",
+              "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+            },
+            "claim": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+          },
+          {
+            "ledger_row": 700,
+            "phase": "F66ADDF-GENERAL-TABLE-NARROW",
+            "status": "passed",
+            "window_size": [
+              1411,
+              1166
+            ],
+            "evidence_scope": "whole_observed_card",
+            "tested_at": "2026-10-02T11:22:23.462Z",
+            "source_commit": {
+              "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+              "basis": "root_sanitized_export_explicit_loaded_runtime",
+              "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+            },
+            "claim": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+          },
+          {
+            "ledger_row": 701,
+            "phase": "F66ADDF-GENERAL-TABLE-REMAXIMUM",
+            "status": "failed",
+            "window_size": [
+              2560,
+              1392
+            ],
+            "evidence_scope": "whole_observed_card",
+            "tested_at": "2026-10-02T11:22:57.786Z",
+            "source_commit": {
+              "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+              "basis": "root_sanitized_export_explicit_loaded_runtime",
+              "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+            },
+            "claim": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+          }
+        ],
+        "long-cell": [
+          {
+            "ledger_row": 702,
+            "phase": "general-table-long-cell-max",
+            "status": "failed",
+            "window_size": [
+              2560,
+              1392
+            ],
+            "evidence_scope": "whole_observed_card",
+            "tested_at": "2026-10-02T11:41:33.603Z",
+            "source_commit": {
+              "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+              "basis": "root_sanitized_export_explicit_loaded_runtime",
+              "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+            },
+            "claim": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+          },
+          {
+            "ledger_row": 703,
+            "phase": "general-table-long-cell-narrow",
+            "status": "passed",
+            "window_size": [
+              1411,
+              1166
+            ],
+            "evidence_scope": "whole_observed_card",
+            "tested_at": "2026-10-02T11:41:52.111Z",
+            "source_commit": {
+              "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+              "basis": "root_sanitized_export_explicit_loaded_runtime",
+              "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+            },
+            "claim": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
+          },
+          {
+            "ledger_row": 704,
+            "phase": "general-table-long-cell-remax",
+            "status": "failed",
+            "window_size": [
+              2560,
+              1392
+            ],
+            "evidence_scope": "whole_observed_card",
+            "tested_at": "2026-10-02T11:42:50.692Z",
+            "source_commit": {
+              "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+              "basis": "root_sanitized_export_explicit_loaded_runtime",
+              "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+            },
+            "claim": "Specific public table example at the recorded width only; not all-width/all-state or 94-template coverage"
           }
         ]
       },
       "card_kind_status": {
-        "table": "passed"
+        "table": "failed"
       },
       "observed_window_sizes": [
         [
           2122,
+          1166
+        ],
+        [
+          2560,
+          1392
+        ],
+        [
+          1411,
           1166
         ]
       ]
@@ -29228,18 +30584,18 @@
     }
   ],
   "native_snapshot": {
-    "source": "questionnaire668/native-snapshot-668.ndjson",
-    "sha256": "4511e8a078c0c35a6f6e90f603d1ac183aa57ad27c1b93d55fcf5ae57978a976",
-    "source_rows": 668,
-    "observation_rows": 661,
+    "source": "questionnaire704/input-provenance.json",
+    "sha256": "0fe6c3831ec817230771865d760abaa84276309b893f59183a1180a324bcad5a",
+    "source_rows": 704,
+    "observation_rows": 697,
     "correction_rows": 7,
-    "cutoff": "2026-10-02T09:34:29.346Z",
+    "cutoff": "2026-10-02T11:42:50.692Z",
     "actual_ui_template_ids": "all actual_template_id and observed_template_id remain null; historical source metadata, if preserved, is distinct",
     "template_summary": {
       "reference_templates": 94,
       "last_whole_display_pass": 48,
       "remaining_whole_reverification": 46,
-      "meaning": "668행까지의 역사적 마지막 전체 관측 집계. 최신94개 상태의 실제 최대·축소·복원 통과 수가 아니다."
+      "meaning": "704행까지의 역사적 마지막 전체 관측 집계. 일반 표의 제한된 폭 통과는94종 집계에 포함하지 않는다. 최신 전체 반응형 통과 수가 아니다."
     },
     "publication_policy": "Prior347 reviewed evidence preserved. New native raw notes/financial values/images excluded; local screenshot path references only.",
     "correction_breakdown": {
@@ -29250,6 +30606,32 @@
       "rows": 581,
       "sha256": "0875be8901c24f4da33947ac343e507c6afafa16e6c9f8c8bb0881b999902bad",
       "bytes": 432038
+    },
+    "source_kind": "prior_snapshot_plus_sanitized_appendix_manifest",
+    "previous_snapshot": {
+      "source": "questionnaire668/native-snapshot-668.ndjson",
+      "sha256": "4511e8a078c0c35a6f6e90f603d1ac183aa57ad27c1b93d55fcf5ae57978a976",
+      "source_rows": 668,
+      "observation_rows": 661,
+      "correction_rows": 7,
+      "cutoff": "2026-10-02T09:34:29.346Z",
+      "actual_ui_template_ids": "all actual_template_id and observed_template_id remain null; historical source metadata, if preserved, is distinct",
+      "template_summary": {
+        "reference_templates": 94,
+        "last_whole_display_pass": 48,
+        "remaining_whole_reverification": 46,
+        "meaning": "668행까지의 역사적 마지막 전체 관측 집계. 최신94개 상태의 실제 최대·축소·복원 통과 수가 아니다."
+      },
+      "publication_policy": "Prior347 reviewed evidence preserved. New native raw notes/financial values/images excluded; local screenshot path references only.",
+      "correction_breakdown": {
+        "expected_reference_correction_rows": 3,
+        "observation_correction_rows": 4
+      },
+      "immutable_prefix": {
+        "rows": 581,
+        "sha256": "0875be8901c24f4da33947ac343e507c6afafa16e6c9f8c8bb0881b999902bad",
+        "bytes": 432038
+      }
     }
   },
   "native_evidence_corrections": [
@@ -29353,13 +30735,54 @@
         }
       ],
       "meaning": "496행 예상 참조만13K0-2로 정정. 카드 미도착/실제ID null/UI미실행은 불변."
+    },
+    {
+      "type": "expected_reference_correction_appendix",
+      "source": "NATIVE670-673-REFERENCE-CORRECTIONS.json",
+      "ledger_rows": [
+        670,
+        671,
+        672,
+        673
+      ],
+      "corrections": [
+        {
+          "ledger_row": 670,
+          "original_expected_template_id": "2U5L-0",
+          "corrected_expected_template_id": "2U5L-1",
+          "actual_template_id": null,
+          "basis": "backend/ref/card-ui-questionnaire.json template2U5L-1 이름과 관심 ui_steps 대조"
+        },
+        {
+          "ledger_row": 671,
+          "original_expected_template_id": "2U5L-0",
+          "corrected_expected_template_id": "2U5L-1",
+          "actual_template_id": null,
+          "basis": "backend/ref/card-ui-questionnaire.json template2U5L-1 이름과 관심 ui_steps 대조"
+        },
+        {
+          "ledger_row": 672,
+          "original_expected_template_id": "2U5L-0",
+          "corrected_expected_template_id": "2U5L-1",
+          "actual_template_id": null,
+          "basis": "backend/ref/card-ui-questionnaire.json template2U5L-1 이름과 관심 ui_steps 대조"
+        },
+        {
+          "ledger_row": 673,
+          "original_expected_template_id": "2U5L-0",
+          "corrected_expected_template_id": "2U5L-1",
+          "actual_template_id": null,
+          "basis": "backend/ref/card-ui-questionnaire.json template2U5L-1 이름과 관심 ui_steps 대조"
+        }
+      ],
+      "meaning": "670–673행의 예상 참조만2U5L-1로 정정. 원본 원장과 실제 ID 미확인 상태는 보존한다."
     }
   ],
   "native_dimension_evidence": {
-    "snapshot_rows": 668,
-    "indexing_scope": "New496–518 explicit geometry observations plus explicitly identified historical max483/489/494 and narrow482/484; historical observations are otherwise preserved under each card, not retroactively scored by dimensions. Added explicitly indexed519–581 actual maximum/narrow/restore/footer/endpoint boundaries; listed cycles all failed. Older evidence remains historical. Added explicit582–668 axes and14 failed same-card cycles. No new passed responsive coverage; occluded/transient scopes excluded.",
+    "snapshot_rows": 704,
+    "indexing_scope": "New496–518 explicit geometry observations plus explicitly identified historical max483/489/494 and narrow482/484; historical observations are otherwise preserved under each card, not retroactively scored by dimensions. Added explicitly indexed519–581 actual maximum/narrow/restore/footer/endpoint boundaries; listed cycles all failed. Older evidence remains historical. Added explicit582–668 axes and14 failed same-card cycles. No new passed responsive coverage; occluded/transient scopes excluded. Added explicit669–698 template observations and7 failed size cycles. General-table699–704 is separately recorded and never counted as template coverage.",
     "status_meaning": "A listed boundary means it was observed, not that the card passed. UI verdict is the original row verdict. Empty cells mean no indexed proof, not proof the action never occurred.",
-    "source_commit_policy": "Only exact hexadecimal commit tokens explicitly present in the observation phase. Missing commit stays unknown. Current repository commits or candidate test results never substitute.",
+    "source_commit_policy": "Only exact hexadecimal commit tokens explicitly present in the observation phase. Missing commit stays unknown. Current repository commits or candidate test results never substitute. For669–704, the root sanitized export explicitly identifies loaded runtime SHA; this is recorded with its own basis even where phase has no commit token.",
     "dimensions": [
       "maximum",
       "narrow",
@@ -29825,6 +31248,128 @@
         ],
         "ui_status": "failed",
         "limitations": "665 screenshot occluded and excluded;666 is fresh narrow endpoint. Restore attempted at664 rejected by foreign occlusion, observed width change cause not assigned."
+      },
+      {
+        "template_id": "2U5L-1",
+        "rows": [
+          670,
+          671,
+          672,
+          673
+        ],
+        "maximum_row": 670,
+        "narrow_row": 671,
+        "restore_row": 673,
+        "bottom_row": null,
+        "table_end_rows": [
+          672
+        ],
+        "ui_status": "failed",
+        "limitations": null
+      },
+      {
+        "template_id": "3D4I-0",
+        "rows": [
+          674,
+          675,
+          676,
+          677
+        ],
+        "maximum_row": 674,
+        "narrow_row": 675,
+        "restore_row": 677,
+        "bottom_row": 676,
+        "table_end_rows": [],
+        "ui_status": "failed",
+        "limitations": null
+      },
+      {
+        "template_id": "3EWN-0",
+        "rows": [
+          678,
+          679,
+          680
+        ],
+        "maximum_row": 678,
+        "narrow_row": 679,
+        "restore_row": 680,
+        "bottom_row": null,
+        "table_end_rows": [],
+        "ui_status": "failed",
+        "limitations": "No populated values observed;678 hidden-CTA interpretation withdrawn by679/680."
+      },
+      {
+        "template_id": "2UBO-1",
+        "rows": [
+          681,
+          682,
+          683,
+          684,
+          685,
+          686
+        ],
+        "maximum_row": 681,
+        "narrow_row": 682,
+        "restore_row": 686,
+        "bottom_row": 685,
+        "table_end_rows": [
+          683,
+          684
+        ],
+        "ui_status": "failed",
+        "limitations": null
+      },
+      {
+        "template_id": "2UHM-1",
+        "rows": [
+          687,
+          688,
+          689,
+          690
+        ],
+        "maximum_row": 687,
+        "narrow_row": 688,
+        "restore_row": 690,
+        "bottom_row": null,
+        "table_end_rows": [
+          689
+        ],
+        "ui_status": "failed",
+        "limitations": null
+      },
+      {
+        "template_id": "2UN6-1",
+        "rows": [
+          691,
+          692,
+          693,
+          694
+        ],
+        "maximum_row": 691,
+        "narrow_row": 692,
+        "restore_row": 694,
+        "bottom_row": null,
+        "table_end_rows": [
+          693
+        ],
+        "ui_status": "failed",
+        "limitations": null
+      },
+      {
+        "template_id": "32S7-0",
+        "rows": [
+          695,
+          696,
+          697,
+          698
+        ],
+        "maximum_row": 695,
+        "narrow_row": 696,
+        "restore_row": 698,
+        "bottom_row": 697,
+        "table_end_rows": [],
+        "ui_status": "failed",
+        "limitations": null
       }
     ],
     "items": [
@@ -29970,7 +31515,7 @@
         "template_id": "13K0-2",
         "actual_template_id": null,
         "latest_observation": {
-          "ledger_row": 623,
+          "ledger_row": 669,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -29979,14 +31524,14 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "4a8f6b5",
-            "basis": "explicit_phase_token_only",
-            "verification": "ledger reported runtime source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T08:35:17.425Z"
+          "tested_at": "2026-10-02T10:06:03.950Z"
         },
         "last_historical_whole": {
-          "ledger_row": 623,
+          "ledger_row": 669,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -29995,11 +31540,11 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "4a8f6b5",
-            "basis": "explicit_phase_token_only",
-            "verification": "ledger reported runtime source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T08:35:17.425Z"
+          "tested_at": "2026-10-02T10:06:03.950Z"
         },
         "current_snapshot_observation_rows": [
           496,
@@ -30020,9 +31565,10 @@
           620,
           621,
           622,
-          623
+          623,
+          669
         ],
-        "latest_runtime_batch_status": "observed_in_582_668",
+        "latest_runtime_batch_status": "failed_retested_in_669_704",
         "axes": {
           "maximum": [
             {
@@ -30056,6 +31602,22 @@
                 "verification": "ledger reported runtime source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T08:31:09.667Z"
+            },
+            {
+              "ledger_row": 669,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:06:03.950Z"
             }
           ],
           "narrow": [
@@ -30324,9 +31886,9 @@
           ]
         },
         "source_commit": {
-          "value": "4a8f6b5",
-          "basis": "explicit_phase_token_only",
-          "verification": "ledger reported runtime source; not inferred from repository HEAD"
+          "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+          "basis": "root_sanitized_export_explicit_loaded_runtime",
+          "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
         },
         "complete_current_responsive_pass": false
       },
@@ -32115,7 +33677,7 @@
         "template_id": "2U5L-1",
         "actual_template_id": null,
         "latest_observation": {
-          "ledger_row": 553,
+          "ledger_row": 673,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -32124,14 +33686,14 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "6845ae9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T05:28:52.356Z"
+          "tested_at": "2026-10-02T10:10:27.275Z"
         },
         "last_historical_whole": {
-          "ledger_row": 553,
+          "ledger_row": 673,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -32140,19 +33702,23 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "6845ae9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T05:28:52.356Z"
+          "tested_at": "2026-10-02T10:10:27.275Z"
         },
         "current_snapshot_observation_rows": [
           550,
           551,
           552,
-          553
+          553,
+          670,
+          671,
+          672,
+          673
         ],
-        "latest_runtime_batch_status": "not_retested_in_582_668",
+        "latest_runtime_batch_status": "failed_retested_in_669_704",
         "axes": {
           "maximum": [
             {
@@ -32186,6 +33752,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:27:38.833Z"
+            },
+            {
+              "ledger_row": 670,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:07:05.897Z"
             }
           ],
           "narrow": [
@@ -32204,6 +33786,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:28:19.978Z"
+            },
+            {
+              "ledger_row": 671,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:08:18.937Z"
             }
           ],
           "restore": [
@@ -32222,6 +33820,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:28:52.356Z"
+            },
+            {
+              "ledger_row": 673,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:10:27.275Z"
             }
           ],
           "bottom": [
@@ -32274,13 +33888,29 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:28:19.978Z"
+            },
+            {
+              "ledger_row": 672,
+              "evidence_scope": "scoped_retest",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:09:11.591Z"
             }
           ]
         },
         "source_commit": {
-          "value": "6845ae9",
-          "basis": "explicit_phase_token",
-          "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+          "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+          "basis": "root_sanitized_export_explicit_loaded_runtime",
+          "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
         },
         "complete_current_responsive_pass": false
       },
@@ -32288,7 +33918,7 @@
         "template_id": "2UBO-1",
         "actual_template_id": null,
         "latest_observation": {
-          "ledger_row": 558,
+          "ledger_row": 686,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -32297,14 +33927,14 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "6845ae9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T05:44:03.662Z"
+          "tested_at": "2026-10-02T10:29:54.739Z"
         },
         "last_historical_whole": {
-          "ledger_row": 558,
+          "ledger_row": 686,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -32313,20 +33943,26 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "6845ae9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T05:44:03.662Z"
+          "tested_at": "2026-10-02T10:29:54.739Z"
         },
         "current_snapshot_observation_rows": [
           554,
           555,
           556,
           557,
-          558
+          558,
+          681,
+          682,
+          683,
+          684,
+          685,
+          686
         ],
-        "latest_runtime_batch_status": "not_retested_in_582_668",
+        "latest_runtime_batch_status": "failed_retested_in_669_704",
         "axes": {
           "maximum": [
             {
@@ -32360,6 +33996,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:42:50.856Z"
+            },
+            {
+              "ledger_row": 681,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:25:14.239Z"
             }
           ],
           "narrow": [
@@ -32394,6 +34046,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:43:36.681Z"
+            },
+            {
+              "ledger_row": 682,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:25:48.128Z"
             }
           ],
           "restore": [
@@ -32412,6 +34080,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:44:03.662Z"
+            },
+            {
+              "ledger_row": 686,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:29:54.739Z"
             }
           ],
           "bottom": [
@@ -32430,6 +34114,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:43:36.681Z"
+            },
+            {
+              "ledger_row": 685,
+              "evidence_scope": "scoped_retest",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:29:15.337Z"
             }
           ],
           "table_end": [
@@ -32464,13 +34164,45 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:43:15.151Z"
+            },
+            {
+              "ledger_row": 683,
+              "evidence_scope": "scoped_retest",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:26:21.784Z"
+            },
+            {
+              "ledger_row": 684,
+              "evidence_scope": "scoped_retest",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:27:09.052Z"
             }
           ]
         },
         "source_commit": {
-          "value": "6845ae9",
-          "basis": "explicit_phase_token",
-          "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+          "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+          "basis": "root_sanitized_export_explicit_loaded_runtime",
+          "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
         },
         "complete_current_responsive_pass": false
       },
@@ -32478,7 +34210,7 @@
         "template_id": "2UHM-1",
         "actual_template_id": null,
         "latest_observation": {
-          "ledger_row": 562,
+          "ledger_row": 690,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -32487,14 +34219,14 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "6845ae9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T05:48:45.482Z"
+          "tested_at": "2026-10-02T10:32:47.789Z"
         },
         "last_historical_whole": {
-          "ledger_row": 562,
+          "ledger_row": 690,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -32503,19 +34235,23 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "6845ae9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T05:48:45.482Z"
+          "tested_at": "2026-10-02T10:32:47.789Z"
         },
         "current_snapshot_observation_rows": [
           559,
           560,
           561,
-          562
+          562,
+          687,
+          688,
+          689,
+          690
         ],
-        "latest_runtime_batch_status": "not_retested_in_582_668",
+        "latest_runtime_batch_status": "failed_retested_in_669_704",
         "axes": {
           "maximum": [
             {
@@ -32549,6 +34285,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:48:03.758Z"
+            },
+            {
+              "ledger_row": 687,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:30:49.208Z"
             }
           ],
           "narrow": [
@@ -32567,6 +34319,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:48:28.856Z"
+            },
+            {
+              "ledger_row": 688,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:31:24.684Z"
             }
           ],
           "restore": [
@@ -32585,6 +34353,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:48:45.482Z"
+            },
+            {
+              "ledger_row": 690,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:32:47.789Z"
             }
           ],
           "bottom": [
@@ -32637,13 +34421,29 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:48:28.856Z"
+            },
+            {
+              "ledger_row": 689,
+              "evidence_scope": "scoped_retest",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:31:54.005Z"
             }
           ]
         },
         "source_commit": {
-          "value": "6845ae9",
-          "basis": "explicit_phase_token",
-          "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+          "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+          "basis": "root_sanitized_export_explicit_loaded_runtime",
+          "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
         },
         "complete_current_responsive_pass": false
       },
@@ -32651,7 +34451,7 @@
         "template_id": "2UN6-1",
         "actual_template_id": null,
         "latest_observation": {
-          "ledger_row": 566,
+          "ledger_row": 694,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -32660,14 +34460,14 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "6845ae9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T05:57:56.489Z"
+          "tested_at": "2026-10-02T10:35:23.211Z"
         },
         "last_historical_whole": {
-          "ledger_row": 566,
+          "ledger_row": 694,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -32676,19 +34476,23 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "6845ae9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T05:57:56.489Z"
+          "tested_at": "2026-10-02T10:35:23.211Z"
         },
         "current_snapshot_observation_rows": [
           563,
           564,
           565,
-          566
+          566,
+          691,
+          692,
+          693,
+          694
         ],
-        "latest_runtime_batch_status": "not_retested_in_582_668",
+        "latest_runtime_batch_status": "failed_retested_in_669_704",
         "axes": {
           "maximum": [
             {
@@ -32722,6 +34526,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:56:04.567Z"
+            },
+            {
+              "ledger_row": 691,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:33:27.667Z"
             }
           ],
           "narrow": [
@@ -32740,6 +34560,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:57:08.518Z"
+            },
+            {
+              "ledger_row": 692,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:34:04.663Z"
             }
           ],
           "restore": [
@@ -32758,6 +34594,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:57:56.489Z"
+            },
+            {
+              "ledger_row": 694,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:35:23.211Z"
             }
           ],
           "bottom": [
@@ -32810,13 +34662,29 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T05:57:08.518Z"
+            },
+            {
+              "ledger_row": 693,
+              "evidence_scope": "scoped_retest",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:34:35.670Z"
             }
           ]
         },
         "source_commit": {
-          "value": "6845ae9",
-          "basis": "explicit_phase_token",
-          "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+          "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+          "basis": "root_sanitized_export_explicit_loaded_runtime",
+          "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
         },
         "complete_current_responsive_pass": false
       },
@@ -36842,7 +38710,7 @@
         "template_id": "32S7-0",
         "actual_template_id": null,
         "latest_observation": {
-          "ledger_row": 571,
+          "ledger_row": 698,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -36851,14 +38719,14 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "35c3a4b",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T06:30:22.018Z"
+          "tested_at": "2026-10-02T11:13:25.088Z"
         },
         "last_historical_whole": {
-          "ledger_row": 571,
+          "ledger_row": 698,
           "evidence_scope": "whole_observed_card",
           "window_size": [
             2560,
@@ -36867,20 +38735,24 @@
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "35c3a4b",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+            "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-02T06:30:22.018Z"
+          "tested_at": "2026-10-02T11:13:25.088Z"
         },
         "current_snapshot_observation_rows": [
           567,
           568,
           569,
           570,
-          571
+          571,
+          695,
+          696,
+          697,
+          698
         ],
-        "latest_runtime_batch_status": "not_retested_in_582_668",
+        "latest_runtime_batch_status": "failed_retested_in_669_704",
         "axes": {
           "maximum": [
             {
@@ -36930,6 +38802,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T06:28:14.142Z"
+            },
+            {
+              "ledger_row": 695,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T11:10:44.566Z"
             }
           ],
           "narrow": [
@@ -36964,6 +38852,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T06:29:55.655Z"
+            },
+            {
+              "ledger_row": 696,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T11:12:10.531Z"
             }
           ],
           "restore": [
@@ -36982,6 +38886,22 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T06:30:22.018Z"
+            },
+            {
+              "ledger_row": 698,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T11:13:25.088Z"
             }
           ],
           "bottom": [
@@ -37032,14 +38952,30 @@
                 "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
               },
               "tested_at": "2026-10-02T06:30:22.018Z"
+            },
+            {
+              "ledger_row": 697,
+              "evidence_scope": "scoped_retest",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T11:12:51.255Z"
             }
           ],
           "table_end": []
         },
         "source_commit": {
-          "value": "35c3a4b",
-          "basis": "explicit_phase_token",
-          "verification": "ledger_reported_UI_source; not inferred from repository HEAD"
+          "value": "f66addff7ebfc2b3761b50fcc6a5526e648ab9e5",
+          "basis": "root_sanitized_export_explicit_loaded_runtime",
+          "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
         },
         "complete_current_responsive_pass": false
       },
@@ -37283,45 +39219,123 @@
         "template_id": "3D4I-0",
         "actual_template_id": null,
         "latest_observation": {
-          "ledger_row": 456,
+          "ledger_row": 677,
           "evidence_scope": "whole_observed_card",
           "window_size": [
-            1361,
-            961
+            2560,
+            1392
           ],
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "4af7ec9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not independently confirmed by this questionnaire"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-01T19:05:34.596Z"
+          "tested_at": "2026-10-02T10:19:48.409Z"
         },
         "last_historical_whole": {
-          "ledger_row": 456,
+          "ledger_row": 677,
           "evidence_scope": "whole_observed_card",
           "window_size": [
-            1361,
-            961
+            2560,
+            1392
           ],
           "ui_status": "failed",
           "call_status": "passed",
-          "tested_at": "2026-10-01T19:05:34.596Z"
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "tested_at": "2026-10-02T10:19:48.409Z"
         },
-        "current_snapshot_observation_rows": [],
-        "latest_runtime_batch_status": "not_retested_in_582_668",
+        "current_snapshot_observation_rows": [
+          674,
+          675,
+          676,
+          677
+        ],
+        "latest_runtime_batch_status": "failed_retested_in_669_704",
         "axes": {
-          "maximum": [],
-          "narrow": [],
-          "restore": [],
-          "bottom": [],
+          "maximum": [
+            {
+              "ledger_row": 674,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:17:23.495Z"
+            }
+          ],
+          "narrow": [
+            {
+              "ledger_row": 675,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:18:39.522Z"
+            }
+          ],
+          "restore": [
+            {
+              "ledger_row": 677,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:19:48.409Z"
+            }
+          ],
+          "bottom": [
+            {
+              "ledger_row": 676,
+              "evidence_scope": "scoped_retest",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:19:10.601Z"
+            }
+          ],
           "table_end": []
         },
         "source_commit": {
-          "value": "4af7ec9",
-          "basis": "explicit_phase_token",
-          "verification": "ledger_reported_UI_source; not independently confirmed by this questionnaire"
+          "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+          "basis": "root_sanitized_export_explicit_loaded_runtime",
+          "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
         },
         "complete_current_responsive_pass": false
       },
@@ -37421,45 +39435,105 @@
         "template_id": "3EWN-0",
         "actual_template_id": null,
         "latest_observation": {
-          "ledger_row": 457,
+          "ledger_row": 680,
           "evidence_scope": "whole_observed_card",
           "window_size": [
-            1361,
-            961
+            2560,
+            1392
           ],
           "ui_status": "failed",
           "call_status": "passed",
           "source_commit": {
-            "value": "4af7ec9",
-            "basis": "explicit_phase_token",
-            "verification": "ledger_reported_UI_source; not independently confirmed by this questionnaire"
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
           },
-          "tested_at": "2026-10-01T19:06:45.503Z"
+          "tested_at": "2026-10-02T10:23:42.355Z"
         },
         "last_historical_whole": {
-          "ledger_row": 457,
+          "ledger_row": 680,
           "evidence_scope": "whole_observed_card",
           "window_size": [
-            1361,
-            961
+            2560,
+            1392
           ],
           "ui_status": "failed",
           "call_status": "passed",
-          "tested_at": "2026-10-01T19:06:45.503Z"
+          "source_commit": {
+            "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+            "basis": "root_sanitized_export_explicit_loaded_runtime",
+            "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+          },
+          "tested_at": "2026-10-02T10:23:42.355Z"
         },
-        "current_snapshot_observation_rows": [],
-        "latest_runtime_batch_status": "not_retested_in_582_668",
+        "current_snapshot_observation_rows": [
+          678,
+          679,
+          680
+        ],
+        "latest_runtime_batch_status": "failed_retested_in_669_704",
         "axes": {
-          "maximum": [],
-          "narrow": [],
-          "restore": [],
+          "maximum": [
+            {
+              "ledger_row": 678,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:21:41.142Z"
+            }
+          ],
+          "narrow": [
+            {
+              "ledger_row": 679,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                1411,
+                1166
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:22:14.946Z"
+            }
+          ],
+          "restore": [
+            {
+              "ledger_row": 680,
+              "evidence_scope": "whole_observed_card",
+              "window_size": [
+                2560,
+                1392
+              ],
+              "ui_status": "failed",
+              "call_status": "passed",
+              "source_commit": {
+                "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+                "basis": "root_sanitized_export_explicit_loaded_runtime",
+                "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
+              },
+              "tested_at": "2026-10-02T10:23:42.355Z"
+            }
+          ],
           "bottom": [],
           "table_end": []
         },
         "source_commit": {
-          "value": "4af7ec9",
-          "basis": "explicit_phase_token",
-          "verification": "ledger_reported_UI_source; not independently confirmed by this questionnaire"
+          "value": "0343c7e64d4d7168f6292205a8095871f0f92b80",
+          "basis": "root_sanitized_export_explicit_loaded_runtime",
+          "verification": "Actual loaded runtime recorded by root; not inferred from current repository HEAD"
         },
         "complete_current_responsive_pass": false
       },
