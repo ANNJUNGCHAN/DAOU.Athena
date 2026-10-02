@@ -37,7 +37,8 @@
       "윈도 크기, UI 배율, 카드 스크롤, 실제 카드 id, 에러 상태, 스크린샷 경로를 함께 기록한다.",
       "582–668행87개 관측 추가, 원581행 불변.614–634 예상 참조는 공개 소스 전환 대상에 따라 별도 정정하며 실제template ID는 미확인. 모든 새UI관측 실패. 합성검사와 소스적용 승인은 실제 앱 전체 통과가 아니다.658의 일시 mini밀집은659안정화 후 분산배치로 해소돼 지속결함으로 계산하지 않는다.665외부가림 화면은 전체표시 증거로 계산하지 않는다.",
       "668행까지의 기존 관측과 입력은 보존했다. 669–704행 36개 관측을 추가했으며 670–673행의 예상 참조는 2U5L-1로 정정했다. 실제 화면 ID는 모두 미확인이다. 관심·업종 7개 크기 검증 경로는 실패다. 일반 표 700·703행의 축소 통과는 해당 예시·폭에 한정되며 최대·재최대화는 실패했다. 678행의 버튼 숨김 해석은 679·680행에서 철회됐다. 실제 값이 없는 ELW·VI·조건검색은 값이 채워진 상태를 검증한 것으로 계산하지 않는다. 최신 소스의94개 전체 반응형 통과 수는0이다.",
-      "현재 기록 범위는704행까지다. 705행 이후는 포함하지 않는다. 669–694행은0343c7e,695–704행은메뉴수정전f66addf 런타임의 관측이다. 작성 기준9616c9e나 합성 검사·커밋을 실제 앱 통과로 계산하지 않는다."
+      "704행 스냅샷 작성 당시 기록 범위는704행까지였으며 당시705행 이후는 포함하지 않았다. 669–694행은0343c7e,695–704행은메뉴수정전f66addf 런타임의 관측이다. 작성 기준9616c9e나 합성 검사·커밋을 실제 앱 통과로 계산하지 않는다.",
+      "현재 실행 부록은801행까지이며705–801행97개 공개 안전 메타데이터를 추가했다. 기존704행 스냅샷·101개참조/94개대상과7개제외·12개입력·31개추가흐름·LAYA 과거 기록은 보존한다. 실제template ID는 모두 미확인이다. scoped PASS는 해당 조작만의 통과이며 전체 카드나94개최신반응형통과로 합산하지 않는다. 728–730·800·801은 호출FAIL/UI미실행이다. 742–744의 별도 정상 경로 도착은 이전 호출실패를 지우지 않으며 전체UI FAIL이다. 최신94개전체반응형완료는 미완료다."
     ],
     "minimal_card_family_smoke": [
       "seed-account",
@@ -30581,6 +30582,3306 @@
       "evidence_scope": "whole_observed_card",
       "ledger_row": 261,
       "acquisition": "not_explicitly_recorded"
+    },
+    {
+      "id": "705",
+      "phase": "menu9616-ranking-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T11:53:31.905Z",
+      "ledger_row": 705,
+      "observation_id": "705",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "706",
+      "phase": "menu9616-market-selected",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "4A9H-1",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T11:53:53.384Z",
+      "ledger_row": 706,
+      "observation_id": "706",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "707",
+      "phase": "menu9616-market-escape",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T11:54:37.724Z",
+      "ledger_row": 707,
+      "observation_id": "707",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "708",
+      "phase": "menu9616-ranking-max-table-end",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T11:56:33.310Z",
+      "ledger_row": 708,
+      "observation_id": "708",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "709",
+      "phase": "menu9616-ranking-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T11:57:03.700Z",
+      "ledger_row": 709,
+      "observation_id": "709",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "710",
+      "phase": "menu9616-market-narrow",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "4A9H-1",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T11:57:18.181Z",
+      "ledger_row": 710,
+      "observation_id": "710",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "711",
+      "phase": "menu9616-market-narrow-escape",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T11:57:34.622Z",
+      "ledger_row": 711,
+      "observation_id": "711",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "712",
+      "phase": "menu9616-ranking-narrow-table-end",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T11:57:53.865Z",
+      "ledger_row": 712,
+      "observation_id": "712",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "713",
+      "phase": "menu9616-ranking-narrow-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T11:58:11.562Z",
+      "ledger_row": 713,
+      "observation_id": "713",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "714",
+      "phase": "menu9616-ranking-narrow-mini-end",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T11:58:40.983Z",
+      "ledger_row": 714,
+      "observation_id": "714",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "715",
+      "phase": "menu9616-ranking-remax",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T11:59:09.847Z",
+      "ledger_row": 715,
+      "observation_id": "715",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "716",
+      "phase": "menu9616-market-remax",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "4A9H-1",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T11:59:37.861Z",
+      "ledger_row": 716,
+      "observation_id": "716",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "717",
+      "phase": "menu9616-market-remax-escape",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "13K0-2",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T11:59:50.803Z",
+      "ledger_row": 717,
+      "observation_id": "717",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "718",
+      "phase": "menu9616-day-volume-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:00:08.818Z",
+      "ledger_row": 718,
+      "observation_id": "718",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "719",
+      "phase": "menu9616-day-volume-management-caption",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "4AUX-1",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:01:07.914Z",
+      "ledger_row": 719,
+      "observation_id": "719",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "720",
+      "phase": "menu9616-management-escape",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:01:43.707Z",
+      "ledger_row": 720,
+      "observation_id": "720",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "721",
+      "phase": "menu9616-day-volume-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:02:00.895Z",
+      "ledger_row": 721,
+      "observation_id": "721",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "722",
+      "phase": "menu9616-day-volume-narrow-table-end",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:02:29.314Z",
+      "ledger_row": 722,
+      "observation_id": "722",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "723",
+      "phase": "menu9616-day-volume-narrow-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:02:48.131Z",
+      "ledger_row": 723,
+      "observation_id": "723",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "724",
+      "phase": "menu9616-day-volume-remax",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:03:04.800Z",
+      "ledger_row": 724,
+      "observation_id": "724",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "725",
+      "phase": "general-table-empty-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:21:03.733Z",
+      "actual_card_kind": "table",
+      "ledger_row": 725,
+      "observation_id": "725",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "726",
+      "phase": "general-table-empty-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:21:28.788Z",
+      "actual_card_kind": "table",
+      "ledger_row": 726,
+      "observation_id": "726",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "727",
+      "phase": "general-table-empty-remax",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:21:43.993Z",
+      "actual_card_kind": "table",
+      "ledger_row": 727,
+      "observation_id": "727",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "728",
+      "phase": "flow-current97c6-invocation-missing-date",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "invocation_only",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:27:43.214Z",
+      "ledger_row": 728,
+      "observation_id": "728",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "invocation_only",
+      "target_coverage": "not_reached",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "직접 FLOW 입력의 호출 실패다. 카드 도착 없이 UI 미실행이며 이후742–744의 별도 경로 관측과 구분한다."
+      ]
+    },
+    {
+      "id": "729",
+      "phase": "flow-current97c6-invocation-explicit-date",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "invocation_only",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:29:18.144Z",
+      "ledger_row": 729,
+      "observation_id": "729",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "invocation_only",
+      "target_coverage": "not_reached",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "직접 FLOW 입력의 호출 실패다. 카드 도착 없이 UI 미실행이며 이후742–744의 별도 경로 관측과 구분한다."
+      ]
+    },
+    {
+      "id": "730",
+      "phase": "flow-current97c6-invocation-explicit-scope",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "invocation_only",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:30:51.560Z",
+      "ledger_row": 730,
+      "observation_id": "730",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "invocation_only",
+      "target_coverage": "not_reached",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "직접 FLOW 입력의 호출 실패다. 카드 도착 없이 UI 미실행이며 이후742–744의 별도 경로 관측과 구분한다."
+      ]
+    },
+    {
+      "id": "731",
+      "phase": "stock-chart-current97c6-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:34:41.307Z",
+      "actual_card_kind": "chart",
+      "ledger_row": 731,
+      "observation_id": "731",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "732",
+      "phase": "stock-chart-current97c6-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:35:22.677Z",
+      "actual_card_kind": "chart",
+      "ledger_row": 732,
+      "observation_id": "732",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "733",
+      "phase": "stock-chart-current97c6-narrow-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:35:53.518Z",
+      "actual_card_kind": "chart",
+      "ledger_row": 733,
+      "observation_id": "733",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "734",
+      "phase": "stock-chart-current97c6-remax",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:36:07.601Z",
+      "actual_card_kind": "chart",
+      "ledger_row": 734,
+      "observation_id": "734",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "735",
+      "phase": "stock-chart-current97c6-session-table-end",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:36:23.313Z",
+      "actual_card_kind": "chart",
+      "ledger_row": 735,
+      "observation_id": "735",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "736",
+      "phase": "etf-current97c6-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:40:44.100Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 736,
+      "observation_id": "736",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "737",
+      "phase": "etf-current97c6-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:41:03.897Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 737,
+      "observation_id": "737",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "738",
+      "phase": "etf-current97c6-narrow-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:41:18.623Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 738,
+      "observation_id": "738",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "739",
+      "phase": "etf-current97c6-daily-table-end",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:41:51.502Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 739,
+      "observation_id": "739",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "740",
+      "phase": "etf-current97c6-time-table-end",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:42:07.722Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 740,
+      "observation_id": "740",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "741",
+      "phase": "etf-current97c6-remax",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:42:34.580Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 741,
+      "observation_id": "741",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "742",
+      "phase": "flow-current97c6-investor-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:48:13.289Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 742,
+      "observation_id": "742",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "별도 정상 종목 탭 경로에서 투자자 카드에 도착했으나 전체UI FAIL이다.728–730의 직접 호출 실패를 해결된 것으로 표시하지 않는다."
+      ]
+    },
+    {
+      "id": "743",
+      "phase": "flow-current97c6-investor-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:48:30.352Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 743,
+      "observation_id": "743",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "별도 정상 종목 탭 경로에서 투자자 카드에 도착했으나 전체UI FAIL이다.728–730의 직접 호출 실패를 해결된 것으로 표시하지 않는다."
+      ]
+    },
+    {
+      "id": "744",
+      "phase": "flow-current97c6-investor-remax",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:48:45.881Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 744,
+      "observation_id": "744",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "별도 정상 종목 탭 경로에서 투자자 카드에 도착했으나 전체UI FAIL이다.728–730의 직접 호출 실패를 해결된 것으로 표시하지 않는다."
+      ]
+    },
+    {
+      "id": "745",
+      "phase": "flow-current97c6-program-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2RWK-1",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:49:42.603Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 745,
+      "observation_id": "745",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "746",
+      "phase": "flow-current97c6-program-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2RWK-1",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:50:10.147Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 746,
+      "observation_id": "746",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "747",
+      "phase": "flow-current97c6-program-main-table-end",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2RWK-1",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:50:28.166Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 747,
+      "observation_id": "747",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "748",
+      "phase": "flow-current97c6-program-narrow-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2RWK-1",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:50:49.637Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 748,
+      "observation_id": "748",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "749",
+      "phase": "flow-current97c6-program-session-table-end",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2RWK-1",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:51:11.059Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 749,
+      "observation_id": "749",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "750",
+      "phase": "flow-current97c6-program-rail-date-layout-narrow",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "2RWK-1",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:51:11.065Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 750,
+      "observation_id": "750",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "751",
+      "phase": "flow-current97c6-program-remax",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2RWK-1",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:51:39.068Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 751,
+      "observation_id": "751",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "752",
+      "phase": "flow-current97c6-credit-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2S4E-1",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:53:31.583Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 752,
+      "observation_id": "752",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "753",
+      "phase": "flow-current97c6-credit-max-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2S4E-1",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T12:53:49.582Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 753,
+      "observation_id": "753",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "754",
+      "phase": "flow-current97c6-credit-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2S4E-1",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T12:54:18.658Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 754,
+      "observation_id": "754",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "755",
+      "phase": "credit-narrow-table-right-end",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "2S4E-1",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:01:26.808Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 755,
+      "observation_id": "755",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "756",
+      "phase": "credit-narrow-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2S4E-1",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:02:30.403Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 756,
+      "observation_id": "756",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "757",
+      "phase": "credit-remaximize",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2S4E-1",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:03:07.742Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 757,
+      "observation_id": "757",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "758",
+      "phase": "broker-maximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:12:03.732Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 758,
+      "observation_id": "758",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "759",
+      "phase": "broker-narrow-with-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:12:58.545Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 759,
+      "observation_id": "759",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "760",
+      "phase": "broker-remaximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:13:15.549Z",
+      "actual_card_kind": "stock",
+      "ledger_row": 760,
+      "observation_id": "760",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "761",
+      "phase": "backtest-home-maximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:16:31.081Z",
+      "actual_card_kind": "backtest-home",
+      "ledger_row": 761,
+      "observation_id": "761",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "762",
+      "phase": "backtest-home-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:16:53.886Z",
+      "actual_card_kind": "backtest-home",
+      "ledger_row": 762,
+      "observation_id": "762",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "763",
+      "phase": "backtest-home-remaximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:17:12.437Z",
+      "actual_card_kind": "backtest-home",
+      "ledger_row": 763,
+      "observation_id": "763",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "외부 창 겹침으로 유효 UI 증거에서 제외한다. 원 판정은 보존한다."
+      ],
+      "evidence_status": "excluded_from_corrected_ui_accounting",
+      "exclusion_basis": "root_public_correction",
+      "correction_relation": {
+        "ledger_rows": [
+          763,
+          766
+        ],
+        "type": "foreign_surface_exclusion",
+        "meaning": "외부 창 겹침으로 유효 UI 증거에서 제외한다. 원 판정은 보존한다."
+      }
+    },
+    {
+      "id": "764",
+      "phase": "backtest-home-stable-remaximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:17:58.465Z",
+      "actual_card_kind": "backtest-home",
+      "ledger_row": 764,
+      "observation_id": "764",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "765",
+      "phase": "backtest-code-maximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:18:55.437Z",
+      "actual_card_kind": "backtest-code",
+      "ledger_row": 765,
+      "observation_id": "765",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "766",
+      "phase": "backtest-code-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:19:26.072Z",
+      "actual_card_kind": "backtest-code",
+      "ledger_row": 766,
+      "observation_id": "766",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "외부 창 겹침으로 유효 UI 증거에서 제외한다. 원 판정은 보존한다."
+      ],
+      "evidence_status": "excluded_from_corrected_ui_accounting",
+      "exclusion_basis": "root_public_correction",
+      "correction_relation": {
+        "ledger_rows": [
+          763,
+          766
+        ],
+        "type": "foreign_surface_exclusion",
+        "meaning": "외부 창 겹침으로 유효 UI 증거에서 제외한다. 원 판정은 보존한다."
+      }
+    },
+    {
+      "id": "767",
+      "phase": "backtest-code-narrow-right-end",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:19:55.934Z",
+      "actual_card_kind": "backtest-code",
+      "ledger_row": 767,
+      "observation_id": "767",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "768",
+      "phase": "backtest-code-narrow-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:20:23.381Z",
+      "actual_card_kind": "backtest-code",
+      "ledger_row": 768,
+      "observation_id": "768",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "769",
+      "phase": "backtest-code-remaximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:20:39.544Z",
+      "actual_card_kind": "backtest-code",
+      "ledger_row": 769,
+      "observation_id": "769",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "770",
+      "phase": "backtest-node-flow-maximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:22:26.541Z",
+      "actual_card_kind": "backtest-node-flow",
+      "ledger_row": 770,
+      "observation_id": "770",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "771",
+      "phase": "backtest-node-flow-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:22:48.931Z",
+      "actual_card_kind": "backtest-node-flow",
+      "ledger_row": 771,
+      "observation_id": "771",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "772",
+      "phase": "backtest-node-flow-remaximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:23:07.062Z",
+      "actual_card_kind": "backtest-node-flow",
+      "ledger_row": 772,
+      "observation_id": "772",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "773",
+      "phase": "backtest-form-maximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:24:18.908Z",
+      "actual_card_kind": "backtest-form",
+      "ledger_row": 773,
+      "observation_id": "773",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "774",
+      "phase": "backtest-form-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:24:40.252Z",
+      "actual_card_kind": "backtest-form",
+      "ledger_row": 774,
+      "observation_id": "774",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        1411,
+        1166
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "775",
+      "phase": "backtest-form-remaximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:24:59.203Z",
+      "actual_card_kind": "backtest-form",
+      "ledger_row": 775,
+      "observation_id": "775",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": [
+        2560,
+        1392
+      ],
+      "window_size_original_format": "array",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "776",
+      "phase": "ranking-menu4c51-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:41:58.031Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 776,
+      "observation_id": "776",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "777",
+      "phase": "ranking-management-menu4c51-max",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:42:30.578Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 777,
+      "observation_id": "777",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "778",
+      "phase": "ranking-menu4c51-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:43:06.351Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 778,
+      "observation_id": "778",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "778의 안내문 존재 표현은779에서 철회됐다.779의 축소 안내문 부재와 scoped FAIL을 유지하며778 whole FAIL을 승격하지 않는다."
+      ],
+      "correction_relation": {
+        "ledger_rows": [
+          778,
+          779
+        ],
+        "type": "hint_claim_correction",
+        "meaning": "778의 안내문 존재 표현은779에서 철회됐다.779의 축소 안내문 부재와 scoped FAIL을 유지하며778 whole FAIL을 승격하지 않는다."
+      }
+    },
+    {
+      "id": "779",
+      "phase": "ranking-sort-right4c51-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:43:27.435Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 779,
+      "observation_id": "779",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "778의 안내문 존재 표현은779에서 철회됐다.779의 축소 안내문 부재와 scoped FAIL을 유지하며778 whole FAIL을 승격하지 않는다."
+      ],
+      "correction_relation": {
+        "ledger_rows": [
+          778,
+          779
+        ],
+        "type": "hint_claim_correction",
+        "meaning": "778의 안내문 존재 표현은779에서 철회됐다.779의 축소 안내문 부재와 scoped FAIL을 유지하며778 whole FAIL을 승격하지 않는다."
+      }
+    },
+    {
+      "id": "780",
+      "phase": "ranking-menu4c51-narrow-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:43:55.156Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 780,
+      "observation_id": "780",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "781",
+      "phase": "ranking-menu4c51-remaximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:45:00.454Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 781,
+      "observation_id": "781",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "782",
+      "phase": "ranking-sort-keyboard-last4c51-narrow",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:48:09.298Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 782,
+      "observation_id": "782",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "782의 필터 행 포커스를 마지막 칩으로 판단한 PASS 주장은783에서 철회됐다.783은 정정이며 새UI시험이 아니다.784의 후속 키보드 드러남·포커스 scoped PASS는 별도이며 전체FAIL은 유지한다."
+      ],
+      "evidence_status": "excluded_from_corrected_ui_accounting",
+      "exclusion_basis": "root_public_correction",
+      "correction_relation": {
+        "ledger_rows": [
+          782,
+          783,
+          784
+        ],
+        "type": "keyboard_focus_claim_correction",
+        "meaning": "782의 필터 행 포커스를 마지막 칩으로 판단한 PASS 주장은783에서 철회됐다.783은 정정이며 새UI시험이 아니다.784의 후속 키보드 드러남·포커스 scoped PASS는 별도이며 전체FAIL은 유지한다."
+      }
+    },
+    {
+      "id": "783",
+      "phase": "ranking-sort-keyboard-correction4c51-narrow",
+      "call_status": "passed",
+      "ui_status": "not_run",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:48:26.704Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 783,
+      "observation_id": "783",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "782의 필터 행 포커스를 마지막 칩으로 판단한 PASS 주장은783에서 철회됐다.783은 정정이며 새UI시험이 아니다.784의 후속 키보드 드러남·포커스 scoped PASS는 별도이며 전체FAIL은 유지한다."
+      ],
+      "correction_relation": {
+        "ledger_rows": [
+          782,
+          783,
+          784
+        ],
+        "type": "keyboard_focus_claim_correction",
+        "meaning": "782의 필터 행 포커스를 마지막 칩으로 판단한 PASS 주장은783에서 철회됐다.783은 정정이며 새UI시험이 아니다.784의 후속 키보드 드러남·포커스 scoped PASS는 별도이며 전체FAIL은 유지한다."
+      },
+      "evidence_role": "correction_only_not_new_ui_test"
+    },
+    {
+      "id": "784",
+      "phase": "ranking-sort-keyboard-reveal4c51-narrow",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:49:20.001Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 784,
+      "observation_id": "784",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "782의 필터 행 포커스를 마지막 칩으로 판단한 PASS 주장은783에서 철회됐다.783은 정정이며 새UI시험이 아니다.784의 후속 키보드 드러남·포커스 scoped PASS는 별도이며 전체FAIL은 유지한다."
+      ],
+      "correction_relation": {
+        "ledger_rows": [
+          782,
+          783,
+          784
+        ],
+        "type": "keyboard_focus_claim_correction",
+        "meaning": "782의 필터 행 포커스를 마지막 칩으로 판단한 PASS 주장은783에서 철회됐다.783은 정정이며 새UI시험이 아니다.784의 후속 키보드 드러남·포커스 scoped PASS는 별도이며 전체FAIL은 유지한다."
+      }
+    },
+    {
+      "id": "785",
+      "phase": "ranking-management4c51-narrow",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:49:47.580Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 785,
+      "observation_id": "785",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "786",
+      "phase": "ranking-management-open-resize4c51-max",
+      "call_status": "passed",
+      "ui_status": "passed",
+      "actual_template_id": null,
+      "expected_template_id": "2X5N-0",
+      "evidence_scope": "scoped_retest",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:50:17.009Z",
+      "actual_card_kind": "explorer",
+      "ledger_row": 786,
+      "observation_id": "786",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "scoped_retest",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다."
+      ]
+    },
+    {
+      "id": "787",
+      "phase": "backtest-history4c51-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:51:39.694Z",
+      "actual_card_kind": "backtest-history",
+      "ledger_row": 787,
+      "observation_id": "787",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "저장 이력의 읽기 화면이다. 행 버튼 분리, 최대 폭의 큰 간격, 종목·기간·날짜 식별 문맥 부족과 작은 상태 글씨가 남았다. 기존 정렬·결과 열기·마지막 행 접근은 유지 대상이다."
+      ]
+    },
+    {
+      "id": "788",
+      "phase": "backtest-history4c51-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:52:08.238Z",
+      "actual_card_kind": "backtest-history",
+      "ledger_row": 788,
+      "observation_id": "788",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "저장 이력의 읽기 화면이다. 행 버튼 분리, 최대 폭의 큰 간격, 종목·기간·날짜 식별 문맥 부족과 작은 상태 글씨가 남았다. 기존 정렬·결과 열기·마지막 행 접근은 유지 대상이다."
+      ]
+    },
+    {
+      "id": "789",
+      "phase": "backtest-history4c51-narrow-bottom",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:53:02.849Z",
+      "actual_card_kind": "backtest-history",
+      "ledger_row": 789,
+      "observation_id": "789",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "저장 이력의 읽기 화면이다. 행 버튼 분리, 최대 폭의 큰 간격, 종목·기간·날짜 식별 문맥 부족과 작은 상태 글씨가 남았다. 기존 정렬·결과 열기·마지막 행 접근은 유지 대상이다."
+      ]
+    },
+    {
+      "id": "790",
+      "phase": "backtest-history4c51-remaximum-bottom",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:53:28.631Z",
+      "actual_card_kind": "backtest-history",
+      "ledger_row": 790,
+      "observation_id": "790",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "저장 이력의 읽기 화면이다. 행 버튼 분리, 최대 폭의 큰 간격, 종목·기간·날짜 식별 문맥 부족과 작은 상태 글씨가 남았다. 기존 정렬·결과 열기·마지막 행 접근은 유지 대상이다."
+      ]
+    },
+    {
+      "id": "791",
+      "phase": "backtest-saved-result4c51-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:54:13.142Z",
+      "actual_card_kind": "backtest-result",
+      "ledger_row": 791,
+      "observation_id": "791",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "저장 모의 결과의 읽기 화면이다. 지표 설명·표 제목 단위·종목과 기간 문맥·차트 축과 제목 간격의 결함이 남았다. 모의 소수 수량과 원값을 유지하며 새 실행 검증으로 계산하지 않는다."
+      ]
+    },
+    {
+      "id": "792",
+      "phase": "backtest-saved-result4c51-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:54:54.966Z",
+      "actual_card_kind": "backtest-result",
+      "ledger_row": 792,
+      "observation_id": "792",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "저장 모의 결과의 읽기 화면이다. 지표 설명·표 제목 단위·종목과 기간 문맥·차트 축과 제목 간격의 결함이 남았다. 모의 소수 수량과 원값을 유지하며 새 실행 검증으로 계산하지 않는다."
+      ]
+    },
+    {
+      "id": "793",
+      "phase": "backtest-saved-result4c51-narrow-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:55:41.287Z",
+      "actual_card_kind": "backtest-result",
+      "ledger_row": 793,
+      "observation_id": "793",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "저장 모의 결과의 읽기 화면이다. 지표 설명·표 제목 단위·종목과 기간 문맥·차트 축과 제목 간격의 결함이 남았다. 모의 소수 수량과 원값을 유지하며 새 실행 검증으로 계산하지 않는다."
+      ]
+    },
+    {
+      "id": "794",
+      "phase": "backtest-saved-result4c51-remaximum-footer",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:56:17.930Z",
+      "actual_card_kind": "backtest-result",
+      "ledger_row": 794,
+      "observation_id": "794",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "저장 모의 결과의 읽기 화면이다. 지표 설명·표 제목 단위·종목과 기간 문맥·차트 축과 제목 간격의 결함이 남았다. 모의 소수 수량과 원값을 유지하며 새 실행 검증으로 계산하지 않는다."
+      ]
+    },
+    {
+      "id": "795",
+      "phase": "backtest-saved-result4c51-remaximum-chart",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:57:04.282Z",
+      "actual_card_kind": "backtest-result",
+      "ledger_row": 795,
+      "observation_id": "795",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "저장 모의 결과의 읽기 화면이다. 지표 설명·표 제목 단위·종목과 기간 문맥·차트 축과 제목 간격의 결함이 남았다. 모의 소수 수량과 원값을 유지하며 새 실행 검증으로 계산하지 않는다."
+      ]
+    },
+    {
+      "id": "796",
+      "phase": "backtest-optimize4c51-max",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T13:59:17.582Z",
+      "actual_card_kind": "backtest-optimize",
+      "ledger_row": 796,
+      "observation_id": "796",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "최적화 설정의 읽기 화면이다. 작은 범위 글씨, 빈 선택줄, 분리된 버튼, 종목·기간·기본설정 문맥과TR/cache 설명 부족이 남았다. 새 탐색 실행은 미검증이다."
+      ]
+    },
+    {
+      "id": "797",
+      "phase": "backtest-optimize4c51-narrow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        1411,
+        1166
+      ],
+      "tested_at": "2026-10-02T13:59:47.911Z",
+      "actual_card_kind": "backtest-optimize",
+      "ledger_row": 797,
+      "observation_id": "797",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 1411,
+        "height": 1166
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "최적화 설정의 읽기 화면이다. 작은 범위 글씨, 빈 선택줄, 분리된 버튼, 종목·기간·기본설정 문맥과TR/cache 설명 부족이 남았다. 새 탐색 실행은 미검증이다."
+      ]
+    },
+    {
+      "id": "798",
+      "phase": "backtest-optimize4c51-remaximum",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:00:13.727Z",
+      "actual_card_kind": "backtest-optimize",
+      "ledger_row": 798,
+      "observation_id": "798",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "798은 외부 창 겹침으로 유효 UI 증거에서 제외한다.799의 안정 재최대 관측은 전체FAIL이며 원798을 보존한다.",
+        "최적화 설정의 읽기 화면이다. 작은 범위 글씨, 빈 선택줄, 분리된 버튼, 종목·기간·기본설정 문맥과TR/cache 설명 부족이 남았다. 새 탐색 실행은 미검증이다."
+      ],
+      "evidence_status": "excluded_from_corrected_ui_accounting",
+      "exclusion_basis": "root_public_correction",
+      "correction_relation": {
+        "ledger_rows": [
+          798,
+          799
+        ],
+        "type": "foreign_surface_exclusion_and_stable_retest",
+        "meaning": "798은 외부 창 겹침으로 유효 UI 증거에서 제외한다.799의 안정 재최대 관측은 전체FAIL이며 원798을 보존한다."
+      }
+    },
+    {
+      "id": "799",
+      "phase": "backtest-optimize4c51-remaximum-correction",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "expected_template_id": null,
+      "evidence_scope": "whole_observed_card",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "tested_at": "2026-10-02T14:01:03.940Z",
+      "actual_card_kind": "backtest-optimize",
+      "ledger_row": 799,
+      "observation_id": "799",
+      "actual_template_id_basis": "explicit_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "reported_verdict_scope": "whole_observed_card",
+      "target_coverage": "visual_reference_only",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "798은 외부 창 겹침으로 유효 UI 증거에서 제외한다.799의 안정 재최대 관측은 전체FAIL이며 원798을 보존한다.",
+        "최적화 설정의 읽기 화면이다. 작은 범위 글씨, 빈 선택줄, 분리된 버튼, 종목·기간·기본설정 문맥과TR/cache 설명 부족이 남았다. 새 탐색 실행은 미검증이다."
+      ],
+      "correction_relation": {
+        "ledger_rows": [
+          798,
+          799
+        ],
+        "type": "foreign_surface_exclusion_and_stable_retest",
+        "meaning": "798은 외부 창 겹침으로 유효 UI 증거에서 제외한다.799의 안정 재최대 관측은 전체FAIL이며 원798을 보존한다."
+      }
+    },
+    {
+      "id": "800",
+      "phase": "watch-minimum-max-invocation-failed",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "expected_template_id": "2U5L-1",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "verification": "Loaded-runtime metadata explicitly supplied; not inferred from phase or current HEAD"
+      },
+      "tested_at": "2026-10-02T14:19:16.178Z",
+      "ledger_row": 800,
+      "observation_id": "800",
+      "actual_template_id": null,
+      "actual_template_id_basis": "unconfirmed_missing_normalized_to_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "evidence_scope": "invocation_only",
+      "reported_verdict_scope": "invocation_only",
+      "target_coverage": "not_reached",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "관심종목 최소 입력은 연결 기능이 없는 경로 응답으로 카드 미도착이다. CALL FAIL / UI NOT_RUN. 예상2U5L-1은 시각 참조만이며 실제ID는 미확인이다."
+      ]
+    },
+    {
+      "id": "801",
+      "phase": "vi-max-provider-invocation-failed",
+      "call_status": "failed",
+      "ui_status": "not_run",
+      "expected_template_id": "2UHM-1",
+      "window_size": [
+        2560,
+        1392
+      ],
+      "source_commit": {
+        "value": "601cc2901380faebcd7daa0f7d388de3c3c029ce",
+        "basis": "explicit_safe_metadata",
+        "verification": "Loaded-runtime metadata explicitly supplied; not inferred from phase or current HEAD"
+      },
+      "tested_at": "2026-10-02T14:22:35.360Z",
+      "ledger_row": 801,
+      "observation_id": "801",
+      "actual_template_id": null,
+      "actual_template_id_basis": "unconfirmed_missing_normalized_to_null",
+      "window_size_original": {
+        "width": 2560,
+        "height": 1392
+      },
+      "window_size_original_format": "object",
+      "prompt": null,
+      "action": null,
+      "screenshot_path": null,
+      "evidence_scope": "invocation_only",
+      "reported_verdict_scope": "invocation_only",
+      "target_coverage": "not_reached",
+      "publication_policy": "Safe metadata and sanitized public UI summaries only; no raw input, notes, screenshots or private values",
+      "metadata_source": "questionnaire801-metadata-plan/safe-metadata-705-801.json",
+      "observations": [
+        "기록된 회차·창크기·판정 범위만의 관측이다. 예상 참조는 실제 화면 ID 확인을 뜻하지 않으며 전체94개 최신 검증 집계에서 제외한다.",
+        "VI 최소 입력은 증권사 시세 서버 요청의 반복 실패로 카드 미도착이다. CALL FAIL / UI NOT_RUN.800의 경로 미지원과 별도 호출 실패이며 예상2UHM-1은 참조만이다."
+      ]
     }
   ],
   "native_snapshot": {
@@ -40458,5 +43759,58 @@
         "complete_current_responsive_pass": false
       }
     ]
+  },
+  "native_execution_appendix": {
+    "cutoff_row": 801,
+    "previous_snapshot_row": 704,
+    "new_rows": {
+      "from": 705,
+      "to": 801,
+      "count": 97
+    },
+    "observation_rows_with_metadata_appendix": 794,
+    "source_plan_sha256": "744cdfab9fc757395afe45d9a64de8a80cdc099fc21b54717ba97e8e9afa1036",
+    "safe_metadata_sha256": "afb14a5a928cb81fb53d0118760f11ad163da1e1ed7a4f3d0e6b2e15f7401cc0",
+    "previous_snapshot_preserved": true,
+    "template_aggregate_recomputed": false,
+    "latest_responsive_94_status": "incomplete",
+    "corrections": [
+      {
+        "ledger_rows": [
+          763,
+          766
+        ],
+        "type": "foreign_surface_exclusion",
+        "meaning": "외부 창 겹침으로 유효 UI 증거에서 제외한다. 원 판정은 보존한다."
+      },
+      {
+        "ledger_rows": [
+          778,
+          779
+        ],
+        "type": "hint_claim_correction",
+        "meaning": "778의 안내문 존재 표현은779에서 철회됐다.779의 축소 안내문 부재와 scoped FAIL을 유지하며778 whole FAIL을 승격하지 않는다."
+      },
+      {
+        "ledger_rows": [
+          782,
+          783,
+          784
+        ],
+        "type": "keyboard_focus_claim_correction",
+        "meaning": "782의 필터 행 포커스를 마지막 칩으로 판단한 PASS 주장은783에서 철회됐다.783은 정정이며 새UI시험이 아니다.784의 후속 키보드 드러남·포커스 scoped PASS는 별도이며 전체FAIL은 유지한다."
+      },
+      {
+        "ledger_rows": [
+          798,
+          799
+        ],
+        "type": "foreign_surface_exclusion_and_stable_retest",
+        "meaning": "798은 외부 창 겹침으로 유효 UI 증거에서 제외한다.799의 안정 재최대 관측은 전체FAIL이며 원798을 보존한다."
+      }
+    ],
+    "window_dimensions": "Normalized arrays retain window_size_original and window_size_original_format; original ledger unchanged",
+    "actual_template_ids": "All97 null;800/801 missing fields remain unconfirmed",
+    "limitations": "Metadata appendix only. No additional IDs assigned from phase; no new source runtime inferred; no new native or renderer verification. All new rows remain additional evidence outside historical94 summary."
   }
 }
