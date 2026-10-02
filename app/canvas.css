@@ -1504,6 +1504,9 @@ table.fin-table { width: 100%; border-collapse: collapse; font-variant-numeric: 
 .common-table-scroll { min-width: 0; max-width: 100%; overflow-x: auto; }
 .common-table-scroll:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
 table.common-table { min-width: 420px; font-size: 13px; line-height: 20px; }
+.card.mcp-table.common-card:not(.integrated-card):not(.board-card):not([data-semantic-primary="specialized"]) table.common-table { width: max-content; max-width: 100%; }
+.card.mcp-table.common-card:not(.integrated-card):not(.board-card):not([data-semantic-primary="specialized"]) .common-table :is(th, td):not(.is-numeric) { max-width: 64ch; }
+.card.mcp-table.common-card:not(.integrated-card):not(.board-card):not([data-semantic-primary="specialized"]) .common-table-empty { max-width: 420px; }
 .common-table th, .common-table td {
   padding: 10px 8px;
   min-width: 96px;

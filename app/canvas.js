@@ -4265,12 +4265,18 @@ function renderMcpTable(envelope) {
   const rows = (envelope.data && Array.isArray(envelope.data.rows)) ? envelope.data.rows : [];
   const header = (envelope.data && Array.isArray(envelope.data.header)) ? envelope.data.header : [];
 
-  if (!rawCols.length || !rows.length) {
+  if (!rawCols.length) {
     body.appendChild(errorNote('조회한 결과가 없습니다. 기간이나 조건을 바꿔 다시 조회해 주세요.'));
     return card;
   }
   if (header.length) body.appendChild(renderCompoundHeaderBand(header));
   body.appendChild(buildReadableTable(rawCols, rows));
+  if (!rows.length) {
+    const note = emptyState('표시할 데이터 행이 없습니다.');
+    note.classList.add('common-table-empty');
+    note.setAttribute('role', 'status');
+    body.appendChild(note);
+  }
   return card;
 }
 
