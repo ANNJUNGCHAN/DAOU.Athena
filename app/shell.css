@@ -7902,3 +7902,61 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
   color: var(--color-k-text);
   cursor: pointer;
 }
+
+/* Public backtest history/result/optimization readability; no live quantity policy. */
+#backtestCanvas :is(.backtest-history, .backtest-result, .backtest-optimize) { max-width: 1120px; min-width: 0; }
+#backtestCanvas .backtest-history-line { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+#backtestCanvas .backtest-history-line .backtest-history-row { flex: 1 1 420px; width: auto; min-width: 0; margin: 0; flex-wrap: wrap; }
+#backtestCanvas .backtest-history-line .backtest-version-activate { margin: 0; flex: 0 0 auto; }
+#backtestCanvas .backtest-history-id { flex: 0 1 auto; }
+#backtestCanvas .backtest-history-date { color: var(--color-k-dim); font-size: 12px; overflow-wrap: anywhere; }
+#backtestCanvas .backtest-history-status { font-size: 12px; }
+#backtestCanvas .backtest-history-return { margin-left: auto; }
+#backtestCanvas .backtest-history-return.is-down { color: var(--color-down); }
+#backtestCanvas .backtest-history-return.is-flat { color: var(--color-k-text); }
+#backtestCanvas .backtest-result-context { margin: 8px 0 16px; color: var(--color-k-dim); font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+#backtestCanvas :is(.backtest-result .backtest-card-title, .backtest-result .backtest-card-note, .backtest-metric-label, .backtest-metric-sub) { font-size: 12px; line-height: 18px; }
+#backtestCanvas .backtest-result > .backtest-card-title { overflow-wrap: anywhere; }
+#backtestCanvas .backtest-equity-host { height: auto; display: grid; grid-template-columns: 64px minmax(0, 1fr); grid-template-rows: 220px auto; gap: 8px; }
+#backtestCanvas .backtest-equity-values { position: relative; grid-column: 1; grid-row: 1; min-width: 0; font-size: 11px; color: var(--color-k-dim); }
+#backtestCanvas .backtest-equity-values span { position: absolute; right: 0; transform: translateY(-50%); white-space: nowrap; }
+#backtestCanvas .backtest-equity-svg { grid-column: 2; grid-row: 1; }
+#backtestCanvas .backtest-equity-host > .backtest-equity-empty { grid-column: 1 / -1; grid-row: 1; }
+#backtestCanvas .backtest-equity-axis { grid-column: 2; grid-row: 2; font-size: 11px; line-height: 18px; gap: 8px; flex-wrap: wrap; }
+#backtestCanvas .backtest-equity { margin-bottom: 24px; }
+#backtestCanvas .backtest-trades { overflow-x: auto; }
+#backtestCanvas .backtest-trades-table { min-width: 600px; }
+#backtestCanvas .backtest-trades-cell { font-size: 12px; white-space: nowrap; }
+#backtestCanvas .backtest-optimize .backtest-segment { width: fit-content; max-width: 100%; }
+#backtestCanvas .backtest-optimize-range { font-size: 13px; line-height: 22px; overflow-wrap: anywhere; }
+
+/* Exact backtest workspace readability and intrinsic node heights. */
+#backtestCanvas { container: backtest-viewport / inline-size; }
+#backtestCanvas :is(.backtest-technique-wrap, .backtest-design:has(.backtest-field)) { max-width: 1120px; }
+#backtestCanvas :is(.backtest-technique-row, .backtest-user-strategy-row) { padding: 0 0 10px; border: 1px solid var(--color-k-line-soft); border-radius: 12px; background: var(--color-k-panel2); overflow: hidden; }
+#backtestCanvas :is(.backtest-technique-row, .backtest-user-strategy-row) > .backtest-technique-card { border: 0; border-radius: 0; background: transparent; }
+#backtestCanvas .backtest-technique-actions { padding: 0 12px; flex-wrap: wrap; }
+#backtestCanvas :is(.backtest-user-strategy-path, .backtest-technique-desc, .backtest-technique-meta, .backtest-technique-foot, .backtest-field-label, .backtest-card-note) { color: var(--color-k-dim); font-size: 12px; line-height: 18px; }
+#backtestCanvas .backtest-user-strategy-path { overflow-wrap: anywhere; white-space: normal; }
+#backtestCanvas .backtest-card-head { flex-wrap: wrap; }
+#backtestCanvas :is(.backtest-field, .backtest-field-input) { min-width: 0; max-width: 100%; }
+#backtestCanvas .backtest-param { min-width: 0; flex-wrap: wrap; }
+#backtestCanvas :is(.backtest-param-name, .backtest-param-range) { overflow-wrap: anywhere; }
+#backtestCanvas .backtest-code-tab { min-width: 0; width: 100%; }
+#backtestCanvas .backtest-tnodes-card > * { flex-shrink: 0; }
+#backtestCanvas :is(.backtest-tnodes-card-summary, .backtest-tnodes-card-io, .backtest-tnodes-card-lines) { font-size: 12px; line-height: 18px; white-space: normal; overflow-wrap: anywhere; overflow: visible; }
+#backtestCanvas .backtest-tnodes-card-summary { word-break: normal; }
+#backtestCanvas .backtest-tnodes-canvas { flex: 0 1 auto; max-width: 100%; }
+#backtestCanvas .backtest-tnodes-surface { flex: 0 0 auto; max-width: 100%; }
+#backtestCanvas .backtest-body:has(.backtest-technique-nodes-host) { display: block; }
+#backtestCanvas .backtest-equity-host:has(> .backtest-equity-empty) { grid-template-rows: auto; gap: 0; }
+@container backtest-viewport (min-width: 560px) {
+  #backtestCanvas .backtest-metric-tile { flex-basis: calc(25% - 7.5px); box-sizing: border-box; }
+  #backtestCanvas .backtest-metric-tile:nth-child(n+5) { flex-basis: calc(50% - 5px); }
+}
+@container backtest-viewport (max-width: 720px) {
+  #backtestCanvas .backtest-technique-list { grid-template-columns: minmax(0, 1fr); }
+  #backtestCanvas .project-ide-body { flex-direction: column; }
+  #backtestCanvas .project-ide-side { flex-basis: auto; max-height: 170px; border-right: 0; border-bottom: 1px solid var(--color-k-line); }
+  #backtestCanvas .project-ide-tree { max-height: 110px; }
+}

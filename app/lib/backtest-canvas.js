@@ -896,9 +896,36 @@ async function loadCompletedHistoryRun(runId, deps, isCurrent) {
   return { runId, result, trades };
 }
 
+function backtestResultTarget(result) {
+  // Code executions receive their target separately; stored Python is not a target document.
+  return result && result.metrics && result.metrics.run_path === 'form'
+    ? targetFromYaml(result.source || '') : {};
+}
+
+function backtestQuantityText(value) {
+  if (value === null || value === undefined || value === '') return '—';
+  const number = Number(value);
+  return Number.isFinite(number)
+    ? number.toLocaleString('ko-KR', { maximumFractionDigits: 20 }) : String(value);
+}
+
+function backtestContextText(target, result) {
+  const item = target || {};
+  const codes = Array.isArray(item.symbols) ? item.symbols.filter(code => typeof code === 'string' && code.trim()) : [];
+  const parts = [codes.length ? '종목 ' + codes.join(', ') : '종목 정보 미제공'];
+  if (item.period) parts.push(({ day: '일봉', week: '주봉', month: '월봉' })[item.period] || String(item.period));
+  if (item.fromDt && item.toDt) parts.push('설정 기간 ' + item.fromDt + ' ~ ' + item.toDt);
+  else {
+    const dates = ((result && result.equity) || []).map(point => point && point.dt).filter(Boolean);
+    if (dates.length) parts.push('결과 기간 ' + dates[0] + ' ~ ' + dates[dates.length - 1]);
+  }
+  return parts.join(' · ');
+}
+
 function renderCompletedHistoryRun(loaded, renderers) {
   const wrap = el('div', 'backtest-result');
   wrap.appendChild(el('div', 'backtest-card-title', `저장된 실행 ${loaded.runId} · 읽기 전용`));
+  wrap.appendChild(el('div', 'backtest-result-context', backtestContextText(backtestResultTarget(loaded.result), loaded.result)));
   wrap.appendChild(renderers.metrics(loaded.result.metrics || null));
   wrap.appendChild(renderers.equity(loaded.result, loaded.trades));
   wrap.appendChild(renderers.stdout(loaded.result.stdout || ''));
@@ -5233,6 +5260,7 @@ function createBacktestCanvas(options) {
     const runPathValue = (state.result.metrics && state.result.metrics.run_path) === 'code'
       ? '코드 경로' : '폼 경로';
     wrap.appendChild(el('div', 'backtest-result-runpath', runPathValue));
+    wrap.appendChild(el('div', 'backtest-result-context', backtestContextText(backtestResultTarget(state.result), state.result)));
     wrap.appendChild(renderMetricTiles());
     wrap.appendChild(renderEquity());
     wrap.appendChild(renderStdout());
@@ -5257,7 +5285,7 @@ function createBacktestCanvas(options) {
   function renderEquity(result = state.result, trades = state.trades) {
     const wrap = el('div', 'backtest-equity');
     const head = el('div', 'backtest-card-head');
-    head.appendChild(el('div', 'backtest-card-title', '자산곡선'));
+    head.appendChild(el('div', 'backtest-card-title', '자산곡선 · 시작값 1배'));
     const legend = el('div', 'backtest-equity-legend');
     legend.appendChild(el('span', 'backtest-legend-strategy', '전략'));
     legend.appendChild(el('span', 'backtest-legend-benchmark', '매수보유'));
@@ -5297,7 +5325,7 @@ function createBacktestCanvas(options) {
     const wrap = el('div', 'backtest-trades');
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-trades-title', `체결 ${formatNumeric(trades.length)}건`));
-    head.appendChild(el('div', 'backtest-card-note', '수수료·세금 반영 후 손익'));
+    head.appendChild(el('div', 'backtest-card-note', '모의 수량은 소수 허용 · 수수료·세금 반영 후 손익'));
     wrap.appendChild(head);
     if (!trades.length) {
       wrap.appendChild(el('div', 'backtest-trades-empty', '체결이 없습니다'));
@@ -5305,7 +5333,7 @@ function createBacktestCanvas(options) {
     }
     const table = el('table', 'backtest-trades-table');
     const headRow = el('tr', 'backtest-trades-row backtest-trades-head');
-    ['일자', '방향', '체결가', '수량', '비용', '손익', '사유'].forEach((label) => {
+    ['일자', '방향', '체결가 (원)', '수량 (주)', '비용 (원)', '손익 (원)', '사유'].forEach((label) => {
       headRow.appendChild(el('th', 'backtest-trades-cell', label));
     });
     table.appendChild(headRow);
@@ -5314,7 +5342,7 @@ function createBacktestCanvas(options) {
       row.appendChild(el('td', 'backtest-trades-cell', formatDatetime(trade.dt)));
       row.appendChild(el('td', `backtest-trades-cell is-${trade.side}`, SIDE_LABEL[trade.side] || trade.side));
       row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(trade.price)));
-      row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(trade.qty)));
+      row.appendChild(el('td', 'backtest-trades-cell', backtestQuantityText(trade.qty)));
       // 비용은 수수료+세금이다 — 수수료만 보여주면 매도 거래세가 사라진 것처럼 읽힌다.
       const cost = (Number(trade.fee) || 0) + (Number(trade.tax) || 0);
       row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(cost)));
@@ -5403,19 +5431,24 @@ function createBacktestCanvas(options) {
       });
       row.setAttribute('aria-pressed', String(isOn));
       row.appendChild(el('span', 'backtest-history-check', isOn ? '■' : '□'));
-      row.appendChild(el('span', 'backtest-history-id', String(run.run_id).slice(0, 8)));
-      row.appendChild(el('span', `backtest-history-status is-${run.status}`, run.status));
+      const identity = el('span', 'backtest-history-id', String(run.run_id).slice(0, 8));
+      identity.setAttribute('title', String(run.run_id));
+      row.appendChild(identity);
+      row.appendChild(el('span', 'backtest-history-date', run.started_at ? formatDatetime(run.started_at) : '실행 시각 미제공'));
+      row.appendChild(el('span', `backtest-history-status is-${run.status}`, ({ done: '완료', failed: '실패', running: '실행 중' })[run.status] || run.status));
       const total = run.metrics && run.metrics.total_return;
       row.appendChild(el(
-        'span', 'backtest-history-return',
+        'span', `backtest-history-return ${total != null && Number.isFinite(Number(total)) ? (Number(total) > 0 ? 'is-up' : Number(total) < 0 ? 'is-down' : 'is-flat') : 'is-flat'}`,
         run.status === 'done' ? formatPercentValue(total) : '—',
       ));
-      wrap.appendChild(row);
+      const line = el('div', 'backtest-history-line');
+      line.appendChild(row);
       if (run.status === 'done') {
         const open = button('backtest-version-activate', '결과 보기', () => { void openHistoryResult(run); });
         open.setAttribute('aria-label', `${String(run.run_id).slice(0, 8)} 결과 보기`);
-        wrap.appendChild(open);
+        line.appendChild(open);
       }
+      wrap.appendChild(line);
     });
 
     if (selected.length === 2) {
@@ -5535,15 +5568,16 @@ function createBacktestCanvas(options) {
     const wrap = el('div', 'backtest-optimize');
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-card-title', '파라미터 최적화'));
-    head.appendChild(el('div', 'backtest-card-note', '추가 TR 호출 없음 — 캐시 밖 구간은 먼저 수집 승인'));
+    head.appendChild(el('div', 'backtest-card-note', '저장된 시세로 비교합니다. 부족한 기간의 자료를 받으려면 먼저 승인이 필요합니다.'));
     wrap.appendChild(head);
 
+    wrap.appendChild(el('div', 'backtest-result-context', backtestContextText(spec)));
     const ranges = optimizeRanges();
     const setup = el('div', 'backtest-optimize-setup');
     ranges.forEach((r) => {
       setup.appendChild(el(
         'div', 'backtest-optimize-range',
-        `${r.name} ${r.start} → ${r.stop} · step ${r.step}`,
+        `${r.name} · 범위 ${r.start} ~ ${r.stop} · 간격 ${r.step}${spec && spec.params && spec.params[r.name] && spec.params[r.name].default != null ? ' · 기본값 ' + spec.params[r.name].default : ''}`,
       ));
     });
     if (!ranges.length) {

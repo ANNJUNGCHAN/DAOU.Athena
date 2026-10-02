@@ -117,6 +117,7 @@ function buildGeometry(options) {
     empty: false,
     width,
     height,
+    valueTicks: [range.max, (range.min + range.max) / 2, range.min].map(value => ({ value, position: project.y(value) / height })),
     strategyPath: pathFrom(equity, project),
     benchmarkPath: benchmark.length ? pathFrom(benchmark, project) : '',
     markers: markerPoints(opts.trades, dts).map((m) => ({
@@ -197,6 +198,16 @@ function renderEquityChart(container, options) {
     }));
   });
 
+  const values = document.createElement('div');
+  values.className = 'backtest-equity-values';
+  values.setAttribute('aria-label', '시작 자산 대비 배수');
+  geometry.valueTicks.forEach(tick => {
+    const label = document.createElement('span');
+    label.textContent = tick.value.toLocaleString('ko-KR', { maximumFractionDigits: 4 }) + '배';
+    label.style.top = (tick.position * 100) + '%';
+    values.appendChild(label);
+  });
+  container.appendChild(values);
   container.appendChild(svg);
 
   const axis = document.createElement('div');
