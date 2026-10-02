@@ -638,7 +638,7 @@ function setStatusAppearance(el, receiving) {
   el.style.color = receiving ? 'var(--color-ok)' : 'var(--color-k-dim)';
   const chip = el.parentElement;
   const dots = chip && typeof chip.querySelectorAll === 'function'
-    ? chip.querySelectorAll('[data-node="34NM-0"], [data-node="34NW-0"], [data-node="2QFW-2"], [data-node="2QKN-2"], [data-node="2QNK-2"], [data-node="153F-2"], [data-node="15BT-2"], [data-node="2TZL-1"], [data-node="2TS6-1"], [data-node="3K7I-0"], [data-node="3LV0-0"], [data-node="1JQ8-0"], [data-node="3NH2-0"], [data-node="2QX8-1"], [data-node="2QYE-1"], [data-node="2S2R-1"]') : [];
+    ? chip.querySelectorAll('[data-node="34NM-0"], [data-node="34NW-0"], [data-node="2QFW-2"], [data-node="2QKN-2"], [data-node="2RUQ-1"], [data-node="2ROP-1"], [data-node="2QNK-2"], [data-node="153F-2"], [data-node="15BT-2"], [data-node="2TZL-1"], [data-node="2TS6-1"], [data-node="3K7I-0"], [data-node="3LV0-0"], [data-node="1JQ8-0"], [data-node="3NH2-0"], [data-node="2QX8-1"], [data-node="2QYE-1"], [data-node="2S2R-1"]') : [];
   if (chip && (chip.children.length === 1 || dots.length) && chip.style.backgroundColor
     && typeof chip.closest === 'function' && chip.closest('.bs-header')) {
     chip.style.backgroundColor = receiving ? '#5FCE3F1F' : 'var(--color-k-panel3)';

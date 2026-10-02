@@ -1146,6 +1146,8 @@ def _initial_surface_contract(
     from athena_api.watch_surface_identity import project_watch_surface
     contract = project_watch_surface(contract, {ref: (source, target) for ref in queried_refs}, target)
     contract = annotate_surface_display_units(contract, {ref: target for ref in queried_refs})
+    from athena_api.flow_display_context import annotate_flow_display_context
+    contract = annotate_flow_display_context(contract, {ref: (source, target) for ref in queried_refs}, target, getattr(selector, "_instrument_identity", None))
     filled = {entry["slot_id"] for entry in contract["slot_values"]}
     contract["hydration_slot_ids"] = [
         slot.slot_id
@@ -1562,6 +1564,8 @@ async def internal_canvas_board_hydrate(
         operation: arguments.model_dump(by_alias=True)
         for operation, (_result, arguments) in hydrated_results.items()
     })
+    from athena_api.flow_display_context import annotate_flow_display_context
+    surface_contract = annotate_flow_display_context(surface_contract, hydrated_results, payload.target, getattr(selector, "_instrument_identity", None))
     filled = {entry["slot_id"] for entry in surface_contract["slot_values"]}
     retryable_refs = {
         status["operation_ref"]
@@ -2567,6 +2571,9 @@ async def canvas_render_plan(
         surface_target.setdefault('stk_cd', sealed_context['symbol'])
     _bind_semantic_values(card_contract, operation_ref, call_payload.get("data"), surface_target=surface_target)
     if full_responses:
+        from athena_api.flow_display_context import annotate_flow_display_context
+        if (card_contract.get("surface_contract") or {}).get("board_id") in {"2QFO-2", "2ROJ-1"}:
+            card_contract["surface_contract"] = annotate_flow_display_context(card_contract.get("surface_contract"), {operation_ref: (full_responses[0], surface_target)}, surface_target, getattr(selector, "_instrument_identity", None))
         initial_contract = _initial_surface_contract(
             card_contract,
             source=full_responses[0],

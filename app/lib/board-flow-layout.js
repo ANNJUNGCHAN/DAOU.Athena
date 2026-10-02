@@ -23,7 +23,7 @@ function stockCode(raw) {
   const code = receivedText(raw).replace(/_(?:AL|NX)$/, '');
   return /^\d{6}$/.test(code) && code !== '000000' ? code : '';
 }
-function identityFor(boardId, envelope, values, fallback) {
+function identityFor(boardId, envelope, values, fallback, displayContext) {
   if (!FLOW_TITLES[boardId]) return fallback;
   const code = stockCode(fallback && fallback.code);
   const args = envelope.operation_args || envelope.arguments || {};
@@ -32,6 +32,7 @@ function identityFor(boardId, envelope, values, fallback) {
   const field = key => (fields.find(item => item && item.key === key) || {}).value;
   const topCode = envelope.stk_cd || envelope.symbol || args.stk_cd || args.symbol;
   const candidates = [
+    [displayContext?.identity?.name, displayContext?.identity?.code],
     [envelope.stk_nm, topCode],
     [args.stk_nm, args.stk_cd || args.symbol],
     [data.stk_nm, data.stk_cd || topCode],
@@ -41,6 +42,87 @@ function identityFor(boardId, envelope, values, fallback) {
   const pair = code && candidates.find(([name, symbol]) => receivedText(name) && stockCode(symbol) === code);
   return { name: pair ? receivedText(pair[0]) : FLOW_TITLES[boardId], code };
 }
+const DISPLAY_SOURCES = {
+  '2QFO-2': ['base:ka10059','base:ka10061'],
+  '2ROJ-1': ['base:ka10059','base:ka10061','base:ka10037','base:ka90005','base:ka90006','base:ka90007','base:ka90008','base:ka90010','base:ka90013'],
+};
+function displayContextFor(boardId, value, targetCode) {
+  const code = stockCode(targetCode);
+  if (!DISPLAY_SOURCES[boardId] || !value || value.board_id !== boardId || !code || stockCode(value.stk_cd) !== code) return null;
+  const identity = value.identity;
+  const clean = { board_id: boardId, stk_cd: code, identity: null, queries: [] };
+  if (identity?.source === 'base:ka10099' && stockCode(identity.code) === code && receivedText(identity.name)) clean.identity = { code, name: receivedText(identity.name), source: identity.source };
+  for (const query of Array.isArray(value.queries) ? value.queries : []) {
+    if (!DISPLAY_SOURCES[boardId].includes(query?.operation_ref)) continue;
+    const args = query.operation_args;
+    if (!args || typeof args !== 'object' || Array.isArray(args) || ('stk_cd' in args && stockCode(args.stk_cd) !== code)) continue;
+    const safe = {};
+    for (const key of ['stk_cd','dt','date','strt_dt','end_dt','trde_tp','amt_qty_tp','unit_tp','mrkt_tp','min_tic_tp','stex_tp']) if (typeof args[key] === 'string') safe[key] = args[key];
+    clean.queries.push({ operation_ref: query.operation_ref, operation_args: safe });
+  }
+  return clean;
+}
+function sourceCaption(query) {
+  const op = query.operation_ref, args = query.operation_args;
+  const names = { 'base:ka10059':'투자자 별도 조회', 'base:ka10061':'투자자 기간 합계 별도 조회', 'base:ka10037':'외국계 매매 별도 조회', 'base:ka90005':'프로그램 시간대별', 'base:ka90006':'프로그램 차익잔고', 'base:ka90007':'프로그램 누적', 'base:ka90008':'종목 시간별 프로그램', 'base:ka90010':'프로그램 일자별', 'base:ka90013':'종목 일별 프로그램' };
+  const period = op === 'base:ka10061' ? (dateText(args.strt_dt) && dateText(args.end_dt) ? [dateText(args.strt_dt), dateText(args.end_dt)].join(' ~ ') : '') : dateText(args.dt || args.date);
+  const parts = [names[op], period ? '조회 기준 '+period : '조회 기간 미제공'];
+  if (['base:ka10059','base:ka10061'].includes(op)) parts.push({'0':'순매수','1':'매수','2':'매도'}[args.trde_tp] || '매매구분 미제공');
+  if (args.amt_qty_tp) parts.push({'1':'금액','2':'수량'}[args.amt_qty_tp] || '금액·수량 구분 미제공');
+  if (['base:ka90005','base:ka90010'].includes(op) && ['0','1'].includes(args.min_tic_tp)) parts.push(args.min_tic_tp === '0' ? '틱' : '분');
+  return parts.join(' · ');
+}
+function updateDisplayContext(surface, contract, plan, options) {
+  if (!DISPLAY_SOURCES[contract.board_id]) return;
+  // No upstream timing flag was supplied. This changes wording, not status.
+  for (const assignment of plan.assignments) {
+    if (!assignment.missing || assignment.text !== '상태 미확인') continue;
+    const slot = contract.slots.find(item => item.slot_id === assignment.slotId);
+    const node = slot && surface.querySelector(`[data-node="${slot.node || slot.node_id}"]`);
+    if (node) node.textContent = '실시간 상태 미제공';
+  }
+  if (contract.board_id !== '2ROJ-1') return;
+  let block = surface.querySelector('.bs-flow-source-context');
+  if (!block) {
+    block = surface.ownerDocument.createElement('div');
+    block.className = 'bs-flow-source-context';
+    block.setAttribute('aria-label', '수신 원천별 조회 조건');
+    block.style.cssText = 'padding:8px 30px;font-size:13px;line-height:1.65;white-space:normal;overflow-wrap:anywhere';
+    surface.insertBefore(block, surface.querySelector('.bs-kpi') || surface.querySelector('.bs-workspace'));
+  }
+  const queries = options.flowDisplayContext?.queries || [];
+  const timeQuery = queries.find(query => query.operation_ref === 'base:ka90005');
+  const interval = {'0':'틱','1':'분'}[timeQuery?.operation_args.min_tic_tp];
+  const intervalSlot = contract.slots.find(item => item.slot_id === 's029');
+  const intervalNode = intervalSlot && surface.querySelector(`[data-node="${intervalSlot.node || intervalSlot.node_id}"]`);
+  if (intervalNode) intervalNode.textContent = interval ? '차익·비차익 · '+interval : '집계 주기 미제공';
+  block.replaceChildren();
+  if (!queries.length) block.textContent = '원천별 조회 조건 미제공';
+  if (!queries.length) return;
+  const investor = queries.find(query => ['base:ka10059','base:ka10061'].includes(query.operation_ref));
+  if (investor) {
+    const line = surface.ownerDocument.createElement('div');
+    line.dataset.flowSource = investor.operation_ref;
+    line.textContent = sourceCaption(investor);
+    block.appendChild(line);
+  }
+  const program = queries.filter(query => query.operation_ref.startsWith('base:ka900'));
+  const dates = [...new Set(program.map(query => dateText(query.operation_args.date)))];
+  const details = surface.ownerDocument.createElement('details');
+  const summary = surface.ownerDocument.createElement('summary');
+  summary.textContent = program.length && dates.length === 1 && dates[0]
+    ? '프로그램 조회 기준 '+dates[0]+' · 원천별 조건 보기'
+    : '프로그램 조회 기간은 원천별 조건에서 확인';
+  details.appendChild(summary);
+  block.appendChild(details);
+  for (const query of queries.filter(query => query !== investor)) {
+    const line = surface.ownerDocument.createElement('div');
+    line.dataset.flowSource = query.operation_ref;
+    line.textContent = sourceCaption(query);
+    details.appendChild(line);
+  }
+}
+
 function queryContextFor(contract, targetCode, requestedOperation) {
   const context = contract && contract.board_id === '2QFO-2' && contract.flow_query_context;
   if (!context || !['base:ka10059','base:ka10061'].includes(context.operation_ref)) return null;
@@ -153,6 +235,7 @@ function prepare(surface, contract) {
 }
 
 function update(surface, contract, plan, options = {}) {
+  updateDisplayContext(surface, contract, plan, options);
   const context = surface.querySelector('.bs-flow-context');
   if (!context) return;
   surface.__bsFlowOptions = options;
@@ -192,7 +275,7 @@ function update(surface, contract, plan, options = {}) {
   }
 }
 
-const api = { INVESTORS, BROKERS, investorCaption, identityFor, queryContextFor, investorSnapshotValues, prepare, update };
+const api = { displayContextFor, sourceCaption, INVESTORS, BROKERS, investorCaption, identityFor, queryContextFor, investorSnapshotValues, prepare, update };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 else { window.AthenaLib = window.AthenaLib || {}; window.AthenaLib.BoardFlowLayout = api; }
 })();

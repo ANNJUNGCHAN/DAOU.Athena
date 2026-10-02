@@ -1306,6 +1306,9 @@ function seedBoardState(state, contract, envelope) {
   if (boardId === '2QFO-2' && Object.prototype.hasOwnProperty.call(contract, 'flow_query_context')) {
     (state.flowQueryContextByBoard ||= new Map()).set(boardId, contract.flow_query_context);
   }
+  if (['2QFO-2','2ROJ-1'].includes(boardId) && Object.prototype.hasOwnProperty.call(contract, 'flow_display_context')) {
+    (state.flowDisplayContextByBoard ||= new Map()).set(boardId, contract.flow_display_context);
+  }
   state.valuesByBoard.set(boardId, slotValuesOf(contract));
   state.unboundByBoard.set(
     boardId, Array.isArray(contract.unbound_slots) ? contract.unbound_slots.slice() : [],
@@ -1365,10 +1368,12 @@ function boardMountOptions(host, envelope) {
     || state.boardId === '2WZK-0' && state.etfReturnIdentity
     || boardMount.boardIdentityFromEnvelope(envelope, state.values);
   const flowBoard = ['2QFO-2','2QM7-2','2ROJ-1','2RWK-1','2S4E-1'].includes(state.boardId);
+  const flowDisplayContext = boardFlowLayout.displayContextFor(state.boardId, state.flowDisplayContextByBoard?.get(state.boardId), target.stk_cd);
   return {
-    identity: flowBoard ? boardFlowLayout.identityFor(state.boardId, envelope, state.values, identity) : identity,
+    identity: flowBoard ? boardFlowLayout.identityFor(state.boardId, envelope, state.values, identity, flowDisplayContext) : identity,
     operationRef: String((envelope && (envelope.operation_ref || envelope.operationRef)) || '').trim(),
     operationArgs: target,
+    flowDisplayContext,
     sectorChangeOccurrence: state.boardId === '32S7-0'
       && state.sectorChangeSourceKey === [envelope.operation_ref || envelope.operationRef || '', target.inds_cd || ''].join('|')
       ? state.sectorChangeOccurrence : '',
@@ -2625,6 +2630,10 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     }
   if (contract && (!contract.board_id || String(contract.board_id) === boardId)) {
     if (boardId === '13K0-2' && rankingRailRows(contract)) metadataReceived = true;
+    if (['2QFO-2','2ROJ-1'].includes(boardId) && Object.prototype.hasOwnProperty.call(contract, 'flow_display_context')) {
+      (state.flowDisplayContextByBoard ||= new Map()).set(boardId, contract.flow_display_context);
+      metadataReceived = true;
+    }
     if (boardId === '2QFO-2' && Object.prototype.hasOwnProperty.call(contract, 'flow_query_context')) {
       (state.flowQueryContextByBoard ||= new Map()).set(boardId, contract.flow_query_context);
       metadataReceived = true;
