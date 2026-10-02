@@ -305,7 +305,7 @@ async function createChartCard(container, opts) {
     localization: {
       timeFormatter: (time) => (intradayAxis ? kstLabel(time, tickSeconds) : null),
     },
-    autoSize: true,
+    autoSize: o.target !== 'sector',
     layout: {
       background: { type: 'solid', color: 'transparent' },
       textColor: AXIS_TEXT_COLOR,
@@ -763,13 +763,17 @@ async function createChartCard(container, opts) {
   // snapshot이므로 여기서 다시 재샘플하지 않는다.
   function replaceData(ohlcv, options) {
     const replacement = options && typeof options === 'object' ? options : {};
+    const sameSectorPeriod = o.target === 'sector' && (!replacement.period || replacement.period === currentPeriod)
+      && (!replacement.trId || replacement.trId === currentTrId);
+    const selectedRange = sameSectorPeriod && viewportPinned ? chart.timeScale().getVisibleRange() : null;
     if (replacement.trId) currentTrId = replacement.trId;
     // 주기가 바뀌면 과거 조회도 새 주기 기준으로 다시 시작한다 — 이전 주기에서
     // "더 없음"으로 잠갔다고 새 주기까지 잠그면 안 된다.
     historyExhausted = false;
     historyPending = false;
     historyFailures = 0;
-    initialVisibleFrom = null;
+    initialVisibleFrom = sameSectorPeriod ? (replacement.initialVisibleFrom || initialVisibleFrom) : null;
+    if (o.target === 'sector' && !sameSectorPeriod) viewportPinned = false;
     if (VALID_INITIAL_PERIODS.indexOf(replacement.period) !== -1) {
       currentPeriod = replacement.period;
       currentInterval = replacement.interval || 1;
@@ -778,6 +782,7 @@ async function createChartCard(container, opts) {
     dailyBars = Array.isArray(ohlcv) ? ohlcv.slice() : [];
     currentBars = dailyBars.slice();
     setData(currentBars);
+    if (selectedRange) chart.timeScale().setVisibleRange(selectedRange);
     updateNote();
   }
 
@@ -922,12 +927,14 @@ async function createChartCard(container, opts) {
 
   function measureAndResize() {
     requestAnimationFrame(() => {
+      const selectedRange = o.target === 'sector' && viewportPinned ? chart.timeScale().getVisibleRange() : null;
       const rect = priceWrap.getBoundingClientRect();
       if (rect.width > 0 && rect.height > 0) chart.resize(rect.width, rect.height);
       // 봉 폭은 폭 독립이라 크기가 바뀌어도 다시 잡을 필요가 없다 — 보이는 봉 수만
       // 늘고 준다. 다만 사용자가 아직 뷰포트를 안 잡았으면 최신 봉에 다시 정렬한다
       // (폭 0에서 마운트된 경우 최초 정렬이 무의미했기 때문 — autoFitObserver 주석).
-      if (!viewportPinned) applyBarDensity();
+      if (selectedRange) chart.timeScale().setVisibleRange(selectedRange);
+      else if (!viewportPinned) applyBarDensity();
       if (volumeProfileOn) renderVolumeProfile();
     });
   }
@@ -941,16 +948,19 @@ async function createChartCard(container, opts) {
   // 뷰포트는 사용자 것이고, 창 크기 변화가 그걸 되돌리면 안 된다.
   let viewportPinned = false;
   let lastFitWidth = -1;
+  let lastFitHeight = -1;
   let autoFitObserver = null;
   const pinViewport = () => { viewportPinned = true; };
   priceWrap.addEventListener('wheel', pinViewport, { passive: true });
   priceWrap.addEventListener('pointerdown', pinViewport);
   if (typeof ResizeObserver !== 'undefined') {
     autoFitObserver = new ResizeObserver(() => {
-      if (viewportPinned) return;
-      const width = Math.round(priceWrap.getBoundingClientRect().width);
-      if (width <= 0 || width === lastFitWidth) return; // 같은 폭 재진입 = 관측 루프
+      if (viewportPinned && o.target !== 'sector') return;
+      const bounds = priceWrap.getBoundingClientRect();
+      const width = Math.round(bounds.width), height = Math.round(bounds.height);
+      if (width <= 0 || (width === lastFitWidth && (o.target !== 'sector' || height === lastFitHeight))) return;
       lastFitWidth = width;
+      lastFitHeight = height;
       measureAndResize();
     });
     autoFitObserver.observe(priceWrap);

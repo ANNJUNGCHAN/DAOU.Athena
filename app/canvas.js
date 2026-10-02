@@ -1457,6 +1457,8 @@ function realtimeBindingsOf(envelope) {
 function applyBoardRealtimeTick(host, tick) {
   const state = host && host.__athenaBoard;
   if (!state || !state.surface || !state.mountContract || !state.realtimeSlots.size) return 0;
+  // Sector chart/summary/history share queried snapshots until a validated industry live authority exists.
+  if (state.boardId === '32S7-0') return 0;
   const touched = [];
   for (const update of semanticWorkspace.semanticRealtimeUpdates(tick)) {
     const observationId = state.realtimeSlots.observationByBinding
@@ -2454,6 +2456,24 @@ function boardHydrationError(reply) {
 
 // 봉투가 못 채운 슬롯을 마운트 뒤에 한 번 더 채운다. 조회 자체가 실패하면 결측값을
 // 완성 화면처럼 보이지 않고 로딩 오류로 돌려 재시도할 수 있게 한다.
+function sectorHydratedPrimaryEnvelope(boardId, envelope, reply) {
+  const incoming = reply && reply.primary_envelope;
+  if (boardId !== '32S7-0' || reply?.surface_contract?.board_id !== boardId || !incoming) return incoming || null;
+  const original = envelope?.data?.chart;
+  const chart = incoming.data?.chart;
+  const code = String(envelope?.operation_args?.inds_cd || '');
+  if (!/^\d{3}$/.test(code) || envelope.operation_ref !== 'base:ka20006'
+    || incoming.operation_ref !== envelope.operation_ref || incoming.operation_args?.inds_cd !== code
+    || String(envelope.data?.symbol || '') !== code || String(incoming.data?.symbol || '') !== code
+    || original?.target !== 'sector' || original.period !== 'day' || original.trId !== 'ka20006'
+    || chart?.target !== original.target || chart.period !== original.period || chart.trId !== original.trId) return incoming;
+  const from = original.initialVisibleFrom;
+  if (chart.initialVisibleFrom || typeof from !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(from)) return incoming;
+  const date = new Date(from + 'T00:00:00Z');
+  if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== from) return incoming;
+  return { ...incoming, data: { ...incoming.data, chart: { ...chart, initialVisibleFrom: from } } };
+}
+
 async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true) {
   const state = boardStateOf(host);
   // 상태 보드마다 slot id 의미가 다를 수 있으므로 현재 마운트 계획의 결측만 요청한다.
@@ -2498,7 +2518,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     throw new Error('요청한 종목 정보를 불러오지 못했습니다. 다시 시도해 주세요.');
   }
   state.hydrationWarnings.push(...failures);
-  state.primaryEnvelope = reply.primary_envelope || null;
+  state.primaryEnvelope = sectorHydratedPrimaryEnvelope(boardId, envelope, reply);
   if (boardId === '4B22-1') {
     if (!reply.ranking_result) throw new Error('전체 조회 목록을 받지 못했습니다. 다시 시도해 주세요.');
     state.rankingResult = reply.ranking_result;
@@ -3014,6 +3034,7 @@ function stampIntegratedRealtimeState(root, state) {
 // 추정하지 않고, 확인된 REST/연결/첫 수신 lifecycle만 해당 상태 잎에 덮는다.
 function stampBoardRealtimeStatus(root, status) {
   if (!root || typeof root.querySelectorAll !== 'function') return;
+  if ([...root.querySelectorAll('.board-surface-host')].some(host => host.__athenaBoard?.boardId === '32S7-0')) status = 'snapshot';
   if (typeof root.__athenaRealtimeStatusRelay === 'function') {
     root.__athenaRealtimeStatusRelay(status);
   } else if (typeof relayCardRealtimeFallbackStatus === 'function') {
@@ -3127,7 +3148,7 @@ function stampRealtimeFallbackStatus(session, state) {
   const card = session && session.card;
   if (!card || !card.isConnected) return;
   let node = card.querySelector('.realtime-fallback-status');
-  if (state.status === 'stopped' || state.status === 'ws-active') {
+  if (isSectorSnapshotCard(card) || state.status === 'stopped' || state.status === 'ws-active') {
     if (node) node.remove();
     return;
   }
@@ -3219,6 +3240,7 @@ async function applyRealtimeFallbackData(session, payload) {
     const host = session.card.querySelector('.board-surface-host');
     const state = host && host.__athenaBoard;
     if (!state || state.boardId !== String(payload.boardId || '')) return false;
+    if (state.boardId === '32S7-0') return false;
     if (payload.mode !== 'slot-patch') return false;
     const values = slotValuesOf({ slot_values: payload.slotValues });
     const watchContract = payload.surfaceContract || payload.surface_contract;
@@ -3349,8 +3371,12 @@ function unregisterRealtimeFallback(session) {
   return true;
 }
 
+function isSectorSnapshotCard(card) {
+  return card?.querySelector?.('.board-surface-host')?.__athenaBoard?.boardId === '32S7-0';
+}
+
 function fallbackSurfaceKindFor(card, envelope) {
-  if (!card || !envelope || envelope.canvas_type === 'action') return null;
+  if (!card || !envelope || envelope.canvas_type === 'action' || isSectorSnapshotCard(card)) return null;
   const title = String(envelope.card_title || '');
   if (/주문/u.test(title)) return null;
   if (card.querySelector('.board-surface-host')) return 'integrated-board';
@@ -3373,7 +3399,10 @@ function fallbackKindFor(card, envelope) {
 function syncCardRealtimeFallback(card, envelope) {
   if (!card || !card.isConnected || !window.athena || typeof window.athena.invoke !== 'function') return null;
   const kind = fallbackKindFor(card, envelope);
-  if (!kind) return null;
+  if (!kind) {
+    if (isSectorSnapshotCard(card)) unregisterRealtimeFallback(card.__athenaRealtimeFallback);
+    return null;
+  }
   const prior = card.__athenaRealtimeFallback;
   if (prior && prior.active && prior.envelope === envelope && prior.kind === kind) return prior;
   if (prior) unregisterRealtimeFallback(prior);
@@ -3429,6 +3458,14 @@ function syncCardRealtimeFallback(card, envelope) {
     });
   }).then((result) => {
     if (result === null) return;
+    if (isSectorSnapshotCard(card)) {
+      unregisterRealtimeFallback(session);
+      // Registration may finish after the snapshot transition already released it.
+      if (result?.ok === true && result.ownerId === ownerId) {
+        void window.athena.invoke('athena:realtime-fallback-unregister', { ownerId }).catch(() => {});
+      }
+      return;
+    }
     if (!session.active || card.__athenaRealtimeFallback !== session || !result || result.ok !== true
       || result.ownerId !== ownerId || Number(result.accountGeneration) !== session.accountGeneration) return;
     session.registrationRevision = Number(result.registrationRevision);
@@ -3511,7 +3548,8 @@ function syncIntegratedRealtime(root, envelope) {
     const boardId = String((surfaceContractOf(envelope) || {}).board_id || '');
     // 2RJ7-1의 국내 금현물 시세는 15초 ka50092 조회가 갱신한다. 통합 gold 정책의
     // 0I는 국제금환산가격이므로 이 보드에 연결하면 pred_pre만 다른 상품 값으로 섞인다.
-    if (boardId === '2RJ7-1') {
+    // The sector chart, header and dated rows remain one queried snapshot.
+    if (boardId === '2RJ7-1' || boardId === '32S7-0') {
       root.__athenaRealtimeFallbackCapable = false;
       if (root.__athenaRealtimeFallback) unregisterRealtimeFallback(root.__athenaRealtimeFallback);
       if (realtime.mounted === true || realtime.mountAttempted === true) {

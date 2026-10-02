@@ -749,6 +749,10 @@ function updateSectorDetails(root, plan, options = {}) {
   note(body,options.loadStatus==='failed'?'업종 목록을 불러오지 못했습니다. 위의 다시 시도로 재조회할 수 있습니다.':pending?'업종 목록을 불러오는 중입니다.':'조회된 업종 목록이 없습니다.',!actual);
  }
  if(id==='32S7-0'){
+  const primary=root.querySelector('.bs-workspace');
+  if(primary){let status=primary.parentElement.querySelector(':scope > .bs-sector-snapshot-status');if(!status){status=document.createElement('div');status.className='bs-sector-note bs-sector-snapshot-status';status.setAttribute('role','status');primary.before(status);}status.textContent='조회 스냅샷 · 실시간 미반영';}
+  text('s070','조회 스냅샷 · 실시간 미반영');
+  const footer=root.querySelector('[data-node="32SB-0"]');if(footer)footer.textContent='조회 응답 기준';
   for(const sid of ['s018','s024'])leaf(sid)?.classList.add('bs-sector-labelled');
   text('s001',options.identity?.name||'업종 이름 미제공');
   const change = leaf('s005');

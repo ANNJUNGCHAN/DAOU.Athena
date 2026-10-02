@@ -1462,3 +1462,11 @@
 .bs-watch-six[data-bs-board-id="2UHM-1"] [data-node="357F-0"]>[data-node]{width:auto!important;min-width:0!important}
 @container board (min-width:960px){.canvas-tab-panel .bs-watch-six .bs-workspace{display:grid!important;grid-template-columns:minmax(0,1fr) 340px!important;gap:24px!important}.canvas-tab-panel .bs-watch-six :is(.bs-primary,.bs-rail){width:100%!important;flex:none!important}}
 @container board (max-width:959px){.canvas-tab-panel .bs-watch-six .bs-workspace{display:flex!important;flex-direction:column!important}.canvas-tab-panel .bs-watch-six :is(.bs-primary,.bs-rail){width:100%!important;flex:none!important}}
+
+/* The three sector summary fields fill both rows without changing their values. */
+@container board (min-width:440px) and (max-width:659px) {
+  .board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > [data-node="32WH-0"] { grid-column:1 / -1; }
+}
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32SE-0"] { height:auto!important;min-height:0!important; }
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32SF-0"] { position:static!important;margin-top:0!important;width:100%!important; }
+.board-surface[data-bs-board-id="32S7-0"] :is(.bs-sector-snapshot-status,[data-node="32SC-0"]) { color:var(--color-k-dim)!important; }

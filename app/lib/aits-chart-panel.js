@@ -257,6 +257,7 @@ function createAitsChartPanelAdapter(options) {
       state.interval = Number.isFinite(interval) && interval > 0 ? interval : 1;
       state.renderer.replaceData(next.candles, {
         period: PERIOD_TO_ATHENA[next.period], interval: state.interval, trId: next.trId,
+        ...(next.target === 'sector' && next.initialVisibleFrom ? { initialVisibleFrom: next.initialVisibleFrom } : {}),
       });
     } else {
       if (previousPeriod !== next.period && typeof state.renderer.applyPeriod === 'function') {
