@@ -7979,3 +7979,16 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
 #backtestCanvas .backtest-trade-value-summary { width: max-content; max-width: 100%; cursor: pointer; font-variant-numeric: tabular-nums; }
 #backtestCanvas .backtest-trade-value-summary:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; border-radius: 3px; }
 #backtestCanvas .backtest-trade-raw { display: block; max-width: 24ch; white-space: normal; overflow-wrap: anywhere; color: var(--color-k-dim); }
+
+/* Optimization content uses the available backtest width without changing result meaning. */
+#backtestCanvas .backtest-optimize { max-width: none; min-width: 0; }
+#backtestCanvas:has(.backtest-optimize) :is(.backtest-crumb, .backtest-crumb-sep, .backtest-head-folder-sub),
+#backtestCanvas .backtest-optimize :is(.backtest-card-title, .backtest-card-note, .backtest-card-empty, .backtest-optimize-warn-badge, .backtest-optimize-warn-text, .backtest-optimize-plateau, .backtest-optimize-neighbour, .backtest-optimize-best-params, .backtest-optimize-suggested) { font-size: 13px; line-height: 20px; }
+#backtestCanvas:has(.backtest-optimize) .backtest-crumbs { flex-wrap: wrap; }
+#backtestCanvas:has(.backtest-optimize) :is(.backtest-crumb, .backtest-head-folder-sub) { white-space: normal; overflow-wrap: anywhere; }
+#backtestCanvas .backtest-optimize-warn { flex-wrap: wrap; align-items: flex-start; }
+#backtestCanvas .backtest-optimize-warn-text { flex: 1 1 32ch; min-width: 0; }
+#backtestCanvas .backtest-optimize :is(.backtest-optimize-warn-text, .backtest-optimize-best-params, .backtest-optimize-plateau, .backtest-optimize-neighbour) { overflow-wrap: anywhere; }
+
+#backtestCanvas .backtest-optimize { text-align: left; }
+#backtestCanvas .backtest-optimize :is(.backtest-optimize-warn-text, .backtest-optimize-plateau, .backtest-optimize-neighbour) { word-break: keep-all; }
