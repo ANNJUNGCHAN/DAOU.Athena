@@ -5965,7 +5965,18 @@ const backtestCanvas = window.AthenaLib.BacktestCanvas.createBacktestCanvas({
         `캐시가 부족해 탐색하지 않았습니다 — ${res.detail.needed_pages}페이지를 먼저 수집하세요`,
       );
     }
-    throw new Error(backtestError(res, '최적화에 실패했습니다'));
+    let message = backtestError(res, '최적화에 실패했습니다');
+    if (res && res.status === 0) {
+      const cause = res.causeCode || res.code;
+      message = ['UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT', 'UND_ERR_CONNECT_TIMEOUT', 'ETIMEDOUT'].includes(cause)
+        ? '최적화 응답 대기 시간이 초과되었습니다. 실행 완료 여부는 확인할 수 없습니다.'
+        : cause === 'ABORT_ERR' ? '최적화 요청 대기가 중단되었습니다. 실행 완료 여부는 확인할 수 없습니다.'
+          : '최적화 응답을 받지 못했습니다. 실행 완료 여부는 확인할 수 없습니다.';
+    }
+    const error = new Error(message);
+    if (res && res.code) error.code = res.code;
+    if (res && res.causeCode) error.causeCode = res.causeCode;
+    throw error;
   },
   createStrategy: async (body) => {
     const res = await window.athena.invoke('athena:backtest-strategy-create', body);

@@ -138,7 +138,7 @@
 .card-kit-hoga-live-columns,
 .card-kit-hoga-live-row {
   display: grid;
-  grid-template-columns: 58px minmax(72px, 1fr) 66px 88px minmax(78px, 1fr);
+  grid-template-columns: 146px minmax(100px, 1fr) 72px 88px minmax(48px, 1fr);
   align-items: center;
   column-gap: 8px;
 }
@@ -160,9 +160,9 @@
 
 .card-kit-hoga-live-row {
   position: relative;
-  flex: 1 0 27px;
-  min-height: 27px;
-  padding: 0 12px;
+  flex: 1 0 auto;
+  min-height: 32px;
+  padding: 6px 12px;
   border-bottom: 1px solid rgb(16 19 26 / 5%);
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 12px;
@@ -367,4 +367,16 @@
     outline: 1px solid currentColor;
     outline-offset: 1px;
   }
+}
+
+/* Keep received count and LP quantity legible without changing quote data. */
+.card-kit-hoga-live-count { white-space: pre; }
+.card-kit-hoga-live-columns, .card-kit-hoga-live-row { min-width: 510px; }
+.card-kit-hoga-live-subtitle, .card-kit-hoga-live-time, .card-kit-hoga-live-status,
+.card-kit-hoga-live-focus, .card-kit-hoga-live-depth, .card-kit-hoga-live-columns,
+.card-kit-hoga-live-center-label, .card-kit-hoga-live-center-hint, .card-kit-hoga-live-totals { font-size: 12px; line-height: 18px; }
+.card-kit-hoga-live-header { flex-wrap: wrap; gap: 8px; }
+.card-kit-hoga-live-center { flex-wrap: wrap; padding: 8px; }
+@container (max-width: 419px) {
+  .card-kit-hoga-live-columns, .card-kit-hoga-live-row { min-width: 0; }
 }

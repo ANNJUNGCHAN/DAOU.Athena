@@ -1039,6 +1039,7 @@ function createBacktestCanvas(options) {
   let historyPreview = null;
   let workspaceCleared = false;
   let pollTimer = null;
+  let optimizeElapsedTimer = null;
   let loadRequestId = 0;
   let mounted = false;
   let editorHandle = null;
@@ -2116,14 +2117,23 @@ function createBacktestCanvas(options) {
       setState({ optimizeError: '훑을 파라미터가 없습니다' });
       return { ok: false, errors: ['훑을 파라미터가 없습니다'] };
     }
-    setState({ optimizeBusy: true, optimizeError: '', formErrors: [] });
+    const method = state.optimizeMethod || 'grid';
+    const samples = method === 'random' ? Number(state.optimizeSamples == null ? 100 : state.optimizeSamples) : null;
+    if (method === 'random' && (!Number.isInteger(samples) || samples < 1 || samples > 1000)) {
+      const message = '랜덤 표본 수는 1~1000 사이의 정수로 입력하세요.';
+      setState({ optimizeError: message });
+      return { ok: false, errors: [message] };
+    }
+    const startedAt = Date.now();
+    setState({ optimizeBusy: true, optimizeError: '', optimizeFailure: null, optimizeStartedAt: startedAt, optimizeElapsedMs: null, formErrors: [] });
     try {
       const body = {
         yaml: currentYaml(),
         ranges,
-        method: state.optimizeMethod || 'grid',
+        method,
         ascending: runPath !== 'code' && ranges.length >= 2 ? [ranges[0].name, ranges[1].name] : undefined,
       };
+      if (method === 'random') body.samples = samples;
       if (runPath === 'code') {
         if (projectIde && projectIde.isDirty()) throw new Error('저장하고 최적화하세요 — 저장하지 않은 편집이 있습니다');
         const activeFile = activeProjectFile();
@@ -2136,11 +2146,13 @@ function createBacktestCanvas(options) {
       if (generation !== workspaceGeneration) return;
       const res = await deps.optimize(body);
       if (generation !== workspaceGeneration) return;
-      setState({ optimizeBusy: false, optimizeResult: res });
+      setState({ optimizeBusy: false, optimizeResult: res, optimizeElapsedMs: Date.now() - startedAt });
       return { ok: true };
     } catch (err) {
       if (generation !== workspaceGeneration) return;
-      setState({ optimizeBusy: false, optimizeError: String((err && err.message) || err) });
+      setState({ optimizeBusy: false, optimizeError: String((err && err.message) || err),
+        optimizeElapsedMs: Date.now() - startedAt,
+        optimizeFailure: err && (err.code || err.causeCode) ? { code: err.code || null, causeCode: err.causeCode || null } : null });
       return { ok: false, errors: [String((err && err.message) || err)] };
     }
   }
@@ -3057,6 +3069,7 @@ function createBacktestCanvas(options) {
   }
 
   function render() {
+    if (optimizeElapsedTimer !== null) { clearInterval(optimizeElapsedTimer); optimizeElapsedTimer = null; }
     if (!mounted) return;
     syncChatTechniqueAttr();
     // 대상이 바뀐 첫 그리기에서 한 번만 캐시 상태를 묻는다 — 같은 열쇠로 두 번 묻지 않는다.
@@ -5600,20 +5613,46 @@ function createBacktestCanvas(options) {
         setState({ optimizeMethod: value });
       });
       seg.setAttribute('aria-pressed', String(isOn));
+      seg.disabled = !!state.optimizeBusy;
       methods.appendChild(seg);
     });
     wrap.appendChild(methods);
+    if ((state.optimizeMethod || 'grid') === 'random') {
+      const field = el('label', 'backtest-field');
+      field.appendChild(el('span', 'backtest-field-label', '랜덤 표본 수 · 기본 100'));
+      const input = el('input', 'backtest-field-input backtest-optimize-samples');
+      input.type = 'number'; input.min = '1'; input.max = '1000'; input.step = '1';
+      input.value = state.optimizeSamples == null ? '100' : String(state.optimizeSamples);
+      input.disabled = !!state.optimizeBusy;
+      input.addEventListener('input', () => { state.optimizeSamples = input.value; });
+      field.appendChild(input); wrap.appendChild(field);
+      wrap.appendChild(el('div', 'backtest-card-note', '탐색 조합이 적으면 실제 표본 수도 줄어듭니다.'));
+    }
+    if (state.optimizeBusy || state.optimizeElapsedMs != null) {
+      const elapsed = el('div', 'backtest-card-note backtest-optimize-elapsed');
+      const update = () => {
+        const seconds = Math.floor(Math.max(0, state.optimizeBusy ? Date.now() - state.optimizeStartedAt : state.optimizeElapsedMs) / 1000);
+        elapsed.textContent = state.optimizeBusy ? `요청 후 ${seconds}초 경과 · 완료 조합 수와 남은 시간은 제공되지 않습니다.` : `요청 종료까지 ${seconds}초`;
+      };
+      update(); wrap.appendChild(elapsed);
+      if (state.optimizeBusy) optimizeElapsedTimer = setInterval(() => {
+        if (!elapsed.isConnected || !isVisible()) { clearInterval(optimizeElapsedTimer); optimizeElapsedTimer = null; return; }
+        update();
+      }, 1000);
+    }
 
     // 채팅이 제안한 설정이면 버튼을 켜두되 누르지는 않는다 — 탐색을 시작하는 것은 사람이다.
     const suggested = state.optimizeSuggested;
-    wrap.appendChild(button(
+    const start = button(
       `backtest-optimize-start${suggested ? ' is-suggested' : ''}`,
       state.optimizeBusy ? '탐색 중…' : '탐색 시작',
       () => {
         if (suggested) setState({ optimizeSuggested: null });
         if (!state.optimizeBusy) void runOptimize();
       },
-    ));
+    );
+    start.disabled = !!state.optimizeBusy;
+    wrap.appendChild(start);
     if (suggested) {
       wrap.appendChild(el(
         'div', 'backtest-optimize-suggested',
@@ -5623,6 +5662,10 @@ function createBacktestCanvas(options) {
 
     if (state.optimizeError) {
       wrap.appendChild(el('div', 'backtest-design-error-line', state.optimizeError));
+    }
+    if (state.optimizeFailure) {
+      const codes = [...new Set([state.optimizeFailure.code, state.optimizeFailure.causeCode].filter(Boolean))];
+      wrap.appendChild(el('div', 'backtest-card-note backtest-optimize-failure-code', '오류 코드: ' + codes.join(' / ')));
     }
     if (state.optimizeResult) wrap.appendChild(renderOptimizeResult(state.optimizeResult));
     return wrap;

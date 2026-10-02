@@ -242,7 +242,7 @@ function mountPlan(contract, values, options = {}) {
       identitySlots.add('s001');
     }
     if (identity.code && stampIdentity(codeSlot)) {
-      values[codeSlot.slot_id] = ['32S7-0', '15N5-2', '2QFO-2', '2QM7-2', '2ROJ-1', '2RWK-1', '2S4E-1'].includes(contract.board_id)
+      values[codeSlot.slot_id] = ['13BC-2', '32S7-0', '15N5-2', '2QFO-2', '2QM7-2', '2ROJ-1', '2RWK-1', '2S4E-1'].includes(contract.board_id)
         ? { value: identity.code, text: identity.code } : identity.code;
       identitySlots.add(codeSlot.slot_id);
     }
@@ -1086,6 +1086,7 @@ function updateOrderbookKpi(surface, options) {
 
 // These groups have independent response sources; zero is received data.
 const ORDERBOOK_DETAIL_GROUPS = {
+  '13BC-2': [],
   '1JPU-0': [['1JQF-0', ['s011', ...Array.from({ length: 96 }, (_, i) => `s${String(i + 19).padStart(3, '0')}`), 's116', 's118'], '최근체결']],
   '2TRW-1': [['3JJC-0', ['s081','s083'], '체결강도'], ['3JSS-0', ['s141','s142','s143'], '호가잔량']],
   '3JZ3-0': [
@@ -1111,6 +1112,7 @@ function updateOrderbookDetails(surface, plan) {
   if (!groups) return;
   const states = surface.__bsOrderbookStates || (surface.__bsOrderbookStates = new Map());
   for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  if (surface.dataset.bsBoardId === '13BC-2') updateQuoteTradeAvailability(surface, states);
   if (surface.dataset.bsBoardId === '3JZ3-0') updateExchangeDepthColumns(surface, states);
   const navigation = '[data-state-control], [data-state-board], [data-bs-orderbook-control], button, [role="button"], a[href]';
   for (const [node, slots, label] of groups) {
@@ -1133,6 +1135,28 @@ function updateOrderbookDetails(surface, plan) {
       note.textContent = `${label} ${slots.some(slot => states.get(slot)?.pending) ? '수신 대기' : label.endsWith('정보') ? '미제공' : '정보 미제공'}`;
       note.hidden = !compact;
     }
+  }
+}
+
+function updateQuoteTradeAvailability(surface, states) {
+  const owner = authoredNode(surface, '3IMQ-0');
+  const scroll = owner?.querySelector('.bs-readable-scroll');
+  if (!scroll) return;
+  const slots = Array.from({ length: 48 }, (_, i) => `s${String(i + 107).padStart(3, '0')}`);
+  const unavailable = slots.every(slot => {
+    const value = states.get(slot);
+    return value && (value.pending || value.empty || value.missing);
+  });
+  owner.classList.toggle('bs-quote-trades-unavailable', unavailable);
+  let note = owner.querySelector(':scope > .bs-quote-trades-note');
+  if (!note && unavailable) {
+    note = layoutGroup(surface.ownerDocument, 'bs-orderbook-note bs-quote-trades-note');
+    note.setAttribute('role', 'status');
+    scroll.before(note);
+  }
+  if (note) {
+    note.textContent = slots.some(slot => states.get(slot)?.pending) ? '체결 내역 수신 대기' : '체결 내역 미제공';
+    note.hidden = !unavailable;
   }
 }
 

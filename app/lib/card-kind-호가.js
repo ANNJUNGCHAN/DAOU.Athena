@@ -299,7 +299,10 @@ function setCountOrLp(node, model, animate) {
   const value = isCount ? model.count : model.auxQuantity;
   const previous = node && node.__athenaNumericValue;
   if (!node) return;
-  node.textContent = Number.isFinite(value) ? `${isCount ? '' : 'LP '}${formatNumber(value)}` : '—';
+  const parts = [];
+  if (isCount) parts.push(`${formatNumber(model.count)}${Number.isFinite(model.auxQuantity) ? '건' : ''}`);
+  if (Number.isFinite(model.auxQuantity)) parts.push(`LP ${formatNumber(model.auxQuantity)}`);
+  node.textContent = parts.length ? parts.join('\n') : '—';
   node.__athenaNumericValue = value;
   if (animate) flash(node, previous, value);
 }
@@ -376,7 +379,12 @@ function updateOrderbookDom(wrap, state, animate) {
   const focus = wrap.querySelector('[data-role="focus"]');
   if (focus) focus.textContent = state.focus;
   const auxHeader = wrap.querySelector('[data-role="aux-header"]');
-  if (auxHeader) auxHeader.textContent = state.focus === 'LP 잔량' ? 'LP 잔량' : '건수';
+  if (auxHeader) {
+    const levels = [...state.asks, ...state.bids];
+    const hasCounts = levels.some(level => Number.isFinite(level.count));
+    const hasLp = levels.some(level => Number.isFinite(level.auxQuantity));
+    auxHeader.textContent = hasLp ? (hasCounts ? '건수 · LP 잔량' : 'LP 잔량') : '건수';
+  }
   const total = (state.sellTotal || 0) + (state.buyTotal || 0);
   const split = total > 0 ? Math.round(((state.sellTotal || 0) / total) * 100) : 50;
   const askShare = wrap.querySelector('[data-role="ask-share"]');

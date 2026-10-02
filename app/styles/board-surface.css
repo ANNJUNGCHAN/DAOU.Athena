@@ -1534,3 +1534,14 @@
   .board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] {flex-basis:100%!important;}
   .board-surface[data-bs-board-id="2X5N-0"] .bs-day-volume-sort-hint {display:block;}
 }
+
+/* The 10-level quote keeps received summary values when its separate trade feed is unavailable. */
+.board-surface[data-bs-board-id="13BC-2"] [data-node="3IMQ-0"].bs-quote-trades-unavailable { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-unavailable > .bs-readable-scroll,
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-unavailable > .bs-readable-hint { display: none !important; }
+
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-unavailable > .bs-empty-table-message { display: none !important; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-note { padding: 8px 16px; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-workspace:has(.bs-quote-trades-unavailable) { flex-direction: column !important; height: auto !important; min-height: 0 !important; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-workspace:has(.bs-quote-trades-unavailable) > .bs-primary { width: 100% !important; flex: 1 1 auto !important; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-workspace .bs-quote-trades-unavailable.bs-rail { width: 100% !important; flex: 0 0 auto !important; }
