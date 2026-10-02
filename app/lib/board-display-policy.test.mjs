@@ -16,6 +16,36 @@ const plan = (id, values = {}, options = {}) => {
 };
 const text = (result, id) => result.assignments.find((entry) => entry.slotId === id)?.text;
 
+test('reviewed ranking quantities format raw and wrapped numbers without changing provenance', () => {
+  const slots = {'2X5N-0':['s089'],'2XG6-0':['s089'],'2XKO-0':['s048','s070'],'2XTO-0':['s098'],
+    '2YJ8-0':['s058','s069','s080','s091','s092']};
+  const format = require('./board-format');
+  for (const [id, ids] of Object.entries(slots)) for (const slot of ids) {
+    for (const raw of [0,12345,-12345,'--12345','+-12345']) {
+      for (const value of [raw,{value:raw,text:'-12,345.0주',source:'public-test',missing:false}]) {
+        const values = {[slot]:value}, saved = structuredClone(values);
+        const p = prepareDisplayInput(registry.contractFor(id), values);
+        const assignment = mountPlan(p.contract,p.values).assignments.find(x=>x.slotId===slot);
+        assert.ok(assignment.text.endsWith('주'));
+        assert.ok(!/\d\.\d/.test(assignment.text));
+        assert.equal(assignment.missing,false);
+        assert.equal(assignment.text.includes('-'),format.toNumber(raw)<0);
+        assert.deepEqual(values,saved);
+        if (typeof value === 'object') assert.equal(p.values[slot].source,'public-test');
+      }
+    }
+    for (const value of [null,{value:null,missing:true,text:'stale'}]) {
+      assert.ok(plan(id,{[slot]:value}).assignments.find(x=>x.slotId===slot).missing);
+    }
+    const supplied = {value:'−12345',text:'-12,345.0주',source:'public-test'};
+    assert.equal(prepareDisplayInput(registry.contractFor(id),{[slot]:supplied}).values[slot].text,
+      (policy[id][slot][2].prefix || '') + supplied.text);
+  }
+  assert.equal(text(plan('13K0-2',{s091:4294967295}),'s091'),'4,294,967,295주');
+  assert.equal(text(plan('13K0-2',{s091:0}),'s091'),'0주');
+  assert.equal(text(plan('13K0-2',{s091:{value:12345,text:'원천 12,345주'}}),'s091'),'원천 12,345주');
+});
+
 test('generated policy exactly follows the 94 public read-only source contracts', () => {
   assert.deepEqual(policy, buildPolicy());
   assert.equal(Object.keys(policy).length, 94);

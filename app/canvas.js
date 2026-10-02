@@ -1265,6 +1265,27 @@ function boardMountOptions(host, envelope) {
 // 봉투가 실어온 계약으로 보드를 연다. 값 표·상태 링크·미결 슬롯은 여기서만 온다.
 async function openBoardSurface(host, contract, envelope, isCurrent) {
   const state = boardStateOf(host);
+  if (rankingBoardControls?.isFilterBoard(contract.board_id)) {
+    const operation = String(envelope?.operation_ref || '');
+    const parent = operation === 'base:ka00198' ? '13K0-2'
+      : Object.keys(RANKING_BOARD_OPERATIONS).find(id => RANKING_BOARD_OPERATIONS[id] === operation);
+    if (!parent) throw new Error('필터의 조회 원천이 없어 화면을 열 수 없습니다. 순위 조회를 먼저 열어 주세요.');
+    closeParentRankingFilter(state);
+    state.rankingReturnBoard = parent;
+    state.rankingSourceBoard = parent;
+    state.rankingExpandedSourceBoard = parent;
+    state.rankingSourceOperation = operation;
+    state.rankingCriteria = rankingBoardControls.initialCriteria(boardHydrateTarget(envelope), parent);
+    state.hydrationWarnings = [];
+    // Filter slots describe a different volume table. Start the verified parent
+    // empty and request its own contract; never copy filter values or bindings.
+    seedBoardState(state, { board_id: parent }, {});
+    const mounted = await mountBoardState(host, parent, envelope, isCurrent);
+    if ((!isCurrent || isCurrent()) && state.boardId === parent) {
+      await showParentRankingFilter(host, contract.board_id, envelope);
+    }
+    return mounted;
+  }
   state.links = stateLinksOf(contract);
   seedBoardState(state, contract, envelope);
   const initialContract = initialSurfaceContractOf(envelope);
@@ -1357,6 +1378,80 @@ function mountBoardState(host, boardId, envelope, isCurrent = () => true) {
     });
 }
 
+// Ignored feasibility candidate: keep the actual parent surface and query state.
+// Reuse only the authored menu, never its specimen volume table or slot values.
+function openParentRankingMenu(surface, filterBoardId, {registry, mount, popover, controls, onSelection, onClose, unavailableReason}) {
+  const spec=popover.MENUS[filterBoardId];
+  if(!spec)throw new Error('unsupported ranking filter');
+  const previousMenu=surface.querySelector('.bs-parent-ranking-menu');
+  if(previousMenu?.closeParentRankingMenu)previousMenu.closeParentRankingMenu();else previousMenu?.remove();
+  const holder=surface.ownerDocument.createElement('template');holder.innerHTML=registry.boardHtml(filterBoardId);
+  const menu=holder.content.querySelector('[data-node="'+spec[0]+'"]');
+  if(!menu)throw new Error('authored filter menu missing');
+  const triggerText=({'4A9H-1':'KOSPI','4AGN-1':'등락 전체','4ANS-1':'시가총액 전체','4AUX-1':'유동성 정상'})[filterBoardId];
+  const trigger=surface.querySelector('[data-state-control="'+triggerText+'"]')||mount.findStateControlNode(surface,triggerText);
+  if(!trigger)throw new Error('actual parent trigger missing');
+  const activationOwner=trigger.closest('[role="button"],button,[role="tab"]')||trigger;
+  menu.classList.add('bs-filter-popover','bs-parent-ranking-menu');menu.setAttribute('role','menu');menu.setAttribute('aria-label',triggerText);
+  menu.style.height='auto';menu.style.minHeight='0';menu.tabIndex=-1;
+  const view=surface.ownerDocument.defaultView;let closed=false,pendingFrame=0,observer=null;
+  const position=()=>{if(closed)return;const r=popover.menuPosition(surface.getBoundingClientRect(),trigger.getBoundingClientRect());Object.assign(menu.style,{width:r.width+'px',left:(r.left+surface.scrollLeft)+'px',top:(r.top+surface.scrollTop)+'px'});};
+  for(const row of menu.children){row.classList.add('bs-filter-option');for(const property of ['height','min-height','justify-content','align-items','padding-inline'])row.style.removeProperty(property);for(const child of row.children)for(const property of ['width','font-size','line-height'])child.style.removeProperty(property);}
+  const oldPosition=surface.style.getPropertyValue('position'),oldPriority=surface.style.getPropertyPriority('position');
+  const needsPosition=getComputedStyle(surface).position==='static';
+  if(needsPosition)surface.style.setProperty('position','relative');
+  const schedulePosition=()=>{if(!closed&&!pendingFrame)pendingFrame=view.requestAnimationFrame(()=>{pendingFrame=0;position();});};
+  const close=()=>{if(closed)return;closed=true;observer?.disconnect();view.removeEventListener('resize',schedulePosition);if(pendingFrame)view.cancelAnimationFrame(pendingFrame);menu.remove();if(needsPosition){if(oldPosition)surface.style.setProperty('position',oldPosition,oldPriority);else surface.style.removeProperty('position');}};
+  surface.append(menu);
+  for(const label of controls.selectionLabels(filterBoardId)){
+    const owner=controls.selectionOwner(menu,label),selection=controls.selectionFor(filterBoardId,label);if(!owner)throw new Error('authored option missing: '+label);
+    if(unavailableReason || selection.unavailable){owner.setAttribute('aria-disabled','true');owner.title=unavailableReason || selection.unavailable;}
+    if(unavailableReason){owner.style.opacity='0.55';owner.style.cursor='default';owner.style.background='transparent';owner.tabIndex=-1;for(const leaf of owner.querySelectorAll('*'))if(!leaf.children.length&&leaf.textContent.trim()==='선택됨')leaf.hidden=true;}
+    else mount.wireStateControlActivation(owner,()=>onSelection(selection),{keyboard:true});
+    owner.setAttribute('role','menuitem');
+  }
+  menu.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();if(onClose)onClose();else close();if(activationOwner.isConnected)activationOwner.focus();}});
+  if(unavailableReason){const note=surface.ownerDocument.createElement('div');note.className='bs-parent-ranking-filter-reason';note.setAttribute('role','status');note.textContent=unavailableReason;Object.assign(note.style,{fontSize:'12px',lineHeight:'1.5',padding:'8px 12px',whiteSpace:'normal'});menu.append(note);}
+  menu.closeParentRankingMenu=close;
+  menu.repositionParentRankingMenu=position;
+  observer=new view.ResizeObserver(schedulePosition);observer.observe(surface);observer.observe(trigger);
+  view.addEventListener('resize',schedulePosition);
+  position();
+  (menu.querySelector('[role="menuitem"]:not([aria-disabled="true"])')||menu).focus();
+  return{menu,close,reposition:position};
+}
+
+function closeParentRankingFilter(state) {
+  const menu = state && state.rankingParentMenu;
+  if (!menu) return;
+  state.rankingParentMenu = null;
+  menu.handle?.close();
+}
+
+async function showParentRankingFilter(host, filterBoardId, envelope) {
+  const state = boardStateOf(host);
+  if (state.rankingParentMenu?.boardId === filterBoardId) {
+    closeParentRankingFilter(state);
+    return null;
+  }
+  closeParentRankingFilter(state);
+  const pending = { boardId: filterBoardId, parentBoard: state.boardId, surface: state.surface };
+  state.rankingParentMenu = pending;
+  await boardTemplateRegistry.loadBoard(filterBoardId);
+  if (state.rankingParentMenu !== pending || state.boardId !== pending.parentBoard
+    || state.surface !== pending.surface) return null;
+  const operation = state.boardId === '4B22-1' ? expandedRankingOperation(state) : state.rankingSourceOperation;
+  pending.handle = openParentRankingMenu(state.surface, filterBoardId, {
+    registry: boardTemplateRegistry, mount: boardMount,
+    popover: window.AthenaLib.BoardPopoverLayout, controls: rankingBoardControls,
+    unavailableReason: operation === 'base:ka00198' && ['4A9H-1','4AUX-1'].includes(filterBoardId)
+      ? '실시간 종목 조회 순위는 시장·관리종목 필터를 지원하지 않습니다.' : '',
+    onSelection: selection => selectRankingFilter(host, envelope, selection),
+    onClose: () => closeParentRankingFilter(state),
+  });
+  return pending.handle;
+}
+
 function switchStateBoard(host, boardId, envelope, control = '') {
   const state = boardStateOf(host);
   const transition = rankingBoardControls && rankingBoardControls.isFamilyBoard(state.boardId)
@@ -1366,6 +1461,10 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   const target = String(transition.boardId || '');
   if (!target || target === state.boardId) return null;
   if (!state.links.some((link) => link.board_id === target)) return null;
+  if (rankingBoardControls?.isFilterBoard(target) && !rankingBoardControls.isFilterBoard(state.boardId)) {
+    return showParentRankingFilter(host, target, envelope);
+  }
+  closeParentRankingFilter(state);
   // This authored expansion belongs to the first actual watchlist row. The
   // envelope can still describe a group or an earlier stock, so it is not its target.
   const watchlistExpansion = state.boardId === '2U5L-1' && target === '3D4I-0';
@@ -1556,6 +1655,12 @@ function selectEtfReturnPeriod(host, envelope, value) {
 
 function selectRankingFilter(host, envelope, selection) {
   const state = boardStateOf(host);
+  const operation = state.boardId === '4B22-1' ? expandedRankingOperation(state) : state.rankingSourceOperation;
+  if (operation === 'base:ka00198' && !selection.boardId
+    && (Object.prototype.hasOwnProperty.call(selection.criteria || {}, 'market')
+      || Object.prototype.hasOwnProperty.call(selection.criteria || {}, 'liquidity'))) {
+    selection = { ...selection, unavailable: '실시간 종목 조회 순위는 시장·관리종목 필터를 지원하지 않습니다.' };
+  }
   if (selection.unavailable) {
     if (state.rankingNoticeNode) state.rankingNoticeNode.remove();
     const note = errorNote(selection.unavailable);
@@ -1570,7 +1675,13 @@ function selectRankingFilter(host, envelope, selection) {
     state.rankingNoticeNode = null;
   }
   state.rankingCriteria = rankingBoardControls.criteriaAfter(state.rankingCriteria, selection);
-  const target = String(selection.boardId || state.rankingReturnBoard || rankingBoardControls.ROOT_BOARD);
+  const target = String(selection.boardId || state.rankingParentMenu?.parentBoard
+    || state.rankingReturnBoard || rankingBoardControls.ROOT_BOARD);
+  closeParentRankingFilter(state);
+  if (selection.boardId && RANKING_BOARD_OPERATIONS[target]) {
+    state.rankingSourceBoard = target;
+    state.rankingSourceOperation = RANKING_BOARD_OPERATIONS[target];
+  }
   clearRankingBoardCache(state);
   destroyBoardPrimary(state);
   return runBoardSurfaceLoad(host, envelope, (isCurrent) => (
@@ -1578,13 +1689,36 @@ function selectRankingFilter(host, envelope, selection) {
   ));
 }
 
-function applyRankingCriteriaLabels(surface, criteria) {
+function applyRankingCriteriaLabels(surface, criteria, context = {}) {
   if (!surface || !criteria) return;
   const labels = {
     KOSPI: criteria.market === '101' ? 'KOSDAQ' : (criteria.market === '000' ? 'KRX 전체' : 'KOSPI'),
     '등락 전체': criteria.direction === 'up' ? '상승만' : (criteria.direction === 'down' ? '하락만' : '등락 전체'),
     '유동성 정상': criteria.liquidity === 'all' ? '전체 포함' : '유동성 정상',
   };
+  if (context.boardId === '13K0-2') {
+    const operation = context.operation;
+    const target = context.target || {};
+    if (operation === 'base:ka00198') {
+      labels.KOSPI = '시장 필터 미지원';
+      labels['유동성 정상'] = '관리종목 필터 미지원';
+      for (const node of surface.querySelectorAll('[data-slot-id="s003"]')) if (!node.children.length) {
+        node.textContent = '실시간 종목 조회 순위 · 시장·관리종목 필터 미지원';
+      }
+    }
+    if (['base:ka10032','base:ka10030'].includes(operation)) {
+      const venue = {'1':'KRX','2':'NXT','3':'통합'}[String(target.stex_tp)] || '';
+      const market = {'000':'전체','001':'KOSPI','101':'KOSDAQ'}[String(target.mrkt_tp)] || '시장 미지정';
+      const marketLabel = [venue, market].filter(Boolean).join(' ');
+      const exclude = operation === 'base:ka10032' ? target.mang_stk_incls === '0' : target.mang_stk_incls === '1';
+      const include = operation === 'base:ka10032' ? target.mang_stk_incls === '1' : target.mang_stk_incls === '0';
+      const management = exclude ? '관리종목 제외' : include ? '관리종목 포함' : '관리종목 조건 확인 필요';
+      labels['유동성 정상'] = management;
+      for (const node of surface.querySelectorAll('[data-slot-id="s003"]')) if (!node.children.length) {
+        node.textContent = [operation === 'base:ka10032' ? '거래대금 상위' : '당일 거래량 상위', marketLabel, management].join(' · ');
+      }
+    }
+  }
   for (const node of surface.querySelectorAll('[data-state-control]')) {
     const control = String(node.dataset.stateControl || '');
     if (labels[control]) node.textContent = labels[control];
@@ -1595,7 +1729,10 @@ function wireRankingFilterSelections(host, envelope, mounted) {
   const state = boardStateOf(host);
   const surface = mounted && mounted.surface;
   if (!rankingBoardControls || !surface || !rankingBoardControls.isFamilyBoard(state.boardId)) return 0;
-  applyRankingCriteriaLabels(surface, state.rankingCriteria);
+  applyRankingCriteriaLabels(surface, state.rankingCriteria, {
+    boardId: state.boardId, operation: state.rankingSourceOperation,
+    target: boardHydrateTarget(envelope, host),
+  });
   let wired = 0;
   for (const label of rankingBoardControls.selectionLabels(state.boardId)) {
     const selection = rankingBoardControls.selectionFor(state.boardId, label);
@@ -1613,6 +1750,8 @@ function wireRankingFilterSelections(host, envelope, mounted) {
 }
 
 function wireMountedBoardControls(host, envelope, mounted) {
+  const state = boardStateOf(host);
+  if (state.rankingParentMenu && state.rankingParentMenu.surface !== mounted?.surface) closeParentRankingFilter(state);
   wireStateControls(host, envelope, mounted);
   wireRankingFilterSelections(host, envelope, mounted);
   wireCardActions(host, envelope, mounted);
@@ -1720,6 +1859,7 @@ const BOARD_ORDERBOOK_RENDERER = 'orderbook-ladder';
 // 열려 있는 보드 primary 패널을 닫는다. 상태 보드 전환과 카드 파괴가 같은 문을 쓴다.
 function destroyBoardPrimary(state) {
   if (!state) return false;
+  closeParentRankingFilter(state);
   if (state.primaryRefreshTimer) clearTimeout(state.primaryRefreshTimer);
   state.primaryRefreshTimer = null;
   state.primaryRefreshing = false;

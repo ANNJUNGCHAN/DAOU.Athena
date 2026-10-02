@@ -35,7 +35,7 @@ function fixture(code, name = { value: '합성 ETF' }) {
   });
   for (const [start, end] of [['const RANKING_BOARD_OPERATIONS =', 'function boardHydrateAccount('],
     ['function boardMountOptions(', '// 봉투가 실어온 계약'],
-    ['function switchStateBoard(', 'function wireStateControls('],
+    ['function closeParentRankingFilter(', 'function wireStateControls('],
     ['function runBoardSurfaceLoad(', 'function renderBoardSurfaceCard(']]) {
     const a = source.indexOf(start), b = source.indexOf(end, a);
     assert.ok(a >= 0 && b > a);

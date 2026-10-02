@@ -56,6 +56,8 @@ function menuPosition(surface, trigger, width = 236) {
 
 function update(surface) {
   compactUnavailableRail(surface);
+  // Width relaxation can move the trigger after the menu resize callback.
+  surface.querySelector('.bs-parent-ranking-menu')?.repositionParentRankingMenu?.();
   const ids = MENUS[surface.dataset.bsBoardId];
   if (!ids) return;
   const menu = surface.querySelector(`[data-node="${ids[0]}"]`);

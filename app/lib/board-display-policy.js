@@ -3,6 +3,7 @@
 'use strict';
 const cjs = typeof module !== 'undefined' && module.exports;
 const policies = cjs ? require('./board-display-policy-data') : window.AthenaLib.BoardDisplayPolicyData;
+const boardFormat = cjs ? require('./board-format') : window.AthenaLib.BoardFormat;
 const RANK_NINE_IDS = ["2X5N-0","2XG6-0","2XKO-0","2XP6-0","2XTO-0","2YA8-0","2YEQ-0","2YJ8-0","2YNQ-0"];
 const isPresent = (value) => value !== undefined && value !== null && value !== '';
 const rawValue = (value) => value && typeof value === 'object' && 'value' in value ? value.value : value;
@@ -32,6 +33,15 @@ function prepareDisplayInput(contract, values) {
       delete next.static;
       next.kind = 'value';
       next.format = { ...rule[2], missing_text: '—' };
+      // Exact reviewed CC06 quantities use the received number, including zero and sign.
+      if (["2X5N-0:s089","2XG6-0:s089","2XKO-0:s048","2XKO-0:s070","2XTO-0:s098","2YJ8-0:s058","2YJ8-0:s069","2YJ8-0:s080","2YJ8-0:s091","2YJ8-0:s092"].includes(contract.board_id + ':' + slot.slot_id)
+        && bound && typeof bound === 'object' && !bound.missing && isPresent(value)
+        && boardFormat.toNumber(value) !== null) {
+        if (changedValues === values) changedValues = { ...values };
+        changedValues[slot.slot_id] = { ...bound };
+        delete changedValues[slot.slot_id].text;
+        return next;
+      }
       // These paired values need their meaning even when a response already
       // supplies display text. Keep the global preformatted-text contract intact.
       if ((contract.board_id === '13K0-2' || RANK_NINE_IDS.includes(contract.board_id)) && bound && typeof bound === 'object'

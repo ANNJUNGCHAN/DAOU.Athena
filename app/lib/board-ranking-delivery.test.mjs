@@ -35,11 +35,12 @@ function fixture(replyPromise) {
     RETRYABLE_BOARD_HYDRATE_REASONS:new Set(['upstream_error']),boardHydrationError:()=>new Error('조회 실패'),
     boardMount:{nextHydrationSlots:()=>[],realtimeSlotIndex:()=>Object.assign(new Map(),{observationByBinding:new Map()}),mountBoard:(_host,id,_values,options)=>{mounts.push({id,options});return {updated:true};}},
     realtimeBindingsOf:()=>[],boardMountOptions:()=>({rankingResult:state.rankingResult}),rememberMountedBoard:()=>{},wireMountedBoardControls:()=>{},
-    boardTemplateRegistry:{navigationTargetRequirement:()=>null},destroyBoardPrimary:()=>{},
+    boardTemplateRegistry:{navigationTargetRequirement:()=>null,loadBoard:async()=>{}},destroyBoardPrimary:()=>{},
+    openParentRankingMenu:(_surface,_filter,options)=>({options,close(){}}),
     stateLinksOf:()=>[],seedBoardState:()=>{},initialSurfaceContractOf:()=>null,
     runBoardSurfaceLoad:(_host,_envelope,load)=>load(()=>true),mountBoardState:(_host,id)=>{state.boardId=id;}});
   for(const [start,end]of [['const RANKING_BOARD_OPERATIONS =','function boardHydrateAccount('],['async function hydrateBoardSlots(','function rememberMountedBoard('],
-    ['function switchStateBoard(','function wireStateControls('],['function clearRankingBoardCache(','function selectEtfReturnPeriod('],
+    ['function closeParentRankingFilter(','function wireStateControls('],['function clearRankingBoardCache(','function selectEtfReturnPeriod('],
     ['function selectRankingFilter(','function applyRankingCriteriaLabels('],['async function openBoardSurface(','// 봉투가 싣는 실시간 바인딩 표.']]) {
     const a=source.indexOf(start),b=source.indexOf(end,a);assert.ok(a>=0&&b>a);vm.runInContext(source.slice(a,b),context);
   }
@@ -76,8 +77,12 @@ test('a filter opened inside the full list preserves its query source on return'
   const f=fixture(Promise.resolve({ok:true,slot_values:{},ranking_result:result,operations:[]}));
   f.state.boardId='2X5N-0';
   f.context.switchStateBoard(f.host,'4B22-1',{});
-  f.context.switchStateBoard(f.host,'4A9H-1',{},'KOSPI');
-  assert.equal(f.state.rankingReturnBoard,'4B22-1');
+  f.context.window.AthenaLib = {BoardPopoverLayout:{}};
+  await f.context.switchStateBoard(f.host,'4A9H-1',{},'KOSPI');
+  assert.equal(f.state.boardId,'4B22-1');
+  assert.equal(f.state.rankingParentMenu.parentBoard,'4B22-1');
+  assert.equal(f.state.rankingParentMenu.handle.options.unavailableReason,'');
+  assert.equal(f.state.rankingReturnBoard,'2X5N-0');
   f.state.rankingResult={rows:[{stk_cd:'old'}]};
   f.context.selectRankingFilter(f.host,{}, {criteria:{market:'101'}});
   assert.equal(f.state.rankingResult,null);

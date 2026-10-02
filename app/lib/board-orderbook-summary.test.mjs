@@ -71,6 +71,7 @@ function harness({ boardId = '13BC-2', deferAcquire = false } = {}) {
     ['wireOrderbookRealtime', 'function renderMcpTable'],
     ['mountAuthoredOrderbook', 'function mountBoardOrderbook'],
     ['mountBoardOrderbook', 'async function mountBoardPrimary'],
+    ['closeParentRankingFilter', 'async function showParentRankingFilter'],
     ['destroyBoardPrimary', 'function boardChartDescriptor'],
   ]) vm.runInContext(source(name, next), context);
   const mount = incoming => context.mountBoardOrderbook(card, state, { mountPoint }, incoming);

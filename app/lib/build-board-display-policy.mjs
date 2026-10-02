@@ -180,6 +180,114 @@ const ELW_QUOTE_MAGNITUDES = {
   s061: 'buy_bid', s075: 'buy_bid', s090: 'buy_bid', s104: 'buy_bid', s118: 'buy_bid', s132: 'buy_bid', s146: 'buy_bid', s161: 'buy_bid',
 };
 
+// The final received quantity uses the same whole-share unit as preceding rows.
+FORMATS['13K0-2'].s091 = ['now_trde_qty', { unit: 'shares', sign: false, precision: 0, tone: 'neutral' }];
+
+const CC06_INTEGER_QUANTITIES = {
+  "2X5N-0": {
+    "s089": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      }
+    ]
+  },
+  "2XG6-0": {
+    "s089": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      }
+    ]
+  },
+  "2XKO-0": {
+    "s048": [
+      "sel_req",
+      {
+        "prefix": "매도 ",
+        "precision": 0,
+        "unit": "shares",
+        "sign": false,
+        "tone": "neutral"
+      }
+    ],
+    "s070": [
+      "now_trde_qty",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
+    ]
+  },
+  "2XTO-0": {
+    "s098": [
+      "trde_qty",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      }
+    ]
+  },
+  "2YJ8-0": {
+    "s058": [
+      "sdnin_qty",
+      {
+        "unit": "shares",
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
+      }
+    ],
+    "s069": [
+      "sdnin_qty",
+      {
+        "unit": "shares",
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
+      }
+    ],
+    "s080": [
+      "sdnin_qty",
+      {
+        "unit": "shares",
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
+      }
+    ],
+    "s091": [
+      "sdnin_qty",
+      {
+        "unit": "shares",
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
+      }
+    ],
+    "s092": [
+      "now_trde_qty",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral",
+        "prefix": "현재 "
+      }
+    ]
+  }
+};
 export function buildPolicy() {
   const policies = {};
   for (const entry of index.boards) {
@@ -194,7 +302,7 @@ export function buildPolicy() {
         && ELW_QUOTE_MAGNITUDES[slot.slot_id] && ELW_QUOTE_MAGNITUDES[slot.slot_id] === slot.f) {
         slots[slot.slot_id] = [slot.paper_text, 'quote-magnitude', slot.f]; continue;
       }
-      const format = FORMATS[entry.board_id]?.[slot.slot_id];
+      const format = CC06_INTEGER_QUANTITIES[entry.board_id]?.[slot.slot_id] || FORMATS[entry.board_id]?.[slot.slot_id];
       if (format && slot.f === format[0] && hasBinding(slot)) {
         slots[slot.slot_id] = [slot.paper_text, 'bound-format', format[1]]; continue;
       }

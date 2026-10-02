@@ -1401,3 +1401,33 @@
 .board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] { display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));height:auto!important;min-height:0!important;align-items:start; }
 .board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > .bs-kpi-cell { width:auto!important;min-width:0!important;max-width:100%;height:auto!important;min-height:0!important;box-sizing:border-box; }
 .board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > .bs-kpi-cell > [data-slot-id] { width:100%!important;max-width:100%;height:auto!important;min-height:0!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.4!important; }
+
+/* Exact CC06 received mini identifiers stay intact beside long names. */
+.board-surface[data-bs-board-id="2XG6-0"] .bs-rank-nine-mini-tile [data-slot-id="s099"],
+.board-surface[data-bs-board-id="2XG6-0"] .bs-rank-nine-mini-tile [data-slot-id="s102"],
+.board-surface[data-bs-board-id="2XG6-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2XKO-0"] .bs-rank-nine-mini-tile [data-slot-id="s104"],
+.board-surface[data-bs-board-id="2XKO-0"] .bs-rank-nine-mini-tile [data-slot-id="s107"],
+.board-surface[data-bs-board-id="2XKO-0"] .bs-rank-nine-mini-tile [data-slot-id="s110"],
+.board-surface[data-bs-board-id="2XP6-0"] .bs-rank-nine-mini-tile [data-slot-id="s099"],
+.board-surface[data-bs-board-id="2XP6-0"] .bs-rank-nine-mini-tile [data-slot-id="s102"],
+.board-surface[data-bs-board-id="2XP6-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2XTO-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2XTO-0"] .bs-rank-nine-mini-tile [data-slot-id="s108"],
+.board-surface[data-bs-board-id="2XTO-0"] .bs-rank-nine-mini-tile [data-slot-id="s111"],
+.board-surface[data-bs-board-id="2YA8-0"] .bs-rank-nine-mini-tile [data-slot-id="s100"],
+.board-surface[data-bs-board-id="2YA8-0"] .bs-rank-nine-mini-tile [data-slot-id="s103"],
+.board-surface[data-bs-board-id="2YA8-0"] .bs-rank-nine-mini-tile [data-slot-id="s106"],
+.board-surface[data-bs-board-id="2YEQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s100"],
+.board-surface[data-bs-board-id="2YEQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s103"],
+.board-surface[data-bs-board-id="2YEQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s106"],
+.board-surface[data-bs-board-id="2YJ8-0"] .bs-rank-nine-mini-tile [data-slot-id="s099"],
+.board-surface[data-bs-board-id="2YJ8-0"] .bs-rank-nine-mini-tile [data-slot-id="s102"],
+.board-surface[data-bs-board-id="2YJ8-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s098"],
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s101"],
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s104"] {white-space:nowrap!important;overflow-wrap:normal!important;min-width:max-content!important;flex-shrink:0}
+
+.board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-primary {padding:12px 28px!important;gap:8px!important}
+.board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-rail {padding:0 28px 16px!important;gap:8px!important}
+.board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-ranking-unavailable-group {padding:0!important;border:0!important;margin:0!important}

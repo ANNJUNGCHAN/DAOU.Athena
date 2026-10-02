@@ -29,7 +29,7 @@ function fixture(rowCode) {
   });
   for (const [start, end] of [['const RANKING_BOARD_OPERATIONS =', 'function boardHydrateAccount('],
     ['function boardMountOptions(', '// 봉투가 실어온 계약'],
-    ['function switchStateBoard(', 'function wireStateControls(']]) {
+    ['function closeParentRankingFilter(', 'function wireStateControls(']]) {
     const a = source.indexOf(start), b = source.indexOf(end, a);
     assert.ok(a >= 0 && b > a);
     vm.runInContext(source.slice(a, b), context);

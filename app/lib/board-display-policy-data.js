@@ -881,6 +881,16 @@ const policy = {
         "tone": "change"
       }
     ],
+    "s091": [
+      "73.8만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      }
+    ],
     "s092": [
       "전일 61.2만주",
       "bound-format",
@@ -11374,6 +11384,16 @@ const policy = {
         "prefix": "전일비 "
       }
     ],
+    "s089": [
+      "73.8만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      }
+    ],
     "s090": [
       "전일 1.2배",
       "bound-format",
@@ -12250,6 +12270,16 @@ const policy = {
       "unavailable",
       null
     ],
+    "s089": [
+      "61.2만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      }
+    ],
     "s090": [
       "4,810억",
       "unavailable",
@@ -12499,8 +12529,11 @@ const policy = {
       "매도 해당 없음",
       "bound-format",
       {
-        "kind": "number",
-        "prefix": "매도 "
+        "prefix": "매도 ",
+        "precision": 0,
+        "unit": "shares",
+        "sign": false,
+        "tone": "neutral"
       }
     ],
     "s049": [
@@ -12617,7 +12650,7 @@ const policy = {
       {
         "unit": "shares",
         "sign": false,
-        "precision": 1,
+        "precision": 0,
         "tone": "neutral",
         "prefix": "현재 "
       }
@@ -13675,6 +13708,16 @@ const policy = {
         "precision": 1,
         "tone": "neutral",
         "prefix": "매수비율 "
+      }
+    ],
+    "s098": [
+      "73.8만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
       }
     ],
     "s103": [
@@ -15950,6 +15993,16 @@ const policy = {
         "prefix": "이전 "
       }
     ],
+    "s058": [
+      "+41.2만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
+      }
+    ],
     "s059": [
       "누적 497만주",
       "bound-format",
@@ -16007,6 +16060,16 @@ const policy = {
         "precision": 0,
         "tone": "neutral",
         "prefix": "이전 "
+      }
+    ],
+    "s069": [
+      "+22.3만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       }
     ],
     "s070": [
@@ -16068,6 +16131,16 @@ const policy = {
         "prefix": "이전 "
       }
     ],
+    "s080": [
+      "+16.6만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
+      }
+    ],
     "s081": [
       "누적 318만주",
       "bound-format",
@@ -16127,13 +16200,23 @@ const policy = {
         "prefix": "이전 "
       }
     ],
+    "s091": [
+      "+2.7만주",
+      "bound-format",
+      {
+        "unit": "shares",
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
+      }
+    ],
     "s092": [
       "누적 73.8만주",
       "bound-format",
       {
         "unit": "shares",
         "sign": false,
-        "precision": 1,
+        "precision": 0,
         "tone": "neutral",
         "prefix": "현재 "
       }

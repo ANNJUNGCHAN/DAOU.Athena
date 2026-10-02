@@ -49,7 +49,7 @@ function fixture(code = '654321_AL', name = '합성 ETF') {
     ['const RANKING_BOARD_OPERATIONS =', 'function boardHydrateAccount('],
     ['function activateBoardState(', 'function boardMountOptions('],
     ['function boardMountOptions(', '// 봉투가 실어온 계약'],
-    ['function switchStateBoard(', 'function wireStateControls('],
+    ['function closeParentRankingFilter(', 'function wireStateControls('],
     ['function selectEtfReturnPeriod(', 'function selectRankingFilter('],
     ['function runBoardSurfaceLoad(', 'function renderBoardSurfaceCard('],
     ['async function hydrateBoardSlots(', '// 마운트 결과에서'],
