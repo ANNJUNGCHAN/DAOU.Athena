@@ -4257,6 +4257,44 @@ function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
   return release;
 }
 
+function fitGeneralTableCard(card, layoutHint) {
+  if (layoutHint === 'half' || layoutHint === 'full') return;
+  card.classList.add('general-table-intrinsic');
+  let pending = 0;
+  let closed = false;
+  let lastWidth = -1;
+  const fit = () => {
+    pending = 0;
+    if (closed || card.parentElement !== grid || card.classList.contains('is-expanded')) return;
+    card.classList.remove('general-table-half');
+    const tracks = getComputedStyle(grid).gridTemplateColumns.split(' ').map(Number.parseFloat);
+    const preferred = card.getBoundingClientRect().width;
+    card.classList.toggle('general-table-half', tracks.length === 2 && preferred <= Math.min(...tracks));
+  };
+  const schedule = () => { if (!closed && !pending) pending = requestAnimationFrame(fit); };
+  const observer = new ResizeObserver(() => {
+    const width = grid.clientWidth;
+    if (width !== lastWidth) { lastWidth = width; schedule(); }
+  });
+  let expanded = card.classList.contains('is-expanded');
+  const expansion = new MutationObserver(() => {
+    const current = card.classList.contains('is-expanded');
+    if (current !== expanded) { expanded = current; schedule(); }
+  });
+  expansion.observe(card, { attributes: true, attributeFilter: ['class'] });
+  observer.observe(grid);
+  schedule();
+  if (document.fonts) document.fonts.ready.then(schedule);
+  const previous = cardDestroyers.get(card);
+  cardDestroyers.set(card, () => {
+    closed = true;
+    observer.disconnect();
+    expansion.disconnect();
+    if (pending) cancelAnimationFrame(pending);
+    if (previous) previous();
+  });
+}
+
 function renderMcpTable(envelope) {
   const [title, subtitle] = cardTitleAndSubtitle(envelope, '공통 테이블');
   // 카드 v3(.omc/state/card-v3-plan.md §2.2) 카드종 후킹 — title이 Paper 16종 고정
@@ -4291,6 +4329,7 @@ function renderMcpTable(envelope) {
     note.setAttribute('role', 'status');
     body.appendChild(note);
   }
+  fitGeneralTableCard(card, envelope.layout);
   return card;
 }
 

@@ -1596,3 +1596,7 @@ table.common-table { min-width: 420px; font-size: 13px; line-height: 20px; }
 }
 .card .realtime-fallback-status { display: block; flex: 0 0 auto; min-width: 0; padding: 8px 12px; color: var(--color-k-dim); font: 12px/18px var(--font-body); overflow-wrap: anywhere; }
 .card .bs-footer > .realtime-fallback-status { flex-basis: 100%; padding: 0; }
+
+/* Intrinsic width only for direct generic table cards; full/tab views retain their contracts. */
+.grid > .card.mcp-table.general-table-intrinsic:not(.is-expanded):not(.integrated-card):not(.board-card):not([data-semantic-primary="specialized"]) { width: fit-content; max-width: 100%; container-type: normal; justify-self: start; }
+.grid > .card.mcp-table.general-table-intrinsic.general-table-half:not(.is-expanded):not(.integrated-card):not(.board-card):not([data-semantic-primary="specialized"]) { grid-column: auto; }
