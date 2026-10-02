@@ -897,6 +897,10 @@ async function loadCompletedHistoryRun(runId, deps, isCurrent) {
 }
 
 function backtestResultTarget(result) {
+  const recorded = result && result.metrics && result.metrics.run_target;
+  if (recorded && Array.isArray(recorded.symbols)) {
+    return { symbols: recorded.symbols, period: recorded.period, fromDt: recorded.from, toDt: recorded.to };
+  }
   // Code executions receive their target separately; stored Python is not a target document.
   return result && result.metrics && result.metrics.run_path === 'form'
     ? targetFromYaml(result.source || '') : {};
@@ -4380,15 +4384,19 @@ function createBacktestCanvas(options) {
     });
     const addInput = el('input', 'backtest-field-input backtest-symbol-add');
     addInput.type = 'text';
-    addInput.placeholder = '종목코드 추가 (005930)';
+    addInput.placeholder = '종목코드 입력 후 Enter (005930)';
+    addInput.setAttribute('aria-label', '종목코드 입력 후 Enter로 추가');
     addInput.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter') return;
+      event.preventDefault();
       spec = SpecModel.addSymbol(spec, addInput.value);
       addInput.value = '';
+      if (state.formErrors && state.formErrors.length) state.formErrors = runErrors();
       render();
     });
     chips.appendChild(addInput);
     card.appendChild(chips);
+    card.appendChild(el('div', 'backtest-symbol-hint', '종목코드를 입력하고 Enter를 눌러 선택하세요.'));
 
     const row = el('div', 'backtest-field-row');
     const periodGroup = el('div', 'backtest-segment');

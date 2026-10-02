@@ -7915,7 +7915,7 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
 #backtestCanvas .backtest-history-return.is-down { color: var(--color-down); }
 #backtestCanvas .backtest-history-return.is-flat { color: var(--color-k-text); }
 #backtestCanvas .backtest-result-context { margin: 8px 0 16px; color: var(--color-k-dim); font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
-#backtestCanvas :is(.backtest-result .backtest-card-title, .backtest-result .backtest-card-note, .backtest-metric-label, .backtest-metric-sub) { font-size: 12px; line-height: 18px; }
+#backtestCanvas :is(.backtest-result .backtest-card-title, .backtest-result .backtest-card-note, .backtest-metric-label, .backtest-metric-sub) { font-size: 13px; line-height: 20px; }
 #backtestCanvas .backtest-result > .backtest-card-title { overflow-wrap: anywhere; }
 #backtestCanvas .backtest-equity-host { height: auto; display: grid; grid-template-columns: 64px minmax(0, 1fr); grid-template-rows: 220px auto; gap: 8px; }
 #backtestCanvas .backtest-equity-values { position: relative; grid-column: 1; grid-row: 1; min-width: 0; font-size: 11px; color: var(--color-k-dim); }
@@ -7960,3 +7960,9 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
   #backtestCanvas .project-ide-side { flex-basis: auto; max-height: 170px; border-right: 0; border-bottom: 1px solid var(--color-k-line); }
   #backtestCanvas .project-ide-tree { max-height: 110px; }
 }
+
+/* Completed-run context and readable form/result content at the available width. */
+#backtestCanvas :is(.backtest-technique-wrap, .backtest-design:has(.backtest-field), .backtest-result) { max-width: none; }
+#backtestCanvas :is(.backtest-user-strategy-path, .backtest-technique-desc, .backtest-technique-meta, .backtest-technique-foot, .backtest-field-label, .backtest-card-note, .backtest-symbol-hint, .backtest-metric-label, .backtest-metric-sub, .backtest-equity-note, .backtest-equity-axis, .backtest-equity-values) { font-size: 13px; line-height: 20px; color: var(--color-k-dim); }
+#backtestCanvas .backtest-symbol-hint { margin: 6px 0 12px; }
+#backtestCanvas .backtest-metric-sub { word-break: keep-all; overflow-wrap: normal; }
