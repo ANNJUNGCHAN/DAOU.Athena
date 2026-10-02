@@ -96,7 +96,7 @@ test('orb request uses the history selection path to leave Pallas, load messages
             ] };
           }
           if (name === 'athena:conversations-list') return state;
-          if (name === 'athena:session-replay-cards') return {};
+          if (name === 'athena:session-replay-cards') return { replayed: 0, status: 'empty' };
           throw new Error(`Unexpected IPC: ${name}`);
         },
       },
@@ -108,7 +108,8 @@ test('orb request uses the history selection path to leave Pallas, load messages
       dispatchEvent() {},
     },
   });
-  vm.runInContext(declaration(chat, 'restoreConversation')
+  vm.runInContext(section(chat, 'let pendingSessionCardReplay = null;', '// sidebar.js가 부르는 다리')
+    + declaration(chat, 'restoreConversation')
     + section(chat, 'window.AthenaShell.registerOpenConversation(', '// Claude 데스크톱의 @')
     + 'let pendingOrbConversationRefresh = null;\n' + section(chat, 'async function refreshOrbConversation(', '// ---------- 루틴 승인 카드')
     + section(sidebar, '  async function loadConversations(', '  async function openRoutineInAgent(')

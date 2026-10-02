@@ -7279,11 +7279,15 @@ ipcMain.on('athena:session-viewport', (_e, payload = {}) => {
 // 렌더러가 다시 보고하고, 같은 스택이 그대로 저장된다.
 ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
   const id = payload && typeof payload.id === 'string' ? payload.id : '';
-  if (id !== historyConversationId()) return { replayed: 0 };
+  if (id !== historyConversationId()) return { replayed: 0, status: 'stale' };
   const bridge = getSessionBridge();
-  if (!id || !bridge || !shellWin || shellWin.isDestroyed()) return { replayed: 0 };
+  if (!id || !bridge || !shellWin || shellWin.isDestroyed()) return { replayed: 0, status: 'unavailable' };
   bridge.flush(id);
   const snapshot = bridge.load(id);
+  if (!snapshot) {
+    flushDeferredShellEvents(id);
+    return { replayed: 0, status: 'unavailable' };
+  }
   const cards = snapshot && Array.isArray(snapshot.canvasCards) ? snapshot.canvasCards : [];
   let replayed = 0;
   for (const card of cards) {
@@ -7316,7 +7320,7 @@ ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
   }
   // 그 대화로 돌아왔다(다중 대화, 2026-09-08) — 미뤄 둔 채팅 전용 카드·캔버스 액션을 이제 흘린다.
   flushDeferredShellEvents(id);
-  return { replayed };
+  return { replayed, status: replayed > 0 ? 'dispatched' : (cards.length ? 'unavailable' : 'empty') };
 });
 // 과거 대화 열기(2026-09-02 사용자 지적 "대화 이력을 누르면 그 대화로 이동해야 한다").
 //

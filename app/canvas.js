@@ -584,11 +584,18 @@ window.AthenaCanvasCards = Object.assign(window.AthenaCanvasCards || {}, {
   flushReport: reportSessionCards,
 });
 
-window.athena.on('athena:add-canvas', ({ type, sessionCardId }) => {
+window.athena.on('athena:add-canvas', ({ type, sessionCardId, conversationId }) => {
+  if (conversationId && canvasConversationId && conversationId !== canvasConversationId) return;
+  const paintRevision = canvasPaintRevision;
+  const renderKey = sessionCardId ? String(paintRevision) + ':' + sessionCardId : null;
+  if (renderKey && (sessionCardRenders.has(renderKey)
+    || Array.from(grid.querySelectorAll('.card')).some((card) => card.dataset.sessionCardId === sessionCardId))) return;
+  if (renderKey) sessionCardRenders.add(renderKey);
   Promise.resolve(addCard(type)).then((node) => {
+    if (paintRevision !== canvasPaintRevision) { if (node && node.classList) destroyCard(node); return; }
     tagSessionCard(lastCardOr(node), { channel: 'fixture', kind: type, envelope: { type }, cardId: sessionCardId || null });
     reportSessionCards();
-  });
+  }).finally(() => { if (renderKey) sessionCardRenders.delete(renderKey); });
 });
 
 // 카드 비우기 — 옛 판에서는 main이 캔버스 창을 수축시킬 때 `athena:clear-canvases`
@@ -804,6 +811,7 @@ window.athena.on('athena:rest-retry-available', (payload = {}) => {
 // 갈아타는 찰나에 늦게 도착한 카드까지 걸러야 다른 대화의 캔버스에 섞이지 않는다.
 let canvasConversationId = null;
 let canvasPaintRevision = 0;
+const sessionCardRenders = new Set();
 window.athena.on('athena:init', (payload) => { if (payload && payload.conversationId) canvasConversationId = payload.conversationId; });
 window.athena.on('athena:conversation-active', ({ conversationId } = {}) => {
   if (conversationId && conversationId !== canvasConversationId) {
@@ -815,7 +823,14 @@ window.athena.on('athena:add-canvas-live', async (result) => {
   if (result && result.conversationId && canvasConversationId && result.conversationId !== canvasConversationId) return;
   const rendererReceivedAt = performance.now();
   const paintRevision = canvasPaintRevision;
-  const node = await addLiveCard(result);
+  const sessionCardId = result && result.sessionCardId;
+  const renderKey = sessionCardId ? String(paintRevision) + ':' + sessionCardId : null;
+  if (renderKey && (sessionCardRenders.has(renderKey)
+    || Array.from(grid.querySelectorAll('.card')).some((card) => card.dataset.sessionCardId === sessionCardId))) return;
+  if (renderKey) sessionCardRenders.add(renderKey);
+  let node;
+  try { node = await addLiveCard(result); }
+  finally { if (renderKey) sessionCardRenders.delete(renderKey); }
   if (paintRevision !== canvasPaintRevision) { if (node && node.classList) destroyCard(node); return; }
   if (!node || !result || (result.status !== 'success' && result.status !== 'fallback')) return;
   tagSessionCard(lastCardOr(node), { channel: 'live', kind: result.envelope && result.envelope.canvas_type || null, envelope: result.envelope || null, cardId: result.sessionCardId || null });

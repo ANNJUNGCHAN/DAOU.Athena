@@ -2551,6 +2551,75 @@ function restoreConversation(switched, messages, snapshot, { stored = false, con
   }
 }
 
+let pendingSessionCardReplay = null;
+let sessionCardReplayNotice = null;
+
+function expectedSessionCards(snapshot) {
+  if (!snapshot) return false;
+  if (Array.isArray(snapshot.canvasCards) && snapshot.canvasCards.some((card) => card && card.envelope)) return true;
+  return Array.isArray(snapshot.messages) && snapshot.messages.some((message) => message && (
+    (Array.isArray(message.cardRefs) && message.cardRefs.length > 0)
+    || (Array.isArray(message.toolSteps) && message.toolSteps.some((step) => step && step.done && !step.error && !step.retrying
+      && (step.label === '카드 그리는 중' || step.label === '카드 표시 완료')))));
+}
+
+function clearSessionCardReplayNotice() {
+  if (sessionCardReplayNotice) sessionCardReplayNotice.remove();
+  sessionCardReplayNotice = null;
+}
+
+function showSessionCardReplayNotice(conversationId, text) {
+  clearSessionCardReplayNotice();
+  const notice = document.createElement('div');
+  notice.className = 'past-empty';
+  notice.setAttribute('role', 'status');
+  const message = document.createElement('p');
+  message.textContent = text;
+  const retry = document.createElement('button');
+  retry.type = 'button';
+  retry.className = 'uk-btn uk-btn-ghost';
+  retry.textContent = '카드 다시 불러오기';
+  retry.addEventListener('click', () => {
+    if (conversationId !== displayedConversationId) return;
+    retry.disabled = true;
+    void replayConversationCards(conversationId, { retry: true });
+  });
+  notice.append(message, retry);
+  $history.appendChild(notice);
+  sessionCardReplayNotice = notice;
+}
+
+function replayConversationCards(conversationId, { expected = false, retry = false } = {}) {
+  if (conversationId !== displayedConversationId) return Promise.resolve(false);
+  if (pendingSessionCardReplay && pendingSessionCardReplay.conversationId === conversationId
+    && pendingSessionCardReplay.revision === conversationSelectionRevision) return pendingSessionCardReplay.promise;
+  clearSessionCardReplayNotice();
+  const attempt = { conversationId, revision: conversationSelectionRevision, promise: null };
+  pendingSessionCardReplay = attempt;
+  const current = () => pendingSessionCardReplay === attempt && displayedConversationId === conversationId
+    && conversationSelectionRevision === attempt.revision;
+  attempt.promise = (async () => {
+    try {
+      const result = await window.athena.invoke('athena:session-replay-cards', { id: conversationId });
+      if (!current()) return false;
+      if (result && result.status === 'stale') return false;
+      if (result && result.status === 'empty') {
+        if (expected || retry) showSessionCardReplayNotice(conversationId, '이 대화에 저장된 카드가 없습니다. 과거 작업 기록은 그대로 유지됩니다.');
+        return false;
+      }
+      if (!result || result.status !== 'dispatched' || !(result.replayed > 0)) throw new Error('card replay unavailable');
+      // This confirms dispatch only. The stored activity is not a new paint receipt.
+      return true;
+    } catch {
+      if (current()) showSessionCardReplayNotice(conversationId, '저장된 카드를 불러오지 못했습니다. 대화 내용은 그대로 유지됩니다.');
+      return false;
+    } finally {
+      if (pendingSessionCardReplay === attempt) pendingSessionCardReplay = null;
+    }
+  })();
+  return attempt.promise;
+}
+
 // sidebar.js가 부르는 다리(shell.js 버스). 돌아갔으면 true.
 window.AthenaShell.registerOpenConversation(async (conv) => {
   if (!conv || !conv.id) return false;
@@ -2560,7 +2629,7 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
   // 갈아타기 전에 이 세션의 지연 보고를 흘린다 — main은 받은 시점의 세션에 적으므로
   // 전환 뒤에 도착한 보고는 앞 세션의 작업공간을 다음 세션 기록에 적는다.
   switchingConversation = true;
-  conversationSelectionRevision += 1;
+  if (displayedConversationId !== conv.id) conversationSelectionRevision += 1;
   try {
     const editor = window.AthenaBacktestCanvas;
     if (editor && typeof editor.flushEditor === 'function' && !(await editor.flushEditor())) return false;
@@ -2568,7 +2637,10 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
     const switched = await window.athena.invoke('athena:conversations-set-active', { id: conv.id })
       .catch(() => null);
     if (!switched || !switched.restorable) return false;
-    if (switched.isCurrent && displayedConversationId === conv.id) return true;
+    if (switched.isCurrent && displayedConversationId === conv.id) {
+      void replayConversationCards(conv.id, { retry: true });
+      return true;
+    }
     // 메시지의 원본은 세션 스토어다(42번 보드). 스냅샷의 currentId 경로만 그린다 — 분기가
     // 있어도 한 줄로 보인다. 스토어에 없으면(이 배선 전에 만든 대화) 브레인 이력으로 폴백.
     const snapshot = await window.athena.invoke('athena:session-load', { id: conv.id }).catch(() => null);
@@ -2590,7 +2662,7 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
     restoreConversation(switched, messages, snapshot, { stored, conversationId: conv.id });
     syncDisplayedTurn();
     // 카드는 main이 저장된 봉투를 같은 페인트 채널로 다시 흘린다 — 캔버스를 비운 뒤라 순서가 맞는다.
-    void window.athena.invoke('athena:session-replay-cards', { id: conv.id }).catch(() => {});
+    void replayConversationCards(conv.id, { expected: expectedSessionCards(snapshot) });
     return true;
   } finally {
     switchingConversation = false;
