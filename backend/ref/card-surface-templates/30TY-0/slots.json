@@ -1665,7 +1665,7 @@
       "node_path": "2/0/1/1/1/0",
       "paper_text": "삼성전자",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1676,12 +1676,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -1707,12 +1702,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_cd",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -1789,7 +1779,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s050",
       "collapse_group": null,
@@ -1848,7 +1840,8 @@
         "sign": true,
         "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1873,18 +1866,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "순매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수량 "
       },
       "paired_with": "s052",
       "collapse_group": null,
@@ -1915,8 +1905,8 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10039",
-      "f": "buy_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1929,7 +1919,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s055",
@@ -1949,18 +1940,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "buy_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "buy_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s054",
       "collapse_group": null,
@@ -1991,8 +1979,8 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10039",
-      "f": "sell_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2005,7 +1993,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s057",
@@ -2025,18 +2014,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "sel_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "sel_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매도거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s056",
       "collapse_group": null,
@@ -2069,18 +2055,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2109,10 +2092,11 @@
       "kor": "거래대금",
       "format": {
         "kind": "korean",
-        "sign": false,
-        "tone": "neutral",
+        "sign": true,
+        "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s058",
       "collapse_group": null,
@@ -2189,7 +2173,7 @@
       "node_path": "2/0/1/2/1/0",
       "paper_text": "SK하이닉스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2200,12 +2184,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -2231,12 +2210,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_cd",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -2313,7 +2287,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s064",
       "collapse_group": null,
@@ -2372,7 +2348,8 @@
         "sign": true,
         "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2397,18 +2374,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "순매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수량 "
       },
       "paired_with": "s066",
       "collapse_group": null,
@@ -2439,8 +2413,8 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10039",
-      "f": "buy_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2453,7 +2427,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 1
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s069",
@@ -2473,18 +2448,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "buy_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "buy_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s068",
       "collapse_group": null,
@@ -2515,8 +2487,8 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10039",
-      "f": "sell_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2529,7 +2501,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 1
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s071",
@@ -2549,18 +2522,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "sel_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "sel_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매도거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s070",
       "collapse_group": null,
@@ -2593,18 +2563,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2633,10 +2600,11 @@
       "kor": "거래대금",
       "format": {
         "kind": "korean",
-        "sign": false,
-        "tone": "neutral",
+        "sign": true,
+        "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s072",
       "collapse_group": null,
@@ -2713,7 +2681,7 @@
       "node_path": "2/0/1/3/1/0",
       "paper_text": "현대차",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2724,12 +2692,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -2755,12 +2718,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_cd",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -2837,7 +2795,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s078",
       "collapse_group": null,
@@ -2896,7 +2856,8 @@
         "sign": true,
         "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2921,18 +2882,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "순매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수량 "
       },
       "paired_with": "s080",
       "collapse_group": null,
@@ -2963,8 +2921,8 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10039",
-      "f": "buy_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2977,7 +2935,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 2
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s083",
@@ -2997,18 +2956,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "buy_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "buy_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s082",
       "collapse_group": null,
@@ -3039,8 +2995,8 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10039",
-      "f": "sell_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3053,7 +3009,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 2
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s085",
@@ -3073,18 +3030,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "sel_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "sel_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매도거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s084",
       "collapse_group": null,
@@ -3117,18 +3071,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3157,10 +3108,11 @@
       "kor": "거래대금",
       "format": {
         "kind": "korean",
-        "sign": false,
-        "tone": "neutral",
+        "sign": true,
+        "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s086",
       "collapse_group": null,
@@ -3237,7 +3189,7 @@
       "node_path": "2/0/1/4/1/0",
       "paper_text": "KB금융",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3248,12 +3200,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -3279,12 +3226,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_cd",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -3361,7 +3303,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s092",
       "collapse_group": null,
@@ -3420,7 +3364,8 @@
         "sign": true,
         "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3445,18 +3390,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "순매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수량 "
       },
       "paired_with": "s094",
       "collapse_group": null,
@@ -3487,8 +3429,8 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka10039",
-      "f": "buy_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3501,7 +3443,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 3
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s097",
@@ -3521,18 +3464,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "buy_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "buy_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s096",
       "collapse_group": null,
@@ -3563,8 +3503,8 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10039",
-      "f": "sell_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3577,7 +3517,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 3
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s099",
@@ -3597,18 +3538,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "sel_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "sel_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매도거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s098",
       "collapse_group": null,
@@ -3641,18 +3579,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3681,10 +3616,11 @@
       "kor": "거래대금",
       "format": {
         "kind": "korean",
-        "sign": false,
-        "tone": "neutral",
+        "sign": true,
+        "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s100",
       "collapse_group": null,
@@ -3761,7 +3697,7 @@
       "node_path": "2/0/1/5/1/0",
       "paper_text": "NAVER",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3772,12 +3708,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -3803,12 +3734,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_cd",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -3885,7 +3811,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s106",
       "collapse_group": null,
@@ -3944,7 +3872,8 @@
         "sign": true,
         "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3969,18 +3898,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "순매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수량 "
       },
       "paired_with": "s108",
       "collapse_group": null,
@@ -4011,8 +3937,8 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka10039",
-      "f": "buy_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4025,7 +3951,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 4
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s111",
@@ -4045,18 +3972,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "buy_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "buy_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s110",
       "collapse_group": null,
@@ -4087,8 +4011,8 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10039",
-      "f": "sell_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4101,7 +4025,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 4
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s113",
@@ -4121,18 +4046,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "sel_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "sel_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매도거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s112",
       "collapse_group": null,
@@ -4165,18 +4087,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4205,10 +4124,11 @@
       "kor": "거래대금",
       "format": {
         "kind": "korean",
-        "sign": false,
-        "tone": "neutral",
+        "sign": true,
+        "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s114",
       "collapse_group": null,
@@ -4285,7 +4205,7 @@
       "node_path": "2/0/1/6/1/0",
       "paper_text": "POSCO홀딩스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4296,12 +4216,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -4327,12 +4242,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_cd",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -4409,7 +4319,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s120",
       "collapse_group": null,
@@ -4468,7 +4380,8 @@
         "sign": true,
         "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4493,18 +4406,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "순매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수량 "
       },
       "paired_with": "s122",
       "collapse_group": null,
@@ -4535,8 +4445,8 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka10039",
-      "f": "buy_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4549,7 +4459,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 5
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s125",
@@ -4569,18 +4480,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "buy_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "buy_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s124",
       "collapse_group": null,
@@ -4611,8 +4519,8 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10039",
-      "f": "sell_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4625,7 +4533,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 5
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s127",
@@ -4645,18 +4554,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "sel_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "sel_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매도거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s126",
       "collapse_group": null,
@@ -4689,18 +4595,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4729,10 +4632,11 @@
       "kor": "거래대금",
       "format": {
         "kind": "korean",
-        "sign": false,
-        "tone": "neutral",
+        "sign": true,
+        "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s128",
       "collapse_group": null,
@@ -4902,7 +4806,7 @@
       "node_path": "2/0/1/8/1/0",
       "paper_text": "LG화학",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4913,12 +4817,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -4944,12 +4843,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_cd",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -5026,7 +4920,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s137",
       "collapse_group": null,
@@ -5085,7 +4981,8 @@
         "sign": true,
         "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5110,18 +5007,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "순매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수량 "
       },
       "paired_with": "s139",
       "collapse_group": null,
@@ -5152,8 +5046,8 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka10039",
-      "f": "buy_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5166,7 +5060,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 6
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s142",
@@ -5186,18 +5081,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "buy_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "buy_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s141",
       "collapse_group": null,
@@ -5228,8 +5120,8 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10039",
-      "f": "sell_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5242,7 +5134,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 6
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s144",
@@ -5262,18 +5155,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "sel_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "sel_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매도거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s143",
       "collapse_group": null,
@@ -5306,18 +5196,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5346,10 +5233,11 @@
       "kor": "거래대금",
       "format": {
         "kind": "korean",
-        "sign": false,
-        "tone": "neutral",
+        "sign": true,
+        "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s145",
       "collapse_group": null,
@@ -5426,7 +5314,7 @@
       "node_path": "2/0/1/9/1/0",
       "paper_text": "카카오",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -5437,12 +5325,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
@@ -5468,12 +5351,7 @@
       },
       "mapping_id": "base:ka10037",
       "f": "stk_cd",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "stk_cd"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -5550,7 +5428,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s151",
       "collapse_group": null,
@@ -5609,7 +5489,8 @@
         "sign": true,
         "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5634,18 +5515,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "netprps_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "netprps"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "순매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": true,
-        "precision": 1,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수량 "
       },
       "paired_with": "s153",
       "collapse_group": null,
@@ -5676,8 +5554,8 @@
         "row": "7",
         "col": 4
       },
-      "mapping_id": "base:ka10039",
-      "f": "buy_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5690,7 +5568,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 7
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s156",
@@ -5710,18 +5589,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "buy_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "buy_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s155",
       "collapse_group": null,
@@ -5752,8 +5628,8 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka10039",
-      "f": "sell_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -5766,7 +5642,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 7
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s158",
@@ -5786,18 +5663,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "sel_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "sel_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "매도거래량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": ""
       },
       "paired_with": "s157",
       "collapse_group": null,
@@ -5830,18 +5704,15 @@
       },
       "mapping_id": "base:ka10037",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10078",
-          "f": "acc_trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "sign": false,
+        "tone": "neutral",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5870,10 +5741,11 @@
       "kor": "거래대금",
       "format": {
         "kind": "korean",
-        "sign": false,
-        "tone": "neutral",
+        "sign": true,
+        "tone": "change",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s159",
       "collapse_group": null,
@@ -6073,9 +5945,10 @@
       "alt_mappings": null,
       "kor": "기간별 누적 매수량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -6151,9 +6024,10 @@
       "alt_mappings": null,
       "kor": "기간별 누적 매도량",
       "format": {
-        "unit": "shares",
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -6229,10 +6103,11 @@
       "alt_mappings": null,
       "kor": "기간별 누적 순매수",
       "format": {
-        "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주",
+        "sign": true,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6312,9 +6187,10 @@
       ],
       "kor": "기간중거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "suffix": "주",
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -6365,26 +6241,21 @@
       "table": null,
       "mapping_id": "base:ka10039",
       "f": "prid_stkpc_flu",
-      "alt_mappings": [],
+      "alt_mappings": null,
       "kor": "기간중주가등락",
       "format": {
         "kind": "number",
-        "sign": true,
         "precision": 0,
-        "tone": "change"
+        "sign": true,
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10039",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ],
-      "display_dup": false
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s180",

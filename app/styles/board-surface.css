@@ -1325,3 +1325,34 @@
 .board-surface[data-bs-board-id="2YEQ-0"] [data-node="36JX-0"] .bs-readable-cell[data-col="6"]{display:none!important}
 .board-surface[data-bs-board-id="2YJ8-0"] [data-node="36QC-0"] .bs-readable-cell[data-col="0"]{display:none!important}
 .board-surface[data-bs-board-id="2YJ8-0"] [data-node="36QC-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+
+/* Exact five reviewed FLOW ranking boards only. */
+.bs-flow-rank-five .bs-flow-five-unsupported,.bs-flow-rank-five .bs-flow-five-empty {display:none!important}
+.bs-flow-rank-five :is(.bs-workspace,.bs-primary,.bs-rail){height:auto!important;min-height:0!important;align-self:start}
+.bs-flow-rank-five .bs-workspace{display:grid!important;width:100%!important;min-width:0!important;max-width:100%!important;grid-template-columns:minmax(0,1fr);align-items:start}
+.bs-flow-rank-five :is(.bs-primary,.bs-rail){width:100%!important;min-width:0!important;max-width:100%!important}
+@container board (min-width:1100px){.bs-flow-rank-five .bs-workspace{grid-template-columns:minmax(0,1fr) minmax(300px,360px)}}
+.bs-flow-rank-five .bs-rail > [data-node]{width:100%!important;min-width:0!important;height:auto!important;min-height:0!important}
+.bs-flow-rank-five .bs-rail [data-slot-id],.bs-flow-rank-five .bs-kpi [data-slot-id]{min-width:0!important;max-width:100%!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
+.bs-flow-rank-five .bs-kpi{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));height:auto!important;min-height:0!important;align-items:start}
+.bs-flow-rank-five .bs-kpi > [data-node]{width:auto!important;min-width:0!important;height:auto!important;min-height:0!important;flex-basis:auto!important}
+.bs-flow-rank-five .bs-flow-five-sort{display:flex!important;flex-direction:row!important;gap:12px;grid-column:1/-1;align-items:center}
+.bs-flow-rank-five .bs-flow-five-sort > *{width:auto!important;height:auto!important}
+.bs-flow-five-kpi-note{grid-column:1/-1;color:var(--color-k-dim);font:12px/1.5 var(--font-body)}
+.bs-flow-five-kpi-note[hidden]{display:none}
+.bs-flow-rank-five .bs-readable-cell[data-col="1"]{text-align:left;align-items:flex-start}
+.bs-flow-rank-five .bs-readable-cell > [data-slot-id]{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.bs-flow-rank-five .bs-ranking-unavailable-group{display:block!important}
+.bs-flow-rank-five .bs-rail .bs-paired{display:none!important}
+.bs-flow-rank-five .bs-rail > [data-node] > [data-node]{max-width:100%;height:auto!important;min-height:0!important}
+.bs-flow-rank-five .bs-flow-five-mini{display:flex;flex-direction:column;width:100%;gap:0}
+.bs-flow-rank-five .bs-flow-five-mini-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,auto);gap:12px;align-items:baseline;border-bottom:1px solid var(--color-k-line);padding:10px 0;min-height:0!important;width:100%}
+.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]{width:auto!important;min-width:0!important;height:auto!important;text-align:left}
+.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]:last-child{text-align:right}
+.bs-flow-rank-five .bs-flow-five-separate{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;border-top:1px solid var(--color-k-line);padding-top:16px}
+.bs-flow-rank-five .bs-flow-five-separate > [data-slot-id]{width:auto!important;flex:1 1 140px}
+.bs-flow-rank-five .bs-flow-five-summary-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,auto);gap:12px;align-items:baseline;width:100%;padding-block:8px;height:auto!important;min-height:0!important}
+.bs-flow-rank-five .bs-flow-five-summary-row > [data-slot-id]{width:auto!important;min-width:0!important;height:auto!important}
+.bs-flow-rank-five .bs-flow-five-summary-row > [data-slot-id]:last-child{text-align:right}
+.board-surface[data-bs-board-id="2ZTA-0"] [data-node="38MX-0"] .bs-readable-cell[data-col="6"],.board-surface[data-bs-board-id="30TY-0"] [data-node="362Z-0"] .bs-readable-cell[data-col="7"]{display:none!important}
+@container board (max-width:600px){.bs-flow-rank-five .bs-workspace{grid-template-columns:minmax(0,1fr)!important;flex-direction:column!important}.bs-flow-rank-five :is(.bs-primary,.bs-rail){width:100%!important;max-width:100%!important;flex-basis:auto!important}.bs-flow-rank-five .bs-flow-five-mini-row{grid-template-columns:minmax(0,1fr);gap:3px}.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]:last-child{text-align:left}}

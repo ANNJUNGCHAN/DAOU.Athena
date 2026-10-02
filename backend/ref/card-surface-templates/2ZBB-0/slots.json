@@ -1764,10 +1764,10 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1801,7 +1801,8 @@
         "sign": false,
         "tone": "neutral",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s050",
       "collapse_group": null,
@@ -2245,10 +2246,10 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2282,7 +2283,8 @@
         "sign": false,
         "tone": "neutral",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s064",
       "collapse_group": null,
@@ -2729,10 +2731,10 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2766,7 +2768,8 @@
         "sign": false,
         "tone": "neutral",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s078",
       "collapse_group": null,
@@ -3213,10 +3216,10 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3250,7 +3253,8 @@
         "sign": false,
         "tone": "neutral",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s092",
       "collapse_group": null,
@@ -3697,10 +3701,10 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3734,7 +3738,8 @@
         "sign": false,
         "tone": "neutral",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s106",
       "collapse_group": null,
@@ -4181,10 +4186,10 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4218,7 +4223,8 @@
         "sign": false,
         "tone": "neutral",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s120",
       "collapse_group": null,
@@ -4724,10 +4730,10 @@
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4761,7 +4767,8 @@
         "sign": false,
         "tone": "neutral",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s136",
       "collapse_group": null,
@@ -5209,10 +5216,10 @@
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주",
+        "prefix": "수량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5246,7 +5253,8 @@
         "sign": false,
         "tone": "neutral",
         "scale": "백만",
-        "suffix": "원"
+        "suffix": "원",
+        "prefix": "금액 "
       },
       "paired_with": "s150",
       "collapse_group": null,

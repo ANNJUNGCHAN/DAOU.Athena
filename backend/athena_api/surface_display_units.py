@@ -104,6 +104,19 @@ def annotate_surface_display_units(surface: dict[str, Any],
     }
     values = []
     for entry in surface.get('slot_values') or []:
+        occurrence = str(entry.get('occurrence_id', '')).split('|')
+        field_name = occurrence[1].rsplit('.', 1)[-1] if len(occurrence) > 1 else ''
+        if surface.get('board_id') == '31CL-0' and occurrence[0] == 'base:ka10062':
+            if field_name in {'for_nettrde_avg_pric', 'orgn_nettrde_avg_pric'}:
+                wrapped = _display(entry.get('value'), '', False)
+                if isinstance(wrapped, dict) and wrapped.get('display_unit') == 'unknown':
+                    wrapped['text'] = wrapped['text'].replace('단위 미확인', '단위 확인 필요')
+                values.append({**entry, 'value': wrapped})
+                continue
+            if field_name in {'for_nettrde_qty', 'orgn_nettrde_qty', 'nettrde_qty'}:
+                unit = {'1': '주', '1000': '천주'}.get(str(arguments_by_operation.get('base:ka10062', {}).get('unit_tp', '')), '')
+                values.append({**entry, 'value': _display(entry.get('value'), unit, True)})
+                continue
         field = metadata.get(entry.get('occurrence_id'))
         if field is None:
             values.append(entry)

@@ -9,6 +9,37 @@ const { formatSlot } = require('./board-format');
 const source = id => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
 const text = (id, values, slot) => mountPlan(registry.contractFor(id), values).assignments.find(x => x.slotId === slot)?.text;
 
+test('five flow rankings retain labels without replacing received conditional units', () => {
+  for (const board of ['2YS8-0','2ZBB-0','2ZTA-0','30TY-0','31CL-0']) {
+    for (const slot of source(board).slots.filter(s => s.mapping_id && s.format?.prefix)) {
+      const prefix = slot.format.prefix;
+      const raw = slot.f === 'stk_infr' ? '27' : 0;
+      const display = slot.f === 'stk_infr' ? '27' : '0천주';
+      for (const received of [display, prefix + display]) {
+        const wrapped = {value:raw, text:received, display_unit:'천주'};
+        assert.equal(text(board, {[slot.slot_id]:wrapped}, slot.slot_id), prefix + display);
+        assert.equal(wrapped.text, received);
+      }
+      const pending = mountPlan(registry.contractFor(board), {}, {deferredValueSlots:[slot.slot_id]}).assignments.find(a => a.slotId === slot.slot_id);
+      assert.equal(pending.pending, true);
+      assert.equal(pending.text.includes(prefix), false);
+    }
+  }
+});
+
+test('flow quantity zeros stay whole and ambiguous averages keep their warning', () => {
+  for (const board of ['2YS8-0','2ZBB-0','30TY-0','31CL-0']) {
+    for (const slot of source(board).slots.filter(s => s.mapping_id && s.format?.precision === 0 && /qty|rmnd/.test(s.f || ''))) {
+      assert.match(text(board, {[slot.slot_id]:'0.0'}, slot.slot_id), /0/);
+      assert.doesNotMatch(text(board, {[slot.slot_id]:'0.0'}, slot.slot_id), /0\.0/);
+    }
+  }
+  for (const slot of source('31CL-0').slots.filter(s => /nettrde_avg_pric$/.test(s.f || ''))) {
+    assert.match(text('31CL-0', {[slot.slot_id]:{value:'12345.67',text:'12,345.67 (단위 확인 필요)'}}, slot.slot_id), /12,345\.67 \(단위 확인 필요\)$/);
+    assert.doesNotMatch(text('31CL-0', {[slot.slot_id]:null}, slot.slot_id), /단위 확인 필요/);
+  }
+});
+
 test('13K0 paired values label prior rank, price change and quantity for raw and wrapped values', () => {
   const contract=registry.contractFor('13K0-2');
   for(let row=0;row<5;row++)for(const[num,prefix,suffix]of [[40,'전일 ','위'],[44,'전일비 ','원'],[48,'전일 ','주']]) {

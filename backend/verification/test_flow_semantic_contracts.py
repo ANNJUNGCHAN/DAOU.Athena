@@ -5,6 +5,85 @@ from athena_api.surface_display_units import annotate_surface_display_units
 from athena_api.mock_unsupported import is_mock_unsupported
 
 
+def test_limit_increase_kpis_never_borrow_subjects_between_queries():
+    values = values_for('2ZTA-0', {
+        'base:ka10036': {'for_limit_exh_rt_incrs_upper': [
+            {'stk_nm': '증가조회 종목', 'stk_cd': '111111', 'exh_rt_incrs': '0.1', 'gain_pos_stkcnt': '0'}]},
+        'base:ka10035': {'for_cont_nettrde_upper': [
+            {'stk_nm': '연속조회 종목', 'stk_cd': '222222', 'limit_exh_rt': '0'}]},
+    })
+    assert values['s014'] == values['s158'] == '증가조회 종목'
+    assert values['s159'] == '111111'
+    assert values['s017'] == '연속조회 종목'
+    assert values['s016'] == values['s165'] == '0'
+
+
+def test_equal_trade_summary_and_six_results_follow_their_own_source_rows():
+    rows = [{'stk_nm': f'조회 종목{i}', 'stk_cd': f'{111111+i}', 'nettrde_amt': str(i)} for i in range(6)]
+    values = values_for('31CL-0', {'base:ka10062': {'eql_nettrde_rank': rows}})
+    assert values['s019'] == values['s158'] == rows[0]['stk_nm']
+    assert values['s159'] == rows[0]['stk_cd']
+    assert values['s020'] == '0'
+    for i, row in enumerate(rows):
+        assert values[f's{176+2*i:03}'] == row['stk_nm']
+        assert values[f's{177+2*i:03}'] == row['nettrde_amt']
+    assert not {'s126', 's172', 's173'}.intersection(values)
+
+
+def test_foreign_window_main_rows_do_not_borrow_another_broker_amount():
+    board = get_registry().boards['30TY-0']
+    values = values_for('30TY-0', {
+        'base:ka10037': {'frgn_wicket_trde_upper': [{'stk_nm': '창구 종목', 'stk_cd': '111111', 'buy_trde_qty': '0', 'sel_trde_qty': '123'}]},
+        'base:ka10039': {'sec_trde_upper': [{'stk_nm': '증권사 종목', 'stk_cd': '222222', 'buy_amt': '999999', 'sell_amt': '888888', 'prid_stkpc_flu': '0'}]},
+    })
+    for slot in board.slots:
+        if slot.table and slot.table.table_id == '362Z-0' and slot.binds_a_field:
+            assert slot.mapping_id == 'base:ka10037'
+    assert values['s179'] == '0'
+    assert '999999' not in values.values() and '888888' not in values.values()
+
+
+def test_foreign_window_missing_primary_never_uses_other_query_names_or_quantities():
+    board = get_registry().boards['30TY-0']
+    main_ids = {s.slot_id for s in board.slots if s.table and s.table.table_id == '362Z-0'}
+    other = {'base:ka10039': {'sec_trde_upper': [
+        {'stk_cd': f'{999990+i}', 'stk_nm': f'다른 조회{i}', 'netprps': '987654',
+         'buy_trde_qty': '876543', 'sel_trde_qty': '765432'} for i in range(8)]},
+        'base:ka10078': {'sec_stk_trde_trend': [
+            {'dt': f'2026090{i+1}', 'acc_trde_qty': '654321', 'netprps_qty': '0'} for i in range(8)]}}
+    assert not main_ids.intersection(values_for('30TY-0', other))
+    for row in [{}, {'stk_cd': '111111', 'buy_trde_qty': '0'},
+                {'stk_nm': '주조회 종목', 'stk_cd': '111111', 'netprps_trde_qty': '0',
+                 'buy_trde_qty': '0', 'sel_trde_qty': '0', 'trde_qty': '0'}]:
+        values = values_for('30TY-0', {**other, 'base:ka10037': {'frgn_wicket_trde_upper': [row]}})
+        expected = {s.slot_id: row[s.f] for s in board.slots
+                    if s.table and s.table.table_id == '362Z-0' and s.table.row == '0'
+                    and s.mapping_id == 'base:ka10037' and s.f in row}
+        assert {key: value for key, value in values.items() if key in main_ids} == expected
+        assert values['s195'] == '다른 조회0'
+    for slot in board.slots:
+        if slot.slot_id in main_ids and slot.binds_a_field:
+            assert slot.mapping_id == 'base:ka10037'
+            assert not slot.alt_mappings
+
+
+def test_exact_equal_trade_card_preserves_raw_average_and_actual_quantity_units():
+    from copy import deepcopy
+    for field in ['for_nettrde_avg_pric', 'orgn_nettrde_avg_pric', 'for_nettrde_qty', 'orgn_nettrde_qty', 'nettrde_qty']:
+        for raw in ['-123456.25', '0', None, {'value': '0', 'text': 'obsolete'}]:
+            source = {'board_id': '31CL-0', 'slot_values': [{'slot_id': 'public', 'occurrence_id': f'base:ka10062|$.eql_nettrde_rank[].{field}|1', 'value': raw}]}
+            before = deepcopy(source)
+            for unit, suffix in [('1', '주'), ('1000', '천주'), ('', ' (단위 미확인)')]:
+                result = annotate_surface_display_units(source, {'base:ka10062': {'unit_tp': unit}})['slot_values'][0]['value']
+                if raw is None:
+                    assert result is None
+                else:
+                    assert result['value'] == (raw['value'] if isinstance(raw, dict) else raw)
+                    expected = '-123,456.25' if raw == '-123456.25' else '0'
+                    assert result['text'] == expected + (' (단위 확인 필요)' if field.endswith('avg_pric') else suffix)
+            assert source == before
+
+
 def values_for(board, responses):
     bound = {}
     for operation, response in responses.items():

@@ -1519,7 +1519,7 @@
       "node_path": "2/0/1/1/1/0",
       "paper_text": "삼성전자",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1593,7 +1593,7 @@
       "kor": "종목정보",
       "format": {
         "kind": "text",
-        "prefix": "정보 "
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1666,7 +1666,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s045",
       "collapse_group": null,
@@ -2035,7 +2037,7 @@
       "node_path": "2/0/1/2/1/0",
       "paper_text": "SK하이닉스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2109,7 +2111,7 @@
       "kor": "종목정보",
       "format": {
         "kind": "text",
-        "prefix": "정보 "
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2175,7 +2177,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s060",
       "collapse_group": null,
@@ -2537,7 +2541,7 @@
       "node_path": "2/0/1/3/1/0",
       "paper_text": "현대차",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2611,7 +2615,7 @@
       "kor": "종목정보",
       "format": {
         "kind": "text",
-        "prefix": "정보 "
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2677,7 +2681,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s075",
       "collapse_group": null,
@@ -3039,7 +3045,7 @@
       "node_path": "2/0/1/4/1/0",
       "paper_text": "KB금융",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3113,7 +3119,7 @@
       "kor": "종목정보",
       "format": {
         "kind": "text",
-        "prefix": "정보 "
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3179,7 +3185,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s090",
       "collapse_group": null,
@@ -3541,7 +3549,7 @@
       "node_path": "2/0/1/5/1/0",
       "paper_text": "NAVER",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3615,7 +3623,7 @@
       "kor": "종목정보",
       "format": {
         "kind": "text",
-        "prefix": "정보 "
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3681,7 +3689,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s105",
       "collapse_group": null,
@@ -4043,7 +4053,7 @@
       "node_path": "2/0/1/6/1/0",
       "paper_text": "POSCO홀딩스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4117,7 +4127,7 @@
       "kor": "종목정보",
       "format": {
         "kind": "text",
-        "prefix": "정보 "
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4183,7 +4193,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s120",
       "collapse_group": null,
@@ -4594,7 +4606,7 @@
       "node_path": "2/0/1/8/1/0",
       "paper_text": "LG화학",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4668,7 +4680,7 @@
       "kor": "종목정보",
       "format": {
         "kind": "text",
-        "prefix": "정보 "
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4734,7 +4746,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s137",
       "collapse_group": null,
@@ -5096,7 +5110,7 @@
       "node_path": "2/0/1/9/1/0",
       "paper_text": "카카오",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -5170,7 +5184,7 @@
       "kor": "종목정보",
       "format": {
         "kind": "text",
-        "prefix": "정보 "
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5236,7 +5250,9 @@
         "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s152",
       "collapse_group": null,

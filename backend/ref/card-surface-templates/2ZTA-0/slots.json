@@ -779,15 +779,18 @@
       "alt_mappings": null,
       "kor": "소진율증가",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "소진율 증가 1위 값 재표시"
+      "note": "소진율 증가 1위 값 재표시",
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s014",
@@ -796,19 +799,24 @@
       "node_path": "1/1/2",
       "paper_text": "SK하이닉스",
       "region": "kpi",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10036",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s015",
@@ -837,7 +845,7 @@
       "node_name": "94.2%",
       "node_path": "1/2/1",
       "paper_text": "94.2%",
-      "region": "kpi",
+      "region": "kpi-foreign-continuity",
       "kind": "value",
       "layer": "직접",
       "font_size_px": 20.0,
@@ -848,15 +856,16 @@
       "alt_mappings": null,
       "kor": "한도소진율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "소진율 최고 종목 값 — 외인연속순매매상위 응답의 한도소진율"
+      "note": "소진율 최고 종목 값 — 외인연속순매매상위 응답의 한도소진율",
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s017",
@@ -864,20 +873,25 @@
       "node_name": "현대차",
       "node_path": "1/2/2",
       "paper_text": "현대차",
-      "region": "kpi",
-      "kind": "label",
+      "region": "kpi-foreign-continuity",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10035",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s018",
@@ -1445,7 +1459,7 @@
       "node_path": "2/0/1/1/1/0",
       "paper_text": "SK하이닉스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1546,10 +1560,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s044",
       "collapse_group": null,
@@ -1615,10 +1631,9 @@
       "alt_mappings": null,
       "kor": "기준한도소진율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "prefix": "기준 "
       },
       "paired_with": "s046",
       "collapse_group": null,
@@ -1645,9 +1660,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
@@ -1676,10 +1691,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1701,8 +1715,8 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10008",
-      "f": "chg_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "변동수량",
       "format": {
@@ -1713,7 +1727,9 @@
       },
       "paired_with": "s049",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s051",
@@ -1731,8 +1747,8 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1743,7 +1759,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s052",
@@ -1752,7 +1770,7 @@
       "node_path": "2/0/1/1/6/1",
       "paper_text": "증감 미제공",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1761,15 +1779,17 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인한도증감",
       "format": null,
       "paired_with": "s051",
       "collapse_group": null,
       "expanded_board": null,
-      "note": "결측 표기 — 응답이 한도 증감을 주지 않는다"
+      "note": "결측 표기 — 응답이 한도 증감을 주지 않는다",
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s053",
@@ -1792,10 +1812,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1871,7 +1890,7 @@
       "node_path": "2/0/1/2/1/0",
       "paper_text": "현대차",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1975,10 +1994,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s058",
       "collapse_group": null,
@@ -2046,10 +2067,9 @@
       "alt_mappings": null,
       "kor": "기준한도소진율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "prefix": "기준 "
       },
       "paired_with": "s060",
       "collapse_group": null,
@@ -2077,9 +2097,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
@@ -2108,10 +2128,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2134,8 +2153,8 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10008",
-      "f": "chg_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "변동수량",
       "format": {
@@ -2147,7 +2166,9 @@
       "paired_with": "s063",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s065",
@@ -2165,8 +2186,8 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2178,7 +2199,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s066",
@@ -2187,7 +2210,7 @@
       "node_path": "2/0/1/2/6/1",
       "paper_text": "증감 미제공",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2196,8 +2219,8 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인한도증감",
       "format": null,
@@ -2205,7 +2228,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "결측 표기 — 응답이 한도 증감을 주지 않는다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s067",
@@ -2228,10 +2253,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2308,7 +2332,7 @@
       "node_path": "2/0/1/3/1/0",
       "paper_text": "KB금융",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2412,10 +2436,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s072",
       "collapse_group": null,
@@ -2483,10 +2509,9 @@
       "alt_mappings": null,
       "kor": "기준한도소진율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "prefix": "기준 "
       },
       "paired_with": "s074",
       "collapse_group": null,
@@ -2514,9 +2539,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
@@ -2545,10 +2570,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2571,8 +2595,8 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10008",
-      "f": "chg_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "변동수량",
       "format": {
@@ -2584,7 +2608,9 @@
       "paired_with": "s077",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s079",
@@ -2602,8 +2628,8 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -2615,7 +2641,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s080",
@@ -2624,7 +2652,7 @@
       "node_path": "2/0/1/3/6/1",
       "paper_text": "증감 미제공",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2633,8 +2661,8 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인한도증감",
       "format": null,
@@ -2642,7 +2670,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "결측 표기 — 응답이 한도 증감을 주지 않는다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s081",
@@ -2665,10 +2695,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2745,7 +2774,7 @@
       "node_path": "2/0/1/4/1/0",
       "paper_text": "NAVER",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2849,10 +2878,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s086",
       "collapse_group": null,
@@ -2920,10 +2951,9 @@
       "alt_mappings": null,
       "kor": "기준한도소진율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "prefix": "기준 "
       },
       "paired_with": "s088",
       "collapse_group": null,
@@ -2951,9 +2981,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
@@ -2982,10 +3012,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3008,8 +3037,8 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10008",
-      "f": "chg_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "변동수량",
       "format": {
@@ -3021,7 +3050,9 @@
       "paired_with": "s091",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s093",
@@ -3039,8 +3070,8 @@
         "row": "3",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3052,7 +3083,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s094",
@@ -3061,7 +3094,7 @@
       "node_path": "2/0/1/4/6/1",
       "paper_text": "증감 미제공",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3070,8 +3103,8 @@
         "row": "3",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인한도증감",
       "format": null,
@@ -3079,7 +3112,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "결측 표기 — 응답이 한도 증감을 주지 않는다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s095",
@@ -3102,10 +3137,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3182,7 +3216,7 @@
       "node_path": "2/0/1/5/1/0",
       "paper_text": "POSCO홀딩스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3286,10 +3320,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s100",
       "collapse_group": null,
@@ -3357,10 +3393,9 @@
       "alt_mappings": null,
       "kor": "기준한도소진율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "prefix": "기준 "
       },
       "paired_with": "s102",
       "collapse_group": null,
@@ -3388,9 +3423,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
@@ -3419,10 +3454,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3445,8 +3479,8 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10008",
-      "f": "chg_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "변동수량",
       "format": {
@@ -3458,7 +3492,9 @@
       "paired_with": "s105",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s107",
@@ -3476,8 +3512,8 @@
         "row": "4",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -3489,7 +3525,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s108",
@@ -3498,7 +3536,7 @@
       "node_path": "2/0/1/5/6/1",
       "paper_text": "증감 미제공",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3507,8 +3545,8 @@
         "row": "4",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인한도증감",
       "format": null,
@@ -3516,7 +3554,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "결측 표기 — 응답이 한도 증감을 주지 않는다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s109",
@@ -3539,10 +3579,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3702,7 +3741,7 @@
       "node_path": "2/0/1/7/1/0",
       "paper_text": "LG화학",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3806,10 +3845,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s116",
       "collapse_group": null,
@@ -3877,10 +3918,9 @@
       "alt_mappings": null,
       "kor": "기준한도소진율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "prefix": "기준 "
       },
       "paired_with": "s118",
       "collapse_group": null,
@@ -3908,9 +3948,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
@@ -3939,10 +3979,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3965,8 +4004,8 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10008",
-      "f": "chg_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "변동수량",
       "format": {
@@ -3978,7 +4017,9 @@
       "paired_with": "s121",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s123",
@@ -3996,8 +4037,8 @@
         "row": "5",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4009,7 +4050,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s124",
@@ -4018,7 +4061,7 @@
       "node_path": "2/0/1/7/6/1",
       "paper_text": "증감 미제공",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4027,8 +4070,8 @@
         "row": "5",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인한도증감",
       "format": null,
@@ -4036,7 +4079,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "결측 표기 — 응답이 한도 증감을 주지 않는다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s125",
@@ -4059,10 +4104,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4139,7 +4183,7 @@
       "node_path": "2/0/1/8/1/0",
       "paper_text": "삼성전자",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4243,10 +4287,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s130",
       "collapse_group": null,
@@ -4314,10 +4360,9 @@
       "alt_mappings": null,
       "kor": "기준한도소진율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "prefix": "기준 "
       },
       "paired_with": "s132",
       "collapse_group": null,
@@ -4345,9 +4390,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "percent",
         "precision": 2,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
@@ -4376,10 +4421,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
-        "precision": 2,
-        "tone": "neutral"
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4402,8 +4446,8 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10008",
-      "f": "chg_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "변동수량",
       "format": {
@@ -4415,7 +4459,9 @@
       "paired_with": "s135",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s137",
@@ -4433,8 +4479,8 @@
         "row": "6",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4446,7 +4492,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s138",
@@ -4455,7 +4503,7 @@
       "node_path": "2/0/1/8/6/1",
       "paper_text": "증감 미제공",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4464,8 +4512,8 @@
         "row": "6",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인한도증감",
       "format": null,
@@ -4473,7 +4521,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "결측 표기 — 응답이 한도 증감을 주지 않는다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s139",
@@ -4496,10 +4546,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4576,7 +4625,7 @@
       "node_path": "2/0/1/9/1/0",
       "paper_text": "카카오",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4680,10 +4729,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s144",
       "collapse_group": null,
@@ -4751,10 +4802,9 @@
       "alt_mappings": null,
       "kor": "기준한도소진율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "prefix": "기준 "
       },
       "paired_with": "s146",
       "collapse_group": null,
@@ -4782,10 +4832,10 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2,
+        "sign": true,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4813,10 +4863,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4839,8 +4888,8 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka10008",
-      "f": "chg_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "변동수량",
       "format": {
@@ -4852,7 +4901,9 @@
       "paired_with": "s149",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s151",
@@ -4870,8 +4921,8 @@
         "row": "7",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -4883,7 +4934,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s152",
@@ -4892,7 +4945,7 @@
       "node_path": "2/0/1/9/6/1",
       "paper_text": "증감 미제공",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4901,8 +4954,8 @@
         "row": "7",
         "col": 6
       },
-      "mapping_id": "base:ka10008",
-      "f": "frgnr_limit_irds",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인한도증감",
       "format": null,
@@ -4910,7 +4963,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "결측 표기 — 응답이 한도 증감을 주지 않는다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "같은 종목 행에 없는 별도 조회값 또는 미연결 보조표기"
     },
     {
       "slot_id": "s153",
@@ -4933,10 +4988,9 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5059,19 +5113,24 @@
       "node_path": "2/1/0/0/0",
       "paper_text": "삼성전자",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10036",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s159",
@@ -5086,28 +5145,19 @@
       "anchor": null,
       "table": null,
       "mapping_id": "base:ka10036",
-      "f": "rank",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "순위",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "note": "레일 선택 종목 — 표 순위와 종목코드 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10036",
-          "f": "stk_cd",
-          "kor": "종목코드",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s160",
@@ -5245,15 +5295,17 @@
       "alt_mappings": null,
       "kor": "취득가능주식수",
       "format": {
-        "unit": "shares",
-        "sign": false,
-        "precision": 2,
-        "tone": "neutral"
+        "kind": "number",
+        "precision": 0,
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "표에 '잔여 한도' 열이 없어 레일 선택 종목 행에 그린다"
+      "note": "표에 '잔여 한도' 열이 없어 레일 선택 종목 행에 그린다",
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s166",
@@ -5563,19 +5615,24 @@
       "node_path": "2/1/2/1/0",
       "paper_text": "SK하이닉스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10036",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s179",
@@ -5594,15 +5651,17 @@
       "alt_mappings": null,
       "kor": "소진율증가",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s180",
@@ -5611,19 +5670,24 @@
       "node_path": "2/1/2/2/0",
       "paper_text": "현대차",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10036",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s181",
@@ -5642,15 +5706,17 @@
       "alt_mappings": null,
       "kor": "소진율증가",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s182",
@@ -5659,19 +5725,24 @@
       "node_path": "2/1/2/3/0",
       "paper_text": "KB금융",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10036",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s183",
@@ -5690,15 +5761,17 @@
       "alt_mappings": null,
       "kor": "소진율증가",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s184",
@@ -5707,19 +5780,24 @@
       "node_path": "2/1/2/4/0",
       "paper_text": "NAVER",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10036",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s185",
@@ -5738,15 +5816,17 @@
       "alt_mappings": null,
       "kor": "소진율증가",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s186",
@@ -5755,19 +5835,24 @@
       "node_path": "2/1/2/5/0",
       "paper_text": "POSCO홀딩스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10036",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4,
+      "display_dup": true,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s187",
@@ -5786,15 +5871,17 @@
       "alt_mappings": null,
       "kor": "소진율증가",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
+        "precision": 2,
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "동일 조회의 명시한 행"
     },
     {
       "slot_id": "s188",

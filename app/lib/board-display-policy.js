@@ -47,6 +47,14 @@ function prepareDisplayInput(contract, values) {
         if (changedValues === values) changedValues = { ...values };
         changedValues[slot.slot_id] = { ...bound, text: (format.prefix || '') + text };
       }
+      // These five cards add meaning to a received unit without replacing it.
+      if (["2YS8-0","2ZBB-0","2ZTA-0","30TY-0","31CL-0"].includes(contract.board_id) && bound && typeof bound === 'object'
+        && typeof bound.text === 'string' && bound.text && !bound.missing && rule[2].prefix) {
+        const prefix = rule[2].prefix;
+        const text = bound.text.startsWith(prefix) ? bound.text.slice(prefix.length) : bound.text;
+        if (changedValues === values) changedValues = { ...values };
+        changedValues[slot.slot_id] = { ...bound, text: prefix + text };
+      }
       return next;
     }
     if (role === 'bound-identifier') {
