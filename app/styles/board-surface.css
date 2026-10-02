@@ -1470,3 +1470,24 @@
 .board-surface[data-bs-board-id="32S7-0"] [data-node="32SE-0"] { height:auto!important;min-height:0!important; }
 .board-surface[data-bs-board-id="32S7-0"] [data-node="32SF-0"] { position:static!important;margin-top:0!important;width:100%!important; }
 .board-surface[data-bs-board-id="32S7-0"] :is(.bs-sector-snapshot-status,[data-node="32SC-0"]) { color:var(--color-k-dim)!important; }
+
+/* The three flow templates reserve a readable side panel without stretching content. */
+.board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) :is(.bs-workspace,.bs-primary,.bs-rail) { height:auto!important;min-height:0!important; }
+.board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) .bs-workspace {flex:0 0 auto!important;align-items:flex-start;}
+@container board (min-width:960px) {
+ .board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) .bs-primary {width:auto!important;min-width:0!important;flex:1 1 0!important;}
+ .board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) .bs-rail {width:360px!important;min-width:0!important;flex:0 0 360px!important;}
+}
+@container board (max-width:959px) {
+ .board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) :is(.bs-primary,.bs-rail) {width:100%!important;min-width:0!important;flex:0 0 auto!important;}
+}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-source {width:100%;height:auto;min-width:0;display:flex;flex-direction:column;gap:8px;padding-block:12px;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-row {display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;width:100%;height:auto;min-width:0;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-value {display:flex!important;flex-wrap:wrap;gap:6px 12px;flex:1 1 180px!important;width:auto!important;min-width:0;height:auto;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-row [data-slot-id] {width:auto!important;min-width:0;height:auto;white-space:normal!important;overflow-wrap:anywhere;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-source-context {width:100%;height:auto;white-space:normal;color:var(--color-k-muted);font-size:12px;line-height:1.5;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-moved-date-axis {display:none!important;}
+
+
+/* Keep each received credit date whole when the independent row wraps. */
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="flow-credit-source"] :is([data-slot-id="s109"],[data-slot-id="s110"],[data-slot-id="s111"],[data-slot-id="s112"],[data-slot-id="s113"]) {min-width:max-content!important;flex:0 0 auto!important;white-space:nowrap!important;overflow-wrap:normal!important;}

@@ -1279,7 +1279,7 @@ function applyPlan(root, plan, options = {}) {
   }
   hideUnavailableUnits(root);
   updateInstrumentResidualDetails(root, plan);
-  updateFlowResidualDetails(root, plan);
+  updateFlowResidualDetails(root, plan, options);
   updateAccountDetailSections(root);
   updateAccountResidualDetails(root, plan);
   updateRankingResidualDetails(root, plan);
@@ -2152,7 +2152,7 @@ const READABLE_TABLES = {
   '13BC-2': { node: '3IMQ-0', rows: ['3IN3-0', '3INL-0', '3INU-0', '3IO3-0', '3IOC-0', '3IP9-0', '3IPI-0', '3IPR-0', '3IQ0-0'], widths: [96, 120, 120, 180, 88, 110], label: '실시간 체결', stack: false, compact: true },
   '2TRW-1': { node: '2TS8-1', rows: ['3JJK-0', '3JQP-0', '3JQY-0', '3JR7-0', '3JRG-0', '3JRP-0', '3JRY-0', '3JS7-0', '3JSG-0'], widths: [96, 120, 120, 180, 88, 110], label: '실시간 체결', stack: false, compact: true },
   '1JPU-0': { node: '1JQF-0', rows: ['3KMT-0', '3L53-0', '3L5C-0', '3L5L-0', '3L5U-0', '3L63-0', '3L6C-0', '3L6L-0', '3L6U-0', '3LDS-0', '3LE1-0', '3LEA-0', '3LEJ-0', '3LES-0', '3LF1-0', '3LFA-0', '3LFJ-0'], widths: [96, 120, 120, 180, 88, 110], label: '최근 체결', stack: false, compact: true },
-  '2RWK-1': { node: '2RYE-1', rows: ['3AUO-0', '3AUW-0', '3AVA-0', '3AVO-0', '3AW2-0', '3AWG-0'], widths: [120, 180, 180, 120, 140, 180, 120], label: '신용·대차', stack: false, compact: true },
+  '2RWK-1': { node: '2RYE-1', rows: ['3AUO-0', '3AUW-0', '3AVA-0', '3AVO-0', '3AW2-0', '3AWG-0'], widths: [120, 180, 180, 120, 140, 0, 0], label: '공매도 조회', stack: false, compact: true },
   '2ZTA-0': {"node":"38MX-0","rows":["38MY-0","38NS-0","38OD-0","38Y7-0","38YS-0","38ZD-0","38ZY-0","38N7-0","390J-0"],"widths":[80,240,170,160,140,170,0,170],"label":"한도 소진율","stack":false,"compact":true},
   "2XTO-0": {"node":"365N-0","rows":["365S-0","3660-0","366I-0","3670-0","367I-0","3680-0"],"widths":[0,220,170,130,210,210,160],"label":"조회 결과","stack":false,"compact":true},
   '2UN6-1': { node: '34NC-0', rows: ['34O8-0', '34OG-0', '34P0-0', '34PK-0', '34Q4-0', '34QO-0', '34R8-0'], widths: [130, 200, 140, 100, 100, 140, 130], label: '조건검색 결과', stack: false, compact: true },
@@ -2227,6 +2227,60 @@ function updateRankFour(surface, plan) {
   surface.querySelector('.bs-rail')?.classList.add('bs-ranking-compact-rail');
 }
 
+// Independent query rows must not borrow the short-sale table's date.
+function prepareCreditSourceLists(surface, contract) {
+  const owner = authoredNode(surface, '2RYE-1');
+  if (!owner || surface.querySelector('[data-node="flow-credit-source"]')) return;
+  const rows = [...owner.querySelectorAll('.bs-readable-row')];
+  const dates = [109,110,111,112,113].map(n => {
+    const slot = contract.slots.find(s => s.slot_id === 's'+n);
+    return slot && authoredNode(surface, slot.node || slot.node_id);
+  });
+  for (const [key, title, column] of [
+    ['lending', '대차 조회 · 응답 순서', 5],
+    ['credit', '신용 조회 · 일자별 잔고율', 6],
+  ]) {
+    const group = layoutGroup(surface.ownerDocument, 'bs-flow-independent-source');
+    group.dataset.node = 'flow-'+key+'-source';
+    const heading = layoutGroup(surface.ownerDocument, 'bs-flow-source-title');
+    heading.textContent = title;
+    group.append(heading);
+    rows.forEach((source, index) => {
+      const cell = source.querySelector('.bs-readable-cell[data-col="'+column+'"]');
+      if (!cell) return;
+      if (!index) { cell.remove(); return; }
+      const row = layoutGroup(surface.ownerDocument, 'bs-flow-independent-row');
+      row.dataset.flowSourceRow = key+'-'+(index-1);
+      const label = layoutGroup(surface.ownerDocument, 'bs-flow-source-label');
+      label.textContent = '조회 '+index;
+      row.append(label);
+      if (key === 'credit' && dates[index-1]) row.append(dates[index-1]);
+      cell.classList.remove('bs-readable-cell');
+      cell.removeAttribute('data-col');
+      cell.classList.add('bs-flow-independent-value');
+      row.append(cell);
+      group.append(row);
+    });
+    owner.append(group);
+  }
+  const note = layoutGroup(surface.ownerDocument, 'bs-flow-source-context');
+  note.textContent = '공매도·신용·대차는 별도 조회입니다. 조회 순서가 같은 행을 같은 날짜로 간주하지 않습니다.';
+  owner.prepend(note);
+  authoredNode(surface, '3FQB-0')?.classList.add('bs-flow-moved-date-axis');
+}
+function updateCreditSourceRows(surface, states) {
+  const received = id => { const value=states.get(id);return value&&!value.missing&&!value.pending&&!value.empty&&!value.designText&&String(value.text).trim(); };
+  for(let i=0;i<5;i++) {
+    for(const [key, ids] of [['credit',[52+10*i]],['lending',[50+10*i,51+10*i]]]) {
+      const row=surface.querySelector('[data-flow-source-row="'+key+'-'+i+'"]');
+      if(row) setHidden(row,!ids.some(n=>received('s'+String(n).padStart(3,'0'))));
+    }
+    const row=authoredNode(surface,'2RYE-1')?.querySelector('.bs-readable-row[data-row="'+i+'"]');
+    if(row) setHidden(row,![44,46,47,48,49].some(n=>received('s'+String(n+10*i).padStart(3,'0'))));
+  }
+}
+
+
 // Keep supplementary flow values separate when their queries have different bases.
 function prepareFlowResidualLists(surface, contract) {
   if (contract.board_id === '2S4E-1') {
@@ -2264,6 +2318,7 @@ function prepareFlowResidualLists(surface, contract) {
     return;
   }
   if (contract.board_id !== '2RWK-1') return;
+  prepareCreditSourceLists(surface, contract);
   // Keep the received numeric leaves; the authored rectangles are still suppressed.
   for (const id of ['3PB6-0', '3SH9-0']) {
     const group = authoredNode(surface, id);
@@ -2281,7 +2336,7 @@ function prepareFlowResidualLists(surface, contract) {
   }
 }
 
-function updateFlowResidualDetails(surface, plan) {
+function updateFlowResidualDetails(surface, plan, options = {}) {
   const id = surface.dataset?.bsBoardId;
   const groups = {
     '2ROJ-1': [
@@ -2289,6 +2344,9 @@ function updateFlowResidualDetails(surface, plan) {
       ['3DWA-0', ['s166','s167','s168','s170','s171','s172'], '차익잔고·미결제'],
     ],
     '2RWK-1': [
+      ['flow-credit-source', ['s052','s062','s072','s082','s092'], '신용 조회'],
+      ['flow-lending-source', ['s050','s051','s060','s061','s070','s071','s080','s081','s090','s091'], '대차 조회'],
+      ['2RWT-1', ['s133','s135'], '프로그램 조회'],
       ['2RXM-1', ['s118','s120','s122','s125','s127','s129'], '거래원 조회 자료'],
       ['3PB4-0', ['s098','s099','s100','s101','s102'], '공매도 비중'],
       ['3FQ3-0', ['s104','s105','s106','s107','s108'], '신용잔고율'],
@@ -2306,6 +2364,14 @@ function updateFlowResidualDetails(surface, plan) {
   if (!groups) return;
   const states = surface.__bsFlowResidualStates || (surface.__bsFlowResidualStates = new Map());
   for (const assignment of plan.assignments) states.set(assignment.slotId, assignment);
+  if (id === '2RWK-1') {
+    // Completed empty metadata supersedes values cached by the hydrate consumer.
+    if (!options.partial) for (const slot of options.emptyValueSlots || []) {
+      const current = states.get(slot);
+      if (current) states.set(slot, { ...current, missing: true, empty: true, pending: false });
+    }
+    updateCreditSourceRows(surface, states);
+  }
   for (const [nodeId, slots, label] of groups) {
     const group = authoredNode(surface, nodeId);
     if (!group) continue;
