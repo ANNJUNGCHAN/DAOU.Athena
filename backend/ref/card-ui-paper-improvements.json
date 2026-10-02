@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "verified_at": "2026-10-01T08:04:25.000Z",
+  "verified_at": "2026-10-02T00:31:06.747Z",
   "paper_file": {
     "id": "01M3SB680J59QWZX6J4CGRVXT7",
     "name": "ATHENA 앱",
@@ -481,11 +481,79 @@
       "page_name": "개선 · 계좌 표 가독성",
       "artboard_id": "11Q9-0",
       "artboard_name": "추가 개선 · 빈 값과 상세 수치의 이름",
-      "targets": ["2SCE-1", "2SKU-1", "137X-2", "2RBO-1"],
+      "targets": [
+        "2SCE-1",
+        "2SKU-1",
+        "137X-2",
+        "2RBO-1"
+      ],
       "improvement_reason": "빈 응답·수신 대기·실제 0을 구분하고, 기간중 거래량과 신용잔고율에 이름을 붙인다.",
-      "implementation_commits": ["9c472cd", "b7ae95f"],
+      "implementation_commits": [
+        "9c472cd",
+        "b7ae95f"
+      ],
       "followup_difference": "전체 카드 복제 도면이 아니라 네 카드의 개선 요소를 모은 편집 가능한 합성 예시다. 실제 제품은 각 카드의 기존 행과 조회 시점 표시 안에 해당 규칙을 적용한다.",
       "verified_at": "2026-10-01T08:04:25.000Z"
+    },
+    {
+      "page_id": "p-I-0",
+      "page_name": "개선 · 순위 카드 반응형과 빈 상태",
+      "artboard_id": "11RU-0",
+      "artboard_name": "개선 · 순위 본문과 보조 정보 · 넓은 카드",
+      "targets": [
+        "2X5N-0",
+        "2XG6-0",
+        "2XKO-0",
+        "2XP6-0",
+        "2XTO-0",
+        "2YA8-0",
+        "2YEQ-0",
+        "2YJ8-0",
+        "2YNQ-0"
+      ],
+      "improvement_reason": "넓은 카드에서 본표에 남은 폭을 주고 보조 정보를 360px로 제한하여 본문 압축과 우측 잘림을 방지한다.",
+      "implementation_commits": [],
+      "followup_difference": "공개 템플릿과 합성 예시로 작성한 편집 가능한 설계이다. 헤더·조작부는 도면에서 단순화했으며 제품의 기존 기능은 유지한다. 반응형 및 빈 상태 구현과 실제 앱 재검증은 진행 중이다."
+    },
+    {
+      "page_id": "p-I-0",
+      "page_name": "개선 · 순위 카드 반응형과 빈 상태",
+      "artboard_id": "11XT-0",
+      "artboard_name": "개선 · 순위 표와 보조 정보 · 좁은 카드",
+      "targets": [
+        "2X5N-0",
+        "2XG6-0",
+        "2XKO-0",
+        "2XP6-0",
+        "2XTO-0",
+        "2YA8-0",
+        "2YEQ-0",
+        "2YJ8-0",
+        "2YNQ-0"
+      ],
+      "improvement_reason": "좁은 카드에서는 표와 보조 정보를 세로 배치하고 표 내부 가로 이동 안내를 표시하여 페이지 넘침 없이 정보를 읽도록 한다.",
+      "implementation_commits": [],
+      "followup_difference": "공개 템플릿과 합성 예시로 작성한 편집 가능한 설계이다. 헤더·조작부는 도면에서 단순화했으며 제품의 기존 기능은 유지한다. 반응형 및 빈 상태 구현과 실제 앱 재검증은 진행 중이다."
+    },
+    {
+      "page_id": "p-I-0",
+      "page_name": "개선 · 순위 카드 반응형과 빈 상태",
+      "artboard_id": "123E-0",
+      "artboard_name": "개선 · 순위 빈 상태 · 중복 요약 제거",
+      "targets": [
+        "2X5N-0",
+        "2XG6-0",
+        "2XKO-0",
+        "2XP6-0",
+        "2XTO-0",
+        "2YA8-0",
+        "2YEQ-0",
+        "2YJ8-0",
+        "2YNQ-0"
+      ],
+      "improvement_reason": "수신 값이 없는 상태는 다섯 안내를 보존하면서 세로로 배치하고 중복 미니 요약과 과도한 빈 높이를 줄인다.",
+      "implementation_commits": [],
+      "followup_difference": "공개 템플릿과 합성 예시로 작성한 편집 가능한 설계이다. 헤더·조작부는 도면에서 단순화했으며 제품의 기존 기능은 유지한다. 반응형 및 빈 상태 구현과 실제 앱 재검증은 진행 중이다."
     }
   ],
   "product_followups_without_diagram": [
