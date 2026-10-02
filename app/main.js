@@ -7292,6 +7292,11 @@ ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
   let replayed = 0;
   for (const card of cards) {
     if (!card || !card.envelope) continue;
+    // Keep stored envelopes until their replay mount is reported or explicitly cleared.
+    if (typeof card.cardId === 'string' && card.cardId && !pendingCanvasCards.has(card.cardId)) {
+      if (pendingCanvasCards.size >= 256) pendingCanvasCards.delete(pendingCanvasCards.keys().next().value);
+      pendingCanvasCards.set(card.cardId, { conversationId: id, card });
+    }
     if (card.channel === 'fixture') {
       shellWin.webContents.send('athena:add-canvas', { type: card.envelope.type || card.kind, sessionCardId: card.cardId, conversationId: id });
     } else if (card.envelope.data && card.envelope.data.chart
