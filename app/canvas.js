@@ -4361,6 +4361,7 @@ function renderMcpTable(envelope) {
   }
   if (semanticWorkspace.isTaskCanvasEnvelope(envelope)) return null;
   const { card, body } = makeCard('mcp-table', title, envelope.layout, envelope.correlation, subtitle, cardStkCd(envelope), envelope.screen_id);
+  card.querySelector('.card-fresh')?.remove();
   stampPaperScreen(card, envelope);
   const rawCols = (envelope.data && Array.isArray(envelope.data.columns)) ? envelope.data.columns : [];
   const rows = (envelope.data && Array.isArray(envelope.data.rows)) ? envelope.data.rows : [];
