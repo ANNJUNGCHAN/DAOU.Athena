@@ -8004,3 +8004,9 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
 /* Keep optimization results and their heatmap explanation together without limiting the setup. */
 #backtestCanvas .backtest-optimize-result { width: fit-content; max-width: 100%; min-width: 0; }
 #backtestCanvas .backtest-optimize-result > .backtest-heatmap > .backtest-card-note { margin-top: 8px; text-align: left; }
+
+/* Keep optimization setup controls and their own guidance close together. */
+#backtestCanvas .backtest-optimize > .backtest-card-head { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 4px; }
+#backtestCanvas .backtest-optimize > .backtest-field:has(> .backtest-optimize-samples) { width: 200px; max-width: 100%; }
+#backtestCanvas .backtest-optimize > .backtest-card-note,
+#backtestCanvas .backtest-optimize > .backtest-card-head > .backtest-card-note { max-width: 48rem; text-align: left; }
