@@ -47838,5 +47838,244 @@
         "tested_at": "2026-10-03T00:47:08.390Z"
       }
     ]
+  },
+  "native_execution_appendix_929_939": {
+    "cutoff_row": 939,
+    "previous_snapshot_row": 928,
+    "new_rows": {
+      "from": 929,
+      "to": 939,
+      "count": 11
+    },
+    "previous_snapshot_preserved": true,
+    "template_aggregate_recomputed": false,
+    "latest_responsive_94_status": "incomplete",
+    "safe_metadata": {
+      "file": "native929-939-safe-metadata.json",
+      "sha256": "7e203d791508e4c21a4085f2ff0e1e79065bc6294e3e04e8cd996a5d1bef6eb1",
+      "fields": [
+        "id",
+        "phase",
+        "call_status",
+        "ui_status",
+        "actual_template_id",
+        "window_size",
+        "tested_at",
+        "runtime_source"
+      ]
+    },
+    "local_review_receipts": [
+      {
+        "file": "929-939-INDEPENDENT-REVIEW.json",
+        "sha256": "84f7148cf73e1eeb5d4e14eb129b641a60f2ebfaa2123c70d7d860b27e625ff5",
+        "scope": "Independent local bitmap scoped receipt; reference hashes only. No images or private payload published."
+      },
+      {
+        "file": "929-939-INDEPENDENT-REVIEW.md",
+        "sha256": "85d897f7c10045d731a99192d323c7db896e97a86a31d5b5c69c0cca88753d50",
+        "scope": "Independent local bitmap scoped receipt; reference hashes only. No images or private payload published."
+      }
+    ],
+    "actual_template_ids": "All11 null; no phase name establishes template identity.",
+    "runtime_policy": "Preserve supplied runtime_source exactly: b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent. No claim of a newly launched eb42 runtime.",
+    "status_policy": "Original lowercase statuses preserved. UI passed is only the listed observation scope; no historical aggregate promotion.",
+    "row_scopes": [
+      {
+        "rows": [
+          929
+        ],
+        "kind": "chart_display_and_query_failure",
+        "detail": "Chart was displayed but query failed with feature server connection failure; right summary session table overflow remained. Whole call and UI failed."
+      },
+      {
+        "rows": [
+          930,
+          931
+        ],
+        "kind": "same_failed_chart_resize",
+        "detail": "Same chart narrow bottom and remaximum observations remained failed; no new call."
+      },
+      {
+        "rows": [
+          932,
+          933,
+          934
+        ],
+        "kind": "optimization_setup_size_cycle",
+        "detail": "Setup layout maximum2560→narrow1411→remaximum2560 scoped pass only; no execution."
+      },
+      {
+        "rows": [
+          935
+        ],
+        "kind": "keyboard_focus_with_external_resize_limit",
+        "detail": "Narrow1411 came from external resize; Tab focus observed with Windows flyout interference. Metadata passed is limited focus evidence, not completed keyboard execution."
+      },
+      {
+        "rows": [
+          936
+        ],
+        "kind": "single_cached_simulation_keyboard_execution",
+        "detail": "One cached single-sample simulation initiated by keyboard, completed in11 seconds; narrow result scoped pass. No real-money order."
+      },
+      {
+        "rows": [
+          937,
+          938,
+          939
+        ],
+        "kind": "same_single_execution_result_size_cycle",
+        "detail": "Same936 result at maximum2560→narrow1411→remaximum2560 and bottom; no fresh calls."
+      }
+    ],
+    "remaining": "Whole94 remains incomplete; outer blank space remains. Chart query failure and summary overflow are recorded failures. Pending source/CSS candidates are not runtime evidence.",
+    "privacy_policy": "Only eight supplied metadata fields and scoped summaries. No images, raw account/financial values, raw notes, private IDs, profile paths or ui_scale proof.",
+    "historical_cutoff_notice": "All25 root keys and every928/prior record,101reference/94scope/7excluded/12seeds/31flows/LAYA remain unchanged.",
+    "verification_boundary": "Author metadata transcription only. Independent native receipt hashes verified against complete reports and exact safe metadata. Separate independent questionnaire review required before application.",
+    "rows": [
+      {
+        "id": 929,
+        "phase": "chart-b01b1ce-max-card-and-query-failure",
+        "call_status": "failed",
+        "ui_status": "failed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T01:33:45.481Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 930,
+        "phase": "chart-b01b1ce-narrow-bottom",
+        "call_status": "not_run",
+        "ui_status": "failed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T01:35:48.303Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 931,
+        "phase": "chart-b01b1ce-remax",
+        "call_status": "not_run",
+        "ui_status": "failed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T01:36:18.453Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 932,
+        "phase": "opt-b01b1ce-max-form",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T01:43:42.380Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 933,
+        "phase": "opt-b01b1ce-narrow-form",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T01:43:58.468Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 934,
+        "phase": "opt-b01b1ce-remax-form",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T01:44:14.576Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 935,
+        "phase": "opt-b01b1ce-keyboard-focus-narrow",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T01:44:49.538Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 936,
+        "phase": "opt-b01b1ce-keyboard-result-narrow",
+        "call_status": "passed",
+        "ui_status": "passed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T01:45:39.711Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 937,
+        "phase": "opt-b01b1ce-max-result-bottom",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T01:45:55.990Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 938,
+        "phase": "opt-b01b1ce-narrow-result-bottom",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T01:46:11.764Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      },
+      {
+        "id": 939,
+        "phase": "opt-b01b1ce-remax-result-bottom",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T01:46:35.415Z",
+        "runtime_source": "b01b1ce app36408 source29 main matched; docs-only eb42a0e app-byte-equivalent"
+      }
+    ]
   }
 }
