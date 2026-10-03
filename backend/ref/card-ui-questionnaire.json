@@ -47246,5 +47246,344 @@
         "actual_template_id": null
       }
     ]
+  },
+  "native_execution_appendix_895_917": {
+    "cutoff_row": 917,
+    "previous_snapshot_row": 894,
+    "new_rows": {
+      "from": 895,
+      "to": 917,
+      "count": 23
+    },
+    "previous_snapshot_preserved": true,
+    "template_aggregate_recomputed": false,
+    "latest_responsive_94_status": "incomplete",
+    "safe_metadata": [
+      {
+        "file": "native895-903-safe-metadata.json",
+        "sha256": "bb69290bfb0e3fe25ea39bf5de90001517b8158c122e217cd14e893c2f4f2d3f"
+      },
+      {
+        "file": "native904-908-safe-metadata.json",
+        "sha256": "885faf49c892b240131ea4bdd44324138f8cb14cda610aaedffb7326d8e07621"
+      },
+      {
+        "file": "native909-911-safe-metadata.json",
+        "sha256": "c2ccef7ba88263cbf95a893700307984790009ce0d07a460676999096f76584c"
+      },
+      {
+        "file": "native912-917-safe-metadata.json",
+        "sha256": "bd96003ac76ad7066be9c5b08a43907ad42eead1ea7f0c8fc677376eaed02c7b"
+      }
+    ],
+    "actual_template_ids": "All 23 null; phase names do not establish runtime template identity.",
+    "excluded_ui_rows": [
+      904
+    ],
+    "runtime_policy": "Preserve each runtime_commit and original CALL/UI result. Do not combine different runtimes into a current whole-card or complete responsive cycle.",
+    "evidence_scope": "The eight metadata fields do not independently establish whole/scoped coverage. Rows912–914 describe only the optimization form without a new call; rows915–917 describe one actual optimization-result maximum/narrow/remaximum cycle, not all94.",
+    "historical_cutoff_notice": "All prior current/latest/snapshot statements remain historical at their original801,853,894 or earlier cutoff. This appendix leaves all earlier evidence, template statuses, counts and LAYA records unchanged.",
+    "verification_boundary": "Metadata transcription and public document checks only. Original observations and private data were not re-inspected; no renderer/native rerun or independent author approval is claimed.",
+    "rows": [
+      {
+        "id": 895,
+        "phase": "maximized-general-table-after-3fe5313-protocol-failure",
+        "call_status": "FAIL",
+        "ui_status": "NOT_RUN",
+        "runtime_commit": "3fe53139c8d0d6cdb368b8e4cabcca20899f9aa1",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T20:56:52.464Z"
+      },
+      {
+        "id": 896,
+        "phase": "maximized-general-table-ac8f4ab-readiness-timeout",
+        "call_status": "FAIL",
+        "ui_status": "NOT_RUN",
+        "runtime_commit": "ac8f4ab3710f42adda5a8893823e4e09fc6b0135",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T21:28:47.808Z"
+      },
+      {
+        "id": 897,
+        "phase": "maximized-opt-form-minimum-samples-ac8f4ab",
+        "call_status": "NOT_RUN",
+        "ui_status": "FAIL",
+        "runtime_commit": "ac8f4ab3710f42adda5a8893823e4e09fc6b0135",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T21:34:36.857Z"
+      },
+      {
+        "id": 898,
+        "phase": "narrow-same-opt-form-minimum-samples-bottom-ac8f4ab",
+        "call_status": "NOT_RUN",
+        "ui_status": "FAIL",
+        "runtime_commit": "ac8f4ab3710f42adda5a8893823e4e09fc6b0135",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T21:35:12.999Z"
+      },
+      {
+        "id": 899,
+        "phase": "remaximized-same-opt-form-minimum-samples-bottom-ac8f4ab",
+        "call_status": "NOT_RUN",
+        "ui_status": "FAIL",
+        "runtime_commit": "ac8f4ab3710f42adda5a8893823e4e09fc6b0135",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T21:36:12.145Z"
+      },
+      {
+        "id": 900,
+        "phase": "maximized-opt-minimum-sample1-request-busy-ac8f4ab",
+        "call_status": "BUSY",
+        "ui_status": "PARTIAL",
+        "runtime_commit": "ac8f4ab3710f42adda5a8893823e4e09fc6b0135",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T21:37:16.623Z"
+      },
+      {
+        "id": 901,
+        "phase": "maximized-opt-sample1-result-ac8f4ab",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "ac8f4ab3710f42adda5a8893823e4e09fc6b0135",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T21:38:33.416Z"
+      },
+      {
+        "id": 902,
+        "phase": "optimization-result-narrow-bottom",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "ac8f4ab3710f42adda5a8893823e4e09fc6b0135",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T21:45:16.955Z"
+      },
+      {
+        "id": 903,
+        "phase": "optimization-result-remax-bottom",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "ac8f4ab3710f42adda5a8893823e4e09fc6b0135",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T21:45:56.984Z"
+      },
+      {
+        "id": 904,
+        "phase": "general-table-arrival-occluded",
+        "call_status": "PASS",
+        "ui_status": "EXCLUDED",
+        "runtime_commit": "93893b9d3d60573af2b8e366106752425a94dc99",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T22:19:48.976Z"
+      },
+      {
+        "id": 905,
+        "phase": "general-table-max-after93893b9",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "93893b9d3d60573af2b8e366106752425a94dc99",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T22:20:08.368Z"
+      },
+      {
+        "id": 906,
+        "phase": "general-table-narrow-bottom",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "93893b9d3d60573af2b8e366106752425a94dc99",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T22:24:43.479Z"
+      },
+      {
+        "id": 907,
+        "phase": "general-table-remax-bottom",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "93893b9d3d60573af2b8e366106752425a94dc99",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T22:26:16.651Z"
+      },
+      {
+        "id": 908,
+        "phase": "general-table-navigation-return",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "93893b9d3d60573af2b8e366106752425a94dc99",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T22:29:50.091Z"
+      },
+      {
+        "id": 909,
+        "phase": "general-table-restart-restore-max",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "e12702a7bfbb238fd867f8fe4dea7a7172e94e9e",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T22:45:14.74Z"
+      },
+      {
+        "id": 910,
+        "phase": "general-table-restart-restore-narrow-bottom",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "e12702a7bfbb238fd867f8fe4dea7a7172e94e9e",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T22:45:59.815Z"
+      },
+      {
+        "id": 911,
+        "phase": "general-table-restart-restore-remax-bottom",
+        "call_status": "PASS",
+        "ui_status": "FAIL",
+        "runtime_commit": "e12702a7bfbb238fd867f8fe4dea7a7172e94e9e",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T22:46:39.138Z"
+      },
+      {
+        "id": 912,
+        "phase": "optimization-form-max-e127",
+        "call_status": "NOT_RUN",
+        "ui_status": "PASS",
+        "runtime_commit": "e12702a7bfbb238fd867f8fe4dea7a7172e94e9e",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T23:01:18.959Z"
+      },
+      {
+        "id": 913,
+        "phase": "optimization-form-narrow-e127",
+        "call_status": "NOT_RUN",
+        "ui_status": "PASS",
+        "runtime_commit": "e12702a7bfbb238fd867f8fe4dea7a7172e94e9e",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T23:01:42.043Z"
+      },
+      {
+        "id": 914,
+        "phase": "optimization-form-remax-e127",
+        "call_status": "NOT_RUN",
+        "ui_status": "PASS",
+        "runtime_commit": "e12702a7bfbb238fd867f8fe4dea7a7172e94e9e",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T23:01:55.087Z"
+      },
+      {
+        "id": 915,
+        "phase": "optimization-result-max-bottom-e127",
+        "call_status": "PASS",
+        "ui_status": "PASS",
+        "runtime_commit": "e12702a7bfbb238fd867f8fe4dea7a7172e94e9e",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T23:02:47.639Z"
+      },
+      {
+        "id": 916,
+        "phase": "optimization-result-narrow-bottom-e127",
+        "call_status": "PASS",
+        "ui_status": "PASS",
+        "runtime_commit": "e12702a7bfbb238fd867f8fe4dea7a7172e94e9e",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-02T23:03:06.358Z"
+      },
+      {
+        "id": 917,
+        "phase": "optimization-result-remax-bottom-e127",
+        "call_status": "PASS",
+        "ui_status": "PASS",
+        "runtime_commit": "e12702a7bfbb238fd867f8fe4dea7a7172e94e9e",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-02T23:03:29.483Z"
+      }
+    ]
   }
 }
