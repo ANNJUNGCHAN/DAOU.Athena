@@ -530,7 +530,7 @@ function buildActiveCardContext({ cards, requested, now } = {}) {
   }, budget);
 }
 
-async function continueAfterDisplayedCards({ result, cards, requested, now, isCurrent, runProvider } = {}) {
+async function continueAfterDisplayedCards({ result, cards, requested, now, isCurrent, runProvider, continueWithProvider = true } = {}) {
   const displayed = (Array.isArray(cards) ? cards : []).filter((card) => card
     && card.envelope && card.verifiedVisible === true && card.isDataCanvas !== false);
   if (!result || result.ok !== true || !displayed.length || typeof runProvider !== 'function') {
@@ -542,6 +542,7 @@ async function continueAfterDisplayedCards({ result, cards, requested, now, isCu
       result: { ...result, ok: false, error: '새 질문이 표시된 카드 설명을 대체했습니다.', answerText: null },
     };
   }
+  if (!continueWithProvider) return { continued: false, result };
   // 새 조회가 방금 만든 카드가 근거다. 이전 카드의 implicit 선택은 새 결과를
   // 가리키지 않으므로 이어받지 않는다. explicit component는 애초 빠른 조회를
   // 타지 않지만, 호출자가 명시했다면 정확한 cardId/path 검증은 그대로 유지한다.
@@ -559,6 +560,7 @@ async function finishDisplayedCardResult({
   now,
   isCurrent,
   providerRequest,
+  continueWithProvider = true,
   runProvider,
   persistReceipt,
 } = {}) {
@@ -572,6 +574,7 @@ async function finishDisplayedCardResult({
     result,
     cards: acceptedCards,
     requested,
+    continueWithProvider,
     now: capturedAt,
     isCurrent,
     runProvider: (activeCardContext, initialResult) => runProvider({

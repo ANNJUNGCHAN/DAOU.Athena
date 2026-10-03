@@ -5615,6 +5615,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     return activeCardQna.finishDisplayedCardResult({
       result,
       cards,
+      continueWithProvider: providerAnswerRequired,
       requested: submit.cardContext,
       now: new Date().toISOString(),
       isCurrent: () => liveSubmitContexts.get(turnConversationId) === submit,
