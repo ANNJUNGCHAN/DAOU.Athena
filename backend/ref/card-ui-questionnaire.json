@@ -47585,5 +47585,258 @@
         "tested_at": "2026-10-02T23:03:29.483Z"
       }
     ]
+  },
+  "native_execution_appendix_918_928": {
+    "cutoff_row": 928,
+    "previous_snapshot_row": 917,
+    "new_rows": {
+      "from": 918,
+      "to": 928,
+      "count": 11
+    },
+    "previous_snapshot_preserved": true,
+    "template_aggregate_recomputed": false,
+    "latest_responsive_94_status": "incomplete",
+    "safe_metadata": {
+      "file": "safe-observations.json",
+      "sha256": "847661429b52ba3c12cfa36eb83c2b04c726e45ecabe082eaaccdacb3703670f",
+      "fields": [
+        "id",
+        "phase",
+        "call_status",
+        "ui_status",
+        "runtime_commit",
+        "actual_template_id",
+        "window_size",
+        "tested_at"
+      ]
+    },
+    "local_review_receipts": [
+      {
+        "file": "918-921-INDEPENDENT-REVIEW.json",
+        "sha256": "747066e580ea6506f71656728e79ebbc870932cd19db7d46b5f41415083c9741",
+        "scope": "Local bitmap scoped review receipt; no image/raw account data included in questionnaire."
+      },
+      {
+        "file": "918-921-INDEPENDENT-REVIEW.md",
+        "sha256": "d119fc636701b30b9fa5080fd47806ea2bf37542e9865a1c50ae6b13a0ccf28d",
+        "scope": "Local bitmap scoped review receipt; no image/raw account data included in questionnaire."
+      },
+      {
+        "file": "922-928-INDEPENDENT-REVIEW.json",
+        "sha256": "b7e3fcce822b17b1f886164ef4aed9763c1ee4f2e80a503decc6f9ebedbe52b7",
+        "scope": "Local bitmap scoped review receipt; no image/raw account data included in questionnaire."
+      },
+      {
+        "file": "922-928-INDEPENDENT-REVIEW.md",
+        "sha256": "45d4f8f73e50854708c8f7d184fe6e043e8248cdb8f00acaba62418286828f67",
+        "scope": "Local bitmap scoped review receipt; no image/raw account data included in questionnaire."
+      }
+    ],
+    "actual_template_ids": "All11 null; phase labels do not establish actual template identity.",
+    "runtime_policy": "Preserve exact runtime_commit strings, including loaded37fdf09+shell0cb060 byte-equivalent6ae46b3; do not imply every row ran on committed6ae46b3.",
+    "status_policy": "Original lowercase statuses preserved exactly. passed is scoped by row role, never whole-card or whole94 approval.",
+    "row_scopes": [
+      {
+        "rows": [
+          918
+        ],
+        "kind": "fresh_call_failed",
+        "call": "failed",
+        "ui": "not_run",
+        "detail": "Feature connection failed with no card; supplied limited code MCP_READINESS_PROTOCOL. Not UI PASS."
+      },
+      {
+        "rows": [
+          919,
+          920,
+          921
+        ],
+        "kind": "saved_general_table_restore",
+        "call": "not_run",
+        "ui": "passed_scoped",
+        "detail": "Saved two-row table restored at maximum/narrow/remaximum; title/lastrow/lastcolumn/no basis clock retained. No new call and live completedlabel unverified."
+      },
+      {
+        "rows": [
+          922
+        ],
+        "kind": "optimization_form_normal_window_correction",
+        "call": "not_run",
+        "ui": "passed_scoped",
+        "detail": "Original phase contains max-form but actual dimensions2122×1166 are normal window, not maximum-cycle evidence. Original phase retained."
+      },
+      {
+        "rows": [
+          923,
+          924,
+          925
+        ],
+        "kind": "optimization_form_corrected_size_cycle",
+        "call": "not_run",
+        "ui": "passed_scoped",
+        "detail": "Confirmed maximum2560→narrow1411→remaximum2560 form retention only; no execution."
+      },
+      {
+        "rows": [
+          926,
+          927,
+          928
+        ],
+        "kind": "same_single_actual_cached_random1_result_size_cycle",
+        "call": "passed_same_one_execution",
+        "ui": "passed_scoped",
+        "detail": "One cached single-sample actual execution,9seconds reported; same result maximum/narrow/remaximum, warning/result grouping/caption/final populatedcell retained. Three observations do not mean three calls."
+      }
+    ],
+    "remaining": "Large surrounding blank space, oversized maximum setup input and detached far-right notes remain. Single native cell does not verify multi-column native behavior. Whole94 pending.",
+    "scale_policy": "Helper default ui_scale1 is not proof of actual100% UI setting; not published as verified.",
+    "historical_cutoff_notice": "All original root keys and prior91723rows/earlier snapshots/history/LAYA/101reference/94scope/7excluded/12seeds/31flows remain unchanged.",
+    "verification_boundary": "Metadata transcription and candidate guards only. Author previously reviewed referenced native bitmaps, so a separate independent agent must review this questionnaire candidate before applying.",
+    "rows": [
+      {
+        "id": 918,
+        "phase": "general-ac8de24-max-fresh-call",
+        "call_status": "failed",
+        "ui_status": "not_run",
+        "runtime_commit": "ac8de243aa23d7e628169939472dfd82751ce443",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T00:17:40.203Z"
+      },
+      {
+        "id": 919,
+        "phase": "general-ac8de24-saved-max-restore",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "runtime_commit": "ac8de243aa23d7e628169939472dfd82751ce443",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T00:19:09.064Z"
+      },
+      {
+        "id": 920,
+        "phase": "general-ac8de24-saved-narrow-bottom",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "runtime_commit": "ac8de243aa23d7e628169939472dfd82751ce443",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T00:19:50.263Z"
+      },
+      {
+        "id": 921,
+        "phase": "general-ac8de24-saved-remax-bottom",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "runtime_commit": "ac8de243aa23d7e628169939472dfd82751ce443",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T00:20:25.794Z"
+      },
+      {
+        "id": 922,
+        "phase": "opt-6ae46b3-max-form",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "runtime_commit": "37fdf09+shell0cb060 byte-equivalent 6ae46b3",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2122,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T00:43:23.058Z"
+      },
+      {
+        "id": 923,
+        "phase": "opt-6ae46b3-max-form-confirmed",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "runtime_commit": "37fdf09+shell0cb060 byte-equivalent 6ae46b3",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T00:43:51.426Z"
+      },
+      {
+        "id": 924,
+        "phase": "opt-6ae46b3-narrow-form",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "runtime_commit": "37fdf09+shell0cb060 byte-equivalent 6ae46b3",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T00:44:21.006Z"
+      },
+      {
+        "id": 925,
+        "phase": "opt-6ae46b3-remax-form",
+        "call_status": "not_run",
+        "ui_status": "passed",
+        "runtime_commit": "37fdf09+shell0cb060 byte-equivalent 6ae46b3",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T00:44:35.757Z"
+      },
+      {
+        "id": 926,
+        "phase": "opt-6ae46b3-max-result-bottom",
+        "call_status": "passed",
+        "ui_status": "passed",
+        "runtime_commit": "37fdf09+shell0cb060 byte-equivalent 6ae46b3",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T00:45:52.279Z"
+      },
+      {
+        "id": 927,
+        "phase": "opt-6ae46b3-narrow-result-bottom",
+        "call_status": "passed",
+        "ui_status": "passed",
+        "runtime_commit": "37fdf09+shell0cb060 byte-equivalent 6ae46b3",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T00:46:41.289Z"
+      },
+      {
+        "id": 928,
+        "phase": "opt-6ae46b3-remax-result-bottom",
+        "call_status": "passed",
+        "ui_status": "passed",
+        "runtime_commit": "37fdf09+shell0cb060 byte-equivalent 6ae46b3",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T00:47:08.390Z"
+      }
+    ]
   }
 }
