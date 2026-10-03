@@ -48078,4 +48078,134 @@
       }
     ]
   }
+,
+  "native_execution_appendix_940_944": {
+  "cutoff_row": 944,
+  "previous_snapshot_row": 939,
+  "new_rows": {
+    "from": 940,
+    "to": 944,
+    "count": 5
+  },
+  "previous_snapshot_preserved": true,
+  "template_aggregate_recomputed": false,
+  "latest_responsive_94_status": "incomplete",
+  "safe_metadata": {
+    "file": "native940-944-safe-metadata.json",
+    "sha256": "58e07d5a96b5f5800ccb10c0b17e110be2978aa6d9217c8755ea3a7abfc67594",
+    "fields": [
+      "id",
+      "phase",
+      "call_status",
+      "ui_status",
+      "actual_template_id",
+      "window_size",
+      "tested_at",
+      "runtime_source"
+    ]
+  },
+  "actual_template_ids": "All five remain null; no identity inferred from phase.",
+  "runtime_policy": "Missing supplied runtime_source remains null. Phase source labels are not invented runtime receipts.",
+  "row_scopes": [
+    {
+      "rows": [
+        940
+      ],
+      "kind": "fresh_chart_call",
+      "detail": "One fresh chart question at maximum2560; CALL passed but summary investor/session clipping remained UI failed."
+    },
+    {
+      "rows": [
+        941
+      ],
+      "kind": "same_chart_actual_normal_window",
+      "detail": "Same card, no fresh call. Actual2122x1166 normal window. Filename remax is misleading; neither1411 narrow nor maximum is proved."
+    },
+    {
+      "rows": [
+        942
+      ],
+      "kind": "same_chart_actual_remaximum",
+      "detail": "Same card returned to actual2560x1392 maximum; summary clipping remained UI failed; no fresh call."
+    },
+    {
+      "rows": [
+        943,
+        944
+      ],
+      "kind": "fresh_account_and_hoga_price_call_failures",
+      "detail": "Each fresh question was submitted once in2122 normal window, then observed at2560 maximum. Feature-server failure and no requested card: CALL fail, card UI not_run. Shell observation is not card UI approval."
+    }
+  ],
+  "historical_cutoff_notice": "All26 existing root keys, eleven929-939 rows and earlier history,101reference/94scope/7excluded/12seeds/31flows/LAYA remain unchanged.",
+  "privacy_policy": "Only eight projected safe metadata fields and bounded scopes. No images, financial values, private identifiers, query payloads, raw notes or scripts.",
+  "remaining": "Whole94 incomplete. V6 summary CSS installed after independent review but fresh native945 confirmation pending. Call failure cause and source-only account selector preflight are separate scopes.",
+  "rows": [
+    {
+      "id": 940,
+      "phase": "chart-ba5b34f-max-query-success-summary-overflow",
+      "call_status": "passed",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "window_size": {
+        "width": 2560,
+        "height": 1392
+      },
+      "tested_at": "2026-10-03T02:30:05.494Z",
+      "runtime_source": null
+    },
+    {
+      "id": 941,
+      "phase": "chart-ba5b34f-remax-query-success-summary-overflow",
+      "call_status": "not_run",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "window_size": {
+        "width": 2122,
+        "height": 1166
+      },
+      "tested_at": "2026-10-03T02:33:14.648Z",
+      "runtime_source": null
+    },
+    {
+      "id": 942,
+      "phase": "chart-ba5b34f-actual-remax-summary-overflow",
+      "call_status": "not_run",
+      "ui_status": "failed",
+      "actual_template_id": null,
+      "window_size": {
+        "width": 2560,
+        "height": 1392
+      },
+      "tested_at": "2026-10-03T02:33:44.327Z",
+      "runtime_source": null
+    },
+    {
+      "id": 943,
+      "phase": "account-minimal-query-feature-server-unreachable",
+      "call_status": "fail",
+      "ui_status": "not_run",
+      "actual_template_id": null,
+      "window_size": {
+        "width": 2560,
+        "height": 1392
+      },
+      "tested_at": "2026-10-03T03:32:07.504Z",
+      "runtime_source": null
+    },
+    {
+      "id": 944,
+      "phase": "hoga-price-minimal-query-feature-server-unreachable",
+      "call_status": "fail",
+      "ui_status": "not_run",
+      "actual_template_id": null,
+      "window_size": {
+        "width": 2560,
+        "height": 1392
+      },
+      "tested_at": "2026-10-03T03:35:06.016Z",
+      "runtime_source": null
+    }
+  ]
+}
 }
