@@ -8000,3 +8000,7 @@ button.backtest-crumb-home:hover { color: var(--color-k-text); text-decoration: 
   #shell:has(#canvasRegion[data-general-table-workspace] > #mosaic:not([hidden]) > #grid > .card.mcp-table.general-table-intrinsic:only-child:not(.is-expanded)) #chatRegion { margin-right: auto; }
   #shell:has(#canvasRegion[data-general-table-workspace] > #mosaic:not([hidden]) > #grid > .card.mcp-table.general-table-intrinsic:only-child:not(.is-expanded)) #chatRegion > .app { top: 12px; bottom: auto; max-height: calc(100% - 24px); }
 }
+
+/* Keep optimization results and their heatmap explanation together without limiting the setup. */
+#backtestCanvas .backtest-optimize-result { width: fit-content; max-width: 100%; min-width: 0; }
+#backtestCanvas .backtest-optimize-result > .backtest-heatmap > .backtest-card-note { margin-top: 8px; text-align: left; }
