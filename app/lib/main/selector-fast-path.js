@@ -307,6 +307,7 @@ async function runSelectorFastPath({
         reason: status,
         preflight: {
           status,
+          ...(body.code === 'INVALID_ARGUMENTS' ? { code: body.code } : {}),
           catalog_version: body.catalog_version || null,
           suggested_intent: body.suggested_intent || null,
           candidates: body.candidates.slice(0, 3),

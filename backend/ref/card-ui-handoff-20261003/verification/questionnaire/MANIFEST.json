@@ -1,0 +1,32 @@
+{
+  "status": "REQUIRES_REVIEW",
+  "files": 5,
+  "bytes": 3259686,
+  "entries": [
+    {
+      "path": "candidate/card-ui-questionnaire.html",
+      "bytes": 1199086,
+      "sha256": "e867d23806cd02df6a8ad7d011e292ec59fb7c77c6faa2cb613c09bcbd7b3d5c"
+    },
+    {
+      "path": "candidate/card-ui-questionnaire.json",
+      "bytes": 2057278,
+      "sha256": "91a2e592594be1607849dfbc88b838fe70a522c2ec7f18add2c274b9775b0031"
+    },
+    {
+      "path": "REPORT.md",
+      "bytes": 1497,
+      "sha256": "428f4c2867b98174be172b9d7787d3eea8273bcb179c4851576097591487b6c4"
+    },
+    {
+      "path": "REVIEW-RECEIPT.json",
+      "bytes": 1637,
+      "sha256": "91b6835b2c13ce2dca4ae51f57d7e23ba8112e40225066734e6e876aabd81b0d"
+    },
+    {
+      "path": "STATUS.md",
+      "bytes": 188,
+      "sha256": "772c461ccd925cdfe5331756d812dd41682681220d3e08a5a0db42ebd62dce75"
+    }
+  ]
+}

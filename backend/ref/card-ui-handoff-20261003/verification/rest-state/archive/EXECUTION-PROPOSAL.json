@@ -1,0 +1,15 @@
+{
+  "status": "PROPOSED_NOT_AUTHORIZED",
+  "exe": "C:/Projects/DAOU.Athena/app/node_modules/electron/dist/electron.exe",
+  "run": "C:/Projects/DAOU.Athena/.omc/artifacts/card-ui-audit/rest-timeout995-fixture/run.cjs",
+  "variants": [
+    "baseline",
+    "candidate"
+  ],
+  "sequential": true,
+  "mechanism": "Normal require_escalated inline Start-Process Hidden PassThru WaitForExit; each owned PID exit and absence before next variant",
+  "productWrites": 0,
+  "profile": "Fresh public fixture profile only",
+  "statesPerVariant": 44,
+  "capturesPerVariant": 44
+}

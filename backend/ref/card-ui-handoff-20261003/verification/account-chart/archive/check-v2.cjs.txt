@@ -1,0 +1,49 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict'),{spawnSync}=require('node:child_process'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'../../../..'), hash=f=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+const results=[];
+function run(name,args){const r=spawnSync(process.execPath,args,{cwd:root,encoding:'utf8'});fs.writeFileSync(path.join(__dirname,name+'.txt'),(r.stdout||'')+(r.stderr||''));results.push({name,exit:r.status});if(r.status!==0)throw Error(name+' failed '+r.status);}
+const raw=fs.readFileSync(path.join(__dirname,'../chart-remount-independent966/probe.cjs'),'utf8');
+const probe=raw.replace("path.join(__dirname,'../chart-remount-candidate/canvas.candidate.js')","path.join(__dirname,'canvas.candidate.js')")
+ .replace("require('../chart-remount-candidate/chart-remount.js')","require('./chart-remount.js')")
+ .replace("assert.equal(first.notes.length,1);assert.deepEqual(first.settled,['error']);","assert.equal(first.notes.length,0);assert.deepEqual(first.settled,[]);")
+ .replace('assert.deepEqual(second.counters(),{draws:1,destroys:0,removed:0});','assert.deepEqual(second.counters(),{draws:1,destroys:1,removed:1});')
+ .replace("decision:'REQUEST_CHANGES'","decision:'AUTHOR_BOUNDARY_REPROS_PASS'")
+ .replace("path.join(__dirname,'canvas.candidate.js')", "\"C:\\\\Projects\\\\DAOU.Athena\\\\app\\\\canvas.js\"")
+ .replace("require('./chart-remount.js')", "require(\"C:\\\\Projects\\\\DAOU.Athena\\\\app\\\\lib\\\\main\\\\chart-remount.js\")");
+fs.writeFileSync(path.join(__dirname,'renderer-boundaries.cjs'),probe);
+run('renderer-boundaries',['renderer-boundaries.cjs'].map(f=>path.join(__dirname,f)));
+run('main-13-protective-consumers',[path.join(__dirname,'focused-consumer.cjs')]);
+const publicSource=fs.readFileSync(path.join(__dirname,'focused-consumer.cjs'),'utf8');
+let prefix=publicSource.slice(0,publicSource.indexOf('const observations = []'));
+prefix=prefix.replace('function harness(mode) {','function harness(mode, retire = true) {')
+ .replace("  handlers.get('athena:chart-panel-destroyed')(event,{panelId:originalPanel});","  if (retire) handlers.get('athena:chart-panel-destroyed')(event,{panelId:originalPanel});");
+const {harness,functionSource}=new Function('require','__dirname',prefix+'return {harness,functionSource};')(require,__dirname);
+(async()=>{
+ const cold=harness('candidate');cold.context.chartRemounts.clear();
+ assert.throws(()=>cold.handlers.get('athena:remount-chart-panel')(cold.event,cold.request));
+ const h=harness('candidate',false);
+ const source=fs.readFileSync(path.join(root,'app/main.js'),'utf8').replace(/\r\n/g,'\n');
+ vm.runInContext(functionSource(source,'handleChartPanelReload',true),h.context);
+ h.context.runDirectRestDataset=async request=>{
+  const original=h.state.cards[0].envelope;
+  const envelope={...original,operation_ref:request.expected.operationRef,operation_args:request.items[0].args,
+   data:{...original.data,chart:{...original.data.chart,period:'week',trId:'ka10082'}}};
+  return {ok:true,canvases:[{renderState:'data',isDataCanvas:true,rendererId:'aits-chart-v1',panelId:request.expected.panelId,
+   generation:request.expected.generation,operationRef:request.expected.operationRef,envelope}]};
+ };
+ const reload=await h.context.handleChartPanelReload(h.event,{panelId:h.originalPanel,generation:1,period:'W'});
+ assert.equal(reload.generation,2);
+ h.handlers.get('athena:chart-panel-destroyed')(h.event,{panelId:h.originalPanel});
+ const reply=h.handlers.get('athena:remount-chart-panel')(h.event,{...h.request,generation:2});
+ assert.equal(reply.envelope.data.chart.period,'week');assert.equal(reply.envelope.data.chart.trId,'ka10082');
+ h.handlers.get('athena:rest-canvas-painted')(h.event,h.paint(reply.envelope.correlation));
+ const fresh=require(path.join(root,'app/lib/aits-chart-panel')).panelIdFor({correlation:reply.envelope.correlation});
+ assert.equal(h.authority.buildDataset({panelId:fresh,generation:1,period:'D'}).items[0].operationRef,'base:ka10081');
+ results.push({name:'cold cache restore has no lease',result:'REJECTED_NOT_APPROVED'},{name:'actual successful week reload generation2/body -> child destroy -> parent fresh mount -> day request',result:'PASS'});
+ for(const file of ['main.candidate.js','canvas.candidate.js','preload.candidate.js','chart-remount.js'])run('syntax-'+file,['--check',{"main.candidate.js":"C:\\Projects\\DAOU.Athena\\app\\main.js","canvas.candidate.js":"C:\\Projects\\DAOU.Athena\\app\\canvas.js","preload.candidate.js":"C:\\Projects\\DAOU.Athena\\app\\preload.js","chart-remount.js":"C:\\Projects\\DAOU.Athena\\app\\lib\\main\\chart-remount.js"}[file]]);
+ const eol={};for(const file of ['main','canvas']){const a=fs.readFileSync(path.join(__dirname,file+'.baseline.js'),'utf8'),b=fs.readFileSync(path.join(__dirname,file+'.candidate.js'),'utf8');eol[file]={baseline:{crlf:(a.match(/\r\n/g)||[]).length,bareLf:(a.match(/(?<!\r)\n/g)||[]).length},candidate:{crlf:(b.match(/\r\n/g)||[]).length,bareLf:(b.match(/(?<!\r)\n/g)||[]).length}};}
+ const files=Object.fromEntries(['main.baseline.js','canvas.baseline.js','preload.baseline.js','main.candidate.js','canvas.candidate.js','preload.candidate.js','chart-remount.js','prepare.cjs','renderer-boundaries.cjs','focused-consumer.cjs','check-v2.cjs'].map(file=>[file,hash(path.join(__dirname,file))]));
+ fs.writeFileSync(path.join(__dirname,'AUTHOR-CHECKS.json'),JSON.stringify({status:'AUTHOR_V2_PUBLIC_CONSUMER_RESULTS_REQUIRES_INDEPENDENT_REVIEW',files,results,eol,productWrites:0,rendererProcessLaunches:0,providerCalls:0,nativeActions:0,limits:['Actual extracted renderer functions use public transport/session/DOM doubles; no LWC draw or native pixels are approved.','Cold cache restoration is rejected; no cold-restored reload capability is approved.']},null,2)+'\n');
+ console.log(JSON.stringify({checks:hash(path.join(__dirname,'AUTHOR-CHECKS.json')),results,eol}));
+})().catch(e=>{console.error(e);process.exitCode=1;});

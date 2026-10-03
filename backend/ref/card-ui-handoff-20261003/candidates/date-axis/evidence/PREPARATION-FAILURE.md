@@ -1,0 +1,1 @@
+Initial preparation2e1c0c exit1: inverse check assumed the two identical alignment call expressions were unique. No renderer or product write occurred. Replaced only that proof mechanism with exact-offset reverse reconstruction of both original spans; source candidate changes remain exactly two call expressions. Original preparer preserved.

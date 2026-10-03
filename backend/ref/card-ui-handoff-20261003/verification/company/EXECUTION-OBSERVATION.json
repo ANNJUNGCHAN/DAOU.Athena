@@ -1,0 +1,13 @@
+{
+  "status": "EXECUTION_COMPLETION_UNKNOWN",
+  "resultPresent": false,
+  "failurePresent": false,
+  "lastStage": {
+    "stage": "file_load",
+    "ordinal": 4,
+    "caseOrdinal": 0,
+    "phaseOrdinal": 0
+  },
+  "ownedProcessStatus": "UNKNOWN: root session was unavailable; no PID/process-exit receipt read in this lane",
+  "newExecution": 0
+}

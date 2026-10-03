@@ -834,7 +834,7 @@ function updateInstrumentResidualDetails(surface, plan) {
 }
 
 
-// 값이 일부라도 있는 계좌 상세는 각 자리를 유지하고, 완전 미제공 묶음만 한 줄로 알린다.
+// 계좌 상세의 값을 유지하고, 완전 미제공 또는 일부 미제공 상태를 한 줄로 알린다.
 function updateAccountDetailSections(surface) {
   if (registry.cardIdFor(surface.dataset?.bsBoardId) !== 'CC-01') return;
   const missing = (node) => node.dataset.missing === 'true'
@@ -845,15 +845,19 @@ function updateAccountDetailSections(surface) {
     if (section.matches('.bs-table')) continue;
     const navigation = '[data-bs-account-navigation], [data-state-control], button, [role="button"], a[href]';
     const empty = allMissing(section) && !section.querySelector(navigation);
+    const partial = ['2SCE-1', '133H-2'].includes(surface.dataset.bsBoardId)
+      && !allMissing(section) && values(section).some(missing);
     section.classList.toggle('bs-account-empty-section', empty);
     let note = section.querySelector(':scope > .bs-account-empty-note');
-    if (empty && !note) {
+    if ((empty || partial) && !note) {
       note = layoutGroup(surface.ownerDocument, 'bs-account-empty-note');
       note.setAttribute('role', 'status');
-      note.textContent = '제공된 데이터가 없습니다';
       section.append(note);
     }
-    if (note) note.hidden = !empty;
+    if (note) {
+      if (empty || partial) note.textContent = empty ? '제공된 데이터가 없습니다' : '미제공 항목은 —로 표시됩니다';
+      note.hidden = !(empty || partial);
+    }
     for (const box of [...section.children, ...section.querySelectorAll('.bs-account-detail-grid > [data-node]')]) {
       if (box === section.firstElementChild || box === note) continue;
       const labels = [...box.querySelectorAll('[data-bs-design-text="true"]')];
@@ -2094,6 +2098,13 @@ function applyResponsiveHooks(surface) {
   // 소유자는 인라인 기하가 없어 hoistRigidBox가 그대로 지나가는 노드일 수 있다.
   for (const owner of surface.querySelectorAll('.bs-r-scroll, .bs-r-scroll-table')) {
     stripScrollOwnerOverflow(owner);
+    if (surface.dataset?.bsBoardId === '133H-2' && owner.getAttribute('data-node') === '14UQ-2'
+      && owner.classList.contains('bs-r-scroll-table')
+      && !owner.nextElementSibling?.classList.contains('bs-readable-hint')) {
+      const hint = layoutGroup(surface.ownerDocument, 'bs-readable-hint');
+      hint.textContent = '표를 좌우로 이동해 모든 열을 확인하세요';
+      owner.after(hint);
+    }
   }
   // Paper 이름이 스크롤이라고 적힌 상자를 실제로 스크롤시킨다(위 주석의 1WOB-1).
   for (const box of surface.querySelectorAll('[data-name]')) {

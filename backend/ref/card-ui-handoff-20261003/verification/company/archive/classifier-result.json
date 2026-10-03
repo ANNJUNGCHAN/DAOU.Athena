@@ -1,0 +1,9 @@
+{
+  "status": "PUBLIC_METADATA_CLASSIFIER_PASS",
+  "checks": 48,
+  "getterReads": 0,
+  "rendererRun": false,
+  "nativeRun": false,
+  "messagesExported": false,
+  "stacksExported": false
+}

@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-03",
+  "branch": "codex/card-ui-resume-20261003",
+  "baseCommit": "7e6c602adf398e48ae12da05fa224b67b38810f6",
+  "goalComplete": false,
+  "pauseAfterUploadRequested": true,
+  "paperEditableStates": 101,
+  "inScopeStates": 94,
+  "excludedOrderStates": 7,
+  "fullCurrentNativeCycleComplete": false,
+  "unitTests": {
+    "tests": 798,
+    "cancelled": 1,
+    "skipped": 0,
+    "todo": 0,
+    "pass": 751,
+    "status": "FAIL",
+    "fail": 46
+  },
+  "uninstalledCandidates": [
+    "date-axis V3 four files",
+    "company history spacing",
+    "rest-state",
+    "questionnaire observations 978-996"
+  ],
+  "portableRendererExecution": "NOT_RUN",
+  "companyV2OriginalExecution": "EXECUTION_COMPLETION_UNKNOWN",
+  "historical94Cutoff": 853,
+  "questionnaireInstalledCutoff": 977,
+  "sourcePins": {
+    "app/main.js": "0216ae705929ce60536125b50540bbc7c437872bf432f923a601dd2e27e02d27",
+    "app/canvas.js": "4d91c637c5411c0d50adb1583261d3caf41e088452cbb98a35026674803e1940",
+    "app/preload.js": "bca098ca3afdf5b29f2d1b7ec2d92558f4566b4353e1539a5ae7c67f84f33be0",
+    "app/lib/board-mount.js": "dedd7c887bb4bb8d59ad40d6e6661ebcd427f196c4ce184f7431e359bab77f12",
+    "app/lib/main/chart-remount.js": "603f12b898fcfa7b41b3e375d6ec36bc7fdf77a8030ace9df8b285f3f12e3e4c",
+    "app/lib/main/account-holdings-clarification.js": "0f135119650095ce5a0bf3d799484539388f49649c019a6303fd774a5b71f014",
+    "app/lib/main/account-holdings-clarification.test.mjs": "4d117be257ae7d97946d6b744b5e4e12978de70cb9376c0b5a4586deca406f11",
+    "app/lib/main/selector-fast-path.js": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de",
+    "app/lib/board-display-policy.js": "5b29d0939673cbd81dac1f2c1ecc3c7fac9ab1c9ecce780218a651a3294bd770",
+    "app/lib/board-display-policy-data.js": "bd7a74b6cc10d1b0fa7ca580dfac805774145ea5c441f2e4dd7e34a0a0eead28",
+    "app/lib/build-board-display-policy.mjs": "5d5aa699fa90410f66e7c05fd59b4c592ac8e41ca668541a504bf738f659f2fc",
+    "backend/ref/card-ui-questionnaire.json": "e73e08189c19c534f01270541704c58370318d7679fd5e06819708fc03e7a420",
+    "backend/ref/card-ui-questionnaire.html": "754544fc31b86bec03f5206d2e6726103ade8876acd82c1c5582d7a86ef79e44"
+  }
+}
