@@ -1545,3 +1545,25 @@
 .board-surface[data-bs-board-id="13BC-2"] .bs-workspace:has(.bs-quote-trades-unavailable) { flex-direction: column !important; height: auto !important; min-height: 0 !important; }
 .board-surface[data-bs-board-id="13BC-2"] .bs-workspace:has(.bs-quote-trades-unavailable) > .bs-primary { width: 100% !important; flex: 1 1 auto !important; }
 .board-surface[data-bs-board-id="13BC-2"] .bs-workspace .bs-quote-trades-unavailable.bs-rail { width: 100% !important; flex: 0 0 auto !important; }
+
+/* 137X: give the fixed session columns room in the side summary. */
+@container board (min-width: 960px) {
+  .board-surface[data-bs-board-id="137X-2"] .bs-workspace > .bs-rail { width: 440px; flex: 0 0 440px; min-width: 0; }
+}
+.board-surface[data-bs-board-id="137X-2"] :is([data-node="14SS-2"], [data-node="14SV-2"], [data-node="14SY-2"]) { flex-wrap: wrap; gap: 4px 12px; height: auto; min-height: 18px; }
+.board-surface[data-bs-board-id="137X-2"] :is([data-node="14SS-2"], [data-node="14SV-2"], [data-node="14SY-2"]) > :last-child { margin-inline-start: auto; }
+
+/* 137X: keep consolidated investor labels and amounts in readable pairs. */
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"]:not([hidden]) { display: grid !important; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 8px; height: auto; min-height: 0; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > :is([data-node="33DK-0"], [data-node="33DN-0"]) { display: none; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > [data-slot-id] { min-width: 0; max-width: 100%; height: auto; }
+/* Valuation cells need enough content space for their actual formatted values. */
+.board-surface[data-bs-board-id="137X-2"] .bs-kpi { flex-wrap: wrap; height: auto; min-height: 0; row-gap: 16px; }
+.board-surface[data-bs-board-id="137X-2"] .bs-kpi > .bs-kpi-cell { width: auto; flex: 1 1 200px; min-width: fit-content; max-width: 100%; height: auto; }
+
+/* Preserve session header and row height when the expanded footer consumes rail space. */
+.board-surface[data-bs-board-id="137X-2"] .bs-session-scroll > * { flex-shrink: 0; }
+
+/* 137X: omit only empty/unavailable consolidated amount pairs. Received zero remains. */
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > :is([data-slot-id="s093"], [data-slot-id="s096"], [data-slot-id="s099"]):empty { display: none; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > :is([data-slot-id="s092"]:has(+ [data-slot-id="s093"]:is(:empty, [hidden])), [data-slot-id="s095"]:has(+ [data-slot-id="s096"]:is(:empty, [hidden])), [data-slot-id="s098"]:has(+ [data-slot-id="s099"]:is(:empty, [hidden]))) { display: none; }
