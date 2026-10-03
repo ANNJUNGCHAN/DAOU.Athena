@@ -7,6 +7,7 @@ const require = createRequire(import.meta.url);
 const registry = require('./board-template-registry');
 const controls = require('./ranking-board-controls');
 const boardMount = require('./board-mount');
+const boardFlowLayout = require('./board-flow-layout');
 const period = require('./board-etf-period');
 const source = fs.readFileSync(new URL('../canvas.js', import.meta.url), 'utf8');
 const cacheKeys = ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
@@ -22,7 +23,7 @@ function fixture(code = '654321_AL', name = '합성 ETF') {
   ]);
   const host = { __athenaBoard: state, scrollTop: 0 }, requests = [], notices = [], remounts = [];
   const context = vm.createContext({
-    rankingBoardControls: controls, boardTemplateRegistry: registry, boardStateOf: () => state,
+    rankingBoardControls: controls, boardTemplateRegistry: registry, boardFlowLayout, WATCH_SOURCE_SLOTS: {}, boardStateOf: () => state,
     cardStkCd: envelope => envelope.stk_cd || '', realtimeBindingsOf: () => [],
     boardMount: { ...boardMount, mountBoard: (_host, id, values, options) => {
       const plan = boardMount.mountPlan(registry.contractFor(id), values, options);
@@ -45,6 +46,9 @@ function fixture(code = '654321_AL', name = '합성 ETF') {
     errorNote: text => ({ text, classList: { add() {} }, setAttribute() {}, remove() {} }),
     boardLoadAnchor: () => ({ insertBefore: note => notices.push(note.text) }),
   });
+  vm.runInContext(source.slice(source.indexOf('function excludeRetiredRankingRailSlots('), source.indexOf('function boardHydrateTarget(')), context);
+  vm.runInContext(source.slice(source.indexOf('function excludeRetiredWatchlistSlots('), source.indexOf('function receiveWatchlistMetadata(')), context);
+  vm.runInContext(source.slice(source.indexOf('function sectorHydratedPrimaryEnvelope('), source.indexOf('async function hydrateBoardSlots(')), context);
   for (const [start, end] of [
     ['const RANKING_BOARD_OPERATIONS =', 'function boardHydrateAccount('],
     ['function activateBoardState(', 'function boardMountOptions('],

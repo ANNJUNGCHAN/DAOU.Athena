@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const registry = require('./board-template-registry');
 const controls = require('./ranking-board-controls');
+const boardFlowLayout = require('./board-flow-layout');
 const { createLatestBoardLoad } = require('./board-mount');
 const source = fs.readFileSync(new URL('../canvas.js', import.meta.url), 'utf8');
 const cacheKeys = ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
@@ -17,7 +18,7 @@ function fixture(code, name = { value: '합성 ETF' }) {
   state.load = createLatestBoardLoad();
   const host = { __athenaBoard: state, scrollTop: 0, hidden: false }, requests = [], notices = [];
   const context = vm.createContext({
-    rankingBoardControls: controls, boardTemplateRegistry: registry, boardStateOf: () => state,
+    rankingBoardControls: controls, boardTemplateRegistry: registry, boardFlowLayout, boardStateOf: () => state,
     cardStkCd: envelope => envelope.stk_cd || '',
     boardMount: { boardIdentityFromEnvelope: () => ({ code: '005930', name: 'stale envelope' }) },
     destroyBoardPrimary: () => {},
@@ -44,13 +45,13 @@ function fixture(code, name = { value: '합성 ETF' }) {
   return { state, host, requests, notices, context };
 }
 
-test('ETF detail action requests its received first-row symbol and discards earlier detail data', () => {
+test('ETF detail action requests its received first-row symbol and discards earlier detail data', async () => {
   assert.ok(registry.directStateLinksFor('2VIN-0').some(link =>
     link.control === 'ETF 상세 열기' && link.board_id === '15N5-2'));
   const envelope = { stk_cd: '005930', operation_ref: 'base:ka40004', operation_args: { stk_cd: '005930|000660' } };
   const original = JSON.stringify(envelope);
   const f = fixture({ value: '069500_AL', observation_id: 'synthetic-row' });
-  f.context.switchStateBoard(f.host, '15N5-2', envelope, 'ETF 상세 열기');
+  await f.context.switchStateBoard(f.host, '15N5-2', envelope, 'ETF 상세 열기');
   assert.equal(f.requests[0].target.stk_cd, '069500');
   assert.equal(f.requests[0].identity.code, '069500');
   assert.equal(f.requests[0].identity.name, '합성 ETF');
@@ -62,7 +63,7 @@ test('ETF detail action requests its received first-row symbol and discards earl
   f.state.boardId = '2VIN-0';
   f.state.links = registry.stateLinksFor('2VIN-0');
   f.state.values = { s387: '102110', s386: '다음 ETF' };
-  f.context.switchStateBoard(f.host, '15N5-2', envelope);
+  await f.context.switchStateBoard(f.host, '15N5-2', envelope);
   assert.equal(f.requests[1].target.stk_cd, '102110');
   assert.equal(f.requests[1].identity.name, '다음 ETF');
 });
@@ -79,9 +80,9 @@ test('ETF detail rejects missing, multiple and specimen-formatted codes without 
   }
 });
 
-test('ETF override is scoped to its detail and absent received names do not reuse the envelope name', () => {
+test('ETF override is scoped to its detail and absent received names do not reuse the envelope name', async () => {
   const f = fixture('069500', { value: 'specimen', missing: 'unavailable' });
-  f.context.switchStateBoard(f.host, '15N5-2', { stk_cd: '005930' });
+  await f.context.switchStateBoard(f.host, '15N5-2', { stk_cd: '005930' });
   assert.equal(f.requests[0].identity.name, '');
   f.state.boardId = '2VIN-0';
   assert.equal(f.context.boardHydrateTarget({ stk_cd: '005930' }, f.host).stk_cd, '005930');

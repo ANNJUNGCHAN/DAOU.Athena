@@ -1,22 +1,22 @@
 {
-  "status": "REQUIRES_REVIEW",
+  "status": "INDEPENDENT_SOURCE_APPROVED_NATIVE_SCOPE_LIMITED",
   "files": 5,
-  "bytes": 3259686,
+  "bytes": 3262522,
   "entries": [
     {
       "path": "candidate/card-ui-questionnaire.html",
-      "bytes": 1199086,
-      "sha256": "e867d23806cd02df6a8ad7d011e292ec59fb7c77c6faa2cb613c09bcbd7b3d5c"
+      "bytes": 1199181,
+      "sha256": "626dfd16487799a6fe564a5c601428a81698a4d89c6704ff2bc164798e3fd71d"
     },
     {
       "path": "candidate/card-ui-questionnaire.json",
-      "bytes": 2057278,
-      "sha256": "91a2e592594be1607849dfbc88b838fe70a522c2ec7f18add2c274b9775b0031"
+      "bytes": 2058221,
+      "sha256": "c082361f5ba84dae9ee807a737ddcd8b75dc6f01d8873761571a4a6fcf4e07db"
     },
     {
       "path": "REPORT.md",
-      "bytes": 1497,
-      "sha256": "428f4c2867b98174be172b9d7787d3eea8273bcb179c4851576097591487b6c4"
+      "bytes": 2884,
+      "sha256": "8d5f38ca0ec1027c32f9a0cb44997bbb60a6c6916e6686f8eb5e22ef95d23a84"
     },
     {
       "path": "REVIEW-RECEIPT.json",
@@ -25,8 +25,8 @@
     },
     {
       "path": "STATUS.md",
-      "bytes": 188,
-      "sha256": "772c461ccd925cdfe5331756d812dd41682681220d3e08a5a0db42ebd62dce75"
+      "bytes": 599,
+      "sha256": "a1446b4a6feff95df0493154a0169d742a72f6a31803849ff737e15062a4281b"
     }
   ]
 }

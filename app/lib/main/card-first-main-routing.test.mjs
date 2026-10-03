@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const activeCardQna = require('./active-card-context.js');
+const accountHoldingsClarification = require('./account-holdings-clarification.js');
 const here = path.dirname(fileURLToPath(import.meta.url));
 const mainSource = fs.readFileSync(path.join(here, '..', '..', 'main.js'), 'utf8');
 const functionStart = mainSource.indexOf('async function runLiveQueryInnerBody(');
@@ -99,6 +100,7 @@ function createHarness({
     String,
     URL,
     activeCardQna,
+    accountHoldingsClarification,
     activeRestAccountId: () => 'local-account',
     accountBoundDataset: {
       createAccountBoundInvoker: async ({ run }) => ({

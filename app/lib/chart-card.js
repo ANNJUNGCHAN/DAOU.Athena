@@ -23,7 +23,7 @@ const { formatKoreanUnit } = __dep('./board-format', 'BoardFormat');
 
 const __LIGHTWEIGHT_CHARTS_URL = (() => {
   if (typeof document === 'undefined' || !document.currentScript) return 'lightweight-charts';
-  return new URL('../node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs', document.currentScript.src).href;
+  return new URL('./lightweight-charts-axis.mjs', document.currentScript.src).href;
 })();
 
 function createCachedChartLibraryLoader(importer, clock) {

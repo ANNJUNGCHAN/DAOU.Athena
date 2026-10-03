@@ -749,6 +749,7 @@ function attachRestRetryAction(card, retryId) {
   action.className = 'rest-retry-action';
   const button = document.createElement('button');
   button.type = 'button';
+  button.className = 'uk-btn uk-btn-ghost';
   // Paper 1IG3-0 — 중단 카드의 행동 문구는 상태 모델이 정한다(결과가 남아 있으면
   // 「결과 유지 · 다시 검색」). 나머지 상태는 지금까지의 「다시 시도」 그대로다.
   button.textContent = card.dataset.restActionLabel || '다시 시도';
@@ -3854,6 +3855,7 @@ function renderRestStateCard(envelope) {
     ? [cancelled.title, cancelled.message]
     : (labels[envelope.state] || labels.error);
   const { card, body } = makeCard(type, title, envelope.layout, envelope.correlation);
+  card.dataset.restState = envelope.state;
   card.dataset.screenState = envelope.state;
   card.dataset.renderState = envelope.state === 'timeout' ? 'timeout' : 'error';
   if (cancelled) {

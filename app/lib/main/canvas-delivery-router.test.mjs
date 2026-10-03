@@ -99,10 +99,10 @@ test('returning immediately after a background card flushes its pending save bef
   };
   const start = source.indexOf("ipcMain.handle('athena:session-replay-cards',");
   const code = source.slice(start, source.indexOf('\n});', start) + 4);
-  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', code)(
+  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', 'pendingCanvasCards', code)(
     { handle: (_name, handler) => { replay = handler; } }, () => bridge,
     { isDestroyed: () => false, webContents: { send: (channel, payload) => sent.push({ channel, payload }) } },
-    () => {}, () => 'original',
+    () => {}, () => 'original', new Map(),
   );
   assert.equal(replay(null, { id: 'original' }).replayed, 1);
   assert.equal(sent[0].payload.envelope.canvas_type, 'chart');
@@ -118,7 +118,7 @@ test('late replay requests cannot paint or flush deferred actions after another 
   const deferred = [];
   const start = source.indexOf("ipcMain.handle('athena:session-replay-cards',");
   const code = source.slice(start, source.indexOf('\n});', start) + 4);
-  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', code)(
+  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', 'pendingCanvasCards', code)(
     { handle: (_name, handler) => { replay = handler; } },
     () => ({ flush() {}, load(id) {
       loads++;
@@ -128,7 +128,7 @@ test('late replay requests cannot paint or flush deferred actions after another 
       ] };
     } }),
     { isDestroyed: () => false, webContents: { send: (channel, payload) => sent.push({ channel, payload }) } },
-    (id) => deferred.push(id), () => active,
+    (id) => deferred.push(id), () => active, new Map(),
   );
   // Simulate the old renderer's queued A request arriving after main switches to B.
   active = 'B';

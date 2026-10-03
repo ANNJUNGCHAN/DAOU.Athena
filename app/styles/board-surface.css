@@ -1567,3 +1567,17 @@
 /* 137X: omit only empty/unavailable consolidated amount pairs. Received zero remains. */
 .board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > :is([data-slot-id="s093"], [data-slot-id="s096"], [data-slot-id="s099"]):empty { display: none; }
 .board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > :is([data-slot-id="s092"]:has(+ [data-slot-id="s093"]:is(:empty, [hidden])), [data-slot-id="s095"]:has(+ [data-slot-id="s096"]:is(:empty, [hidden])), [data-slot-id="s098"]:has(+ [data-slot-id="s099"]:is(:empty, [hidden]))) { display: none; }
+
+/* 기업정보의 가격 범위는 좁아지면 값 묶음 사이에 간격을 두고 다음 줄을 쓴다. */
+@container board (max-width: 1279px) {
+  .board-surface[data-bs-board-id="2RBO-1"] [data-node="2RCJ-1"] {
+    flex-wrap: wrap;
+    column-gap: 12px;
+    row-gap: 8px;
+  }
+  .board-surface[data-bs-board-id="2RBO-1"] [data-node="2RCJ-1"] > :is([data-node="2RCL-1"], [data-node="2RCK-1"]) {
+    flex: 0 0 auto;
+    max-width: 100%;
+    white-space: normal;
+  }
+}

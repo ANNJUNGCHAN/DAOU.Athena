@@ -30,7 +30,7 @@ test('REST fallback status stays inside the current card and disappears when WS 
     return selector === '.realtime-fallback-status' ? node : selector === '.bs-footer' ? footer : null;
   }};
   const context = vm.createContext({ Date, document: {createElement() { throw Error('Existing node must be reused'); }} });
-  vm.runInContext(functionSource('fallbackTimestamp') + '\n' + functionSource('stampRealtimeFallbackStatus'), context);
+  vm.runInContext(functionSource('isSectorSnapshotCard') + '\n' + functionSource('fallbackTimestamp') + '\n' + functionSource('stampRealtimeFallbackStatus'), context);
   const stamp = vm.runInContext('stampRealtimeFallbackStatus', context);
   stamp({card}, {status: 'api-fallback'});
   assert.equal(node.parentElement, footer);
@@ -229,9 +229,9 @@ test('integrated fallback accepts array and object slot patches only for registe
     window: { AthenaLib: { CardKinds: { resolve: () => null } } },
     aitsChartPanels: {}, boardMount, semanticWorkspace: {},
     boardMountOptions: () => ({}), rememberMountedBoard() {}, wireMountedBoardControls() {},
-    mountBoardPrimary: async () => {}, rendererRealtimeAccountGeneration: 7,
+    mountBoardPrimary: async () => {}, rendererRealtimeAccountGeneration: 7, WATCH_SOURCE_SLOTS: {},
   });
-  vm.runInContext(`${functionSource('slotValuesOf')}\n${functionSource('replaceSpecializedFallbackBody')}\n${functionSource('applyRealtimeFallbackData')}`, context);
+  vm.runInContext(`${functionSource('slotValuesOf')}\n${functionSource('excludeRetiredRankingRailSlots')}\n${functionSource('excludeRetiredWatchlistSlots')}\n${functionSource('replaceSpecializedFallbackBody')}\n${functionSource('applyRealtimeFallbackData')}`, context);
   const apply = vm.runInContext('applyRealtimeFallbackData', context);
   const session = { kind: 'integrated-board', card, slotIds: ['price', 'volume'], envelope: {} };
   const common = {
@@ -273,7 +273,7 @@ test('integrated realtime payload keeps a dedicated verified index code alias', 
 test('fallback eligibility excludes actions and static semantic cards while recognizing realtime reads', () => {
   const semanticWorkspace = { isTaskCanvasEnvelope: (envelope) => envelope.task === true };
   const context = vm.createContext({ semanticWorkspace, realtimeBindingsOf: (envelope) => envelope.bindings || [] });
-  vm.runInContext(`${functionSource('fallbackSurfaceKindFor')}\n${functionSource('fallbackKindFor')}`, context);
+  vm.runInContext(`${functionSource('isSectorSnapshotCard')}\n${functionSource('fallbackSurfaceKindFor')}\n${functionSource('fallbackKindFor')}`, context);
   const kind = vm.runInContext('fallbackKindFor', context);
   const card = ({ chart = false, board = false, capable = false, boundKind = '' } = {}) => ({
     dataset: { chartPanelId: chart ? 'panel-1' : '' },
