@@ -1,10 +1,10 @@
-# 카드 UI 전체 완료 목표 — 2026-10-04 진행 기록
+# 카드 UI 전체 완료 목표 — 전체 미완료 / native 환경 대기
 
 상태: **ACTIVE / 전체 완료 아님**. 사용자가 전체 계획을 세우고 native goal로 완료까지 계속 진행하도록 요청해 목표를 등록했다. 계정 연결을 위해 일시정지했던 native goal 도구는 현재 turn에 자동 재개됐다. 완료 조건을 줄이거나 과거 부분 통과를 현재 전체 통과로 바꾸지 않는다.
 
 기준 커밋은 UI 브랜치 `codex/card-ui-resume-20261003`의 `7e69c995c5c04d3d0eac602e4d379d2e0ed35e99`다. 기존 main의 로컬 변경과 별도 LAYA 브랜치는 이 목표의 변경 대상에 포함하지 않는다.
 
-현재 제품 수정 후 전체 단위 검사는 **807/807 PASS**다. Paper 원본 101개 구조의 독립 검토와 개선안 39개 시각 검토가 각각 범위 한정 승인을 받았고, 최종 manifest와 review binding을 사용하는 장부의 strict current 판정도 **101/101 confirmed**다. 실제 앱 완료 0/94, 추가 흐름 완료 0/30이며 native goal lifecycle은 **ACTIVE**다. 실제 앱 ID 두 건의 부분 증거는 전체 완료에 포함하지 않는다. 공개 합성 검사의 최신 결과는 아래 체크포인트에 별도로 기록한다.
+현재 제품 수정 후 전체 단위 검사는 **807/807 PASS**다. Paper 원본 101개 구조의 독립 검토와 개선안 **41개 composite(기존 39개 prior approved + 신규 2개 current approved)**가 각각 범위 한정 승인을 받았고, 최종 manifest와 review binding을 사용하는 장부의 strict current 판정도 **101/101 confirmed**다. 실제 앱 완료 0/94, 추가 흐름 완료 0/30이며 native goal lifecycle은 **ACTIVE**다. 실제 앱 ID 두 건의 부분 증거는 전체 완료에 포함하지 않는다. 공개 합성 검사의 최신 결과는 아래 체크포인트에 별도로 기록한다.
 
 ## 계획과 범위
 
@@ -184,3 +184,23 @@ native goal 도구 상태는 계속 **PAUSED**다. 원본 main 로컬 변경과 
 최종 41개 manifest, 공개 index와 `current.json` 결속은 [M5 후속 독립 검토 receipt](reviews/PAPER-M5-FOLLOWUPS-20261005-REVIEW.json)로 검토됐다. receipt SHA-256은 `26f0a345f627bc47c262c4810f89ec39c7b4ab01e6346fe789cb9fdf1664954b`, 최종 `current.json` SHA-256은 `a6840ef955752d0f740eefb24e30a65bc7d86956c4a72f2a304e0403924d486d`다. 새 root를 사용한 validator는 실제 검사 `VALIDATION=PASS`, 자체 검사 **24/24**를 반환했고 집계는 Paper 101/101, native **0/94**, 추가 흐름 **0/30**, lifecycle **ACTIVE**, `GOAL_COMPLETE=false`다. native JSON SHA-256 `222c3caaa3bfa3d38661f84e8aacc34b06d7a98677a013bb6670a22281a23828`과 additional JSON SHA-256 `20bbf60182f9be78d94f42364f6b618f43ba071a846d13cc2e9399b74feca6ea`는 이전과 같다.
 
 이 결속은 app-only Paper 누락 두 건과 원본 101개 보존 체크포인트를 승인한다. 전체 M5 또는 native route 대조 완료를 뜻하지 않으며 기존 Athena 인증과 exact logical `WINDOW_OUTER` 크기 blocker도 해소되지 않았다. 현재 체크포인트에 대한 새 보안 검사·commit·push는 아직 실행하지 않았다. 앞서 완료한 `bc59aac` 업로드와 256-commit 보안 검사는 이전 체크포인트 이력이다.
+
+## 백엔드 검증 gap 해소와 native readiness turn 3
+
+공개 체크포인트 HEAD `c7c7e87`은 remote와 같고 작업 트리가 깨끗한 상태로 확인됐다. 이 체크포인트에서 보안 검사는 257개 커밋을 검사해 **ALL_GATES_PASS**였고, 비공개 publication receipt SHA-256은 `b8700367a86b3e6d563111b0689e70e52a23077a5338982ac1f8c3749db1bcac`다. 바로 위의 보안·commit·push 미실행 문장은 M5 문서를 작성하던 당시 snapshot이며, 이 후속 공개 체크포인트에서 완료됐다.
+
+M5 감사 당시 Python 환경이 없어 실행하지 못했던 조건 결과 검사를 fresh 환경에서 수행해 gap을 해소했다. targeted 조건 결과 검사는 **22 passed / 20.67s**이고 로그 `.omc/artifacts/card-ui-goal-20261004/condition-result-targeted.log`의 SHA-256은 `c745790298a8bfdc8c9d0603f8c937f7771c2edbae54817185a90cfe1cc5eff0`다. 해당 22개는 아래 전체 376개에 포함된다.
+
+백엔드 전체 검증은 backend cwd에서 다음 명령을 한 번 실행했다.
+
+```powershell
+$env:PYTHONDONTWRITEBYTECODE='1'; uv run --isolated --frozen --extra dev pytest -q -p no:cacheprovider verification
+```
+
+결과는 **376 passed / 95.01s / exit 0 / skipped 0**, Starlette deprecation warning 1건이다. 로그 `.omc/artifacts/card-ui-goal-20261004/backend-verification-full-20261005.log`의 SHA-256은 `cbf45cf07507367ddb4484f4f7e731e25bc3acd5207ca0b78c594a5b8b6792b4`다. 제품·테스트·`pyproject`·`uv.lock`은 변경하지 않았다. 이 전체 백엔드 검증은 mock/local 계약 검사이며 native 완료 증거가 아니다.
+
+[백엔드 독립 검토](reviews/BACKEND-VERIFICATION-20261005-REVIEW.md)는 **SCOPED APPROVE**를 반환했고 receipt SHA-256은 `7c8c9006e04b62e17df54d4881d96c8bf5ba8bc2d788156616fb2ec69904dc2c`다. 검토자는 targeted 22개와 full 376개 실제 로그·해시, lock/`pyproject`, 현재 HEAD `c7c7e87`의 clean backend 상태를 확인했다. 이 판정은 과거 anchor와 byte-identical하다는 주장이 아니라 현재 HEAD `c7c7e87`에서 실행한 검증의 승인이다. 이 Python 검증 기록 자체에 대한 새 보안 검사·commit·push는 아직 수행하지 않았다.
+
+2026-10-05 15:33:13 UTC에 `Models → Screen → Models`를 거쳐 화면을 새로 렌더한 뒤 다시 관측했다. Athena Codex는 여전히 `인증 필요`, 연결 계정 없음, disabled 모델 selector, CLI `0.147.0`만 표시했다. logical 화면은 1920×1152이고 runtime commit은 null이다. 입력·인증·provider·설정은 변경하지 않았다. 비공개 기록 `native-readiness-20261005-active-turn3.json`의 SHA-256은 `75571bd5262a083eb4028f26518b4dc62d90c58651abd0f59983a56e1a4b44aa`다.
+
+동일한 인증·크기 조건이 세 turn 반복됐지만 이번 turn에는 백엔드 검증 gap을 해소하는 실질 작업이 있었다. `completion_plan_review`의 M0–M6 remaining-work 감사는 이 문서의 최종 검토와 보안 검사·commit·push가 끝나면 인증, 현재 runtime 확인, exact display 조건 외에 실질적으로 남은 필수 작업이 없다는 조건부 결론을 냈다. 현재 문서 기록의 새 보안 검사·commit·push는 아직 실행하지 않았으므로 blocked 전환 전이며 전체 목표도 완료되지 않았다. native goal 도구와 current ledger는 **ACTIVE**, native 완료 **0/94**, 추가 흐름 완료 **0/30**, `GOAL_COMPLETE=false`를 유지한다.
