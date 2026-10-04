@@ -4,7 +4,7 @@
 
 기준 커밋은 UI 브랜치 `codex/card-ui-resume-20261003`의 `7e69c995c5c04d3d0eac602e4d379d2e0ed35e99`다. 기존 main의 로컬 변경과 별도 LAYA 브랜치는 이 목표의 변경 대상에 포함하지 않는다.
 
-현재 제품 수정 후 전체 단위 검사는 **807/807 PASS**다. 공개 합성 검사에서는 90개 보드의 270개 크기 단계를 측정했으며, 이번에 수정한 네 상태의 기하 문제는 재현되지 않았다. 합성 검사 전체 판정은 여전히 **ISSUES**이고 실제 앱 완료 0/94, Paper 확인 0/101, 추가 흐름 완료 0/30이다. 실제 앱 ID 두 건의 부분 증거는 전체 완료에 포함하지 않는다.
+현재 제품 수정 후 전체 단위 검사는 **807/807 PASS**다. 공개 합성 검사에서는 90개 보드의 270개 크기 단계를 측정했으며, 이번에 수정한 네 상태의 기하 문제는 재현되지 않았다. 합성 검사 전체 판정은 여전히 **ISSUES**다. Paper 원본 101개 구조의 독립 검토와 개선안 39개 시각 검토가 각각 범위 한정 승인을 받았고, 최종 manifest와 review binding을 사용하는 장부의 strict current 판정도 **101/101 confirmed**다. 실제 앱 완료 0/94, 추가 흐름 완료 0/30이며 목표는 **ACTIVE**다. 실제 앱 ID 두 건의 부분 증거는 전체 완료에 포함하지 않는다.
 
 ## 계획과 범위
 
@@ -33,6 +33,8 @@
 
 Paper의 연결된 Chrome 표면에는 Log in / Sign up 안내가 남아 있다. 별도의 Paper 데스크톱 창이 열려 있었으나 Computer Use 앱 접근 승인 요청이 시간 초과됐다. 사용자에게 그 앱의 접근 승인과 ATHENA 파일 열기를 요청했다. 이는 모든 Paper 표면의 인증 실패를 뜻하지 않는다. 현재 원본 101개의 편집 권한·구조 snapshot이나 Paper 변경은 아직 확인하지 않았다.
 
+위 문단은 최초 접근 시점의 기록이다. 이후 기존 Paper MCP SDK 연결로 ATHENA 파일 접근이 복구됐으며, 최신 상태는 아래의 **Paper 원본·개선안 독립 검토** 절에 기록한다. 연결된 Chrome의 로그인 안내를 현재 Paper 전체 접근 blocker로 해석하지 않는다.
+
 ## 병행 작업
 
 - `verification/goal-ledger/`의 새 장부·validator는 별도 검토에서 **VALIDATOR-SCOPED PASS**를 받았다. 실제 파일 해시, 원본 경로·제어 목록, 증거의 상태·단계 결속, PNG 실제 크기, Paper 참조 대응을 검사한다. 제품 소스가 같은 보고서 전용 후속 커밋은 허용한다. 반례 검사 16/16이 통과했으며 실제 UI 완료 수는 여전히 0이다. 자세한 이력은 [장부 독립 검토](reviews/GOAL-LEDGER-20261004-REVIEW.md)에 보존한다.
@@ -54,7 +56,7 @@ Paper의 연결된 Chrome 표면에는 Log in / Sign up 안내가 남아 있다.
 - 초기 27개를 별도로 분석한 결과, 0×0 초기 카드, footer 전체 폭을 요구한 검사, 조건부 control의 가시성 요구 및 chart fixture를 먼저 확인할 필요가 있다. 카드와 실제 footer가 viewport 하단을 벗어난 관측은 해당 81회에서 0건이었다.
 - 보고서: `.omc/artifacts/card-ui-goal-20261004/public-matrix/watchlist-contract-01/report.json` (SHA-256 `b78bcc5424ea23b26554a6a09821a463ab37e1844222079ccc785bd64cf70409`). 해당 실행 harness SHA-256은 독립 검토의 `35866f32b398dbddff686e8d82db6f076b86c076ff1a7f6b3a1ce072530f1993`과 연결된다.
 
-다음 순서는 합성 입력·측정 계약 수정, 같은 전체 목록 재실행, 남은 문제의 실제 공개 렌더 캡처 확인과 필요한 제품 수정이다. Paper 접근과 Claude 인증은 별도 조건으로 남아 있다.
+다음 순서는 합성 입력·측정 계약 수정, 같은 전체 목록 재실행, 남은 문제의 실제 공개 렌더 캡처 확인과 필요한 제품 수정이다. Paper 접근과 최종 장부 결속은 완료됐다. Claude 인증은 실제 앱 경로별로 계속 구분해 판정한다.
 
 ## 실제 직접 조회 재개 및 calibration-01
 
@@ -91,4 +93,34 @@ Paper의 연결된 Chrome 표면에는 Log in / Sign up 안내가 남아 있다.
 
 controls 12개를 별도 읽기 전용 조사로 대조했다. 순위 계열 10개는 `ranking-board-controls.js`의 `linksFor()`가 추가한 `거래대금 → 13K0-2`를 하네스의 정적 registry 기대값이 모르는 차이다. `13K0-2`의 `관리종목 제외 → 4AUX-1`도 선택 조건에 따른 제품 동적 이름이다. `2TZN-1`은 실제 클릭을 pill로 옮긴 뒤 glyph에 남은 목적지 속성을 별도 control로 센 경우이며, `4B22-1`은 합성 입력에서 surface 전체가 비가시여서 parent navigation도 관측되지 않았다. 현재 증거로 확정된 제품 wiring 결함은 없으며 검사 경고를 지우기 위한 제품 변경은 하지 않았다. 이 소스 대조를 실제 클릭 성공 증거로 사용하지 않는다.
 
+남은 geometry 14개와 controls 12개를 추가로 읽기 전용 분류했다. `4B22-1`을 제외한 관측 가능한 스크롤은 모두 끝점에 도달했고 outer overflow 0과 containment 정상을 확인했으며, 남은 차이는 정적으로 작성된 개수와 숨김·사용 불가 endpoint, 동적 ranking link 및 중복 icon 기대값의 차이다. `4B22-1` standalone fixture 오류, 부모가 필요한 overlay 4개, ELW 펼침은 fixture/parent 보강 전까지 미검증이다. 따라서 기존 **ISSUES / NOT_EXERCISED** 판정을 유지하고, 현재 확인된 제품 오류가 없다는 분류를 native PASS로 승격하지 않는다. 이 조사에서 제품 변경이나 재실행은 하지 않았다.
+
 반응형 제품 수정 후 `scripts/security/eval-security-gates.ps1`을 다시 실행해 exit 0 / **ALL_GATES_PASS**를 확인했다. 253개 커밋 검사에서 누출을 찾지 않았고 public remote의 secret scanning과 push protection 활성 상태를 확인했다. 로그는 `.omc/artifacts/card-ui-goal-20261004/security-after-responsive.log`다. 실제 비공개 증거 폴더를 사용한 최종 장부 검사도 `VALIDATION=PASS`, `GOAL_COMPLETE=false`를 반환했다.
+
+## Paper 원본·개선안 독립 검토
+
+Paper 접근 복구 후 원본 101개를 변경 전 `before03`과 변경 후 `after01`로 다시 읽었다. 독립 구조 검토 판정은 **SCOPED APPROVE**다.
+
+- 변경 전후 모두 raw call 2,021회, node 33,101개, edge 33,000개, aggregate SHA-256 `8efc6abbe8e748f25f6689a96c00e3c20b812f53349094205c17883aae1fd872`, 직렬화 크기 15,368,005 bytes였다.
+- 변경 전 snapshot SHA-256은 `c2d79b382a76ad1423252de6b79a8ebeda6224c4b3e67ac14f37dd6b0a7da6e4`, 변경 후 snapshot SHA-256은 `5f7fe947461aaa0cda23cd6b2540802e8c2d84fdd756c0424d75ab1b778b1b53`다.
+- ID·부모·자식·순서·속성·style·text·geometry 대조의 mismatch는 모두 0이다. 이 판정은 원본 101개 구조 보존 범위의 승인이다.
+
+별도 개선안 39개 시각 감사는 최초에 35개 **SCOPED PASS**, 4개 **REQUEST CHANGES**였다. 네 항목을 Paper에서 수정한 뒤 독립 재검토 `auth_error_review`가 **39/39 BOUNDED APPROVE**를 반환했다.
+
+- `YRI-0`의 18개 Text와 `YGL-0`의 1개 Text를 `%`로 수정했고, `YGL-0`의 `YMH-0` 폭을 104px로 되돌려 회귀를 보정했다.
+- `1155-0`과 `11DX-0`에 가로 track·handle·우측 경계 8개 노드를 추가했다.
+- position 갱신 요청은 Paper가 no-op으로 무시했다. 위치가 변경됐다고 기록하지 않는다.
+- `10WU-0`과 `10WV-0`의 generic header 지적은 재검토에서 철회됐으며 해당 두 항목은 수정하지 않았다.
+- 개선안은 공개 합성 예시만 포함한다. 실제 금융 화면과 감사 screenshot은 비공개로 유지한다.
+
+원본 101개 manifest와 최종 review binding을 `verification/goal-ledger/current.json`에 결속했다. validator의 실제 Paper 101개 검사와 자체 검사 **24/24**가 모두 exit 0 / `VALIDATION=PASS`를 반환했으며 장부 집계는 `aggregates.paper.confirmed=101`, `aggregates.native.pass=0`, `aggregates.additional_flows.pass=0`, `aggregates.goal_complete=false`다. native·additional JSON 해시는 이전과 같고 `current.next.json`은 남지 않았다. manifest SHA-256은 `e89e1269c18de815657d43243879f84b047e7c638d357a94a2dd0dcd5735ad85`이며, [최종 Paper 독립 receipt](reviews/PAPER-FINAL-20261004-REVIEW.json)의 SHA-256은 `72c1796187ffe1d711a570faa0d73fba49a16e5eddc3be1e580a4b1ad5895d3f`다. 따라서 Paper strict current는 **101/101 confirmed**지만 native와 추가 흐름이 남아 있어 `GOAL_COMPLETE=false`와 목표 **ACTIVE**를 유지한다.
+
+## 최근 native 재시도
+
+차트 요청에서는 실제 카드가 도착했고 API 조회 자료를 표시했다. 동시에 실시간 연결 오류가 나타났고 일별 순매수와 graph는 제공되지 않았다. 실제 금융 값과 화면은 공개 기록에 복사하지 않는다. 별도로 AI 연결 확인 질의를 실행했을 때는 다시 다음 오류가 나타났다.
+
+> Failed to authenticate: OAuth session expired and could not be refreshed
+
+두 관측은 서로 다른 경로의 결과다. 카드 도착을 Claude 인증 복구로 해석하거나, 인증 실패를 API 조회 카드 미도착으로 바꾸지 않는다. 비공개 관측 기록 `native-auth-recheck-20261004.json`은 2026-10-04 09:28:43 UTC에 작성됐고 `runtime_commit_sha=null`, native PASS 0이다. Paper manifest에는 포함하지 않았으며 native 최종 증거로 승격하지 않는다. 현재 디스플레이는 1920×1152이고 요구 크기 2560×1392를 충족하지 않으므로 native 완료 **0/94**, 추가 흐름 완료 **0/30**, 목표 **ACTIVE**를 유지한다.
+
+앱의 X/Alt+F4는 tray hide로 동작했고 정상 종료용 tray UI는 현재 window 목록에 노출되지 않아 정상 재시작은 미완료다. 프로세스를 강제 종료하거나 프로필을 변경하지 않았다.

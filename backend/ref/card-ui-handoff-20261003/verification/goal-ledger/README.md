@@ -72,7 +72,9 @@ native 94와 additional 30은 다음을 모두 충족해야 한다.
 - `recorded_outcome=PASS`, `freshness_status=CURRENT`, 열린 bug 0이어야 한다.
 - 작성자와 다른 검토자의 JSON receipt가 실제 파일/hash, 제품 source commit, cohort, manifest hash, 승인 item 집합에 결속돼야 한다. review receipt는 manifest 밖의 `REPO` evidence로 유지해 manifest가 review 자체를 포함하는 순환 hash를 만들지 않는다.
 
-Paper PASS는 수정 전 snapshot, 수정 후 snapshot, mapping receipt의 정확한 101개 ID, Paper 참조, 편집 가능 여부, 부모 구조 SHA-256을 비교하고 독립 receipt로 승인한다. 각 공개 `paper.items[].actual_paper_reference`도 after snapshot과 mapping의 reference와 같아야 한다.
+Paper PASS의 수정 전·수정 후 snapshot은 manifest에 파일 SHA-256이 결속된 `PRIVATE` JSON이어야 한다. 두 파일은 `athena.paper-originals-live-snapshot.v1` 형식의 완전한 101개 캡처여야 하며 `complete=true`, `selfCheckOne=false`, `incompleteFlags=[]`, 각 item의 `complete=true`, `editable=true`, `unresolvedFrontier=[]`를 요구한다. root는 `card-ui-paper-baseline.json`의 board/page/artboard 101개와 정확히 같아야 한다.
+
+Validator는 snapshot이 적어 둔 `structureHash`를 신뢰하지 않는다. 각 item의 전체 canonical node 목록에서 root, child edge, 단일 parent, ancestor chain, 순회 순서, 연결성, node count를 확인하고 SHA-256을 다시 계산한다. 101개 item의 aggregate hash도 다시 계산하며, 검증된 수정 전·수정 후 canonical structure hash와 artboard ID가 모두 같아야 한다. 따라서 동일한 임의 문자열 두 개만 넣어 Paper 보존 PASS를 만들 수 없다. mapping receipt의 정확한 101개 ID와 Paper reference, 공개 `paper.items[].actual_paper_reference`, 별도 독립 review receipt도 같은 after artboard에 결속돼야 한다.
 
 ## 상태와 한계
 
@@ -84,9 +86,11 @@ Validator는 파일 존재, 해시, Git source, schema, session/item/cohort 결�
 
 ## 검증
 
+`<private-evidence-directory>`는 해당 실행 cohort의 `manifest.json`이 있는 실제 로컬 디렉터리로 바꾼다. 현재 ACTIVE 장부에는 PRIVATE runtime identity 참조가 있으므로 이 인수를 생략하면 검증이 실패하는 것이 정상이다.
+
 ```powershell
-node backend/ref/card-ui-handoff-20261003/verification/goal-ledger/validate.mjs
-node backend/ref/card-ui-handoff-20261003/verification/goal-ledger/validate.mjs --self-test
+node backend/ref/card-ui-handoff-20261003/verification/goal-ledger/validate.mjs --evidence-root <private-evidence-directory>
+node backend/ref/card-ui-handoff-20261003/verification/goal-ledger/validate.mjs --evidence-root <private-evidence-directory> --self-test
 ```
 
 정상 초기 결과는 Paper 101, native 94, excluded 7, additional 31=30+1, 현재 PASS 0/0/0, route gaps 21+1, `GOAL_COMPLETE=false`다. `--init`은 기존 `current.json`을 `--force` 없이 덮어쓰지 않는다.

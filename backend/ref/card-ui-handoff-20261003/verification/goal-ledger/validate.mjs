@@ -11,6 +11,7 @@ const repo=path.resolve(dir,'../../../../..');
 const currentFile=path.join(dir,'current.json');
 const q=readJson(path.join(repo,'backend/ref/card-ui-questionnaire.json'));
 const index=readJson(path.join(repo,'backend/ref/card-surface-templates/index.json'));
+const paperBaseline=readJson(path.join(repo,'backend/ref/card-ui-paper-baseline.json'));
 const head=execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim();
 const targets={max:{width:2560,height:1392},narrow:{width:1411,height:1166},remax:{width:2560,height:1392}};
 const stageKeys=['top','core_content','source_and_units','no_clip_overlap_blank','restoration'];
@@ -24,6 +25,7 @@ const zeros=/^0+$/;
 const nonempty=v=>typeof v==='string'&&v.trim().length>0;
 const clone=v=>JSON.parse(JSON.stringify(v));
 const hashFile=f=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+const hashJson=v=>crypto.createHash('sha256').update(JSON.stringify(v)).digest('hex');
 const exact=(a,b)=>{const x=[...new Set(a)].sort(),y=[...new Set(b)].sort();return x.length===a.length&&x.length===y.length&&x.every((v,i)=>v===y[i]);};
 const exactKeys=(o,k)=>o&&typeof o==='object'&&!Array.isArray(o)&&exact(Object.keys(o),k);
 const sameSize=(a,b)=>a?.width===b?.width&&a?.height===b?.height;
@@ -37,6 +39,56 @@ function flowContract(f){const pseudo={ui_steps:(f.ui_steps||[]).map(x=>typeof x
 function contractFor(i){return nativeById.has(i.item_id)?nativeContract(nativeById.get(i.item_id)):flowById.has(i.item_id)?flowContract(flowById.get(i.item_id)):null;}
 function pngSize(file){const b=fs.readFileSync(file);if(b.length<24||b.subarray(0,8).toString('hex')!=='89504e470d0a1a0a'||b.subarray(12,16).toString('ascii')!=='IHDR')return null;return {width:b.readUInt32BE(16),height:b.readUInt32BE(20)};}
 function rasterScaleMatches(pixel,outer,scale){return Number.isFinite(scale)&&scale>0&&pixel?.width===Math.round(outer.width*scale)&&pixel?.height===Math.round(outer.height*scale);}
+
+const paperCards=paperBaseline.cards;
+const paperCardById=new Map(paperCards.map(card=>[card.board_id,card]));
+function validatePaperCanonical(item,errors,label){
+  const canonical=item?.canonical,nodes=canonical?.nodes;
+  if(!canonical||canonical.rootId!==item.artboardId||!Array.isArray(nodes)||nodes.length<2){errors.push(label+': canonical graph/root missing');return false;}
+  const byId=new Map();let ok=true;
+  for(const node of nodes){
+    if(!node||!nonempty(node.id)||!nonempty(node.component)||!Array.isArray(node.childIds)||!Array.isArray(node.ancestorIds)||byId.has(node.id)){errors.push(label+': canonical node invalid or duplicate');ok=false;continue;}
+    byId.set(node.id,node);
+  }
+  if(!ok||nodes[0]?.id!==item.artboardId||nodes[0]?.parentId!==null||nodes[0]?.ancestorIds?.length!==0||nodes[0]?.childIds?.length===0){errors.push(label+': canonical root identity invalid');ok=false;}
+  const visited=new Set(),visiting=new Set(),order=[];
+  const walk=(id,parentId,ancestors)=>{
+    const node=byId.get(id);if(!node){errors.push(label+': canonical edge points outside graph');ok=false;return;}
+    if(visiting.has(id)||visited.has(id)){errors.push(label+': canonical graph cycle or repeated parent');ok=false;return;}
+    if(node.parentId!==parentId||JSON.stringify(node.ancestorIds)!==JSON.stringify(ancestors)){errors.push(label+': canonical parent/ancestor identity mismatch');ok=false;}
+    visiting.add(id);visited.add(id);order.push(id);
+    for(const childId of node.childIds)walk(childId,id,[...ancestors,id]);
+    visiting.delete(id);
+  };
+  walk(item.artboardId,null,[]);
+  if(visited.size!==nodes.length||JSON.stringify(order)!==JSON.stringify(nodes.map(node=>node.id))){errors.push(label+': canonical graph disconnected or order invalid');ok=false;}
+  if(item.nodeCount!==nodes.length){errors.push(label+': nodeCount does not match canonical graph');ok=false;}
+  if(!sha.test(item.structureHash||'')||zeros.test(item.structureHash)||item.structureHash!==hashJson(canonical)){errors.push(label+': canonical structure hash mismatch');ok=false;}
+  return ok;
+}
+function validatePaperCapture(doc,errors,label){
+  const ids=q.templates.map(t=>t.template_id);
+  // designTokenHash describes design tokens only; canonical graph hashes prove structure preservation below.
+  if(doc?.schema!=='athena.paper-originals-live-snapshot.v1'||doc?.paperFileId!==paperBaseline.paper_file_id||doc?.complete!==true||doc?.selfCheckOne!==false||doc?.requestedOriginals!==101||doc?.expectedFullOriginals!==101||!Array.isArray(doc?.incompleteFlags)||doc.incompleteFlags.length!==0||!nonempty(doc?.designTokenHash)){errors.push(label+': incomplete or noncanonical full capture');return new Map();}
+  if(!Array.isArray(doc.items)||!exact(doc.items.map(item=>item.boardId),ids)){errors.push(label+': capture must contain exact canonical 101 roots');return new Map();}
+  const result=new Map();
+  for(const item of doc.items){
+    const expected=paperCardById.get(item.boardId),itemLabel=label+' '+item.boardId;
+    if(!expected||item.pageId!==expected.page_id||item.artboardId!==expected.artboard_id||item.complete!==true||item.editable!==true||!Array.isArray(item.unresolvedFrontier)||item.unresolvedFrontier.length!==0){errors.push(itemLabel+': root/editability/completeness mismatch');continue;}
+    if(validatePaperCanonical(item,errors,itemLabel))result.set(item.boardId,item);
+  }
+  const aggregate=hashJson(doc.items.map(item=>({boardId:item.boardId,artboardId:item.artboardId,structureHash:item.structureHash})));
+  if(!sha.test(doc.aggregateStructureHash||'')||zeros.test(doc.aggregateStructureHash)||doc.aggregateStructureHash!==aggregate)errors.push(label+': aggregate structure hash mismatch');
+  return result;
+}
+function paperStructuresPreserved(before,after,errors){
+  let ok=true;
+  for(const id of q.templates.map(t=>t.template_id)){
+    const b=before.get(id),a=after.get(id);
+    if(!b||!a||b.artboardId!==a.artboardId||b.structureHash!==a.structureHash){errors.push('paper '+id+': before/after canonical structure changed');ok=false;}
+  }
+  return ok;
+}
 
 function evidence(t){
   return {
@@ -235,15 +287,17 @@ function computedStatus(i,ctx,errors,g){
 function validatePaper(d,ctx,errors){
   const p=d.paper;if(!p.items.some(i=>i.final_status==='PASS'))return new Set();
   if(!nonempty(p.source_cohort)||!nonempty(p.session_id)){errors.push('paper source cohort/session required');return new Set();}
+  if(p.before_snapshot_ref?.scope!=='PRIVATE'||p.after_snapshot_ref?.scope!=='PRIVATE')errors.push('paper snapshots must be PRIVATE manifest-bound captures');
   const before=parseEvidence(resolveRef(p.before_snapshot_ref,ctx,errors,'paper before snapshot',{required:true,kind:'paper-before-snapshot',sessionId:p.session_id,cohort:p.source_cohort}),errors,'paper before snapshot');
   const after=parseEvidence(resolveRef(p.after_snapshot_ref,ctx,errors,'paper after snapshot',{required:true,kind:'paper-after-snapshot',sessionId:p.session_id,cohort:p.source_cohort}),errors,'paper after snapshot');
   const mapping=parseEvidence(resolveRef(p.mapping_receipt_ref,ctx,errors,'paper mapping',{required:true,kind:'paper-mapping',sessionId:p.session_id,cohort:p.source_cohort}),errors,'paper mapping');
-  const ids=q.templates.map(t=>t.template_id),okIds=x=>Array.isArray(x?.items)&&exact(x.items.map(v=>v.expected_design_reference_id),ids);
-  if(!okIds(before)||!okIds(after)||!okIds(mapping)){errors.push('paper snapshots/mapping must contain exact canonical 101');return new Set();}
+  const ids=q.templates.map(t=>t.template_id),okMapping=x=>Array.isArray(x?.items)&&exact(x.items.map(v=>v.expected_design_reference_id),ids);
+  const beforeItems=validatePaperCapture(before,errors,'paper before snapshot'),afterItems=validatePaperCapture(after,errors,'paper after snapshot');
+  if(beforeItems.size!==101||afterItems.size!==101||!paperStructuresPreserved(beforeItems,afterItems,errors)||!okMapping(mapping)){errors.push('paper snapshots/mapping must contain exact canonical preserved 101');return new Set();}
   const passed=new Set();
   for(const id of ids){
-    const b=before.items.find(x=>x.expected_design_reference_id===id),a=after.items.find(x=>x.expected_design_reference_id===id),m=mapping.items.find(x=>x.expected_design_reference_id===id);
-    if(!nonempty(b?.paper_reference)||!nonempty(a?.paper_reference)||b.paper_reference!==a.paper_reference||b.editable!==true||a.editable!==true||!sha.test(b.parent_structure_sha256||'')||zeros.test(b.parent_structure_sha256)||b.parent_structure_sha256!==a.parent_structure_sha256||!nonempty(m?.paper_reference)||m.paper_reference!==a.paper_reference||d.paper.items.find(x=>x.item_id===id)?.actual_paper_reference!==a.paper_reference){errors.push('paper '+id+': before/after structure or mapping invalid');continue;}
+    const a=afterItems.get(id),m=mapping.items.find(x=>x.expected_design_reference_id===id);
+    if(!nonempty(m?.paper_reference)||m.paper_reference!==a.artboardId||d.paper.items.find(x=>x.item_id===id)?.actual_paper_reference!==a.artboardId){errors.push('paper '+id+': capture or mapping reference invalid');continue;}
     if(validateReview(p.independent_review,id,p.source_cohort,ctx.manifest?.source_commit_sha,ctx,errors,true,true))passed.add(id);
   }return passed;
 }
@@ -318,8 +372,30 @@ function selfTest(base,ctx){
   const pngHeader=(w,h)=>{const b=Buffer.alloc(24);Buffer.from('89504e470d0a1a0a','hex').copy(b,0);b.writeUInt32BE(13,8);b.write('IHDR',12,'ascii');b.writeUInt32BE(w,16);b.writeUInt32BE(h,20);return b;};
   const tmp=fs.mkdtempSync(path.join(process.env.TEMP||process.env.TMP||repo,'goal-ledger-')),one=path.join(tmp,'one.png');fs.writeFileSync(one,pngHeader(1,1));
   const focused=[['reject-generic-subcheck-reuse',!hasClaim({entry:{metadata:{asserted_checks:['bottom']}}},'asserted_checks','error')],['reject-non-image-raster',pngSize(currentFile)===null],['reject-1x1-raster',!rasterScaleMatches(pngSize(one),targets.max,1)]];for(const [name,pass] of focused){if(pass){ok++;console.log('NEGATIVE_CHECK '+name+'=PASS');}else console.error('NEGATIVE_CHECK '+name+'=FAIL');}fs.unlinkSync(one);fs.rmdirSync(tmp);
+  const makePaperCapture=()=>{
+    const items=paperCards.map((card,index)=>{
+      const childId=card.artboard_id+'_capture_child',canonical={rootId:card.artboard_id,nodes:[
+        {id:card.artboard_id,component:'Frame',parentId:null,childIds:[childId],ancestorIds:[]},
+        {id:childId,component:'Text',parentId:card.artboard_id,childIds:[],ancestorIds:[card.artboard_id]},
+      ]};
+      return {baselineIndex:index,boardId:card.board_id,cardId:card.card_id,pageId:card.page_id,artboardId:card.artboard_id,complete:true,editable:true,unresolvedFrontier:[],nodeCount:2,structureHash:hashJson(canonical),canonical};
+    });
+    return {schema:'athena.paper-originals-live-snapshot.v1',complete:true,paperFileId:paperBaseline.paper_file_id,requestedOriginals:101,expectedFullOriginals:101,selfCheckOne:false,designTokenHash:'811c9dc5',incompleteFlags:[],items,aggregateStructureHash:hashJson(items.map(item=>({boardId:item.boardId,artboardId:item.artboardId,structureHash:item.structureHash})))};
+  };
+  const refreshPaperHashes=x=>{for(const item of x.items)item.structureHash=hashJson(item.canonical);x.aggregateStructureHash=hashJson(x.items.map(item=>({boardId:item.boardId,artboardId:item.artboardId,structureHash:item.structureHash})));};
+  const validPaper=makePaperCapture(),paperPositiveErrors=[],validPaperMap=validatePaperCapture(validPaper,paperPositiveErrors,'paper self-test'),activeResult=validate(base,ctx);
+  for(const [name,pass] of [['accept-complete-paper-canonical-graph',paperPositiveErrors.length===0&&validPaperMap.size===101],['retain-active-current-goal-false',base.lifecycle==='ACTIVE'&&activeResult.errors.length===0&&activeResult.aggregates.goal_complete===false]]){if(pass){ok++;console.log('POSITIVE_CHECK '+name+'=PASS');}else console.error('POSITIVE_CHECK '+name+'=FAIL');}
+  const paperCases=[
+    ['reject-paper-legacy-content-hash-only',x=>{x.contentHash=x.designTokenHash;delete x.designTokenHash;},'incomplete or noncanonical full capture'],
+    ['reject-paper-arbitrary-identical-hash',x=>{x.items[0].structureHash='1'.repeat(64);},'canonical structure hash mismatch'],
+    ['reject-paper-unresolved-frontier',x=>{x.items[0].unresolvedFrontier=['unresolved'];},'root/editability/completeness mismatch'],
+    ['reject-paper-missing-canonical-root',x=>{x.items.pop();refreshPaperHashes(x);},'exact canonical 101 roots'],
+    ['reject-paper-ancestor-tamper',x=>{x.items[0].canonical.nodes[1].ancestorIds=[];refreshPaperHashes(x);},'parent/ancestor identity mismatch'],
+  ];
+  for(const [name,mutate,needle] of paperCases){const x=clone(validPaper);mutate(x);const errs=[];validatePaperCapture(x,errs,'paper self-test');if(errs.some(error=>error.includes(needle))){ok++;console.log('NEGATIVE_CHECK '+name+'=PASS');}else console.error('NEGATIVE_CHECK '+name+'=FAIL');}
+  const changed=clone(validPaper);changed.items[0].canonical.nodes[1].component='Rectangle';refreshPaperHashes(changed);const changedErrors=[],changedMap=validatePaperCapture(changed,changedErrors,'paper after self-test'),preserveErrors=[];const preserveRejected=changedErrors.length===0&&!paperStructuresPreserved(validPaperMap,changedMap,preserveErrors)&&preserveErrors.some(error=>error.includes('before/after canonical structure changed'));if(preserveRejected){ok++;console.log('NEGATIVE_CHECK reject-paper-recomputed-after-change=PASS');}else console.error('NEGATIVE_CHECK reject-paper-recomputed-after-change=FAIL');
   let audit=false;try{const parent=execFileSync('git',['rev-parse','HEAD^'],{cwd:repo,encoding:'utf8'}).trim(),files=execFileSync('git',['ls-tree','-r','--name-only',parent,'--','app','backend'],{cwd:repo,encoding:'utf8'}).split(/\r?\n/).filter(p=>p&&!p.startsWith('backend/ref/')&&fs.existsSync(path.join(repo,p)));let source=null;for(const p of files){const blob=execFileSync('git',['show',parent+':'+p],{cwd:repo});if(crypto.createHash('sha256').update(blob).digest('hex')===hashFile(path.join(repo,p))){source={repo_path:p,sha256:hashFile(path.join(repo,p))};break;}}if(source){const errs=[],auditCtx={manifest:{cohort_id:'audit-descendant',source_commit_sha:parent,product_source_closure:[source]}},item={item_id:'audit-descendant',source_cohort:'audit-descendant',runtime_commit_sha:parent,runtime_source_hashes:[source]};audit=validateSource(item,auditCtx,errs,true)&&errs.length===0;}}catch{}if(audit){ok++;console.log('POSITIVE_CHECK allow-audit-descendant-commit=PASS');}else console.error('POSITIVE_CHECK allow-audit-descendant-commit=FAIL');
-  const total=cases.length+focused.length+1;console.log('NEGATIVE_FALSE_PASS_CHECKS='+ok+'/'+total);return ok===total;
+  const total=cases.length+focused.length+paperCases.length+4;console.log('NEGATIVE_FALSE_PASS_CHECKS='+ok+'/'+total);return ok===total;
 }
 const args=process.argv.slice(2),ri=args.indexOf('--evidence-root'),evidenceRoot=ri>=0?args[ri+1]:null;
 if(ri>=0&&!evidenceRoot){console.error('--evidence-root requires a directory');process.exit(1);}

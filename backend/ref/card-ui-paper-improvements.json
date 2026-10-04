@@ -1,17 +1,33 @@
 {
   "schema_version": 1,
-  "verified_at": "2026-10-02T00:31:06.747Z",
+  "verified_at": "2026-10-04T09:34:39.893Z",
   "paper_file": {
     "id": "01M3SB680J59QWZX6J4CGRVXT7",
     "name": "ATHENA 앱",
     "url": "https://app.paper.design/file/01M3SB680J59QWZX6J4CGRVXT7"
   },
-  "scope": "기존 원본 도면과 별도로 작성한 편집 가능한 개선안의 색인이다. 실제 Paper 페이지에서 확인한 아트보드만 포함하며, 설계 이후 제품 교정 차이를 각 항목에 기록한다.",
+  "scope": "기존 원본 도면과 별도로 작성한 편집 가능한 개선안 39개의 색인이다. 실제 Paper 페이지에서 확인한 아트보드 ID만 포함한다. ID 집합 검증과 별도로 개선안 39개 시각 재검토가 BOUNDED APPROVE를 받았으며, 제품 native 94개 검증은 아직 완료되지 않았다. 설계 이후 제품 교정 차이를 각 항목에 기록한다.",
   "baseline_manifests": [
     "card-ui-paper-baseline.json",
     "card-ui-paper-support-baseline.json"
   ],
   "data_provenance": "공개 저장소 템플릿과 합성 예시를 사용한 도면이다. 실제 사용자 계좌·응답·비공개 화면 데이터는 포함하지 않는다.",
+  "paper_visual_review": {
+    "status": "BOUNDED_APPROVE",
+    "review_lane": "auth_error_review",
+    "approved_entries": 39,
+    "total_entries": 39,
+    "scope": "개선안 39개의 현재 Paper 시각 상태만 승인한다. 원본 101개 구조 보존, 제품 소스 적용 여부, native 94개 상태 완료는 별도 판정이다.",
+    "initial_result": "35 SCOPED PASS + 4 REQUEST CHANGES",
+    "resolved_changes": [
+      "YRI-0의 18개 Text와 YGL-0의 1개 Text를 %로 수정했다.",
+      "YGL-0의 YMH-0 폭을 104px로 되돌려 회귀를 보정했다.",
+      "1155-0과 11DX-0에 가로 track, handle, 우측 경계 8개 노드를 추가했다.",
+      "position 갱신은 Paper가 no-op으로 무시했으며 위치 변경으로 계산하지 않는다.",
+      "10WU-0과 10WV-0의 generic header 지적은 철회됐고 두 항목은 수정하지 않았다."
+    ],
+    "private_evidence": "감사 screenshot은 비공개이며 이 공개 색인에 포함하지 않는다."
+  },
   "entries": [
     {
       "page_id": "p-A-0",
@@ -159,6 +175,32 @@
         "ac4f858"
       ],
       "followup_difference": "파일 변경 영수증·이력·최적화 상태와 노드 배치를 구현했다. 별도 LAYA 실험 변경은 포함하지 않는다."
+    },
+    {
+      "page_id": "p-A-0",
+      "page_name": "개선 · 공통 결과와 정보 밀도",
+      "artboard_id": "1293-0",
+      "artboard_name": "공통 표 · 내용에 맞는 폭 · 실제 검증854–862",
+      "paper_display_name": "공통 표 · 내용에 맞는 폭 · 실제 검증854–862",
+      "design_label": "표의 내용에 맞는 카드 폭",
+      "targets": [
+        "공통 테이블 카드"
+      ],
+      "improvement_reason": "짧은 표와 빈 표는 내용 폭에 맞추고, 단일 표와 대화가 불필요한 빈 공간 없이 같은 작업 영역을 사용하게 한다.",
+      "implementation_commits": [
+        "e4ebf74",
+        "b6ac1de",
+        "ac8de24"
+      ],
+      "current_source_evidence": [
+        "app/canvas.js: fitGeneralTableCard가 실제 카드 폭과 높이를 측정해 generalTableWorkspace를 설정한다.",
+        "app/canvas.css: general-table-intrinsic 카드가 내용 폭과 최대 폭을 사용한다.",
+        "app/shell.css: 단일 intrinsic 표와 대화 영역을 계산된 작업 영역 폭·높이에 맞춘다."
+      ],
+      "source_status": "APPLIED_CURRENT_SOURCE",
+      "native_status": "UNVERIFIED",
+      "paper_visual_status": "BOUNDED_APPROVE",
+      "followup_difference": "도면은 공개 예제를 사용한다. 제품은 동적으로 계산한 실제 카드 폭·높이를 사용하며 전체 94개 native 검증은 완료되지 않았다."
     },
     {
       "page_id": "p-C-0",
@@ -560,6 +602,83 @@
         "6845ae9"
       ],
       "followup_difference": "공개 템플릿과 합성 예시로 작성한 편집 가능한 설계이다. 제품은 기존 헤더·조작 기능과 데이터 수신 상태를 유지하며 넓은 화면의 본표 폭, 전체 결측 세로 배치, 2YNQ 빈 미니 요약을 교정했다. 실제 패널 DOM의 크기 변경·결측·0·복원 검사는 독립 검토를 통과했다. 최신 앱의 실제 호출과 반응형 재검증은 진행 중이다."
+    },
+    {
+      "page_id": "p-J-0",
+      "page_name": "개선 · 최적화 최대 창과 축소 창",
+      "artboard_id": "12AB-0",
+      "artboard_name": "개선 · 최적화 결과 · 최대 2560",
+      "paper_display_name": "개선 · 최적화 결과 · 최대 2560",
+      "design_label": "최적화 입력·결과 개선 · 최대 창 2560 × 1392",
+      "targets": [
+        "백테스트 최적화 화면"
+      ],
+      "improvement_reason": "최적화 입력과 안내를 가까이 두고 결과와 히트맵 설명이 사용 가능한 폭 안에서 함께 보이게 한다.",
+      "implementation_commits": [
+        "e12702a",
+        "6ae46b3",
+        "b01b1ce"
+      ],
+      "current_source_evidence": [
+        "app/shell.css: backtest-optimize가 가용 폭과 줄바꿈을 사용한다.",
+        "app/shell.css: backtest-optimize-result가 fit-content와 max-width 100%를 사용한다.",
+        "app/shell.css: 표본 입력 폭과 입력 안내 배치가 최적화 카드에 한정된다."
+      ],
+      "source_status": "APPLIED_CURRENT_SOURCE",
+      "native_status": "UNVERIFIED",
+      "paper_visual_status": "BOUNDED_APPROVE",
+      "followup_difference": "제품 규칙은 현재 소스에 남아 있고 Paper 시각 재검토는 범위 한정 승인을 받았다. 최대 창의 현재 native 통과는 아직 검증하지 않았다."
+    },
+    {
+      "page_id": "p-J-0",
+      "page_name": "개선 · 최적화 최대 창과 축소 창",
+      "artboard_id": "12CP-0",
+      "artboard_name": "개선 · 최적화 결과 · 축소 1411",
+      "paper_display_name": "개선 · 최적화 결과 · 축소 1411",
+      "design_label": "최적화 입력·결과 개선 · 축소 창 1411 × 1166",
+      "targets": [
+        "백테스트 최적화 화면"
+      ],
+      "improvement_reason": "축소 창에서 입력·경고·결과 설명을 줄바꿈하고 최적화 결과의 의미와 순서를 보존한다.",
+      "implementation_commits": [
+        "e12702a",
+        "6ae46b3",
+        "b01b1ce"
+      ],
+      "current_source_evidence": [
+        "app/shell.css: 최적화 breadcrumb·경고·결과 설명이 좁은 폭에서 줄바꿈된다.",
+        "app/shell.css: backtest-optimize-result와 히트맵 설명이 같은 결과 묶음에 유지된다.",
+        "app/shell.css: 최적화 입력 필드는 200px와 max-width 100%를 함께 사용한다."
+      ],
+      "source_status": "APPLIED_CURRENT_SOURCE",
+      "native_status": "UNVERIFIED",
+      "paper_visual_status": "BOUNDED_APPROVE",
+      "followup_difference": "제품 규칙은 현재 소스에 남아 있고 Paper 시각 재검토는 범위 한정 승인을 받았다. 축소 창의 현재 native 통과는 아직 검증하지 않았다."
+    },
+    {
+      "page_id": "p-J-0",
+      "page_name": "개선 · 최적화 최대 창과 축소 창",
+      "artboard_id": "12F1-0",
+      "artboard_name": "기업정보 · 단위 반영과 축소 가격 이력 제안 · 공개 합성",
+      "paper_display_name": "기업정보 · 단위 반영과 축소 가격 이력 제안 · 공개 합성",
+      "design_label": "기업정보 · 단위와 가격 이력",
+      "targets": [
+        "2RBO-1"
+      ],
+      "improvement_reason": "현재가·전일 대비·PER·PBR의 단위를 구분하고 축소 폭에서 가격과 기록일을 읽을 수 있게 배치한다.",
+      "implementation_commits": [
+        "1c0e7e7",
+        "7e69c99"
+      ],
+      "current_source_evidence": [
+        "app/lib/build-board-display-policy.mjs와 app/lib/board-display-policy.js: 2RBO-1의 원·배 단위와 필드 provenance를 검증한다.",
+        "app/lib/board-mount.js: 2RBO-1 가격 이력의 기록일 슬롯을 날짜로 보존한다.",
+        "app/styles/board-surface.css: 2RBO-1 가격 범위가 좁은 폭에서 간격을 두고 줄바꿈된다."
+      ],
+      "source_status": "APPLIED_CURRENT_SOURCE",
+      "native_status": "UNVERIFIED",
+      "paper_visual_status": "BOUNDED_APPROVE",
+      "followup_difference": "단위와 좁은 가격 이력 규칙은 현재 소스에 적용돼 있고 Paper 시각 재검토는 범위 한정 승인을 받았다. 공개 합성 도면의 값은 실제 금융 값이 아니며 전체 native 재검증은 별도다."
     }
   ],
   "product_followups_without_diagram": [
