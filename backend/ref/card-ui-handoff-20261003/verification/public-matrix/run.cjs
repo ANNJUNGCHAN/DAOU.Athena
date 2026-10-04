@@ -25,10 +25,15 @@ if (runName && !/^[a-z0-9][a-z0-9-]{0,63}$/.test(runName)) {
 const outRoot = runName ? path.join(outBase, runName) : outBase;
 const registry = require(path.join(appRoot, 'lib/board-template-registry'));
 const displayPolicy = require(path.join(appRoot, 'lib/board-display-policy-data'));
+const rankingControls = require(path.join(appRoot, 'lib/ranking-board-controls'));
+const popoverLayout = require(path.join(appRoot, 'lib/board-popover-layout'));
 const canvasSource = fs.readFileSync(path.join(appRoot, 'canvas.js'), 'utf8');
 const watchSourceMatch = canvasSource.match(/^const WATCH_SOURCE_SLOTS = (.+);$/m);
 assert.ok(watchSourceMatch, 'current canvas watch-source slot contract must be readable');
 const watchSourceSlots = JSON.parse(watchSourceMatch[1]);
+const watchlistGroupsMatch = canvasSource.match(/^const WATCHLIST_SLOT_GROUPS = (.+);$/m);
+assert.ok(watchlistGroupsMatch, 'current canvas watchlist row contract must be readable');
+const watchlistSlotGroups = JSON.parse(watchlistGroupsMatch[1]);
 const historical = JSON.parse(fs.readFileSync(historicalPath, 'utf8'));
 const rows = historical.rows;
 const ids = rows.map((row) => String(row.template_id));
@@ -36,6 +41,11 @@ const LIVE_ORDER_IDS = Object.freeze([
   '135M-2', '1JZW-0', '2T63-1', '2TAG-1', '2TET-1', '2TJ6-1', '2TNJ-1',
 ]);
 const OVERLAY_STATE_IDS = Object.freeze(['4A9H-1', '4AGN-1', '4ANS-1', '4AUX-1']);
+const RANKING_PARENT_ID = '13K0-2';
+const RANKING_PARENT_ROW = rows.find((row) => row.template_id === RANKING_PARENT_ID);
+assert.ok(RANKING_PARENT_ROW, 'the ranking parent must remain in the public matrix');
+const PUBLIC_RANKING_FIELDS = Object.freeze(['_position', 'stk_cd', 'stk_nm', 'cur_prc', 'flu_rt']);
+const PUBLIC_RANKING_ROW_COUNT = 2;
 const PRIMARY_EXPECTED = Object.freeze({
   '137X-2': 'athena-chart',
   '13BC-2': 'orderbook-ladder',
@@ -48,6 +58,168 @@ const STAGES = Object.freeze([
   { id: 'narrow', width: 1411, height: 1166 },
   { id: 'remax', width: 2560, height: 1392 },
 ]);
+
+function identityAssessment(entries) {
+  const hardFailures = [];
+  const notExercised = [];
+  for (const entry of entries || []) {
+    if (!entry.present) hardFailures.push({ identity: entry.identity, reason: 'EXPECTED_OWNER_MISSING' });
+    else if (!entry.visible) notExercised.push({ identity: entry.identity, reason: entry.reason || 'CSS_HIDDEN' });
+    else if (!entry.endpointPresent) {
+      if (entry.reason) notExercised.push({ identity: entry.identity, reason: entry.reason });
+      else hardFailures.push({ identity: entry.identity, reason: 'VISIBLE_ENDPOINT_MISSING' });
+    } else if (!entry.contained) hardFailures.push({ identity: entry.identity, reason: 'VISIBLE_ENDPOINT_OVERFLOW' });
+  }
+  return {
+    hardFailures,
+    notExercised,
+    complete: hardFailures.length === 0 && notExercised.length === 0,
+  };
+}
+
+function controlAssessment(plan, actualControls) {
+  const required = [...plan.requiredDirect, ...plan.requiredNavigation];
+  const matches = (actual, link) => actual.target === link.target
+    && link.acceptedLabels.some((label) => actual.labels.includes(String(label).trim().replace(/\s+/g, ' ')));
+  return {
+    requiredMissing: required.filter((link) => !(actualControls || []).some((actual) => (
+      actual.wired && actual.rendered && matches(actual, link)
+    ))),
+    invalidActual: (actualControls || []).filter((actual) => actual.wired && actual.rendered
+      && !plan.all.some((link) => matches(actual, link))),
+  };
+}
+
+function overlayOptionContract(filterBoardId, operationRef = 'base:ka10032') {
+  const management = filterBoardId === '4AUX-1'
+    && ['base:ka10032', 'base:ka10030'].includes(operationRef);
+  return {
+    ariaLabel: management ? '관리종목 포함 조건' : {
+      '4A9H-1': 'KOSPI', '4AGN-1': '등락 전체',
+      '4ANS-1': '시가총액 전체', '4AUX-1': '유동성 정상',
+    }[filterBoardId],
+    options: rankingControls.selectionLabels(filterBoardId).flatMap((label) => {
+      if (management && label === '관리·경고 제외') return [];
+      const selection = rankingControls.selectionFor(filterBoardId, label);
+      return [{
+        label: management
+          ? (label === '전체 포함' ? '관리종목 포함' : '관리종목 제외') : label,
+        disabled: Boolean(selection?.unavailable),
+      }];
+    }),
+  };
+}
+
+function overlayContractAssessment(expected, actual) {
+  return Boolean(actual && actual.ariaLabel === expected.ariaLabel
+    && JSON.stringify(actual.options) === JSON.stringify(expected.options));
+}
+
+function rankingTableAssessment(expectedFields, expectedRows, actual) {
+  return Boolean(actual?.present
+    && JSON.stringify(actual.headerFields) === JSON.stringify(expectedFields)
+    && actual.rowCount === expectedRows
+    && actual.rowFields.every((fields) => JSON.stringify(fields) === JSON.stringify(expectedFields)));
+}
+
+function watchlistRowsContractValid(metadata) {
+  const code = (value) => typeof value === 'string'
+    && /^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(value) && value !== '000000';
+  return Boolean(metadata && metadata.membership_received === true
+    && typeof metadata.group === 'string' && metadata.group
+    && Array.isArray(metadata.rows) && metadata.rows.length === watchlistSlotGroups.length
+    && metadata.rows.every((row, index) => row.row === index && code(row.code)
+      && row.quote_state === 'received'
+      && ['slot_ids', 'quote_slot_ids', 'member_slot_ids'].every((key) => (
+        Array.isArray(row[key])
+          && JSON.stringify(row[key]) === JSON.stringify(watchlistSlotGroups[index][key])
+      ))
+      && ['present_slots', 'empty_slots'].every((key) => Array.isArray(row[key])
+        && row[key].every((slotId) => watchlistSlotGroups[index].slot_ids.includes(slotId)))));
+}
+
+function syntheticHasIssues(result) {
+  return Boolean(result.missing.length || result.reports.length !== 94
+    || result.stageContractFailures.length || result.sameDomFailures.length
+    || result.primaryFailures.length || result.controlFailures.length
+    || result.controlNotExercised.length || result.geometryFailures.length
+    || result.geometryNotExercised.length || result.overlayFailures.length
+    || result.networkAttempts.length || result.rendererErrors.length || !result.sourcesStillPinned);
+}
+
+function selfTest() {
+  assert.deepEqual(identityAssessment([{ identity: 'gone', present: false }]).hardFailures,
+    [{ identity: 'gone', reason: 'EXPECTED_OWNER_MISSING' }]);
+  assert.deepEqual(identityAssessment([{
+    identity: 'overflow', present: true, visible: true, endpointPresent: true, contained: false,
+  }]).hardFailures, [{ identity: 'overflow', reason: 'VISIBLE_ENDPOINT_OVERFLOW' }]);
+  const hidden = identityAssessment([{
+    identity: 'hidden', present: true, visible: false, endpointPresent: false, contained: false,
+    reason: 'CSS_HIDDEN',
+  }]);
+  assert.equal(hidden.complete, false);
+  assert.equal(hidden.notExercised.length, 1);
+  const plan = {
+    all: [{ target: 'known', acceptedLabels: ['Known'] }],
+    requiredDirect: [{ target: 'known', acceptedLabels: ['Known'] }],
+    requiredNavigation: [],
+  };
+  assert.equal(controlAssessment(plan, [{
+    target: 'unknown', labels: ['Unknown'], wired: true, rendered: true,
+  }]).invalidActual.length, 1);
+  assert.equal(controlAssessment(plan, [{
+    target: 'known', labels: ['Known'], wired: true, rendered: true,
+  }]).requiredMissing.length, 0);
+  const marketCap = overlayOptionContract('4ANS-1');
+  assert.deepEqual(marketCap.options.map((entry) => entry.disabled), [false, true, true]);
+  const management = overlayOptionContract('4AUX-1');
+  assert.deepEqual(management.options.map((entry) => entry.label), ['관리종목 제외', '관리종목 포함']);
+  assert.equal(overlayContractAssessment(management, {
+    ariaLabel: management.ariaLabel,
+    options: [management.options[1], management.options[0]],
+  }), false);
+  assert.equal(overlayContractAssessment(marketCap, {
+    ariaLabel: marketCap.ariaLabel,
+    options: marketCap.options.map((entry) => ({ ...entry, disabled: false })),
+  }), false);
+  assert.equal(rankingTableAssessment(PUBLIC_RANKING_FIELDS, PUBLIC_RANKING_ROW_COUNT, {
+    present: true, headerFields: [...PUBLIC_RANKING_FIELDS].reverse(), rowCount: 2,
+    rowFields: [PUBLIC_RANKING_FIELDS, PUBLIC_RANKING_FIELDS],
+  }), false);
+  assert.equal(rankingTableAssessment(PUBLIC_RANKING_FIELDS, PUBLIC_RANKING_ROW_COUNT, {
+    present: true, headerFields: PUBLIC_RANKING_FIELDS, rowCount: 1,
+    rowFields: [PUBLIC_RANKING_FIELDS],
+  }), false);
+  assert.ok(controlExpectation('2U5L-1').requiredDirect.some((link) => (
+    link.target === '3EWN-0' && link.control === 'ELW 행 펼침'
+  )));
+  const managementPlan = controlExpectation(RANKING_PARENT_ID, 'base:ka10032', {
+    mang_stk_incls: '0',
+  });
+  const managementLink = managementPlan.all.find((link) => link.target === '4AUX-1');
+  assert.ok(managementLink.acceptedLabels.includes('관리종목 제외'));
+  assert.equal(controlExpectation(RANKING_PARENT_ID, 'base:ka10032', {
+    mang_stk_incls: '1',
+  }).all.find((link) => link.target === '4AUX-1').acceptedLabels.includes('관리종목 제외'), false);
+  assert.equal(controlAssessment(managementPlan, [{
+    target: '4ANS-1', labels: ['관리종목 제외'], wired: true, rendered: true,
+  }]).invalidActual.length, 1);
+  assert.equal(controlAssessment(managementPlan, [{
+    target: '4AUX-1', labels: ['관리종목 포함'], wired: true, rendered: true,
+  }]).invalidActual.length, 1);
+  const watchlist = watchlistRowsContract(surfaceSlotValuesFor('2U5L-1'));
+  assert.equal(watchlistRowsContractValid(watchlist), true);
+  assert.equal(watchlistRowsContractValid({
+    ...watchlist, rows: watchlist.rows.slice(0, -1),
+  }), false);
+  assert.equal(syntheticHasIssues({
+    missing: [], reports: Array.from({ length: 94 }), stageContractFailures: [], sameDomFailures: [],
+    primaryFailures: [], controlFailures: [], controlNotExercised: [], geometryFailures: [],
+    geometryNotExercised: [{ boardId: 'hidden' }], overlayFailures: [], networkAttempts: [],
+    rendererErrors: [], sourcesStillPinned: true,
+  }), true);
+  return 20;
+}
 
 function shellResourceFiles() {
   const shell = fs.readFileSync(path.join(appRoot, 'shell.html'), 'utf8');
@@ -95,6 +267,11 @@ assert.deepEqual(
   'every executed renderer JS/CSS resource must exist before launch',
 );
 const sourcePins = Object.fromEntries(sourceFiles.map((file) => [file, sha256(path.join(appRoot, file))]));
+
+if (process.argv.includes('--self-test')) {
+  console.log(JSON.stringify({ status: 'SELF_TEST_PASS', assertions: selfTest() }));
+  process.exit(0);
+}
 
 if (!process.argv.includes('--execute-reviewed')) {
   console.log(JSON.stringify({
@@ -180,6 +357,32 @@ function surfaceSlotValuesFor(boardId) {
   }));
 }
 
+function watchlistRowsContract(slotValues) {
+  const entries = new Map(slotValues.map((entry) => [entry.slot_id, entry]));
+  const metadata = {
+    group: 'PUBLIC-SYNTHETIC',
+    membership_received: true,
+    rows: watchlistSlotGroups.map((group, row) => {
+      const codeEntry = group.member_slot_ids.map((slotId) => entries.get(slotId))
+        .find((entry) => /^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(String(entry?.value || ''))
+          && String(entry.value) !== '000000');
+      return {
+        row,
+        code: codeEntry ? String(codeEntry.value) : null,
+        slot_ids: [...group.slot_ids],
+        present_slots: group.slot_ids.filter((slotId) => entries.has(slotId)),
+        quote_slot_ids: [...group.quote_slot_ids],
+        member_slot_ids: [...group.member_slot_ids],
+        empty_slots: [],
+        quote_row_index: row,
+        quote_state: 'received',
+      };
+    }),
+  };
+  assert.ok(watchlistRowsContractValid(metadata), 'public watchlist fixture must match the live row contract');
+  return metadata;
+}
+
 function watchSourceContext(boardId, operationRef, slotValues) {
   if (!['2UBO-1', '3D4I-0', '3EWN-0'].includes(boardId)) return null;
   const requested = boardId === '2UBO-1' ? 'PUBLIC-THEME' : '000000';
@@ -201,37 +404,54 @@ function watchSourceContext(boardId, operationRef, slotValues) {
   };
 }
 
-function authoredLayoutExpectation(boardId) {
-  const html = registry.boardHtml(boardId) || '';
-  const countClass = (name) => [...html.matchAll(/class=["']([^"']+)["']/g)]
-    .filter((match) => match[1].split(/\s+/).includes(name)).length;
-  return { footerCount: countClass('bs-footer'), tableCount: countClass('bs-table') };
+function authoredClassIdentities(html, className) {
+  return [...html.matchAll(/<[^>]+>/g)].flatMap((match) => {
+    const tag = match[0];
+    const classes = tag.match(/class=["']([^"']+)["']/)?.[1]?.split(/\s+/) || [];
+    if (!classes.includes(className)) return [];
+    const node = tag.match(/data-node=["']([^"']+)["']/)?.[1] || null;
+    return node ? [{ identity: node, selector: `[data-node="${node}"]` }] : [];
+  });
 }
 
-function controlExpectation(boardId) {
-  const all = registry.stateLinksFor(boardId).map((link) => ({
+function authoredLayoutExpectation(boardId) {
+  const html = registry.boardHtml(boardId) || '';
+  return {
+    footers: authoredClassIdentities(html, 'bs-footer'),
+    tables: [
+      ...authoredClassIdentities(html, 'bs-table'),
+      ...(boardId === '4B22-1'
+        ? [{ identity: 'runtime:expanded-ranking-table', selector: '.bs-ranking-table' }] : []),
+    ],
+  };
+}
+
+function controlExpectation(boardId, operationRef = '', target = {}) {
+  const productLinks = rankingControls.linksFor(boardId, registry.stateLinksFor(boardId));
+  const all = productLinks.map((link) => ({
     control: String(link.control || ''),
     target: String(link.board_id || ''),
     navigation: link.navigation || null,
     acceptedLabels: [...new Set([
       String(link.control || ''), ...registry.controlLabels(link.control),
       ...registry.additionalControlLabels(link.control),
+      ...(boardId === RANKING_PARENT_ID
+        && operationRef === 'base:ka10032'
+        && String(target.mang_stk_incls) === '0'
+        && link.board_id === '4AUX-1'
+        && link.control === '유동성 정상' ? ['관리종목 제외'] : []),
     ].filter(Boolean))],
   }));
   const directKeys = new Set(registry.directStateLinksFor(boardId)
     .map((link) => `${link.board_id}|${link.control}`));
-  const gated = boardId === '2U5L-1'
-    ? new Set(all.filter((link) => link.target === '3EWN-0')
-      .map((link) => `${link.target}|${link.control}`)) : new Set();
-  const requiredDirect = all.filter((link) => directKeys.has(`${link.target}|${link.control}`)
-    && !gated.has(`${link.target}|${link.control}`));
+  const requiredDirect = all.filter((link) => directKeys.has(`${link.target}|${link.control}`));
   const requiredNavigation = boardId === '2U5L-1' ? [] : all.filter((link) => link.navigation);
   const requiredKeys = new Set([...requiredDirect, ...requiredNavigation]
     .map((link) => `${link.target}|${link.control}`));
   const inherited = all.filter((link) => !requiredKeys.has(`${link.target}|${link.control}`));
   return {
     all, requiredDirect, requiredNavigation, inherited,
-    notExercised: [...gated].map((key) => ({ key, reason: 'product fixture gate' })),
+    notExercised: [],
   };
 }
 
@@ -266,6 +486,24 @@ function orderbookFields() {
   return fields;
 }
 
+function publicRankingResult(operationRef) {
+  const columns = [
+    { key: '_position', label: '순위', role: 'identifier', format: { literal: true } },
+    { key: 'stk_cd', label: '종목코드', role: 'identifier', format: { literal: true } },
+    { key: 'stk_nm', label: '종목명', role: 'bound-name', format: { literal: true } },
+    { key: 'cur_prc', label: '현재가', role: 'price', format: { kind: 'number', suffix: '원' } },
+    { key: 'flu_rt', label: '등락률', format: { kind: 'percent', digits: 2 } },
+  ];
+  return {
+    board_id: '4B22-1', operation_ref: operationRef, columns,
+    rows: [
+      { _position: '1', stk_cd: 'QA0001', stk_nm: '공개 합성 첫 종목', cur_prc: 10100, flu_rt: 1.25 },
+      { _position: '2', stk_cd: 'QA0002', stk_nm: '공개 합성 둘째 종목', cur_prc: 9900, flu_rt: -0.75 },
+    ],
+    received_count: PUBLIC_RANKING_ROW_COUNT, truncated: false,
+  };
+}
+
 function envelopeFor(row) {
   const boardId = row.template_id;
   const primary = registry.primaryRendererFor(boardId);
@@ -274,6 +512,7 @@ function envelopeFor(row) {
       : boardId === '32S7-0' ? { operationRef: 'base:ka20006', target: 'sector', period: 'day', trId: 'ka20006' }
         : null;
   const operationRef = chartContract?.operationRef
+    || boardId === RANKING_PARENT_ID && 'base:ka10032'
     || (boardId === '2U5L-1' || boardId === '3D4I-0' || boardId === '3EWN-0') && 'base:ka10095'
     || boardId === '2UBO-1' && 'base:ka90001'
     || primary === 'orderbook-ladder' && 'base:ka10007'
@@ -288,6 +527,7 @@ function envelopeFor(row) {
     operation_ref: operationRef,
     operation_refs: boardId === '2UBO-1'
       ? ['base:ka90001', 'base:ka90002'] : [operationRef],
+    operation_args: boardId === RANKING_PARENT_ID ? { mang_stk_incls: '0' } : undefined,
     renderer_id: primary === 'athena-chart' ? 'aits-chart-v1' : undefined,
     stk_cd: '000000',
     symbol: '000000',
@@ -305,6 +545,9 @@ function envelopeFor(row) {
   };
   const watchContext = watchSourceContext(boardId, operationRef, surfaceSlotValues);
   if (watchContext) envelope.surface_contract.watch_source_context = watchContext;
+  if (boardId === '2U5L-1') {
+    envelope.surface_contract.watchlist_rows = watchlistRowsContract(surfaceSlotValues);
+  }
   if (primary === 'athena-chart') envelope.data = chartData(
     chartContract.target, chartContract.period, chartContract.trId,
   );
@@ -335,6 +578,9 @@ safeHandle('athena:realtime-release', true);
 safeHandle('athena:realtime-fallback-status', { ok: true, status: 'snapshot' });
 safeHandle('athena:realtime-fallback-register', { ok: false, status: 'fixture-disabled' });
 safeHandle('athena:realtime-fallback-unregister', true);
+// The public chart fixture has no earlier page. Match the product response
+// shape while keeping this explicit empty result out of native-history proof.
+safeHandle('athena:chart-history-page', { ok: true, candles: [] });
 // shell.html starts these read-only views before the matrix paints a card. Keep
 // the fixture explicit and empty: it supplies no financial values, profiles,
 // provider state, or persisted user data and cannot trigger a mutation.
@@ -349,6 +595,21 @@ safeHandle('athena:backtest-presets', { ok: true, data: { presets: [] } });
 safeHandle('athena:backtest-user-strategies', { ok: true, data: { strategies: [] } });
 safeHandle('athena:boot-readiness:get', {
   runId: 'public-matrix-fixture', revision: 1, phase: 'ready', tasks: [],
+});
+safeHandle('athena:canvas-board-hydrate', (payload = {}) => {
+  if (String(payload.boardId || '') !== '4B22-1') return { ok: false, status: 'unavailable' };
+  const operationRef = String(payload.rankingOperationRef || '');
+  if (!['base:ka10032', 'base:ka10030', 'base:ka00198'].includes(operationRef)) {
+    return { ok: false, status: 'error', error: 'unsupported public ranking operation' };
+  }
+  return {
+    ok: true, slot_values: {}, operations: [],
+    surface_contract: {
+      board_id: '4B22-1', slot_values: [], hydration_slot_ids: [], unbound_slots: [],
+      empty_rows: [], empty_columns: [], empty_value_slots: [],
+    },
+    ranking_result: publicRankingResult(operationRef),
+  };
 });
 safeHandle('athena:model-get', {
   claude: { model: null, effort: null },
@@ -479,6 +740,106 @@ async function awaitBoard(boardId, nonce) {
   })()`);
 }
 
+async function activateProductControl(nonce, targetBoardId, control, acceptedLabels) {
+  return win.webContents.executeJavaScript(`(() => {
+    const card = [...document.querySelectorAll('.card[data-board-surface="true"]')]
+      .find((item) => item.dataset.publicMatrixNonce === ${JSON.stringify(nonce)});
+    const surface = card?.querySelector('.board-surface');
+    if (!surface) throw new Error('product surface missing before control activation');
+    const normalize = (value) => String(value || '').trim().replace(/\s+/g, ' ');
+    const wanted = ${JSON.stringify(acceptedLabels)}.map(normalize);
+    const candidates = [...surface.querySelectorAll('[data-state-board="${targetBoardId}"]')]
+      .filter((node) => node.__athenaStateWired === true && node.checkVisibility({ checkVisibilityCSS: true }));
+    const node = candidates.find((candidate) => [
+      candidate.dataset.stateControl, candidate.getAttribute('aria-label'), candidate.getAttribute('title'),
+      candidate.textContent,
+    ].map(normalize).some((label) => wanted.includes(label)));
+    if (!node) throw new Error('real wired product control missing: ' + wanted.join(' | ') + ' -> ${targetBoardId}');
+    node.click();
+    return { clicked: true, target: node.dataset.stateBoard, control: normalize(node.textContent),
+      node: node.dataset.node || null, role: node.getAttribute('role') || node.tagName.toLowerCase() };
+  })()`);
+}
+
+async function awaitOverlay(filterBoardId, nonce) {
+  const menuNode = popoverLayout.MENUS[filterBoardId]?.[0];
+  assert.ok(menuNode, `overlay ${filterBoardId} must have a canonical authored menu`);
+  return win.webContents.executeJavaScript(`(async () => {
+    const deadline = performance.now() + 10000;
+    while (performance.now() < deadline) {
+      const card = [...document.querySelectorAll('.card[data-board-surface="true"]')]
+        .find((item) => item.dataset.publicMatrixNonce === ${JSON.stringify(nonce)});
+      const host = card?.querySelector('.board-surface-host');
+      const menu = host?.querySelector('.bs-parent-ranking-menu[role="menu"][data-node="${menuNode}"]');
+      if (menu && menu.checkVisibility({ checkVisibilityCSS: true })) return {
+        productRoot: host.__athenaBoard?.boardId || null,
+        menuNode: menu.dataset.node || null,
+        activeCards: document.querySelectorAll('#grid .card').length,
+      };
+      await new Promise((resolve) => setTimeout(resolve, 25));
+    }
+    throw new Error('product ranking overlay did not open: ${filterBoardId}');
+  })()`);
+}
+
+async function measureOverlay(filterBoardId, nonce) {
+  const menuNode = popoverLayout.MENUS[filterBoardId][0];
+  const expected = overlayOptionContract(filterBoardId);
+  return win.webContents.executeJavaScript(`(() => {
+    const card = [...document.querySelectorAll('.card[data-board-surface="true"]')]
+      .find((item) => item.dataset.publicMatrixNonce === ${JSON.stringify(nonce)});
+    const surface = card?.querySelector('.board-surface');
+    const menu = surface?.querySelector('.bs-parent-ranking-menu[role="menu"][data-node="${menuNode}"]');
+    if (!card || !surface || !menu) return { present: false, complete: false };
+    for (const node of [card, ...card.querySelectorAll('*')]) {
+      if (/^(auto|scroll)$/.test(getComputedStyle(node).overflowY)) node.scrollTop = 0;
+      if (/^(auto|scroll)$/.test(getComputedStyle(node).overflowX)) node.scrollLeft = 0;
+    }
+    menu.repositionParentRankingMenu?.();
+    const box = menu.getBoundingClientRect(), surfaceBox = surface.getBoundingClientRect();
+    const cardBox = card.getBoundingClientRect();
+    const options = [...menu.querySelectorAll('[role="menuitem"]')]
+      .filter((node) => node.checkVisibility({ checkVisibilityCSS: true }))
+      .map((node) => {
+        const leaves = [...node.querySelectorAll('*')].filter((leaf) => !leaf.children.length)
+          .map((leaf) => leaf.textContent.trim()).filter((text) => text && text !== '선택됨');
+        return {
+          label: node.getAttribute('aria-label') || leaves[0] || '',
+          disabled: node.getAttribute('aria-disabled') === 'true',
+        };
+      });
+    const contained = box.width > 0 && box.height > 0
+      && box.x >= surfaceBox.x - 2 && box.right <= surfaceBox.right + 2
+      && box.y >= surfaceBox.y - 2 && box.bottom <= surfaceBox.bottom + 2
+      && box.x >= cardBox.x - 2 && box.right <= cardBox.right + 2
+      && box.y >= cardBox.y - 2 && box.bottom <= cardBox.bottom + 2;
+    return {
+      present: true, productRoot: card.querySelector('.board-surface-host')?.__athenaBoard?.boardId || null,
+      menuNode: menu.dataset.node || null, role: menu.getAttribute('role'), ariaLabel: menu.getAttribute('aria-label'),
+      options, expected: ${JSON.stringify(expected)}, contained,
+      rect: { x: box.x, y: box.y, width: box.width, height: box.height, right: box.right, bottom: box.bottom },
+      complete: contained
+        && menu.getAttribute('aria-label') === ${JSON.stringify(expected.ariaLabel)}
+        && JSON.stringify(options) === ${JSON.stringify(JSON.stringify(expected.options))},
+    };
+  })()`);
+}
+
+async function closeOverlay(filterBoardId, nonce) {
+  return win.webContents.executeJavaScript(`(async () => {
+    const card = [...document.querySelectorAll('.card[data-board-surface="true"]')]
+      .find((item) => item.dataset.publicMatrixNonce === ${JSON.stringify(nonce)});
+    const menu = card?.querySelector('.bs-parent-ranking-menu[role="menu"]');
+    if (!menu) return { closed: false, reason: 'menu missing before close' };
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    const deadline = performance.now() + 1000;
+    while (menu.isConnected && performance.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+    return { closed: !menu.isConnected, filterBoardId: ${JSON.stringify(filterBoardId)} };
+  })()`);
+}
+
 async function measure(boardId, nonce, controlsPlan, expectedPrimary, layoutExpectation) {
   return win.webContents.executeJavaScript(`(() => {
     const card = [...document.querySelectorAll('.card[data-board-surface="true"]')]
@@ -501,9 +862,7 @@ async function measure(boardId, nonce, controlsPlan, expectedPrimary, layoutExpe
       const box = rect(node);
       return box.width > 0 && box.height > 0;
     };
-    const nodes = [...surface.querySelectorAll('[data-node]')].filter(measurable);
-    const footers = [...surface.querySelectorAll('.bs-footer')].filter(visible);
-    const tables = [...surface.querySelectorAll('.bs-table')].filter(visible);
+    const nodes = [...surface.querySelectorAll('[data-node], .bs-ranking-table :is(th,td)')].filter(measurable);
     const nodeIdentity = (node) => node.dataset.node
       || (typeof node.className === 'string' && node.className) || node.tagName;
     const scrollables = [...new Set([host, surface, ...surface.querySelectorAll('*')])].filter((node) => {
@@ -549,6 +908,7 @@ async function measure(boardId, nonce, controlsPlan, expectedPrimary, layoutExpe
       return {
         target,
         labels,
+        wired: node.__athenaStateWired === true,
         visible: cssVisible,
         rendered: cssVisible && box.width > 0 && box.height > 0,
         rect: box,
@@ -560,29 +920,67 @@ async function measure(boardId, nonce, controlsPlan, expectedPrimary, layoutExpe
     const matchesControl = (actual, link) => actual.target === link.target
       && link.acceptedLabels.some((label) => actual.labels.includes(normalizeLabel(label)));
     const requiredMissing = required.filter((link) => !actualControls.some((actual) => (
-      actual.rendered && matchesControl(actual, link)
+      actual.wired && actual.rendered && matchesControl(actual, link)
     )));
-    const invalidActual = actualControls.filter((actual) => actual.rendered && !actual.exactPair);
+    const invalidActual = actualControls.filter((actual) => actual.wired
+      && actual.rendered && !actual.exactPair);
     const rightmost = nodes.reduce((best, node) => !best || rect(node).right > rect(best).right ? node : best, null);
     const bottommost = nodes.reduce((best, node) => !best || rect(node).bottom > rect(best).bottom ? node : best, null);
     const finalRight = rightmost ? rect(rightmost).right : null;
     const finalBottom = bottommost ? rect(bottommost).bottom : null;
     const primary = ${JSON.stringify(expectedPrimary)};
     const layout = ${JSON.stringify(layoutExpectation)};
-    const tableEndpoints = tables.map((table) => {
-      const cells = [...table.querySelectorAll('[data-node]')].filter(measurable);
+    const unavailableReason = (owner, cssVisible) => {
+      if (!owner) return null;
+      if (!cssVisible) {
+        if (owner.hidden || owner.closest('[hidden]')) return 'PRODUCT_HIDDEN_ATTRIBUTE';
+        if (owner.style.display === 'none') return 'PRODUCT_HIDDEN_INLINE';
+        return 'PRODUCT_HIDDEN_COMPUTED';
+      }
+      if (primary && owner.querySelector('[data-bs-primary-mounted="' + primary + '"]')) {
+        return 'SPECIALIZED_PRIMARY_RENDERER';
+      }
+      if (owner.matches('[class*="unavailable"], [class*="empty"], [class*="compact"]')
+          || owner.querySelector('[role="status"], [data-missing="true"], [class*="unavailable"], [class*="empty"]')) {
+        return 'PRODUCT_UNAVAILABLE_OR_COMPACT';
+      }
+      return null;
+    };
+    const assessIdentities = (entries) => {
+      const hardFailures = [], notExercised = [];
+      for (const entry of entries) {
+        if (!entry.present) hardFailures.push({ identity: entry.identity, reason: 'EXPECTED_OWNER_MISSING' });
+        else if (!entry.visible) notExercised.push({ identity: entry.identity, reason: entry.reason || 'CSS_HIDDEN' });
+        else if (!entry.endpointPresent) {
+          if (entry.reason) notExercised.push({ identity: entry.identity, reason: entry.reason });
+          else hardFailures.push({ identity: entry.identity, reason: 'VISIBLE_ENDPOINT_MISSING' });
+        } else if (!entry.contained) hardFailures.push({ identity: entry.identity, reason: 'VISIBLE_ENDPOINT_OVERFLOW' });
+      }
+      return { hardFailures, notExercised,
+        complete: hardFailures.length === 0 && notExercised.length === 0 };
+    };
+    const tableEntries = layout.tables.map((expected) => {
+      const table = surface.querySelector(expected.selector);
+      const cssVisible = visible(table);
+      const cells = table ? [...table.querySelectorAll('[data-node], th, td')].filter(measurable) : [];
       const endpoint = cells.reduce((best, node) => !best || rect(node).right > rect(best).right ? node : best, null);
-      const box = rect(table);
+      const box = table ? rect(table) : null;
       const endpointBox = endpoint ? rect(endpoint) : null;
       return {
+        identity: expected.identity,
+        present: !!table,
+        visible: cssVisible,
+        reason: unavailableReason(table, cssVisible),
+        endpointPresent: !!endpointBox && endpointBox.width > 0 && endpointBox.height > 0,
         node: endpoint?.dataset.node || null,
         rect: endpointBox,
         right: endpointBox?.right ?? null,
-        ownerRight: box.right,
+        ownerRight: box?.right ?? null,
         contained: !!endpointBox && endpointBox.width > 0 && endpointBox.height > 0
           && endpointBox.right <= box.right + 2,
       };
     });
+    const tableAssessment = assessIdentities(tableEntries);
     const horizontalReachedEnds = horizontalScrollerEntries.length
       ? horizontalScrollerEntries.every((entry) => entry.reachedEnd)
       : null;
@@ -607,23 +1005,60 @@ async function measure(boardId, nonce, controlsPlan, expectedPrimary, layoutExpe
       }
       return card;
     };
-    const footerEntries = footers.map((node) => {
-      const box = rect(node);
-      const owner = horizontalClipOwner(node);
-      const ownerBox = rect(owner);
+    const footerEntries = layout.footers.map((expected) => {
+      const node = surface.querySelector(expected.selector);
+      const cssVisible = visible(node);
+      const box = node ? rect(node) : null;
+      const owner = node ? horizontalClipOwner(node) : null;
+      const ownerBox = owner ? rect(owner) : null;
+      const nonzero = !!box && box.width > 0 && box.height > 0;
+      const horizontalContained = nonzero && box.x >= ownerBox.x - 2 && box.right <= ownerBox.right + 2
+        && box.x >= cardBox.x - 2 && box.right <= cardBox.right + 2;
+      const bottomContained = nonzero && box.bottom <= surfaceBox.bottom + 2 && box.bottom <= cardBox.bottom + 2;
       return {
-        node: node.dataset.node || null,
+        identity: expected.identity,
+        present: !!node,
+        visible: cssVisible,
+        reason: unavailableReason(node, cssVisible),
+        endpointPresent: nonzero,
+        contained: horizontalContained && bottomContained,
+        node: node?.dataset.node || null,
         rect: box,
-        owner: owner === card ? 'card' : owner.dataset.node || owner.className || owner.tagName,
+        owner: owner === card ? 'card' : owner?.dataset.node || owner?.className || owner?.tagName || null,
         ownerRect: ownerBox,
-        nonzero: box.width > 0 && box.height > 0,
-        horizontalContained: box.x >= ownerBox.x - 2 && box.right <= ownerBox.right + 2
-          && box.x >= cardBox.x - 2 && box.right <= cardBox.right + 2,
-        bottomContained: box.bottom <= surfaceBox.bottom + 2 && box.bottom <= cardBox.bottom + 2,
+        nonzero,
+        horizontalContained,
+        bottomContained,
       };
     });
-    const footerBottom = footerEntries.length
-      ? Math.max(...footerEntries.map((entry) => entry.rect.bottom)) : null;
+    const footerAssessment = assessIdentities(footerEntries);
+    const visibleFooters = footerEntries.filter((entry) => entry.visible && entry.rect);
+    const footerBottom = visibleFooters.length
+      ? Math.max(...visibleFooters.map((entry) => entry.rect.bottom)) : null;
+    const rankingTableNode = surface.querySelector('.bs-ranking-table');
+    const rankingHeaderFields = rankingTableNode
+      ? [...rankingTableNode.querySelectorAll('thead th[data-field]')].map((node) => node.dataset.field) : [];
+    const rankingRows = rankingTableNode ? [...rankingTableNode.querySelectorAll('tbody > tr')] : [];
+    const rankingRowFields = rankingRows.map((row) => (
+      [...row.querySelectorAll('td[data-field]')].map((node) => node.dataset.field)
+    ));
+    const rankingTable = {
+      applicable: ${JSON.stringify(boardId === '4B22-1')},
+      present: !!rankingTableNode,
+      headerFields: rankingHeaderFields,
+      rowCount: rankingRows.length,
+      rowFields: rankingRowFields,
+      expectedFields: ${JSON.stringify(PUBLIC_RANKING_FIELDS)},
+      expectedRows: ${PUBLIC_RANKING_ROW_COUNT},
+      complete: ${JSON.stringify(boardId === '4B22-1')}
+        ? !!rankingTableNode
+          && JSON.stringify(rankingHeaderFields) === ${JSON.stringify(JSON.stringify(PUBLIC_RANKING_FIELDS))}
+          && rankingRows.length === ${PUBLIC_RANKING_ROW_COUNT}
+          && rankingRowFields.every((fields) => (
+            JSON.stringify(fields) === ${JSON.stringify(JSON.stringify(PUBLIC_RANKING_FIELDS))}
+          ))
+        : null,
+    };
     return {
       boardId: host.__athenaBoard?.boardId || null,
       sameDom: card === window.__athenaPublicMatrixCard,
@@ -634,17 +1069,16 @@ async function measure(boardId, nonce, controlsPlan, expectedPrimary, layoutExpe
       surfaceAtEndpoints,
       outerOverflowX: Math.max(0, surface.scrollWidth - surface.clientWidth),
       finalColumn: {
-        applicable: layout.tableCount > 0,
-        expectedTables: layout.tableCount,
-        actualTables: tables.length,
+        applicable: layout.tables.length > 0,
+        expectedTables: layout.tables.length,
+        actualTables: tableEntries.filter((entry) => entry.present).length,
         scrollableCount: scrollables.length,
         scrollers: horizontalScrollerEntries,
         reachedEnds: horizontalReachedEnds,
-        endpoints: tableEndpoints,
-        complete: layout.tableCount > 0
-          ? tables.length >= layout.tableCount && tableEndpoints.length > 0
-            && tableEndpoints.every((endpoint) => endpoint.contained)
-          : null,
+        endpoints: tableEntries,
+        hardFailures: tableAssessment.hardFailures,
+        notExercised: tableAssessment.notExercised,
+        complete: layout.tables.length > 0 ? tableAssessment.complete : null,
         visibleNodeRight: finalRight,
         withinSurface: finalRight === null || finalRight <= surfaceAtEndpoints.right + 2,
         withinCard: finalRight === null || finalRight <= cardBox.right + 2,
@@ -652,20 +1086,19 @@ async function measure(boardId, nonce, controlsPlan, expectedPrimary, layoutExpe
           && surfaceAtEndpoints.right <= cardBox.right + 2,
       },
       footer: {
-        applicable: layout.footerCount > 0,
-        expected: layout.footerCount,
-        actual: footers.length,
+        applicable: layout.footers.length > 0,
+        expected: layout.footers.length,
+        actual: footerEntries.filter((entry) => entry.present).length,
         visibleBottom: footerBottom,
         entries: footerEntries,
-        withinHorizontalOwner: footers.length
-          ? footerEntries.every((entry) => entry.horizontalContained) : null,
-        withinBottom: footers.length ? footerEntries.every((entry) => entry.bottomContained) : null,
-        complete: layout.footerCount > 0
-          ? footers.length >= layout.footerCount && footerEntries.every((entry) => (
-            entry.nonzero && entry.horizontalContained && entry.bottomContained
-          ))
-          : null,
+        withinHorizontalOwner: visibleFooters.length
+          ? visibleFooters.every((entry) => entry.horizontalContained) : null,
+        withinBottom: visibleFooters.length ? visibleFooters.every((entry) => entry.bottomContained) : null,
+        hardFailures: footerAssessment.hardFailures,
+        notExercised: footerAssessment.notExercised,
+        complete: layout.footers.length > 0 ? footerAssessment.complete : null,
       },
+      rankingTable,
       verticalEndpoint: {
         node: bottommost?.dataset.node || null,
         rect: bottommost ? rect(bottommost) : null,
@@ -785,28 +1218,39 @@ app.whenReady().then(async () => {
 
   for (const row of rows) {
     const boardId = row.template_id;
-    if (OVERLAY_STATE_IDS.includes(boardId)) {
-      missing.push({
-        boardId,
-        reason: 'NOT_EXERCISED_OVERLAY',
-        observed: {
-          expectedProductRoot: '13K0-2',
-          nativeValidation: false,
-          detail: 'This ID is a product control popover over the ranking parent, not a standalone board root.',
-        },
-      });
-      continue;
-    }
+    const overlayState = OVERLAY_STATE_IDS.includes(boardId);
+    const parentFlow = overlayState || boardId === '4B22-1';
+    const mountedBoardId = parentFlow ? RANKING_PARENT_ID : boardId;
+    const measuredBoardId = overlayState ? RANKING_PARENT_ID : boardId;
+    const mountRow = parentFlow ? RANKING_PARENT_ROW : row;
+    const mountEnvelope = envelopeFor(mountRow);
     const nonce = `public-${boardId}-${crypto.randomBytes(4).toString('hex')}`;
-    const controlsPlan = controlExpectation(boardId);
-    const expectedPrimary = registry.primaryRendererFor(boardId);
-    const layoutExpectation = authoredLayoutExpectation(boardId);
+    const controlsPlan = controlExpectation(
+      measuredBoardId, mountEnvelope.operation_ref, mountEnvelope.operation_args,
+    );
+    const expectedPrimary = registry.primaryRendererFor(measuredBoardId);
+    const layoutExpectation = authoredLayoutExpectation(measuredBoardId);
     try {
       win.webContents.send('athena:add-canvas-live', {
         status: 'success', conversationId: 'public-matrix', sessionCardId: nonce,
-        envelope: envelopeFor(row),
+        envelope: mountEnvelope,
       });
-      const mounted = await awaitBoard(boardId, nonce);
+      const parentMounted = await awaitBoard(mountedBoardId, nonce);
+      let mounted = parentMounted;
+      let activation = null;
+      let overlayOpened = null;
+      if (parentFlow) {
+        const control = overlayState
+          ? rankingControls.linksFor(RANKING_PARENT_ID, []).find((link) => link.board_id === boardId)?.control
+          : '더보기';
+        assert.ok(control, `parent-flow control missing for ${boardId}`);
+        const activationLink = controlsPlan.all.find((link) => link.target === boardId
+          && link.control === control);
+        assert.ok(activationLink, `parent-flow control contract missing for ${boardId}`);
+        activation = await activateProductControl(nonce, boardId, control, activationLink.acceptedLabels);
+        if (overlayState) overlayOpened = await awaitOverlay(boardId, nonce);
+        else mounted = await awaitBoard(boardId, nonce);
+      }
       if (!mounted.expectedMatched) {
         missing.push({
           boardId,
@@ -818,14 +1262,16 @@ app.whenReady().then(async () => {
       const stages = [];
       for (const stage of STAGES) {
         const viewportCalibration = await setExactStage(stage);
+        const overlay = overlayState ? await measureOverlay(boardId, nonce) : null;
         const measured = await measure(
-          boardId, nonce, controlsPlan, expectedPrimary, layoutExpectation,
+          measuredBoardId, nonce, controlsPlan, expectedPrimary, layoutExpectation,
         );
         const stageResult = {
           ...stage,
           actualContentSize: viewportCalibration.actualContentSize,
           viewportCalibration,
           ...measured,
+          ...(overlayState ? { overlay } : {}),
         };
         stages.push(stageResult);
         if (captureBoardIds.includes(boardId)) {
@@ -839,7 +1285,12 @@ app.whenReady().then(async () => {
           captures.push({ boardId, stage: stage.id, path: relativePath, sha256: sha256Buffer(png) });
         }
       }
-      reports.push({ boardId, cardId: registry.cardIdFor(boardId), variant: row.variant, mounted, stages });
+      const overlayClose = overlayState ? await closeOverlay(boardId, nonce) : null;
+      reports.push({
+        boardId, cardId: registry.cardIdFor(boardId), variant: row.variant,
+        expectedProductRoot: measuredBoardId, parentFlow, parentMounted, mounted,
+        activation, overlayOpened, overlayClose, stages,
+      });
     } catch (error) {
       missing.push({ boardId, reason: String(error && error.message || error).slice(0, 300) });
     } finally {
@@ -853,7 +1304,7 @@ app.whenReady().then(async () => {
 
   const stageContractFailures = reports.filter((report) => report.stages.some((stage) => (
     stage.missing
-      || stage.boardId !== report.boardId
+      || stage.boardId !== report.expectedProductRoot
       || stage.cardConnected !== true
       || stage.activeCards !== 1
       || stage.viewportCalibration?.exact !== true
@@ -864,6 +1315,7 @@ app.whenReady().then(async () => {
       || stage.actualContentSize[1] !== stage.height
       || stage.viewport?.width !== stage.width
       || stage.viewport?.height !== stage.height
+      || (report.boardId === '4B22-1' && stage.rankingTable?.complete !== true)
   )));
   const sameDomFailures = reports.filter((report) => report.stages.some((stage) => stage.sameDom !== true));
   const primaryFailures = reports.filter((report) => (
@@ -889,18 +1341,28 @@ app.whenReady().then(async () => {
       || stage.finalColumn?.withinCard !== true
       || stage.finalColumn?.surfaceWithinCard !== true
       || (stage.finalColumn?.scrollableCount > 0 && stage.finalColumn.reachedEnds !== true)
-      || (stage.finalColumn?.applicable && stage.finalColumn.complete !== true)
-      || (stage.footer?.applicable && (
-        stage.footer.complete !== true || stage.footer.withinBottom !== true
-      ))
+      || (stage.finalColumn?.hardFailures?.length > 0)
+      || (stage.footer?.hardFailures?.length > 0)
   )));
+  const geometryNotExercised = reports.flatMap((report) => report.stages.flatMap((stage) => {
+    const entries = [
+      ...(stage.finalColumn?.notExercised || []).map((entry) => ({ ...entry, kind: 'table' })),
+      ...(stage.footer?.notExercised || []).map((entry) => ({ ...entry, kind: 'footer' })),
+    ];
+    return entries.length ? [{ boardId: report.boardId, stage: stage.id, entries }] : [];
+  }));
+  const overlayFailures = reports.filter((report) => OVERLAY_STATE_IDS.includes(report.boardId)
+    && (report.expectedProductRoot !== RANKING_PARENT_ID
+      || report.activation?.clicked !== true
+      || report.overlayOpened?.productRoot !== RANKING_PARENT_ID
+      || report.overlayOpened?.activeCards !== 1
+      || report.overlayClose?.closed !== true
+      || report.stages.some((stage) => stage.overlay?.complete !== true
+        || stage.overlay?.productRoot !== RANKING_PARENT_ID
+        || stage.overlay?.menuNode !== popoverLayout.MENUS[report.boardId]?.[0])));
   const sourcesStillPinned = sourceUnchanged();
-  const hasIssues = missing.length || reports.length !== 94 || stageContractFailures.length
-    || sameDomFailures.length
-    || primaryFailures.length || controlFailures.length || geometryFailures.length
-    || networkAttempts.length || rendererErrors.length || !sourcesStillPinned;
   const result = {
-    status: hasIssues ? 'PUBLIC_SYNTHETIC_MATRIX_ISSUES' : 'PUBLIC_SYNTHETIC_MATRIX_PASS',
+    status: null,
     evidenceLevel: 'PUBLIC_SYNTHETIC_PRODUCT_RENDERER_ONLY',
     nativeValidation: false,
     nativeCompletedStates: 0,
@@ -921,6 +1383,8 @@ app.whenReady().then(async () => {
     controlFailures: controlFailures.map((report) => report.boardId),
     controlNotExercised,
     geometryFailures: geometryFailures.map((report) => report.boardId),
+    geometryNotExercised,
+    overlayFailures: overlayFailures.map((report) => report.boardId),
     missing,
     reports,
     sourcePins,
@@ -930,6 +1394,11 @@ app.whenReady().then(async () => {
     rendererErrors,
     invokedChannels,
   };
+  const hasIssues = syntheticHasIssues({
+    ...result, stageContractFailures, sameDomFailures, primaryFailures, controlFailures,
+    geometryFailures, overlayFailures, sourcesStillPinned,
+  });
+  result.status = hasIssues ? 'PUBLIC_SYNTHETIC_MATRIX_ISSUES' : 'PUBLIC_SYNTHETIC_MATRIX_PASS';
   fs.writeFileSync(path.join(outRoot, 'report.json'), `${JSON.stringify(result, null, 2)}\n`);
   console.log(JSON.stringify({
     status: result.status,
@@ -939,7 +1408,10 @@ app.whenReady().then(async () => {
     sameDomFailures: result.sameDomFailures.length,
     primaryFailures: result.primaryFailures.length,
     controlFailures: result.controlFailures.length,
+    controlNotExercised: result.controlNotExercised.length,
     geometryFailures: result.geometryFailures.length,
+    geometryNotExercised: result.geometryNotExercised.length,
+    overlayFailures: result.overlayFailures.length,
     sourceUnchanged: result.sourceUnchanged,
     networkAttempts: result.networkAttempts.length,
     rendererErrors: result.rendererErrors.length,

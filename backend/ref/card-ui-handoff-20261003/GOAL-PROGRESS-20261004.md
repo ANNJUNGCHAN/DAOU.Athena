@@ -1,10 +1,10 @@
 # 카드 UI 전체 완료 목표 — 2026-10-04 진행 기록
 
-상태: **ACTIVE / 전체 완료 아님**. 사용자가 전체 계획을 세우고 native goal로 완료까지 계속 진행하도록 요청했다. 목표를 실제 등록했으며 완료 조건을 줄이거나 과거 부분 통과를 현재 전체 통과로 바꾸지 않는다.
+상태: **PAUSED / 전체 완료 아님**. 사용자가 전체 계획을 세우고 native goal로 완료까지 계속 진행하도록 요청해 목표를 등록했다. 이후 계정 연결을 위해 목표를 일시정지했고 최신 메시지에서 작업 재개를 요청했지만, native goal 도구의 lifecycle은 아직 `paused`다. 이번 turn의 승인된 확인 작업은 계속하되 도구 상태를 ACTIVE로 임의 변경하지 않는다. 완료 조건을 줄이거나 과거 부분 통과를 현재 전체 통과로 바꾸지 않는다.
 
 기준 커밋은 UI 브랜치 `codex/card-ui-resume-20261003`의 `7e69c995c5c04d3d0eac602e4d379d2e0ed35e99`다. 기존 main의 로컬 변경과 별도 LAYA 브랜치는 이 목표의 변경 대상에 포함하지 않는다.
 
-현재 제품 수정 후 전체 단위 검사는 **807/807 PASS**다. 공개 합성 검사에서는 90개 보드의 270개 크기 단계를 측정했으며, 이번에 수정한 네 상태의 기하 문제는 재현되지 않았다. 합성 검사 전체 판정은 여전히 **ISSUES**다. Paper 원본 101개 구조의 독립 검토와 개선안 39개 시각 검토가 각각 범위 한정 승인을 받았고, 최종 manifest와 review binding을 사용하는 장부의 strict current 판정도 **101/101 confirmed**다. 실제 앱 완료 0/94, 추가 흐름 완료 0/30이며 목표는 **ACTIVE**다. 실제 앱 ID 두 건의 부분 증거는 전체 완료에 포함하지 않는다.
+현재 제품 수정 후 전체 단위 검사는 **807/807 PASS**다. Paper 원본 101개 구조의 독립 검토와 개선안 39개 시각 검토가 각각 범위 한정 승인을 받았고, 최종 manifest와 review binding을 사용하는 장부의 strict current 판정도 **101/101 confirmed**다. 실제 앱 완료 0/94, 추가 흐름 완료 0/30이며 native goal lifecycle은 **PAUSED**다. 실제 앱 ID 두 건의 부분 증거는 전체 완료에 포함하지 않는다. 공개 합성 검사의 최신 결과는 아래 체크포인트에 별도로 기록한다.
 
 ## 계획과 범위
 
@@ -124,3 +124,39 @@ Paper 접근 복구 후 원본 101개를 변경 전 `before03`과 변경 후 `af
 두 관측은 서로 다른 경로의 결과다. 카드 도착을 Claude 인증 복구로 해석하거나, 인증 실패를 API 조회 카드 미도착으로 바꾸지 않는다. 비공개 관측 기록 `native-auth-recheck-20261004.json`은 2026-10-04 09:28:43 UTC에 작성됐고 `runtime_commit_sha=null`, native PASS 0이다. Paper manifest에는 포함하지 않았으며 native 최종 증거로 승격하지 않는다. 현재 디스플레이는 1920×1152이고 요구 크기 2560×1392를 충족하지 않으므로 native 완료 **0/94**, 추가 흐름 완료 **0/30**, 목표 **ACTIVE**를 유지한다.
 
 앱의 X/Alt+F4는 tray hide로 동작했고 정상 종료용 tray UI는 현재 window 목록에 노출되지 않아 정상 재시작은 미완료다. 프로세스를 강제 종료하거나 프로필을 변경하지 않았다.
+
+## 최신 체크포인트와 native readiness — turn 3
+
+UI 브랜치 커밋 `17928be76a2aed44c9fbd38f524e8db56205600b`을 normal push로 업로드했다. 이번 turn 시작 전에 local/remote가 같은 커밋이고 UI 작업 트리가 깨끗함을 확인했다. 해당 커밋 상태에서 보안 검사를 새로 실행해 255개 커밋과 117.37MB를 검사했으며 누출 0, exit 0 / **ALL_GATES_PASS**를 확인했다.
+
+실제 goal turn 3에서 `UI 검증 연결 확인입니다. 준비됨 한 단어로 답해 주세요.`를 새로 제출했다. 입력란은 비워졌지만 제출 후 다음 오류를 다시 관측했다.
+
+> Failed to authenticate: OAuth session expired and could not be refreshed
+
+같은 window `134656`은 normal/maximized 상태였고 캡처의 logical 크기는 1920×1152였다. 이는 요구한 정확한 `WINDOW_OUTER` 2560×1392 → 1411×1166 → 2560×1392 cycle 증거가 아니다. 읽기 전용 프로세스 관측에는 10월 3일 timestamp의 Electron root 두 개가 있었지만 현재 runtime commit은 null이며, 이 정보로 window `134656`을 특정 PID에 매핑하지 않는다.
+
+독립 비공개 관측 기록 `native-auth-recheck-20261004-turn3.json`은 2026-10-04 11:00:24 UTC에 작성됐고 SHA-256은 `b83aa1451229f2f2fa8957f5ebb8a821dc5e045d3662533975f8052055b4caf8`다. 금융 값이나 screenshot은 저장소에 넣지 않았고, 이 기록을 Paper manifest나 native 최종 증거로 사용하지 않는다. native 및 추가 흐름 완료 수 증가는 각각 0이다. 인증 자동화는 수행하지 않았고 provider·설정도 변경하지 않았다.
+
+의미 있는 supplemental public-harness 수정이 현재 별도 작성자에 의해 진행 중이므로 목표는 **ACTIVE**다. 아직 새 하네스 성공이나 재검증 결과를 선언하지 않는다.
+
+## 재개 요청 이후 현재 readiness와 공개 하네스
+
+위 turn 3 절은 당시의 이력이다. 사용자는 계정 연결을 위해 목표를 일시정지한 뒤 Athena를 다시 열어 달라고 요청했고, 이후 연결됐으니 재개하라고 알렸다. 그러나 native goal 도구에는 별도 resume 기능이 없고 lifecycle은 계속 `paused`다. 앱에서 목표를 다시 활성화하기 전까지 최신 상태를 ACTIVE로 기록하지 않는다.
+
+`npm --prefix app start`는 exit 0으로 끝났고 single-instance 경로를 통해 기존 window `134656`을 앞으로 가져왔다. 새 프로세스와 새 renderer로 시작한 true fresh restart 증거는 아니다. 사용자 연결 이후 실제 Athena 인증 UI를 새로 읽었으며, `설정 > 모델 > Codex`에는 `인증 필요`, `연결된 Codex 계정이 없다`가 표시됐다. CLI probe는 `0.147.0`만 확인했고 모델 selector는 disabled였다. 이는 앞서 Claude 요청에서 관측한 OAuth session 만료와 다른 Codex 계정 readiness 결과이며 두 인증 상태를 합치지 않는다. 사용자가 연결했다는 계정이 Athena 전용 연결인지 Codex 앱 연결인지 질문했으나 아직 답을 받지 못했다. 인증 자동화, provider 전환, 설정 변경은 수행하지 않았다. 새 비공개 관측 `native-codex-readiness-20261004-resume.json`의 SHA-256은 `ff05b95cb45720127c2c52e206d0b4f6d7c013278061be659fedc0831a57dc5b`이며 native 최종 증거로 승격하지 않는다.
+
+검토된 supplemental harness의 SHA-256 prefix는 `0E986CB…`다. `responsive-parent-flow-01` 실행은 **ISSUES / exit 1**로 끝났고 report SHA-256은 `e24c639434ec9b8e8478e3cf0b58d8e8760b30a0ad56e485bb955bdb8e1ff0bf`다. mounted 93, missing 1, control 4, geometry 0, unexercised 42, overlay 0, stage 0, same-DOM 0, network 0, renderer error 1이며 renderer source 155개는 실행 전후 같았다. `nativeValidation=false`, native 완료 증가는 0이다. 현재 별도 작성자가 이 실행을 triage 중이므로 특정 제품 원인을 확정하거나 새 하네스 성공으로 선언하지 않는다.
+
+첫 실행의 `overlay=0`은 overlay 4개 전체 통과가 아니다. `4A9H-0`, `4AGN-0`, `4ANS-0` 세 report만 범위 한정 통과했고 `4AUX-1`은 report가 생성되지 않은 missing 1이며 renderer error 1과 함께 남았다. 생성된 93개 report와 279개 stage는 exact viewport, same-DOM 및 실제 측정된 hard geometry를 통과했다. `geometryNotExercised=42`는 board-stage record 42개, endpoint observation 45개, 14개 board의 미실행 기록이므로 전체 94개 geometry 통과로 확대하지 않는다.
+
+## supplemental public harness 최신 체크포인트 — responsive-parent-flow-02
+
+management alias/activation을 정확히 맞추고, 빈 history handler를 명시적으로 처리하며, 공개 관심종목 8개 metadata를 보강한 뒤 `responsive-parent-flow-02`를 새로 실행했다. 제품 소스는 변경하지 않았고 앞서 확인한 전체 단위 검사 **807/807 PASS**를 유지한다. 하네스 자체 검사 20개와 대상 검사 22개를 통과했다.
+
+실행은 **ISSUES / exit 1**이며 report SHA-256은 `3492fdd3e2db39b3e51d39f3fdd2338c353be2a8ee835f4de8bfe180a97f5cfb`, harness SHA-256은 `893bc55288532291e8403cf2f56c8205e473d5c5fe9fca44b890ba47b760a074`다. mounted 94, missing 0, stage 0, same-DOM 0, primary 0, control 0, `controlNotExercised=0`, geometry 0, `geometryNotExercised=39`, overlay 0, network 0, renderer error 0이며 renderer source 155개는 실행 전후 같았다. `nativeValidation=false`, native 완료 증가는 0이다.
+
+[독립 체크포인트 검토](reviews/PUBLIC-MATRIX-CHECKPOINT-20261004-REVIEW.md)는 이 실행에 **SCOPED APPROVE**를 부여했다. runtime 94개 report·282개 stage에서 실제 측정한 검사는 모두 실패 0이고, overlay 4개는 각 3단계에서 실제 parent open/close를 수행했으며 renderer source pin 155개의 재해시 mismatch는 0이다. `NOT_EXERCISED`는 39 board-stage record, 42 entry, 14 unique identity, 13 board다. compact/unavailable table ID 4개, hidden-attribute footer 1개, computed-hidden table 9개가 남는다. `2U5L`의 8-row 계약은 주입됐고 표는 visible/contained였지만 report가 DOM 8행 census를 수행한 것은 아니다. ELW는 wiring/rendering만 확인됐고 `interactionVerified=false`이며 실제 `2U5L → 3EWN` 클릭은 미검증이다. 이 승인은 공개 합성 체크포인트 범위이며 native·추가 흐름 또는 전체 목표의 최종 승인이 아니다.
+
+크기 계약은 [실행 계획](GOAL-PLAN-20261004.md)의 43–48행과 [계획 재검토](reviews/GOAL-PLAN-20261004-REVIEW.md)의 22행대로 logical `WINDOW_OUTER`다. 현재 작업 영역 1920×1152에서는 2560×1392와 1411×1166 전체를 화면 안에 표시할 수 없고 단위 fallback도 없다. 물리 raster가 이 계약을 대신 충족할 수 있다는 이전 추정은 철회한다. Athena의 visible 정상 종료 경로는 tray의 `종료`/app quit뿐이며 X/Alt+F4는 hide로 동작한다. 현재 window 목록과 소스에서 대체 visible quit menu를 찾지 못했다. Athena Codex의 연결 계정 없음 관측과 사용자의 연결 위치 답변 대기는 그대로다.
+
+native goal 도구 상태는 계속 **PAUSED**다. 원본 main 로컬 변경과 별도 LAYA 브랜치는 건드리지 않았다.
