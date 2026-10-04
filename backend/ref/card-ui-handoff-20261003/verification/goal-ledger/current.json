@@ -114,31 +114,31 @@
     "resolution_rule": "M1 must confirm a unique executable route and evidence-bound identity assertion before PASS."
   },
   "paper": {
-    "source_cohort": "card-ui-paper-20261004-01",
-    "session_id": "paper-design-preservation-20261004-01",
+    "source_cohort": "card-ui-paper-m5-followups-20261005-01",
+    "session_id": "paper-m5-followups-20261005-01",
     "before_snapshot_ref": {
       "scope": "PRIVATE",
-      "artifact_id": "paper-originals-before-20261004",
-      "sha256": "c2d79b382a76ad1423252de6b79a8ebeda6224c4b3e67ac14f37dd6b0a7da6e4"
+      "artifact_id": "paper-originals-before-m5-followups",
+      "sha256": "5ed616305c1982e1632b50666957433d00dea87656b1211aa251bac064264fc0"
     },
     "after_snapshot_ref": {
       "scope": "PRIVATE",
-      "artifact_id": "paper-originals-after-20261004",
-      "sha256": "5f7fe947461aaa0cda23cd6b2540802e8c2d84fdd756c0424d75ab1b778b1b53"
+      "artifact_id": "paper-originals-after-m5-followups",
+      "sha256": "dee3d464da1f5cbd54c5d00a939da5688d2a771c657b428b8a34a69a41085819"
     },
     "mapping_receipt_ref": {
       "scope": "PRIVATE",
-      "artifact_id": "paper-mapping-101",
+      "artifact_id": "paper-mapping-101-m5-followups",
       "sha256": "33f2b792702ea407bfe2f6f826b5895f02543e46b0c4bf191d26253dcea6fa6a"
     },
     "independent_review": {
       "status": "APPROVED",
-      "author_id": "paper-evidence-author-20261004",
-      "reviewer_id": "paper-final-independent-review-20261004",
+      "author_id": "paper-m5-evidence-author-20261005",
+      "reviewer_id": "paper-m5-independent-review-20261005",
       "report_ref": {
         "scope": "REPO",
-        "path": "backend/ref/card-ui-handoff-20261003/reviews/PAPER-FINAL-20261004-REVIEW.json",
-        "sha256": "72c1796187ffe1d711a570faa0d73fba49a16e5eddc3be1e580a4b1ad5895d3f"
+        "path": "backend/ref/card-ui-handoff-20261003/reviews/PAPER-M5-FOLLOWUPS-20261005-REVIEW.json",
+        "sha256": "26f0a345f627bc47c262c4810f89ec39c7b4ab01e6346fe789cb9fdf1664954b"
       }
     },
     "items": [

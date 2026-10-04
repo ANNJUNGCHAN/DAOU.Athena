@@ -1,10 +1,10 @@
 # 카드 UI 전체 완료 목표 — 2026-10-04 진행 기록
 
-상태: **PAUSED / 전체 완료 아님**. 사용자가 전체 계획을 세우고 native goal로 완료까지 계속 진행하도록 요청해 목표를 등록했다. 이후 계정 연결을 위해 목표를 일시정지했고 최신 메시지에서 작업 재개를 요청했지만, native goal 도구의 lifecycle은 아직 `paused`다. 이번 turn의 승인된 확인 작업은 계속하되 도구 상태를 ACTIVE로 임의 변경하지 않는다. 완료 조건을 줄이거나 과거 부분 통과를 현재 전체 통과로 바꾸지 않는다.
+상태: **ACTIVE / 전체 완료 아님**. 사용자가 전체 계획을 세우고 native goal로 완료까지 계속 진행하도록 요청해 목표를 등록했다. 계정 연결을 위해 일시정지했던 native goal 도구는 현재 turn에 자동 재개됐다. 완료 조건을 줄이거나 과거 부분 통과를 현재 전체 통과로 바꾸지 않는다.
 
 기준 커밋은 UI 브랜치 `codex/card-ui-resume-20261003`의 `7e69c995c5c04d3d0eac602e4d379d2e0ed35e99`다. 기존 main의 로컬 변경과 별도 LAYA 브랜치는 이 목표의 변경 대상에 포함하지 않는다.
 
-현재 제품 수정 후 전체 단위 검사는 **807/807 PASS**다. Paper 원본 101개 구조의 독립 검토와 개선안 39개 시각 검토가 각각 범위 한정 승인을 받았고, 최종 manifest와 review binding을 사용하는 장부의 strict current 판정도 **101/101 confirmed**다. 실제 앱 완료 0/94, 추가 흐름 완료 0/30이며 native goal lifecycle은 **PAUSED**다. 실제 앱 ID 두 건의 부분 증거는 전체 완료에 포함하지 않는다. 공개 합성 검사의 최신 결과는 아래 체크포인트에 별도로 기록한다.
+현재 제품 수정 후 전체 단위 검사는 **807/807 PASS**다. Paper 원본 101개 구조의 독립 검토와 개선안 39개 시각 검토가 각각 범위 한정 승인을 받았고, 최종 manifest와 review binding을 사용하는 장부의 strict current 판정도 **101/101 confirmed**다. 실제 앱 완료 0/94, 추가 흐름 완료 0/30이며 native goal lifecycle은 **ACTIVE**다. 실제 앱 ID 두 건의 부분 증거는 전체 완료에 포함하지 않는다. 공개 합성 검사의 최신 결과는 아래 체크포인트에 별도로 기록한다.
 
 ## 계획과 범위
 
@@ -160,3 +160,27 @@ management alias/activation을 정확히 맞추고, 빈 history handler를 명�
 크기 계약은 [실행 계획](GOAL-PLAN-20261004.md)의 43–48행과 [계획 재검토](reviews/GOAL-PLAN-20261004-REVIEW.md)의 22행대로 logical `WINDOW_OUTER`다. 현재 작업 영역 1920×1152에서는 2560×1392와 1411×1166 전체를 화면 안에 표시할 수 없고 단위 fallback도 없다. 물리 raster가 이 계약을 대신 충족할 수 있다는 이전 추정은 철회한다. Athena의 visible 정상 종료 경로는 tray의 `종료`/app quit뿐이며 X/Alt+F4는 hide로 동작한다. 현재 window 목록과 소스에서 대체 visible quit menu를 찾지 못했다. Athena Codex의 연결 계정 없음 관측과 사용자의 연결 위치 답변 대기는 그대로다.
 
 native goal 도구 상태는 계속 **PAUSED**다. 원본 main 로컬 변경과 별도 LAYA 브랜치는 건드리지 않았다.
+
+## 자동 재개 후 최신 readiness — blocked audit turn 2
+
+위 PAUSED 절은 당시 이력이다. native goal 도구는 현재 turn에 자동 재개돼 **ACTIVE**이며, HEAD `bc59aac`가 remote와 같고 작업 트리가 깨끗함을 확인했다. 이 체크포인트는 이미 업로드된 상태다. 직전 fresh 보안 검사는 256개 커밋에서 **ALL_GATES_PASS**였고, 이번 readiness turn에서는 다시 실행하지 않았다.
+
+기존 window `134656`은 최소화 상태였다. 활성화와 재획득으로 955×1040에 복원한 뒤 normal maximize 1920×1152를 확인했다. Athena의 Codex UI는 여전히 `인증 필요`, 연결 계정 없음, CLI `0.147.0`만 표시하고 모델 selector는 disabled다. 인증·provider·OS 설정을 변경하지 않았고 새 요청 probe도 제출하지 않았다. runtime commit은 null이며 native 및 추가 흐름 완료 증가는 0이다.
+
+비공개 관측 기록 `native-readiness-20261004-active-turn2.json`은 2026-10-04 14:13:56 UTC에 작성됐고 SHA-256은 `5321ed3e275a9a5c906ae1e92c36926faec1d3a51d5cdb6f161f5c894f42ccbe`다. 이전 goal turn의 공개 matrix 94개 체크포인트는 그대로 유지한다. 이번 turn은 같은 인증·화면 크기 조건이 반복된 resumed blocked audit turn 2이며, blocked 전환 기준에는 아직 도달하지 않았다. `completion_plan_review`가 차단되지 않은 필수 source/Paper 작업이 남았는지 별도로 감사 중이므로 현재 hard impasse를 선언하지 않는다.
+
+## M5 Paper 후속 체크포인트 — 2026-10-05
+
+필수 후속 개선안 두 개를 새 편집 가능 보드로 작성했다. `12G5-0`은 `p-A-0`의 Markdown source 개선안이며 source ref는 `c5ded55`다. `12L8-0`은 `p-E-0`의 condition 개선안이며 source ref는 `07b266c`다. 두 보드는 작성 완료 후 독립 시각·source 검토에서 **SCOPED APPROVE**를 받았다. 기존 39개는 이전 승인 이력을 그대로 사용하며 이번에 fresh 재검토하지 않았다. 따라서 현재 개선안 집합은 **기존 39개 prior approved + 신규 2개 current approved = 41개 composite**다.
+
+이 체크포인트는 M5에서 확인된 app-only 도면 누락 두 건을 해소한 범위다. `unresolved followups` 배열 0은 이 목록의 두 건이 해소됐다는 뜻이며, 전체 M5 또는 native 0/94 route 대조에서 디자인 불일치가 0이라는 뜻이 아니다. native 기반 전체 M5 검증은 남아 있다.
+
+새 변경 전 snapshot SHA-256은 `5ed616305c1982e1632b50666957433d00dea87656b1211aa251bac064264fc0`, 변경 후 snapshot SHA-256은 `dee3d464da1f5cbd54c5d00a939da5688d2a771c657b428b8a34a69a41085819`다. fresh before/after 모두 원본 101개·6페이지·read 2,021회·node 33,101개·편집 가능 101개를 확인했고 structure/mapping diff는 0이다. aggregate SHA-256은 기존과 같은 `8efc6abbe8e748f25f6689a96c00e3c20b812f53349094205c17883aae1fd872`이며 독립 검토가 이 보존 범위를 승인했다.
+
+비공개 증거 root는 `VROOT/card-ui-native-m5-followups`다. 최종 교정 manifest SHA-256은 `9b5a0d4a098795d3e822e04309d9d3ad0ca93f4537adcfed6b69dcc639e69063`, 기준 source commit은 `bc59aac8e3b7055d495e17ff3d6ef51de57799aa`다. 공개 index SHA-256은 `b96144ca4f676b395d2d9904a32d7727c4cbe76b392b7c3865846772e4695270`, 두 번째 audit SHA-256은 `8edc63218ce24bae76f7e284c1b72f1d0526aa481b9d744395a553d39687d2f2`다. 최종 교정에서 기존 native identity 두 건의 원래 session/cohort metadata를 복원하고 index의 실제 `+1`·`-1`·`0`·미제공 표기를 바로잡았다. native JSON 내용과 해시는 바뀌지 않았다.
+
+첫 보드 작성의 초기 sequence 1–10은 raw `CallToolResult` wrapper를 보존하지 못했다. rendered 출력, 최종 JSX, screenshot, sequence 11–44의 실제 raw 결과는 정확히 보존했다. 따라서 최종 산출물과 후반 raw provenance는 검토 가능하지만 전체 raw mutation history가 승인됐다고 기록하지 않는다. `FocusNode` 검사는 8/8, condition node 검사는 20/20 fresh pass다. 실행 가능한 Python 환경이 없어 `pytest`는 실행하지 못했다.
+
+최종 41개 manifest, 공개 index와 `current.json` 결속은 [M5 후속 독립 검토 receipt](reviews/PAPER-M5-FOLLOWUPS-20261005-REVIEW.json)로 검토됐다. receipt SHA-256은 `26f0a345f627bc47c262c4810f89ec39c7b4ab01e6346fe789cb9fdf1664954b`, 최종 `current.json` SHA-256은 `a6840ef955752d0f740eefb24e30a65bc7d86956c4a72f2a304e0403924d486d`다. 새 root를 사용한 validator는 실제 검사 `VALIDATION=PASS`, 자체 검사 **24/24**를 반환했고 집계는 Paper 101/101, native **0/94**, 추가 흐름 **0/30**, lifecycle **ACTIVE**, `GOAL_COMPLETE=false`다. native JSON SHA-256 `222c3caaa3bfa3d38661f84e8aacc34b06d7a98677a013bb6670a22281a23828`과 additional JSON SHA-256 `20bbf60182f9be78d94f42364f6b618f43ba071a846d13cc2e9399b74feca6ea`는 이전과 같다.
+
+이 결속은 app-only Paper 누락 두 건과 원본 101개 보존 체크포인트를 승인한다. 전체 M5 또는 native route 대조 완료를 뜻하지 않으며 기존 Athena 인증과 exact logical `WINDOW_OUTER` 크기 blocker도 해소되지 않았다. 현재 체크포인트에 대한 새 보안 검사·commit·push는 아직 실행하지 않았다. 앞서 완료한 `bc59aac` 업로드와 256-commit 보안 검사는 이전 체크포인트 이력이다.

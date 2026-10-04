@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "verified_at": "2026-10-04T09:34:39.893Z",
+  "verified_at": "2026-10-04T15:00:11.000Z",
   "paper_file": {
     "id": "01M3SB680J59QWZX6J4CGRVXT7",
     "name": "ATHENA 앱",
     "url": "https://app.paper.design/file/01M3SB680J59QWZX6J4CGRVXT7"
   },
-  "scope": "기존 원본 도면과 별도로 작성한 편집 가능한 개선안 39개의 색인이다. 실제 Paper 페이지에서 확인한 아트보드 ID만 포함한다. ID 집합 검증과 별도로 개선안 39개 시각 재검토가 BOUNDED APPROVE를 받았으며, 제품 native 94개 검증은 아직 완료되지 않았다. 설계 이후 제품 교정 차이를 각 항목에 기록한다.",
+  "scope": "기존 원본 도면과 별도로 작성한 편집 가능한 개선안 41개의 색인이다. 실제 Paper 페이지에서 확인한 아트보드 ID만 포함한다. 기존 39개 승인을 유지하고 새 개선안 2개를 현재 독립 검토한 합성 BOUNDED APPROVE이며, 41개 전부를 새로 검토했다는 뜻은 아니다. 제품 native 94개 검증은 아직 완료되지 않았다. 설계 이후 제품 교정 차이를 각 항목에 기록한다.",
   "baseline_manifests": [
     "card-ui-paper-baseline.json",
     "card-ui-paper-support-baseline.json"
@@ -15,16 +15,19 @@
   "paper_visual_review": {
     "status": "BOUNDED_APPROVE",
     "review_lane": "auth_error_review",
-    "approved_entries": 39,
-    "total_entries": 39,
-    "scope": "개선안 39개의 현재 Paper 시각 상태만 승인한다. 원본 101개 구조 보존, 제품 소스 적용 여부, native 94개 상태 완료는 별도 판정이다.",
-    "initial_result": "35 SCOPED PASS + 4 REQUEST CHANGES",
+    "approved_entries": 41,
+    "total_entries": 41,
+    "scope": "기존 개선안 39개의 이전 승인을 유지하고 새 개선안 2개의 현재 Paper 시각 상태를 독립 검토한 합성 승인이다. 41개 전체를 새로 검토한 결과가 아니다. 원본 101개 구조 보존과 native 94개 상태 완료는 별도 판정이다.",
+    "initial_result": "기존 39 BOUNDED APPROVE 유지 + 새 2 SCOPED APPROVE",
     "resolved_changes": [
       "YRI-0의 18개 Text와 YGL-0의 1개 Text를 %로 수정했다.",
       "YGL-0의 YMH-0 폭을 104px로 되돌려 회귀를 보정했다.",
       "1155-0과 11DX-0에 가로 track, handle, 우측 경계 8개 노드를 추가했다.",
       "position 갱신은 Paper가 no-op으로 무시했으며 위치 변경으로 계산하지 않는다.",
-      "10WU-0과 10WV-0의 generic header 지적은 철회됐고 두 항목은 수정하지 않았다."
+      "10WU-0과 10WV-0의 generic header 지적은 철회됐고 두 항목은 수정하지 않았다.",
+      "12G5-0은 Markdown 표의 표 내부 가로 이동, 초점 표시와 숫자·단위 줄바꿈 방지 상태를 공개 합성 예시로 제시한다.",
+      "12L8-0은 15L8-2의 계산 등락률, 0% 중립 상태와 계산 불가 미제공 상태를 공개 합성 예시로 제시한다.",
+      "12G5-0 작성 기록 중 초기 10개 호출은 raw CallToolResult wrapper가 남지 않아 실제 요청과 보존된 출력 전사만 기록했다. 변경을 재실행하지 않았으며 최종 JSX·screenshot과 후속 raw receipt로 최종 상태를 검토했다."
     ],
     "private_evidence": "감사 screenshot은 비공개이며 이 공개 색인에 포함하지 않는다."
   },
@@ -679,9 +682,55 @@
       "native_status": "UNVERIFIED",
       "paper_visual_status": "BOUNDED_APPROVE",
       "followup_difference": "단위와 좁은 가격 이력 규칙은 현재 소스에 적용돼 있고 Paper 시각 재검토는 범위 한정 승인을 받았다. 공개 합성 도면의 값은 실제 금융 값이 아니며 전체 native 재검증은 별도다."
+    },
+    {
+      "page_id": "p-A-0",
+      "page_name": "개선 · 공통 결과와 정보 밀도",
+      "artboard_id": "12G5-0",
+      "artboard_name": "추가 개선 · 채팅 Markdown 표 · 좁은 폭과 키보드 초점",
+      "paper_display_name": "추가 개선 · 채팅 Markdown 표 · 좁은 폭과 키보드 초점",
+      "targets": [
+        "채팅 답변의 Markdown 표"
+      ],
+      "improvement_reason": "좁은 채팅 폭에서도 일반 답변 폭은 유지하면서 표 안에서만 가로 이동하고, 키보드 초점 위치와 숫자·단위의 한 줄 표시를 확인할 수 있게 한다.",
+      "implementation_commits": [
+        "c5ded55"
+      ],
+      "current_source_evidence": [
+        "app/lib/markdown.js: Markdown 표를 tabindex 0, region 역할과 좌우 이동 안내가 있는 md-table-scroll 안에 넣고 숫자형 셀에 md-table-number를 적용한다.",
+        "app/chat.css: md-table-scroll에 표 내부 overflow-x와 focus-visible outline을 적용하고 표는 max-content, 숫자형 셀은 nowrap으로 유지한다."
+      ],
+      "source_status": "APPLIED_CURRENT_SOURCE",
+      "native_status": "UNVERIFIED",
+      "paper_visual_status": "SCOPED_APPROVE",
+      "evidence_limitation": "최종 JSX·screenshot과 후속 raw receipt는 보존했다. 초기 10개 작성 호출의 raw CallToolResult wrapper는 보존되지 않아 실제 요청과 출력 전사 및 별도 gap receipt로 범위를 한정하며, 전체 raw 변경 이력이라고 주장하지 않는다.",
+      "followup_difference": "제품은 실제 Markdown 파서와 CSS로 동작한다. Paper 도면은 공개 합성 표로 넓은 상태, 좁은 viewport와 우측 이동·초점 상태를 정적으로 비교하며 실제 키보드 조작 성공을 증명하지 않는다."
+    },
+    {
+      "page_id": "p-E-0",
+      "page_name": "개선 · 탐색 카드",
+      "artboard_id": "12L8-0",
+      "artboard_name": "추가 개선 · 조건검색 결과 · 계산 등락률 상태",
+      "paper_display_name": "추가 개선 · 조건검색 결과 · 계산 등락률 상태",
+      "targets": [
+        "15L8-2 조건검색 결과"
+      ],
+      "improvement_reason": "현재가와 전일 대비로 계산한 등락률을 원본 값과 구분하고, 상승·하락·0% 중립·계산 불가 상태의 의미를 한 화면에서 확인할 수 있게 한다.",
+      "implementation_commits": [
+        "07b266c"
+      ],
+      "current_source_evidence": [
+        "backend/athena_api/canvas_condition_query.py: 100 × 전일 대비 ÷ (현재가 - 전일 대비)로 계산하고 양수·음수·0에 up·down·flat tone을 적용하며 계산 불가는 unavailable로 남긴다.",
+        "app/lib/board-display-policy-data.js: 15L8-2 s009를 등락률(계산)으로 명시해 응답 원본 등락률과 계산 표시를 구분한다."
+      ],
+      "source_status": "APPLIED_CURRENT_SOURCE",
+      "native_status": "UNVERIFIED",
+      "paper_visual_status": "SCOPED_APPROVE",
+      "followup_difference": "제품은 동일 응답 행의 실제 현재가와 전일 대비가 있을 때만 계산한다. Paper 도면은 공개 합성 값으로 +1.00%, -1.00%, 0.00%와 미제공 상태를 보여 주며 실제 금융 조회 결과가 아니다."
     }
   ],
-  "product_followups_without_diagram": [
+  "product_followups_without_diagram": [],
+  "resolved_product_followups": [
     {
       "targets": [
         "채팅 답변의 Markdown 표"
@@ -690,7 +739,8 @@
         "c5ded55"
       ],
       "difference": "표 안에서만 가로 스크롤과 키보드 이동을 제공하고 숫자와 단위의 줄바꿈을 방지한다. 일반 답변 본문의 폭은 유지한다.",
-      "diagram_status": "대응하는 별도 개선 도면은 작성하지 않았다."
+      "diagram_status": "12G5-0 편집 가능 개선 도면으로 해소했다.",
+      "artboard_id": "12G5-0"
     },
     {
       "targets": [
@@ -700,7 +750,8 @@
         "07b266c"
       ],
       "difference": "동일 응답 행의 현재가와 전일 대비로 계산한 비율을 등락률(계산)으로 명시하고, 계산한 0%의 중립색을 적용한다. 원본 등락률 값은 보존하며 계산할 수 없으면 미제공으로 표시한다.",
-      "diagram_status": "대응하는 별도 개선 도면은 작성하지 않았다."
+      "diagram_status": "12L8-0 편집 가능 개선 도면으로 해소했다.",
+      "artboard_id": "12L8-0"
     }
   ]
 }
