@@ -24,3 +24,15 @@ The runtime requires a separately prepared SDK environment and deployment/catalo
 Do not publish `.env`, live bearer tokens, provider profiles, conversation databases, model/source datasets, local runtime logs or raw application payloads. Leases and generation values travel through private process environment variables; the opaque turn ticket intentionally travels in the provider prompt and local HTTP path. Callback redaction tests are scoped checks and do not prove that provider transcripts or HTTP access logs are safe to publish. Keep those logs private and recreate credentials locally on the destination computer.
 
 Public-repository security gates remain a separate required check before publishing the snapshot. This focused review does not replace the complete gate evaluation. Real-money order execution remains outside scope; simulated backtests remain in scope.
+
+## Destination re-run (2026-10-06, Claude)
+
+Fresh worktree of `c3f15b6` on a second Windows machine after `npm ci --prefix app`, `node app/node_modules/electron/install.js`, `uv sync`, and `resume.mjs` (plan restored).
+
+| Check | Result |
+| --- | --- |
+| Focused Node LAYA routing/runtime tests | 27 passed, 0 failed |
+| Backend `test_laya_*.py` (unittest, backend .venv) | 52 run: 48 OK, 4 errors |
+| Full app unit suite (`npm test`) | 819 tests: 772 passed, 46 failed, 1 cancelled; exit 1 (same as the origin machine) |
+
+The four backend errors all load the ignored local file `datasets/laya-athena/versions/v008/source-contracts.json`, which Git does not transfer. They are environment gaps, not source regressions, and remain unverified on this machine until that dataset is provided locally. This machine also has no LAYA SDK, deployment/checkpoint or LAYA env settings, so no live LAYA runtime was started.

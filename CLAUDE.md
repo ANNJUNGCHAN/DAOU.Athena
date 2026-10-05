@@ -1,5 +1,9 @@
 # CLAUDE.md
 
+## Handoff and product scope
+
+Before working in this repository, read `AGENTS.md`. It holds the shared agent instructions: the current cross-machine handoff entry points (`backend/ref/handoff-20261005.md`, `backend/ref/handoff-20261005-review.md`, `backend/ref/card-ui-handoff-20261003/`), branch separation rules, and product scope. Those rules apply to Claude sessions as well.
+
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
