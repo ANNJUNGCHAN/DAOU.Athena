@@ -18,6 +18,12 @@
 node backend/ref/card-ui-handoff-20261003/verification/goal-ledger/validate.mjs --evidence-root <private-evidence-directory>
 ```
 
+증분 실행이 서로 다른 불변 cohort에 있으면 `--evidence-root`를 반복한다. PRIVATE 참조는 행의 `source_cohort`를 소유한 한 manifest에서만 해석되며, 같은 cohort 또는 artifact ID가 여러 root에 있으면 검증을 거절한다.
+
+```powershell
+node backend/ref/card-ui-handoff-20261003/verification/goal-ledger/validate.mjs --evidence-root <paper-cohort-root> --evidence-root <native-route-cohort-root>
+```
+
 로컬 root의 `manifest.json`은 다음 필드를 가진다.
 
 ```json
@@ -71,6 +77,12 @@ native 94와 additional 30은 다음을 모두 충족해야 한다.
 - 모든 예상 control은 관측 증거가 필요하다. 예상 control이 0개여도 근거 있는 `NOT_APPLICABLE_VERIFIED` receipt가 필요하다.
 - `recorded_outcome=PASS`, `freshness_status=CURRENT`, 열린 bug 0이어야 한다.
 - 작성자와 다른 검토자의 JSON receipt가 실제 파일/hash, 제품 source commit, cohort, manifest hash, 승인 item 집합에 결속돼야 한다. review receipt는 manifest 밖의 `REPO` evidence로 유지해 manifest가 review 자체를 포함하는 순환 hash를 만들지 않는다.
+
+`CONFIRMED_UNIQUE` route는 아직 full native PASS가 아니어도 source commit/closure, session receipt, observed route와 고유 route identity evidence를 모두 검증한다. 또한 별도 `route_independent_review`의 `REPO` JSON receipt가 `kind=independent-review`, `scope=M1_ROUTE_IDENTITY_ONLY`, 서로 다른 작성자/검토자, source commit/cohort, 해당 evidence manifest SHA-256, 승인 item ID에 결속돼야 한다. 이 receipt는 full PASS의 `independent_review`로 재사용할 수 없다. 이 M1 부분 승격은 `final_status=NOT_RUN`과 native PASS 0을 유지한다. 같은 행이 나중에 full PASS가 되어도 route assertion ID와 signature는 한 번만 등록한다. `route_gaps`는 native 행의 `AMBIGUOUS`/`MISSING` 상태에서 기계적으로 계산한 값과 정확히 같아야 한다.
+
+제품 source closure는 실행 코드인 `app/**`, `backend/**`와 런타임이 실제 읽는 `backend/ref/card-surface-templates/**`, `aits-chart-contracts.json`, `hydrate-argument-chains.json`, `hydrate-argument-defaults.json`, `kiwoom-capability-assignment.json`, `kiwoom-common-screen-manifest.json`, `kiwoom-presentation-hidden-occurrences.json`, `kiwoom-screen-definitions.json`, `kiwoom-tr-inventory.json`, `mock-unsupported-trs.json`, `selector-entity-markers.json`만 허용한다. `backend/ref/card-ui-handoff-20261003/**` 같은 audit evidence는 제품 source proof가 될 수 없다.
+
+같은 validator 호출 안에서 cohort, runtime commit, 정규화된 전체 closure가 모두 같은 행은 무거운 Git blob/현재 파일 SHA 검사를 재사용한다. 각 행의 closure 완전 일치와 cohort/commit 결속은 항상 별도로 검사하며, 캐시는 다음 validator 호출로 유지되지 않는다.
 
 Paper PASS의 수정 전·수정 후 snapshot은 manifest에 파일 SHA-256이 결속된 `PRIVATE` JSON이어야 한다. 두 파일은 `athena.paper-originals-live-snapshot.v1` 형식의 완전한 101개 캡처여야 하며 `complete=true`, `selfCheckOne=false`, `incompleteFlags=[]`, 각 item의 `complete=true`, `editable=true`, `unresolvedFrontier=[]`를 요구한다. root는 `card-ui-paper-baseline.json`의 board/page/artboard 101개와 정확히 같아야 한다.
 

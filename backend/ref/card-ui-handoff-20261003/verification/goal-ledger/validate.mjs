@@ -22,6 +22,19 @@ const missing=q.templates.filter(t=>t.scope==='in_scope'&&!t.prompt&&t.ui_steps.
 const sha=/^[a-f0-9]{64}$/;
 const commit=/^[a-f0-9]{40}$/;
 const zeros=/^0+$/;
+const runtimeRefFiles=new Set([
+  'backend/ref/aits-chart-contracts.json',
+  'backend/ref/hydrate-argument-chains.json',
+  'backend/ref/hydrate-argument-defaults.json',
+  'backend/ref/kiwoom-capability-assignment.json',
+  'backend/ref/kiwoom-common-screen-manifest.json',
+  'backend/ref/kiwoom-presentation-hidden-occurrences.json',
+  'backend/ref/kiwoom-screen-definitions.json',
+  'backend/ref/kiwoom-tr-inventory.json',
+  'backend/ref/mock-unsupported-trs.json',
+  'backend/ref/selector-entity-markers.json'
+]);
+let selfTestRepoEvidence=null;
 const nonempty=v=>typeof v==='string'&&v.trim().length>0;
 const clone=v=>JSON.parse(JSON.stringify(v));
 const hashFile=f=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
@@ -30,6 +43,7 @@ const exact=(a,b)=>{const x=[...new Set(a)].sort(),y=[...new Set(b)].sort();retu
 const exactKeys=(o,k)=>o&&typeof o==='object'&&!Array.isArray(o)&&exact(Object.keys(o),k);
 const sameSize=(a,b)=>a?.width===b?.width&&a?.height===b?.height;
 const safeRelative=p=>nonempty(p)&&!path.isAbsolute(p)&&!p.includes('..')&&!/^[A-Za-z]:/.test(p);
+const productSourcePath=p=>p.startsWith('app/')||(p.startsWith('backend/')&&!p.startsWith('backend/ref/'))||p.startsWith('backend/ref/card-surface-templates/')||runtimeRefFiles.has(p);
 const controls=t=>(t.ui_steps||[]).filter(s=>s&&typeof s==='object').map(s=>({action:s.action??null,control:s.control??null,from_design_reference_id:s.from_template_id??null,to_design_reference_id:s.to_template_id??null}));
 const check=()=>({applicability:'UNCONFIRMED',status:'NOT_RUN',justification:null,evidence_ref:null});
 const nativeById=new Map(q.templates.filter(t=>t.scope==='in_scope').map(t=>[t.template_id,t]));
@@ -144,6 +158,39 @@ function loadEvidenceRoot(rootPath,errors){
   }
   return {root,manifest,entries,manifestSha:hashFile(mf)};
 }
+function evidenceContexts(ctx){return Array.isArray(ctx?.contexts)?ctx.contexts:[ctx];}
+function contextForCohort(ctx,cohort,errors,label,required=true){
+  const contexts=evidenceContexts(ctx).filter(Boolean);
+  if(nonempty(cohort)){
+    const matches=contexts.filter(candidate=>candidate.manifest?.cohort_id===cohort||[...candidate.entries.values()].some(entry=>entry.source_cohort===cohort));
+    if(matches.length!==1){if(required)errors.push(label+': evidence cohort missing or ambiguous');return null;}
+    return matches[0];
+  }
+  if(contexts.length===1)return contexts[0];
+  if(required)errors.push(label+': evidence cohort required when multiple roots are loaded');
+  return null;
+}
+function contextForManifestCohort(ctx,cohort,errors,label){
+  const matches=evidenceContexts(ctx).filter(candidate=>candidate?.manifest?.cohort_id===cohort);
+  if(matches.length!==1){errors.push(label+': source manifest cohort missing or ambiguous');return null;}
+  return matches[0];
+}
+function loadEvidenceRoots(rootPaths,errors){
+  const contexts=rootPaths.map(rootPath=>loadEvidenceRoot(rootPath,errors));
+  const cohorts=new Map(),artifactOwners=new Map();
+  for(const candidate of contexts){
+    const cohort=candidate.manifest?.cohort_id,ownedCohorts=new Set([cohort,...[...candidate.entries.values()].map(entry=>entry.source_cohort)].filter(nonempty));
+    for(const owned of ownedCohorts){
+      if(cohorts.has(owned))errors.push('duplicate evidence cohort: '+owned);
+      else cohorts.set(owned,candidate);
+    }
+    for(const id of candidate.entries?.keys?.()||[]){
+      if(artifactOwners.has(id))errors.push('artifact id reused across evidence cohorts: '+id);
+      else artifactOwners.set(id,cohort??null);
+    }
+  }
+  return {contexts,cohorts,artifactOwners};
+}
 function resolveRef(ref,ctx,errors,label,opt={}){
   const {required=false,kind=null,itemId=null,sessionId=null,cohort=null,stage=null}=opt;
   if(!ref||typeof ref!=='object'){if(required)errors.push(label+': evidence ref required');return null;}
@@ -153,20 +200,27 @@ function resolveRef(ref,ctx,errors,label,opt={}){
   if(ref.scope==='REPO'){
     const normalized=(ref.path||'').replaceAll('\\','/');
     if(!safeRelative(ref.path)||!normalized.startsWith('backend/ref/card-ui-handoff-20261003/')||normalized.endsWith('/verification/goal-ledger/current.json')||normalized.endsWith('/verification/goal-ledger/validate.mjs')){errors.push(label+': repo evidence path not allowed');return null;}
+    const fixture=selfTestRepoEvidence?.get(normalized);
+    if(fixture){
+      if(crypto.createHash('sha256').update(fixture.bytes).digest('hex')!==ref.sha256){errors.push(label+': repo evidence hash mismatch');return null;}
+      document=fixture.document;
+    }else{
     file=path.resolve(repo,ref.path);
     if(!file.startsWith(repo+path.sep)||!fs.existsSync(file)){errors.push(label+': repo evidence file missing');return null;}
     if(hashFile(file)!==ref.sha256){errors.push(label+': repo evidence hash mismatch');return null;}
     try{document=readJson(file);}catch{errors.push(label+': repo evidence must be valid JSON');return null;}
+    }
     if(kind&&document?.kind!==kind)errors.push(label+': repo evidence kind mismatch');
     if(itemId&&document?.item_id!==itemId)errors.push(label+': repo evidence item binding mismatch');
     if(sessionId&&document?.session_id!==sessionId)errors.push(label+': repo evidence session binding mismatch');
     if(cohort&&document?.source_cohort!==cohort)errors.push(label+': repo evidence cohort binding mismatch');
     if(stage&&document?.stage!==stage)errors.push(label+': repo evidence stage binding mismatch');
   }else{
-    if(!ctx.root||!ctx.manifest){errors.push(label+': --evidence-root with valid manifest required');return null;}
-    if(!nonempty(ref.artifact_id)||(entry=ctx.entries.get(ref.artifact_id))==null){errors.push(label+': private artifact missing from manifest');return null;}
+    const selected=contextForCohort(ctx,cohort,errors,label);
+    if(!selected?.root||!selected.manifest){errors.push(label+': --evidence-root with valid manifest required');return null;}
+    if(!nonempty(ref.artifact_id)||(entry=selected.entries.get(ref.artifact_id))==null){errors.push(label+': private artifact missing from selected cohort');return null;}
     if(entry.sha256!==ref.sha256){errors.push(label+': private artifact hash differs from manifest');return null;}
-    file=path.resolve(ctx.root,entry.relative_path);
+    file=path.resolve(selected.root,entry.relative_path);
   }
   if(entry){
     if(kind&&entry.kind!==kind)errors.push(label+': artifact kind mismatch');
@@ -180,32 +234,50 @@ function resolveRef(ref,ctx,errors,label,opt={}){
 function parseEvidence(r,errors,label){if(!r)return null;if(r.document)return r.document;try{return readJson(r.file);}catch{errors.push(label+': evidence must be valid JSON');return null;}}
 function hasClaim(r,claimField,claimKey){const claims=(r?.entry?.metadata??r?.document?.metadata)?.[claimField];return Array.isArray(claims)&&claims.includes(claimKey);}
 function proveRef(ref,ctx,errors,label,opt,claimField,claimKey){const r=resolveRef(ref,ctx,errors,label,opt);if(!r)return null;if(!hasClaim(r,claimField,claimKey)){errors.push(label+': artifact does not assert '+claimField+' '+claimKey);return null;}return r;}
-function validateSource(i,ctx,errors,strict){
+function validateSource(i,ctx,errors,strict,sourceCache=null){
   if(!strict)return false;
   let ok=true;
-  const closure=ctx.manifest?.product_source_closure;
-  if(i.source_cohort!==ctx.manifest?.cohort_id){errors.push(i.item_id+': source cohort does not match manifest');ok=false;}
-  const commitBound=i.runtime_commit_sha===ctx.manifest?.source_commit_sha&&commit.test(i.runtime_commit_sha||'')&&!zeros.test(i.runtime_commit_sha||'');if(!commitBound){errors.push(i.item_id+': runtime commit is not bound to manifest');ok=false;}
+  const selected=contextForManifestCohort(ctx,i.source_cohort,errors,i.item_id+' source');
+  const closure=selected?.manifest?.product_source_closure;
+  if(!selected||i.source_cohort!==selected.manifest?.cohort_id){errors.push(i.item_id+': source cohort does not match manifest');ok=false;}
+  const commitBound=i.runtime_commit_sha===selected?.manifest?.source_commit_sha&&commit.test(i.runtime_commit_sha||'')&&!zeros.test(i.runtime_commit_sha||'');if(!commitBound){errors.push(i.item_id+': runtime commit is not bound to manifest');ok=false;}
   if(commitBound)try{execFileSync('git',['cat-file','-e',i.runtime_commit_sha+'^{commit}'],{cwd:repo,stdio:'ignore'});execFileSync('git',['merge-base','--is-ancestor',i.runtime_commit_sha,head],{cwd:repo,stdio:'ignore'});}catch{errors.push(i.item_id+': runtime commit is not valid provenance for current HEAD');ok=false;}
   const normalized=x=>(x||[]).map(v=>({repo_path:v.repo_path,sha256:v.sha256})).sort((a,b)=>a.repo_path.localeCompare(b.repo_path));
-  if(!Array.isArray(closure)||closure.length===0||JSON.stringify(normalized(i.runtime_source_hashes))!==JSON.stringify(normalized(closure))){errors.push(i.item_id+': runtime source hashes do not match product source closure');return false;}
+  const normalizedClosure=normalized(closure),normalizedItem=normalized(i.runtime_source_hashes);
+  if(!Array.isArray(closure)||closure.length===0||JSON.stringify(normalizedItem)!==JSON.stringify(normalizedClosure)){errors.push(i.item_id+': runtime source hashes do not match product source closure');return false;}
+  const cacheKey=JSON.stringify([i.source_cohort,i.runtime_commit_sha,normalizedClosure]);
+  const cached=sourceCache?.get(cacheKey);
+  if(cached){for(const reason of cached)errors.push(i.item_id+': '+reason);return cached.length===0&&ok;}
+  const closureErrors=[];
   for(const s of closure){
     const p=(s?.repo_path||'').replaceAll('\\','/');
-    if(!safeRelative(s?.repo_path)||(!p.startsWith('app/')&&!p.startsWith('backend/'))||p.startsWith('backend/ref/')){errors.push(i.item_id+': invalid product source path');ok=false;continue;}
+    if(!safeRelative(s?.repo_path)||!productSourcePath(p)){closureErrors.push('invalid product source path');continue;}
     const file=path.resolve(repo,s.repo_path);
-    let blob=null;try{blob=execFileSync('git',['show',i.runtime_commit_sha+':'+p],{cwd:repo});}catch{}
-    if(!file.startsWith(repo+path.sep)||!fs.existsSync(file)||!sha.test(s.sha256||'')||zeros.test(s.sha256||'')||hashFile(file)!==s.sha256||!blob||crypto.createHash('sha256').update(blob).digest('hex')!==s.sha256){errors.push(i.item_id+': product source closure file/hash mismatch');ok=false;}
+    let blob=null;try{blob=execFileSync('git',['show',i.runtime_commit_sha+':'+p],{cwd:repo,maxBuffer:64*1024*1024});}catch{}
+    if(!file.startsWith(repo+path.sep)||!fs.existsSync(file)||!sha.test(s.sha256||'')||zeros.test(s.sha256||'')||hashFile(file)!==s.sha256||!blob||crypto.createHash('sha256').update(blob).digest('hex')!==s.sha256)closureErrors.push('product source closure file/hash mismatch');
   }
-  return ok;
+  sourceCache?.set(cacheKey,closureErrors);for(const reason of closureErrors)errors.push(i.item_id+': '+reason);
+  return closureErrors.length===0&&ok;
 }
 function validateReview(review,itemId,cohort,runtimeCommit,ctx,errors,strict,paper=false){
   if(!strict)return false;
   if(review?.status!=='APPROVED'||!nonempty(review.author_id)||!nonempty(review.reviewer_id)||review.author_id===review.reviewer_id){errors.push(itemId+': independent reviewer identity invalid');return false;}
   if(review?.report_ref?.scope!=='REPO'){errors.push(itemId+': independent review receipt must be separate REPO evidence');return false;}
   const receipt=parseEvidence(resolveRef(review.report_ref,ctx,errors,itemId+' review',{required:true,kind:'independent-review'}),errors,itemId+' review');
+  const selected=contextForCohort(ctx,cohort,errors,itemId+' review');
   const ids=paper?receipt?.paper_item_ids:receipt?.item_ids;
-  const ok=receipt?.status==='APPROVED'&&receipt.author_id===review.author_id&&receipt.reviewer_id===review.reviewer_id&&receipt.author_id!==receipt.reviewer_id&&receipt.reviewed_commit_sha===runtimeCommit&&receipt.reviewed_source_cohort===cohort&&receipt.reviewed_evidence_manifest_sha256===ctx.manifestSha&&Array.isArray(ids)&&ids.includes(itemId);
+  const ok=receipt?.scope!=='M1_ROUTE_IDENTITY_ONLY'&&receipt?.status==='APPROVED'&&receipt.author_id===review.author_id&&receipt.reviewer_id===review.reviewer_id&&receipt.author_id!==receipt.reviewer_id&&receipt.reviewed_commit_sha===runtimeCommit&&receipt.reviewed_source_cohort===cohort&&receipt.reviewed_evidence_manifest_sha256===selected?.manifestSha&&Array.isArray(ids)&&ids.includes(itemId);
   if(!ok)errors.push(itemId+': independent review receipt binding mismatch');return ok;
+}
+function validateRouteReview(review,i,ctx,errors){
+  if(review?.status!=='APPROVED'||!nonempty(review.author_id)||!nonempty(review.reviewer_id)||review.author_id===review.reviewer_id){errors.push(i.item_id+': route independent reviewer identity invalid');return false;}
+  if(review?.report_ref?.scope!=='REPO'){errors.push(i.item_id+': route independent review must be separate REPO evidence');return false;}
+  if(i.independent_review?.report_ref&&JSON.stringify(i.independent_review.report_ref)===JSON.stringify(review.report_ref)){errors.push(i.item_id+': route and full independent reviews must use separate receipts');return false;}
+  const receipt=parseEvidence(resolveRef(review.report_ref,ctx,errors,i.item_id+' route review',{required:true,kind:'independent-review'}),errors,i.item_id+' route review');
+  const selected=contextForManifestCohort(ctx,i.source_cohort,errors,i.item_id+' route review');
+  if(receipt?.scope!=='M1_ROUTE_IDENTITY_ONLY'){errors.push(i.item_id+': route independent review scope mismatch');return false;}
+  const ok=receipt?.status==='APPROVED'&&receipt.author_id===review.author_id&&receipt.reviewer_id===review.reviewer_id&&receipt.author_id!==receipt.reviewer_id&&receipt.reviewed_commit_sha===i.runtime_commit_sha&&receipt.reviewed_source_cohort===i.source_cohort&&receipt.reviewed_evidence_manifest_sha256===selected?.manifestSha&&Array.isArray(receipt.item_ids)&&receipt.item_ids.includes(i.item_id);
+  if(!ok)errors.push(i.item_id+': route independent review receipt binding mismatch');return ok;
 }
 function checked(c,i,ctx,errors,label,strict,kind,key){
   if(!c||!['APPLICABLE','NOT_APPLICABLE_VERIFIED'].includes(c.applicability)){if(strict)errors.push(label+': applicability unresolved');return false;}
@@ -234,6 +306,15 @@ function validateRoute(i,ctx,errors,strict,g){
       if(!resolveRef(a.evidence_ref,ctx,errors,i.item_id+' route assertion',{required:true,kind:'route-identity',itemId:i.item_id,sessionId:i.session_id,cohort:i.source_cohort}))ok=false;
     }
   }
+  return ok;
+}
+function validateConfirmedRoute(i,ctx,errors,g,strict,sourceCache){
+  if(!strict)return false;
+  let ok=validateSource(i,ctx,errors,true,sourceCache);
+  if(!nonempty(i.session_id)){errors.push(i.item_id+': confirmed route session required');ok=false;}
+  ok=!!resolveRef(i.session_receipt_ref,ctx,errors,i.item_id+' route session',{required:true,kind:'session-receipt',itemId:i.item_id,sessionId:i.session_id,cohort:i.source_cohort})&&ok;
+  ok=validateRoute(i,ctx,errors,true,g)&&ok;
+  ok=validateRouteReview(i.route_independent_review,i,ctx,errors)&&ok;
   return ok;
 }
 function controlsFromItem(i){return i.seed_or_route?.steps?.filter(s=>s&&typeof s==='object').map(s=>({action:s.action??null,control:s.control??null,from_design_reference_id:s.from_design_reference_id??null,to_design_reference_id:s.to_design_reference_id??null}))||[];}
@@ -266,15 +347,14 @@ function validateCycle(i,ctx,errors,strict){
     if(!m||raster?.entry?.mime_type!=='image/png'||!actualPixels||m.full_window!==true||m.clipped!==false||m.card_instance_marker!==i.card_instance_marker||m.device_scale_factor!==s.device_scale_factor||!sameSize(m.window_outer_size,s.measured_window_outer_size)||!sameSize(m.renderer_viewport_size,s.measured_renderer_viewport_size)||!sameSize(m.pixel_size,actualPixels)||!rasterScaleMatches(actualPixels,s.measured_window_outer_size,s.device_scale_factor)){errors.push(i.item_id+': '+s.stage+' raster PNG header/scale/metadata is missing or unbound');ok=false;}
   }return ok;
 }
-function computedStatus(i,ctx,errors,g){
+function computedStatus(i,ctx,errors,confirmedRouteOk){
   if(i.freshness_status==='REVALIDATE')return 'NOT_RUN';
   if(i.recorded_outcome==='BLOCKED_EXTERNAL')return 'BLOCKED_EXTERNAL';
   if(i.recorded_outcome==='FAIL'||i.call_status==='FAIL')return 'FAIL';
   if(i.final_status!=='PASS')return 'NOT_RUN';
   let ok=i.recorded_outcome==='PASS'&&i.freshness_status==='CURRENT'&&i.call_status==='PASS'&&i.privacy_class==='PUBLIC_METADATA_ONLY'&&Array.isArray(i.bug_ids)&&i.bug_ids.length===0;
   if(!ok)errors.push(i.item_id+': PASS outcome/freshness/call/privacy/bugs invalid');
-  ok=validateSource(i,ctx,errors,true)&&ok;
-  ok=validateRoute(i,ctx,errors,true,g)&&ok;
+  ok=confirmedRouteOk&&ok;
   ok=!!resolveRef(i.call_evidence_ref,ctx,errors,i.item_id+' call',{required:true,kind:'call-receipt',itemId:i.item_id,sessionId:i.session_id,cohort:i.source_cohort})&&ok;
   ok=validateCycle(i,ctx,errors,true)&&ok;
   if(!exactKeys(i.regions,regionKeys)){errors.push(i.item_id+': exact region keys required');ok=false;}else for(const k of regionKeys)ok=checked(i.regions[k],i,ctx,errors,i.item_id+' region '+k,true,'region-check',k)&&ok;
@@ -287,6 +367,7 @@ function computedStatus(i,ctx,errors,g){
 function validatePaper(d,ctx,errors){
   const p=d.paper;if(!p.items.some(i=>i.final_status==='PASS'))return new Set();
   if(!nonempty(p.source_cohort)||!nonempty(p.session_id)){errors.push('paper source cohort/session required');return new Set();}
+  const selected=contextForCohort(ctx,p.source_cohort,errors,'paper source cohort');
   if(p.before_snapshot_ref?.scope!=='PRIVATE'||p.after_snapshot_ref?.scope!=='PRIVATE')errors.push('paper snapshots must be PRIVATE manifest-bound captures');
   const before=parseEvidence(resolveRef(p.before_snapshot_ref,ctx,errors,'paper before snapshot',{required:true,kind:'paper-before-snapshot',sessionId:p.session_id,cohort:p.source_cohort}),errors,'paper before snapshot');
   const after=parseEvidence(resolveRef(p.after_snapshot_ref,ctx,errors,'paper after snapshot',{required:true,kind:'paper-after-snapshot',sessionId:p.session_id,cohort:p.source_cohort}),errors,'paper after snapshot');
@@ -298,10 +379,16 @@ function validatePaper(d,ctx,errors){
   for(const id of ids){
     const a=afterItems.get(id),m=mapping.items.find(x=>x.expected_design_reference_id===id);
     if(!nonempty(m?.paper_reference)||m.paper_reference!==a.artboardId||d.paper.items.find(x=>x.item_id===id)?.actual_paper_reference!==a.artboardId){errors.push('paper '+id+': capture or mapping reference invalid');continue;}
-    if(validateReview(p.independent_review,id,p.source_cohort,ctx.manifest?.source_commit_sha,ctx,errors,true,true))passed.add(id);
+    if(validateReview(p.independent_review,id,p.source_cohort,selected?.manifest?.source_commit_sha,ctx,errors,true,true))passed.add(id);
   }return passed;
 }
 function counts(items){const r={total:items.length,pass:0,fail:0,not_run:0,blocked_external:0};for(const i of items){const k=i.final_status.toLowerCase();if(Object.hasOwn(r,k))r[k]++;}return r;}
+function makeRouteGaps(d){
+  const items=d.native.items;
+  const ambiguousIds=items.filter(i=>i.route_status==='AMBIGUOUS').map(i=>i.item_id).sort();
+  const missingIds=items.filter(i=>i.route_status==='MISSING').map(i=>i.item_id).sort();
+  return {ambiguous_count:ambiguousIds.length,ambiguous_item_ids:ambiguousIds,missing_count:missingIds.length,missing_item_ids:missingIds,resolution_rule:'M1 must confirm a unique executable route and evidence-bound identity assertion before PASS.'};
+}
 function makeAggregates(d){
   const pc=d.paper.items.filter(i=>i.final_status==='PASS').length,n=counts(d.native.items),a=counts(d.additional_flows.in_scope);
   return {paper:{total:d.paper.items.length,confirmed:pc,not_run:d.paper.items.length-pc},
@@ -328,7 +415,7 @@ function validate(d,ctx){
   if(!exact([...d.additional_flows.in_scope,...d.additional_flows.excluded].map(i=>i.item_id),flows))add('additional flow set must exactly match canonical 31');
   const paperPassed=validatePaper(d,ctx,errors);
   for(const i of d.paper.items){if(i.expected_design_reference_id!==i.item_id)add('paper '+i.item_id+': design reference mismatch');const s=paperPassed.has(i.item_id)?'PASS':'NOT_RUN';if(i.final_status!==s)add('paper '+i.item_id+': final_status '+i.final_status+' must be computed as '+s);}
-  const g={assertionIds:new Set(),signatures:new Set(),runtimeIds:new Set()};
+  const g={assertionIds:new Set(),signatures:new Set(),runtimeIds:new Set()},sourceCache=new Map();
   for(const i of [...d.native.items,...d.additional_flows.in_scope]){
     if(!['PASS','FAIL','NOT_RUN','BLOCKED_EXTERNAL'].includes(i.final_status))add(i.item_id+': invalid final_status');if(!['UNCONFIRMED','AMBIGUOUS','MISSING','CONFIRMED_UNIQUE'].includes(i.route_status))add(i.item_id+': invalid route_status');
     if(!['NOT_RUN','PASS','FAIL','BLOCKED_EXTERNAL'].includes(i.recorded_outcome))add(i.item_id+': invalid recorded_outcome');if(!['CURRENT','REVALIDATE'].includes(i.freshness_status))add(i.item_id+': invalid freshness_status');
@@ -336,10 +423,13 @@ function validate(d,ctx){
     if(i.expected_design_reference_id!==i.item_id)add(i.item_id+': design reference mismatch');validateCanonical(i,errors);if(i.observed_runtime_template_id===i.expected_design_reference_id){const bound=resolveRef(i.runtime_identity?.evidence_ref,ctx,errors,i.item_id+' copied design ID',{required:true,kind:'runtime-metadata',itemId:i.item_id,sessionId:i.session_id,cohort:i.source_cohort});if(i.runtime_identity?.method!=='runtime_metadata'||!bound)add(i.item_id+': copied design ID lacks bound runtime metadata');}if(i.privacy_class!=='PUBLIC_METADATA_ONLY')add(i.item_id+': invalid privacy_class');
     if(!Array.isArray(i.resize_cycle)||i.resize_cycle.length!==3||i.resize_cycle.map(s=>s.stage).join(',')!=='max,narrow,remax')add(i.item_id+': exact resize stages required');else for(const s of i.resize_cycle){if(!sameSize(s.expected_window_outer_size,targets[s.stage]))add(i.item_id+': invalid expected outer size');if(!exactKeys(s.checks,stageKeys))add(i.item_id+': exact stage check keys required');}
     if(!exactKeys(i.regions,regionKeys))add(i.item_id+': exact region keys required');if(!i.content_state_inventory||!exactKeys(i.content_state_inventory,['status',...contentKeys]))add(i.item_id+': exact content-state keys required');
-    validateControls(i,ctx,errors,false);const s=computedStatus(i,ctx,errors,g);if(i.final_status!==s)add(i.item_id+': final_status '+i.final_status+' must be computed as '+s);
+    const routeProofRequired=i.route_status==='CONFIRMED_UNIQUE'||i.final_status==='PASS';
+    const confirmedRouteOk=routeProofRequired?validateConfirmedRoute(i,ctx,errors,g,true,sourceCache):false;
+    validateControls(i,ctx,errors,false);const s=computedStatus(i,ctx,errors,confirmedRouteOk);if(i.final_status!==s)add(i.item_id+': final_status '+i.final_status+' must be computed as '+s);
   }
   for(const i of [...d.native.excluded,...d.additional_flows.excluded]){if(i.final_status!=='EXCLUDED')add(i.item_id+': excluded item must remain EXCLUDED');if(i.observed_runtime_template_id!==null)add(i.item_id+': excluded runtime ID must remain null');}
   if(d.lifecycle==='M2_INITIAL'){if(d.starting_receipt.paper_confirmed!==0)add('M2_INITIAL paper_confirmed must be 0');if(d.native.items.some(i=>i.observed_runtime_template_id!==null))add('M2_INITIAL native runtime IDs must all be null');if(!exact(d.native.items.filter(i=>i.route_status==='AMBIGUOUS').map(i=>i.item_id),ambiguous))add('M2_INITIAL ambiguous route set must match canonical 21');if(!exact(d.native.items.filter(i=>i.route_status==='MISSING').map(i=>i.item_id),missing))add('M2_INITIAL missing route set mismatch');}
+  const routeGaps=makeRouteGaps(d);if(JSON.stringify(d.route_gaps)!==JSON.stringify(routeGaps))add('route_gaps must equal machine-computed values');
   const a=makeAggregates(d);if(JSON.stringify(d.aggregates)!==JSON.stringify(a))add('aggregates must equal machine-computed values');if(a.additional_flows.total!==31||a.additional_flows.in_scope!==30||a.additional_flows.excluded!==1)add('additional aggregate must be total 31 = in-scope 30 + excluded 1');if(a.goal_complete&&d.lifecycle!=='COMPLETE_REVIEWED')add('goal_complete requires COMPLETE_REVIEWED lifecycle');
   const raw=JSON.stringify(d);if(/[A-Za-z]:[\\/]Users[\\/]/.test(raw))add('personal absolute path is forbidden');if(/(api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret)["']?\s*[:=]\s*["'][^"']+/i.test(raw))add('credential-like value is forbidden');
   return {errors,aggregates:a};
@@ -366,12 +456,78 @@ function selfTest(base,ctx){
     ['reject-arbitrary-freshness',x=>x.native.items[0].freshness_status='STALE_BUT_ACCEPTED','invalid freshness_status'],
     ['reject-self-review',x=>{x.native.items[0].final_status='PASS';x.native.items[0].independent_review={status:'APPROVED',author_id:'same',reviewer_id:'same',report_ref:null};},'independent reviewer identity invalid'],
     ['reject-canonical-route-drift',x=>{const i=x.native.items[0];i.expected_card_kind='fake';i.seed_or_route={seed_id:'fake',prompt:'fake',steps:[],route_source:'fake',prerequisites:[]};i.control_inventory.design_expected=[];},'canonical card kind drift'],
+    ['reject-unproven-confirmed-route-not-run',x=>{x.lifecycle='ACTIVE';x.native.items[0].route_status='CONFIRMED_UNIQUE';x.route_gaps=makeRouteGaps(x);x.aggregates=makeAggregates(x);},'runtime commit is not bound to manifest'],
     ['reject-forged-completion',forgeAll,null]
   ];
   let ok=0;for(const [name,mutate,needle] of cases){const x=clone(base);mutate(x);const r=validate(x,ctx);const rejected=r.errors.length>0&&(name==='reject-forged-completion'?r.aggregates.goal_complete===true:r.errors.some(v=>v.includes(needle)));if(rejected){ok++;console.log('NEGATIVE_CHECK '+name+'=PASS');}else console.error('NEGATIVE_CHECK '+name+'=FAIL');}
   const pngHeader=(w,h)=>{const b=Buffer.alloc(24);Buffer.from('89504e470d0a1a0a','hex').copy(b,0);b.writeUInt32BE(13,8);b.write('IHDR',12,'ascii');b.writeUInt32BE(w,16);b.writeUInt32BE(h,20);return b;};
   const tmp=fs.mkdtempSync(path.join(process.env.TEMP||process.env.TMP||repo,'goal-ledger-')),one=path.join(tmp,'one.png');fs.writeFileSync(one,pngHeader(1,1));
-  const focused=[['reject-generic-subcheck-reuse',!hasClaim({entry:{metadata:{asserted_checks:['bottom']}}},'asserted_checks','error')],['reject-non-image-raster',pngSize(currentFile)===null],['reject-1x1-raster',!rasterScaleMatches(pngSize(one),targets.max,1)]];for(const [name,pass] of focused){if(pass){ok++;console.log('NEGATIVE_CHECK '+name+'=PASS');}else console.error('NEGATIVE_CHECK '+name+'=FAIL');}fs.unlinkSync(one);fs.rmdirSync(tmp);
+  const focused=[
+    ['reject-generic-subcheck-reuse',!hasClaim({entry:{metadata:{asserted_checks:['bottom']}}},'asserted_checks','error')],
+    ['reject-non-image-raster',pngSize(currentFile)===null],
+    ['reject-1x1-raster',!rasterScaleMatches(pngSize(one),targets.max,1)],
+    ['accept-runtime-ref-source-path',[
+      'backend/ref/card-surface-templates/15J9-2/slots.json',
+      ...runtimeRefFiles
+    ].every(productSourcePath)],
+    ['reject-audit-ref-source-path',!productSourcePath('backend/ref/card-ui-handoff-20261003/verification/goal-ledger/current.json')]
+  ];for(const [name,pass] of focused){if(pass){ok++;console.log((name.startsWith('accept-')?'POSITIVE_CHECK ':'NEGATIVE_CHECK ')+name+'=PASS');}else console.error((name.startsWith('accept-')?'POSITIVE_CHECK ':'NEGATIVE_CHECK ')+name+'=FAIL');}fs.unlinkSync(one);fs.rmdirSync(tmp);
+  const routeTmp=fs.mkdtempSync(path.join(process.env.TEMP||process.env.TMP||repo,'goal-ledger-route-'));
+  selfTestRepoEvidence=new Map();
+  const sourcePaths=['app/package.json','backend/ref/card-surface-templates/15J9-2/slots.json',...runtimeRefFiles];
+  const routeSources=sourcePaths.map(repoPath=>({repo_path:repoPath,sha256:hashFile(path.join(repo,repoPath))}));
+  const makeRouteRoot=(name,itemId,artifactPrefix=name)=>{
+    const root=path.join(routeTmp,name);fs.mkdirSync(root);
+    const cohort='route-cohort-'+name,session='route-session-'+name,sessionFile=path.join(root,'session.json'),routeFile=path.join(root,'route.json');
+    fs.writeFileSync(sessionFile,JSON.stringify({cohort,session,itemId}));fs.writeFileSync(routeFile,JSON.stringify({cohort,session,itemId,observed:true}));
+    const sessionId=artifactPrefix+'-session',observedId=artifactPrefix+'-observed',identityId=artifactPrefix+'-identity',routeHash=hashFile(routeFile);
+    const manifest={schema_version:1,cohort_id:cohort,source_commit_sha:head,product_source_closure:routeSources,artifacts:[
+      {id:sessionId,relative_path:'session.json',sha256:hashFile(sessionFile),kind:'session-receipt',item_id:itemId,session_id:session,source_cohort:cohort,metadata:{}},
+      {id:observedId,relative_path:'route.json',sha256:routeHash,kind:'observed-route',item_id:itemId,session_id:session,source_cohort:cohort,metadata:{asserted_checks:['observed_route']}},
+      {id:identityId,relative_path:'route.json',sha256:routeHash,kind:'route-identity',item_id:itemId,session_id:session,source_cohort:cohort,metadata:{}}
+    ]};const manifestFile=path.join(root,'manifest.json');fs.writeFileSync(manifestFile,JSON.stringify(manifest));
+    return {root,cohort,session,manifestSha:hashFile(manifestFile),sessionRef:{scope:'PRIVATE',artifact_id:sessionId,sha256:manifest.artifacts[0].sha256},observedRef:{scope:'PRIVATE',artifact_id:observedId,sha256:routeHash},identityRef:{scope:'PRIVATE',artifact_id:identityId,sha256:routeHash}};
+  };
+  const makeRouteReview=(evidence,itemId,suffix,overrides={})=>{
+    const relativePath='backend/ref/card-ui-handoff-20261003/reviews/.goal-ledger-route-self-test-'+suffix+'.json';
+    const receipt={kind:'independent-review',schema_version:1,scope:'M1_ROUTE_IDENTITY_ONLY',status:'APPROVED',author_id:'route-author-'+suffix,reviewer_id:'route-reviewer-'+suffix,reviewed_commit_sha:head,reviewed_source_cohort:evidence.cohort,reviewed_evidence_manifest_sha256:evidence.manifestSha,item_ids:[itemId],...overrides};
+    const bytes=Buffer.from(JSON.stringify(receipt));selfTestRepoEvidence.set(relativePath,{bytes,document:receipt});
+    return {status:'APPROVED',author_id:receipt.author_id,reviewer_id:receipt.reviewer_id,report_ref:{scope:'REPO',path:relativePath,sha256:crypto.createHash('sha256').update(bytes).digest('hex')}};
+  };
+  const bindRoute=(d,index,evidence)=>{
+    const item=d.native.items[index];item.source_cohort=evidence.cohort;item.session_id=evidence.session;item.session_receipt_ref=evidence.sessionRef;item.runtime_commit_sha=head;item.runtime_source_hashes=routeSources;item.route_status='CONFIRMED_UNIQUE';
+    item.observed_route={prompt:'self-test route '+item.item_id,steps:[],route_source:'self-test',evidence_ref:evidence.observedRef};
+    item.route_identity_assertions=[{assertion_id:'route-assertion-'+evidence.cohort,item_id:item.item_id,status:'PASS',signature:{expected_card_kind:item.expected_card_kind,selected_control:'self-test:'+item.item_id,operation_shape:null,distinctive_text_sha256:null},evidence_ref:evidence.identityRef}];
+    item.route_independent_review=makeRouteReview(evidence,item.item_id,evidence.cohort);
+  };
+  const routeBase=makeInitial();routeBase.lifecycle='ACTIVE';const first=routeBase.native.items[0].item_id,second=routeBase.native.items[1].item_id,rootA=makeRouteRoot('a',first),rootB=makeRouteRoot('b',second);
+  bindRoute(routeBase,0,rootA);routeBase.route_gaps=makeRouteGaps(routeBase);routeBase.aggregates=makeAggregates(routeBase);
+  const onePre=[],oneCtx=loadEvidenceRoots([rootA.root],onePre);
+  const missingReview=clone(routeBase);delete missingReview.native.items[0].route_independent_review;const missingReviewResult=validate(missingReview,oneCtx),missingReviewRejected=missingReviewResult.errors.some(error=>error.includes('route independent reviewer identity invalid'));
+  if(missingReviewRejected){ok++;console.log('NEGATIVE_CHECK reject-missing-m1-route-review=PASS');}else console.error('NEGATIVE_CHECK reject-missing-m1-route-review=FAIL');
+  const wrongScope=clone(routeBase);wrongScope.native.items[0].route_independent_review=makeRouteReview(rootA,first,'wrong-scope',{scope:'FULL_NATIVE_PASS'});const wrongScopeResult=validate(wrongScope,oneCtx),wrongScopeRejected=wrongScopeResult.errors.some(error=>error.includes('route independent review scope mismatch'));
+  if(wrongScopeRejected){ok++;console.log('NEGATIVE_CHECK reject-wrong-m1-route-review-scope=PASS');}else console.error('NEGATIVE_CHECK reject-wrong-m1-route-review-scope=FAIL');
+  const wrongManifest=clone(routeBase);wrongManifest.native.items[0].route_independent_review=makeRouteReview(rootA,first,'wrong-manifest',{reviewed_evidence_manifest_sha256:'1'.repeat(64)});const wrongManifestResult=validate(wrongManifest,oneCtx),wrongManifestRejected=wrongManifestResult.errors.some(error=>error.includes('route independent review receipt binding mismatch'));
+  if(wrongManifestRejected){ok++;console.log('NEGATIVE_CHECK reject-wrong-m1-route-review-manifest=PASS');}else console.error('NEGATIVE_CHECK reject-wrong-m1-route-review-manifest=FAIL');
+  const oneResult=validate(routeBase,oneCtx),validPartial=onePre.length===0&&oneResult.errors.length===0&&oneResult.aggregates.native.pass===0&&oneResult.aggregates.native.route_confirmed===1;
+  if(validPartial){ok++;console.log('POSITIVE_CHECK accept-bound-m1-route-native-pass-zero=PASS');}else console.error('POSITIVE_CHECK accept-bound-m1-route-native-pass-zero=FAIL: '+[...onePre,...oneResult.errors].join('; '));
+  const cacheProbe=new Map(),cacheErrors=[],sourceFirst=clone(routeBase.native.items[0]),sourceSecond=clone(sourceFirst);sourceSecond.item_id='source-cache-second-row';
+  const sameSourceCached=validateSource(sourceFirst,oneCtx,cacheErrors,true,cacheProbe)&&validateSource(sourceSecond,oneCtx,cacheErrors,true,cacheProbe)&&cacheErrors.length===0&&cacheProbe.size===1;
+  if(sameSourceCached){ok++;console.log('POSITIVE_CHECK accept-same-cohort-source-verification-reuse=PASS');}else console.error('POSITIVE_CHECK accept-same-cohort-source-verification-reuse=FAIL');
+  const tamperedSource=clone(sourceSecond);tamperedSource.runtime_source_hashes[0].sha256='2'.repeat(64);const tamperedErrors=[],tamperedRejected=!validateSource(tamperedSource,oneCtx,tamperedErrors,true,cacheProbe)&&tamperedErrors.some(error=>error.includes('runtime source hashes do not match product source closure'));
+  if(tamperedRejected){ok++;console.log('NEGATIVE_CHECK reject-tampered-second-row-source-hashes=PASS');}else console.error('NEGATIVE_CHECK reject-tampered-second-row-source-hashes=FAIL');
+  const changedCandidate={...oneCtx.contexts[0],manifest:clone(oneCtx.contexts[0].manifest)};changedCandidate.manifest.product_source_closure[0].sha256='3'.repeat(64);const changedCtx={contexts:[changedCandidate]},changedSource=clone(sourceFirst);changedSource.runtime_source_hashes=clone(changedCandidate.manifest.product_source_closure);const sourceChangedErrors=[],changedRejected=!validateSource(changedSource,changedCtx,sourceChangedErrors,true,new Map())&&sourceChangedErrors.some(error=>error.includes('product source closure file/hash mismatch'));
+  if(changedRejected){ok++;console.log('NEGATIVE_CHECK reject-changed-source-on-new-validation=PASS');}else console.error('NEGATIVE_CHECK reject-changed-source-on-new-validation=FAIL');
+  const mixed=clone(routeBase);bindRoute(mixed,1,rootB);mixed.route_gaps=makeRouteGaps(mixed);mixed.aggregates=makeAggregates(mixed);
+  const mixedPre=[],mixedCtx=loadEvidenceRoots([rootA.root,rootB.root],mixedPre),mixedResult=validate(mixed,mixedCtx),validMixed=mixedPre.length===0&&mixedResult.errors.length===0&&mixedResult.aggregates.native.pass===0&&mixedResult.aggregates.native.route_confirmed===2;
+  if(validMixed){ok++;console.log('POSITIVE_CHECK accept-mixed-route-cohorts=PASS');}else console.error('POSITIVE_CHECK accept-mixed-route-cohorts=FAIL: '+[...mixedPre,...mixedResult.errors].join('; '));
+  const wrong=clone(mixed);wrong.native.items[0].source_cohort=rootB.cohort;wrong.route_gaps=makeRouteGaps(wrong);wrong.aggregates=makeAggregates(wrong);const wrongResult=validate(wrong,mixedCtx),wrongRejected=wrongResult.errors.some(error=>error.includes('private artifact missing from selected cohort'));
+  if(wrongRejected){ok++;console.log('NEGATIVE_CHECK reject-cross-cohort-artifact-binding=PASS');}else console.error('NEGATIVE_CHECK reject-cross-cohort-artifact-binding=FAIL');
+  const rootCollision=makeRouteRoot('collision',second,'a'),collisionPre=[];loadEvidenceRoots([rootA.root,rootCollision.root],collisionPre);const collisionRejected=collisionPre.some(error=>error.includes('artifact id reused across evidence cohorts'));
+  if(collisionRejected){ok++;console.log('NEGATIVE_CHECK reject-cross-cohort-artifact-alias=PASS');}else console.error('NEGATIVE_CHECK reject-cross-cohort-artifact-alias=FAIL');
+  const duplicatePre=[];loadEvidenceRoots([rootA.root,rootA.root],duplicatePre);const duplicateRejected=duplicatePre.some(error=>error.includes('duplicate evidence cohort'));
+  if(duplicateRejected){ok++;console.log('NEGATIVE_CHECK reject-duplicate-evidence-cohort=PASS');}else console.error('NEGATIVE_CHECK reject-duplicate-evidence-cohort=FAIL');
+  selfTestRepoEvidence=null;fs.rmSync(routeTmp,{recursive:true,force:true});
   const makePaperCapture=()=>{
     const items=paperCards.map((card,index)=>{
       const childId=card.artboard_id+'_capture_child',canonical={rootId:card.artboard_id,nodes:[
@@ -395,10 +551,10 @@ function selfTest(base,ctx){
   for(const [name,mutate,needle] of paperCases){const x=clone(validPaper);mutate(x);const errs=[];validatePaperCapture(x,errs,'paper self-test');if(errs.some(error=>error.includes(needle))){ok++;console.log('NEGATIVE_CHECK '+name+'=PASS');}else console.error('NEGATIVE_CHECK '+name+'=FAIL');}
   const changed=clone(validPaper);changed.items[0].canonical.nodes[1].component='Rectangle';refreshPaperHashes(changed);const changedErrors=[],changedMap=validatePaperCapture(changed,changedErrors,'paper after self-test'),preserveErrors=[];const preserveRejected=changedErrors.length===0&&!paperStructuresPreserved(validPaperMap,changedMap,preserveErrors)&&preserveErrors.some(error=>error.includes('before/after canonical structure changed'));if(preserveRejected){ok++;console.log('NEGATIVE_CHECK reject-paper-recomputed-after-change=PASS');}else console.error('NEGATIVE_CHECK reject-paper-recomputed-after-change=FAIL');
   let audit=false;try{const parent=execFileSync('git',['rev-parse','HEAD^'],{cwd:repo,encoding:'utf8'}).trim(),files=execFileSync('git',['ls-tree','-r','--name-only',parent,'--','app','backend'],{cwd:repo,encoding:'utf8'}).split(/\r?\n/).filter(p=>p&&!p.startsWith('backend/ref/')&&fs.existsSync(path.join(repo,p)));let source=null;for(const p of files){const blob=execFileSync('git',['show',parent+':'+p],{cwd:repo});if(crypto.createHash('sha256').update(blob).digest('hex')===hashFile(path.join(repo,p))){source={repo_path:p,sha256:hashFile(path.join(repo,p))};break;}}if(source){const errs=[],auditCtx={manifest:{cohort_id:'audit-descendant',source_commit_sha:parent,product_source_closure:[source]}},item={item_id:'audit-descendant',source_cohort:'audit-descendant',runtime_commit_sha:parent,runtime_source_hashes:[source]};audit=validateSource(item,auditCtx,errs,true)&&errs.length===0;}}catch{}if(audit){ok++;console.log('POSITIVE_CHECK allow-audit-descendant-commit=PASS');}else console.error('POSITIVE_CHECK allow-audit-descendant-commit=FAIL');
-  const total=cases.length+focused.length+paperCases.length+4;console.log('NEGATIVE_FALSE_PASS_CHECKS='+ok+'/'+total);return ok===total;
+  const total=cases.length+focused.length+paperCases.length+15;console.log('NEGATIVE_FALSE_PASS_CHECKS='+ok+'/'+total);return ok===total;
 }
-const args=process.argv.slice(2),ri=args.indexOf('--evidence-root'),evidenceRoot=ri>=0?args[ri+1]:null;
-if(ri>=0&&!evidenceRoot){console.error('--evidence-root requires a directory');process.exit(1);}
-if(args.includes('--init')){if(fs.existsSync(currentFile)&&!args.includes('--force')){console.error('current.json exists; use --force only for intentional regeneration');process.exit(1);}const d=makeInitial(),pre=[],ctx=loadEvidenceRoot(evidenceRoot,pre),r=validate(d,ctx);r.errors.unshift(...pre);if(r.errors.length){console.error(r.errors.join('\n'));process.exit(1);}fs.writeFileSync(currentFile,JSON.stringify(d,null,2)+'\n');print(r);console.log('INITIAL_LEDGER_WRITTEN=current.json');process.exit(0);}
-const fi=args.indexOf('--file'),file=fi>=0?path.resolve(process.cwd(),args[fi+1]):currentFile,d=readJson(file),pre=[],ctx=loadEvidenceRoot(evidenceRoot,pre),r=validate(d,ctx);r.errors.unshift(...pre);
+const args=process.argv.slice(2),evidenceRoots=[];
+for(let index=0;index<args.length;index++)if(args[index]==='--evidence-root'){const value=args[index+1];if(!value||value.startsWith('--')){console.error('--evidence-root requires a directory');process.exit(1);}evidenceRoots.push(value);index++;}
+if(args.includes('--init')){if(fs.existsSync(currentFile)&&!args.includes('--force')){console.error('current.json exists; use --force only for intentional regeneration');process.exit(1);}const d=makeInitial(),pre=[],ctx=loadEvidenceRoots(evidenceRoots,pre),r=validate(d,ctx);r.errors.unshift(...pre);if(r.errors.length){console.error(r.errors.join('\n'));process.exit(1);}fs.writeFileSync(currentFile,JSON.stringify(d,null,2)+'\n');print(r);console.log('INITIAL_LEDGER_WRITTEN=current.json');process.exit(0);}
+const fi=args.indexOf('--file'),file=fi>=0?path.resolve(process.cwd(),args[fi+1]):currentFile,d=readJson(file),pre=[],ctx=loadEvidenceRoots(evidenceRoots,pre),r=validate(d,ctx);r.errors.unshift(...pre);
 if(r.errors.length){console.error(r.errors.map(x=>'ERROR: '+x).join('\n'));process.exit(1);}print(r);console.log('VALIDATION=PASS');if(args.includes('--self-test')&&!selfTest(d,ctx))process.exit(1);
