@@ -1,6 +1,23 @@
 title = "Athena repository secret policy"
 minVersion = "8.30.1"
 
+[[allowlists]]
+description = "Card UI handoff: verified public app/styles/tokens.css SHA256, exact metadata paths only"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "secret"
+paths = [
+  '''(?:^|/)backend/ref/card-ui-handoff-20261003/candidates/date-axis/evidence/PREPARED-MANIFEST\.json$''',
+  '''(?:^|/)backend/ref/card-ui-handoff-20261003/verification/company/archive/V1-FAILURE-FREEZE\.json$''',
+  '''(?:^|/)backend/ref/card-ui-handoff-20261003/verification/company/historical-public-source-pins\.json$''',
+  '''(?:^|/)backend/ref/card-ui-handoff-20261003/verification/company/archive/SOURCE-RECEIPT\.json$''',
+  '''(?:^|/)backend/ref/card-ui-handoff-20261003/verification/date-axis/PORTABLE-MANIFEST\.json$''',
+  '''(?:^|/)backend/ref/card-ui-handoff-20261003/verification/date-axis/archive/ORIGINAL-MANIFEST\.json$''',
+  '''(?:^|/)backend/ref/card-ui-handoff-20261003/verification/rest-state/PORTABLE-MANIFEST\.json$''',
+  '''(?:^|/)backend/ref/card-ui-handoff-20261003/verification/rest-state/archive/ORIGINAL-MANIFEST\.json$''',
+]
+regexes = ['''^c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2$''']
+
 [extend]
 useDefault = true
 
