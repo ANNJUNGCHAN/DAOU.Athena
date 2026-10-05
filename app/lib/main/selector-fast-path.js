@@ -210,6 +210,9 @@ async function runSelectorFastPath({
   question,
   backendBase,
   backendAccountAlias,
+  authorization = '',
+  originalQuestion,
+  semanticContext,
   intent = 'auto',
   arguments: operationArguments = {},
   candidateRefs = [],
@@ -263,10 +266,13 @@ async function runSelectorFastPath({
       headers: {
         'Content-Type': 'application/json',
         'X-Athena-Account': backendAccountAlias,
+        ...(authorization ? { Authorization: authorization } : {}),
       },
       signal: dispatchController.signal,
       body: JSON.stringify({
         question: rawQuestion,
+        ...(typeof originalQuestion === 'string' ? { original_question: originalQuestion } : {}),
+        ...(semanticContext === undefined ? {} : { semantic_context: semanticContext }),
         intent,
         candidate_refs: Array.isArray(candidateRefs) ? candidateRefs : [],
         ...(preferredRef ? { preferred_ref: preferredRef } : {}),

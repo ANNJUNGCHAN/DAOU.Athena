@@ -231,8 +231,10 @@ async function runOnce(args) {
     return { ok: false, aborted: false, content, canvasCount, model: selection.model, effort: selection.effort };
   }
   let result;
+  const executeQuery = args.runBoundQuery
+    ? options => args.runBoundQuery(runQuery, options, event) : runQuery;
   try {
-    result = await runQuery({
+    result = await executeQuery({
       prompt: buildBriefingPrompt(event),
       cwd: args.cwd,
       configFile: args.configFile,

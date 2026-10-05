@@ -113,6 +113,7 @@ class SearchResponse(StrictModel):
     # Set when the question asks for something this intent cannot see. Without it an
     # `auto` search for "실시간 체결" silently returns unrelated query operations.
     suggested_intent: DiscoveryIntent | None = None
+    semantic_ranking: dict[str, Any] | None = None
 
 
 class DescribeRequest(StrictModel):

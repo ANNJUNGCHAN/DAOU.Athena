@@ -75,6 +75,11 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "backend/verification/test_product_scope.py",
   "backend/verification/test_release_version.py",
   "backend/verification/verify_mcp_bundled_runtime.py",
+  "backend/verification/test_laya_api_worker.py",
+  "backend/verification/test_laya_native.py",
+  "backend/verification/test_laya_query_memory.py",
+  "backend/verification/test_laya_runtime.py",
+  "backend/verification/test_laya_selector_dispatch.py",
 ]);
 
 const RUNTIME_ROOT = new Set(RUNTIME_ROOT_FILES);

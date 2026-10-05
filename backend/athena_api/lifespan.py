@@ -422,6 +422,7 @@ async def _open_brain(
     *,
     kiwoom_clients: Mapping[str, KiwoomClient] | None = None,
     hourly_interval_seconds: float | None = None,
+    semantic_client=None,
 ) -> BrainRuntime:
     """Best-effort brain startup: a missing native runtime degrades, lock contention does not.
 
@@ -490,9 +491,9 @@ async def _open_brain(
             source_projector = None
             if settings.brain_extraction_llm_argv:
                 client = LocalCommandStructuredLlm(tuple(settings.brain_extraction_llm_argv))
-                source_projector = ExtractionService(client, store)
+                source_projector = ExtractionService(client, store, semantic_client=semantic_client)
             elif settings.brain_use_claude_cli_extraction:
-                source_projector = ExtractionService(ClaudeCliStructuredLlm(), store)
+                source_projector = ExtractionService(ClaudeCliStructuredLlm(), store, semantic_client=semantic_client)
             # 체결은 LLM을 타지 않는다. 추출이 꺼져 있어도(설정에 argv가 없어도) 결정적
             # 티어는 항상 돌아야 한다 — 체결은 사실이고, 사실을 적재하는 데 모델 설정이
             # 필요할 이유가 없다.
@@ -719,6 +720,10 @@ async def _cleanup_lifespan_resources(
     primary_error: BaseException | None = None,
 ) -> None:
     first_error = primary_error
+    async def close_laya():
+        worker = getattr(app.state, "laya_worker", None)
+        if worker is not None:
+            await worker.close()
     phases = (
         ("instrument-identity", lambda: _teardown_instrument_identity(app)),
         ("accounts", lambda: _teardown(app, account_registry)),
@@ -726,6 +731,7 @@ async def _cleanup_lifespan_resources(
         ("brain", lambda: _teardown_brain(app, brain)),
         ("routines", lambda: teardown_routines(routines)),
         ("backtest", lambda: _teardown_backtest(app, backtest)),
+        ("laya", close_laya),
     )
     for phase, cleanup in phases:
         try:
@@ -756,6 +762,33 @@ def build_lifespan(settings: Settings | None = None, *, ws_connect=None):
         app.state.instrument_identity_task = None
         app.state.instrument_identity_wakeup = asyncio.Event()
         app.state.selector_service = build_selector_service(instrument_identity)
+        from athena_api.laya.client import RuntimeClient
+        from athena_api.laya.service import SemanticService
+
+        app.state.laya_service = SemanticService(RuntimeClient(
+            runtime_settings.laya_runtime_url,
+            runtime_settings.laya_runtime_token.get_secret_value()
+            if runtime_settings.laya_runtime_token else (
+                runtime_settings.local_bearer_token.get_secret_value()
+                if runtime_settings.local_bearer_token else ""),
+            runtime_settings.laya_deployment_sha256,
+            timeout=runtime_settings.laya_timeout_seconds,
+        ))
+        if runtime_settings.laya_deployment_path and runtime_settings.laya_deployment_sha256:
+            from athena_api.laya.contracts import bound_json
+            try:
+                deployment_path = runtime_settings.laya_deployment_path.resolve()
+                deployment = bound_json(deployment_path, runtime_settings.laya_deployment_sha256)
+                app.state.laya_service.catalog = bound_json(
+                    (deployment_path.parent / deployment["catalog_path"]).resolve(),
+                    deployment["catalog_sha256"],
+                )
+                app.state.laya_service.selector_catalog_version = deployment.get("selector_catalog_version")
+            except (OSError, ValueError, KeyError, TypeError):
+                app.state.laya_service.client.counts["deployment_configuration_invalid"] += 1
+                app.state.laya_service.client.deployment_sha256 = ""
+        from athena_api.laya.worker import ManagedWorker
+        app.state.laya_worker = ManagedWorker(runtime_settings, app.state.laya_service.client)
         app.state.settings = runtime_settings
         app.state.local_bearer_token = (
             runtime_settings.local_bearer_token.get_secret_value()
@@ -847,6 +880,7 @@ def build_lifespan(settings: Settings | None = None, *, ws_connect=None):
         routines: RoutinesRuntime | None = None
         backtest: BacktestRuntime | None = None
         try:
+            await app.state.laya_worker.start()
             if runtime_settings.has_credentials:
                 for account in runtime_settings.kiwoom_accounts:
                     await account_registry.add_configured(account)
@@ -870,6 +904,7 @@ def build_lifespan(settings: Settings | None = None, *, ws_connect=None):
                 brain = await _open_brain(
                     runtime_settings,
                     kiwoom_clients=_ReadyAccountClients(runtimes),
+                    semantic_client=app.state.laya_service.client,
                 )
                 _publish_brain(app, brain)
             # 백테스트를 루틴보다 먼저 연다 — 코드 감시 알람이 백테스트의 일봉

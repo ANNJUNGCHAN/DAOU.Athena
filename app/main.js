@@ -35,6 +35,7 @@ const { createCodexUserInputDialog } = require('./lib/main/codex-user-input-dial
 const { createCodexChatRuntime } = require('./lib/main/codex-chat-runtime');
 const { createConversationSessionPool } = require('./lib/main/conversation-session-pool');
 const { runConversationSessionTurn } = require('./lib/main/conversation-session-turn');
+const { createLayaRouting } = require('./lib/main/laya-routing');
 const { assertSessionStopsSucceeded } = require('./lib/main/provider-session-shutdown');
 // 툴 호출 진행 단계(board-33) 라벨링에 render_canvas 판정 하나만 빌려 쓴다 —
 // 파서 자체는 손대지 않는다(sendLiveToolStep 근처 주석 참고).
@@ -805,6 +806,16 @@ function runBriefingTurnWired(event) {
     codexRunner: briefingClaudeRunner ? { runCodexQuery: briefingClaudeRunner.runClaudeQuery } : { runCodexQuery: runIsolatedCodexBriefingQuery },
     // 브리핑 모델은 앱 모델 설정 하나 — 사용자 턴·셸 툴바·오브와 같은 함수다.
     resolveModelSelection: resolveActiveModelSelection,
+    runBoundQuery: (runQuery, options, approvedEvent) => runLayaColdQuery(runQuery, {
+      ...options, allowLayaDirect: false,
+      layaContext: {
+        conversation_id: 'briefing:' + approvedEvent.routine_id + ':' + approvedEvent.fired_at,
+        turn_id: crypto.randomUUID(), origin: 'briefing', utterance: String(approvedEvent.note || ''),
+        context: { approved_note: String(approvedEvent.note || ''),
+          linked_symbols: typeof approvedEvent.symbol === 'string' && approvedEvent.symbol ? [approvedEvent.symbol] : [],
+          symbol: approvedEvent.symbol, observed: approvedEvent.observed },
+      },
+    }),
     cwd: dir,
     configFile,
     onEvent: trackBriefingToolStep,
@@ -3589,15 +3600,33 @@ function persistentChatEnabled() {
   return process.env.ATHENA_PERSISTENT_CHAT !== '0';
 }
 
+const layaRouting = createLayaRouting({
+  baseUrl: () => BACKEND_HTTP_BASE, bearerToken: () => LOCAL_BEARER_TOKEN,
+});
+const sessionLayaLeases = new WeakMap();
+function attachLayaSession(session, lease, closeOnStop = true) {
+  sessionLayaLeases.set(session, lease);
+  const stop = session.stop.bind(session);
+  session.stop = (...args) => { if (closeOnStop) lease.close(); return stop(...args); };
+  return session;
+}
+function runLayaColdQuery(runQuery, options) {
+  const lease = layaRouting.createSession();
+  return lease.run(options, bound => runQuery({ ...bound, layaSession: lease }))
+    .finally(() => lease.close());
+}
+
 function createLiveChatSessionForConversation() {
   const { dir, configFile } = getLiveMcpConfig();
-  return createClaudeChatSession({
+  const lease = layaRouting.createSession();
+  return attachLayaSession(createClaudeChatSession({
+    envOverridesFn: () => ({ ...mcpEnv.buildEnvOverrides(), ...lease.env() }),
     cwd: dir,
     configFile,
     // 불변 규칙(live-prompt.js)은 --append-system-prompt로 세션당 1회 —
     // 턴 페이로드는 buildLiveTurnPrompt(질문만)로 가볍다.
     appendSystemPrompt: buildLiveSystemPrompt(),
-  });
+  }), lease);
 }
 
 function getLiveChatSession(conversationId = historyConversationId()) {
@@ -3610,7 +3639,8 @@ function getLiveGrokSession(conversationId) {
 
 function createLiveGrokChatSession() {
     const { dir, grokProfilePath, configPath } = getLiveMcpConfig();
-    return createGrokAcpSession({
+    const lease = layaRouting.createSession();
+    return attachLayaSession(createGrokAcpSession({
       cwd: dir,
       profilePath: grokProfilePath,
       trustProjectFolder: true,
@@ -3619,7 +3649,7 @@ function createLiveGrokChatSession() {
         const gateway = JSON.parse(fs.readFileSync(configPath, 'utf8')).mcpServers.athena;
         return [{
           name: 'athena', command: gateway.command, args: gateway.args,
-          env: Object.entries({ ...gateway.env, ATHENA_MCP_TOOL_NAME_STYLE: 'grok' })
+          env: Object.entries({ ...gateway.env, ...lease.env(), ATHENA_MCP_TOOL_NAME_STYLE: 'grok' })
             .map(([name, value]) => ({ name, value })),
         }];
       },
@@ -3629,37 +3659,39 @@ function createLiveGrokChatSession() {
       // Athena 플러그인은 자체 게이트웨이에서 권한을 확인한다. 다른 코딩 앱의
       // 전역 MCP를 함께 시작하면 질문마다 무관한 서버 준비를 기다리게 된다.
       envOverridesFn: () => ({
-        ...mcpEnv.buildEnvOverrides(),
+        ...mcpEnv.buildEnvOverrides(), ...lease.env(),
         GROK_CLAUDE_MCPS_ENABLED: '0',
         GROK_CURSOR_MCPS_ENABLED: '0',
       }),
-    });
+    }), lease);
 }
 
-function createLiveCodexChatSession({ interactive = true } = {}) {
+function createLiveCodexChatSession({ interactive = true, layaSession = null } = {}) {
+  const ownsLayaSession = !layaSession;
+  layaSession = layaSession || layaRouting.createSession();
   const { dir, configPath } = getLiveMcpConfig();
   const gateway = JSON.parse(fs.readFileSync(configPath, 'utf8')).mcpServers.athena;
   const built = createCodexChatRuntime({
     userDataPath: app.getPath('userData'), cwd: dir, gateway,
     allowedTools: GATEWAY_ALLOWED_TOOLS,
-    envOverridesFn: () => mcpEnv.buildEnvOverrides(),
+    envOverridesFn: () => ({ ...mcpEnv.buildEnvOverrides(), ...layaSession.env() }),
     securityKeyFn: liveGrokSecurityKey,
     identityKeyFn: () => {
       const account = currentProviderSelection.activeAccount || cliAccounts.peekActiveAccount() || {};
       return account.accountId || account.id || null;
     },
   });
-  return createCodexChatSession({
+  return attachLayaSession(createCodexChatSession({
     ...built.sessionOptions, developerInstructions: buildLiveSystemPrompt('codex'),
     requestUserInput: createCodexUserInputDialog({ dialog, getWindow: () => shellWin, interactive }),
-  });
+  }), layaSession, ownsLayaSession);
 }
 
 async function runIsolatedCodexBriefingQuery(options) {
   if (process.env.ATHENA_CODEX_PERSISTENT_CHAT === '0') {
     return { ok: false, error: 'Codex 대화 연결이 꺼져 있습니다.' };
   }
-  const session = createLiveCodexChatSession({ interactive: false });
+  const session = createLiveCodexChatSession({ interactive: false, layaSession: options.layaSession });
   const controller = new AbortController();
   let stopPromise;
   const stop = () => (stopPromise || (stopPromise = session.stop()));
@@ -3755,7 +3787,13 @@ function getLiveProviderChatSession(conversationId, providerId) {
 
 function runLiveProviderChatTurn(providerId, conversationId, options) {
   const session = getLiveProviderChatSession(conversationId, providerId);
-  return runConversationSessionTurn(session, {
+  const lease = sessionLayaLeases.get(session);
+  lease.bind(conversationId); // A pool slot has no conversation until it is claimed.
+  const routed = {
+    snapshot: () => session.snapshot?.(), stop: reason => session.stop(reason),
+    run: request => lease.run(request, bound => session.run(bound)),
+  };
+  return runConversationSessionTurn(routed, {
     ...options,
     stopSession: (reason) => liveRuntimes.stopChatSession(conversationId, session, reason),
   });
@@ -4835,6 +4873,7 @@ function createProviderRuntimeControllerInstance(stateDir) {
       );
     },
     capabilityEnv: () => mcpEnv.buildEnvOverrides(),
+    layaRouting,
     callbacks: {
       onTurnBound(event, binding) {
         const context = persistentTurnContexts.get(event.clientSubmitId);
@@ -4866,11 +4905,22 @@ function createProviderRuntimeControllerInstance(stateDir) {
       },
       onTrustedToolCompleted(completion) {
         const context = persistentTurnContexts.get(completion.clientSubmitId);
-        if (!context || context.canvasMode !== 'backtest') return;
-        maybeForwardBacktestChatAction(
-          { name: completion.canonicalToolName, input: completion.input },
-          { is_error: false, content: completion.content },
-        );
+        if (!context) return;
+        const step = { name: completion.canonicalToolName, input: completion.input };
+        const block = { is_error: false, content: completion.content };
+        forwardingConversationId = context.conversationId;
+        try {
+          if (context.canvasMode === 'backtest') maybeForwardBacktestChatAction(step, block);
+          else {
+            maybeForwardBrainEntity(step, block);
+            maybeForwardNudgeGuardProposal(step, block);
+            maybeForwardRoutineDraft(step, block);
+            maybeForwardRoutineProposal(step, block);
+            maybeForwardWatchCreate(step, block);
+            maybeForwardGraphChatAction(step, block);
+            maybeForwardPluginProposal(step, block);
+          }
+        } finally { forwardingConversationId = null; }
       },
       onSubagentStep(step) {
         if (!persistentTurnContexts.has(step.clientSubmitId)) return;
@@ -5583,6 +5633,7 @@ async function runLiveQuery(query, expand, origin = 'shell', turnConversationId 
   liveQueryBusyDepth += 1;
   runtime.busyDepth += 1;
   if (runtime.busyDepth === 1) broadcastLiveQueryBusy(true, turnConversationId);
+  submit = { ...submit, layaOriginalUtterance: query };
   liveSubmitContexts.set(turnConversationId, submit);
   try {
     return await runLiveQueryInner(query, expand, origin, turnConversationId);
@@ -5612,6 +5663,7 @@ async function runLiveQueryInner(query, expand, origin, turnConversationId) {
 async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, sessionAssistantId, continuation = null) {
   const queryStartedAt = performance.now();
   const submit = liveSubmitContexts.get(turnConversationId) || {};
+  const originalUtterance = submit.layaOriginalUtterance ?? query;
   const graphAccessError = await require('./lib/main/graph-model-access').checkGraphModelAccess(submit.canvasMode, {
     readPreferences: () => prefs.get(),
     getBackendUrl: historySink.getBackendUrl,
@@ -5881,8 +5933,15 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         run: (options) => selectorFastPath.runSelectorFastPath(options),
       });
     if (holdingsRequest) assertCurrentHoldingsTurn();
+    const selectorSemanticContext = {
+      canvasMode: submit.canvasMode, activeCardContext,
+      ...(routingQuery !== originalUtterance ? { app_clarified_question: routingQuery } : {}),
+    };
     const selectorOptions = {
       question: routingQuery,
+      originalQuestion: originalUtterance,
+      semanticContext: selectorSemanticContext,
+      authorization: backendAccountAuthorization(),
       backendBase: BACKEND_HTTP_BASE,
       intent: 'auto',
       deadlineMs: selectorFastPath.DEFAULT_DEADLINE_MS,
@@ -5937,6 +5996,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         holdingsRequest = clarification.request;
         assertCurrentHoldingsTurn();
         selectorResult = await selectorAccount.run({ ...selectorOptions,
+          semanticContext: { ...selectorSemanticContext, app_clarified_question: holdingsRequest.question },
           question: holdingsRequest.question, ...holdingsRequest.options });
         assertCurrentHoldingsTurn();
       }
@@ -5967,6 +6027,9 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         // proposal을 순차 dispatch하여 조회 외 operation의 중복 효과를 막는다.
         dispatchProposal: (proposal) => selectorAccount.run({
           question: routingQuery,
+          originalQuestion: originalUtterance,
+          semanticContext: selectorSemanticContext,
+          authorization: backendAccountAuthorization(),
           backendBase: BACKEND_HTTP_BASE,
           intent: proposal.intent,
           arguments: proposal.arguments,
@@ -6135,6 +6198,14 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     providerId: liveProviderId,
   };
   const turnPrompt = buildLiveTurnPrompt(liveTurnInput);
+  const layaContext = {
+    conversation_id: turnConversationId, turn_id: sessionAssistantId, origin,
+    utterance: originalUtterance,
+    context: { canvasMode: submit.canvasMode, graphContext: submit.graphContext,
+      agentContext: submit.agentContext, pluginContext: submit.pluginContext,
+      activeCardContext, today: liveTurnInput.today,
+      ...(query !== originalUtterance ? { app_clarified_question: query } : {}) },
+  };
   if (providerRuntimeEnabled && currentProviderSelection.disabled) {
     return {
       ...currentProviderSelection.disabled,
@@ -6173,6 +6244,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         },
         expectedRendererId,
         rendererSubmittedAt,
+        layaContext,
       });
     } finally {
       persistentTurnContexts.deleteIfSame(clientSubmitId, persistentTurnContext);
@@ -6204,6 +6276,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   let terminalAnswerText = null;
   const providerStartedAt = performance.now();
   const turnCallbacks = {
+    layaContext,
     onSpawn: (h) => { myHandle = h; runtime.activeLiveQuery = h; },
     // 성공 resolve 1건과 render 1건의 토큰이 정확히 같은 경우만 캐시한다.
     onEvent: (ev) => { replayTurnCapture.observe(ev); trackToolStep(ev); trackSubagent(ev); },
@@ -6283,7 +6356,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       ...turnCallbacks,
     });
   } else if (liveProviderId === 'grok') {
-    result = await runGrokQuery({
+    result = await runLayaColdQuery(runGrokQuery, {
       prompt: buildLivePrompt(liveTurnInput),
       cwd: dir,
       resumeSessionId,
@@ -6304,7 +6377,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       ...turnCallbacks,
     });
   } else {
-    const legacyQueryOperation = runClaudeQuery({
+    const legacyQueryOperation = runLayaColdQuery(runClaudeQuery, {
       // 날것 질문을 그대로 넘기면 모델이 조회만 하고 캔버스를 건너뛸 수 있다 —
       // 렌더 지시·스키마 힌트로 감싼다(lib/main/live-prompt.js의 실측 근거 참조).
       prompt: buildLivePrompt(liveTurnInput),

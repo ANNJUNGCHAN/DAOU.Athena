@@ -745,10 +745,12 @@ class ExtractionService:
         graph: ExtractionProjection,
         *,
         clock: Callable[[], datetime] = utc_now,
+        semantic_client=None,
     ) -> None:
         self._client = client
         self._graph = graph
         self._clock = clock
+        self._semantic_client = semantic_client
 
     async def project_source(self, source: SourceRecord) -> None:
         request_id = extraction_request_id(source)
@@ -773,6 +775,9 @@ class ExtractionService:
         except (ValueError, TypeError) as exc:
             raise ExtractionError("structured extraction response was invalid") from exc
         try:
+            if self._semantic_client is not None:
+                from athena_api.laya.memory import refine_extraction
+                envelope = await refine_extraction(source, envelope, self._semantic_client)
             entities, relations = self._build_records(source, envelope)
         except (ValueError, TypeError) as exc:
             raise ExtractionError("structured extraction response was invalid") from exc

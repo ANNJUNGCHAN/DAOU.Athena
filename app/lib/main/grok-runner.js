@@ -75,6 +75,7 @@ function runGrokQuery({
   onTextDelta,
   onThinkingDelta,
   signal,
+  envOverrides = {},
 } = {}) {
   return new Promise((resolve) => {
     if (!prompt || !String(prompt).trim()) {
@@ -110,7 +111,7 @@ function runGrokQuery({
       child = spawn(grokBin, args, {
         cwd,
         stdio: ['ignore', 'pipe', 'pipe'],
-        env: { ...process.env, ...mcpEnv.buildEnvOverrides() },
+        env: { ...process.env, ...mcpEnv.buildEnvOverrides(), ...envOverrides },
         windowsHide: true,
         shell: false,
       });

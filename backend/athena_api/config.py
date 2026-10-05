@@ -170,6 +170,14 @@ class Settings(BaseSettings):
     # Custom argv has highest priority. The Claude CLI path below is a separate explicit
     # opt-in; neither setting causes implicit executable discovery or probing by default.
     brain_extraction_llm_argv: list[str] = []
+    # The installed deployment owns a separate SDK worker; imports never load weights.
+    laya_runtime_url: str = "http://127.0.0.1:8769"
+    laya_runtime_token: SecretStr | None = None
+    laya_deployment_sha256: str = ""
+    laya_deployment_path: Path | None = None
+    laya_python_executable: Path | None = None
+    laya_device: Literal["cuda", "cpu"] = "cuda"
+    laya_timeout_seconds: float = Field(default=2.5, gt=0, le=30)
     brain_use_claude_cli_extraction: bool = False
     # Hourly self-enqueue period for IngestionCoordinator (ADR §9 gate G005). Manual runs
     # still go through the existing enqueue(JobTrigger.MANUAL) path unaffected by this.
@@ -327,6 +335,14 @@ class Settings(BaseSettings):
             raise ValueError(
                 "kiwoom_default_account is required when more than one account is configured"
             )
+        return self
+
+    @model_validator(mode="after")
+    def resolve_laya_timeout(self) -> Self:
+        # A CPU request can evaluate several heads serially. Preserve an explicit
+        # timeout (including an env override) and the existing CUDA default.
+        if self.laya_device == "cpu" and "laya_timeout_seconds" not in self.model_fields_set:
+            self.laya_timeout_seconds = 30.0
         return self
 
     @model_validator(mode="after")

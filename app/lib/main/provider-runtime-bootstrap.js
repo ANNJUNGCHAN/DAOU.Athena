@@ -9,6 +9,8 @@ const ATHENA_GATEWAY_BUILTIN_TOOLS = Object.freeze([
   'athena_call',
   'athena_routine',
   'athena_brain',
+  'athena_graph_view',
+  'athena_plugin',
   'athena_nudge_guard',
   'athena_backtest',
 ]);
@@ -181,6 +183,7 @@ function createProviderRuntimeController({
   commitSuccess = async () => {},
   metrics = null,
   capabilityEnv = () => ({}),
+  layaRouting = null,
   stateDir = null,
   epochStore: suppliedEpochStore = null,
   retentionMs = 60_000,
@@ -200,6 +203,7 @@ function createProviderRuntimeController({
   const routers = new Map();
   const submissions = new Map();
   const capabilityContexts = new Map();
+  const layaGenerations = new Map();
   let activeTurnId = null;
   let admissionBlocked = false;
   let admissionReason = null;
@@ -240,17 +244,19 @@ function createProviderRuntimeController({
       if (provider !== 'claude') throw new Error('CODEX_LIVE_DISABLED_BY_CONTRACT');
       return createClaudeAgentSession();
     },
-    generationContextFactory({ desiredState }) {
+    generationContextFactory({ desiredState, runtimeGeneration }) {
       let current = true;
       const capability = capabilityContexts.get(desiredState.configGeneration);
       if (!capability || !capability.stamp
         || capability.stamp.securityGeneration !== desiredState.securityGeneration) {
         throw new Error('matching gateway capability context is required');
       }
+      const lease = layaRouting?.createSession();
+      if (lease) layaGenerations.set(runtimeGeneration, lease);
       return {
         spawnContext: Object.freeze({
           assertCurrent() { if (!current) throw new Error('stale provider generation'); },
-          buildEnv() { return { ...capabilityEnv(), ...capability.buildCapabilityEnv() }; },
+          buildEnv() { return { ...capabilityEnv(), ...capability.buildCapabilityEnv(), ...lease?.env() }; },
           registerChild(child, metadata = {}) {
             const expectedCreationTime = metadata.expectedCreationTime
               ?? child.expectedCreationTime
@@ -259,6 +265,8 @@ function createProviderRuntimeController({
             return Object.freeze({
               async terminate() {
                 current = false;
+                lease?.close();
+                layaGenerations.delete(runtimeGeneration);
                 return terminateTree(child, {
                   expectedCreationTime,
                   readCreationTime: creationTimeReader,
@@ -274,6 +282,7 @@ function createProviderRuntimeController({
       const entry = submissions.get(event.clientSubmitId);
       if (!entry) return;
       if (event.conversationId !== entry.request.conversationId) return;
+      event = entry.redactLayaEvent ? entry.redactLayaEvent(event) : event;
       if (!entry.turnId) {
         entry.turnId = event.turnId;
         activeTurnId = event.turnId;
@@ -325,7 +334,7 @@ function createProviderRuntimeController({
         return result;
       });
     },
-    async sendTurn({ request, expectedRendererId, rendererSubmittedAt }) {
+    async sendTurn({ request, expectedRendererId, rendererSubmittedAt, layaContext }) {
       if (admissionBlocked) throw createProviderAdmissionError(admissionReason);
       if (!request || request.conversationId !== publishedConversationId) {
         throw createProviderConversationMismatchError();
@@ -336,7 +345,20 @@ function createProviderRuntimeController({
         m0: performance.now(), terminalAt: null,
       });
       try {
-        const result = await supervisor.sendTurn(request);
+        let result;
+        if (layaRouting && layaContext) {
+          await supervisor.ready();
+          const generation = supervisor.snapshot().runtimeGeneration;
+          const lease = layaGenerations.get(generation);
+          if (!lease) throw new Error('Laya provider generation unavailable');
+          result = await lease.run({ prompt: request.userText, layaContext, allowLayaDirect: false }, bound => {
+            if (supervisor.snapshot().runtimeGeneration !== generation || lifecycleClosed || admissionBlocked) {
+              throw new Error('Laya provider generation changed');
+            }
+            submissions.get(request.clientSubmitId).redactLayaEvent = bound.redactLayaEvent;
+            return supervisor.sendTurn({ ...request, userText: bound.prompt });
+          });
+        } else result = await supervisor.sendTurn(request);
         activeTurnId = activeTurnId === result.turnId ? null : activeTurnId;
         metrics?.completeTurn?.(result.turnId, result.ok ? 'completed' : result.interrupted ? 'interrupted' : 'failed');
         return result;
@@ -347,6 +369,7 @@ function createProviderRuntimeController({
       }
     },
     interrupt(reason = 'user_interrupt') {
+      for (const lease of layaGenerations.values()) lease.cancel();
       return activeTurnId ? supervisor.interrupt(activeTurnId, reason) : Promise.resolve(null);
     },
     blockNewTurns(reason = 'security mutation') {
@@ -360,6 +383,7 @@ function createProviderRuntimeController({
       return true;
     },
     rotate(desired, reason, capabilityContext) {
+      for (const lease of layaGenerations.values()) lease.close();
       return serializeLifecycle(async () => {
         assertLifecycleOpen();
         capabilityContexts.clear();
@@ -371,6 +395,7 @@ function createProviderRuntimeController({
       });
     },
     stop(reason) {
+      for (const lease of layaGenerations.values()) lease.close();
       lifecycleClosed = true;
       admissionBlocked = true;
       admissionReason = reason || 'provider stopped';

@@ -348,6 +348,13 @@ class AthenaGateway:
             return _gateway_blocked_result("도구 권한 세대가 만료되어 호출할 수 없다")
 
         name = qualified_or_builtin_name
+        from athena_mcp.laya_bridge import refine as refine_semantics, turn_headers
+        semantic_headers = turn_headers(arguments)
+        arguments, semantic_block = await refine_semantics(name, arguments, self.selector_http_client)
+        if not self.capability_guard.is_current():
+            return _gateway_blocked_result("도구 권한 세대가 만료되어 호출할 수 없다")
+        if semantic_block:
+            return _gateway_blocked_result(semantic_block)
         if name == RENDER_CANVAS_TOOL:
             if not arguments.get("plan_token") and not arguments.get("data"):
                 # 게이트 수준 검증(2026-08-26) — 이 요구를 예전에는 inputSchema
@@ -388,7 +395,7 @@ class AthenaGateway:
         # 빌트인이 항상 이긴다(selector_tools.py 모듈 docstring의 이름 충돌
         # 절 참고 — RENDER_CANVAS_TOOL/SAVE_CANVAS_TOOL과 같은 우선순위 패턴).
         if name in selector_tools.SELECTOR_TOOL_NAMES:
-            return await self._dispatch_selector_tool(name, arguments)
+            return await self._dispatch_selector_tool(name, arguments, semantic_headers=semantic_headers)
         if name == routine_tools.ROUTINE_TOOL:
             # 셀렉터 4툴과 같은 빌트인 우선순위·같은 감사 최소 원칙(시각·
             # 툴명·성공여부만 — 조건·인자는 로그에 닿지 않는다).
@@ -557,7 +564,7 @@ class AthenaGateway:
         return fixed
 
     async def _dispatch_selector_tool(
-        self, name: str, arguments: dict[str, Any]
+        self, name: str, arguments: dict[str, Any], *, semantic_headers=None
     ) -> types.CallToolResult:
         result = await selector_tools.dispatch(
             name,
@@ -565,6 +572,7 @@ class AthenaGateway:
             self.selector_http_client,
             timing_log_path=self.audit_log_dir / "kiwoom-selector-timing.jsonl",
             cache=self.selector_cache,
+            semantic_headers=semantic_headers,
         )
         if name == selector_tools.CALL_TOOL:
             result = canvas_data.websocket_lifecycle_receipt(result)
@@ -832,7 +840,8 @@ def build_mcp_server(gateway: AthenaGateway) -> Server:
             )
             for t in aggregated
         ]
-        internal_tools = exposed + _builtin_tool_defs()
+        from athena_mcp.laya_bridge import expose_ticket
+        internal_tools = exposed + [expose_ticket(tool) for tool in _builtin_tool_defs()]
         if not grok_wire_names:
             return internal_tools
 

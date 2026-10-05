@@ -86,7 +86,8 @@ function localToolName(tool) {
 function gatewayEnvVarNames(overrides = {}, inherited = {}) {
   return [...new Set([...Object.keys(overrides), ...Object.keys(inherited)])]
     .filter((name) => name.startsWith('ATHENA_MCP_ENV__')
-      || name === 'ATHENA_MCP_REGISTRY_PATH')
+      || name === 'ATHENA_MCP_REGISTRY_PATH'
+      || name === 'ATHENA_LAYA_LEASE_ID' || name === 'ATHENA_LAYA_GENERATION_ID')
     .sort();
 }
 

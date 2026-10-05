@@ -93,6 +93,7 @@ function runClaudeQuery({
   onTextDelta,
   onThinkingDelta,
   signal,
+  envOverrides = {},
   disableAllTools = false,
 } = {}) {
   return new Promise((resolve) => {
@@ -113,7 +114,7 @@ function runClaudeQuery({
         cwd,
         // Pipe prompt bytes, then close immediately; Windows argv has a 32K limit.
         stdio: ['pipe', 'pipe', 'pipe'],
-        env: { ...process.env, ...mcpEnv.buildEnvOverrides(), ...DISABLE_TOOL_SEARCH_ENV },
+        env: { ...process.env, ...mcpEnv.buildEnvOverrides(), ...envOverrides, ...DISABLE_TOOL_SEARCH_ENV },
         windowsHide: true,
         shell: false,
       });

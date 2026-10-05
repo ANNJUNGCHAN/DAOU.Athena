@@ -113,9 +113,15 @@ async def get_manifest(selector: SelectorServiceDep) -> dict[str, Any]:
     openapi_extra={"x-athena-llm-exposed": True},
 )
 async def search_operations(
-    payload: SearchRequest, selector: SelectorServiceDep
+    payload: SearchRequest, selector: SelectorServiceDep, request: Request
 ) -> SearchResponse:
-    return selector.search(payload)
+    from athena_api.laya.query import rerank_search
+    from athena_api.laya.service import TurnExpired
+    response = selector.search(payload)
+    try:
+        return await rerank_search(request, payload, selector, response)
+    except TurnExpired:
+        return response
 
 
 @router.post(
@@ -139,8 +145,14 @@ async def describe_operation(
     openapi_extra={"x-athena-llm-exposed": True},
 )
 async def resolve_operation(
-    payload: ResolveRequest, selector: SelectorServiceDep, account: AccountAliasDep
+    payload: ResolveRequest, selector: SelectorServiceDep, account: AccountAliasDep, request: Request
 ) -> ResolveResponse:
+    from athena_api.laya.query import refine_arguments
+    from athena_api.laya.service import TurnExpired
+    try:
+        payload = await refine_arguments(request, payload, selector)
+    except TurnExpired:
+        pass
     return selector.resolve(payload, account=account)
 
 

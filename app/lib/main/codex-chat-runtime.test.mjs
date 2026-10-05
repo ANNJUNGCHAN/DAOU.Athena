@@ -120,3 +120,12 @@ test('actual config/read reordered env keys preserve policy while value changes 
     assert.throws(() => audit.validate(input), { code: 'CODEX_MCP_CONFIG_MISMATCH' });
   }
 });
+
+// Private routing credentials cross the filtered MCP env boundary by name only.
+test('Laya lease and generation values never enter Codex argv', () => {
+  const names = gatewayEnvVarNames({ ATHENA_LAYA_LEASE_ID: 'private-lease', ATHENA_LAYA_GENERATION_ID: 'private-generation' });
+  assert.deepEqual(names, ['ATHENA_LAYA_GENERATION_ID', 'ATHENA_LAYA_LEASE_ID']);
+  const args = buildCodexAppServerArgs({ gateway: { ...gateway, env_vars: names }, allowedTools });
+  assert.ok(!JSON.stringify(args).includes('private-lease'));
+  assert.ok(!JSON.stringify(args).includes('private-generation'));
+});

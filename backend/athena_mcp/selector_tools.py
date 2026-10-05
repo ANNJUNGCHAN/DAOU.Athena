@@ -620,12 +620,13 @@ async def dispatch(
     *,
     timing_log_path: Path | None = None,
     cache: SelectorCache | None = None,
+    semantic_headers: dict[str, str] | None = None,
 ) -> types.CallToolResult:
     if name != CALL_TOOL and arguments.get("intent") == "order":
         return _blocked("Athena는 분석과 백테스트를 지원하며 증권사 주문과 자동매매는 제공하지 않는다.")
     log_path = timing_log_path or default_timing_log_path()
 
-    if cache is not None:
+    if cache is not None and not semantic_headers:
         cached_payload = cache.get(name, arguments)
         if cached_payload is not None:
             _record_backend_timing(log_path, name, 0, cache_hit=True)
@@ -637,7 +638,8 @@ async def dispatch(
 
     start = time.monotonic()
     try:
-        response = await http_client.post(url, json=arguments, timeout=timeout)
+        response = await http_client.post(url, json=arguments, timeout=timeout,
+                                          headers=semantic_headers or {})
     except httpx.ConnectError:
         return _upstream_failed(
             "앱에 연결된 키움 백엔드가 응답하지 않는다. 사용자에게 백엔드 "
@@ -662,7 +664,7 @@ async def dispatch(
     except ValueError:
         return _upstream_failed(f"{name} 응답이 JSON이 아니다: {response.text[:500]!r}")
 
-    if cache is not None:
+    if cache is not None and not semantic_headers:
         cache.put(name, arguments, payload)  # resolve/call은 게이트로 걸러 무시된다
 
     if name == CALL_TOOL:

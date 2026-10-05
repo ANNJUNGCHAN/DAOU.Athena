@@ -1777,9 +1777,13 @@ class SelectorDispatchRequest(ResolveRequest):
     item_id: str | None = Field(default=None, min_length=1, max_length=128)
     ordinal: int | None = Field(default=None, ge=1, le=6)
     deadline_ms: int = Field(default=_INLINE_SERVER_BUDGET_MS, ge=100, le=3000)
+    original_question: str | None = Field(default=None, min_length=1, max_length=4000)
+    semantic_context: dict[str, Any] | str = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def validate_dispatch_correlation(self) -> SelectorDispatchRequest:
+        if len(json.dumps(self.semantic_context, ensure_ascii=False)) > 10000:
+            raise ValueError("semantic_context exceeds the local semantic input limit")
         correlation = (self.dataset_id, self.item_id, self.ordinal)
         if any(value is not None for value in correlation) and not all(
             value is not None for value in correlation
@@ -1821,7 +1825,7 @@ def _chart_reload_metadata(
 def _resolve_request(payload: SelectorDispatchRequest) -> ResolveRequest:
     return ResolveRequest.model_validate(
         payload.model_dump(
-            exclude={"dataset_id", "item_id", "ordinal", "deadline_ms"}
+            exclude={"dataset_id", "item_id", "ordinal", "deadline_ms", "original_question", "semantic_context"}
         )
     )
 
@@ -1843,10 +1847,11 @@ _PREFLIGHT_ERRORS = (
 )
 
 
-def _selector_preflight(
+async def _selector_preflight(
     payload: SelectorDispatchRequest,
     selector: SelectorService,
     error: Exception,
+    request: Request,
 ) -> JSONResponse | None:
     """Return a local, effect-free shortlist for recoverable cold-path misses."""
 
@@ -1865,6 +1870,16 @@ def _selector_preflight(
                 limit=3,
             )
         )
+
+    from athena_api.laya.query import rerank_search
+    try:
+        candidate_search = await asyncio.wait_for(rerank_search(request,
+            SearchRequest(query=payload.question, intent=search.suggested_intent or payload.intent, limit=3),
+            selector, candidate_search), timeout=min(1.5, payload.deadline_ms / 2000))
+    except TimeoutError:
+        service = getattr(request.app.state, "laya_service", None)
+        if service is not None:
+            service.client.counts["selector_shortlist_timeout"] += 1
 
     candidate_intent = search.suggested_intent or payload.intent
     candidate_refs: list[str] = []
@@ -2183,10 +2198,20 @@ async def selector_dispatch(
 ) -> JSONResponse:
     """Resolve exactly once, then finish the selected safe workflow in-process."""
 
+    request.state.laya_original_question = payload.original_question or payload.question
+    request.state.laya_semantic_context = payload.semantic_context
+    from athena_api.laya.query import refine_dispatch_request
+    try:
+        payload = await asyncio.wait_for(refine_dispatch_request(request, payload, selector),
+            timeout=min(1.5, payload.deadline_ms / 2000))
+    except TimeoutError:
+        service = getattr(request.app.state, "laya_service", None)
+        if service is not None:
+            service.client.counts["selector_defaults_timeout"] += 1
     try:
         resolved = selector.resolve(_resolve_request(payload), account=account)
     except _PREFLIGHT_ERRORS as exc:
-        preflight = _selector_preflight(payload, selector, exc)
+        preflight = await _selector_preflight(payload, selector, exc, request)
         if preflight is None:
             raise
         return preflight
