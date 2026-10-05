@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import logging
 import time
 from collections.abc import Awaitable, Callable
 from contextlib import suppress
@@ -26,6 +27,7 @@ from athena_api.routines.store import RoutineStore
 from athena_api.routines.triggers import TriggerEngine
 
 _KST = timezone(timedelta(hours=9))
+_log = logging.getLogger(__name__)
 
 NotifyFn = Callable[[dict[str, Any]], Awaitable[None]]
 
@@ -176,6 +178,9 @@ class RoutineScheduler:
     run_deployments_once: Callable[[], Awaitable[None]] | None = None
     deployment_poll_interval_s: float = 60.0
     last_error: str | None = None
+    # 예약 패스가 마지막으로 남긴 오류 — 성공한 패스는 자기가 남긴 것만 지운다
+    # (다른 루프의 last_error를 덮어 지우지 않는다).
+    _schedule_error: str | None = None
     _tasks: list[asyncio.Task[None]] = field(default_factory=list)
     _stopping: bool = False
     # routine_id → 근접(near) 진행 중 여부. 진입·이탈 각 1회만 notify하기 위한
@@ -347,89 +352,121 @@ class RoutineScheduler:
     async def _schedule_loop(self) -> None:
         while not self._stopping:
             await asyncio.sleep(self.schedule_poll_interval_s)
-            await self.run_schedule_once()
+            try:
+                await self.run_schedule_once()
+            except Exception as exc:
+                # 루틴 목록 자체를 못 읽는 등 패스 전체가 실패해도 루프는 살아 있어야
+                # 한다 — 죽으면 이후 알림이 조용히 멈춘다. 다음 주기에 다시 돈다.
+                _log.exception("예약 패스 실패")
+                self.last_error = self._schedule_error = (
+                    f"예약 처리 실패: {type(exc).__name__}: {exc}"
+                )
 
     async def run_schedule_once(self) -> None:
-        """Evaluate wall-clock occurrences, retaining quiet delays across midnight/restart."""
-        await self._expire_pass()
+        """Evaluate wall-clock occurrences, retaining quiet delays across midnight/restart.
+
+        루틴 한 건(손상된 ledger 행 등)의 오류가 같은 패스의 다른 루틴을 막지 않는다.
+        """
+        errors: list[str] = []
+        try:
+            await self._expire_pass()
+        except Exception as exc:
+            _log.exception("예약 만료 처리 실패")
+            errors.append(f"예약 만료 처리 실패: {type(exc).__name__}: {exc}")
         now = self.now_kst()
         for spec in self.store.list_active():
-            # A prior notification awaits external work: refresh status and ledger
-            # before deciding this occurrence, with no await before its record.
-            spec = self.store.get(spec.id)
-            if spec is None or spec.status != "active" or spec.mode != "scheduled":
-                continue
-            rows = [row for row in self.engine.ledger.read_all()
-                    if row.get("routine_id") == spec.id]
-            fired = [row for row in rows if row.get("verdict") == "fired"]
-            one_shot = spec.condition.source == "schedule.once"
-            if one_shot and fired:
-                self.store.transition(spec.id, "completed")
-                continue
-            if one_shot:
-                occurrence = parse_once_value(str(spec.condition.value))
-                if occurrence is None or now < occurrence:
+            try:
+                error = await self._schedule_one(spec, now)
+            except Exception as exc:
+                _log.exception("루틴 %s 예약 처리 실패", spec.id)
+                error = f"루틴 {spec.id} 예약 처리 실패: {type(exc).__name__}: {exc}"
+            if error:
+                errors.append(error)
+        if errors:
+            self.last_error = self._schedule_error = errors[-1]
+        elif self._schedule_error is not None:
+            if self.last_error == self._schedule_error:
+                self.last_error = None
+            self._schedule_error = None
+
+    async def _schedule_one(self, spec: RoutineSpec, now: datetime) -> str | None:
+        """루틴 한 건의 예약 판정·발화. 형식 오류는 사유 문자열로 돌려준다."""
+        # A prior notification awaits external work: refresh status and ledger
+        # before deciding this occurrence, with no await before its record.
+        spec = self.store.get(spec.id)
+        if spec is None or spec.status != "active" or spec.mode != "scheduled":
+            return None
+        rows = [row for row in self.engine.ledger.read_all()
+                if row.get("routine_id") == spec.id]
+        fired = [row for row in rows if row.get("verdict") == "fired"]
+        one_shot = spec.condition.source == "schedule.once"
+        if one_shot and fired:
+            self.store.transition(spec.id, "completed")
+            return None
+        if one_shot:
+            occurrence = parse_once_value(str(spec.condition.value))
+            if occurrence is None or now < occurrence:
+                return None
+        else:
+            parsed = parse_schedule_value(spec.condition.value)
+            if parsed is None:
+                return f"루틴 {spec.id}의 예약 형식이 올바르지 않다"
+            days, target_hhmm = parsed
+            hour, minute = map(int, target_hhmm.split(":"))
+            candidate = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            eligible = max(spec.created_at, spec.approved_at or spec.created_at)
+            candidates = []
+            if (days is None or now.isoweekday() in days) and now.strftime("%H:%M") == target_hhmm:
+                candidates.append(candidate)
+            # Delayed occurrences carry their own timestamp, so a morning
+            # delivery cannot consume that evening's distinct occurrence.
+            for row in rows:
+                if row.get("reason") != "조용 시간: 예약 알림 보류" or row.get("threshold") != spec.condition.value:
                     continue
-            else:
-                parsed = parse_schedule_value(spec.condition.value)
-                if parsed is None:
-                    self.last_error = f"루틴 {spec.id}의 예약 형식이 올바르지 않다"
+                try:
+                    due = datetime.fromisoformat(row.get("scheduled_for") or row["ts"]).astimezone(_KST)
+                    if not row.get("scheduled_for"):
+                        due = due.replace(hour=hour, minute=minute, second=0, microsecond=0)
+                    if eligible <= due <= now:
+                        candidates.append(due)
+                except (ValueError, TypeError):
                     continue
-                days, target_hhmm = parsed
-                hour, minute = map(int, target_hhmm.split(":"))
-                candidate = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
-                eligible = max(spec.created_at, spec.approved_at or spec.created_at)
-                candidates = []
-                if (days is None or now.isoweekday() in days) and now.strftime("%H:%M") == target_hhmm:
-                    candidates.append(candidate)
-                # Delayed occurrences carry their own timestamp, so a morning
-                # delivery cannot consume that evening's distinct occurrence.
-                for row in rows:
-                    if row.get("reason") != "조용 시간: 예약 알림 보류" or row.get("threshold") != spec.condition.value:
-                        continue
-                    try:
-                        due = datetime.fromisoformat(row.get("scheduled_for") or row["ts"]).astimezone(_KST)
-                        if not row.get("scheduled_for"):
-                            due = due.replace(hour=hour, minute=minute, second=0, microsecond=0)
-                        if eligible <= due <= now:
-                            candidates.append(due)
-                    except (ValueError, TypeError):
-                        continue
-                occurrence = None
-                for due in sorted(set(candidates)):
-                    if due < eligible:
-                        continue
-                    already_fired = any(
-                        (datetime.fromisoformat(row["scheduled_for"]) == due
-                         if row.get("scheduled_for") else
-                         datetime.fromisoformat(row["ts"]).astimezone(_KST).date() == due.date())
-                        for row in fired
-                    )
-                    if not already_fired:
-                        occurrence = due
-                        break
-                if occurrence is None:
+            occurrence = None
+            for due in sorted(set(candidates)):
+                if due < eligible:
                     continue
-            occurrence_key = occurrence.isoformat()
-            if self.get_guard_settings and in_quiet_hours(self.get_guard_settings(), now):
-                if not any(row.get("verdict") == "suppressed"
-                           and row.get("scheduled_for") == occurrence_key
-                           for row in rows):
-                    self.engine.ledger.record(
-                        "suppressed", routine_id=spec.id, symbol=spec.symbol,
-                        source=spec.condition.source, observed=now.strftime("%H:%M"),
-                        threshold=spec.condition.value, reason="조용 시간: 예약 알림 보류",
-                        ts=now, scheduled_for=occurrence_key,
-                    )
-                continue
-            row = record_scheduled_fire(
-                spec, self.engine.ledger, now.strftime("%H:%M"),
-                reason="예약 시각 도달",
-                threshold=spec.condition.value, ts=now, scheduled_for=occurrence_key,
-            )
-            if one_shot:
-                self.store.transition(spec.id, "completed")
-            await self._fire(spec, now.strftime("%H:%M"), fired_at=row["ts"])
+                already_fired = any(
+                    (datetime.fromisoformat(row["scheduled_for"]) == due
+                     if row.get("scheduled_for") else
+                     datetime.fromisoformat(row["ts"]).astimezone(_KST).date() == due.date())
+                    for row in fired
+                )
+                if not already_fired:
+                    occurrence = due
+                    break
+            if occurrence is None:
+                return None
+        occurrence_key = occurrence.isoformat()
+        if self.get_guard_settings and in_quiet_hours(self.get_guard_settings(), now):
+            if not any(row.get("verdict") == "suppressed"
+                       and row.get("scheduled_for") == occurrence_key
+                       for row in rows):
+                self.engine.ledger.record(
+                    "suppressed", routine_id=spec.id, symbol=spec.symbol,
+                    source=spec.condition.source, observed=now.strftime("%H:%M"),
+                    threshold=spec.condition.value, reason="조용 시간: 예약 알림 보류",
+                    ts=now, scheduled_for=occurrence_key,
+                )
+            return None
+        row = record_scheduled_fire(
+            spec, self.engine.ledger, now.strftime("%H:%M"),
+            reason="예약 시각 도달",
+            threshold=spec.condition.value, ts=now, scheduled_for=occurrence_key,
+        )
+        if one_shot:
+            self.store.transition(spec.id, "completed")
+        await self._fire(spec, now.strftime("%H:%M"), fired_at=row["ts"])
+        return None
 
     # ---------- code (감시 함수, 장중) ----------
 

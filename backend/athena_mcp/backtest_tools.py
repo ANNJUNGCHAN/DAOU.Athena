@@ -480,12 +480,30 @@ _INPUT_SCHEMA: dict[str, Any] = {
         "propose_optimize": {
             "type": "object",
             "description": (
-                "action=propose_optimize일 때의 입력 — 최적화 탭에 준비할 탐색 방식. "
+                "action=propose_optimize일 때의 입력 — 최적화 탭에 준비할 탐색 방식과 범위. "
                 "탐색은 사람이 [탐색 시작]을 눌러야 시작된다."
             ),
             "required": ["method"],
             "properties": {
                 "method": {"type": "string", "enum": list(_OPTIMIZE_METHODS)},
+                "ranges": {
+                    "type": "array",
+                    "minItems": 1,
+                    "description": (
+                        "요청한 파라미터 범위. 각 축은 start부터 stop까지 step 간격으로 훑는다."
+                    ),
+                    "items": {
+                        "type": "object",
+                        "required": ["name", "start", "stop", "step"],
+                        "properties": {
+                            "name": {"type": "string"},
+                            "start": {"type": "number"},
+                            "stop": {"type": "number"},
+                            "step": {"type": "number", "exclusiveMinimum": 0},
+                            "is_int": {"type": "boolean"},
+                        },
+                    },
+                },
                 "note": {"type": "string", "description": "무엇을 왜 제안했는지 한 줄"},
             },
         },
@@ -931,12 +949,34 @@ async def dispatch(
                 f"{'/'.join(_OPTIMIZE_METHODS)} 중 하나."
             )
         note = opt_input.get("note")
+        ranges = opt_input.get("ranges")
+        if ranges is not None:
+            if not isinstance(ranges, list) or not ranges:
+                return _blocked("propose_optimize의 ranges는 비어 있지 않은 배열이어야 한다.")
+            for item in ranges:
+                if not isinstance(item, dict):
+                    return _blocked("propose_optimize의 ranges 항목은 객체여야 한다.")
+                name = item.get("name")
+                start, stop, step = item.get("start"), item.get("stop"), item.get("step")
+                if (
+                    not isinstance(name, str)
+                    or not name.strip()
+                    or not isinstance(start, (int, float))
+                    or not isinstance(stop, (int, float))
+                    or not isinstance(step, (int, float))
+                    or step <= 0
+                    or stop < start
+                ):
+                    return _blocked(
+                        "propose_optimize의 ranges에는 name과 start <= stop, step > 0이 필요하다."
+                    )
         return _success(
             {
                 "delivered": "canvas",
                 "application_status": "pending",
                 "kind": "optimize_request",
                 "method": method,
+                "ranges": ranges,
                 "note": note if isinstance(note, str) else None,
                 "notice": (
                     "최적화 방식을 캔버스로 전달했다. 실제 반영 여부는 캔버스 영수증에서 "

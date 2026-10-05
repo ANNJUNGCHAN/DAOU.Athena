@@ -160,7 +160,22 @@ function displayNameFor(alias) {
   return entry ? entry.name : null;
 }
 
-const __exports = { CATALOG, MARKETPLACES, recommendedFor, findEntry, displayNameFor };
+// @ 메뉴에는 이름만 등록됐거나 서버 승인만 끝난 행을 넣지 않는다. 실제로
+// 허용된 도구가 하나도 없으면 해당 @별칭을 지정해도 모델이 호출할 수 있는
+// 기능이 없으므로, 선택 가능한 것처럼 보이는 메뉴가 된다.
+function mentionableServers(servers) {
+  return (Array.isArray(servers) ? servers : [])
+    .filter((server) => server && server.approved === true && Number(server.toolCount) > 0)
+    .map((server) => ({
+      alias: String(server.alias),
+      name: displayNameFor(server.alias),
+      hint: [server.command, server.argsPreview].filter(Boolean).join(' '),
+    }));
+}
+
+const __exports = {
+  CATALOG, MARKETPLACES, recommendedFor, findEntry, displayNameFor, mentionableServers,
+};
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = __exports;

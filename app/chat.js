@@ -2242,8 +2242,8 @@ window.AthenaShell.registerOpenBrainQuestions(async () => {
 //
 // 사용자 확정 방향: **모델은 제안, 확정은 사람.** 모델이 athena_graph_view
 // action=propose_edit을 부르면 main.js가 athena:graph-chat-action으로 보내고,
-// 여기서 카드를 띄운다. 누르면 사람의 답변 문장이 dispatchUserQuery로 제출되어
-// POST /brain/chat → 추출로 그래프가 갱신된다 — 되물을 것들 카드와 **같은 경로**다.
+// 여기서 카드를 띄운다. 적용은 id로 지목한 직접 API만 호출한다. 카드 선택을 사람의
+// 채팅 발화로 꾸미면 모델이 새 요청으로 읽고 같은 제안을 반복하므로 그러지 않는다.
 //
 // 되물을 것들 카드와 같은 클래스(.question-card*)를 쓰고 같은 키(Ctrl+Enter·Esc)를
 // 쓴다. 다른 점은 하나뿐이다: 저쪽은 백엔드가 고른 불확실한 관계를 N건 묻고 한 번에
@@ -2267,35 +2267,25 @@ function answerGraphEditProposal(choice) {
   const lib = graphEditProposalLib();
   if (!graphEditProposal || !lib) return;
   const item = graphEditProposal;
-  const sentence = lib.proposalSentence(item, choice);
+  const mutation = lib.proposalMutation(item, choice);
   closeGraphEditProposal();
 
-  // 지우기는 **바로** 지운다(2026-09-03 사용자 확정 "내가 그래프창에 있으면 편집이라고
-  // 봐야지"). 수집(대화를 캐는 일)과 편집(주인이 화면에서 고치는 일)은 다른 일이다.
-  //
-  // 예전에는 이것도 답변 문장을 채팅으로 보내는 것이 전부였고, 반영은 다음 수집
-  // 배치가 했다 — 누른 직후 아무 일도 안 일어나니 모델이 같은 제안을 다시 냈고
-  // 사람은 같은 카드를 무한히 눌렀다(실측). 문장을 **보내지 않는** 것이 중요하다:
-  // 보내면 모델이 그것을 새 요청으로 읽어 또 제안하고, 루프가 그대로 남는다.
-  //
-  // relationId가 없으면(구버전 모델이 id를 안 실었거나 추가·수정 제안이면) 예전
-  // 경로를 그대로 쓴다 — 직접 쓰기는 아직 지우기 하나뿐이다.
-  if (choice === 'apply' && item.op === 'remove' && item.relationId) {
+  // 거절·건너뛰기는 현재 상태를 보존한다. 발화를 보내지 않으므로 거절 자체가 새
+  // 사실로 추출되거나 불확실한 관계를 확정하는 일이 없다.
+  if (choice !== 'apply') return;
+  if (!mutation) {
+    appendSystemLine(proposalLabel(item) + ' — 식별 정보가 부족하거나 지원하지 않는 정정이라 반영하지 않았습니다.');
+    return;
+  }
+  if (mutation.type === 'remove') {
     void retractGraphRelation(item);
     return;
   }
-
-  // 추가·수정도 바로 쓴다(2026-09-03). 두 끝 id가 다 와야 한다 — 이름으로 쓰면
-  // 오타가 새 노드가 되고, 그것은 고치려던 것보다 나쁘다. 하나라도 없으면 아래
-  // 예전 경로(답변 문장 제출 → 수집 때 반영)로 떨어진다.
-  if (choice === 'apply' && (item.op === 'add' || item.op === 'change')
-      && item.subjectId && item.objectId) {
-    void writeManualRelation(item);
+  if (mutation.type === 'add') {
+    void writeManualRelation(item, mutation.payload);
     return;
   }
-
-  // 건너뛰기는 아무것도 보내지 않는다 — 침묵을 답으로 굳히지 않는다.
-  if (sentence) dispatchUserQuery(sentence);
+  appendSystemLine(proposalLabel(item) + ' — 지원하지 않는 정정이라 반영하지 않았습니다.');
 }
 
 // 채팅 흐름에 결과 한 줄. 'past-empty'는 과거 대화 복원이 "메시지가 없습니다"에
@@ -2313,16 +2303,11 @@ function appendSystemLine(text) {
 // 사람이 누른 추가·수정을 그래프에 바로 쓴다. 티어는 MANUAL이라 다음 대화 추출이
 // 덮지 못한다(store._apply_one_relation). 취소와 같은 이유로 실패를 조용히 넘기지
 // 않는다 — 사람은 고쳤다고 믿고 화면을 떠난다(§0 정직성).
-async function writeManualRelation(item) {
+async function writeManualRelation(item, payload) {
   const label = proposalLabel(item);
   let res = null;
   try {
-    res = await window.athena.invoke('athena:brain-manual-relation', {
-      subjectId: item.subjectId,
-      objectId: item.objectId,
-      kind: item.relation,
-      rationale: item.reason,
-    });
+    res = await window.athena.invoke('athena:brain-manual-relation', payload);
   } catch (err) {
     appendSystemLine(label + ' — 반영하지 못했습니다: ' + String((err && err.message) || err));
     return;
@@ -2391,18 +2376,10 @@ function renderGraphEditProposalCard() {
   const note = document.createElement('div');
   note.className = 'question-card-note';
   // 아직 아무것도 안 바뀌었다는 사실을 화면이 말한다 — 모델의 notice와 같은 내용이다.
-  // 문구는 **실제로 걸릴 경로**를 말한다(2026-09-03). 두 경로가 있다:
-  //   · relationId가 있으면(op=remove) 누른 순간 그래프에서 바로 사라진다.
-  //   · 없으면(추가·수정, 또는 모델이 id를 안 실은 경우) 답변 문장이 채팅으로 나가고
-  //     반영은 다음 수집 배치가 한다.
-  // 앞 판은 둘을 구분하지 않아, 즉시 지워지는데도 "다음 수집 때"라고 말했다 —
-  // 그 전 판은 반대로 "그 답이 그래프를 갱신합니다"라 즉시로 읽혔고, 숫자가 안
-  // 줄어드니 같은 카드를 계속 누르는 무한 루프처럼 느껴졌다(실제 제보). 어느 쪽이든
-  // 화면이 사실과 다르면 사람은 고장으로 읽는다.
-  const immediate = graphEditProposal.op === 'remove' && !!graphEditProposal.relationId;
-  note.textContent = immediate
+  // 렌더러는 id가 갖춰진 제안만 받으므로 적용은 언제나 직접 반영된다.
+  note.textContent = graphEditProposal.op === 'remove'
     ? '아직 그래프는 그대로입니다. 누르면 바로 지워집니다.'
-    : '아직 그래프는 그대로입니다. 누르면 그 답이 채팅으로 보내지고, 다음 수집 때 그래프에 반영됩니다.';
+    : '아직 그래프는 그대로입니다. 누르면 바로 추가됩니다.';
   host.appendChild(note);
 
   const actions = document.createElement('div');
@@ -2620,16 +2597,9 @@ async function loadMentionAliases() {
   if (mentionState.loaded) return;
   try {
     const res = await window.athena.invoke('athena:mcp-list');
-    mentionState.aliases = ((res && res.servers) || [])
-      .filter((s) => s && s.approved)
-      .map((s) => ({
-        alias: s.alias,
-        // 카탈로그에서 설치한 서버는 사람이 읽는 이름을 함께 보여준다. 모르는
-        // 별칭에는 이름을 지어내지 않고 실행 명령을 그대로 힌트로 쓴다.
-        name: (window.AthenaLib && window.AthenaLib.PluginCatalog
-          && window.AthenaLib.PluginCatalog.displayNameFor(s.alias)) || null,
-        hint: [s.command, s.argsPreview].filter(Boolean).join(' '),
-      }));
+    mentionState.aliases = (window.AthenaLib && window.AthenaLib.PluginCatalog)
+      ? window.AthenaLib.PluginCatalog.mentionableServers((res && res.servers) || [])
+      : [];
     mentionState.loaded = true;
   } catch { /* 목록 실패 — 멘션 없이도 입력은 정상이어야 한다 */ }
 }
@@ -4842,6 +4812,10 @@ function renderApprovalCard(r, { autoCheck = false, conversationId = displayedCo
     const res = await window.athena.invoke('athena:routine-confirm', { id: r.id });
     if (res && res.ok) {
       status.textContent = '활성 — 감시가 시작됐습니다';
+      // 캔버스 갱신은 부수 효과다 — 실패해도 승인 결과를 바꾸지 않는다.
+      if (window.AthenaAgentCanvas && typeof window.AthenaAgentCanvas.refresh === 'function') {
+        Promise.resolve().then(() => window.AthenaAgentCanvas.refresh()).catch(() => {});
+      }
     } else {
       status.textContent = `활성화 실패: ${(res && res.error) || '알 수 없는 오류'}`;
       syncActivate();
@@ -4899,6 +4873,9 @@ window.athena.on('athena:routine-draft-created', (routine, meta) => {
     autoCheck: true,
     conversationId: (meta && meta.conversationId) || displayedConversationId,
   });
+  if (window.AthenaAgentCanvas && typeof window.AthenaAgentCanvas.refresh === 'function') {
+    Promise.resolve().then(() => window.AthenaAgentCanvas.refresh()).catch(() => {});
+  }
 });
 
 // ---------- 말걸기 가드 확인 카드 (F-stage9, Paper 보드 42/BIM-0) ----------
@@ -5842,12 +5819,30 @@ function renderBacktestChangeCard(receipt) {
   // "반영 안 됨"이라 적어놓고 탐색만 시작되는 갈라짐을 막는다.
   if (receipt.kind === 'optimize_request' && receipt.applied) {
     const start = _btn('탐색 시작', 'routine-btn routine-btn-approve');
-    start.addEventListener('click', () => {
+    start.addEventListener('click', async () => {
       const api = canvasApi();
       if (!api || typeof api.startOptimizeFromChat !== 'function') return;
-      api.startOptimizeFromChat();
       start.disabled = true;
-      start.textContent = '탐색 시작됨';
+      start.textContent = '탐색 중…';
+      status.textContent = '조합별 결과를 계산하는 중입니다';
+      let result;
+      try { result = await api.startOptimizeFromChat(); }
+      catch (err) { result = { ok: false, error: String((err && err.message) || err) }; }
+      if (result && result.ok) {
+        start.textContent = '탐색 완료';
+        status.textContent = `${(result.result && result.result.trials || []).length}개 조합 계산 완료`;
+        return;
+      }
+      if (result && result.stale) {
+        // 탐색 중 다른 기법·작업으로 넘어갔다 — 실패가 아니라 결과를 버린 것이다.
+        start.textContent = '탐색 시작';
+        start.disabled = false;
+        status.textContent = '다른 작업으로 전환되어 결과를 표시하지 않습니다';
+        return;
+      }
+      start.disabled = false;
+      start.textContent = '다시 탐색';
+      status.textContent = (result && result.error) || '탐색에 실패했습니다';
     });
     actions.appendChild(start);
   }

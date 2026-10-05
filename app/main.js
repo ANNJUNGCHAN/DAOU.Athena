@@ -34,6 +34,7 @@ const { createCodexChatSession } = require('./lib/main/codex-chat-session');
 const { createCodexUserInputDialog } = require('./lib/main/codex-user-input-dialog');
 const { createCodexChatRuntime } = require('./lib/main/codex-chat-runtime');
 const { createConversationSessionPool } = require('./lib/main/conversation-session-pool');
+const { terminateTree } = require('./lib/main/proc-utils');
 const { runConversationSessionTurn } = require('./lib/main/conversation-session-turn');
 const { assertSessionStopsSucceeded } = require('./lib/main/provider-session-shutdown');
 // 툴 호출 진행 단계(board-33) 라벨링에 render_canvas 판정 하나만 빌려 쓴다 —
@@ -3567,12 +3568,20 @@ function getLiveGrokSession(conversationId) {
   return getLiveProviderChatSession(conversationId, 'grok');
 }
 
+function terminateGrokProcessTree(child) {
+  // Grok ACP는 자기 아래에 Athena MCP Python 프로세스를 띄운다. Windows에서
+  // 여러 예열/대화 트리를 동시에 닫을 때 기본 1.5초 안에 close 이벤트가 오지
+  // 않을 수 있으므로, 강제 종료가 실제로 확인될 시간만 이 경로에서 늘린다.
+  return terminateTree(child, { gracefulMs: 1_500, forceMs: 8_000 });
+}
+
 function createLiveGrokChatSession() {
     const { dir, grokProfilePath, configPath } = getLiveMcpConfig();
     return createGrokAcpSession({
       cwd: dir,
       profilePath: grokProfilePath,
       trustProjectFolder: true,
+      killFn: terminateGrokProcessTree,
       rules: buildLiveSystemPrompt('grok'),
       mcpServersFn: () => {
         const gateway = JSON.parse(fs.readFileSync(configPath, 'utf8')).mcpServers.athena;
@@ -4085,11 +4094,11 @@ function maybeForwardGraphChatAction(step, resultBlock) {
       subject: payload.subject == null ? null : payload.subject,
       object: payload.object,
       relation: payload.relation,
-      // 있으면 카드가 '적용'에서 바로 지운다(2026-09-03). 없으면 카드가 예전
-      // 경로(답변 문장 제출 → 수집 때 반영)를 그대로 쓴다.
+      // op=remove의 필수 재료 — '적용'이 이 id로 바로 지운다. 없으면 렌더러가
+      // 카드를 띄우지 않는다(답변 문장을 채팅으로 되보내는 우회 경로는 없다).
       relationId: payload.relation_id == null ? null : payload.relation_id,
-      // 추가·수정의 즉시 반영 재료 — 두 끝의 entity id. 이름으로 쓰지 않는 이유는
-      // 백엔드 입구 주석과 같다: 오타가 새 노드가 된다.
+      // op=add의 필수 재료 — 두 끝의 entity id. 둘 중 하나라도 없으면 카드를 띄우지
+      // 않는다. 이름으로 쓰지 않는 이유는 백엔드 입구 주석과 같다: 오타가 새 노드가 된다.
       subjectId: payload.subject_id == null ? null : payload.subject_id,
       objectId: payload.object_id == null ? null : payload.object_id,
       reason: payload.reason == null ? null : payload.reason,
@@ -4195,7 +4204,9 @@ function maybeForwardBacktestChatAction(step, resultBlock) {
         designTab: payload.designTab == null ? null : payload.designTab,
       };
     } else if (action === 'propose_optimize' && payload.kind === 'optimize_request') {
-      message = { kind: 'optimize_request', method: payload.method, note };
+      message = {
+        kind: 'optimize_request', method: payload.method, ranges: payload.ranges, note,
+      };
     } else if (action === 'technique_question' && payload.kind === 'technique_question') {
       // 새 기법 만들기의 질문 카드 — visual_question과 같은 모양이다. 고른 선택지는
       // 캔버스가 채팅 입력으로 되돌려 보낸다(모델이 대신 고르지 않는다).

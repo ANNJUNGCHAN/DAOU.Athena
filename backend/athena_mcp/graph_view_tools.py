@@ -63,10 +63,10 @@ _WINDOW_DAYS: tuple[int, ...] = (30, 90, 180, 365)
 _MIN_DEGREES: tuple[int, ...] = (0, 2, 3, 5)
 _SUMMARY_SORTS: tuple[str, ...] = ("reinforcement", "recent")
 
-# 제안할 수 있는 편집 세 종. `remove`가 있는 이유: 되물을 것들 카드가 이미 "아니다 →
-# 그 연결은 지워도 돼"를 사람의 문장으로 보내고 있다. 같은 일을 모델이 먼저 제안할 수
-# 있게 하는 것이지, 새 권한을 만드는 것이 아니다.
-_EDIT_OPS: tuple[str, ...] = ("add", "change", "remove")
+# 현재 직접 mutation으로 의미를 보존할 수 있는 편집만 제안한다. `change`는 직접 쓰기
+# API가 불확실성 수준을 무조건 확정으로 바꾸므로 제외한다. 관계 수정은 현재 관계를
+# id로 지우고, 정확한 두 노드 id로 새 관계를 추가하는 두 제안으로 나눠야 한다.
+_EDIT_OPS: tuple[str, ...] = ("add", "remove")
 
 _INPUT_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -112,7 +112,7 @@ _INPUT_SCHEMA: dict[str, Any] = {
         "edit": {
             "type": "object",
             "description": (
-                "action=propose_edit일 때의 제안. op=add|change|remove, "
+                "action=propose_edit일 때의 제안. op=add|remove, "
                 "subject·object는 노드 이름, relation은 관계 이름, "
                 "reason은 왜 그렇게 고쳐야 하는지(카드 부제로 사람이 읽는다). "
                 # relation의 출처를 지목한다 — 이것이 없어서 모델이 관계 이름을 못
@@ -127,9 +127,8 @@ _INPUT_SCHEMA: dict[str, Any] = {
                 "object": {"type": "string"},
                 "relation": {"type": "string"},
                 "reason": {"type": "string"},
-                # op=remove일 때 이것이 있으면 사람이 '적용'을 누른 순간 그래프에서
-                # 바로 사라진다(2026-09-03). 없으면 예전처럼 답변 문장이 채팅으로
-                # 나가고 다음 수집 때 반영된다 — 즉시 반영을 원하면 id를 실어라.
+                # op=remove는 이 id가 필수다. 이름을 채팅으로 되보내 추출시키는
+                # 우회 경로는 같은 제안 카드가 반복되는 원인이므로 사용하지 않는다.
                 "relation_id": {
                     "type": "string",
                     "description": (
@@ -137,22 +136,20 @@ _INPUT_SCHEMA: dict[str, Any] = {
                         "relation_id로 준다. op=remove일 때만 쓰인다."
                     ),
                 },
-                # op=add|change에 이 둘이 있으면 사람이 누른 순간 그래프에 바로
-                # 쓰인다(2026-09-03). 없으면 답변 문장이 채팅으로 나가고 반영이
-                # 다음 수집까지 밀린다 — 사람은 아무 일도 안 일어난 것으로 본다.
+                # op=add는 두 id가 모두 필수다. 이름만으로 새 노드를 만들지 않는다.
                 "subject_id": {
                     "type": "string",
                     "description": (
                         "관계의 출발 노드 id. athena_brain action=entity의 entity_id, "
-                        "또는 관계 목록이 준 상대 노드 id를 그대로 쓴다. 성향 관계처럼 "
-                        "주체가 투자자 본인이면 생략한다."
+                        "또는 관계 목록이 준 상대 노드 id를 그대로 쓴다. 성향 관계의 "
+                        "주체가 투자자 본인이어도 투자자 프로필 id를 넣는다."
                     ),
                 },
                 "object_id": {
                     "type": "string",
                     "description": (
-                        "관계의 도착 노드 id. op=add|change일 때 이것이 없으면 즉시 "
-                        "반영을 못 한다 — 이름만으로는 오타가 새 노드가 되므로 "
+                        "관계의 도착 노드 id. op=add일 때 이것이 없으면 즉시 "
+                        "반영할 수 없다 — 이름만으로는 오타가 새 노드가 되므로 "
                         "화면이 이름으로 쓰지 않는다."
                     ),
                 },
@@ -313,20 +310,21 @@ async def dispatch(arguments: dict[str, Any]) -> types.CallToolResult:
             f"propose_edit의 edit에는 object와 relation(문자열)이 필요하다. {_RECOVERY}"
         )
     relation_id = _text(edit.get("relation_id"))
-    # id가 실리면 확정 순간 바로 반영되고, 없으면 예전 추출 경로다(OBS-065).
-    # 모델이 한 경로의 시점을 다른 경로에 갖다 붙이지 않도록 notice를 가른다.
-    if relation_id:
-        notice = (
-            "아직 아무것도 바뀌지 않았다 — 확정 카드를 띄웠을 뿐이다. "
-            "사람이 누르면 그 관계 id로 바로 반영된다. "
-            "'고쳤다'고 말하지 마라."
+    subject_id = _text(edit.get("subject_id"))
+    object_id = _text(edit.get("object_id"))
+    if op == "remove" and relation_id is None:
+        return _blocked(
+            f"op=remove에는 relation_id가 필요하다. {_RECOVERY}"
         )
-    else:
-        notice = (
-            "아직 아무것도 바뀌지 않았다 — 확정 카드를 띄웠을 뿐이다. "
-            "사람이 누르면 그 답이 추출 경로로 그래프를 갱신한다. "
-            "'고쳤다'고 말하지 마라."
+    if op == "add" and (subject_id is None or object_id is None):
+        return _blocked(
+            f"op=add에는 subject_id와 object_id가 모두 필요하다. {_RECOVERY}"
         )
+    notice = (
+        "아직 아무것도 바뀌지 않았다 — 확정 카드를 띄웠을 뿐이다. "
+        "사람이 누르면 제공된 id로 바로 반영된다. "
+        "'고쳤다'고 말하지 마라."
+    )
     return _success(
         {
             "delivered": "canvas",
@@ -337,14 +335,9 @@ async def dispatch(arguments: dict[str, Any]) -> types.CallToolResult:
             "subject": _text(edit.get("subject")),
             "object": obj,
             "relation": relation,
-            # 있으면 카드가 '적용'에서 바로 지운다(2026-09-03). 없으면 null로 실려
-            # 화면이 예전 경로(문장 제출 → 수집)를 그대로 쓴다 — 카드가 어느 쪽인지
-            # 스스로 판단할 수 있어야 하므로 필드 자체는 항상 싣는다.
             "relation_id": relation_id,
-            # 두 id도 항상 싣는다(없으면 null) — 카드가 즉시 반영 경로를 쓸 수
-            # 있는지 스스로 판단해야 하고, 그 판단 재료가 이 필드다.
-            "subject_id": _text(edit.get("subject_id")),
-            "object_id": _text(edit.get("object_id")),
+            "subject_id": subject_id,
+            "object_id": object_id,
             "reason": _text(edit.get("reason")),
             "notice": notice,
         }
