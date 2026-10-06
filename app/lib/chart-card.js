@@ -119,12 +119,25 @@ const KST_HM = new Intl.DateTimeFormat('ko-KR', { timeZone: KST, hour: '2-digit'
 const KST_HMS = new Intl.DateTimeFormat('ko-KR', { timeZone: KST, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 const KST_MD = new Intl.DateTimeFormat('ko-KR', { timeZone: KST, month: 'numeric', day: 'numeric' });
 
-// epoch 초만 다룬다. 일·주·월·년 봉의 time은 'YYYY-MM-DD' 문자열이라 라이브러리
-// 기본 표기가 이미 맞다 — 그때는 null을 돌려 기본 동작에 맡긴다.
+// epoch 초만 다룬다. 날짜형 time의 null은 tickMarkFormatter에서 기본 표기로
+// 처리되지만 localization.timeFormatter는 반드시 문자열로 바꿔야 한다.
 function kstLabel(time, withSeconds) {
   if (typeof time !== 'number' || !Number.isFinite(time)) return null;
   const at = new Date(time * 1000);
   return (withSeconds ? KST_HMS : KST_HM).format(at);
+}
+
+function createChartTimeFormatter(defaultHorzScaleBehavior, getChartOptions) {
+  const defaultTimeScale = new (defaultHorzScaleBehavior())();
+  return (time) => {
+    const options = getChartOptions();
+    const intradayLabel = options.timeScale.timeVisible
+      ? kstLabel(time, options.timeScale.secondsVisible)
+      : null;
+    if (intradayLabel !== null) return intradayLabel;
+    defaultTimeScale.setOptions(options);
+    return defaultTimeScale.formatHorzItem(defaultTimeScale.convertHorzItemToInternal(time));
+  };
 }
 
 // ---- 보조지표(CC-103) 색은 chart-indicator-render.js의 스펙 테이블이 갖는다.
@@ -227,7 +240,7 @@ async function createChartCard(container, opts) {
   const priceFormat = o.target === 'sector' ? DECIMAL_PRICE_FORMAT : PRICE_FORMAT;
   const loaded = await __loadChartLibrary();
   if (typeof o.onChartLibraryReady === 'function') o.onChartLibraryReady(loaded.readyAt);
-  const { createChart, CandlestickSeries, BarSeries, LineSeries, AreaSeries, HistogramSeries, CrosshairMode, LineStyle } =
+  const { createChart, defaultHorzScaleBehavior, CandlestickSeries, BarSeries, LineSeries, AreaSeries, HistogramSeries, CrosshairMode, LineStyle } =
     loaded.library;
 
   let dailyBars = Array.isArray(o.ohlcv) ? o.ohlcv.slice() : [];
@@ -303,7 +316,7 @@ async function createChartCard(container, opts) {
   const chart = createChart(priceWrap, {
     // 크로스헤어의 시각 라벨 — 축과 같은 KST 표기를 쓴다.
     localization: {
-      timeFormatter: (time) => (intradayAxis ? kstLabel(time, tickSeconds) : null),
+      timeFormatter: createChartTimeFormatter(defaultHorzScaleBehavior, () => chart.options()),
     },
     autoSize: o.target !== 'sector',
     layout: {
@@ -1004,6 +1017,7 @@ async function createChartCard(container, opts) {
 
 const __exports = {
   createChartCard,
+  createChartTimeFormatter,
   createCachedChartLibraryLoader,
   renderNowAndOnNextFrame,
   withReloadDeadline,
