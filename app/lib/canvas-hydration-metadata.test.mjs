@@ -21,6 +21,7 @@ function fixture(reply) {
   }
   const mounts = [];
   const context = vm.createContext({ boardStateOf: () => state,
+    WATCH_SOURCE_SLOTS: {},
     window: { athena: { invoke: async () => reply } }, boardHydrateTarget: () => ({}), boardHydrateAccount: () => '',
     RETRYABLE_BOARD_HYDRATE_REASONS: new Set(), boardHydrationError: () => new Error('failed'),
     boardMount: { nextHydrationSlots,
@@ -29,7 +30,10 @@ function fixture(reply) {
     boardMountOptions: () => ({ emptyRows: state.emptyRows, emptyColumns: state.emptyColumns,
       emptyValueSlots: state.emptyValueSlots, deferredValueSlots: state.deferredValueSlots }),
     realtimeBindingsOf: () => [], rememberMountedBoard: () => {}, wireMountedBoardControls: () => {} });
-  vm.runInContext(source.slice(begin, end), context);
+  vm.runInContext(source.slice(source.indexOf('function excludeRetiredRankingRailSlots('), source.indexOf('function boardHydrateTarget(')), context);
+  vm.runInContext(source.slice(source.indexOf('function excludeRetiredWatchlistSlots('), source.indexOf('function receiveWatchlistMetadata(')), context);
+  const helper = source.slice(source.indexOf('function sectorHydratedPrimaryEnvelope('), begin);
+  vm.runInContext(helper + source.slice(begin, end), context);
   return { state, mounts, run: (isCurrent = () => true) => context.hydrateBoardSlots({}, {}, { original: true }, isCurrent) };
 }
 

@@ -83,17 +83,15 @@ test('entity details cannot obscure another mode and return intact when graph mo
   } finally { global.document = oldDocument; }
 });
 
-test('graph edit notice describes the actual immediate or deferred application path', () => {
+// 2026-10-06 사용자 결정: change 제안은 막고 add·remove는 id가 있어야 한다. id 없는 제안은
+// normalizeProposal이 버리므로 카드(와 '다음 수집' 안내)는 렌더되지 않는다.
+test('graph edit notice describes the immediate application path and id-less proposals never render', () => {
   const source = readFileSync(new URL('../chat.js', import.meta.url), 'utf8');
   const start = source.indexOf('function renderGraphEditProposalCard(');
   const code = source.slice(start, source.indexOf('\n}', start) + 2);
   for (const [patch, expected] of [
     [{ op: 'add', subjectId: 'a', objectId: 'b' }, /바로 반영/],
-    [{ op: 'change', subjectId: 'a', objectId: 'b' }, /바로 반영/],
     [{ op: 'remove', relationId: 'r' }, /바로 지워/],
-    [{ op: 'add', subjectId: 'a' }, /다음 수집/],
-    [{ op: 'change', objectId: 'b' }, /다음 수집/],
-    [{ op: 'remove' }, /다음 수집/],
   ]) {
     const host = fakeNode('div');
     const sandbox = { document: { getElementById: () => host, createElement: fakeNode },
@@ -102,5 +100,13 @@ test('graph edit notice describes the actual immediate or deferred application p
     };
     vm.runInNewContext(`${code}\nrenderGraphEditProposalCard();`, sandbox);
     assert.match(host.querySelector('.question-card-note').textContent, expected);
+    assert.doesNotMatch(host.querySelector('.question-card-note').textContent, /다음 수집/);
+  }
+  for (const message of [
+    { op: 'change', object: '합성 항목', relation: 'interested', subjectId: 'a', objectId: 'b' },
+    { op: 'add', object: '합성 항목', relation: 'interested', subjectId: 'a' },
+    { op: 'remove', object: '합성 항목', relation: 'interested' },
+  ]) {
+    assert.equal(editProposal.normalizeProposal(message), null);
   }
 });

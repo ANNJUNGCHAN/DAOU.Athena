@@ -16,7 +16,7 @@ function buildPrefill(event) {
 }
 
 // Selector one-shot 응답 → 사람 확인용 주문 티켓 프리필.
-// 현금 주식 시장가 매수/매도만 1차 범위로 허용하며 실행 능력은 전혀 없다.
+// 현금 주식 시장가·지정가 매수/매도 초안을 사람 확인 티켓으로 바꾼다.
 function buildSelectorOrderPrefill(payload) {
   if (!payload) return null;
   const goldOperation = payload.operation_ref === 'base:kt50000' ? 'buy'
@@ -66,7 +66,8 @@ function buildSelectorOrderPrefill(payload) {
   const draft = payload.order_draft;
   if (!draft || typeof draft !== 'object' || Array.isArray(draft)) return null;
   if (draft.side != null && draft.side !== side) return null;
-  if (draft.dmst_stex_tp !== 'KRX' || String(draft.trde_tp) !== '3') return null;
+  const tradeType = String(draft.trde_tp);
+  if (draft.dmst_stex_tp !== 'KRX' || !['0', '3'].includes(tradeType)) return null;
   if (typeof draft.stk_cd !== 'string' || !/^\d{6}$/.test(draft.stk_cd)) return null;
 
   const qtyText = typeof draft.ord_qty === 'number'
@@ -74,13 +75,21 @@ function buildSelectorOrderPrefill(payload) {
   if (typeof qtyText !== 'string' || !/^[1-9]\d*$/.test(qtyText)) return null;
   const qty = Number(qtyText);
   if (!Number.isSafeInteger(qty) || qty > 100000) return null;
+  const limitPriceText = draft.ord_uv == null ? null : String(draft.ord_uv).replace(/,/g, '');
+  const limitPrice = limitPriceText == null ? null : Number(limitPriceText);
+  if (tradeType === '0'
+      && (!/^[1-9]\d*$/.test(limitPriceText || '') || !Number.isSafeInteger(limitPrice)
+        || limitPrice > 1_000_000_000)) return null;
+  if (tradeType === '3' && draft.ord_uv != null && String(draft.ord_uv).trim() !== '') return null;
+  const orderType = tradeType === '0' ? 'limit' : 'market';
 
   return {
     symbol: draft.stk_cd,
     side,
     qty,
-    orderType: 'market',
-    reason: `시장가 ${side === 'buy' ? '구매' : '판매'} 주문 초안 — 실행 전 내용을 확인하세요`,
+    orderType,
+    ...(orderType === 'limit' ? { limitPrice } : {}),
+    reason: `${orderType === 'limit' ? '지정가' : '시장가'} ${side === 'buy' ? '구매' : '판매'} 주문 초안 — 실행 전 내용을 확인하세요`,
   };
 }
 
@@ -116,13 +125,20 @@ function buildOrderPayload(ticket) {
   if (ticket.side !== 'buy' && ticket.side !== 'sell') {
     throw new Error('방향(매수/매도)을 선택해야 한다');
   }
+  const orderType = ticket.orderType === 'limit' ? 'limit' : 'market';
+  const limitPrice = Number(ticket.limitPrice);
+  if (orderType === 'limit'
+      && (!Number.isSafeInteger(limitPrice) || limitPrice < 1 || limitPrice > 1_000_000_000)) {
+    throw new Error('지정가는 1~1,000,000,000원 사이 정수여야 한다');
+  }
   return {
     tr_id: ticket.side === 'buy' ? 'kt10000' : 'kt10001',
     body: {
       dmst_stex_tp: 'KRX',
       stk_cd: ticket.symbol,
       ord_qty: String(qty),
-      trde_tp: '3', // 시장가 — P4 1차 범위(지정가는 후속)
+      ...(orderType === 'limit' ? { ord_uv: String(limitPrice) } : {}),
+      trde_tp: orderType === 'limit' ? '0' : '3',
     },
   };
 }
@@ -133,13 +149,15 @@ function buildOrderPayload(ticket) {
 function estimateOrderTotal(input) {
   const src = input || {};
   const qty = Number(src.qty);
-  const observed = Number(src.observed);
+  const isLimit = src.orderType === 'limit';
+  const observed = Number(isLimit ? src.limitPrice : src.observed);
   if (!Number.isFinite(qty) || qty <= 0) return null;
-  if (src.observed == null || !Number.isFinite(observed) || observed <= 0) return null;
+  if ((isLimit ? src.limitPrice : src.observed) == null
+      || !Number.isFinite(observed) || observed <= 0) return null;
   const total = Math.round(qty * observed);
   return {
-    label: '총 주문 금액 (시장가 추정)',
-    text: `약 ${String(total).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`,
+    label: isLimit ? '총 주문 금액 (지정가)' : '총 주문 금액 (시장가 추정)',
+    text: `${isLimit ? '' : '약 '}${String(total).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`,
   };
 }
 
@@ -168,6 +186,17 @@ function priceRowModel(input) {
       selected: '시장가',
       readout: '시장가 요청 · 실행 불가',
       limitEnabled: false,
+    };
+  }
+  if (input && input.orderType === 'limit') {
+    const price = Number(input.limitPrice);
+    return {
+      segments: ['지정가', '시장가'],
+      selected: '지정가',
+      readout: Number.isSafeInteger(price) && price > 0
+        ? `${String(price).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 지정가`
+        : '지정가를 입력해 주세요',
+      limitEnabled: true,
     };
   }
   return {
@@ -253,9 +282,13 @@ function qtyChipModel(input) {
 }
 
 // HTTP 상태 → 티켓 상태. 409(멱등 충돌/IN_DOUBT)는 재전송 금지 상태다.
+// 0(전송 중 오류·시간 초과)과 500/502/504는 주문이 나갔는지 알 수 없다 — 재전송하면
+// 중복 주문이 될 수 있으므로 종결 상태 in_doubt로 본다.
+const IN_DOUBT_STATUSES = new Set([0, 409, 500, 502, 504]);
+
 function interpretExecuteStatus(status) {
   if (status >= 200 && status < 300) return 'done';
-  if (status === 409) return 'in_doubt';
+  if (IN_DOUBT_STATUSES.has(Number(status) || 0)) return 'in_doubt';
   if (status === 428) return 'needs_confirm';
   return 'failed';
 }
@@ -276,14 +309,19 @@ function createTicket(prefill) {
     assetKind: prefill && prefill.assetKind === 'gold' ? 'gold' : 'stock',
     productName: prefill && typeof prefill.productName === 'string' ? prefill.productName : null,
     unit: prefill && prefill.assetKind === 'gold' ? 'g' : '주',
-    orderType: prefill && ['market', 'regular', 'unspecified'].includes(prefill.orderType)
+    orderType: prefill && ['market', 'limit', 'regular', 'unspecified'].includes(prefill.orderType)
       ? prefill.orderType : null,
+    limitPrice: prefill && Number.isSafeInteger(prefill.limitPrice) && prefill.limitPrice > 0
+      ? prefill.limitPrice : null,
     executionSupported: !(prefill && prefill.executionSupported === false),
     executionBlocker: prefill && typeof prefill.executionBlocker === 'string'
       ? prefill.executionBlocker : null,
     symbol,
     side,
     qty,
+    // 멱등키는 티켓마다 한 번 만든다(클릭마다가 아니다). 접수되지 않은 것이 확정된
+    // 실패(failed) 뒤에만 새 키로 바꾼다 — rotateIdempotencyKeyAfter 참고.
+    idempotencyKey: newIdempotencyKey(),
     result: null,
   };
 }
@@ -312,12 +350,19 @@ function executeOutcomeTone(outcome) {
 function executeOutcomeCopy(outcome, res) {
   if (outcome === 'done') return '주문 접수됨 — 체결은 계좌에서 확인하세요.';
   if (outcome === 'in_doubt') {
-    return '확인 중(IN_DOUBT) — 중복 방지를 위해 재전송하지 않습니다. 계좌에서 접수 여부를 확인하세요.';
+    return '주문이 전송됐을 수 있습니다(IN_DOUBT) — 중복 방지를 위해 재전송하지 않습니다. 체결·잔고에서 접수 여부를 확인하세요.';
   }
   if (outcome === 'needs_confirm') {
     return '확인 요청 — 조건을 확인한 뒤 주문 게이트로 돌아갑니다.';
   }
   return `실행 실패: ${(res && res.error) || 'HTTP ' + ((res && res.status) || '?')} — 재시도하려면 다시 실행을 누르세요(새 멱등키).`;
+}
+
+// 접수되지 않은 것이 확정된 실패만 새 멱등키로 다시 시도한다. 같은 키에는 백엔드가
+// 앞선 결과를 캐시하므로, 거절된 주문을 고쳐 다시 낼 때 키가 그대로면 막힌다.
+function rotateIdempotencyKeyAfter(ticket, outcome) {
+  if (outcome === 'failed') ticket.idempotencyKey = newIdempotencyKey();
+  return ticket.idempotencyKey;
 }
 
 function transition(ticket, next) {
@@ -360,6 +405,7 @@ const __exports = {
   createTicket,
   transition,
   newIdempotencyKey,
+  rotateIdempotencyKeyAfter,
   canPresentOrderTicket,
 };
 

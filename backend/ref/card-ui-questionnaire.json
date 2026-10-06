@@ -48946,5 +48946,379 @@
         }
       }
     ]
+   },
+  "native_execution_appendix_978_996": {
+    "previous_cutoff": 977,
+    "cutoff": 996,
+    "observation_count": 19,
+    "scope": "서로 다른 카드 호출 및 같은 카드의 창 크기·스크롤 관측 기록. 전체 94개 상태의 완료 증거가 아니다.",
+    "fields": [
+      "id",
+      "phase",
+      "call_status",
+      "ui_status",
+      "actual_template_id",
+      "window_size",
+      "tested_at",
+      "runtime_source"
+    ],
+    "scope_notes": [
+      "979·982의 scoped_pass는 기업정보 단위 적합만 확인하고, 981의 scoped_pass는 축소 창 하단 경계 적합만 확인한다.",
+      "985·990의 scoped_pass는 축소 창의 마지막 열 확인만 뜻하며 마지막 행, 미제공 문맥이나 전체 카드의 통과를 뜻하지 않는다.",
+      "993·994 저장 이미지는 이전 화면을 참조해 현재 요청의 UI 증거에서 제외한다. 창 크기 필드는 null로 교정했다.",
+      "995·996은 994에서 실패한 같은 시간 초과 요청의 오류 화면 재관측이다. 별도 재호출하지 않아 call_status와 기본 차트 UI는 not_run이다.",
+      "실제 템플릿 ID는 모든 기록에서 미확인이다. 공개 참조 ID로 대체하지 않는다."
+    ],
+    "corrections": [
+      {
+        "ids": [
+          993,
+          994
+        ],
+        "reason": "이전 관측 상태가 저장된 이미지 귀속 결함",
+        "saved_images": "excluded_from_current_request_ui_evidence",
+        "original_records": "preserved",
+        "ui_status": "not_run",
+        "window_size": null
+      },
+      {
+        "ids": [
+          995,
+          996
+        ],
+        "reason": "994에서 실패한 같은 요청의 화면 재관측이며 별도 제출 없음",
+        "original_failed_request_id": 994,
+        "original_records": "preserved",
+        "call_status": "not_run",
+        "ui_status": "not_run"
+      }
+    ],
+    "runtime_source_provenance": {
+      "source33_main": "backend/ref/card-ui-handoff-20261003/reviews/UNITS-V2-POSTINSTALL.md",
+      "source35_main": "backend/ref/card-ui-handoff-20261003/STATE.json and reviews/COMPOSED-V4-POSTINSTALL.md",
+      "board_surface": "backend/ref/card-ui-handoff-20261003/candidates/PACK-SOURCE-RECEIPT.json and verification/company/historical-public-source-pins.json",
+      "selector": "current app/lib/main/selector-fast-path.js and backend/ref/card-ui-handoff-20261003/STATE.json"
+    },
+    "source_status_as_of_appendix_authoring": "차트 전환 수정 적용·계좌 안내 소스 적용; 계좌 설치 후 및 날짜축 후보 검토 중. 새 앱의 요청 차트는 시간 초과로 미도착.",
+    "privacy": "상태·시간·창 크기·공개 소스 해시만 포함한다. 이미지 경로, 계좌/종목 수치, 원본 노트, 프로필·provider 정보는 제외한다.",
+    "rows": [
+      {
+        "id": 978,
+        "phase": "source33-stock-chart-max-arrival",
+        "call_status": "pass",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T07:03:50.251Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 979,
+        "phase": "company-units-source33-max",
+        "call_status": "pass",
+        "ui_status": "scoped_pass",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T07:04:29.769Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 980,
+        "phase": "company-units-source33-narrow-top",
+        "call_status": "not_run",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T07:05:04.179Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 981,
+        "phase": "company-units-source33-narrow-bottom",
+        "call_status": "not_run",
+        "ui_status": "scoped_pass",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T07:05:18.468Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 982,
+        "phase": "company-units-source33-remax",
+        "call_status": "not_run",
+        "ui_status": "scoped_pass",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T07:05:43.165Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 983,
+        "phase": "account-source33-max-arrival",
+        "call_status": "pass",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T07:09:41.701Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 984,
+        "phase": "account-source33-narrow-top",
+        "call_status": "not_run",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T07:10:22.636Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 985,
+        "phase": "account-source33-narrow-last-columns",
+        "call_status": "not_run",
+        "ui_status": "scoped_pass",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T07:10:38.183Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 986,
+        "phase": "account-source33-narrow-bottom",
+        "call_status": "not_run",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T07:10:54.522Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 987,
+        "phase": "account-source33-remax",
+        "call_status": "not_run",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T07:11:10.104Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 988,
+        "phase": "account-asset-summary-source33-max",
+        "call_status": "pass",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T07:16:42.642Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 989,
+        "phase": "account-asset-summary-source33-narrow-top",
+        "call_status": "not_run",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T07:17:02.823Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 990,
+        "phase": "account-asset-summary-source33-narrow-last-columns",
+        "call_status": "not_run",
+        "ui_status": "scoped_pass",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T07:17:44.637Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 991,
+        "phase": "account-asset-summary-source33-narrow-bottom",
+        "call_status": "not_run",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 1411,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T07:18:00.684Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 992,
+        "phase": "account-asset-summary-source33-remax",
+        "call_status": "not_run",
+        "ui_status": "needs_review",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T07:18:13.401Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 993,
+        "phase": "source33-flow-max-call-failed",
+        "call_status": "failed",
+        "ui_status": "not_run",
+        "actual_template_id": null,
+        "window_size": null,
+        "tested_at": "2026-10-03T07:49:37.156Z",
+        "runtime_source": {
+          "main_sha256": "78f680293c7cd53521f98f13269109b7dca5562f17c5bd85fdc4852e5778fc57",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 994,
+        "phase": "source35-chart-fresh-call-timeout",
+        "call_status": "failed",
+        "ui_status": "not_run",
+        "actual_template_id": null,
+        "window_size": null,
+        "tested_at": "2026-10-03T08:08:37.052Z",
+        "runtime_source": {
+          "main_sha256": "0216ae705929ce60536125b50540bbc7c437872bf432f923a601dd2e27e02d27",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 995,
+        "phase": "source35-chart-timeout-current-observation",
+        "call_status": "not_run",
+        "ui_status": "not_run",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2122,
+          "height": 1166
+        },
+        "tested_at": "2026-10-03T08:11:53.423Z",
+        "runtime_source": {
+          "main_sha256": "0216ae705929ce60536125b50540bbc7c437872bf432f923a601dd2e27e02d27",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      },
+      {
+        "id": 996,
+        "phase": "source35-timeout-max-current",
+        "call_status": "not_run",
+        "ui_status": "not_run",
+        "actual_template_id": null,
+        "window_size": {
+          "width": 2560,
+          "height": 1392
+        },
+        "tested_at": "2026-10-03T08:22:02.243Z",
+        "runtime_source": {
+          "main_sha256": "0216ae705929ce60536125b50540bbc7c437872bf432f923a601dd2e27e02d27",
+          "board_surface_sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+          "selector_sha256": "8559ee623b5fe178f74efd5ad6d48abbd90345c765a1f2fbf9739b29c6d6f5de"
+        }
+      }
+    ]
   }
 }

@@ -1971,6 +1971,29 @@ function stripScrollOwnerOverflow(el) {
   return stripped;
 }
 
+function readableHintScroll(hint) {
+  if (!hint || !hint.classList) return null;
+  const parent = hint.parentElement;
+  if (parent?.classList?.contains('bs-r-scroll-table')) return parent;
+  return hint.classList.contains('bs-ranking-scroll-hint')
+    ? hint.nextElementSibling
+    : hint.previousElementSibling;
+}
+
+function ensureAccountTableHint(surface, owner) {
+  if (surface?.dataset?.bsBoardId !== '133H-2'
+    || owner?.getAttribute?.('data-node') !== '14UQ-2'
+    || !owner.classList?.contains('bs-r-scroll-table')) return null;
+  const existing = owner.querySelector(':scope > .bs-readable-hint');
+  if (existing) return existing;
+  const hint = layoutGroup(surface.ownerDocument, 'bs-readable-hint');
+  hint.textContent = '표를 좌우로 이동해 모든 열을 확인하세요';
+  // workspace의 형제로 두면 좁은 폭에서 나타난 힌트가 재최대화 뒤에도 flex 폭을
+  // 차지한다. 그러면 줄어든 표가 계속 overflow라 힌트가 다시 숨지 않는 순환이 된다.
+  owner.append(hint);
+  return hint;
+}
+
 // 세로로 쌓는 부모 아래 놓인 상자. flex-shrink는 **주축** 속성이라 부모가 column이면
 // 폭이 아니라 높이를 줄인다: 좁은 단계에서 원문의 `flex-shrink: 0`을 놓아주면
 // (board-surface.css L 단계) 고정 높이가 바닥이라는 계약이 세로로만 뒤집혀, 늘어난
@@ -2098,13 +2121,7 @@ function applyResponsiveHooks(surface) {
   // 소유자는 인라인 기하가 없어 hoistRigidBox가 그대로 지나가는 노드일 수 있다.
   for (const owner of surface.querySelectorAll('.bs-r-scroll, .bs-r-scroll-table')) {
     stripScrollOwnerOverflow(owner);
-    if (surface.dataset?.bsBoardId === '133H-2' && owner.getAttribute('data-node') === '14UQ-2'
-      && owner.classList.contains('bs-r-scroll-table')
-      && !owner.nextElementSibling?.classList.contains('bs-readable-hint')) {
-      const hint = layoutGroup(surface.ownerDocument, 'bs-readable-hint');
-      hint.textContent = '표를 좌우로 이동해 모든 열을 확인하세요';
-      owner.after(hint);
-    }
+    ensureAccountTableHint(surface, owner);
   }
   // Paper 이름이 스크롤이라고 적힌 상자를 실제로 스크롤시킨다(위 주석의 1WOB-1).
   for (const box of surface.querySelectorAll('[data-name]')) {
@@ -2210,6 +2227,17 @@ function layoutGroup(doc, className) {
   const group = doc.createElement('div');
   group.className = className;
   return group;
+}
+
+function detailPanelResponsiveWidth(paperWidth) {
+  return {
+    402: '100%',
+    191: 'calc((100% - 20px) / 2)',
+    170: 'calc((100% - 54px) / 2)',
+    62: '54px',
+    151: 'calc((100% - 54px) / 2)',
+    100: '80px',
+  }[paperWidth];
 }
 
 const RANK_FOUR = {"2V71-0":{"groups":[["kpi","프로그램 요약",["s013","s016","s017","s022","s023"]],["2WBN-0","프로그램 조회 종목",["s041","s042","s043","s044","s045","s046","s047","s048","s049","s050","s051","s052","s053","s054","s055","s056","s057","s058","s059","s060","s061","s062","s063","s064","s065","s066","s067","s068","s069","s070","s071","s072","s073","s074","s075","s076","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s087","s088","s089","s090","s091","s092","s093","s094","s095","s096","s097","s098","s099","s100","s101","s102","s103","s104","s105","s106","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s135","s136","s137","s138","s139","s140","s141","s142","s143","s144","s145","s146","s147","s148","s149","s150","s151","s152","s153","s154","s155"]],["3E9K-0","첫 조회 종목",["s168","s169","s173"]],["3E9U-0","프로그램 별도 조회",["s177","s179","s181"]],["3EAD-0","종목별 프로그램 조회 합계",["s185","s186","s188","s189","s191","s194"]]],"omitted":["s047","s049","s051","s053","s054","s061","s063","s065","s067","s068","s075","s077","s079","s081","s082","s089","s091","s093","s095","s096","s103","s105","s107","s109","s110","s117","s119","s121","s123","s124","s134","s136","s138","s140","s141","s148","s150","s152","s154","s155","s171","s192","s195"]},"3063-0":{"groups":[["kpi","요약 통계",["s013","s016","s020","s022"]],["35L4-0","요청 주체의 조회 종목",["s045","s046","s047","s048","s049","s050","s051","s052","s053","s054","s055","s056","s057","s058","s059","s060","s061","s062","s063","s064","s065","s066","s067","s068","s069","s070","s071","s072","s073","s074","s075","s076","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s087","s088","s089","s090","s091","s092","s093","s094","s095","s096","s097","s098","s099","s100","s101","s102","s103","s104","s105","s106","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s135","s136","s137","s138","s139","s140","s141","s142","s143","s144","s145","s146","s147","s148","s149","s150","s151","s152","s153","s154","s155","s156","s157","s158","s159","s160","s161","s162","s163","s164","s165","s166"]],["3TYJ-0","첫3개 조회 종목",["s176","s177","s179","s181","s183","s184","s186","s188","s190","s191","s193","s195"]],["3U01-0","직전 비교",["s204","s205","s206","s207","s208","s209","s210","s211","s212","s213","s214","s215","s216","s217","s218","s219","s220","s221","s222","s223","s224"]],["3U0Z-0","조회 요약",["s225","s226","s227","s228","s229","s230","s231","s232","s233","s234","s235"]]],"omitted":["s020","s045","s048","s049","s051","s053","s055","s056","s057","s058","s059","s060","s063","s064","s066","s068","s070","s071","s072","s073","s074","s075","s078","s079","s081","s083","s085","s086","s087","s088","s089","s090","s093","s094","s096","s098","s100","s101","s102","s103","s104","s105","s108","s109","s111","s113","s115","s116","s117","s118","s119","s120","s122","s125","s126","s128","s130","s132","s133","s134","s135","s136","s137","s140","s141","s143","s145","s147","s148","s149","s150","s151","s152","s155","s156","s158","s160","s162","s163","s164","s165","s166","s178","s180","s182","s185","s187","s189","s192","s194","s196","s197","s198","s199","s200","s201","s202","s203","s213","s214","s216","s217","s218","s219","s220","s221","s223","s224","s234"]},"30HY-0":{"groups":[["kpi","외국인·기관 요약",["s013","s016","s019","s020","s022"]],["34IW-0","외국인·기관 조회 종목",["s041","s042","s043","s044","s045","s046","s047","s048","s049","s050","s051","s052","s053","s054","s055","s056","s057","s058","s059","s060","s061","s062","s063","s064","s065","s066","s067","s068","s069","s070","s071","s072","s073","s074","s075","s076","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s087","s088","s089","s090","s091","s092","s093","s094","s095","s096","s097","s098","s099","s100","s101","s102","s103","s104","s105","s106","s107","s108","s109","s110","s111","s112","s113","s114","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s127","s128","s129","s130","s131","s132","s133","s134","s135","s136","s137","s138","s139","s140","s141","s142","s143","s144","s145","s146","s147","s148","s149","s150","s151","s152","s153"]],["3I61-0","첫 조회 종목",["s158","s159"]],["3I6B-0","첫 결과 연속 순매수",["s172","s173"]],["3T0G-0","외국인 순매매액",["s176","s177","s178","s179","s180","s181","s182","s183","s184","s185","s186","s187"]]],"omitted":["s044","s045","s054","s058","s059","s068","s072","s073","s082","s086","s087","s096","s100","s101","s110","s114","s115","s124","s126","s130","s131","s140","s144","s145","s154","s161","s163","s165","s166","s167","s168","s169","s170","s171"]},"31OF-0":{"groups":[["3A7P-0","신용융자 가능종목",[]]],"omitted":["s044","s045","s054","s055","s064","s065","s074","s075","s084","s085","s094","s095","s106","s107","s116","s117"]}};
@@ -3162,10 +3190,10 @@ function applyReadableBoardLayout(surface, contract) {
       for (const panel of row.children) {
         panel.classList.add('bs-detail-panel');
         // 패널 내부의 고정 두 칸도 같은 비율로 줄여 숫자 칸의 최소 폭을 지킨다.
-        const widths = { 402: '100%', 191: 'calc((100% - 20px) / 2)', 170: 'calc((100% - 20px) / 2)', 62: '54px', 151: 'calc((100% - 54px) / 2)', 100: '80px' };
         for (const node of panel.querySelectorAll('[data-bs-hoisted]')) {
           const width = pxNumber(node.style.getPropertyValue('--bs-width'));
-          if (widths[width]) node.style.setProperty('--bs-width', widths[width]);
+          const responsiveWidth = detailPanelResponsiveWidth(width);
+          if (responsiveWidth) node.style.setProperty('--bs-width', responsiveWidth);
         }
       }
     }
@@ -3561,7 +3589,7 @@ function relaxOverflowRows(surface) {
   if (typeof getComputedStyle !== 'function' || typeof document === 'undefined') return [];
   if (popoverLayout) popoverLayout.update(surface);
   for (const hint of surface.querySelectorAll('.bs-readable-hint, .bs-ranking-scroll-hint')) {
-    const scroll = hint.classList.contains('bs-ranking-scroll-hint') ? hint.nextElementSibling : hint.previousElementSibling;
+    const scroll = readableHintScroll(hint);
     hint.style.display = scroll && scroll.clientWidth > 0 && scroll.scrollWidth > scroll.clientWidth + 1 ? 'block' : 'none';
   }
   // 같은 폭에서 두 번 재지 않는다. 제품에서는 표면의 관찰자가, 게이트에서는 정착
@@ -3975,6 +4003,7 @@ const __exports = {
   scrollOverflowOwner,
   watchSurfaceWidth,
   wrapOverflowingLabels,
+  readableHintScroll, ensureAccountTableHint,
   markDeclaredScrollBox,
   hoistLayout, hoistRigidBox, applyResponsiveHooks, surfaceRoot,
   primaryMountPoint, collapsePrimaryMockup, restorePrimaryMockup, mountBoard, mountBoardAsync,
@@ -3987,6 +4016,7 @@ const __exports = {
   pairedClosure, realtimePlan, applyRealtimeSlots,
   stateLinksFromMarks, stateControlActivationOwner, wireStateControlActivation,
   findStateControlNode, STATE_CONTROL_SCOPES, STATE_CONTROL_WIDE_SCOPES,
+  detailPanelResponsiveWidth,
 };
 
 if (typeof module !== 'undefined' && module.exports) {

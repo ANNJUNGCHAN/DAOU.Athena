@@ -1,0 +1,4 @@
+Athena Lightweight Charts time-axis label alignment variant.
+Upstream TradingView Lightweight Charts v5.2.1, Copyright (c) 2026 TradingView, Inc., Apache License 2.0.
+Two TimeAxisWidget base/bold label draw call sites use the existing upstream coordinate alignment helper for viewport-edge glyphs. Label contents, tick/grid coordinates, font, marks, series data and scrolling options are unchanged.
+Generated from the exact upstream standalone production module by .omc author preparation; its SHA and minimal before/after edits are recorded in the source review manifest. Existing license header, library version and attribution remain.

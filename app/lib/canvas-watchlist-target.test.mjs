@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const registry = require('./board-template-registry');
 const controls = require('./ranking-board-controls');
+const boardFlowLayout = require('./board-flow-layout');
 const source = fs.readFileSync(new URL('../canvas.js', import.meta.url), 'utf8');
 const cacheKeys = ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
   'emptyRowsByBoard', 'emptyColumnsByBoard', 'emptyValueSlotsByBoard', 'deferredValueSlotsByBoard'];
@@ -15,7 +16,7 @@ function fixture(rowCode) {
   for (const key of cacheKeys) state[key] = new Map([['3D4I-0', ['stale']], ['2U5L-1', ['parent']]]);
   const host = { __athenaBoard: state }, requests = [], notices = [];
   const context = vm.createContext({
-    rankingBoardControls: controls, boardTemplateRegistry: registry, boardStateOf: () => state,
+    rankingBoardControls: controls, boardTemplateRegistry: registry, boardFlowLayout, boardStateOf: () => state,
     cardStkCd: envelope => envelope.stk_cd || '',
     boardMount: { boardIdentityFromEnvelope: () => ({}) },
     destroyBoardPrimary: () => {}, runBoardSurfaceLoad: (_host, _envelope, load) => load(() => true),

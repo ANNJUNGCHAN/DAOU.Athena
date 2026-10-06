@@ -10,11 +10,9 @@
 // 그 경계다 — 모델이 카드를 스스로 누를 방법은 없다.
 //
 // **누르면 무엇이 도나(같은 날 후속).** 처음에는 답변 문장이 채팅으로 나가 추출
-// 경로를 탔다. 그런데 반영이 다음 수집 배치까지 밀려, 누른 직후 아무 일도 안
-// 일어나니 사람이 같은 카드를 무한히 눌렀다(실측 제보). 지금은 전용 API가 바로
-// 쓴다(`/api/v1/brain/relations/*` — 전부 모델 비노출): remove는 관계를 지우고,
-// add·change는 티어 MANUAL로 쓴다. 그래서 쓰기 경로는 셋이다 — 채팅→추출,
-// 체결·잔고→투영, 그리고 사람의 직접 편집. 셋 다 사람의 행동에서 시작한다.
+// 경로를 탔다. 그런데 반영이 다음 수집 배치까지 밀리고 모델은 그 문장을 새 요청으로
+// 읽어 같은 카드를 반복했다(실측 제보). 지금은 id가 갖춰진 add·remove만 전용 API로
+// 바로 반영한다. 불확실성 수준을 보존할 수 없는 change는 카드 자체를 만들지 않는다.
 //
 // **왜 되물을 것들 카드와 같은 모양인가.** 사람이 답해야 하는 일이 화면에 두 종류
 // 생기는데(불확실한 관계 확인 / 모델의 편집 제안) 모양이 다르면 "무엇을 누르는
@@ -29,9 +27,10 @@
 // 실수가 나고, 반대로 이 leaf가 controller를 의존하면 층이 뒤집힌다).
 
 // 백엔드 graph_view_tools._EDIT_OPS와 같은 셋. 어긋나면 화면이 못 그리는 제안이 온다.
+// change는 제외한다. 현재 직접 쓰기 API는 관계를 무조건 확정 상태로 만들기 때문에
+// 불확실성 수준을 보존한 수정이 불가능하다. 의미를 잃는 수정 카드는 띄우지 않는다.
 const OPS = Object.freeze({
   add: { label: '추가', verb: '맞아' },
-  change: { label: '수정', verb: '맞아' },
   remove: { label: '삭제', verb: '아니야' },
 });
 
@@ -51,6 +50,11 @@ function normalizeProposal(message, relationLabels) {
   const relation = String(message.relation == null ? '' : message.relation).trim();
   if (!object || !relation) return null;
   const subject = String(message.subject == null ? '' : message.subject).trim();
+  const relationId = message.relationId ? String(message.relationId).trim() || null : null;
+  const subjectId = message.subjectId ? String(message.subjectId).trim() || null : null;
+  const objectId = message.objectId ? String(message.objectId).trim() || null : null;
+  if (message.op === 'remove' && !relationId) return null;
+  if (message.op === 'add' && (!subjectId || !objectId)) return null;
   return {
     op: String(message.op),
     opLabel: OPS[String(message.op)].label,
@@ -61,18 +65,11 @@ function normalizeProposal(message, relationLabels) {
     object,
     relation,
     relationText: dict[relation] || relation,
-    // 지울 관계의 id(2026-09-03). 있으면 '적용'이 그래프에서 **바로** 지운다 —
-    // 수집(대화를 캐는 일)과 편집(주인이 화면에서 고치는 일)은 다른 일이고, 편집을
-    // 배치까지 기다리게 하면 누른 직후 아무 일도 안 일어나 같은 카드를 반복해 누른다
-    // (실측). 없으면 예전 경로(답변 문장 제출 → 수집 때 반영)를 그대로 쓴다.
-    // op=remove 전용이다. 추가·수정은 아래 subjectId·objectId를 쓴다.
-    relationId: message.relationId ? String(message.relationId).trim() || null : null,
-    // 추가·수정의 즉시 반영 재료(2026-09-03). 둘 다 있어야 쓴다 — 하나만 있으면
-    // 어느 끝을 이을지 모른다. 성향 관계처럼 주체가 본인이면 모델이 subject_id를
-    // 생략하므로, 그 경우는 화면이 투자자 프로필 id를 알아야 한다(아직 없다 —
-    // 그래서 지금은 두 id가 다 온 경우에만 즉시 반영한다).
-    subjectId: message.subjectId ? String(message.subjectId).trim() || null : null,
-    objectId: message.objectId ? String(message.objectId).trim() || null : null,
+    // 적용은 채팅 재해석을 거치지 않고 id로 직접 반영한다. id가 없으면 위에서
+    // 제안을 버린다 — 가짜 사용자 발화를 만들어 추출기로 우회하지 않는다.
+    relationId,
+    subjectId,
+    objectId,
     reason: message.reason ? String(message.reason).trim() || null : null,
   };
 }
@@ -85,7 +82,7 @@ function proposalTitle(item) {
     : `"${item.subject}" → "${item.object}" · '${item.relationText}'`;
   if (item.op === 'remove') return `${target} 연결을 지울까요?`;
   if (item.op === 'add') return `${target} 연결을 추가할까요?`;
-  return `${target} 연결을 이렇게 고칠까요?`;
+  return '';
 }
 
 // 카드 부제 — 왜 그렇게 하자는 것인지. 근거가 없으면 그 절을 붙이지 않는다(§0:
@@ -95,31 +92,25 @@ function proposalContext(item) {
   return item.reason ? `${item.opLabel} 제안 — ${item.reason}` : `${item.opLabel} 제안`;
 }
 
-// 선택 → 채팅에 제출할 **사람의 답변 문장**.
-//
-// brain-questions.js answerSentence와 같은 규범을 따른다: 무엇에 대한 답인지를 문장
-// 안에 남긴다(추출기는 이 문장만 보고 관계를 다시 판단하므로 "응"만 보내면 무엇이
-// 맞다는 것인지 알 수 없다), 조사를 피해 따옴표와 조사 없는 어미로 쓴다.
-//
-// **적용 = 제안대로**다. remove 제안에 '적용'을 누르면 "그 연결은 지워도 돼"가 되고,
-// add/change 제안에 누르면 "맞아, 확실한 것으로 봐도 돼"가 된다. 거절은 그 반대가
-// 아니라 **현재 상태 유지**다 — remove를 거절한 것은 "지우지 마"이지 "더 강하게
-// 기록해"가 아니다. 그래서 거절 문장은 관계를 다시 주장하지 않고 그 사실만 말한다.
-function proposalSentence(item, choice) {
-  if (!item) return null;
-  const target = item.subjectImplicit
-    ? `"${item.object}"`
-    : `"${item.subject}" → "${item.object}"`;
-  const rel = ` · '${item.relationText}'`;
-  if (choice === 'apply') {
-    if (item.op === 'remove') return `${target}${rel} — 아니야. 그 연결은 지워도 돼.`;
-    return `${target}${rel} — 맞아. 확실한 것으로 봐도 돼.`;
+// 선택 → 실제 mutation. 거절·건너뛰기는 현재 상태를 그대로 두며 어떤 발화나 쓰기도
+// 만들지 않는다. 적용도 id가 갖춰진 직접 API만 사용한다.
+function proposalMutation(item, choice) {
+  if (!item || choice !== 'apply') return null;
+  if (item.op === 'remove' && item.relationId) {
+    return { type: 'remove', payload: { relationId: item.relationId } };
   }
-  if (choice === 'reject') {
-    if (item.op === 'remove') return `${target}${rel} — 그 연결은 그대로 둬. 지우지 마.`;
-    return `${target}${rel} — 그건 아직 확실하지 않아. 그대로 둬.`;
+  if (item.op === 'add' && item.subjectId && item.objectId) {
+    return {
+      type: 'add',
+      payload: {
+        subjectId: item.subjectId,
+        objectId: item.objectId,
+        kind: item.relation,
+        rationale: item.reason,
+      },
+    };
   }
-  return null; // skip은 아무것도 보내지 않는다.
+  return null;
 }
 
 // 선택지 3종. 되물을 것들 카드(brain-questions.js CHOICES)와 **같은 키 힌트**를 쓴다 —
@@ -132,7 +123,7 @@ const CHOICES = Object.freeze({
 });
 
 const __exports = {
-  OPS, isOp, normalizeProposal, proposalTitle, proposalContext, proposalSentence, CHOICES,
+  OPS, isOp, normalizeProposal, proposalTitle, proposalContext, proposalMutation, CHOICES,
 };
 
 // UMD 각주(2026-08-18 렌더러 격리) — brain-questions.js와 같은 패턴.

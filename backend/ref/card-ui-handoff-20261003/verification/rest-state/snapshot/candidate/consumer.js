@@ -69,6 +69,7 @@ function renderRestStateCard(envelope) {
     ? [cancelled.title, cancelled.message]
     : (labels[envelope.state] || labels.error);
   const { card, body } = makeCard(type, title, envelope.layout, envelope.correlation);
+  card.dataset.restState = envelope.state;
   card.dataset.screenState = envelope.state;
   card.dataset.renderState = envelope.state === 'timeout' ? 'timeout' : 'error';
   if (cancelled) {

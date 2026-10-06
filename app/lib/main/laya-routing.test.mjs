@@ -290,6 +290,7 @@ test('actual warm Claude/Grok/Codex factories propagate one private lease into c
       buildLiveSystemPrompt: () => 'system', fs: { readFileSync: () => JSON.stringify({ mcpServers: { athena: { command: 'fixture', args: [], env: {} } } }) },
       attachLayaSession: (s,l) => { attached=l; return s; },
       createClaudeChatSession: o => { options=o; return {}; }, createGrokAcpSession: o => { options=o; return {}; },
+      terminateGrokProcessTree: () => { throw new Error('unexpected process termination'); },
       createCodexChatSession: o => { options=o; return {}; },
       createCodexChatRuntime: o => { runtimeOptions=o; return { sessionOptions: {} }; },
       createCodexUserInputDialog: () => ({}), dialog: {}, shellWin: null,

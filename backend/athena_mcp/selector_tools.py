@@ -338,7 +338,7 @@ def default_http_client_factory() -> httpx.AsyncClient:
     return httpx.AsyncClient(base_url=backend_base_url(), headers=headers)
 
 
-_DISCOVERY_INTENT_ENUM = ["auto", "query", "websocket"]
+_DISCOVERY_INTENT_ENUM = ["auto", "query", "order", "websocket"]
 _RESPONSE_MODE_ENUM = ["auto", "compact", "full"]
 
 # 아래 네 스키마는 `athena_api/selector/schemas.py`의 SearchRequest/
@@ -363,8 +363,9 @@ _SEARCH_INPUT_SCHEMA: dict[str, Any] = {
                 "auto/query는 조회 표면과 저장된 조건검색 목록·일회 조회를 랭킹한다. "
                 "조건검색의 ka10171(CNSRLST), ka10172(CNSRREQ, search_type=0)는 "
                 "통신 종류가 websocket이어도 읽기 전용 조회이며 발급된 plan_token을 render_canvas에 전달한다. "
-                "실시간 구독은 'websocket'을 쓴다. "
-                "증권사 주문과 자동매매는 제품 범위 밖이며 제공하지 않는다."
+                "실시간 구독은 'websocket', 주문 초안은 'order'를 명시해야 그 표면이 랭킹에 "
+                "들어온다 — 모호한 질문은 절대 order/websocket에 닿지 않는다. 'order'는 활성 "
+                "계좌가 모의투자 계좌일 때만 허용되며 실계좌 주문과 자동매매는 제공하지 않는다."
             ),
         },
         "limit": {"type": "integer", "minimum": 1, "maximum": 10, "default": 5},
@@ -478,8 +479,10 @@ _FLOW_NOTE_POINTER = "4단계 흐름 전체 설명은 athena_search 설명을 �
 _DESCRIPTION_BY_TOOL: dict[str, str] = {
     SEARCH_TOOL: (
         "1/4단계 — 자연어 질문으로 국내 키움 오퍼레이션 후보를 검색한다. 조회가 "
-        "기본이며, 실시간 구독은 intent='websocket'을 명시한다. "
-        f"증권사 주문과 자동매매는 제공하지 않는다. {_FLOW_NOTE}"
+        "기본이며, 실시간 구독은 intent='websocket', 주문 초안은 intent='order'를 "
+        "명시해야 그 표면이 랭킹에 들어온다. 주문은 모의투자 계좌에서만 초안을 만들고 "
+        "사용자가 주문 티켓에서 확인해 실행한다 — 실계좌 주문과 자동매매는 제공하지 "
+        f"않는다. {_FLOW_NOTE}"
     ),
     DESCRIBE_TOOL: (
         f"2/4단계 — 실제 operation_ref 하나의 정확한 인자·응답 계약을 읽는다. {_FLOW_NOTE_POINTER}"
@@ -613,6 +616,33 @@ def _extract_error_detail(response: httpx.Response) -> str:
     return json.dumps(body, ensure_ascii=False)
 
 
+REAL_ACCOUNT_ORDER_MESSAGE = (
+    "실계좌 주문은 지원하지 않습니다. 모의투자 계좌에서만 주문할 수 있습니다."
+)
+
+
+ORDERS_UNAVAILABLE_MESSAGE = (
+    "모의투자 계좌 주문을 지금 실행할 수 없습니다. 계좌가 연결되지 않았거나 "
+    "설정 › 계좌에서 주문 API가 꺼져 있습니다."
+)
+
+
+async def _order_block_reason(http_client: httpx.AsyncClient | None) -> str | None:
+    """백엔드의 단일 판정을 묻는다. 확인하지 못하면 실계좌로 보고 막는다."""
+    if http_client is None:
+        return REAL_ACCOUNT_ORDER_MESSAGE
+    try:
+        response = await http_client.get("/api/v1/llm/order-environment", timeout=5.0)
+        payload = response.json() if response.status_code == 200 else None
+    except (httpx.HTTPError, ValueError):
+        return REAL_ACCOUNT_ORDER_MESSAGE
+    if not isinstance(payload, dict) or payload.get("mock") is not True:
+        return REAL_ACCOUNT_ORDER_MESSAGE
+    if payload.get("orders_available") is not True:
+        return ORDERS_UNAVAILABLE_MESSAGE
+    return None
+
+
 async def dispatch(
     name: str,
     arguments: dict[str, Any],
@@ -623,7 +653,11 @@ async def dispatch(
     semantic_headers: dict[str, str] | None = None,
 ) -> types.CallToolResult:
     if name != CALL_TOOL and arguments.get("intent") == "order":
-        return _blocked("Athena는 분석과 백테스트를 지원하며 증권사 주문과 자동매매는 제공하지 않는다.")
+        reason = await _order_block_reason(http_client)
+        if reason is not None:
+            return _blocked(reason)
+        # 주문 표면은 계좌 상태에 묶이므로 캐시된 응답을 재사용하지 않는다.
+        cache = None
     log_path = timing_log_path or default_timing_log_path()
 
     if cache is not None and not semantic_headers:

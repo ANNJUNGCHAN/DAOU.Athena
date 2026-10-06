@@ -36,8 +36,19 @@ function getHealthUrl(baseUrl = backendEndpoint.getBackendUrl()) {
   return baseUrl ? `${baseUrl}/api/v1/llm/manifest` : null;
 }
 
+// 주문 키 — 앱 실행마다 새로 만들고 main 메모리에만 둔다. process.env에 넣지 않으므로
+// 모델 공급자·MCP 자식은 상속하지 못하고, 이 백엔드 자식의 spawn env로만 건너간다.
+// 백엔드의 모든 주문 라우트가 이 키를 요구하므로 로컬 베어러만으로는 주문할 수 없다.
+const ORDER_KEY = crypto.randomBytes(32).toString('hex');
+
 function buildBackendEnv(baseEnv = process.env) {
   const env = { ...baseEnv };
+  // 모의투자 주문 경로(2026-10-06 범위). 실제 집행 게이트는 백엔드의 모의투자 판정 +
+  // 계좌별 주문 허용 + 티켓 클릭 + 아래 주문 키다. 외부에서 명시하면 그 값을 따른다.
+  if (!Object.prototype.hasOwnProperty.call(baseEnv, 'ATHENA_ENABLE_ORDER_API')) {
+    env.ATHENA_ENABLE_ORDER_API = 'true';
+  }
+  env.ATHENA_ORDER_KEY = ORDER_KEY;
   if (!Object.prototype.hasOwnProperty.call(baseEnv, 'ATHENA_BRAIN_ENABLED')) {
     env.ATHENA_BRAIN_ENABLED = 'true';
   }
@@ -712,6 +723,8 @@ module.exports = {
   STARTUP_POLL_INTERVAL_MS,
   buildServerArgs,
   buildBackendEnv,
+  // 주문 실행(executeOrderRequest)만 이 값을 헤더로 보낸다.
+  orderKey: () => ORDER_KEY,
   decideAction,
   venvExists,
   checkHealth,

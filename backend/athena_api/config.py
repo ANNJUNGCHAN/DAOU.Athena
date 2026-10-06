@@ -97,6 +97,9 @@ class Settings(BaseSettings):
     kiwoom_base_url: str = KIWOOM_MOCK_BASE_URL
     enable_order_api: bool = False
     local_bearer_token: SecretStr | None = None
+    # Per-launch secret the Electron app passes only to this process (never to model or MCP
+    # children). Every order route requires it, so the bearer token alone cannot place orders.
+    order_key: SecretStr | None = None
     request_timeout_seconds: float = 10.0
     max_rate_limit_retries: int = 1
     instrument_db_path: Path = Field(

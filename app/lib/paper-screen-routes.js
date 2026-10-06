@@ -818,14 +818,16 @@ const GRAPH_TIMELINE = Object.freeze({
 
 // 편집 제안 봉투 — 보드 11의 카드 목업 그대로다(op=remove · 「2차전지」 · avoids).
 // main.js가 athena_graph_view action=propose_edit을 이 모양으로 렌더러에 보낸다
-// (canvas.js athena:graph-chat-action의 kind==='edit_proposal'). relationId를 안
-// 싣는 것도 Paper 그대로다 — 보드가 그린 propose_edit 인자에 그것이 없다.
+// (canvas.js athena:graph-chat-action의 kind==='edit_proposal'). 보드가 그린 propose_edit
+// 인자에는 relationId가 없지만, 이제 id 없는 remove 제안은 카드를 띄우지 않으므로
+// (graph-edit-proposal.js normalizeProposal) 합성 id 하나를 싣는다.
 // 종목명·사유는 전부 값이라 phrases에 한 글자도 넣지 않는다.
 const GRAPH_EDIT_PROPOSAL = Object.freeze({
   kind: 'edit_proposal',
   op: 'remove',
   object: '2차전지',
   relation: 'avoids',
+  relationId: 'paper-fixture-relation',
   reason: '3주 전 한 번 언급 후 계속 회피',
 });
 

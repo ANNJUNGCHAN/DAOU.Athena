@@ -82,11 +82,11 @@ def make_runner(app: Any) -> Any:
         # 라우트와 같은 함수를 지난다 — 판정·집행 경로는 하나뿐이다.
         from athena_api.api.backtest import evaluate_deployment_once
 
-        order_client = getattr(app.state, "kiwoom_order_client", None)
+        # 자동매매는 모의투자 계좌를 포함해 제공하지 않는다 — 주문 클라이언트를 넘기지 않는다.
         for row in targets:
             try:
                 await evaluate_deployment_once(
-                    app, store, row, order_client=order_client, params={}
+                    app, store, row, order_client=None, params={}
                 )
             except Exception:  # noqa: BLE001 — 한 배포의 실패가 나머지를 멈추면 안 된다
                 logger.exception("배포 판정 실패 deployment_id=%s", row.id)

@@ -13,12 +13,16 @@ from athena_api.dependencies import (
     get_kiwoom_client,
     get_kiwoom_ws_client,
     get_order_kiwoom_client,
+    is_mock_order_account,
+    orders_available,
+    require_mock_order_account,
 )
 from athena_api.kiwoom import KiwoomClient, KiwoomWsClient
 from athena_api.selector.schemas import (
     CallRequest,
     CallResponse,
     DescribeRequest,
+    DiscoveryIntent,
     OperationDescription,
     ResolveRequest,
     ResolveResponse,
@@ -40,7 +44,8 @@ _TOOL_SPECS = (
         "athena_search",
         "Rank compact domestic Kiwoom operation candidates for a question. Reads are the "
         "default surface; set intent=websocket for a realtime subscription or intent=order "
-        "to place one, and honour suggested_intent when the answer replies with it.",
+        "to draft one for the user's order ticket (mock-trading accounts only), and honour "
+        "suggested_intent when the answer replies with it.",
         SearchRequest,
         SearchResponse,
     ),
@@ -113,11 +118,15 @@ async def get_manifest(selector: SelectorServiceDep) -> dict[str, Any]:
     openapi_extra={"x-athena-llm-exposed": True},
 )
 async def search_operations(
-    payload: SearchRequest, selector: SelectorServiceDep, request: Request
+    payload: SearchRequest, request: Request, selector: SelectorServiceDep
 ) -> SearchResponse:
+    if payload.intent is DiscoveryIntent.ORDER:
+        require_mock_order_account(request)
     from athena_api.laya.query import rerank_search
     from athena_api.laya.service import TurnExpired
     response = selector.search(payload)
+    if getattr(request.app.state, "laya_service", None) is None:
+        return response
     try:
         return await rerank_search(request, payload, selector, response)
     except TurnExpired:
@@ -132,8 +141,10 @@ async def search_operations(
     openapi_extra={"x-athena-llm-exposed": True},
 )
 async def describe_operation(
-    payload: DescribeRequest, selector: SelectorServiceDep
+    payload: DescribeRequest, request: Request, selector: SelectorServiceDep
 ) -> OperationDescription:
+    if payload.intent is DiscoveryIntent.ORDER:
+        require_mock_order_account(request)
     return selector.describe(payload)
 
 
@@ -145,8 +156,13 @@ async def describe_operation(
     openapi_extra={"x-athena-llm-exposed": True},
 )
 async def resolve_operation(
-    payload: ResolveRequest, selector: SelectorServiceDep, account: AccountAliasDep, request: Request
+    payload: ResolveRequest,
+    request: Request,
+    selector: SelectorServiceDep,
+    account: AccountAliasDep,
 ) -> ResolveResponse:
+    if payload.intent is DiscoveryIntent.ORDER:
+        require_mock_order_account(request)
     from athena_api.laya.query import refine_arguments
     from athena_api.laya.service import TurnExpired
     try:
@@ -154,6 +170,21 @@ async def resolve_operation(
     except TurnExpired:
         pass
     return selector.resolve(payload, account=account)
+
+
+@router.get(
+    "/order-environment",
+    operation_id="llm_get_order_environment",
+    summary="Whether the addressed account may draft and place mock-trading orders",
+    openapi_extra={"x-athena-llm-exposed": False},
+)
+async def get_order_environment(request: Request) -> dict[str, Any]:
+    mock = is_mock_order_account(request)
+    return {
+        "order_environment": "mock" if mock else "real",
+        "mock": mock,
+        "orders_available": mock and orders_available(request),
+    }
 
 
 @router.post(

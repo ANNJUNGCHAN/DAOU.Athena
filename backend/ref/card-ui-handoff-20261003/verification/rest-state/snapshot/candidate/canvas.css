@@ -1602,27 +1602,27 @@ table.common-table { min-width: 420px; font-size: 13px; line-height: 20px; }
 .grid > .card.mcp-table.general-table-intrinsic.general-table-half:not(.is-expanded):not(.integrated-card):not(.board-card):not([data-semantic-primary="specialized"]) { grid-column: auto; }
 
 /* REST status cards contain an explanation and action, not the original data pane. */
-.card[data-screen-state]:not(.is-expanded) {
+.card[data-rest-state]:not(.is-expanded) {
   height: auto;
   min-height: 0;
   max-height: none;
   align-self: start;
 }
-.card[data-screen-state]:not(.is-expanded) > .card-body {
+.card[data-rest-state]:not(.is-expanded) > .card-body {
   flex: 0 1 auto;
 }
-.card[data-screen-state] .rest-retry-action {
+.card[data-rest-state] .rest-retry-action {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 12px;
   margin-top: 12px;
 }
-.card[data-screen-state] .rest-retry-action > button {
+.card[data-rest-state] .rest-retry-action > button {
   min-height: 36px;
   flex: 0 0 auto;
 }
-.card[data-screen-state] .rest-retry-action > [role="status"] {
+.card[data-rest-state] .rest-retry-action > [role="status"] {
   min-width: 0;
   max-width: 100%;
   overflow-wrap: anywhere;

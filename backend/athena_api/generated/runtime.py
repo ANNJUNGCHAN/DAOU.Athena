@@ -15,7 +15,12 @@ from fastapi import HTTPException, Request, Response, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from athena_api.accounts import account_runtimes, order_scope_for
+from athena_api.accounts import (
+    REAL_ACCOUNT_ORDER_MESSAGE,
+    account_runtimes,
+    is_mock_order_client,
+    order_scope_for,
+)
 from athena_api.errors import OrderScopeError
 from athena_api.generated.registry import TR_REGISTRY
 from athena_api.kiwoom import RequestOptions, ResponseEnvelope
@@ -69,6 +74,25 @@ def _business_result_response(envelope: ResponseEnvelope) -> JSONResponse:
     if envelope.next_key:
         headers["next-key"] = envelope.next_key
     return JSONResponse(status_code=200, content=envelope.body, headers=headers)
+
+
+ORDER_KEY_HEADER = "X-Athena-Order-Key"
+MODEL_CALLER_HEADER = "X-Athena-Caller"
+
+
+def _require_order_key(request: Request) -> None:
+    """The per-launch key only the app's ticket click sends; the bearer token is not enough."""
+    settings = getattr(request.app.state, "settings", None)
+    expected = getattr(settings, "order_key", None)
+    provided = (request.headers.get(ORDER_KEY_HEADER) or "").strip()
+    if (
+        expected is None
+        or not provided
+        or not secrets.compare_digest(
+            provided.encode("utf-8"), expected.get_secret_value().encode("utf-8")
+        )
+    ):
+        raise HTTPException(status_code=403, detail="Order key required")
 
 
 def _require_bearer(request: Request, authorization: str) -> None:
@@ -245,9 +269,17 @@ async def call_order_tr(
     idempotency_key: str,
     account: str = "",
 ) -> BaseModel | JSONResponse:
+    # Re-checked at call time, below every dependency: only the mock host may receive orders.
+    if not is_mock_order_client(client):
+        raise HTTPException(status_code=403, detail=REAL_ACCOUNT_ORDER_MESSAGE)
+    if (request.headers.get(MODEL_CALLER_HEADER) or "").strip().lower() == "model":
+        raise HTTPException(
+            status_code=403, detail="Orders are placed only from the user's order ticket"
+        )
     _require_bearer(request, authorization)
     if confirmation.strip().lower() != "true":
         raise HTTPException(status_code=428, detail="X-Athena-Confirm: true is required")
+    _require_order_key(request)
     idempotency_key = idempotency_key.strip()
     if not idempotency_key or len(idempotency_key) > 128:
         raise HTTPException(

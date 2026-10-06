@@ -9,10 +9,13 @@ from starlette.requests import HTTPConnection
 from athena_api.accounts import (
     ACCOUNT_HEADER,
     ACCOUNT_QUERY_PARAM,
+    REAL_ACCOUNT_ORDER_MESSAGE,
     AccountRuntime,
     account_runtimes,
     default_account_alias,
+    is_mock_order_client,
 )
+from athena_api.config import OrderScope
 from athena_api.errors import KiwoomNotReadyError, UnknownAccountError
 from athena_api.kiwoom import KiwoomClient, KiwoomWsClient, TokenManager
 from athena_api.selector import PlanSigner, SelectorService, build_operation_catalog
@@ -116,16 +119,58 @@ def require_kiwoom_client(request: Request) -> KiwoomClient:
 KiwoomClientDep = Annotated[KiwoomClient, Depends(require_kiwoom_client)]
 
 
+def _addressed_order_client(request: Any) -> Any:
+    runtime = get_account_runtime(request)
+    if runtime is not None:
+        return runtime.order_client
+    return getattr(request.app.state, "kiwoom_order_client", None)
+
+
+def is_mock_order_account(request: Any) -> bool:
+    """Whether the addressed account's order client posts to Kiwoom mock trading."""
+    return is_mock_order_client(_addressed_order_client(request))
+
+
+def require_mock_order_account(request: Any) -> None:
+    """Refuse any order step for a real or unknown account environment."""
+    if not is_mock_order_account(request):
+        raise HTTPException(status_code=403, detail=REAL_ACCOUNT_ORDER_MESSAGE)
+
+
 def get_order_kiwoom_client(request: Request) -> KiwoomClient | None:
-    """Keep selector reads available while withholding the excluded execution client."""
-    return None
+    """Return the execution client only for an enabled, ready, mock-trading account."""
+    settings = getattr(request.app.state, "settings", None)
+    if (
+        settings is None
+        or not settings.enable_order_api
+        or settings.local_bearer_token is None
+        or getattr(settings, "order_key", None) is None
+    ):
+        return None
+    client = _addressed_order_client(request)
+    if client is None or not client.is_ready or not is_mock_order_client(client):
+        return None
+    return client
+
+
+def orders_available(request: Any) -> bool:
+    """Whether a cash order for the addressed account would actually reach the broker.
+
+    True only when the execution client would be returned and, for an app-registered
+    account, the user's per-account order permission is on.
+    """
+    if get_order_kiwoom_client(request) is None:
+        return False
+    runtime = get_account_runtime(request)
+    return runtime is None or runtime.permits_order(OrderScope.CASH)
 
 
 def require_order_kiwoom_client(request: Request) -> KiwoomClient:
-    raise HTTPException(
-        status_code=403,
-        detail="Athena는 분석과 백테스트를 지원하며 증권사 주문과 자동매매는 제공하지 않습니다.",
-    )
+    require_mock_order_account(request)
+    client = get_order_kiwoom_client(request)
+    if client is None:
+        raise KiwoomNotReadyError("Kiwoom order service is not ready")
+    return client
 
 
 OrderKiwoomClientDep = Annotated[KiwoomClient, Depends(require_order_kiwoom_client)]

@@ -196,7 +196,7 @@ test('actual orderbook price fields hide zero prices while retaining zero quanti
 });
 
 test('price differences, direction enumerations, fiscal months and dates keep their separate meanings', () => {
-  assert.equal(text('2RBO-1', {s006:-1500}, 's006'), '-1,500');
+  assert.equal(text('2RBO-1', {s006:-1500}, 's006'), '-1,500원');
   assert.equal(text('2RBO-1', {s113:12}, 's113'), '결산 12월');
   assert.equal(text('2X5N-0', {s122:'2'}, 's122'), '상승');
   assert.equal(text('2X5N-0', {s122:'999'}, 's122'), '—');

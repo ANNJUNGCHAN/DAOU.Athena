@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from athena_api.config import OrderScope
+from athena_api.config import KIWOOM_MOCK_BASE_URL, OrderScope
 from athena_api.kiwoom import (
     KiwoomAuth,
     KiwoomClient,
@@ -24,6 +24,21 @@ ACCOUNT_QUERY_PARAM = "account"
 
 CREDIT_ORDER_PATH = "/api/dostk/crdordr"
 GOLD_ORDER_PREFIX = "kt5"
+
+REAL_ACCOUNT_ORDER_MESSAGE = (
+    "실계좌 주문은 지원하지 않습니다. 모의투자 계좌에서만 주문할 수 있습니다."
+)
+
+
+def is_mock_order_client(client: Any) -> bool:
+    """The one authority for "orders through this client reach Kiwoom mock trading".
+
+    Decided by the host the client actually posts to, never by an account label. Anything
+    that cannot prove the mock host (no client, no base URL, any other host) counts as a
+    real account, so the order path fails closed.
+    """
+    base_url = getattr(client, "base_url", None)
+    return isinstance(base_url, str) and base_url.rstrip("/") == KIWOOM_MOCK_BASE_URL
 
 
 def order_scope_for(tr_id: str, upstream_path: str) -> OrderScope:

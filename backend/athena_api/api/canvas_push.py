@@ -56,6 +56,7 @@ from athena_api.dependencies import (
     KiwoomClientDep,
     SelectorServiceDep,
     get_kiwoom_client,
+    require_mock_order_account,
 )
 from athena_api.errors import KiwoomError, KiwoomNotReadyError
 from athena_api.generated.registry import WEBSOCKET_TR_IDS
@@ -2198,6 +2199,8 @@ async def selector_dispatch(
 ) -> JSONResponse:
     """Resolve exactly once, then finish the selected safe workflow in-process."""
 
+    if payload.intent is DiscoveryIntent.ORDER:
+        require_mock_order_account(request)
     request.state.laya_original_question = payload.original_question or payload.question
     request.state.laya_semantic_context = payload.semantic_context
     from athena_api.laya.query import refine_dispatch_request

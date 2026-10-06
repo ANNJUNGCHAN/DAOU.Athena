@@ -7,6 +7,7 @@ const require = createRequire(import.meta.url);
 const bridge = require('./main/board-hydrate');
 const controls = require('./ranking-board-controls');
 const source = fs.readFileSync(new URL('../canvas.js', import.meta.url), 'utf8');
+const watchSourceSlots = JSON.parse(source.match(/^const WATCH_SOURCE_SLOTS = (.+);$/m)[1]);
 
 test('expanded result bridge binds request and response to its exact ranking operation', async () => {
   const projection = {board_id:'4B22-1',operation_ref:'base:ka10032',rows:[{stk_cd:'005930',cur_prc:0}],columns:[]};
@@ -31,6 +32,7 @@ function fixture(replyPromise) {
     valuesByBoard:new Map(),unboundByBoard:new Map(),realtimeByBoard:new Map(),realtimeSlots:new Map()};
   const requests=[],mounts=[];
   const context=vm.createContext({rankingBoardControls:controls,cardStkCd:()=>'',boardStateOf:()=>state,boardHydrateAccount:()=>'',
+    WATCH_SOURCE_SLOTS:watchSourceSlots,
     window:{athena:{invoke:async(_name,payload)=>{requests.push(payload);return replyPromise;}}},
     RETRYABLE_BOARD_HYDRATE_REASONS:new Set(['upstream_error']),boardHydrationError:()=>new Error('조회 실패'),
     boardMount:{nextHydrationSlots:()=>[],realtimeSlotIndex:()=>Object.assign(new Map(),{observationByBinding:new Map()}),mountBoard:(_host,id,_values,options)=>{mounts.push({id,options});return {updated:true};}},
@@ -39,6 +41,8 @@ function fixture(replyPromise) {
     openParentRankingMenu:(_surface,_filter,options)=>({options,close(){}}),
     stateLinksOf:()=>[],seedBoardState:()=>{},initialSurfaceContractOf:()=>null,
     runBoardSurfaceLoad:(_host,_envelope,load)=>load(()=>true),mountBoardState:(_host,id)=>{state.boardId=id;}});
+  vm.runInContext(source.slice(source.indexOf('function excludeRetiredWatchlistSlots('), source.indexOf('function receiveWatchlistMetadata(')), context);
+  vm.runInContext(source.slice(source.indexOf('function sectorHydratedPrimaryEnvelope('), source.indexOf('async function hydrateBoardSlots(')),context);
   for(const [start,end]of [['const RANKING_BOARD_OPERATIONS =','function boardHydrateAccount('],['async function hydrateBoardSlots(','function rememberMountedBoard('],
     ['function closeParentRankingFilter(','function wireStateControls('],['function clearRankingBoardCache(','function selectEtfReturnPeriod('],
     ['function selectRankingFilter(','function applyRankingCriteriaLabels('],['async function openBoardSurface(','// 봉투가 싣는 실시간 바인딩 표.']]) {
@@ -114,6 +118,7 @@ const railContract = (changes={}) => ({board_id:'13K0-2',ranking_rail_rows:railG
 }))});
 function explorerFixture(reply) {
   const f=fixture(reply);
+  f.context.reconcileWatchlistState=(_state,contract)=>contract;
   Object.assign(f.state,{boardId:'13K0-2',rankingSourceOperation:'base:ka10032',values:{...railValues},
     surface:{},mountContract:{},emptyRowsByBoard:new Map(),emptyColumnsByBoard:new Map(),
     emptyValueSlotsByBoard:new Map(),deferredValueSlotsByBoard:new Map()});
