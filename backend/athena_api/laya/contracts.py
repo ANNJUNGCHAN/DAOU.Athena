@@ -47,6 +47,7 @@ class Contracts:
                for v in self.thresholds.values()):
             raise ValueError("invalid_threshold")
         self.reject_labels = frozenset(policy.get("reject_labels", ["defer"])) | {"defer"}
+        self.force_non_defer = policy.get("force_non_defer") is True
         for task in self.tasks.values():
             labels = [choice["label"] for choice in task["choices"]]
             if len(labels) < 2 or len(set(labels)) != len(labels):
@@ -92,12 +93,20 @@ class Contracts:
         weights = [math.exp(value - max(scaled)) for value in scaled]
         probabilities = [weight / sum(weights) for weight in weights]
         index = max(range(len(labels)), key=probabilities.__getitem__)
+        original_index = index
+        if self.force_non_defer:
+            eligible = [i for i, label in enumerate(labels) if label not in self.reject_labels]
+            if not eligible:
+                raise DecisionError("no_eligible_choice")
+            index = max(eligible, key=probabilities.__getitem__)
         label, confidence = labels[index], probabilities[index]
         threshold = self.thresholds.get(task_id, 1.000001)
         reason = ("reject_all" if threshold > 1 else "defer" if label in self.reject_labels
                   else "below_threshold" if confidence < threshold else "accepted")
         return {"task_id": task_id, "label": label, "confidence": confidence,
-                "threshold": threshold, "accepted": reason == "accepted", "reason": reason}
+                "threshold": threshold, "accepted": reason == "accepted", "reason": reason,
+                **({"original_top_label": labels[original_index], "defer_override": True}
+                   if index != original_index else {})}
 
 
 class Deployment:

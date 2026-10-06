@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from collections import Counter
 import math
+import time
 from urllib.parse import urlsplit
 
 import httpx
@@ -17,18 +18,31 @@ class RuntimeClient:
         self.url, self.token, self.deployment_sha256 = url.rstrip("/"), token, deployment_sha256
         self.timeout, self.transport = timeout, transport
         self.counts = Counter()
+        self.last_timing = {}
 
     async def decide(self, requests: list[dict]) -> list[dict]:
         reason = "unconfigured"
+        started = time.monotonic()
+        request_started = response_finished = None
+        timing = {}
         if self.token and self.deployment_sha256:
             try:
                 async with httpx.AsyncClient(timeout=self.timeout, transport=self.transport,
                                              trust_env=False) as client:
-                    response = await client.post(self.url + "/decide", json={
-                        "deployment_sha256": self.deployment_sha256, "requests": requests},
-                        headers={"Authorization": "Bearer " + self.token})
+                    request_started = time.monotonic()
+                    try:
+                        response = await client.post(self.url + "/decide", json={
+                            "deployment_sha256": self.deployment_sha256, "requests": requests},
+                            headers={"Authorization": "Bearer " + self.token})
+                    finally:
+                        response_finished = time.monotonic()
                 response.raise_for_status()
                 payload = response.json()
+                runtime_timing = payload.get("timings", {})
+                if isinstance(runtime_timing, dict):
+                    timing["runtime_timings"] = {key: value for key, value in runtime_timing.items()
+                        if key in {"lock_wait_ms", "processing_ms", "total_ms"}
+                        and type(value) in (int, float) and math.isfinite(value) and value >= 0}
                 if payload.get("identity", {}).get("deployment_sha256") != self.deployment_sha256:
                     reason = "deployment_mismatch"
                 else:
@@ -42,6 +56,17 @@ class RuntimeClient:
                 reason = "timeout"
             except (httpx.HTTPError, ValueError, TypeError):
                 reason = "unavailable"
+            finally:
+                finished = time.monotonic()
+                timing["total_ms"] = (finished - started) * 1000
+                if request_started is not None:
+                    timing["client_setup_ms"] = (request_started - started) * 1000
+                if response_finished is not None:
+                    timing["http_ms"] = (response_finished - request_started) * 1000
+                    timing["close_ms"] = (finished - response_finished) * 1000
+                self.last_timing = timing
+        else:
+            self.last_timing = {"total_ms": (time.monotonic() - started) * 1000}
         self.counts[reason] += len(requests)
         return [{"task_id": row["task_id"], "accepted": False, "reason": reason} for row in requests]
 

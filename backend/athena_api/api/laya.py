@@ -8,6 +8,7 @@ from athena_api.account_sync import require_loopback
 from athena_api.laya.contracts import canonical
 from athena_api.laya.service import TurnExpired
 from athena_api.laya.native import plan_native, refine_native, SUPPORTED_TOOLS
+from athena_api.laya.cancellation import until_disconnect
 from athena_api.security import require_local_bearer
 
 router = APIRouter(prefix="/api/v1/laya", tags=["Local semantic decisions"])
@@ -79,7 +80,8 @@ async def decide(ticket: str, payload: DecisionsRequest, request: Request,
                  authorization: Annotated[str, Header()] = ""):
     current = bound_service(request, authorization, ticket)
     try:
-        return {"decisions": await current.decide(ticket, [item.model_dump() for item in payload.decisions])}
+        return {"decisions": await until_disconnect(request,
+            current.decide(ticket, [item.model_dump() for item in payload.decisions]))}
     except TurnExpired:
         raise HTTPException(409, "Semantic turn expired") from None
 
@@ -103,7 +105,7 @@ async def status(request: Request, authorization: Annotated[str, Header()] = "")
 async def plan(ticket: str, request: Request, authorization: Annotated[str, Header()] = ""):
     current = bound_service(request, authorization, ticket)
     try:
-        return await plan_native(current, ticket)
+        return await until_disconnect(request, plan_native(current, ticket))
     except TurnExpired:
         raise HTTPException(409, "Semantic turn expired") from None
 
@@ -115,18 +117,19 @@ async def refine(ticket: str, payload: RefineRequest, request: Request,
     if payload.tool_name not in SUPPORTED_TOOLS or len(canonical(payload.arguments)) > 200000:
         raise HTTPException(422, "Unsupported native tool or oversized arguments")
     try:
-        # First native call follows an accepted routing decision. This chooses a
-        # tool, never permission. Later calls may perform its normal lookup chain.
-        route = await plan_native(current, ticket)
+        # Routing is advisory; a structured native call retains its tool and is
+        # still checked by the existing tool validator and permission boundary.
         turn = current.context(ticket)
-        if (not turn.get("route_consumed") and route["tool_name"] is not None
+        route = turn.get("plan")
+        advisory = None
+        if (route and not turn.get("route_consumed") and route["tool_name"] is not None
                 and route["tool_name"] != payload.tool_name):
-            return {"blocked": True, "reason": "accepted_route_mismatch",
-                    "expected_tool": route["tool_name"], "arguments": payload.arguments,
-                    "decisions": route["decisions"]}
-        result = await refine_native(current, ticket, payload.tool_name, payload.arguments)
+            advisory = {"reason": "accepted_route_mismatch", "applied": False,
+                        "expected_tool": route["tool_name"], "decisions": route["decisions"]}
+        result = await until_disconnect(request,
+            refine_native(current, ticket, payload.tool_name, payload.arguments))
         current.turns[ticket]["route_consumed"] = True
-        return {"blocked": False, **result}
+        return {"blocked": False, **result, **({"routing_advisory": advisory} if advisory else {})}
     except TurnExpired:
         raise HTTPException(409, "Semantic turn expired") from None
 

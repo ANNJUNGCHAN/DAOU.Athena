@@ -80,14 +80,19 @@ async def refine_native(service, ticket, tool, arguments):
             set_path(output, field[len(tool) + 1:], deepcopy(value))
 
     async def apply(fields):
-        available = {task: field for task, field in fields.items() if tool + "." + field not in protected}
+        available = {task: field for task, field in fields.items()
+                     if tool + "." + field not in protected
+                     and get_path(output, field) in (None, "")}
         if not available:
             return
         results = await service.decide(ticket, [{"task_id": task} for task in available])
-        decisions.extend(results)
         for result in results:
-            if result["accepted"]:
-                set_path(output, available[result["task_id"]], convert(result["label"]))
+            field = available[result["task_id"]]
+            applied = result["accepted"]
+            decisions.append({**result, "applied": applied,
+                              "application_reason": "filled_missing" if applied else "prediction_rejected"})
+            if applied:
+                set_path(output, field, convert(result["label"]))
 
     action_head = ACTION_HEADS.get(tool)
     if tool == "athena_plugin":

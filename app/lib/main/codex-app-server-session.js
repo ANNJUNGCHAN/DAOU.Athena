@@ -38,6 +38,14 @@ function turnFailure(status, params) {
     const parsed = JSON.parse(message);
     if (typeof parsed?.error?.message === 'string') message = parsed.error.message;
   } catch { /* Plain provider messages need no decoding. */ }
+  const errorInfo = providerError?.codexErrorInfo ?? providerError?.codex_error_info;
+  if (errorInfo === 'usageLimitExceeded' || errorInfo === 'usage_limit_exceeded'
+    || /\bYou['’]ve hit your usage limit\b/i.test(message)) {
+    const safeMessage = '현재 Codex 계정의 사용 한도가 소진되었습니다. 한도가 초기화된 뒤 다시 시도하거나 사용 가능한 다른 연결 계정을 선택해 주세요.';
+    return new CodexSessionError('CODEX_USAGE_LIMIT_EXCEEDED', safeMessage, {
+      providerStatus: status, safeMessage, actionNeeded: true, retryable: false,
+    });
+  }
   if (/model requires a newer version of Codex\b/i.test(message)) {
     const safeMessage = '선택한 모델을 사용하려면 Athena가 실행하는 Codex CLI를 최신 버전으로 업데이트해야 합니다.';
     return new CodexSessionError('CODEX_UPGRADE_REQUIRED', safeMessage, {

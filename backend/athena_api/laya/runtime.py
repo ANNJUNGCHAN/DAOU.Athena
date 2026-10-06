@@ -3,13 +3,62 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from contextlib import contextmanager
 import os
 from pathlib import Path
 import secrets
 import threading
 import time
+from fastapi import Request
 
 from athena_api.laya.contracts import DecisionError, Deployment
+from athena_api.laya.cancellation import until_disconnect
+
+
+class InferenceCancelled(Exception):
+    pass
+
+
+def check_cancelled(cancelled):
+    if cancelled is not None and cancelled.is_set():
+        raise InferenceCancelled('inference_cancelled')
+
+
+@contextmanager
+def cancellation_hooks(model, cancelled):
+    """Stop eager ModernBert execution between layers without changing inputs."""
+    handles = []
+    def before_layer(module, args):
+        check_cancelled(cancelled)
+    try:
+        check_cancelled(cancelled)
+        if cancelled is not None:
+            # Head TransformerEncoderLayer hooks would disable its fused fastpath.
+            for layer in getattr(model.encoder, 'layers', ()):
+                handles.append(layer.register_forward_pre_hook(before_layer))
+        yield
+        check_cancelled(cancelled)
+    finally:
+        for handle in handles:
+            handle.remove()
+
+
+@contextmanager
+def inference_lock(lock, cancelled):
+    if cancelled is None:
+        with lock:
+            yield
+        return
+    while not cancelled.is_set():
+        if lock.acquire(timeout=.05):
+            try:
+                if cancelled.is_set():
+                    raise InferenceCancelled('inference_cancelled')
+                yield
+            finally:
+                lock.release()
+            return
+    raise InferenceCancelled('inference_cancelled')
 
 
 class SdkPredictor:
@@ -18,7 +67,7 @@ class SdkPredictor:
                           USE_TF="0", TOKENIZERS_PARALLELISM="false")
         import torch
         import laya
-        torch.set_num_threads(2)
+        torch.set_num_threads(min(4, os.cpu_count() or 1) if device == "cpu" else 2)
         if device == "cuda" and not torch.cuda.is_available():
             raise RuntimeError("requested_device_unavailable")
         self.agent = laya.load(str(deployment.checkpoint), device=device, fast=False, compile=False)
@@ -27,7 +76,8 @@ class SdkPredictor:
         deployment.verify_checkpoint()  # SDK must not normalize/modify the artifact.
         self.deployment, self.device = deployment, device
 
-    def __call__(self, state: str, question: dict) -> list[float]:
+    def __call__(self, state: str, question: dict, *, cancelled=None) -> list[float]:
+        check_cancelled(cancelled)
         import torch
         from contextlib import nullcontext
         from laya.common import build_sequence, collate_items, render_options
@@ -47,7 +97,7 @@ class SdkPredictor:
         # Match the verified trainer/evaluator's forward; no SDK OOM-to-CPU fallback
         # and no rounded answer confidence. Each head keeps its own trained sequence.
         amp = torch.autocast("cuda", dtype=torch.bfloat16) if self.device == "cuda" else nullcontext()
-        with torch.inference_mode(), amp:
+        with cancellation_hooks(agent.model, cancelled), torch.inference_mode(), amp:
             logits, _ = agent.model(batch["input_ids"], batch["attention_mask"],
                 batch["marker_pos"], batch["marker_mask"], batch["qtype"])
         return logits.float()[0, :len(markers)].cpu().tolist()
@@ -59,18 +109,29 @@ class DecisionRuntime:
         self.lock, self.counts = threading.Lock(), Counter()
         self.task_counts = {task: Counter() for task in deployment.contracts.tasks}
 
-    def decide(self, requests):
+    def decide(self, requests, *, cancelled=None):
         results = []
-        with self.lock:
+        received = time.monotonic()
+        with inference_lock(self.lock, cancelled):
+            acquired = time.monotonic()
             for request in requests:
+                if cancelled is not None and cancelled.is_set():
+                    raise InferenceCancelled('inference_cancelled')
                 started = time.monotonic()
                 try:
                     state, question = self.deployment.contracts.encode(request)
-                    result = self.deployment.contracts.decide(request["task_id"], self.predictor(state, question))
+                    logits = (self.predictor(state, question, cancelled=cancelled)
+                              if isinstance(self.predictor, SdkPredictor)
+                              else self.predictor(state, question))
+                    result = self.deployment.contracts.decide(request["task_id"], logits)
+                except InferenceCancelled:
+                    raise
                 except DecisionError as error:
                     result = {"task_id": request.get("task_id"), "accepted": False, "reason": str(error)}
                 except Exception:
                     result = {"task_id": request.get("task_id"), "accepted": False, "reason": "inference_failed"}
+                if cancelled is not None and cancelled.is_set():
+                    raise InferenceCancelled('inference_cancelled')
                 self.counts[result["reason"]] += 1
                 task = self.task_counts.get(request.get("task_id"))
                 if task is not None:
@@ -78,7 +139,11 @@ class DecisionRuntime:
                     task["accepted" if result["accepted"] else "fallback"] += 1
                     task["reason:" + result["reason"]] += 1
                 results.append({**result, "latency_ms": (time.monotonic() - started) * 1000})
-        return {"identity": self.deployment.identity, "decisions": results}
+        finished = time.monotonic()
+        return {"identity": self.deployment.identity, "decisions": results,
+                "timings": {"lock_wait_ms": (acquired - received) * 1000,
+                            "processing_ms": (finished - acquired) * 1000,
+                            "total_ms": (finished - received) * 1000}}
 
 
 def create_app(deployment, predictor, token):
@@ -103,14 +168,20 @@ def create_app(deployment, predictor, token):
                 "head_max_len": deployment.head_max_len}
 
     @app.post("/decide")
-    def decide(payload: dict, authorization: str = Header(default="")):
+    async def decide(payload: dict, request: Request, authorization: str = Header(default="")):
         authorize(authorization)
         requests = payload.get("requests")
         if not isinstance(requests, list) or not 1 <= len(requests) <= 32 or any(not isinstance(r, dict) for r in requests):
             raise HTTPException(422, "Provide 1 to 32 decisions")
         if payload.get("deployment_sha256") != deployment.manifest_sha256:
             raise HTTPException(409, "Deployment identity mismatch")
-        return runtime.decide(requests)
+        from starlette.concurrency import run_in_threadpool
+        cancelled = threading.Event()
+        try:
+            return await until_disconnect(request,
+                run_in_threadpool(runtime.decide, requests, cancelled=cancelled), on_cancel=cancelled.set)
+        except InferenceCancelled:
+            raise HTTPException(499, 'Inference cancelled') from None
 
     return app
 
@@ -126,6 +197,11 @@ def main():
         parser.error("ATHENA_LAYA_RUNTIME_TOKEN is required")
     deployment = Deployment(args.deployment)
     predictor = SdkPredictor(deployment, args.device)
+    # Finish the first forward before exposing readiness. This is initialization,
+    # not a user decision, so it does not enter DecisionRuntime counters/policy.
+    state, question = deployment.contracts.encode({
+        "task_id": "general.builtin_tool", "utterance": "안녕", "context": {}})
+    predictor(state, question)
     import uvicorn
     uvicorn.run(create_app(deployment, predictor, token), host="127.0.0.1", port=args.port, workers=1)
 

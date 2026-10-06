@@ -3,10 +3,29 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const { createCodexRuntime } = require('./codex-runtime-home');
+
+test('Windows interactive launcher executes a native fixture in a usable terminal', async (t) => {
+  if (process.platform !== 'win32') return;
+  const runtimeHome = temporaryHome(t);
+  const root = path.dirname(runtimeHome);
+  fs.mkdirSync(root, { recursive: true });
+  const report = path.join(root, 'terminal.json');
+  const fixture = path.join(root, 'terminal.cjs');
+  fs.writeFileSync(fixture, `require('node:fs').writeFileSync(${JSON.stringify(report)}, JSON.stringify({ stdin: !!process.stdin.isTTY, stdout: !!process.stdout.isTTY, stderr: !!process.stderr.isTTY, home: process.env.CODEX_HOME }));`);
+  const runtime = createCodexRuntime({ runtimeHome, codexExecutable: process.execPath, spawnImpl: spawn });
+  const child = runtime.spawnPrivateHomeInteractiveCommand([fixture], { title: 'Athena terminal verification' });
+  const exit = await new Promise((resolve, reject) => { child.once('exit', resolve); child.once('error', reject); });
+  assert.equal(exit, 0);
+  const deadline = Date.now() + 5000;
+  while (!fs.existsSync(report) && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 50));
+  assert.equal(fs.existsSync(report), true, 'interactive terminal must execute its command');
+  assert.deepEqual(JSON.parse(fs.readFileSync(report, 'utf8')), { stdin: true, stdout: true, stderr: true, home: runtimeHome });
+});
 
 function temporaryHome(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'athena-codex-home-test-'));

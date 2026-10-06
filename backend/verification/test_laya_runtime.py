@@ -16,6 +16,7 @@ import httpx
 from athena_api.laya.client import RuntimeClient
 from athena_api.laya.contracts import Contracts, DecisionError, Deployment, canonical
 from athena_api.laya.runtime import DecisionRuntime, create_app
+from athena_api.laya import runtime as runtime_module
 from athena_api.laya.service import SemanticService, TurnExpired
 from athena_api.config import Settings
 
@@ -113,6 +114,51 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(result["decisions"][1]["reason"], "inference_failed")
         self.assertNotIn("private", json.dumps(result))
 
+    def test_runtime_reports_lock_wait_separately_from_inference(self):
+        now = [0.0]
+        class WaitingLock:
+            def __enter__(self):
+                now[0] += 3
+            def __exit__(self, *args):
+                pass
+        def predictor(*args):
+            now[0] += 2
+            return [4, 0, -2]
+        runtime = DecisionRuntime(self.deployment, predictor)
+        runtime.lock = WaitingLock()
+        with patch('athena_api.laya.runtime.time.monotonic', side_effect=lambda: now[0]):
+            result = runtime.decide([{'task_id': 'native', 'utterance': 'text'}])
+        self.assertEqual(result['timings'], {'lock_wait_ms': 3000, 'processing_ms': 2000, 'total_ms': 5000})
+        self.assertEqual(result['decisions'][0]['latency_ms'], 2000)
+
+    def test_startup_warms_real_contract_before_server_and_failure_never_serves(self):
+        schema = catalog()
+        schema['tasks'][0]['task_id'] = 'general.builtin_tool'
+        deployment = SimpleNamespace(contracts=Contracts(schema, {'temperature': 2, 'thresholds': {}}))
+        for fails in (False, True):
+            calls = []
+            def predictor(state, question):
+                calls.append((json.loads(state), question))
+                if fails:
+                    raise RuntimeError('warmup_failed')
+                return [4, 0, -2]
+            def serve(*args, **kwargs):
+                self.assertEqual(len(calls), 1)
+                self.assertEqual(list(calls[0][1]['crit']), ['yes', 'no', 'defer'])
+            with self.subTest(fails=fails), patch.dict(os.environ, {'ATHENA_LAYA_RUNTIME_TOKEN': 'test'}), patch(
+                    'sys.argv', ['runtime', '--deployment', 'fixture.json', '--device', 'cpu']), patch(
+                    'athena_api.laya.runtime.Deployment', return_value=deployment), patch(
+                    'athena_api.laya.runtime.SdkPredictor', return_value=predictor), patch('uvicorn.run', side_effect=serve) as run:
+                if fails:
+                    with self.assertRaisesRegex(RuntimeError, 'warmup_failed'):
+                        runtime_module.main()
+                    run.assert_not_called()
+                else:
+                    runtime_module.main()
+                    run.assert_called_once()
+            self.assertEqual(len(calls), 1)
+            self.assertEqual(DecisionRuntime(deployment, predictor).counts, {})
+
     def test_runtime_auth_identity_and_bounded_request_before_predictor(self):
         calls = []
         app = create_app(self.deployment, lambda *x: calls.append(x) or [4, 0, -2], "secret")
@@ -150,6 +196,32 @@ class CpuSettingsTests(unittest.TestCase):
 
 
 class TransportTests(unittest.IsolatedAsyncioTestCase):
+    async def test_transport_distinguishes_setup_http_and_close_cost_without_input_data(self):
+        now = [0.0]
+        class TimedClient:
+            def __init__(self, **kwargs):
+                now[0] += 3
+            async def __aenter__(self):
+                return self
+            async def __aexit__(self, *args):
+                now[0] += 2
+            async def post(self, *args, **kwargs):
+                now[0] += 7
+                return httpx.Response(200, request=httpx.Request('POST', 'http://127.0.0.1/decide'),
+                    json={'identity': {'deployment_sha256': 'pin'}, 'decisions': [
+                        {'task_id': 'native', 'accepted': False, 'reason': 'defer'}],
+                        'timings': {'lock_wait_ms': 1000, 'processing_ms': 4000, 'total_ms': 5000}})
+        client = RuntimeClient('http://127.0.0.1:8769', 'private-token', 'pin')
+        with patch('athena_api.laya.client.httpx.AsyncClient', TimedClient), patch(
+                'athena_api.laya.client.time.monotonic', side_effect=lambda: now[0]):
+            await client.decide([{'task_id': 'native', 'utterance': 'private-utterance'}])
+        self.assertEqual(client.last_timing['client_setup_ms'], 3000)
+        self.assertEqual(client.last_timing['http_ms'], 7000)
+        self.assertEqual(client.last_timing['close_ms'], 2000)
+        self.assertEqual(client.last_timing['total_ms'], 12000)
+        self.assertEqual(client.last_timing['runtime_timings']['lock_wait_ms'], 1000)
+        self.assertNotIn('private', json.dumps(client.last_timing))
+
     async def test_loopback_only_and_runtime_identity_mismatch(self):
         with self.assertRaisesRegex(ValueError, "loopback"):
             RuntimeClient("https://remote.example", "secret", "pin")

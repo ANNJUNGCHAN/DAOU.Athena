@@ -6,9 +6,21 @@ import vm from 'node:vm';
 import { EventEmitter } from 'node:events';
 const require = createRequire(import.meta.url);
 const { createLayaRouting } = require('./laya-routing');
+const { buildLayaTurnContext } = require('./laya-turn-context');
 const { runConversationSessionTurn } = require('./conversation-session-turn');
 const { createProviderRuntimeController } = require('./provider-runtime-bootstrap');
 const { runSelectorFastPath } = require('./selector-fast-path');
+
+test('LAYA provider handoff presents a recommendation without binding tool or supplied arguments', () => {
+  const { ticketPrompt } = require('./laya-routing');
+  const prompt = ticketPrompt('선택한 알림을 멈춰 줘', 'fixture-ticket', {
+    tool_name: 'athena_routine', arguments: { action: 'draft' },
+  });
+  assert.match(prompt, /LAYA 추천/);
+  assert.match(prompt, /사용자 요청과 명시된 도구·인수를 우선/);
+  assert.match(prompt, /다른 도구를 사용할 수 있다/);
+  assert.ok(prompt.includes('"action":"draft"'));
+});
 
 const context = (conversation = 'shell-a', turn = 'turn-1') => ({
   conversation_id: conversation, turn_id: turn, origin: 'shell',
@@ -371,7 +383,7 @@ test('actual submit ownership preserves raw utterance across holdings/gold routi
         const submit=contexts.get('conversation');
         assert.notEqual(submit,input);assert.equal(submit.layaOriginalUtterance,raw);
         const result=vm.runInNewContext(`${originalLine}\n${holdingsLine}\n${goldLine}\n${contextCode}\nlayaContext`,{
-          query:raw,submit,...rewritten,turnConversationId:'conversation',sessionAssistantId:'turn',origin:'shell',activeCardContext:null,liveTurnInput:{today:'20261004'}});
+          buildLayaTurnContext,query:raw,submit,...rewritten,turnConversationId:'conversation',sessionAssistantId:'turn',origin:'shell',activeCardContext:null,liveTurnInput:{today:'20261004'}});
         assert.equal(result.utterance,raw);
         assert.equal(result.context.app_clarified_question,rewritten.holdingsRequest?.question||rewritten.goldQuote.routeQuery);
         // Recursive provider fallback still reads the same original submit authority.

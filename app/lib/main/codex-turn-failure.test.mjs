@@ -20,6 +20,23 @@ function failTurn(error) {
   return { emitted, error: rejected[0], active };
 }
 
+test('Codex usage exhaustion is actionable without exposing provider text', () => {
+  for (const error of [
+    { codexErrorInfo: 'usageLimitExceeded', message: 'fixture-private-value' },
+    { codex_error_info: 'usage_limit_exceeded', message: 'fixture-private-value' },
+    { message: 'You’ve hit your usage limit. Visit https://example.invalid/private to purchase more credits or try again at a private date.' },
+    { message: "You've hit your usage limit. fixture-private-value" },
+  ]) {
+    const result = failTurn(error);
+    assert.equal(result.error.code, 'CODEX_USAGE_LIMIT_EXCEEDED');
+    assert.equal(result.error.actionNeeded, true);
+    assert.equal(result.error.retryable, false);
+    assert.match(result.error.safeMessage, /사용 한도.*소진/);
+    assert.equal(result.emitted[0].payload.safeMessage, result.error.safeMessage);
+    assert.doesNotMatch(JSON.stringify(result.emitted), /fixture-private-value|example\.invalid|private date/);
+  }
+});
+
 test('upstream model-version failure reaches terminal and UI as an actionable safe explanation', () => {
   const result = failTurn({ message: JSON.stringify({ status: 400, error: {
     type: 'invalid_request_error',

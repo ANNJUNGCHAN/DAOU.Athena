@@ -45,6 +45,8 @@ def compatible_catalog(service, selector):
 
 
 async def rerank_search(request, payload, selector, response):
+    if len(response.results) <= 1:
+        return response
     bound = query_context(request, payload.query)
     if not bound:
         return response

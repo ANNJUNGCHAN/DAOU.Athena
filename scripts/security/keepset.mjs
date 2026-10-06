@@ -79,6 +79,11 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "backend/verification/test_laya_native.py",
   "backend/verification/test_laya_query_memory.py",
   "backend/verification/test_laya_runtime.py",
+  "backend/verification/test_laya_cancellation.py",
+  "backend/verification/test_laya_context.py",
+  "backend/verification/test_laya_cpu_threads.py",
+  "backend/verification/test_laya_force_choice.py",
+  "backend/verification/test_laya_layer_cancellation.py",
   "backend/verification/test_laya_selector_dispatch.py",
 ]);
 

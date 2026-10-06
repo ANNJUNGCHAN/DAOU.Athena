@@ -19,7 +19,9 @@ const WINDOWS_TERMINAL_ARGV = Object.freeze([
   '-NoLogo',
   '-NoProfile',
   '-Command',
-  WINDOWS_TERMINAL_SCRIPT,
+  // A detached PowerShell can exit before executing -Command on Windows.
+  // Start-Process gives the interactive child its own console and real handles.
+  `$ErrorActionPreference = 'Stop'; Start-Process -FilePath powershell.exe -WindowStyle Normal -ArgumentList '-NoLogo','-NoProfile','-EncodedCommand','${Buffer.from(WINDOWS_TERMINAL_SCRIPT, 'utf16le').toString('base64')}'`,
 ]);
 
 function requireNonEmptyString(value, name) {
@@ -100,8 +102,8 @@ function createCodexRuntime({
     if (platform === 'win32') {
       return spawnImpl(WINDOWS_TERMINAL_EXECUTABLE, [...WINDOWS_TERMINAL_ARGV], {
         shell: false,
-        windowsHide: false,
-        detached: true,
+        windowsHide: true,
+        detached: false,
         stdio: 'ignore',
         env: {
           ...privateEnv,

@@ -90,7 +90,14 @@ class ConversationSessionPool {
     const entry = entries.find((candidate) => candidate.state === 'ready') || entries[0];
     this._owned.delete(entry);
     entry.owned = false;
-    this._scheduleRefill();
+    if (entry.state === 'warming' && entry.warmPromise) {
+      // Do not start another complete MCP gateway while the claimed session is
+      // still initializing for the user's first turn.
+      const refill = () => {
+        if (entry.generation === this._generation) this._scheduleRefill();
+      };
+      entry.warmPromise.then(refill, refill);
+    } else this._scheduleRefill();
     return entry.session;
   }
 
@@ -172,7 +179,7 @@ class ConversationSessionPool {
       return;
     }
 
-    Promise.resolve(result).then(
+    entry.warmPromise = Promise.resolve(result).then(
       (snapshot) => this._refreshReadiness(entry, snapshot, true),
       (error) => this._handleWarmFailure(entry, error),
     );

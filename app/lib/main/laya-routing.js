@@ -12,7 +12,7 @@ function ticketPrompt(prompt, ticket, plan) {
   return `${prompt}\n\n[Athena 도구 연결]\n현재 턴의 opaque ticket: ${JSON.stringify(ticket)}\n`
     + `다음 Athena builtin 호출에만 _athena_turn_ticket 필드로 위 값을 그대로 복사한다: ${TICKET_TOOLS.join(', ')}. `
     + '백테스트 및 외부 플러그인 도구에는 붙이지 않는다. 이전 턴의 ticket은 재사용하지 않는다.\n'
-    + (plan?.tool_name ? `서버가 선택한 도구/선택 항목: ${JSON.stringify({ tool_name: plan.tool_name, arguments: plan.arguments || {} })}. 아직 실행된 결과가 아니며, 부족한 입력은 기존 도구 계약에 따라 채운다.` : '');
+    + (plan?.tool_name ? `LAYA 추천 도구/선택 항목: ${JSON.stringify({ tool_name: plan.tool_name, arguments: plan.arguments || {} })}. 아직 실행된 결과가 아니다. 사용자 요청과 명시된 도구·인수를 우선하며, 추천이 맞지 않으면 다른 도구를 사용할 수 있다. 부족한 입력은 기존 도구 계약에 따라 채운다.` : '');
 }
 
 function withoutTicket(value, ticket) {
@@ -78,12 +78,16 @@ function forwardDirect(result, callbacks, id) {
   return { ok: true, layaDirect: true, finalResult: { result: answer }, spawnedFresh: false };
 }
 
-function createLayaRouting({ baseUrl, bearerToken, fetchImpl = globalThis.fetch, timeoutMs = 5000, uuid = randomUUID } = {}) {
-  async function request(method, suffix, body, env) {
+function createLayaRouting({ baseUrl, bearerToken, fetchImpl = globalThis.fetch, timeoutMs = 5000, uuid = randomUUID, now = Date.now } = {}) {
+  async function request(method, suffix, body, env, { signal, deadline } = {}) {
+    const remaining = deadline === undefined ? timeoutMs : Math.min(timeoutMs, deadline - now());
+    if (remaining <= 0 || signal?.aborted) throw new Error('Laya request deadline or cancellation');
     const url = new URL(`/api/v1/laya${suffix}`, typeof baseUrl === 'function' ? baseUrl() : baseUrl);
     if (!['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)) throw new Error('Laya backend must be loopback');
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    const abort = () => controller.abort();
+    signal?.addEventListener('abort', abort, { once: true });
+    const timer = setTimeout(abort, remaining);
     try {
       const response = await fetchImpl(url, {
         method, signal: controller.signal, redirect: 'error',
@@ -95,7 +99,10 @@ function createLayaRouting({ baseUrl, bearerToken, fetchImpl = globalThis.fetch,
       });
       if (!response.ok) throw new Error('Laya request unavailable');
       return response.status === 204 ? null : await response.json();
-    } finally { clearTimeout(timer); }
+    } finally {
+      clearTimeout(timer);
+      signal?.removeEventListener('abort', abort);
+    }
   }
 
   function createSession() {
@@ -147,15 +154,16 @@ function createLayaRouting({ baseUrl, bearerToken, fetchImpl = globalThis.fetch,
       try {
         if (!current()) return interrupted();
         let plan = null;
+        const planning = { signal: turn.controller.signal, deadline: now() + timeoutMs };
         try {
           const registration = await request('POST', '/turns', {
             ...layaContext, lease_id: env.ATHENA_LAYA_LEASE_ID,
             generation_id: env.ATHENA_LAYA_GENERATION_ID,
-          }, env);
+          }, env, planning);
           if (typeof registration?.ticket !== 'string' || registration.conversation_id !== conversationId
             || registration.turn_id !== layaContext.turn_id) throw new Error('Laya registration mismatch');
           turn.ticket = registration.ticket;
-          if (current()) plan = await request('POST', `/turns/${encodeURIComponent(turn.ticket)}/plan`, {}, env);
+          if (current()) plan = await request('POST', `/turns/${encodeURIComponent(turn.ticket)}/plan`, {}, env, planning);
         } catch { /* Unavailable classifier preserves the existing provider path. */ }
         if (!current()) return interrupted();
         if (plan?.complete === true && TICKET_TOOLS.includes(plan.tool_name) && allowLayaDirect) {

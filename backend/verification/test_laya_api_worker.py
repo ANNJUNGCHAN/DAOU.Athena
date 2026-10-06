@@ -76,13 +76,34 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.client.post(url + "/plan", headers=self.headers).status_code, 409)
         self.assertEqual(self.choices.requests, [])
 
-    def test_first_tool_route_is_enforced_before_existing_handler(self):
+    def test_first_tool_route_is_advisory_and_explicit_tool_is_refined(self):
         ticket = self.ticket()
+        self.client.post("/api/v1/laya/turns/" + ticket + "/plan", headers=self.headers)
+        self.choices.requests.clear()
         response = self.client.post("/api/v1/laya/turns/" + ticket + "/refine", headers=self.headers,
                                     json={"tool_name": "athena_routine", "arguments": {"action": "list"}})
-        self.assertTrue(response.json()["blocked"])
-        self.assertEqual(response.json()["expected_tool"], "athena_graph_view")
-        self.assertNotIn("routine.action", [item["task_id"] for item in self.choices.requests])
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()["blocked"])
+        self.assertEqual(response.json()["routing_advisory"]["expected_tool"], "athena_graph_view")
+        self.assertEqual(response.json()["tool_name"], "athena_routine")
+        self.assertEqual(response.json()["arguments"], {"action": "list"})
+        self.assertEqual(self.choices.requests, [])
+
+    def test_explicit_cold_refine_skips_routing_and_only_fills_missing_field(self):
+        ticket = self.ticket()
+        url = "/api/v1/laya/turns/" + ticket + "/refine"
+        response = self.client.post(url, headers=self.headers,
+            json={"tool_name": "athena_graph_view", "arguments": {"action": "navigate"}})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["arguments"], {"action": "navigate", "surface": "map"})
+        self.assertNotIn("routing_advisory", response.json())
+        self.assertEqual([row["task_id"] for row in self.choices.requests], ["graph.surface"])
+        self.choices.requests.clear()
+        response = self.client.post(url, headers=self.headers,
+            json={"tool_name": "athena_routine", "arguments": {"action": "propose", "propose": {"control": "pause", "routine_id": "fixture"}}})
+        self.assertFalse(response.json()["blocked"])
+        self.assertEqual(response.json()["arguments"]["propose"]["control"], "pause")
+        self.assertEqual(self.choices.requests, [])
 
 
 class WorkerTests(unittest.IsolatedAsyncioTestCase):

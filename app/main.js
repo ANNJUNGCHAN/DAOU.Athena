@@ -36,6 +36,7 @@ const { createCodexChatRuntime } = require('./lib/main/codex-chat-runtime');
 const { createConversationSessionPool } = require('./lib/main/conversation-session-pool');
 const { runConversationSessionTurn } = require('./lib/main/conversation-session-turn');
 const { createLayaRouting } = require('./lib/main/laya-routing');
+const { buildLayaTurnContext } = require('./lib/main/laya-turn-context');
 const { assertSessionStopsSucceeded } = require('./lib/main/provider-session-shutdown');
 // 툴 호출 진행 단계(board-33) 라벨링에 render_canvas 판정 하나만 빌려 쓴다 —
 // 파서 자체는 손대지 않는다(sendLiveToolStep 근처 주석 참고).
@@ -6201,10 +6202,10 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   const layaContext = {
     conversation_id: turnConversationId, turn_id: sessionAssistantId, origin,
     utterance: originalUtterance,
-    context: { canvasMode: submit.canvasMode, graphContext: submit.graphContext,
+    context: buildLayaTurnContext({ canvasMode: submit.canvasMode, graphContext: submit.graphContext,
       agentContext: submit.agentContext, pluginContext: submit.pluginContext,
       activeCardContext, today: liveTurnInput.today,
-      ...(query !== originalUtterance ? { app_clarified_question: query } : {}) },
+      ...(query !== originalUtterance ? { app_clarified_question: query } : {}) }),
   };
   if (providerRuntimeEnabled && currentProviderSelection.disabled) {
     return {

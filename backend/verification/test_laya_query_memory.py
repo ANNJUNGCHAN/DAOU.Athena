@@ -32,6 +32,20 @@ def request_for(service, headers=None):
 
 
 class QueryTests(unittest.IsolatedAsyncioTestCase):
+    async def test_single_exact_search_hit_has_nothing_to_rerank(self):
+        selector = build_selector_service()
+        query = SearchRequest(query='base:ka10171', intent='websocket', limit=5)
+        response = selector.search(query)
+        self.assertEqual(len(response.results), 1)
+        client = Client(lambda row: self.fail('A single result cannot be reordered'))
+        service = SemanticService(client)
+        service.selector_catalog_version = selector.catalog.version
+        service.catalog = {'query_candidates': [{'candidate_id': hit.operation_ref,
+            'operation_ref': hit.operation_ref, 'name': hit.name, 'domain': hit.domain, 'kind': 'websocket'}
+            for hit in response.results]}
+        self.assertIs(await rerank_search(request_for(service), query, selector, response), response)
+        self.assertEqual(client.requests, [])
+
     async def test_actual_catalog_retrieval_is_reranked_without_relabeling_typed_confidence(self):
         selector = build_selector_service()
         query = SearchRequest(query="삼성전자 거래량 순위", limit=5)
@@ -64,6 +78,11 @@ class QueryTests(unittest.IsolatedAsyncioTestCase):
             payload = SearchRequest(query=ref, intent="websocket", limit=5)
             response = selector.search(payload)
             self.assertIn(ref, [hit.operation_ref for hit in response.results])
+            # Keep this coverage about eligible trained pairs in a real shortlist;
+            # singleton identity lookups are covered by the no-ranking test.
+            other_ref = 'base:ka10172' if ref == 'base:ka10171' else 'base:ka10171'
+            other = selector.search(SearchRequest(query=other_ref, intent='websocket', limit=5)).results[0]
+            response = response.model_copy(update={'results': [*response.results, other]})
             result = await rerank_search(request_for(service), payload, selector, response)
             self.assertIn(ref, [row["candidate_id"] for row in service.client.requests])
             self.assertEqual(result.results, response.results)  # Ambiguity never becomes unique selection.

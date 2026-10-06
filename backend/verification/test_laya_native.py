@@ -38,6 +38,32 @@ def setup(choices, *, origin="shell", protected=None):
 
 
 class NativeTests(unittest.IsolatedAsyncioTestCase):
+    async def test_pause_and_explicit_false_zero_survive_conflicting_predictions(self):
+        cases = [
+            ("athena_routine", {"action": "propose", "propose": {"control": "pause", "routine_id": "fixture"}},
+             {"routine.action": "draft", "routine.control": "resume"}),
+            ("athena_graph_view", {"action": "filter", "min_degree": 0},
+             {"graph.action": "navigate", "graph.min_degree": "3"}),
+            ("athena_nudge_guard", {"action": "propose", "propose": {"show_rationale": False}},
+             {"nudge.action": "get", "nudge.show_rationale": "true"}),
+        ]
+        for tool, original, choices in cases:
+            with self.subTest(tool=tool):
+                service, ticket, client = setup(choices)
+                result = await refine_native(service, ticket, tool, original)
+                self.assertEqual(result["arguments"], original)
+                self.assertTrue(set(choices).isdisjoint({row["task_id"] for row in client.requests}))
+                self.assertTrue(all(not row["applied"] for row in result["decisions"]))
+
+    async def test_missing_fields_are_filled_without_mutating_original(self):
+        service, ticket, client = setup({"graph.action": "navigate", "graph.surface": "map"})
+        original = {"action": "navigate", "surface": None}
+        result = await refine_native(service, ticket, "athena_graph_view", original)
+        self.assertEqual(result["arguments"], {"action": "navigate", "surface": "map"})
+        self.assertIsNone(original["surface"])
+        self.assertEqual([row["task_id"] for row in client.requests], ["graph.surface"])
+        self.assertTrue(result["decisions"][0]["applied"])
+
     async def test_real_graph_dispatch_uses_accepted_values_once_and_plan_is_not_execution(self):
         service, ticket, client = setup({"general.builtin_tool": "athena_graph_view", "graph.action": "navigate",
                                         "graph.surface": "map"})
@@ -66,7 +92,7 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse((await service.direct_dispatch(ticket, forbidden))["applied"])
         refined = await refine_native(service, ticket, "athena_graph_view",
             {"action": "filter", "window_days": 30, "min_degree": 3, "summary_sort": "recent"})
-        self.assertEqual(refined["arguments"], {"action": "filter", "window_days": 90, "min_degree": 3, "summary_sort": "recent"})
+        self.assertEqual(refined["arguments"], {"action": "filter", "window_days": 30, "min_degree": 3, "summary_sort": "recent"})
         self.assertFalse((await graph_view_tools.dispatch(refined["arguments"])).isError)
         self.assertEqual({row["task_id"] for row in client.requests}, {
             "general.builtin_tool", "graph.action", "graph.window_days", "graph.min_degree", "graph.summary_sort"})
@@ -120,7 +146,7 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         service, ticket, client = setup({"routine.action": "draft", "routine.source": "schedule.once", "routine.goal": "false"})
         original = {"action": "draft", "draft": {"symbol": "005930", "condition": {"source": "schedule.daily", "op": "at", "value": "time"}}}
         result = await refine_native(service, ticket, "athena_routine", original)
-        self.assertEqual(result["arguments"]["draft"]["condition"]["source"], "schedule.once")
+        self.assertEqual(result["arguments"]["draft"]["condition"]["source"], "schedule.daily")
         self.assertEqual(result["arguments"]["draft"]["condition"]["op"], "at")
         self.assertNotIn("routine.operator", [row["task_id"] for row in client.requests])
         self.assertIs(result["arguments"]["draft"]["goal"], False)
@@ -128,6 +154,8 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
     async def test_plugin_single_action_refines_but_multiple_targets_are_not_overwritten(self):
         service, ticket, client = setup({"plugin.action": "set_enabled", "plugin.enabled": "false"})
         result = await refine_native(service, ticket, "athena_plugin", {"actions": [{"action": "remove", "target": "notes"}]})
+        self.assertEqual(result["arguments"]["actions"], [{"action": "remove", "target": "notes"}])
+        result = await refine_native(service, ticket, "athena_plugin", {"actions": [{"target": "notes"}]})
         self.assertEqual(result["arguments"]["actions"], [{"action": "set_enabled", "target": "notes", "enabled": False}])
         original = {"actions": [{"action": "remove", "target": "one"}, {"action": "install", "target": "two"}]}
         before = len(client.requests)
@@ -158,15 +186,15 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
                                             "learn_from_dismissals": False})
         cases = [
             ("athena_graph_view", {"graph.action": "propose_edit", "graph.edit_op": "remove"},
-             {"action": "fit", "edit": {"op": "change", "object": "반도체", "relation": "interested_in"}}, graph_view_tools),
+             {"edit": {"object": "반도체", "relation": "interested_in"}}, graph_view_tools),
             ("athena_routine", {"routine.action": "propose", "routine.control": "pause"},
-             {"action": "list", "propose": {"control": "resume", "routine_id": "fixture"}}, routine_tools),
+             {"propose": {"routine_id": "fixture"}}, routine_tools),
             ("athena_routine", {"routine.action": "draft", "routine.source": "price.current", "routine.goal": "true", "routine.operator": ">="},
-             {"action": "draft", "draft": {"symbol": "005930", "condition": {"source": "price.current", "op": "<", "value": 90000},
+             {"action": "draft", "draft": {"symbol": "005930", "condition": {"value": 90000},
               "main_card_candidate": {"operation_ref": "base:ka10003", "args": {"stk_cd": "005930"}, "title": "체결"}}}, routine_tools),
             ("athena_nudge_guard", {"nudge.action": "propose", "nudge.show_rationale": "false", "nudge.learn_from_dismissals": "true"},
-             {"action": "get", "propose": {}}, nudge_guard_tools),
-            ("athena_brain", {"brain.action": "entity"}, {"action": "profile", "entity": "반도체"}, brain_tools),
+             {"propose": {}}, nudge_guard_tools),
+            ("athena_brain", {"brain.action": "entity"}, {"entity": "반도체"}, brain_tools),
         ]
         observed = set()
         async with httpx.AsyncClient(base_url="http://127.0.0.1", transport=httpx.MockTransport(response)) as http:
@@ -192,6 +220,8 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("query.intent", [row["task_id"] for row in client.requests])
         service, ticket, client = setup(choices)
         result = await refine_native(service, ticket, "athena_search", {"query": "실시간 조건검색", "intent": "auto"})
+        self.assertEqual(result["arguments"]["intent"], "auto")
+        result = await refine_native(service, ticket, "athena_search", {"query": "실시간 조건검색"})
         self.assertEqual(result["arguments"]["intent"], "websocket")
         self.assertEqual(client.requests[0]["utterance"], "user original")
 

@@ -1103,18 +1103,34 @@ function buildModelSection(opts) {
     onAccountsChanged();
   }
 
+  const loginStatus = el('div', 'uk-provider-desc');
+  loginStatus.setAttribute('role', 'status');
+  loginStatus.setAttribute('aria-live', 'polite');
+  wrap.appendChild(loginStatus);
+  let loginPending = false;
   async function doLogin() {
+    if (loginPending) return;
+    loginPending = true;
     clear(errBox);
+    loginStatus.textContent = `${title} 로그인 창을 여는 중…`;
     try {
       const res = await window.athena.invoke('athena:cli-login', { providerId: provider.id });
       if (!res || !res.ok) {
+        loginStatus.textContent = '';
         errBox.appendChild(errorNote(`${title} 로그인을 시작하지 못했다${res && res.message ? ' — ' + res.message : ''}`));
+        errBox.scrollIntoView({ block: 'nearest' });
+      } else {
+        loginStatus.textContent = res.message || '열린 터미널에서 로그인을 완료해 주세요.';
       }
       // launched:true면 새 터미널 창에서 로그인이 진행 중이다 — 성공하면
       // athena:cli-changed가 이 창에도 방송되고 renderModel()의 구독이 카드를
       // 다시 그린다(onboarding.js와 같은 신호, 별도 폴링을 두지 않는다).
     } catch (err) {
-      errBox.appendChild(errorNote('CLI 로그인 기능을 아직 사용할 수 없다 (athena:cli-login 핸들러 없음)'));
+      loginStatus.textContent = '';
+      errBox.appendChild(errorNote(`${title} 로그인 창을 열지 못했습니다. 다시 시도해 주세요.`));
+      errBox.scrollIntoView({ block: 'nearest' });
+    } finally {
+      loginPending = false;
     }
   }
 
