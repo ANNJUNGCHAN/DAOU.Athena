@@ -111,6 +111,7 @@ function createPluginCanvas(options) {
   }
 
   const installed = cloneRows(deps.installed || SAMPLE_INSTALLED);
+  const recommended = cloneRows(deps.recommended || []);
   // 실제 셸은 빈 배열로 시작한 뒤 setData()로 조회 결과를 넣는다. 반면 목록을
   // 직접 넘기지 않은 단위 사용처는 아래 샘플을 즉시 쓰므로 성공 상태로 본다.
   let registryLoadState = Array.isArray(deps.installed) && deps.installed.length === 0
@@ -149,7 +150,7 @@ function createPluginCanvas(options) {
   function matches(row) {
     const needle = search.trim().toLocaleLowerCase('ko-KR');
     if (!needle) return true;
-    return [row.name, row.description, row.source]
+    return [row.name, row.description, row.source, row.provider, row.purpose]
       .filter(Boolean)
       .some((value) => String(value).toLocaleLowerCase('ko-KR').includes(needle));
   }
@@ -183,6 +184,30 @@ function createPluginCanvas(options) {
     card.appendChild(actionButton('권한', 'is-primary', () => {
       if (typeof deps.onPermission === 'function') deps.onPermission(plugin);
       openPermissionSheet(plugin);
+    }));
+    return card;
+  }
+
+  function recommendedCard(plugin) {
+    const card = el('article', 'plugin-canvas-card');
+    card.setAttribute('data-plugin-id', plugin.id || plugin.name);
+    card.setAttribute('data-plugin-kind', 'recommended');
+
+    const icon = el('div', 'plugin-canvas-icon');
+    icon.appendChild(plugIcon());
+    card.appendChild(icon);
+
+    const copy = el('div', 'plugin-canvas-card-copy');
+    copy.appendChild(el('div', 'plugin-canvas-card-name', plugin.name));
+    copy.appendChild(el('div', 'plugin-canvas-card-description', plugin.description || ''));
+    if (plugin.provider) copy.appendChild(el('div', 'plugin-canvas-card-source', plugin.provider));
+    card.appendChild(copy);
+
+    card.appendChild(actionButton('설치', 'is-primary is-install', () => {
+      propose(
+        { action: 'install', target: plugin.id },
+        `허브에서 ${plugin.name} 설치를 선택했습니다`,
+      );
     }));
     return card;
   }
@@ -514,6 +539,7 @@ function createPluginCanvas(options) {
   function renderHubLists() {
     if (!hubLists) return;
     clear(hubLists.installedGrid);
+    if (hubLists.recommendedGrid) clear(hubLists.recommendedGrid);
     if (registryLoadState === 'pending') {
       hubLists.installedGrid.appendChild(registryStateMessage('플러그인 등록 목록을 확인하는 중입니다'));
       return;
@@ -523,6 +549,7 @@ function createPluginCanvas(options) {
       return;
     }
     const installedRows = installed.filter(matches);
+    const recommendedRows = recommended.filter(matches);
     // 빈 이유를 뭉뚱그리지 않는다. 하나도 설치하지 않은 첫 화면에 "검색과
     // 일치하는 …이 없습니다"가 뜨면 검색어를 지우면 나올 것처럼 읽힌다.
     const searching = !!search.trim();
@@ -530,6 +557,13 @@ function createPluginCanvas(options) {
     else hubLists.installedGrid.appendChild(emptyMessage(searching
       ? '검색과 일치하는 설치 플러그인이 없습니다'
       : '설치한 플러그인이 없습니다 · [+ 서버 추가]에서 직접 등록합니다'));
+    if (hubLists.recommendedGrid && recommendedRows.length) {
+      recommendedRows.forEach((plugin) => hubLists.recommendedGrid.appendChild(recommendedCard(plugin)));
+    } else if (hubLists.recommendedGrid) {
+      hubLists.recommendedGrid.appendChild(emptyMessage(searching
+        ? '검색과 일치하는 추천 플러그인이 없습니다'
+        : '추천할 플러그인이 없습니다'));
+    }
   }
 
   function registryStateMessage(copy) {
@@ -591,9 +625,16 @@ function createPluginCanvas(options) {
         '이번에 바꾼 서버는 Athena를 다시 시작한 뒤의 대화부터 적용됩니다. 진행 중인 대화에는 아직 반영되지 않았습니다.',
       ));
     }
+    if (recommended.length) panel.appendChild(el('h2', 'plugin-canvas-section-title', '설치됨'));
     const installedGrid = el('div', 'plugin-canvas-grid plugin-canvas-installed');
     panel.appendChild(installedGrid);
-    hubLists = { installedGrid };
+    let recommendedGrid = null;
+    if (recommended.length) {
+      panel.appendChild(el('h2', 'plugin-canvas-section-title', '추천'));
+      recommendedGrid = el('div', 'plugin-canvas-grid plugin-canvas-recommended');
+      panel.appendChild(recommendedGrid);
+    }
+    hubLists = { installedGrid, recommendedGrid };
     renderHubLists();
     return panel;
   }
@@ -1229,6 +1270,7 @@ function createPluginCanvas(options) {
       registryLoadState = 'success';
       registryUpdatedAt = new Date().toISOString();
     }
+    if (Array.isArray(next.recommended)) replaceRows(recommended, next.recommended);
     // 'add' 시트에는 plugin이 없다 — 스니펫을 붙여넣는 중에 목록 갱신이
     // 도착하면 여기서 터졌다(activeSheet.plugin.id).
     if (activeSheet && activeSheet.plugin) {
