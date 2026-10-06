@@ -162,6 +162,7 @@ function createHarness({
     persistentTerminalAnswers: { delete() {} },
     persistentTurnContexts: { set() {}, deleteIfSame() {} },
     presentProviderOrderTicket() {},
+    settlePendingOrderTicket: async () => {},
     process: { env: {} },
     providerRuntimeEnabled: false,
     query,

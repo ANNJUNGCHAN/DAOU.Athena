@@ -124,6 +124,8 @@ def _collect_secrets(settings: Settings) -> tuple[str, ...]:
     secrets: list[str] = []
     if settings.local_bearer_token is not None:
         secrets.append(settings.local_bearer_token.get_secret_value())
+    if settings.order_key is not None:
+        secrets.append(settings.order_key.get_secret_value())
     for account in settings.kiwoom_accounts:
         secrets.append(account.app_key.get_secret_value())
         secrets.append(account.secret_key.get_secret_value())

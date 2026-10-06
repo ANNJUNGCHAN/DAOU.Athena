@@ -20,7 +20,8 @@ function toSelectorPayload(confirmation) {
       dmst_stex_tp: draft.dmst_stex_tp || 'KRX',
       stk_cd: draft.stk_cd,
       ord_qty: draft.ord_qty,
-      trde_tp: '3',
+      trde_tp: String(draft.trde_tp),
+      ...(draft.ord_uv != null ? { ord_uv: String(draft.ord_uv) } : {}),
       side,
     },
   };
