@@ -15,9 +15,9 @@
     960
   ],
   "operation_refs": [
+    "base:ka20006",
     "base:ka20004",
     "base:ka20005",
-    "base:ka20006",
     "base:ka20007",
     "base:ka20008",
     "base:ka20019"
@@ -357,7 +357,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -393,7 +394,8 @@
           "kor": "현재가",
           "period": "년"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s005",
@@ -411,16 +413,8 @@
       "f": "pred_pre",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka20004",
-          "f": "pred_pre_sig"
-        },
-        {
           "mapping_id": "base:ka20005",
           "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka20005",
-          "f": "pred_pre_sig"
         }
       ],
       "kor": "전일대비",
@@ -454,7 +448,8 @@
           "kor": "전일대비 기호",
           "period": "분"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s006",
@@ -470,12 +465,7 @@
       "table": null,
       "mapping_id": "base:ka20004",
       "f": "cntr_tm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20005",
-          "f": "cntr_tm"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "체결시간",
       "format": {
         "unit": "time",
@@ -493,7 +483,8 @@
           "kor": "체결시간",
           "period": "분"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s007",
@@ -683,56 +674,16 @@
           "f": "open_pric"
         },
         {
-          "mapping_id": "base:ka20004",
-          "f": "high_pric"
-        },
-        {
-          "mapping_id": "base:ka20004",
-          "f": "low_pric"
-        },
-        {
           "mapping_id": "base:ka20005",
           "f": "open_pric"
-        },
-        {
-          "mapping_id": "base:ka20005",
-          "f": "high_pric"
-        },
-        {
-          "mapping_id": "base:ka20005",
-          "f": "low_pric"
-        },
-        {
-          "mapping_id": "base:ka20006",
-          "f": "high_pric"
-        },
-        {
-          "mapping_id": "base:ka20006",
-          "f": "low_pric"
         },
         {
           "mapping_id": "base:ka20007",
           "f": "open_pric"
         },
         {
-          "mapping_id": "base:ka20007",
-          "f": "high_pric"
-        },
-        {
-          "mapping_id": "base:ka20007",
-          "f": "low_pric"
-        },
-        {
           "mapping_id": "base:ka20008",
           "f": "open_pric"
-        },
-        {
-          "mapping_id": "base:ka20008",
-          "f": "high_pric"
-        },
-        {
-          "mapping_id": "base:ka20008",
-          "f": "low_pric"
         },
         {
           "mapping_id": "base:ka20019",
@@ -744,7 +695,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -842,7 +794,8 @@
           "kor": "시가",
           "period": "년"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s016",
@@ -895,10 +848,11 @@
       ],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -922,7 +876,8 @@
           "kor": "거래대금",
           "period": "년"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s018",
@@ -941,16 +896,18 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "직전 봉(전일)의 거래대금"
+      "note": "직전 봉(전일)의 거래대금",
+      "row_index": 1
     },
     {
       "slot_id": "s019",
@@ -1139,7 +1096,8 @@
           "kor": "누적거래량",
           "period": "분"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s024",
@@ -1167,7 +1125,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "직전 봉(전일)의 거래량"
+      "note": "직전 봉(전일)의 거래량",
+      "row_index": 1
     },
     {
       "slot_id": "s025",
@@ -1551,44 +1510,21 @@
       "table": null,
       "mapping_id": "base:ka20006",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20004",
-          "f": "inds_tic_chart_qry"
-        },
-        {
-          "mapping_id": "base:ka20005",
-          "f": "inds_min_pole_qry"
-        },
-        {
-          "mapping_id": "base:ka20006",
-          "f": "inds_dt_pole_qry"
-        },
-        {
-          "mapping_id": "base:ka20007",
-          "f": "inds_stk_pole_qry"
-        },
-        {
-          "mapping_id": "base:ka20008",
-          "f": "inds_mth_pole_qry"
-        },
-        {
-          "mapping_id": "base:ka20019",
-          "f": "inds_yr_pole_qry"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "차트 시세 표기 — 주기 6종(틱·분·일·주·월·년) 캔들 배열이 같은 자리를 나눠 쓴다"
+      "note": "차트 시세 표기 — 주기 6종(틱·분·일·주·월·년) 캔들 배열이 같은 자리를 나눠 쓴다",
+      "row_index": 0
     },
     {
       "slot_id": "s042",
@@ -1615,7 +1551,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s043",
@@ -1995,12 +1932,14 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "년봉(ka20019) 저가 = 52주 최저"
+      "note": "년봉(ka20019) 저가 = 52주 최저",
+      "row_index": 0
     },
     {
       "slot_id": "s058",
@@ -2022,12 +1961,14 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "년봉(ka20019) 고가 = 52주 최고"
+      "note": "년봉(ka20019) 고가 = 52주 최고",
+      "row_index": 0
     },
     {
       "slot_id": "s059",
@@ -2067,15 +2008,17 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s061",
@@ -2155,7 +2098,8 @@
           "kor": "일자",
           "period": "년"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s063",
@@ -2177,12 +2121,14 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s064",
@@ -2209,7 +2155,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s065",
@@ -2231,12 +2178,14 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s066",
@@ -2263,7 +2212,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s067",
@@ -2285,12 +2235,14 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s068",
@@ -2380,7 +2332,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     }
   ],
   "unbound_fields": [

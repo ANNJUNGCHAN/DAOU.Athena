@@ -2614,7 +2614,7 @@ function createAgentCanvas(deps) {
       // 없이 실제 note만 쓴다(P3).
       desc.textContent = item.raw.note || '';
     }
-    detailCol.appendChild(desc);
+    if (desc.textContent !== item.title) detailCol.appendChild(desc);
 
     if (item.kind === 'draft' && typeof onOpenDraft === 'function') {
       const openDraft = el('button', 'agent-pause-btn');

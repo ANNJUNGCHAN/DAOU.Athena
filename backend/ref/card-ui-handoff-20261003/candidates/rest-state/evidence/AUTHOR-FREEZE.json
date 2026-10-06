@@ -1,0 +1,57 @@
+{
+  "status": "PREPARED_NOT_RENDERED",
+  "productWrites": 0,
+  "appStarts": 0,
+  "rendererStarts": 0,
+  "providerCalls": 0,
+  "retryClicks": 0,
+  "scope": [
+    "app/canvas.js",
+    "app/canvas.css"
+  ],
+  "baseline": {
+    "app/canvas.js": "4d91c637c5411c0d50adb1583261d3caf41e088452cbb98a35026674803e1940",
+    "app/canvas.css": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f"
+  },
+  "candidate": {
+    "app/canvas.js": "350864a5cd618f850a2d7425e80f92d9e02eb520759cad49769cc9e7451c6be7",
+    "app/canvas.css": "99a2e40042c38292191d84989bc2cc7472fa442c736a5a97b7d722ff6aebeb99"
+  },
+  "checks": {
+    "syntaxExit": 0,
+    "diffWhitespaceExit": 1,
+    "whitespaceDiagnostics": 0,
+    "exactInverse": true,
+    "existingSourceBytesPreserved": true
+  },
+  "observedNative": {
+    "source": "root-reported native995/996",
+    "sizes": [
+      "2122x1166",
+      "2560x1392"
+    ],
+    "conclusion": "large empty area and browser-default retry button",
+    "rawValuesCopied": false
+  },
+  "limits": [
+    "No actual browser geometry or visual validation performed",
+    "Native canvas_type is not inferred",
+    "Normal cards have no data-screen-state marker",
+    "Expanded state card height semantics preserved",
+    "canvas.js shared with chart/account composition: apply only the single retry class hunk against rechecked current source"
+  ],
+  "artifactFiles": {
+    "prepare.cjs": "c466e9a11d1b45ee8dd6255e06d5ef8a699a5142810d2a05d874d590cebfe4fd",
+    "correct-insertion.cjs": "a0adedfcd656025028e97ed54004b170461ea7af72ee9e6f69f7c1ea14bce993",
+    "correct-check-exit.cjs": "0627fcee74043c760a6f1a7f6b7543d519bc2f509756b53274bad3ccf974e4bf",
+    "finalize.cjs": "1cc4dc6dfa4ea3a4309ac37b35d142f3677a01cfec32b31d69fba07e9a2943e1",
+    "PREPARATION-FAILURE.md": "540352b15fdf2d36d4ebc38d433def8b2caf322659f0f148ab17f6a01e5e5bab",
+    "AUTHOR-PREPARATION.md": "b710131c01311a351f8efb66d7a1d2f91a5649889b6ff3754df6731816fc02f4",
+    "canvas.js.diff": "88db839594211238fc7a6cbc618c5b5d3178511efd56c2290646009af630040f",
+    "canvas.css.diff": "0b7bc67ad62a341f488d48947abfcf45aea9bc70a1c7dd378d7293d2ebea08c5",
+    "baseline/app/canvas.js": "4d91c637c5411c0d50adb1583261d3caf41e088452cbb98a35026674803e1940",
+    "baseline/app/canvas.css": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f",
+    "candidate/app/canvas.js": "350864a5cd618f850a2d7425e80f92d9e02eb520759cad49769cc9e7451c6be7",
+    "candidate/app/canvas.css": "99a2e40042c38292191d84989bc2cc7472fa442c736a5a97b7d722ff6aebeb99"
+  }
+}

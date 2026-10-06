@@ -711,7 +711,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "출금가능 "
       },
       "paired_with": "s015",
       "collapse_group": null,
@@ -838,10 +839,10 @@
         "field": "tot_evltv_prft"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_evltv_prft",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_evlt_pl",
       "alt_mappings": null,
-      "kor": "총 평가손익",
+      "kor": "총평가손익금액",
       "format": {
         "unit": "krw_ko",
         "sign": true,
@@ -869,15 +870,16 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_buy_amt",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_pur_amt",
       "alt_mappings": null,
-      "kor": "총 매입가",
+      "kor": "총매입금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "총매입 "
       },
       "paired_with": "s021",
       "collapse_group": null,
@@ -1221,8 +1223,8 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:kt00008",
-      "f": "setl_dt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1234,7 +1236,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "정산일 축 — 결제일자를 오늘/D+1/D+2로 읽어 준 행 이름"
+      "note": "정산일 축 — 결제일자를 오늘/D+1/D+2로 읽어 준 행 이름",
+      "static": true,
+      "static_reason": "고정 상대 결제일 라벨 — 실제 달력 날짜는 미제공"
     },
     {
       "slot_id": "s036",
@@ -1477,8 +1481,8 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:kt00008",
-      "f": "setl_dt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1491,7 +1495,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "정산일 축 — 결제일자를 오늘/D+1/D+2로 읽어 준 행 이름"
+      "note": "정산일 축 — 결제일자를 오늘/D+1/D+2로 읽어 준 행 이름",
+      "static": true,
+      "static_reason": "고정 상대 결제일 라벨 — 실제 달력 날짜는 미제공"
     },
     {
       "slot_id": "s044",
@@ -1759,8 +1765,8 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:kt00008",
-      "f": "setl_dt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": null,
       "format": {
@@ -1773,7 +1779,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "정산일 축 — 결제일자를 오늘/D+1/D+2로 읽어 준 행 이름"
+      "note": "정산일 축 — 결제일자를 오늘/D+1/D+2로 읽어 준 행 이름",
+      "static": true,
+      "static_reason": "고정 상대 결제일 라벨 — 실제 달력 날짜는 미제공"
     },
     {
       "slot_id": "s053",
@@ -2848,10 +2856,8 @@
       "alt_mappings": null,
       "kor": "결제일자",
       "format": {
-        "unit": "text",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "date",
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2935,10 +2941,8 @@
       "alt_mappings": null,
       "kor": "결제일자",
       "format": {
-        "unit": "text",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "date",
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3027,10 +3031,8 @@
       "alt_mappings": null,
       "kor": "결제일자",
       "format": {
-        "unit": "text",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "date",
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3114,10 +3116,8 @@
       "alt_mappings": null,
       "kor": "결제일자",
       "format": {
-        "unit": "text",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "date",
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3244,26 +3244,21 @@
       "node_path": "2/1/1/1/0/0",
       "paper_text": "오늘 09/01",
       "region": "rail",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:kt00008",
-      "f": "setl_dt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
-      "kor": "결제일자",
-      "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
+      "kor": null,
+      "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "정산일 축"
+      "note": "고정 상대 결제일 축 — 인접 kt00001 당일·D+1·D+2 정산금의 구분"
     },
     {
       "slot_id": "s107",
@@ -3302,26 +3297,21 @@
       "node_path": "2/1/1/1/1/0",
       "paper_text": "D+1 09/02",
       "region": "rail",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:kt00008",
-      "f": "setl_dt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
-      "kor": "결제일자",
-      "format": {
-        "unit": "date",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
-      },
+      "kor": null,
+      "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "정산일 축"
+      "note": "고정 상대 결제일 축 — 인접 kt00001 당일·D+1·D+2 정산금의 구분"
     },
     {
       "slot_id": "s109",
@@ -3357,26 +3347,21 @@
       "node_path": "2/1/1/1/2/0",
       "paper_text": "D+2 09/03",
       "region": "rail",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:kt00008",
-      "f": "setl_dt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
-      "kor": "결제일자",
-      "format": {
-        "unit": "date",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
-      },
+      "kor": null,
+      "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "정산일 축"
+      "note": "고정 상대 결제일 축 — 인접 kt00001 당일·D+1·D+2 정산금의 구분"
     },
     {
       "slot_id": "s111",

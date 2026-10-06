@@ -1,0 +1,2022 @@
+{
+  "mode": "baseline",
+  "pid": 40076,
+  "ppid": 18436,
+  "states": [
+    {
+      "name": "month-max-latest",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "latest",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 193,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "2018년",
+          "left": 33.417503356933594,
+          "right": 72.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 28
+        },
+        {
+          "text": "2019년",
+          "left": 129.4175033569336,
+          "right": 168.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 28
+        },
+        {
+          "text": "2020년",
+          "left": 225.4175033569336,
+          "right": 264.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 28
+        },
+        {
+          "text": "2021년",
+          "left": 321.4175033569336,
+          "right": 360.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 28
+        },
+        {
+          "text": "2022년",
+          "left": 417.4175033569336,
+          "right": 456.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 28
+        },
+        {
+          "text": "2023년",
+          "left": 513.4175033569336,
+          "right": 552.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 28
+        },
+        {
+          "text": "2024년",
+          "left": 609.4175033569336,
+          "right": 648.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 28
+        },
+        {
+          "text": "2025년",
+          "left": 705.4175033569336,
+          "right": 744.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 28
+        },
+        {
+          "text": "2026년",
+          "left": 801.4175033569336,
+          "right": 840.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 28
+        }
+      ],
+      "range": {
+        "from": 89.75,
+        "to": 192
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2026년"
+      ]
+    },
+    {
+      "name": "month-max-first",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "first",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 193,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "2010년",
+          "left": -16.758422568992273,
+          "right": 22.366577431007727,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 53
+        },
+        {
+          "text": "2011년",
+          "left": 75.01935520878544,
+          "right": 114.14435520878544,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 53
+        },
+        {
+          "text": "2012년",
+          "left": 166.79713298656327,
+          "right": 205.92213298656327,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 53
+        },
+        {
+          "text": "2013년",
+          "left": 258.574910764341,
+          "right": 297.699910764341,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 53
+        },
+        {
+          "text": "2014년",
+          "left": 350.3526885421188,
+          "right": 389.4776885421188,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 53
+        },
+        {
+          "text": "2015년",
+          "left": 442.1304663198966,
+          "right": 481.2554663198966,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 53
+        },
+        {
+          "text": "2016년",
+          "left": 533.9082440976744,
+          "right": 573.0332440976744,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 53
+        },
+        {
+          "text": "2017년",
+          "left": 625.6860218754521,
+          "right": 664.8110218754521,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 53
+        },
+        {
+          "text": "2018년",
+          "left": 717.4637996532299,
+          "right": 756.5887996532299,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 53
+        }
+      ],
+      "range": {
+        "from": 0,
+        "to": 107
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2010년"
+      ]
+    },
+    {
+      "name": "month-max-middle",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "middle",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 193,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "2019년",
+          "left": -15.723673113654627,
+          "right": 23.401326886345373,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 97
+        },
+        {
+          "text": "2020년",
+          "left": 100.88809159222774,
+          "right": 140.01309159222774,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 97
+        },
+        {
+          "text": "2021년",
+          "left": 217.4998562981101,
+          "right": 256.6248562981101,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 97
+        },
+        {
+          "text": "2022년",
+          "left": 334.11162100399247,
+          "right": 373.23662100399247,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 97
+        },
+        {
+          "text": "2023년",
+          "left": 450.7233857098748,
+          "right": 489.8483857098748,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 97
+        },
+        {
+          "text": "2024년",
+          "left": 567.3351504157572,
+          "right": 606.4601504157572,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 97
+        },
+        {
+          "text": "2025년",
+          "left": 683.9469151216394,
+          "right": 723.0719151216394,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 97
+        },
+        {
+          "text": "2026년",
+          "left": 800.5586798275218,
+          "right": 839.6836798275218,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 97
+        }
+      ],
+      "range": {
+        "from": 108,
+        "to": 192
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2019년",
+        "date-glyph-outside-canvas:2026년"
+      ]
+    },
+    {
+      "name": "month-narrow-latest",
+      "period": "month",
+      "width": 1411,
+      "height": 1166,
+      "edge": "latest",
+      "viewport": [
+        1411,
+        1166
+      ],
+      "candleCount": 193,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        },
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        }
+      ],
+      "ticks": [
+        {
+          "text": "2021년",
+          "left": 63.417503356933594,
+          "right": 102.5425033569336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 135
+        },
+        {
+          "text": "2022년",
+          "left": 159.4175033569336,
+          "right": 198.5425033569336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 135
+        },
+        {
+          "text": "2023년",
+          "left": 255.4175033569336,
+          "right": 294.5425033569336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 135
+        },
+        {
+          "text": "2024년",
+          "left": 351.4175033569336,
+          "right": 390.5425033569336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 135
+        },
+        {
+          "text": "2025년",
+          "left": 447.4175033569336,
+          "right": 486.5425033569336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 135
+        },
+        {
+          "text": "2026년",
+          "left": 543.4175033569336,
+          "right": 582.5425033569336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 135
+        }
+      ],
+      "range": {
+        "from": 122,
+        "to": 192
+      },
+      "body": {
+        "width": 603,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2026년"
+      ]
+    },
+    {
+      "name": "month-narrow-first",
+      "period": "month",
+      "width": 1411,
+      "height": 1166,
+      "edge": "first",
+      "viewport": [
+        1411,
+        1166
+      ],
+      "candleCount": 193,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        },
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        }
+      ],
+      "ticks": [
+        {
+          "text": "2010년",
+          "left": -16.845654537803284,
+          "right": 22.279345462196716,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 173
+        },
+        {
+          "text": "2011년",
+          "left": 72.83855598851255,
+          "right": 111.96355598851255,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 173
+        },
+        {
+          "text": "2012년",
+          "left": 162.52276651482833,
+          "right": 201.64776651482833,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 173
+        },
+        {
+          "text": "2013년",
+          "left": 252.2069770411441,
+          "right": 291.3319770411441,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 173
+        },
+        {
+          "text": "2014년",
+          "left": 341.8911875674599,
+          "right": 381.0161875674599,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 173
+        },
+        {
+          "text": "2015년",
+          "left": 431.5753980937757,
+          "right": 470.7003980937757,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 173
+        },
+        {
+          "text": "2016년",
+          "left": 521.2596086200915,
+          "right": 560.3846086200915,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 173
+        }
+      ],
+      "range": {
+        "from": 0,
+        "to": 75
+      },
+      "body": {
+        "width": 603,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2010년"
+      ]
+    },
+    {
+      "name": "month-narrow-middle",
+      "period": "month",
+      "width": 1411,
+      "height": 1166,
+      "edge": "middle",
+      "viewport": [
+        1411,
+        1166
+      ],
+      "candleCount": 193,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        },
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        }
+      ],
+      "ticks": [
+        {
+          "text": "2019년",
+          "left": -16.845654537803284,
+          "right": 22.279345462196716,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 213
+        },
+        {
+          "text": "2020년",
+          "left": 72.83855598851255,
+          "right": 111.96355598851255,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 213
+        },
+        {
+          "text": "2021년",
+          "left": 162.52276651482833,
+          "right": 201.64776651482833,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 213
+        },
+        {
+          "text": "2022년",
+          "left": 252.2069770411441,
+          "right": 291.3319770411441,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 213
+        },
+        {
+          "text": "2023년",
+          "left": 341.8911875674599,
+          "right": 381.0161875674599,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 213
+        },
+        {
+          "text": "2024년",
+          "left": 431.5753980937757,
+          "right": 470.7003980937757,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 213
+        },
+        {
+          "text": "2025년",
+          "left": 521.2596086200915,
+          "right": 560.3846086200915,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 213
+        }
+      ],
+      "range": {
+        "from": 108,
+        "to": 183
+      },
+      "body": {
+        "width": 603,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ]
+    },
+    {
+      "name": "month-remax-latest",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "latest",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 193,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "2018년",
+          "left": 33.417503356933594,
+          "right": 72.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 247
+        },
+        {
+          "text": "2019년",
+          "left": 129.4175033569336,
+          "right": 168.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 247
+        },
+        {
+          "text": "2020년",
+          "left": 225.4175033569336,
+          "right": 264.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 247
+        },
+        {
+          "text": "2021년",
+          "left": 321.4175033569336,
+          "right": 360.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 247
+        },
+        {
+          "text": "2022년",
+          "left": 417.4175033569336,
+          "right": 456.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 247
+        },
+        {
+          "text": "2023년",
+          "left": 513.4175033569336,
+          "right": 552.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 247
+        },
+        {
+          "text": "2024년",
+          "left": 609.4175033569336,
+          "right": 648.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 247
+        },
+        {
+          "text": "2025년",
+          "left": 705.4175033569336,
+          "right": 744.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 247
+        },
+        {
+          "text": "2026년",
+          "left": 801.4175033569336,
+          "right": 840.5425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 247
+        }
+      ],
+      "range": {
+        "from": 89.75,
+        "to": 192
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2026년"
+      ]
+    },
+    {
+      "name": "month-remax-first",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "first",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 193,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "2010년",
+          "left": -16.758422568992273,
+          "right": 22.366577431007727,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 294
+        },
+        {
+          "text": "2011년",
+          "left": 75.01935520878544,
+          "right": 114.14435520878544,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 294
+        },
+        {
+          "text": "2012년",
+          "left": 166.79713298656327,
+          "right": 205.92213298656327,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 294
+        },
+        {
+          "text": "2013년",
+          "left": 258.574910764341,
+          "right": 297.699910764341,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 294
+        },
+        {
+          "text": "2014년",
+          "left": 350.3526885421188,
+          "right": 389.4776885421188,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 294
+        },
+        {
+          "text": "2015년",
+          "left": 442.1304663198966,
+          "right": 481.2554663198966,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 294
+        },
+        {
+          "text": "2016년",
+          "left": 533.9082440976744,
+          "right": 573.0332440976744,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 294
+        },
+        {
+          "text": "2017년",
+          "left": 625.6860218754521,
+          "right": 664.8110218754521,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 294
+        },
+        {
+          "text": "2018년",
+          "left": 717.4637996532299,
+          "right": 756.5887996532299,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 294
+        }
+      ],
+      "range": {
+        "from": 0,
+        "to": 107
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2010년"
+      ]
+    },
+    {
+      "name": "month-remax-middle",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "middle",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 193,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "2019년",
+          "left": -15.723673113654627,
+          "right": 23.401326886345373,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 336
+        },
+        {
+          "text": "2020년",
+          "left": 100.88809159222774,
+          "right": 140.01309159222774,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 336
+        },
+        {
+          "text": "2021년",
+          "left": 217.4998562981101,
+          "right": 256.6248562981101,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 336
+        },
+        {
+          "text": "2022년",
+          "left": 334.11162100399247,
+          "right": 373.23662100399247,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 336
+        },
+        {
+          "text": "2023년",
+          "left": 450.7233857098748,
+          "right": 489.8483857098748,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 336
+        },
+        {
+          "text": "2024년",
+          "left": 567.3351504157572,
+          "right": 606.4601504157572,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 336
+        },
+        {
+          "text": "2025년",
+          "left": 683.9469151216394,
+          "right": 723.0719151216394,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 336
+        },
+        {
+          "text": "2026년",
+          "left": 800.5586798275218,
+          "right": 839.6836798275218,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 336
+        }
+      ],
+      "range": {
+        "from": 108,
+        "to": 192
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2019년",
+        "date-glyph-outside-canvas:2026년"
+      ]
+    },
+    {
+      "name": "week-max-latest",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "latest",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 835,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "10월",
+          "left": -2.3129653930664062,
+          "right": 21.272972106933594,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        },
+        {
+          "text": "4월",
+          "left": 181.8335189819336,
+          "right": 200.1264877319336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        },
+        {
+          "text": "7월",
+          "left": 273.8335189819336,
+          "right": 291.1264877319336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        },
+        {
+          "text": "10월",
+          "left": 361.6870346069336,
+          "right": 385.2729721069336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        },
+        {
+          "text": "4월",
+          "left": 545.8335189819336,
+          "right": 564.1264877319336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        },
+        {
+          "text": "7월",
+          "left": 637.8335189819336,
+          "right": 655.1264877319336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        },
+        {
+          "text": "10월",
+          "left": 725.6870346069336,
+          "right": 749.2729721069336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        },
+        {
+          "text": "26일",
+          "left": 809.6870346069336,
+          "right": 833.2729721069336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        },
+        {
+          "text": "2024년",
+          "left": 80.9175033569336,
+          "right": 120.0425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        },
+        {
+          "text": "2025년",
+          "left": 444.9175033569336,
+          "right": 484.0425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        }
+      ],
+      "range": {
+        "from": 717,
+        "to": 834
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:10월",
+        "date-glyph-outside-canvas:26일"
+      ]
+    },
+    {
+      "name": "week-max-first",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "first",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 835,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "4월",
+          "left": 79.26093833677237,
+          "right": 97.55390708677237,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 408
+        },
+        {
+          "text": "7월",
+          "left": 166.85771253032067,
+          "right": 184.15068128032067,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 408
+        },
+        {
+          "text": "10월",
+          "left": 250.30800234886908,
+          "right": 273.8939398488691,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 408
+        },
+        {
+          "text": "5월",
+          "left": 459.9544867238691,
+          "right": 477.2474554738691,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 408
+        },
+        {
+          "text": "8월",
+          "left": 546.5512609174175,
+          "right": 563.8442296674175,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 408
+        },
+        {
+          "text": "4월",
+          "left": 778.69642220774,
+          "right": 796.98939095774,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 408
+        },
+        {
+          "text": "2010년",
+          "left": -17.251851481776043,
+          "right": 21.873148518223957,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 408
+        },
+        {
+          "text": "2011년",
+          "left": 335.7965356149981,
+          "right": 374.9215356149981,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 408
+        },
+        {
+          "text": "2012년",
+          "left": 682.1836323891916,
+          "right": 721.3086323891916,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 408
+        }
+      ],
+      "range": {
+        "from": 0,
+        "to": 123
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2010년"
+      ]
+    },
+    {
+      "name": "week-max-middle",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "middle",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 835,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "4월",
+          "left": 79.26093833677237,
+          "right": 97.55390708677237,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        },
+        {
+          "text": "7월",
+          "left": 166.85771253032067,
+          "right": 184.15068128032067,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        },
+        {
+          "text": "10월",
+          "left": 250.30800234886908,
+          "right": 273.8939398488691,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        },
+        {
+          "text": "4월",
+          "left": 425.64803511096585,
+          "right": 443.94100386096585,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        },
+        {
+          "text": "7월",
+          "left": 513.2448093045143,
+          "right": 530.5377780545143,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        },
+        {
+          "text": "10월",
+          "left": 596.6950991230626,
+          "right": 620.2810366230626,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        },
+        {
+          "text": "4월",
+          "left": 772.0351318851594,
+          "right": 790.3281006351594,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        },
+        {
+          "text": "2019년",
+          "left": -17.251851481776043,
+          "right": 21.873148518223957,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        },
+        {
+          "text": "2020년",
+          "left": 329.1352452924175,
+          "right": 368.2602452924175,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        },
+        {
+          "text": "2021년",
+          "left": 675.522342066611,
+          "right": 714.647342066611,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        }
+      ],
+      "range": {
+        "from": 470,
+        "to": 593
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ]
+    },
+    {
+      "name": "week-narrow-latest",
+      "period": "week",
+      "width": 1411,
+      "height": 1166,
+      "edge": "latest",
+      "viewport": [
+        1411,
+        1166
+      ],
+      "candleCount": 835,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        },
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        }
+      ],
+      "ticks": [
+        {
+          "text": "7월",
+          "left": 15.833518981933594,
+          "right": 33.126487731933594,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 489
+        },
+        {
+          "text": "10월",
+          "left": 103.6870346069336,
+          "right": 127.2729721069336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 489
+        },
+        {
+          "text": "4월",
+          "left": 287.8335189819336,
+          "right": 306.1264877319336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 489
+        },
+        {
+          "text": "7월",
+          "left": 379.8335189819336,
+          "right": 397.1264877319336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 489
+        },
+        {
+          "text": "10월",
+          "left": 467.6870346069336,
+          "right": 491.2729721069336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 489
+        },
+        {
+          "text": "26일",
+          "left": 551.6870346069336,
+          "right": 575.2729721069336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 489
+        },
+        {
+          "text": "2025년",
+          "left": 186.9175033569336,
+          "right": 226.0425033569336,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 489
+        }
+      ],
+      "range": {
+        "from": 753.8571428571429,
+        "to": 834
+      },
+      "body": {
+        "width": 603,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:26일"
+      ]
+    },
+    {
+      "name": "week-narrow-first",
+      "period": "week",
+      "width": 1411,
+      "height": 1166,
+      "edge": "first",
+      "viewport": [
+        1411,
+        1166
+      ],
+      "candleCount": 835,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        },
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        }
+      ],
+      "ticks": [
+        {
+          "text": "4월",
+          "left": 77.47145001641633,
+          "right": 95.76441876641633,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 528
+        },
+        {
+          "text": "7월",
+          "left": 163.34501323480714,
+          "right": 180.63798198480714,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 528
+        },
+        {
+          "text": "10월",
+          "left": 245.07209207819795,
+          "right": 268.65802957819795,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 528
+        },
+        {
+          "text": "5월",
+          "left": 450.6093810508991,
+          "right": 467.9023498008991,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 528
+        },
+        {
+          "text": "8월",
+          "left": 535.4829442692899,
+          "right": 552.7759130192899,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 528
+        },
+        {
+          "text": "2010년",
+          "left": -17.31812882697443,
+          "right": 21.80687117302557,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 528
+        },
+        {
+          "text": "2011년",
+          "left": 328.70485967877266,
+          "right": 367.82985967877266,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 528
+        }
+      ],
+      "range": {
+        "from": 0,
+        "to": 86
+      },
+      "body": {
+        "width": 603,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2010년"
+      ]
+    },
+    {
+      "name": "week-narrow-middle",
+      "period": "week",
+      "width": 1411,
+      "height": 1166,
+      "edge": "middle",
+      "viewport": [
+        1411,
+        1166
+      ],
+      "candleCount": 835,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        },
+        {
+          "width": 568,
+          "height": 28,
+          "cssWidth": 568
+        }
+      ],
+      "ticks": [
+        {
+          "text": "4월",
+          "left": 77.47145001641633,
+          "right": 95.76441876641633,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 566
+        },
+        {
+          "text": "7월",
+          "left": 163.34501323480714,
+          "right": 180.63798198480714,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 566
+        },
+        {
+          "text": "10월",
+          "left": 245.07209207819795,
+          "right": 268.65802957819795,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 566
+        },
+        {
+          "text": "4월",
+          "left": 416.9657028899796,
+          "right": 435.2586716399796,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 566
+        },
+        {
+          "text": "7월",
+          "left": 502.83926610837034,
+          "right": 520.1322348583703,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 566
+        },
+        {
+          "text": "2019년",
+          "left": -17.31812882697443,
+          "right": 21.80687117302557,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 566
+        },
+        {
+          "text": "2020년",
+          "left": 322.17612404658877,
+          "right": 361.30112404658877,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 566
+        }
+      ],
+      "range": {
+        "from": 470,
+        "to": 556
+      },
+      "body": {
+        "width": 603,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ]
+    },
+    {
+      "name": "week-remax-latest",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "latest",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 835,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "10월",
+          "left": -2.3129653930664062,
+          "right": 21.272972106933594,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        },
+        {
+          "text": "4월",
+          "left": 181.8335189819336,
+          "right": 200.1264877319336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        },
+        {
+          "text": "7월",
+          "left": 273.8335189819336,
+          "right": 291.1264877319336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        },
+        {
+          "text": "10월",
+          "left": 361.6870346069336,
+          "right": 385.2729721069336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        },
+        {
+          "text": "4월",
+          "left": 545.8335189819336,
+          "right": 564.1264877319336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        },
+        {
+          "text": "7월",
+          "left": 637.8335189819336,
+          "right": 655.1264877319336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        },
+        {
+          "text": "10월",
+          "left": 725.6870346069336,
+          "right": 749.2729721069336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        },
+        {
+          "text": "26일",
+          "left": 809.6870346069336,
+          "right": 833.2729721069336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        },
+        {
+          "text": "2024년",
+          "left": 80.9175033569336,
+          "right": 120.0425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        },
+        {
+          "text": "2025년",
+          "left": 444.9175033569336,
+          "right": 484.0425033569336,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 610
+        }
+      ],
+      "range": {
+        "from": 717,
+        "to": 834
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:10월",
+        "date-glyph-outside-canvas:26일"
+      ]
+    },
+    {
+      "name": "week-remax-first",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "first",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 835,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "4월",
+          "left": 79.26093833677237,
+          "right": 97.55390708677237,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 645
+        },
+        {
+          "text": "7월",
+          "left": 166.85771253032067,
+          "right": 184.15068128032067,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 645
+        },
+        {
+          "text": "10월",
+          "left": 250.30800234886908,
+          "right": 273.8939398488691,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 645
+        },
+        {
+          "text": "5월",
+          "left": 459.9544867238691,
+          "right": 477.2474554738691,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 645
+        },
+        {
+          "text": "8월",
+          "left": 546.5512609174175,
+          "right": 563.8442296674175,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 645
+        },
+        {
+          "text": "4월",
+          "left": 778.69642220774,
+          "right": 796.98939095774,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 645
+        },
+        {
+          "text": "2010년",
+          "left": -17.251851481776043,
+          "right": 21.873148518223957,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 645
+        },
+        {
+          "text": "2011년",
+          "left": 335.7965356149981,
+          "right": 374.9215356149981,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 645
+        },
+        {
+          "text": "2012년",
+          "left": 682.1836323891916,
+          "right": 721.3086323891916,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 645
+        }
+      ],
+      "range": {
+        "from": 0,
+        "to": 123
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2010년"
+      ]
+    },
+    {
+      "name": "week-remax-middle",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "middle",
+      "viewport": [
+        2560,
+        1392
+      ],
+      "candleCount": 835,
+      "mounted": true,
+      "axisCanvases": [
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        },
+        {
+          "width": 826,
+          "height": 28,
+          "cssWidth": 826
+        }
+      ],
+      "ticks": [
+        {
+          "text": "4월",
+          "left": 79.26093833677237,
+          "right": 97.55390708677237,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        },
+        {
+          "text": "7월",
+          "left": 166.85771253032067,
+          "right": 184.15068128032067,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        },
+        {
+          "text": "10월",
+          "left": 250.30800234886908,
+          "right": 273.8939398488691,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        },
+        {
+          "text": "4월",
+          "left": 425.64803511096585,
+          "right": 443.94100386096585,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        },
+        {
+          "text": "7월",
+          "left": 513.2448093045143,
+          "right": 530.5377780545143,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        },
+        {
+          "text": "10월",
+          "left": 596.6950991230626,
+          "right": 620.2810366230626,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        },
+        {
+          "text": "4월",
+          "left": 772.0351318851594,
+          "right": 790.3281006351594,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        },
+        {
+          "text": "2019년",
+          "left": -17.251851481776043,
+          "right": 21.873148518223957,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        },
+        {
+          "text": "2020년",
+          "left": 329.1352452924175,
+          "right": 368.2602452924175,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        },
+        {
+          "text": "2021년",
+          "left": 675.522342066611,
+          "right": 714.647342066611,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 685
+        }
+      ],
+      "range": {
+        "from": 470,
+        "to": 593
+      },
+      "body": {
+        "width": 861,
+        "height": 710
+      },
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ]
+    }
+  ],
+  "captures": [
+    {
+      "name": "month-max-latest",
+      "sha256": "fdc57b5021b5aeb86ff83068d29ff4598ced5eb7a3c78f7c1c8d5c3383b3ecd1",
+      "paintBefore": 18,
+      "paintAfter": 29
+    },
+    {
+      "name": "month-max-first",
+      "sha256": "c03c9d780804cc6e7e7829cf020e47a9949e747616257a10053a7137ba3792d4",
+      "paintBefore": 33,
+      "paintAfter": 34
+    },
+    {
+      "name": "month-max-middle",
+      "sha256": "8e794014e1f1ced8f6ff950766fb4586c4ec5b17c407d0c6cd05a179d95be91d",
+      "paintBefore": 36,
+      "paintAfter": 37
+    },
+    {
+      "name": "month-narrow-latest",
+      "sha256": "48bcb5d2eda156c9378bf84e989c33470044b83ad773cf266ecdc47293965e5f",
+      "paintBefore": 42,
+      "paintAfter": 43
+    },
+    {
+      "name": "month-narrow-first",
+      "sha256": "d10a3af427840de432acbc1a4760c2236cebc4637c59e379baef8b2cd6babfd4",
+      "paintBefore": 46,
+      "paintAfter": 47
+    },
+    {
+      "name": "month-narrow-middle",
+      "sha256": "ebe074d40cc413d356a029c93fafb000aa82fbccd612d09436be08eb918f04f4",
+      "paintBefore": 49,
+      "paintAfter": 50
+    },
+    {
+      "name": "month-remax-latest",
+      "sha256": "350e0427739cd5a7a6db6e8744479fbac0da2953cb93bfe4d716984f0b45ae97",
+      "paintBefore": 51,
+      "paintAfter": 53
+    },
+    {
+      "name": "month-remax-first",
+      "sha256": "0379e427e33a0ac49d208842719885155b6f677329871b227648c371ec5455d8",
+      "paintBefore": 55,
+      "paintAfter": 56
+    },
+    {
+      "name": "month-remax-middle",
+      "sha256": "33b27ab5cae7d1787c9089c96a96e3c0c02113c44a10cbf8e3307da7cf07702e",
+      "paintBefore": 58,
+      "paintAfter": 59
+    },
+    {
+      "name": "week-max-latest",
+      "sha256": "56c96d926dbd48ded1d1f9a08cb014e934b0396ad35805c7d603ea89daee4286",
+      "paintBefore": 67,
+      "paintAfter": 76
+    },
+    {
+      "name": "week-max-first",
+      "sha256": "54ac461e65cf30a3f0e14e3d199afb275b2ac5f3ad4120983a25c2448d0865a8",
+      "paintBefore": 82,
+      "paintAfter": 83
+    },
+    {
+      "name": "week-max-middle",
+      "sha256": "5ecb99c970511a09d672234b3e3921f2961913f8cebbff5ce5ef3132d800a717",
+      "paintBefore": 85,
+      "paintAfter": 86
+    },
+    {
+      "name": "week-narrow-latest",
+      "sha256": "0ae7399a622d411bc8a86b17dfa0574e34c41923b0daee67da153e5364b39808",
+      "paintBefore": 89,
+      "paintAfter": 90
+    },
+    {
+      "name": "week-narrow-first",
+      "sha256": "9278b15f77489092bd5013ad8c7f01ce4ecbbc912b6d0e83b6ea5cb63eb7d941",
+      "paintBefore": 92,
+      "paintAfter": 93
+    },
+    {
+      "name": "week-narrow-middle",
+      "sha256": "228bb1e712df8f042bcca9d16f45ec6b329c7d4aa0e25a80c3b2cef11584a410",
+      "paintBefore": 95,
+      "paintAfter": 96
+    },
+    {
+      "name": "week-remax-latest",
+      "sha256": "ee003c4dc890c045d658022d33c2f4ce552df88bd34a7b45586744137d1e8ea8",
+      "paintBefore": 98,
+      "paintAfter": 99
+    },
+    {
+      "name": "week-remax-first",
+      "sha256": "6a5f6b7272ace21f0e3d5128374b26429cb1ca9cb5527d05f9d925ec481fb4c1",
+      "paintBefore": 101,
+      "paintAfter": 102
+    },
+    {
+      "name": "week-remax-middle",
+      "sha256": "e1ff00da78c5027121a08529fad7df38b0bf6059e63ee6714d3f550b534d5d91",
+      "paintBefore": 104,
+      "paintAfter": 105
+    }
+  ],
+  "cleanup": {
+    "adapterSize": 0
+  },
+  "sourceUnchanged": true,
+  "network": [],
+  "errors": [],
+  "scope": "Actual BoardMount/AITS/ChartCard/LWC primary with public deterministic synthetic OHLCV only; no main/IPC/provider/profile",
+  "productWrites": 0,
+  "privateReads": 0
+}

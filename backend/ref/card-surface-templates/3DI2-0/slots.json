@@ -356,13 +356,15 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 헤더 재표시"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 0
     },
     {
       "slot_id": "s006",
@@ -381,7 +383,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -390,8 +392,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 헤더 재표시",
-      "note": "'+1.24%' 등락률은 이 보드 op(ka10060·ka10064) 응답에 필드가 없다"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "note": "'+1.24%' 등락률은 이 보드 op(ka10060·ka10064) 응답에 필드가 없다",
+      "row_index": 0
     },
     {
       "slot_id": "s007",
@@ -683,16 +686,18 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 2,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 지표 스트립 재표시"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 0
     },
     {
       "slot_id": "s020",
@@ -970,17 +975,15 @@
       "alt_mappings": null,
       "kor": "일자",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "섹션 ① 일자 열(s037) 재표시",
-      "note": "'09:42' 갱신 시각은 응답에 필드가 없다"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "note": "'09:42' 갱신 시각은 응답에 필드가 없다",
+      "row_index": 0
     },
     {
       "slot_id": "s031",
@@ -1020,7 +1023,7 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1029,7 +1032,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 오늘의 수급 기관 재표시"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 0
     },
     {
       "slot_id": "s033",
@@ -1132,14 +1136,14 @@
       "alt_mappings": null,
       "kor": "일자",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s038",
@@ -1179,16 +1183,14 @@
       "alt_mappings": null,
       "kor": "일자",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "열 머리 일자 반복(2열)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s040",
@@ -1228,16 +1230,14 @@
       "alt_mappings": null,
       "kor": "일자",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "열 머리 일자 반복(3열)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s042",
@@ -1277,16 +1277,14 @@
       "alt_mappings": null,
       "kor": "일자",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "열 머리 일자 반복(4열)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s044",
@@ -1326,16 +1324,14 @@
       "alt_mappings": null,
       "kor": "일자",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "열 머리 일자 반복(5열)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s046",
@@ -1403,17 +1399,15 @@
       "alt_mappings": null,
       "kor": "일자",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "5일 누적 열 머리의 기간 표기",
-      "note": "일자 5개의 처음·끝으로 만든 기간 문구"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "note": "일자 5개의 처음·끝으로 만든 기간 문구",
+      "row_index": 5
     },
     {
       "slot_id": "s049",
@@ -1474,7 +1468,7 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1483,7 +1477,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 오늘의 수급 개인 재표시"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 0
     },
     {
       "slot_id": "s052",
@@ -1502,7 +1497,7 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1511,7 +1506,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s053",
@@ -1530,7 +1526,7 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1539,7 +1535,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s054",
@@ -1558,7 +1555,7 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1567,7 +1564,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s055",
@@ -1586,7 +1584,7 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1595,7 +1593,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s056",
@@ -1614,7 +1613,7 @@
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1623,7 +1622,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s057",
@@ -1663,7 +1663,7 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1672,7 +1672,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 오늘의 수급 외국인 재표시"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 0
     },
     {
       "slot_id": "s059",
@@ -1691,7 +1692,7 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1700,7 +1701,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s060",
@@ -1719,7 +1721,7 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1728,7 +1730,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s061",
@@ -1747,7 +1750,7 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1756,7 +1759,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s062",
@@ -1775,7 +1779,7 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1784,7 +1788,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s063",
@@ -1803,7 +1808,7 @@
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1812,7 +1817,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s064",
@@ -1873,14 +1879,17 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s067",
@@ -1899,7 +1908,7 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1908,7 +1917,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s068",
@@ -1927,7 +1937,7 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1936,7 +1946,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s069",
@@ -1955,7 +1966,7 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1964,7 +1975,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s070",
@@ -1983,7 +1995,7 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1992,7 +2004,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s071",
@@ -2011,7 +2024,7 @@
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2020,7 +2033,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s072",
@@ -2060,14 +2074,17 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s074",
@@ -2086,7 +2103,7 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2095,7 +2112,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s075",
@@ -2114,7 +2132,7 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2123,7 +2141,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s076",
@@ -2142,7 +2161,7 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2151,7 +2170,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s077",
@@ -2170,7 +2190,7 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2179,7 +2199,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s078",
@@ -2198,7 +2219,7 @@
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2207,7 +2228,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s079",
@@ -2247,14 +2269,17 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s081",
@@ -2273,7 +2298,7 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2282,7 +2307,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s082",
@@ -2301,7 +2327,7 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2310,7 +2336,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s083",
@@ -2329,7 +2356,7 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2338,7 +2365,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s084",
@@ -2357,7 +2385,7 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2366,7 +2394,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s085",
@@ -2385,7 +2414,7 @@
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2394,7 +2423,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s086",
@@ -2434,14 +2464,17 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s088",
@@ -2460,7 +2493,7 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2469,7 +2502,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s089",
@@ -2488,7 +2522,7 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2497,7 +2531,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s090",
@@ -2516,7 +2551,7 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2525,7 +2560,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s091",
@@ -2544,7 +2580,7 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2553,7 +2589,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s092",
@@ -2572,7 +2609,7 @@
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2581,7 +2618,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s093",
@@ -2621,14 +2659,17 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s095",
@@ -2647,7 +2688,7 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2656,7 +2697,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s096",
@@ -2675,7 +2717,7 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2684,7 +2726,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s097",
@@ -2703,7 +2746,7 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2712,7 +2755,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s098",
@@ -2731,7 +2775,7 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2740,7 +2784,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s099",
@@ -2759,7 +2804,7 @@
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2768,7 +2813,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s100",
@@ -2808,14 +2854,17 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s102",
@@ -2834,7 +2883,7 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2843,7 +2892,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s103",
@@ -2862,7 +2912,7 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2871,7 +2921,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s104",
@@ -2890,7 +2941,7 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2899,7 +2950,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s105",
@@ -2918,7 +2970,7 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2927,7 +2979,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s106",
@@ -2946,7 +2999,7 @@
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2955,7 +3008,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s107",
@@ -2995,14 +3049,17 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s109",
@@ -3021,7 +3078,7 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3030,7 +3087,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s110",
@@ -3049,7 +3107,7 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3058,7 +3116,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s111",
@@ -3077,7 +3136,7 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3086,7 +3145,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s112",
@@ -3105,7 +3165,7 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3114,7 +3174,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s113",
@@ -3133,7 +3194,7 @@
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3142,7 +3203,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s114",
@@ -3182,7 +3244,7 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3191,7 +3253,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 오늘의 수급 기관 재표시"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 0
     },
     {
       "slot_id": "s116",
@@ -3210,7 +3273,7 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3219,7 +3282,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s117",
@@ -3238,7 +3302,7 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3247,7 +3311,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s118",
@@ -3266,7 +3331,7 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3275,7 +3340,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s119",
@@ -3294,7 +3360,7 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3303,7 +3369,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s120",
@@ -3322,7 +3389,7 @@
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3331,7 +3398,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s121",
@@ -3392,14 +3460,17 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s124",
@@ -3418,7 +3489,7 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3427,7 +3498,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s125",
@@ -3446,7 +3518,7 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3455,7 +3527,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s126",
@@ -3474,7 +3547,7 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3483,7 +3556,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s127",
@@ -3502,7 +3576,7 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3511,7 +3585,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s128",
@@ -3530,7 +3605,7 @@
       "alt_mappings": null,
       "kor": "국가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3539,7 +3614,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s129",
@@ -3579,14 +3655,17 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s131",
@@ -3605,7 +3684,7 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3614,7 +3693,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s132",
@@ -3633,7 +3713,7 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3642,7 +3722,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s133",
@@ -3661,7 +3742,7 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3670,7 +3751,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s134",
@@ -3689,7 +3771,7 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3698,7 +3780,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s135",
@@ -3717,7 +3800,7 @@
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3726,7 +3809,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s136",
@@ -3766,14 +3850,17 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다."
     },
     {
       "slot_id": "s138",
@@ -3792,7 +3879,7 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3801,7 +3888,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-31)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 1
     },
     {
       "slot_id": "s139",
@@ -3820,7 +3908,7 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3829,7 +3917,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-28)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 2
     },
     {
       "slot_id": "s140",
@@ -3848,7 +3937,7 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3857,7 +3946,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-27)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 3
     },
     {
       "slot_id": "s141",
@@ -3876,7 +3966,7 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3885,7 +3975,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(08-26)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 4
     },
     {
       "slot_id": "s142",
@@ -3904,7 +3995,7 @@
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3913,7 +4004,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "일자별 열 반복(5일 누적)"
+      "dup_note": "가로 열은 응답의 동일한 일자 행 인덱스를 공유한다. 기관계는 기관 세부 주체와 별도 필드다.",
+      "row_index": 5
     },
     {
       "slot_id": "s143",
@@ -3962,7 +4054,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "12주체 순매수 합 — 섹션 ① 표 행들의 합계(응답 필드가 아니다)"
+      "unbound_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다.",
+      "static_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다."
     },
     {
       "slot_id": "s145",
@@ -3990,7 +4083,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "12주체 순매수 합 — 섹션 ① 표 행들의 합계(응답 필드가 아니다)"
+      "unbound_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다.",
+      "static_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다."
     },
     {
       "slot_id": "s146",
@@ -4018,7 +4112,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "12주체 순매수 합 — 섹션 ① 표 행들의 합계(응답 필드가 아니다)"
+      "unbound_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다.",
+      "static_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다."
     },
     {
       "slot_id": "s147",
@@ -4046,7 +4141,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "12주체 순매수 합 — 섹션 ① 표 행들의 합계(응답 필드가 아니다)"
+      "unbound_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다.",
+      "static_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다."
     },
     {
       "slot_id": "s148",
@@ -4074,7 +4170,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "12주체 순매수 합 — 섹션 ① 표 행들의 합계(응답 필드가 아니다)"
+      "unbound_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다.",
+      "static_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다."
     },
     {
       "slot_id": "s149",
@@ -4102,7 +4199,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "12주체 순매수 합 — 섹션 ① 표 행들의 합계(응답 필드가 아니다)"
+      "unbound_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다.",
+      "static_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다."
     },
     {
       "slot_id": "s150",
@@ -4193,7 +4291,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 미니 막대 시각 재표시"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 0
     },
     {
       "slot_id": "s154",
@@ -4242,7 +4341,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 시각 반복(2열)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 1
     },
     {
       "slot_id": "s156",
@@ -4312,7 +4412,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "당일 누계 열 머리의 기준 시각"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 2
     },
     {
       "slot_id": "s159",
@@ -4487,7 +4588,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 미니 막대 외국인 재표시"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 0
     },
     {
       "slot_id": "s166",
@@ -4515,7 +4617,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(09:30~09:42 진행)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 1
     },
     {
       "slot_id": "s167",
@@ -4543,7 +4646,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(당일 누계)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 2
     },
     {
       "slot_id": "s168",
@@ -4716,7 +4820,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다."
     },
     {
       "slot_id": "s175",
@@ -4744,7 +4851,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(09:30~09:42 진행)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 1
     },
     {
       "slot_id": "s176",
@@ -4772,7 +4880,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(당일 누계)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 2
     },
     {
       "slot_id": "s177",
@@ -4819,7 +4928,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다."
     },
     {
       "slot_id": "s179",
@@ -4847,7 +4959,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(09:30~09:42 진행)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 1
     },
     {
       "slot_id": "s180",
@@ -4875,7 +4988,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(당일 누계)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 2
     },
     {
       "slot_id": "s181",
@@ -5027,7 +5141,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다."
     },
     {
       "slot_id": "s187",
@@ -5055,7 +5172,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(09:30~09:42 진행)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 1
     },
     {
       "slot_id": "s188",
@@ -5083,7 +5201,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(당일 누계)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 2
     },
     {
       "slot_id": "s189",
@@ -5130,7 +5249,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다."
     },
     {
       "slot_id": "s191",
@@ -5158,7 +5280,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(09:30~09:42 진행)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 1
     },
     {
       "slot_id": "s192",
@@ -5186,7 +5309,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(당일 누계)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 2
     },
     {
       "slot_id": "s193",
@@ -5340,7 +5464,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "137X-2 미니 막대 기관 재표시"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 0
     },
     {
       "slot_id": "s199",
@@ -5368,7 +5493,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(09:30~09:42 진행)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 1
     },
     {
       "slot_id": "s200",
@@ -5396,7 +5522,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(당일 누계)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 2
     },
     {
       "slot_id": "s201",
@@ -5464,7 +5591,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다."
     },
     {
       "slot_id": "s204",
@@ -5492,7 +5622,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(09:30~09:42 진행)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 1
     },
     {
       "slot_id": "s205",
@@ -5520,7 +5651,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(당일 누계)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 2
     },
     {
       "slot_id": "s206",
@@ -5567,7 +5699,10 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다."
     },
     {
       "slot_id": "s208",
@@ -5595,7 +5730,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(09:30~09:42 진행)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 1
     },
     {
       "slot_id": "s209",
@@ -5623,7 +5759,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "장중 구간 열 반복(당일 누계)"
+      "dup_note": "가로 열은 실제 장중 조회 응답 시각 행 인덱스를 공유한다. 구간 차이나 당일 합계를 계산한 값이 아니다.",
+      "row_index": 2
     },
     {
       "slot_id": "s210",
@@ -5777,7 +5914,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "12주체 순매수 합 — 섹션 ② 표 행들의 합계(응답 필드가 아니다)"
+      "unbound_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다.",
+      "static_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다."
     },
     {
       "slot_id": "s216",
@@ -5805,7 +5943,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "12주체 순매수 합 — 섹션 ② 표 행들의 합계(응답 필드가 아니다)"
+      "unbound_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다.",
+      "static_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다."
     },
     {
       "slot_id": "s217",
@@ -5833,7 +5972,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "12주체 순매수 합 — 섹션 ② 표 행들의 합계(응답 필드가 아니다)"
+      "unbound_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다.",
+      "static_reason": "미제공 — 주체별 응답값의 합계를 계산하지 않는다. 기관계와 세부 주체를 중복 합산하지 않는다."
     },
     {
       "slot_id": "s218",

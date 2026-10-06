@@ -15,7 +15,6 @@
     1014
   ],
   "operation_refs": [
-    "base:ka10013",
     "base:ka10033"
   ],
   "state": {
@@ -818,16 +817,15 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 1위 행 신용비율 재표시"
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다.",
+      "row_index": 0
     },
     {
       "slot_id": "s014",
@@ -836,19 +834,24 @@
       "node_path": "1/1/2",
       "paper_text": "삼성전자",
       "region": "kpi",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10033",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s015",
@@ -890,21 +893,21 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": "base:ka10033",
+      "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "금액",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 1위 행 융자잔고 금액 재표시"
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다.",
+      "row_index": 0
     },
     {
       "slot_id": "s017",
@@ -913,19 +916,24 @@
       "node_path": "1/2/2",
       "paper_text": "삼성전자",
       "region": "kpi",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10033",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s018",
@@ -1477,7 +1485,7 @@
       "node_path": "2/0/1/1/0",
       "paper_text": "1",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1486,8 +1494,8 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10033",
-      "f": "crd_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신용비율상위",
       "format": {
@@ -1499,8 +1507,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
-      "display_dup": false
+      "display_dup": false,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s042",
@@ -1509,7 +1519,7 @@
       "node_path": "2/0/1/1/1/0",
       "paper_text": "삼성전자",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1582,10 +1592,8 @@
       "alt_mappings": null,
       "kor": "종목정보",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1612,34 +1620,14 @@
       },
       "mapping_id": "base:ka10033",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1672,34 +1660,15 @@
       },
       "mapping_id": "base:ka10033",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s045",
       "collapse_group": null,
@@ -1743,10 +1712,8 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1770,8 +1737,8 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka10013",
-      "f": "pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대비",
       "format": {
@@ -1785,7 +1752,9 @@
       "expanded_board": null,
       "display_dup": false,
       "note": "신용비율 셀 2번째 줄 — 전일 대비 %p",
-      "row_index": 0
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s049",
@@ -1803,21 +1772,22 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "remn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
-      "display_dup": false
+      "display_dup": false,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s050",
@@ -1835,8 +1805,8 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금액",
       "format": {
@@ -1849,7 +1819,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": false,
-      "row_index": 0
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s051",
@@ -1867,21 +1839,22 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "new",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신규",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
-      "display_dup": false
+      "display_dup": false,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s052",
@@ -1899,21 +1872,22 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "rpya",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "상환",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": "s051",
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": false,
-      "row_index": 0
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s053",
@@ -1931,8 +1905,8 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka10013",
-      "f": "shr_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "공여율",
       "format": {
@@ -1944,8 +1918,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0,
-      "display_dup": false
+      "display_dup": false,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s054",
@@ -1963,20 +1939,14 @@
         "row": "0",
         "col": 7
       },
-      "mapping_id": "base:ka10013",
-      "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10033",
-          "f": "now_trde_qty"
-        }
-      ],
+      "mapping_id": "base:ka10033",
+      "f": "now_trde_qty",
+      "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1989,7 +1959,8 @@
         }
       ],
       "row_index": 0,
-      "display_dup": false
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s055",
@@ -2021,8 +1992,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
-      "row_index": 0
+      "unbound_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
+      "row_index": 0,
+      "static_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)"
     },
     {
       "slot_id": "s056",
@@ -2031,7 +2003,7 @@
       "node_path": "2/0/1/2/0",
       "paper_text": "2",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2040,8 +2012,8 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10033",
-      "f": "crd_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신용비율상위",
       "format": {
@@ -2053,8 +2025,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 1,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s057",
@@ -2063,7 +2037,7 @@
       "node_path": "2/0/1/2/1/0",
       "paper_text": "SK하이닉스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2136,10 +2110,8 @@
       "alt_mappings": null,
       "kor": "종목정보",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2166,34 +2138,14 @@
       },
       "mapping_id": "base:ka10033",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2219,34 +2171,15 @@
       },
       "mapping_id": "base:ka10033",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s060",
       "collapse_group": null,
@@ -2290,10 +2223,8 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2317,8 +2248,8 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10013",
-      "f": "pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대비",
       "format": {
@@ -2332,7 +2263,9 @@
       "expanded_board": null,
       "display_dup": true,
       "note": "신용비율 셀 2번째 줄 — 전일 대비 %p",
-      "row_index": 1
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s064",
@@ -2350,21 +2283,22 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "remn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 1,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s065",
@@ -2382,8 +2316,8 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금액",
       "format": {
@@ -2396,7 +2330,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 1
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s066",
@@ -2414,21 +2350,22 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "new",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신규",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 1,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s067",
@@ -2446,21 +2383,22 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "rpya",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "상환",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": "s066",
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 1
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s068",
@@ -2478,8 +2416,8 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka10013",
-      "f": "shr_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "공여율",
       "format": {
@@ -2491,8 +2429,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 1,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s069",
@@ -2510,26 +2450,21 @@
         "row": "1",
         "col": 7
       },
-      "mapping_id": "base:ka10013",
-      "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10033",
-          "f": "now_trde_qty"
-        }
-      ],
+      "mapping_id": "base:ka10033",
+      "f": "now_trde_qty",
+      "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 1,
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s070",
@@ -2561,8 +2496,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
-      "row_index": 1
+      "unbound_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
+      "row_index": 1,
+      "static_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)"
     },
     {
       "slot_id": "s071",
@@ -2571,7 +2507,7 @@
       "node_path": "2/0/1/3/0",
       "paper_text": "3",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2580,8 +2516,8 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10033",
-      "f": "crd_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신용비율상위",
       "format": {
@@ -2593,8 +2529,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 2,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s072",
@@ -2603,7 +2541,7 @@
       "node_path": "2/0/1/3/1/0",
       "paper_text": "현대차",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2676,10 +2614,8 @@
       "alt_mappings": null,
       "kor": "종목정보",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2706,34 +2642,14 @@
       },
       "mapping_id": "base:ka10033",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2759,34 +2675,15 @@
       },
       "mapping_id": "base:ka10033",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s075",
       "collapse_group": null,
@@ -2830,10 +2727,8 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2857,8 +2752,8 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka10013",
-      "f": "pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대비",
       "format": {
@@ -2872,7 +2767,9 @@
       "expanded_board": null,
       "display_dup": true,
       "note": "신용비율 셀 2번째 줄 — 전일 대비 %p",
-      "row_index": 2
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s079",
@@ -2890,21 +2787,22 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "remn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 2,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s080",
@@ -2922,8 +2820,8 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금액",
       "format": {
@@ -2936,7 +2834,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 2
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s081",
@@ -2954,21 +2854,22 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "new",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신규",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 2,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s082",
@@ -2986,21 +2887,22 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "rpya",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "상환",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": "s081",
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 2
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s083",
@@ -3018,8 +2920,8 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka10013",
-      "f": "shr_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "공여율",
       "format": {
@@ -3031,8 +2933,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 2,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s084",
@@ -3050,26 +2954,21 @@
         "row": "2",
         "col": 7
       },
-      "mapping_id": "base:ka10013",
-      "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10033",
-          "f": "now_trde_qty"
-        }
-      ],
+      "mapping_id": "base:ka10033",
+      "f": "now_trde_qty",
+      "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 2,
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s085",
@@ -3101,8 +3000,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
-      "row_index": 2
+      "unbound_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
+      "row_index": 2,
+      "static_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)"
     },
     {
       "slot_id": "s086",
@@ -3111,7 +3011,7 @@
       "node_path": "2/0/1/4/0",
       "paper_text": "4",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3120,8 +3020,8 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:ka10033",
-      "f": "crd_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신용비율상위",
       "format": {
@@ -3133,8 +3033,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 3,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s087",
@@ -3143,7 +3045,7 @@
       "node_path": "2/0/1/4/1/0",
       "paper_text": "KB금융",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3216,10 +3118,8 @@
       "alt_mappings": null,
       "kor": "종목정보",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3246,34 +3146,14 @@
       },
       "mapping_id": "base:ka10033",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3299,34 +3179,15 @@
       },
       "mapping_id": "base:ka10033",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s090",
       "collapse_group": null,
@@ -3370,10 +3231,8 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3397,8 +3256,8 @@
         "row": "3",
         "col": 3
       },
-      "mapping_id": "base:ka10013",
-      "f": "pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대비",
       "format": {
@@ -3412,7 +3271,9 @@
       "expanded_board": null,
       "display_dup": true,
       "note": "신용비율 셀 2번째 줄 — 전일 대비 %p",
-      "row_index": 3
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s094",
@@ -3430,21 +3291,22 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "remn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 3,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s095",
@@ -3462,8 +3324,8 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금액",
       "format": {
@@ -3476,7 +3338,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 3
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s096",
@@ -3494,21 +3358,22 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "new",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신규",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 3,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s097",
@@ -3526,21 +3391,22 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "rpya",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "상환",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": "s096",
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 3
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s098",
@@ -3558,8 +3424,8 @@
         "row": "3",
         "col": 6
       },
-      "mapping_id": "base:ka10013",
-      "f": "shr_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "공여율",
       "format": {
@@ -3571,8 +3437,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 3,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s099",
@@ -3590,26 +3458,21 @@
         "row": "3",
         "col": 7
       },
-      "mapping_id": "base:ka10013",
-      "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10033",
-          "f": "now_trde_qty"
-        }
-      ],
+      "mapping_id": "base:ka10033",
+      "f": "now_trde_qty",
+      "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 3,
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s100",
@@ -3641,8 +3504,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
-      "row_index": 3
+      "unbound_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
+      "row_index": 3,
+      "static_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)"
     },
     {
       "slot_id": "s101",
@@ -3651,7 +3515,7 @@
       "node_path": "2/0/1/5/0",
       "paper_text": "5",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3660,8 +3524,8 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:ka10033",
-      "f": "crd_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신용비율상위",
       "format": {
@@ -3673,8 +3537,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 4,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s102",
@@ -3683,7 +3549,7 @@
       "node_path": "2/0/1/5/1/0",
       "paper_text": "NAVER",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3756,10 +3622,8 @@
       "alt_mappings": null,
       "kor": "종목정보",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3786,34 +3650,14 @@
       },
       "mapping_id": "base:ka10033",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3839,34 +3683,15 @@
       },
       "mapping_id": "base:ka10033",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s105",
       "collapse_group": null,
@@ -3910,10 +3735,8 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3937,8 +3760,8 @@
         "row": "4",
         "col": 3
       },
-      "mapping_id": "base:ka10013",
-      "f": "pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대비",
       "format": {
@@ -3952,7 +3775,9 @@
       "expanded_board": null,
       "display_dup": true,
       "note": "신용비율 셀 2번째 줄 — 전일 대비 %p",
-      "row_index": 4
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s109",
@@ -3970,21 +3795,22 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "remn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 4,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s110",
@@ -4002,8 +3828,8 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금액",
       "format": {
@@ -4016,7 +3842,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 4
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s111",
@@ -4034,21 +3862,22 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "new",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신규",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 4,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s112",
@@ -4066,21 +3895,22 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "rpya",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "상환",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": "s111",
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 4
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s113",
@@ -4098,8 +3928,8 @@
         "row": "4",
         "col": 6
       },
-      "mapping_id": "base:ka10013",
-      "f": "shr_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "공여율",
       "format": {
@@ -4111,8 +3941,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 4,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s114",
@@ -4130,26 +3962,21 @@
         "row": "4",
         "col": 7
       },
-      "mapping_id": "base:ka10013",
-      "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10033",
-          "f": "now_trde_qty"
-        }
-      ],
+      "mapping_id": "base:ka10033",
+      "f": "now_trde_qty",
+      "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 4,
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s115",
@@ -4181,8 +4008,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
-      "row_index": 4
+      "unbound_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
+      "row_index": 4,
+      "static_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)"
     },
     {
       "slot_id": "s116",
@@ -4191,7 +4019,7 @@
       "node_path": "2/0/1/6/0",
       "paper_text": "6",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4200,8 +4028,8 @@
         "row": "5",
         "col": 0
       },
-      "mapping_id": "base:ka10033",
-      "f": "crd_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신용비율상위",
       "format": {
@@ -4213,8 +4041,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 5,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s117",
@@ -4223,7 +4053,7 @@
       "node_path": "2/0/1/6/1/0",
       "paper_text": "POSCO홀딩스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4296,10 +4126,8 @@
       "alt_mappings": null,
       "kor": "종목정보",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4326,34 +4154,14 @@
       },
       "mapping_id": "base:ka10033",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4379,34 +4187,15 @@
       },
       "mapping_id": "base:ka10033",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s120",
       "collapse_group": null,
@@ -4450,10 +4239,8 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4477,8 +4264,8 @@
         "row": "5",
         "col": 3
       },
-      "mapping_id": "base:ka10013",
-      "f": "pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대비",
       "format": {
@@ -4492,7 +4279,9 @@
       "expanded_board": null,
       "display_dup": true,
       "note": "신용비율 셀 2번째 줄 — 전일 대비 %p",
-      "row_index": 5
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s124",
@@ -4510,21 +4299,22 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "remn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 5,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s125",
@@ -4542,8 +4332,8 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금액",
       "format": {
@@ -4556,7 +4346,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 5
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s126",
@@ -4574,21 +4366,22 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "new",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신규",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 5,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s127",
@@ -4606,21 +4399,22 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "rpya",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "상환",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": "s126",
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 5
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s128",
@@ -4638,8 +4432,8 @@
         "row": "5",
         "col": 6
       },
-      "mapping_id": "base:ka10013",
-      "f": "shr_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "공여율",
       "format": {
@@ -4651,8 +4445,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 5,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s129",
@@ -4670,26 +4466,21 @@
         "row": "5",
         "col": 7
       },
-      "mapping_id": "base:ka10013",
-      "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10033",
-          "f": "now_trde_qty"
-        }
-      ],
+      "mapping_id": "base:ka10033",
+      "f": "now_trde_qty",
+      "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 5,
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s130",
@@ -4721,8 +4512,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
-      "row_index": 5
+      "unbound_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
+      "row_index": 5,
+      "static_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)"
     },
     {
       "slot_id": "s131",
@@ -4780,7 +4572,7 @@
       "node_path": "2/0/1/8/0",
       "paper_text": "49",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4789,8 +4581,8 @@
         "row": "6",
         "col": 0
       },
-      "mapping_id": "base:ka10033",
-      "f": "crd_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신용비율상위",
       "format": {
@@ -4802,8 +4594,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 6,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s134",
@@ -4812,7 +4606,7 @@
       "node_path": "2/0/1/8/1/0",
       "paper_text": "LG화학",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4885,10 +4679,8 @@
       "alt_mappings": null,
       "kor": "종목정보",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4915,34 +4707,14 @@
       },
       "mapping_id": "base:ka10033",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4968,34 +4740,15 @@
       },
       "mapping_id": "base:ka10033",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s137",
       "collapse_group": null,
@@ -5039,10 +4792,8 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5066,8 +4817,8 @@
         "row": "6",
         "col": 3
       },
-      "mapping_id": "base:ka10013",
-      "f": "pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대비",
       "format": {
@@ -5081,7 +4832,9 @@
       "expanded_board": null,
       "display_dup": true,
       "note": "신용비율 셀 2번째 줄 — 전일 대비 %p",
-      "row_index": 6
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s141",
@@ -5099,21 +4852,22 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "remn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 6,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s142",
@@ -5131,8 +4885,8 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금액",
       "format": {
@@ -5145,7 +4899,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 6
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s143",
@@ -5163,21 +4919,22 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "new",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신규",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 6,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s144",
@@ -5195,21 +4952,22 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "rpya",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "상환",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": "s143",
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 6
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s145",
@@ -5227,8 +4985,8 @@
         "row": "6",
         "col": 6
       },
-      "mapping_id": "base:ka10013",
-      "f": "shr_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "공여율",
       "format": {
@@ -5240,8 +4998,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 6,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s146",
@@ -5259,26 +5019,21 @@
         "row": "6",
         "col": 7
       },
-      "mapping_id": "base:ka10013",
-      "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10033",
-          "f": "now_trde_qty"
-        }
-      ],
+      "mapping_id": "base:ka10033",
+      "f": "now_trde_qty",
+      "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 6,
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s147",
@@ -5310,8 +5065,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
-      "row_index": 6
+      "unbound_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
+      "row_index": 6,
+      "static_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)"
     },
     {
       "slot_id": "s148",
@@ -5320,7 +5076,7 @@
       "node_path": "2/0/1/9/0",
       "paper_text": "50",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -5329,8 +5085,8 @@
         "row": "7",
         "col": 0
       },
-      "mapping_id": "base:ka10033",
-      "f": "crd_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신용비율상위",
       "format": {
@@ -5342,8 +5098,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 7,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "표시 순번 — 조회 응답 배열 행 번호",
+      "static_reason": "표시 순번 — 조회 응답 배열 행 번호"
     },
     {
       "slot_id": "s149",
@@ -5352,7 +5110,7 @@
       "node_path": "2/0/1/9/1/0",
       "paper_text": "카카오",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -5425,10 +5183,8 @@
       "alt_mappings": null,
       "kor": "종목정보",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "종목정보 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5455,34 +5211,14 @@
       },
       "mapping_id": "base:ka10033",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5508,34 +5244,15 @@
       },
       "mapping_id": "base:ka10033",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10013",
-          "f": "cur_prc"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre"
-        },
-        {
-          "mapping_id": "base:ka10013",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10033",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": "s152",
       "collapse_group": null,
@@ -5579,10 +5296,8 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5606,8 +5321,8 @@
         "row": "7",
         "col": 3
       },
-      "mapping_id": "base:ka10013",
-      "f": "pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "대비",
       "format": {
@@ -5621,7 +5336,9 @@
       "expanded_board": null,
       "display_dup": true,
       "note": "신용비율 셀 2번째 줄 — 전일 대비 %p",
-      "row_index": 7
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s156",
@@ -5639,21 +5356,22 @@
         "row": "7",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "remn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 7,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s157",
@@ -5671,8 +5389,8 @@
         "row": "7",
         "col": 4
       },
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금액",
       "format": {
@@ -5685,7 +5403,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 7
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s158",
@@ -5703,21 +5423,22 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "new",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신규",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 7,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s159",
@@ -5735,21 +5456,22 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka10013",
-      "f": "rpya",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "상환",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": "s158",
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 7
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s160",
@@ -5767,8 +5489,8 @@
         "row": "7",
         "col": 6
       },
-      "mapping_id": "base:ka10013",
-      "f": "shr_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "공여율",
       "format": {
@@ -5780,8 +5502,10 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 7,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "unbound_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다.",
+      "static_reason": "미제공 — ka10013은 단일 종목의 일별 신용거래 추이이며 ka10033 순위의 동일 종목/일자를 보장하지 않는다."
     },
     {
       "slot_id": "s161",
@@ -5799,26 +5523,21 @@
         "row": "7",
         "col": 7
       },
-      "mapping_id": "base:ka10013",
-      "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10033",
-          "f": "now_trde_qty"
-        }
-      ],
+      "mapping_id": "base:ka10033",
+      "f": "now_trde_qty",
+      "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 7,
-      "display_dup": true
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s162",
@@ -5850,8 +5569,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
-      "row_index": 7
+      "unbound_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)",
+      "row_index": 7,
+      "static_reason": "미제공 — 일별 거래대금 — 이 보드 두 응답에 없다(거래량 셀 병기 표기)"
     },
     {
       "slot_id": "s163",
@@ -5937,19 +5657,24 @@
       "node_path": "2/1/0/0/0",
       "paper_text": "삼성전자",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10033",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": null,
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다."
     },
     {
       "slot_id": "s167",
@@ -5977,7 +5702,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "레일 선택 종목 카드 코드 재표시"
+      "dup_note": "레일 선택 종목 카드 코드 재표시",
+      "row_index": 0
     },
     {
       "slot_id": "s168",
@@ -6026,7 +5752,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "종목 담보비율 — 이 보드 두 응답에 없다"
+      "unbound_reason": "미제공 — 종목 담보비율 — 이 보드 두 응답에 없다",
+      "static_reason": "미제공 — 종목 담보비율 — 이 보드 두 응답에 없다"
     },
     {
       "slot_id": "s170",
@@ -6074,7 +5801,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s172",
@@ -6122,7 +5850,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s174",
@@ -6157,8 +5886,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90004",
-      "f": "all_trde_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전체거래비율",
       "format": {
@@ -6171,7 +5900,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "본자리는 순위 보드 2V71-0 '합계 비중' 열"
+      "dup_note": "본자리는 순위 보드 2V71-0 '합계 비중' 열",
+      "static": true,
+      "unbound_reason": "미제공 — 순위 응답의 거래대금 비중/표시 범위 집계는 제공되지 않는다.",
+      "static_reason": "미제공 — 순위 응답의 거래대금 비중/표시 범위 집계는 제공되지 않는다."
     },
     {
       "slot_id": "s176",
@@ -6262,7 +5994,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "시장 전체 융자잔고 — 이 보드 두 응답에 없다"
+      "unbound_reason": "미제공 — 시장 전체 융자잔고 — 이 보드 두 응답에 없다",
+      "static_reason": "미제공 — 시장 전체 융자잔고 — 이 보드 두 응답에 없다"
     },
     {
       "slot_id": "s180",
@@ -6311,7 +6044,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "시장 전체 대주잔고 — 이 보드 두 응답에 없다"
+      "unbound_reason": "미제공 — 시장 전체 대주잔고 — 이 보드 두 응답에 없다",
+      "static_reason": "미제공 — 시장 전체 대주잔고 — 이 보드 두 응답에 없다"
     },
     {
       "slot_id": "s182",
@@ -6400,16 +6134,15 @@
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "kind": "percent",
+        "precision": 2
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "신용비율 최고 종목 값 재표시"
+      "dup_note": "같은 순위 응답의 지정 행 또는 명시된 전체 집계값만 재표시한다.",
+      "row_index": 0
     },
     {
       "slot_id": "s186",
@@ -6591,8 +6324,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10033",
-      "f": "crd_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "신용비율",
       "format": {
@@ -6605,7 +6338,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표시 구간 신용비율 최댓값·최솟값"
+      "dup_note": "표시 구간 신용비율 최댓값·최솟값",
+      "static": true,
+      "unbound_reason": "미제공 — 순위 응답의 거래대금 비중/표시 범위 집계는 제공되지 않는다.",
+      "static_reason": "미제공 — 순위 응답의 거래대금 비중/표시 범위 집계는 제공되지 않는다."
     },
     {
       "slot_id": "s194",

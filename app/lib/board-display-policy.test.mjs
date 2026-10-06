@@ -1,0 +1,280 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { createRequire } from 'node:module';
+import { buildPolicy, hasBinding, staticDisplayRole } from './build-board-display-policy.mjs';
+
+const require = createRequire(import.meta.url);
+const policy = require('./board-display-policy-data');
+const { prepareDisplayInput, correctBoardIdentity } = require('./board-display-policy');
+const registry = require('./board-template-registry');
+const { mountPlan } = require('./board-mount');
+const source = (id) => JSON.parse(fs.readFileSync(new URL(`../../backend/ref/card-surface-templates/${id}/slots.json`, import.meta.url)));
+const plan = (id, values = {}, options = {}) => {
+  const prepared = prepareDisplayInput(registry.contractFor(id), values);
+  return mountPlan(prepared.contract, prepared.values, options);
+};
+const text = (result, id) => result.assignments.find((entry) => entry.slotId === id)?.text;
+
+test('reviewed ranking quantities format raw and wrapped numbers without changing provenance', () => {
+  const slots = {'2X5N-0':['s089'],'2XG6-0':['s089'],'2XKO-0':['s048','s070'],'2XTO-0':['s098'],
+    '2YJ8-0':['s058','s069','s080','s091','s092']};
+  const format = require('./board-format');
+  for (const [id, ids] of Object.entries(slots)) for (const slot of ids) {
+    for (const raw of [0,12345,-12345,'--12345','+-12345']) {
+      for (const value of [raw,{value:raw,text:'-12,345.0주',source:'public-test',missing:false}]) {
+        const values = {[slot]:value}, saved = structuredClone(values);
+        const p = prepareDisplayInput(registry.contractFor(id), values);
+        const assignment = mountPlan(p.contract,p.values).assignments.find(x=>x.slotId===slot);
+        assert.ok(assignment.text.endsWith('주'));
+        assert.ok(!/\d\.\d/.test(assignment.text));
+        assert.equal(assignment.missing,false);
+        assert.equal(assignment.text.includes('-'),format.toNumber(raw)<0);
+        assert.deepEqual(values,saved);
+        if (typeof value === 'object') assert.equal(p.values[slot].source,'public-test');
+      }
+    }
+    for (const value of [null,{value:null,missing:true,text:'stale'}]) {
+      assert.ok(plan(id,{[slot]:value}).assignments.find(x=>x.slotId===slot).missing);
+    }
+    const supplied = {value:'−12345',text:'-12,345.0주',source:'public-test'};
+    assert.equal(prepareDisplayInput(registry.contractFor(id),{[slot]:supplied}).values[slot].text,
+      (policy[id][slot][2].prefix || '') + supplied.text);
+  }
+  assert.equal(text(plan('13K0-2',{s091:4294967295}),'s091'),'4,294,967,295주');
+  assert.equal(text(plan('13K0-2',{s091:0}),'s091'),'0주');
+  assert.equal(text(plan('13K0-2',{s091:{value:12345,text:'원천 12,345주'}}),'s091'),'원천 12,345주');
+});
+
+test('generated policy exactly follows the 94 public read-only source contracts', () => {
+  assert.deepEqual(policy, buildPolicy());
+  assert.equal(Object.keys(policy).length, 94);
+  for (const [id, rules] of Object.entries(policy)) {
+    const contract = source(id);
+    assert.notEqual(contract.card_id, 'CC-02');
+    assert.notEqual(id, '1JZW-0');
+    for (const [slotId, [authored, role]] of Object.entries(rules)) {
+      const slot = contract.slots.find((item) => item.slot_id === slotId);
+      assert.equal(authored, slot.paper_text);
+      if (role !== 'caption') assert.equal(hasBinding(slot), ['price', 'price-composite', 'quote-magnitude', 'direction', 'bound-time', 'bound-label', 'bound-name', 'bound-format', 'bound-identifier'].includes(role), `${id}/${slotId}`);
+    }
+  }
+});
+
+test('unbound example statistics, timestamps and status cannot masquerade as observations', () => {
+  const ranking = plan('2VDA-0');
+  for (const id of ['s003', 's004', 's017', 's018', 's020', 's021', 's023', 's284', 's304']) {
+    assert.equal(text(ranking, id), '—', id);
+  }
+  const company = plan('2RBO-1');
+  assert.equal(text(company, 's003'), '상태 미확인');
+  assert.equal(text(company, 's007'), '시각 미제공');
+  assert.equal(text(company, 's112'), '시각 미제공');
+  assert.equal(text(plan('2SKU-1'), 's143'), '시각 미제공');
+  assert.equal(text(plan('2SCE-1'), 's168'), '—');
+});
+
+test('fixed headings, controls, product descriptions and numeric labels remain authored', () => {
+  for (const id of Object.keys(policy)) {
+    const original = registry.contractFor(id);
+    const prepared = prepareDisplayInput(original, {}).contract;
+    for (let i = 0; i < original.slots.length; i++) {
+      if (!policy[id][original.slots[i].slot_id]) assert.equal(prepared.slots[i], original.slots[i]);
+    }
+  }
+  assert.equal(text(plan('137X-2'), 's077'), '기관 12주체');
+  for (const slot of source('1JPU-0').slots.filter((s) => /52주 (최저|최고)/.test(s.paper_text) && s.kind === 'label')) {
+    assert.equal(text(plan('1JPU-0'), slot.slot_id), slot.paper_text);
+  }
+  assert.equal(text(plan('2SKU-1'), 's069'), '정산 상세 ›');
+  for (const slot of source('2SKU-1').slots.filter((s) => s.slot_id >= 's040' && s.slot_id <= 's046')) {
+    assert.equal(text(plan('2SKU-1'), slot.slot_id), slot.paper_text);
+  }
+  assert.equal(staticDisplayRole({ static: true, paper_text: '12주체', static_reason: '주체 수 라벨' }), null);
+});
+
+test('mapped row labels never restore specimen holdings after a short response', () => {
+  // Public schema plus invented values only: three observed rows in an eight-row design.
+  const observed = { s035: '테스트 종목 하나', s050: '테스트 종목 둘', s065: '테스트 종목 셋' };
+  const result = plan('2SCE-1', observed);
+  for (const [id, value] of Object.entries(observed)) assert.equal(text(result, id), value);
+  for (const id of ['s080', 's095', 's110', 's125', 's140']) assert.equal(text(result, id), '미제공');
+  assert.equal(text(plan('2SCE-1', observed, { emptyValueSlots: ['s080'] }), 's080'), '');
+  assert.equal(text(plan('2SCE-1', observed, { deferredValueSlots: ['s080'] }), 's080'), '');
+});
+
+test('new observed statistics and real zero quantities remain visible', () => {
+  assert.equal(text(plan('2VDA-0', { s017: 0 }), 's017'), '0');
+  assert.equal(text(plan('2VDA-0', { s017: 7 }), 's017'), '7');
+  assert.equal(text(plan('2SCE-1', { s038: 0 }), 's038'), '0');
+  assert.equal(text(plan('137X-2', { s018: 0 }), 's018'), '0주');
+});
+
+test('bound prices use monetary units and zero-price sentinels without changing quantities', () => {
+  assert.equal(text(plan('2RBO-1', { s099: -78600 }), 's099'), '78,600원');
+  for (const value of [0, '000000', '+0', '-0.00', { value: '000000', text: '0' }]) {
+    assert.equal(text(plan('137X-2', { s005: value }), 's005'), '—');
+  }
+  assert.equal(text(plan('137X-2', { s005: 12345 }), 's005'), '12,345원');
+});
+
+test('OHLC composite retains real prices and refuses unavailable zero parts', () => {
+  const slot = source('137X-2').slots.find((s) => s.slot_id === 's016');
+  const values = (prices) => ({ s016: { composite: { ...slot.composite,
+    parts: slot.composite.parts.map((part, index) => ({ ...part, value: prices[index] })) } } });
+  assert.equal(text(plan('137X-2', values([100, 110, 90])), 's016'), '100 · 110 · 90');
+  assert.equal(text(plan('137X-2', values([0, 0, 0])), 's016'), '—');
+  assert.equal(text(plan('137X-2', values([100, '000000', 90])), 's016'), '—');
+});
+
+test('time sentinel is unavailable while a received time is formatted', () => {
+  assert.equal(text(plan('137X-2', { s007: '000000' }), 's007'), '시각 미제공');
+  assert.equal(text(plan('137X-2', { s007: '091234' }), 's007'), '09:12:34');
+});
+
+test('verified industry fields use their own units and the caption describes that single field', () => {
+  const result = plan('2TZN-1', { s148: 4321.25, s150: 1234, s152: 777, s154: 4100.5, s156: 2100.25, s157: '20260317' });
+  assert.equal(text(result, 's145'), '선택 업종');
+  assert.equal(text(result, 's148'), '4,321.25');
+  assert.equal(text(result, 's150'), '12억 3,400만원');
+  assert.equal(text(result, 's152'), '777개');
+  assert.equal(text(result, 's154'), '4,100.50');
+  assert.equal(text(result, 's156'), '2,100.25');
+  assert.equal(text(result, 's157'), '52주 최저가일 2026-03-17');
+  for (const id of ['s213', 's215', 's217']) assert.equal(text(result, id), '—');
+  const settlement = plan('2SKU-1', {}, { emptyValueSlots: ['s047', 's054', 's061'] });
+  // The day labels stay meaningful independently of a missing settlement date.
+  assert.equal(text(settlement, 's047'), '오늘');
+  assert.equal(text(settlement, 's054'), 'D+1');
+  assert.equal(text(settlement, 's061'), 'D+2');
+});
+
+test('identity accepts a real Samsung response and never promotes stock codes or titles to names', () => {
+  const envelope = { stk_cd: '005930', surface_contract: { board_id: '137X-2' } };
+  assert.deepEqual(correctBoardIdentity(envelope, { s001: '삼성전자', s002: '005930' }, { name: '005930', code: '005930' }), { name: '삼성전자', code: '005930' });
+  assert.equal(correctBoardIdentity(envelope, { s001: '005930' }, { name: '005930', code: '005930' }).name, '');
+  assert.equal(correctBoardIdentity({ surface_contract: { board_id: '2VDA-0' } }, { s001: '주식순위' }, {}).name, '');
+  assert.equal(correctBoardIdentity({ stk_nm: '조회한 종목' }, {}, { code: '123456' }).name, '조회한 종목');
+});
+
+test('settlement axes and unavailable gold-account as-of dates do not reuse specimen dates', () => {
+  const settlement = plan('3MTJ-0', {});
+  assert.deepEqual(['s035', 's043', 's052'].map(id => text(settlement, id)), ['오늘', 'D+1', 'D+2']);
+  assert.deepEqual(['s036', 's044', 's053'].map(id => text(settlement, id)), ['', '', '']);
+  assert.equal(text(settlement, 's064'), 'D+2 자산');
+  assert.equal(text(settlement, 's067'), 'D+2 금액');
+  assert.equal(text(plan('3ODO-0', {}), 's088'), '시각 미제공');
+});
+
+test('account generated display metadata agrees with the canonical slots', () => {
+  const ids = registry.boardIds().filter(id => registry.cardIdFor(id) === 'CC-01');
+  assert.equal(ids.length, 14);
+  for (const id of ids) {
+    const generated = new Map(registry.contractFor(id).slots.map(slot => [slot.slot_id, slot]));
+    for (const slot of source(id).slots) {
+      assert.equal(generated.get(slot.slot_id)?.kind, slot.kind, `${id}/${slot.slot_id}`);
+      assert.deepEqual(generated.get(slot.slot_id)?.format ?? null, slot.format ?? null, `${id}/${slot.slot_id}`);
+    }
+  }
+});
+
+test('condition query preserves the mode control and does not claim monitoring or invent detection history', () => {
+  const result = plan('2UN6-1', { s020: '합성 저장조건', s022: '7' });
+  assert.equal(text(result, 's014'), '1회 조회');
+  assert.equal(text(result, 's020'), '합성 저장조건');
+  for (const id of ['s015', 's018', 's024', 's025', 's029', 's030', 's034', 's035']) {
+    assert.equal(text(result, id), '상태 미확인');
+  }
+  for (const id of ['s047', 's058', 's069', 's125', 's126', 's128', 's129', 's131', 's132']) {
+    assert.equal(text(result, id), '—');
+  }
+});
+
+test('preparation is immutable and requires exact source text provenance', () => {
+  const contract = registry.contractFor('137X-2');
+  const values = { s005: { value: '000000' }, s018: 0 };
+  const before = JSON.stringify({ contract, values });
+  prepareDisplayInput(contract, values);
+  assert.equal(JSON.stringify({ contract, values }), before);
+  const changed = { board_id: '137X-2', slots: [{ slot_id: 's003', paper_text: '새 고정 라벨', kind: 'label', static: true }] };
+  assert.equal(prepareDisplayInput(changed, {}).contract.slots[0], changed.slots[0]);
+});
+
+test('regular depth navigation keeps fixed session and level captions', () => {
+  for (const id of ['13BC-2', '2TRW-1']) {
+    for (const values of [{}, { s004: '3' }]) {
+      const result = plan(id, values);
+      assert.equal(text(result, 's007'), '5단');
+      assert.equal(text(result, 's008'), '10단');
+      assert.equal(text(result, 's004'), '정규장');
+    }
+  }
+});
+
+test('the investor KPI caption describes its received accumulated trading amount', () => {
+  const value = { value: 1234, text: '1,234백만원', display_unit: '백만원' };
+  const result = plan('3DI2-0', { s019: value });
+  assert.equal(text(result, 's017'), '누적 거래대금');
+  assert.equal(text(result, 's018'), '—');
+  assert.equal(text(result, 's019'), value.text);
+  assert.equal(source('3DI2-0').slots.find(s => s.slot_id === 's019').f, 'acc_trde_prica');
+});
+
+test('sector quotes preserve actual rows without claiming a specimen industry or theme', () => {
+  const result = plan('15J9-2', { s015: '합성 업종 종목', s016: '000007', s017: '-12340', s020: 0 });
+  assert.equal(text(result, 's001'), '업종별 종목 시세');
+  assert.equal(text(result, 's002'), '조회한 업종의 종목 목록');
+  assert.equal(text(result, 's009'), '종목');
+  assert.equal(text(result, 's011'), '거래량');
+  assert.equal(text(result, 's012'), '고가 · 시가');
+  assert.equal(text(result, 's048'), '조회 순서 · 최대 3종목 표시');
+  assert.equal(text(result, 's007'), '—');
+  assert.equal(text(result, 's015'), '합성 업종 종목');
+  assert.equal(text(result, 's016'), '000007');
+  assert.equal(text(result, 's017'), '12,340');
+  assert.equal(text(result, 's020'), '0주');
+  for (const id of ['s025','s036','s047','s052','s069','s072','s075']) assert.equal(text(result, id), '—');
+  for (const id of ['s051','s068','s071','s074']) assert.equal(text(result, id), '');
+});
+
+test('subscription-right quotes label response order and keep first observed values', () => {
+  const result = plan('32XM-0', { s023: '-3.56', s024: '합성 첫 종목', s042: '합성 첫 종목', s043: 'J000007D', s049: 0 });
+  assert.equal(text(result, 's002'), '조회 응답 순서');
+  assert.equal(text(result, 's015'), '조회 응답 순서');
+  assert.equal(text(result, 's022'), '첫 수신 종목 등락률');
+  assert.equal(text(result, 's023'), '-3.56%');
+  assert.equal(text(result, 's024'), '합성 첫 종목');
+  assert.equal(text(result, 's032'), '조회 순서 · 최대 14종목 표시');
+  assert.equal(text(result, 's033'), '순서');
+  assert.equal(text(result, 's036'), '시가');
+  assert.equal(text(result, 's038'), '거래량');
+  assert.equal(text(result, 's041'), '1');
+  assert.equal(text(result, 's054'), '2');
+  assert.equal(text(result, 's043'), 'J000007D');
+  assert.equal(text(result, 's049'), '0주');
+  for (const id of ['s020', 's021', 's051', 's052', 's053']) assert.equal(text(result, id), '—');
+});
+
+test('condition result captions identify calculated rates without claiming watchlist membership', () => {
+  const result = plan('15L8-2', {
+    s018: { value: '999', text: '+1.00%', tone: 'up', display_calculation: 'current_price_previous_change' },
+    s028: { value: '-888', text: '-1.00%', tone: 'down', display_calculation: 'current_price_previous_change' },
+    s038: { value: '123', text: '0.00%', tone: 'flat', display_calculation: 'current_price_previous_change' },
+    s048: { value: '777', missing: 'unavailable' },
+  });
+  assert.equal(text(result, 's001'), '조건검색 결과 종목');
+  assert.equal(text(result, 's003'), '조건검색 결과');
+  assert.equal(text(result, 's005'), '일회 검색 결과');
+  assert.equal(text(result, 's009'), '등락률(계산)');
+  assert.equal(text(result, 's095'), '첫 결과 · 누적거래량');
+  for (const id of ['s100', 's106', 's110', 's111', 's112']) assert.equal(text(result, id), '');
+  assert.equal(text(result, 's018'), '+1.00%');
+  assert.equal(text(result, 's028'), '-1.00%');
+  assert.equal(text(result, 's038'), '0.00%');
+  assert.equal(text(result, 's048'), '미제공');
+  const zero = result.assignments.find(a => a.slotId === 's038');
+  assert.equal(zero.tone, 'flat');
+  assert.equal(zero.forceFlatTone, true);
+  assert.equal(result.assignments.find(a => a.slotId === 's018').tone, 'up');
+  assert.equal(result.assignments.find(a => a.slotId === 's028').tone, 'down');
+});

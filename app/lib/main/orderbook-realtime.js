@@ -54,6 +54,18 @@ function parseQuoteBookTick(row) {
     buyChanges: F_BUY_CHANGE.map((fid) => toNumber(values[fid])),
     sellTotal: toNumber(values[F_SELL_TOTAL], { absolute: true }),
     buyTotal: toNumber(values[F_BUY_TOTAL], { absolute: true }),
+    sellTotalChange: toNumber(values['122']),
+    buyTotalChange: toNumber(values['126']),
+    sellLpQuantities: Array.from({ length: 10 }, (_, i) => toNumber(values[String(621 + i)], { absolute: true })),
+    buyLpQuantities: Array.from({ length: 10 }, (_, i) => toNumber(values[String(631 + i)], { absolute: true })),
+    krxSellQuantities: Array.from({ length: 10 }, (_, i) => toNumber(values[String(6044 + i)], { absolute: true })),
+    krxBuyQuantities: Array.from({ length: 10 }, (_, i) => toNumber(values[String(6054 + i)], { absolute: true })),
+    nxtSellQuantities: Array.from({ length: 10 }, (_, i) => toNumber(values[String(6066 + i)], { absolute: true })),
+    nxtBuyQuantities: Array.from({ length: 10 }, (_, i) => toNumber(values[String(6076 + i)], { absolute: true })),
+    krxSellTotal: toNumber(values['6064'], { absolute: true }),
+    krxBuyTotal: toNumber(values['6065'], { absolute: true }),
+    nxtSellTotal: toNumber(values['6086'], { absolute: true }),
+    nxtBuyTotal: toNumber(values['6087'], { absolute: true }),
   };
 }
 

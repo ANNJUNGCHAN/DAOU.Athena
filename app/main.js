@@ -78,11 +78,14 @@ const { reconcileStockIndexStartupTask } = require('./lib/main/stock-entity-inde
 const { createChartFollowupTracker } = require('./lib/main/chart-followup');
 const simpleChartFastPath = require('./lib/main/simple-chart-fast-path');
 const selectorFastPath = require('./lib/main/selector-fast-path');
+const accountHoldingsClarification = require('./lib/main/account-holdings-clarification');
 const activeCardQna = require('./lib/main/active-card-context');
 const selectorColdHedge = require('./lib/main/selector-cold-hedge');
 const { createClaudeSelectorWorkerPool } = require('./lib/main/claude-selector-worker-pool');
 const chartReload = require('./lib/main/chart-reload');
 const chartReloadAuthority = chartReload.createChartReloadAuthority();
+const { createChartRemounts } = require('./lib/main/chart-remount');
+const chartRemounts = createChartRemounts({ correlationKey: value => restCorrelationKey(value), panelIdFor: require('./lib/aits-chart-panel').panelIdFor, randomUUID: () => crypto.randomUUID() });
 const ticketCapacity = require('./lib/main/ticket-capacity');
 const { appIconPath, appTrayIconPath } = require('./lib/main/app-icon');
 const orderTicket = require('./lib/order-ticket');
@@ -982,6 +985,7 @@ const integratedRealtimeShutdown = integratedCardRealtime.createBoundedShutdownC
     }
     stopOrbCursorPoll(); // 인터벌 누수 금지 — 창이 죽기 전에 정리한다
     chartReloadAuthority.clear();
+    chartRemounts.clear();
     stockMasterAbortController.abort(new Error('Athena 앱 종료'));
     // 트레이로 숨겨진 동안에는 selector worker를 유지하고 실제 종료에서만 닫는다.
     selectorClaudePool.stop(new Error('Athena 앱 종료'));
@@ -2824,7 +2828,10 @@ function rememberRealtimeFallbackAuthority(payload = {}) {
   const surfaceContract = payload.envelope && payload.envelope.surface_contract;
   const boardId = String(surfaceContract && surfaceContract.board_id || '').trim();
   const boardHydrateAuthority = boardId
-    ? Object.freeze({ boardId, target: Object.freeze({ ...operationArgs }) })
+    ? Object.freeze({ boardId, target: Object.freeze({ ...operationArgs }),
+      ...(boardId === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(operationRef) ? { flowOperationRef: operationRef } : {}),
+      ...(boardId === '13K0-2' ? { rankingOperationRef: operationRef === 'base:ka00198' ? operationRef : 'base:ka10032' } : {}),
+    })
     : null;
   realtimeFallbackAuthorities.delete(key);
   realtimeFallbackAuthorities.set(key, Object.freeze({
@@ -2906,7 +2913,11 @@ function projectRealtimeFallbackResult(descriptor, result) {
       ? raw.filter((entry) => requested.has(String(entry && entry.slot_id || '')))
       : Object.fromEntries(Object.entries(raw || {}).filter(([slotId]) => requested.has(slotId)));
     const filled = Array.isArray(slotValues) ? slotValues.length : Object.keys(slotValues).length;
-    if (!filled) return { ok: false, error: '요청한 보드 슬롯의 API 대체 값이 없다' };
+    const watchlistMetadata = contract?.board_id === descriptor.boardId && (descriptor.boardId === '2U5L-1' && contract.watchlist_rows && Array.isArray(contract.watchlist_rows.rows) || ['2UBO-1','3D4I-0','3EWN-0'].includes(descriptor.boardId) && contract.watch_source_context && Array.isArray(contract.watch_source_context.slots));
+    const investorMetadata = descriptor.boardId === '2QFO-2' && contract?.board_id === descriptor.boardId
+      && ['base:ka10059', 'base:ka10061'].includes(contract.flow_query_context?.operation_ref)
+      && contract.flow_query_context.operation_ref === realtimeFallbackAuthorities.get(descriptor.authorityKey)?.boardHydrate?.flowOperationRef;
+    if (!filled && !watchlistMetadata && !investorMetadata) return { ok: false, error: '요청한 보드 슬롯의 API 대체 값이 없다' };
     return {
       ok: true,
       mode: 'slot-patch',
@@ -2934,6 +2945,10 @@ async function refreshRealtimeFallback(descriptor, { signal } = {}) {
       boardId: hydrate.boardId,
       target: hydrate.target,
       slotIds: descriptor.slotIds,
+      flowOperationRef: hydrate.boardId === '2QFO-2' ? hydrate.flowOperationRef : undefined,
+      rankingOperationRef: hydrate.boardId === '13K0-2'
+        && ['base:ka10032', 'base:ka00198'].includes(hydrate.rankingOperationRef)
+        ? hydrate.rankingOperationRef : undefined,
       signal,
     });
     if (realtimeFallbackAuthorities.get(descriptor.authorityKey) !== authority) {
@@ -3099,7 +3114,20 @@ ipcMain.on('athena:rest-canvas-painted', (event, payload = {}) => {
   }
   restPaintWaiters.delete(key);
   waiter.cleanup();
-  chartReloadAuthority.registerPaint(decision.paint, waiter.reloadAuthority);
+  if (waiter.remountToken && !chartRemounts.valid(waiter.remountToken, decision.paint, chartRemountContext(event, waiter.remountRequest))) {
+    waiter.reject(new Error('차트 재표시 소유권이 변경됐습니다.'));
+    return;
+  }
+  const chartRegistered = chartReloadAuthority.registerPaint(decision.paint, waiter.reloadAuthority);
+  if (waiter.remountToken && !chartRegistered) {
+    waiter.reject(new Error('차트 재표시 계약을 확인할 수 없습니다.'));
+    return;
+  }
+  if (waiter.remountToken) chartRemounts.accept(waiter.remountToken, decision.paint, chartRemountContext(event, waiter.remountRequest));
+  if (chartRegistered && !waiter.remountToken) chartRemounts.remember({
+    key, paint: decision.paint, authority: waiter.reloadAuthority, envelope: waiter.sourceEnvelope,
+    senderId: waiter.senderId, conversationId: waiter.conversationId, accountGeneration: waiter.accountGeneration,
+  });
   // 차트가 실제로 그려진 순간에만 실시간을 건다 — 그려지지도 않은 패널로 REG를
   // 소모하지 않는다(REG는 리미터를 먹는다). 참조 중복은 registrar와
   // chartRealtimePanelSymbols(panelId 단위)가 함께 막는다.
@@ -3123,6 +3151,7 @@ ipcMain.on('athena:rest-receipt-painted', (event, payload = {}) => {
 
 ipcMain.on('athena:chart-panel-destroyed', (event, payload = {}) => {
   if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) return;
+  chartRemounts.retire(payload.panelId);
   chartReloadAuthority.unregister(payload.panelId);
   // 이 패널이 실시간 참조를 쥐고 있었다면(ensureChartRealtime 주석 참고) 여기서
   // 정확히 1회 release한다 — acquire 때 실제로 쓴 종목코드를 그대로 되쓴다.
@@ -3435,6 +3464,8 @@ async function hydrateCanvasBoardForActiveAccount(payload = {}) {
     // 확인한 서버 alias만 백엔드 라우팅 값으로 사용한다.
     account: options.backendAccountAlias,
     slotIds: payload.slotIds || payload.slot_ids,
+    rankingOperationRef: payload.rankingOperationRef,
+    flowOperationRef: (payload.boardId || payload.board_id) === '2QFO-2' ? payload.flowOperationRef : undefined,
   }), requestedAccountId);
   if (!bound.ok) return { ok: false, status: 'error', errorCode: 'backend_account_unavailable', error: bound.error };
   if (generation !== realtimeAccountGeneration || bound.accountId !== activeRestAccountId()) {
@@ -3480,6 +3511,10 @@ ipcMain.handle('athena:canvas-board-hydrate', async (event, payload = {}) => {
         }),
         boardHydrate: Object.freeze({
           boardId,
+          ...(boardId === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(payload.flowOperationRef) ? { flowOperationRef: payload.flowOperationRef } : {}),
+          ...(boardId === '13K0-2' ? {
+            rankingOperationRef: payload.rankingOperationRef === 'base:ka00198' ? 'base:ka00198' : 'base:ka10032',
+          } : {}),
           target: payload.target && typeof payload.target === 'object'
             ? Object.freeze({ ...payload.target }) : Object.freeze({}),
         }),
@@ -3491,7 +3526,7 @@ ipcMain.handle('athena:canvas-board-hydrate', async (event, payload = {}) => {
     const authority = boardHydrate.primaryReloadAuthority(
       reply, correlation, waiter.reloadAuthority.accountId,
     );
-    if (authority) waiter.reloadAuthority = authority;
+    if (authority) { waiter.reloadAuthority = authority; waiter.sourceEnvelope = primary; }
   }
   return reply;
 });
@@ -3584,7 +3619,7 @@ async function resetAccountBoundRealtime() {
   }
 }
 
-async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs = 3000, conversationId = null } = {}) {
+async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs = 3000, conversationId = null, paintOnly = false } = {}) {
   if (!shellWin || shellWin.isDestroyed()) throw new Error('셸 창이 준비되지 않았다');
   // The direct REST lane has a hard three-second feedback budget. Reveal the
   // already-loaded surface without changing application focus. The renderer
@@ -3628,6 +3663,12 @@ async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs
         if (timer) { clearTimeout(timer); timer = null; }
         pendingTimer = setTimeout(onTimeout, PENDING_MOUNT_ACK_TIMEOUT_MS);
       },
+      sourceEnvelope: payload.envelope,
+      senderId: shellWin.webContents.id,
+      conversationId: conversationId || historyConversationId(),
+      accountGeneration: realtimeAccountGeneration,
+      remountToken: payload.remountToken || null,
+      remountRequest: payload.remountRequest || null,
       reloadAuthority: {
         correlation,
         operationRef: payload.operationRef,
@@ -3637,7 +3678,7 @@ async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs
         chartMeta: payload && payload.envelope && payload.envelope.data && payload.envelope.data.chart_meta,
       },
     });
-    shellWin.webContents.send('athena:add-rest-canvas', {
+    if (!paintOnly) shellWin.webContents.send('athena:add-rest-canvas', {
       envelope: payload.envelope,
       operationRef: payload.operationRef,
       operationArgs: payload.operationArgs,
@@ -5540,6 +5581,38 @@ async function runDirectRestDataset(dataset, expand = true, overrides = {}) {
   return result;
 }
 
+function chartRemountContext(event, request = {}) {
+  const conversationId = historyConversationId();
+  const bridge = getSessionBridge();
+  if (bridge) bridge.flush(conversationId);
+  const snapshot = bridge && bridge.load(conversationId);
+  const cards = snapshot && Array.isArray(snapshot.canvasCards) ? snapshot.canvasCards : [];
+  const matches = cards.filter(card => card && card.cardId === request.cardId && card.envelope);
+  const card = matches.length === 1 ? matches[0] : null;
+  return { senderId: event.sender.id, conversationId, accountGeneration: realtimeAccountGeneration,
+    accountId: activeRestAccountId(), cardId: card && card.cardId,
+    cardKey: card && restCorrelationKey(card.envelope.correlation) };
+}
+
+ipcMain.handle('athena:remount-chart-panel', (event, request = {}) => {
+  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) {
+    throw new Error('차트 재표시는 셸 창에서만 허용됩니다.');
+  }
+  const lease = chartRemounts.begin(request, chartRemountContext(event, request));
+  void emitRestCanvasAndWaitForPaint({
+    envelope: lease.envelope, operationRef: lease.envelope.operation_ref,
+    operationArgs: lease.envelope.operation_args, canvasType: lease.envelope.canvas_type,
+    accountId: lease.accountId, remountToken: lease.token, remountRequest: request,
+  }, { expand: false, timeoutMs: 30_000, conversationId: lease.conversationId, paintOnly: true })
+    .catch(() => chartRemounts.abort(lease.token));
+  return { ok: true, token: lease.token, envelope: lease.envelope };
+});
+
+ipcMain.handle('athena:cancel-chart-remount', (event, request = {}) => {
+  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) return false;
+  return chartRemounts.cancel(request.token, chartRemountContext(event, request));
+});
+
 async function handleChartPanelReload(event, payload) {
   if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) {
     throw new Error('AITS chart reload는 셸 창에서만 허용된다');
@@ -5550,7 +5623,12 @@ async function handleChartPanelReload(event, payload) {
     allowRetry: true,
     accountId: request.accountId,
   });
-  return chartReloadAuthority.acceptResult(request, result);
+  const accepted = chartReloadAuthority.acceptResult(request, result);
+  chartRemounts.updateReload(request, result, {
+    senderId: event.sender.id, conversationId: historyConversationId(),
+    accountGeneration: realtimeAccountGeneration, accountId: activeRestAccountId(),
+  });
+  return accepted;
 }
 
 ipcMain.handle('athena:reload-chart-panel', handleChartPanelReload);
@@ -5708,6 +5786,12 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
   });
   if (graphAccessError) return graphAccessError;
   const runtime = liveRuntimes.get(turnConversationId);
+  const assertCurrentHoldingsTurn = () => {
+    if (liveSubmitContexts.get(turnConversationId) !== submit) {
+      throw Object.assign(new Error('새 질문이 보유 종목 조회 조건 선택을 대체했습니다.'), { name: 'AbortError' });
+    }
+  };
+  if (runtime.pendingAccountHoldings) assertCurrentHoldingsTurn();
   if (continuation && continuation.submitIdentity !== submit) {
     return {
       ok: false, source: 'live', error: '새 질문이 표시된 카드 설명을 대체했습니다.',
@@ -5761,10 +5845,20 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     && activeCardQna.shouldAttemptCardFirstLookup(query, submit.cardContext, activeCardContext);
   const cardRetrievalBlocked = modePromptRequired
     || (providerAnswerRequired && !cardFirstLookupRequired);
+  const holdingsTurn = accountHoldingsClarification.resume(query, runtime.pendingAccountHoldings, {
+    conversationId: turnConversationId, accountId: activeRestAccountId(), blocked: cardRetrievalBlocked,
+  });
+  runtime.pendingAccountHoldings = holdingsTurn.state;
+  if (holdingsTurn.answerText) {
+    return persistLocalLiveResult(query, accountHoldingsClarification.reply(holdingsTurn.answerText, holdingsTurn.status), turnConversationId);
+  }
+  let holdingsRequest = holdingsTurn.request;
+  if (holdingsRequest) query = holdingsRequest.question;
   const finishCardProducingResult = async (result, cards) => {
     return activeCardQna.finishDisplayedCardResult({
       result,
       cards,
+      continueWithProvider: providerAnswerRequired,
       requested: submit.cardContext,
       now: new Date().toISOString(),
       isCurrent: () => liveSubmitContexts.get(turnConversationId) === submit,
@@ -5944,6 +6038,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       }, turnConversationId);
     }
   }
+  if (holdingsRequest) assertCurrentHoldingsTurn();
   const selectorController = new AbortController();
   runtime.activeSelectorFastRun = selectorController;
   try {
@@ -5970,9 +6065,8 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         durationMs: Math.max(0, performance.now() - queryStartedAt),
       }, turnConversationId);
     }
-    const selectorResult = cardRetrievalBlocked
-      ? { handled: false, reason: '대화 답변이 필요한 질문 — 모델 경로로 넘긴다' }
-      : selectorAccount.ok ? await selectorAccount.run({
+    if (holdingsRequest) assertCurrentHoldingsTurn();
+    const selectorOptions = {
       question: routingQuery,
       backendBase: BACKEND_HTTP_BASE,
       intent: orderDraft ? orderDraft.intent : 'auto',
@@ -5982,8 +6076,10 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         ? selectorFastPath.DEFAULT_GUARDED_ORDER_DEADLINE_MS
         : selectorFastPath.DEFAULT_DEADLINE_MS,
       signal: selectorController.signal,
-      isCurrent: () => runtime.activeSelectorFastRun === selectorController,
+      isCurrent: () => runtime.activeSelectorFastRun === selectorController
+        && (!holdingsRequest || liveSubmitContexts.get(turnConversationId) === submit),
       emitCanvas: async (payload) => {
+        if (holdingsRequest) assertCurrentHoldingsTurn();
         if (runtime.activeSelectorFastRun !== selectorController) {
           throw new Error('교체된 Selector fast path의 늦은 카드는 표시하지 않는다');
         }
@@ -6014,7 +6110,38 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         void question;
         void answerText;
       },
-    }) : { handled: false, reason: 'backend_account_unavailable' };
+    };
+    if (holdingsRequest && (selectorAccount?.accountId !== holdingsRequest.accountId
+      || activeRestAccountId() !== holdingsRequest.accountId)) {
+      return persistLocalLiveResult(query, {
+        ...accountHoldingsClarification.reply('선택한 계좌가 변경되었습니다. 보유 종목 평가 손익을 다시 요청해 주세요.'),
+        ok: false, code: 'ACCOUNT_SELECTION_CHANGED',
+      }, turnConversationId);
+    }
+    let selectorResult = cardRetrievalBlocked
+      ? { handled: false, reason: '대화 답변이 필요한 질문 — 모델 경로로 넘긴다' }
+      : selectorAccount.ok ? await selectorAccount.run({ ...selectorOptions, ...(holdingsRequest?.options || {}) })
+        : { handled: false, reason: 'backend_account_unavailable' };
+    if (holdingsRequest) assertCurrentHoldingsTurn();
+    // 주문 초안 실패는 보유 종목 명확화로 넘기지 않는다 — 아래에서 모델 폴백 없이 끝낸다.
+    if (selectorResult.preflight && !holdingsRequest && !orderDraft
+      && liveSubmitContexts.get(turnConversationId) === submit
+      && activeRestAccountId() === selectorAccount.accountId) {
+      const clarification = accountHoldingsClarification.begin(routingQuery, selectorResult.preflight, {
+        conversationId: turnConversationId, accountId: selectorAccount.accountId,
+      });
+      runtime.pendingAccountHoldings = clarification.state;
+      if (clarification.answerText) {
+        return persistLocalLiveResult(query, accountHoldingsClarification.reply(clarification.answerText), turnConversationId);
+      }
+      if (clarification.request) {
+        holdingsRequest = clarification.request;
+        assertCurrentHoldingsTurn();
+        selectorResult = await selectorAccount.run({ ...selectorOptions,
+          question: holdingsRequest.question, ...holdingsRequest.options });
+        assertCurrentHoldingsTurn();
+      }
+    }
     if (selectorResult.handled) {
       mdlog(`Selector 단일 dispatch 적중 — ${selectorResult.durationMs}ms (모델 무호출)`);
       return finishCardProducingResult(selectorResult, selectorDisplayedCards);
@@ -6539,6 +6666,7 @@ function abortConversationWork(reason, conversationId = historyConversationId())
 }
 
 function abortRuntimeWork(runtime, reason) {
+  runtime.pendingAccountHoldings = null;
   if (runtime.activeSelectorFastRun) {
     runtime.activeSelectorFastRun.abort(reason || new Error('대화 작업을 취소했다'));
     runtime.activeSelectorFastRun = null;
@@ -7510,15 +7638,24 @@ ipcMain.on('athena:session-viewport', (_e, payload = {}) => {
 // 렌더러가 다시 보고하고, 같은 스택이 그대로 저장된다.
 ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
   const id = payload && typeof payload.id === 'string' ? payload.id : '';
-  if (id !== historyConversationId()) return { replayed: 0 };
+  if (id !== historyConversationId()) return { replayed: 0, status: 'stale' };
   const bridge = getSessionBridge();
-  if (!id || !bridge || !shellWin || shellWin.isDestroyed()) return { replayed: 0 };
+  if (!id || !bridge || !shellWin || shellWin.isDestroyed()) return { replayed: 0, status: 'unavailable' };
   bridge.flush(id);
   const snapshot = bridge.load(id);
+  if (!snapshot) {
+    flushDeferredShellEvents(id);
+    return { replayed: 0, status: 'unavailable' };
+  }
   const cards = snapshot && Array.isArray(snapshot.canvasCards) ? snapshot.canvasCards : [];
   let replayed = 0;
   for (const card of cards) {
     if (!card || !card.envelope) continue;
+    // Keep stored envelopes until their replay mount is reported or explicitly cleared.
+    if (typeof card.cardId === 'string' && card.cardId && !pendingCanvasCards.has(card.cardId)) {
+      if (pendingCanvasCards.size >= 256) pendingCanvasCards.delete(pendingCanvasCards.keys().next().value);
+      pendingCanvasCards.set(card.cardId, { conversationId: id, card });
+    }
     if (card.channel === 'fixture') {
       shellWin.webContents.send('athena:add-canvas', { type: card.envelope.type || card.kind, sessionCardId: card.cardId, conversationId: id });
     } else if (card.envelope.data && card.envelope.data.chart
@@ -7547,7 +7684,7 @@ ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
   }
   // 그 대화로 돌아왔다(다중 대화, 2026-09-08) — 미뤄 둔 채팅 전용 카드·캔버스 액션을 이제 흘린다.
   flushDeferredShellEvents(id);
-  return { replayed };
+  return { replayed, status: replayed > 0 ? 'dispatched' : (cards.length ? 'unavailable' : 'empty') };
 });
 // 과거 대화 열기(2026-09-02 사용자 지적 "대화 이력을 누르면 그 대화로 이동해야 한다").
 //

@@ -39,6 +39,34 @@ function harness() {
 }
 const payload = { revision: 1, nodes: [{ entity_id: 'qa-node', name: '검증 노드', degree: 0, cluster: 0 }], edges: [] };
 
+test('visible map fit button uses the existing controller camera action without changing graph data', async () => {
+  const h = harness(), button = fakeNode('button');
+  const previousDocument = global.document;
+  global.document = h.document;
+  try {
+    const controller = createGraphModeController({ store, grouping,
+      elements: { graphBody: h.container }, fetchClusterMap: async () => payload,
+      createLiveMap: h.create,
+    });
+    controller.setAvailable(true);
+    await controller.setView(store.VIEW_GRAPH);
+    await controller.setSurface(store.SURFACE_MAP);
+    const source = fs.readFileSync(require.resolve('../../canvas.js'), 'utf8');
+    const start = source.indexOf('const graphFitView =');
+    assert.ok(start > 0);
+    vm.runInNewContext(source.slice(start, source.indexOf('// --- 헤더 필터 칩 배선', start)), {
+      document: { getElementById: id => id === 'graphFitView' ? button : null }, graphMode: controller,
+    });
+    const before = JSON.stringify(payload);
+    const network = h.networks[0];
+    assert.equal(network.fits, 0);
+    button.dispatchEvent({ type: 'click' });
+    assert.equal(network.fits, 1);
+    assert.equal(h.networks.length, 1);
+    assert.equal(JSON.stringify(payload), before);
+  } finally { global.document = previousDocument; }
+});
+
 test('controller forced redraw retains the attached live graph and user placement', async () => {
   const h = harness();
   const previousDocument = global.document;

@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from athena_api import screen_manifest
+from athena_api.surface_display_units import sector_chart_index
 
 logger = logging.getLogger(__name__)
 
@@ -560,7 +561,8 @@ def build_aits_chart_body(
             value = _aits_number(row.get(aliases[key]))
             if value is None:
                 break
-            candle[key] = value
+            index = sector_chart_index(operation_ref, aliases[key], row.get(aliases[key]))
+            candle[key] = float(index) if index is not None else value
         else:
             volume_alias = aliases["volume"]
             if volume_alias is not None:

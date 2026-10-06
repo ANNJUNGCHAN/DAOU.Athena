@@ -2342,7 +2342,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2527,9 +2528,9 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": "s082",
@@ -2587,9 +2588,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": "s084",
@@ -2677,7 +2678,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2868,9 +2870,9 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": "s093",
@@ -2930,9 +2932,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": "s095",
@@ -3021,7 +3023,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3264,9 +3267,9 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
         "tone": "neutral"
       },
       "paired_with": "s106",
@@ -3575,10 +3578,9 @@
       "alt_mappings": null,
       "kor": "주요종목",
       "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
+        "kind": "text",
+        "sign": false,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,

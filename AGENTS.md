@@ -1,5 +1,9 @@
 # AGENTS.md
 
+## Card UI continuation after checkout
+
+The user requested moving the unfinished card UI work to another computer through GitHub. For a request to resume this work, read `backend/ref/card-ui-handoff-20261003/README.md` and `PLAN.md` before editing. Run `node backend/ref/card-ui-handoff-20261003/resume.mjs` to restore the ignored local plan without overwriting an existing plan. Continue the complete 101 editable Paper / 94 real-app state objective, including the same-card maximum → narrow → maximum cycle and bottom/final-column/tab checks. The handoff contains installed changes and separately labelled uninstalled candidates; do not treat fixtures, scoped passes, failed calls, or historical captures as all-card completion. Check current Git state, dependencies, source pins and live handles on the new computer. Git pull alone does not start an agent. Never install Git hooks to silently run the agent or transfer authentication/profile data.
+
 ## Product scope
 
 Kiwoom mock-account (모의투자) orders that the user confirms one by one on the order ticket are in scope, as decided by the user on 2026-10-06 (replacing the 2026-09-30 exclusion of all order execution). Real-account orders and automated trading (strategy deployment, arming, scheduler or routine orders without a per-order user confirmation) are outside Athena's development scope for every account. Do not treat them as unfinished work, propose them as a next development phase, or include them in completion criteria. Real-account read/query features and simulated trades in backtests remain in scope.

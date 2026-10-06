@@ -507,3 +507,1086 @@
  * 모자이크 통합 카드는 패널 여러 장을 세로로 쌓는 뼈대가 그대로 맞다. */
 .card[data-board-surface="true"] .integrated-card-panels { flex: 1 1 auto; min-height: 0; }
 .card[data-board-surface="true"] .integrated-card-panel { height: 100%; min-height: 0; }
+.card[data-board-surface="true"] .integrated-card-panel:has(> .board-surface-host) { display: flex; flex-direction: column; }
+.card[data-board-surface="true"] .integrated-card-panel > .board-surface-host { height: auto; flex: 1 1 0; min-height: 0; }
+.card[data-board-surface="true"] .integrated-card-panel:has(> .board-surface-host) > :not(.board-surface-host) { flex: 0 0 auto; }
+
+/* 집중 보기는 본문 높이만 사용한다. 고정 원본 폭도 스크롤바가 차지한 폭을 양보한다. */
+.canvas-tab-panel .board-surface[data-bs-hoisted] { min-height: 0; }
+.board-surface > [data-bs-hoisted] { max-width: 100%; min-width: 0; }
+.board-surface .bs-quote-scroll { overflow-x: auto; max-width: 100%; height: auto; min-height: 0; }
+.bs-quote-table { width: 990px; min-width: 990px; }
+@container board (min-width: 1280px) {
+  .canvas-tab-panel .board-surface .bs-workspace > .bs-primary { flex-shrink: 1; }
+}
+
+/* 검토한 표는 열을 접는 대신 읽을 수 있는 폭을 보존한다. */
+:is([data-bs-layout="15J9-2"], [data-bs-layout="2SCE-1"], [data-bs-layout="3LGC-0"], [data-bs-layout="3MTJ-0"]) .bs-workspace {
+  flex-direction: column;
+  height: auto;
+  min-height: 0;
+}
+:is([data-bs-layout="15J9-2"], [data-bs-layout="2SCE-1"], [data-bs-layout="3LGC-0"], [data-bs-layout="3MTJ-0"]) :is(.bs-primary, .bs-rail) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 auto;
+}
+.bs-readable-owner[data-bs-hoisted] { width: 100%; height: auto; min-height: 0; flex: 0 0 auto; container-type: inline-size; container-name: readable; }
+.bs-readable-scroll {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  flex: 0 0 auto;
+}
+.bs-readable-scroll:focus-visible, .bs-exchange-scroll:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: -2px;
+}
+.bs-readable-table { width: max(100%, var(--bs-table-width)); }
+.board-surface .bs-readable-remainder { width:100%; height:auto; min-height:0; flex:0 0 auto; }
+.bs-readable-table .bs-col { display: contents; }
+.bs-readable-table .bs-readable-row {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: var(--bs-table-width);
+  max-width: none;
+  height: auto;
+  min-height: 70px;
+  flex: 0 0 auto;
+  gap: var(--bs-table-gap);
+}
+.bs-readable-table .bs-readable-row[data-row="head"] { min-height: 40px; }
+.bs-readable-table .bs-readable-cell {
+  width: var(--bs-cell-width);
+  min-width: var(--bs-cell-width);
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 var(--bs-cell-width);
+  padding: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: right;
+  font-size: 13px;
+  line-height: 18px;
+  box-sizing: border-box;
+}
+.bs-readable-cell[data-col="0"], [data-bs-layout="3LGC-0"] .bs-readable-cell[data-col="2"],
+.board-surface:is([data-bs-board-id="2Z49-0"], [data-bs-board-id="3TOM-0"]) .bs-readable-cell[data-col="2"],
+.board-surface:is([data-bs-board-id="4A9H-1"], [data-bs-board-id="4AGN-1"], [data-bs-board-id="4ANS-1"], [data-bs-board-id="4AUX-1"], [data-bs-board-id="2YS8-0"], [data-bs-board-id="2ZBB-0"], [data-bs-board-id="2V71-0"]) .bs-readable-cell[data-col="1"] {
+  align-items: flex-start;
+  text-align: left;
+}
+.bs-readable-table .bs-readable-cell [data-bs-hoisted] {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  flex-shrink: 0;
+}
+.bs-readable-table [data-bs-table-text="true"] { font-size: 13px; line-height: 18px; }
+.bs-readable-table [data-row="head"] [data-bs-table-text="true"],
+.bs-readable-cell > [data-bs-table-text="true"] ~ [data-bs-table-text="true"] { font-size: 12px; }
+.bs-readable-hint { display: none; color: var(--color-k-dim); font-size: 12px; line-height: 18px; padding-top: 6px; }
+[data-bs-layout="133H-2"] [data-node="14UQ-2"] > .bs-readable-hint {
+  position: sticky;
+  left: 0;
+  width: max-content;
+}
+.board-surface .bs-session-quote-scroll { overflow-x: auto; max-width: 100%; height: auto; min-height: 0; }
+.bs-session-quote-table { width: max(100%, 660px); min-width: 660px; }
+.bs-session-quote-table .bs-session-quote-row { display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; min-height: 40px; height: auto; }
+.bs-session-quote-row > [data-col] { display: flex; justify-content: flex-end; align-items: center; box-sizing: border-box; min-width: 150px; width: 150px; flex: 0 0 150px; padding: 10px 12px; text-align: right; font-size: 13px; line-height: 18px; }
+.bs-session-quote-row > [data-col="2"], .bs-session-quote-row > [data-col="3"] { width: 180px; min-width: 180px; flex-basis: 180px; }
+.board-surface .bs-session-quote-table [data-bs-hoisted] { height: auto; min-height: 0; max-height: none; }
+[data-bs-layout="30HY-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+[data-bs-layout="3NVG-0"] [data-node="3PCB-0"] { overflow-wrap: anywhere; }
+[data-bs-layout="3NVG-0"] [data-node="3PAQ-0"] { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); height: auto; min-height: 0; }
+[data-bs-layout="3NVG-0"] [data-node="3PAQ-0"] > [data-node] { width: auto; min-width: 0; height: auto; }
+@container board (max-width: 719px) {
+  [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] { flex-direction: column; }
+  [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] > [data-node] { width: 100%; min-width: 0; flex: 0 0 auto; padding-inline: 0; }
+  [data-bs-layout="3NVG-0"] [data-node="3PC2-0"] { padding-left: 0 !important; border-left: 0 !important; }
+  [data-bs-layout="3NVG-0"] [data-node="3PBS-0"] { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); height: auto; min-height: 0; }
+  [data-bs-layout="3NVG-0"] [data-node="3PBS-0"] > [data-node] { width: auto; min-width: 0; min-height: 64px; }
+}
+@container readable (max-width: 1069px) { .bs-readable-hint { display: block; } }
+[data-bs-layout="3MTJ-0"] .bs-readable-owner { container-name: readable-settlement; }
+@container readable-settlement (max-width: 1011px) { .bs-readable-hint { display: block; } }
+[data-bs-layout="2SCE-1"] [data-node="3890-0"] { flex-wrap: wrap; height: auto; min-height: 0; }
+[data-bs-layout="2SCE-1"] [data-node="3891-0"] { flex-shrink: 0; min-width: max-content; }
+
+/* 테마 요약 → 종목 표 → 확산 근거: 원본 정보를 넓은 행으로 나눈다. */
+[data-bs-layout="15J9-2"] :is([data-node="15JM-2"], [data-node="15KI-2"], [data-node="3HJL-0"], [data-node="32I4-0"]) {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 auto;
+}
+[data-bs-layout="15J9-2"] [data-node="15JM-2"] { flex-direction: row; gap: 28px; flex-wrap: wrap; align-items: center; }
+[data-bs-layout="15J9-2"] [data-node="15JQ-2"] { width: 220px; flex: 0 0 220px; }
+.bs-theme-summary-details { display: flex; flex-direction: column; gap: 20px; flex: 1 1 300px; min-width: 0; }
+.bs-theme-summary-details > [data-bs-hoisted] { width: 100%; height: auto; min-height: 0; }
+.bs-theme-evidence-columns { display: flex; flex-wrap: wrap; gap: 28px; width: 100%; }
+.bs-theme-evidence-columns > [data-bs-hoisted], .bs-theme-metrics { flex: 1 1 300px; width: 0; min-width: 0; }
+.bs-theme-metrics { display: flex; flex-direction: column; gap: 14px; }
+[data-bs-layout="15J9-2"] .bs-readable-cell { padding-inline: 0; }
+/* 업종별 주가 응답에는 업종 강도·테마 확산·기여도 자료가 없다. 실제 종목 표만 남긴다. */
+[data-bs-layout="15J9-2"] :is([data-node="15JM-2"], [data-node="15JK-2"], .bs-readable-cell[data-col="5"]) { display: none !important; }
+[data-bs-layout="15J9-2"] .bs-readable-table { --bs-table-width: 890px !important; }
+[data-bs-layout="15J9-2"] .bs-workspace { flex: 0 0 auto; }
+
+/* 신주인수권 조회는 응답 순서와 실제 가격·거래량만 보존한다. */
+[data-bs-layout="32XM-0"] :is([data-node="332S-0"], [data-node="332O-0"], [data-node="332G-0"], [data-node="3324-0"], [data-node="3ONT-0"], [data-node="3ONW-0"], [data-node="3ONZ-0"], [data-node="3OOA-0"], [data-node="3OOO-0"], .bs-readable-cell[data-col="6"], .bs-readable-cell[data-col="7"]) { display: none !important; }
+[data-bs-layout="32XM-0"] .bs-readable-cell[data-col="5"] > :nth-child(2) { display: none !important; }
+[data-bs-layout="32XM-0"] :is([data-node="333K-0"], [data-node="333G-0"]) { flex-wrap: wrap; gap: 8px 12px; }
+[data-bs-layout="32XM-0"] :is([data-node="333K-0"], [data-node="333G-0"]) > * { flex: 0 0 auto; max-width: 100%; }
+[data-bs-layout="32XM-0"] [data-node="333J-0"] { font-size: 14px !important; line-height: 20px !important; }
+[data-bs-layout="32XM-0"] :is(.bs-workspace, .bs-primary, .bs-rail, .bs-kpi, .bs-kpi-cell) { height: auto; min-height: 0; }
+[data-bs-layout="32XM-0"] .bs-workspace { flex: 0 0 auto; align-items: flex-start; }
+[data-bs-layout="32XM-0"] .bs-kpi { padding-block: 16px; flex-wrap: wrap; row-gap: 12px; }
+[data-bs-layout="32XM-0"] .bs-kpi-cell { width: auto; flex: 1 1 240px; }
+[data-bs-layout="32XM-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+@container board (min-width: 960px) {
+  [data-bs-layout="32XM-0"] .bs-primary { width: auto; flex: 1 1 0; }
+  [data-bs-layout="32XM-0"] .bs-rail { width: 300px; min-width: 0; flex: 0 0 300px; }
+}
+
+/* 신용·대차 표의 100% 폭이 보조 영역을 누르지 않게 각 영역의 몫을 정한다. */
+[data-bs-board-id="2RWK-1"] :is(.bs-workspace, .bs-primary, .bs-rail) { height: auto; min-height: 0; }
+[data-bs-board-id="2RWK-1"] .bs-workspace { flex: 0 0 auto; align-items: flex-start; }
+@container board (min-width: 960px) {
+  [data-bs-board-id="2RWK-1"] .bs-primary { width: auto; flex: 1 1 0; }
+  [data-bs-board-id="2RWK-1"] .bs-rail { width: 360px; min-width: 0; flex: 0 0 360px; }
+}
+
+/* 펼친 종목의 두 패널은 본문 폭 안에서 균등 분할하고, 333px보다 작아지면 한 열. */
+:is([data-bs-layout="3D4I-0"], [data-bs-layout="3EWN-0"]) :is(.bs-workspace, .bs-primary, .bs-rail) {
+  height: auto;
+  min-height: 0;
+}
+.board-surface .bs-detail-panels {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.board-surface .bs-detail-panel {
+  width: auto;
+  min-width: min(100%, 333px);
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  flex: 1 1 333px;
+}
+.bs-detail-panel [data-bs-hoisted] { min-height: 0; }
+
+/* 거래소 비교의 머리글과 숫자에 동일한 370px 열 계약을 준다. */
+.bs-exchange-scroll { max-width: 100%; min-width: 0; overflow-x: auto; }
+.bs-exchange-scroll .bs-exchange-row { width: 370px; max-width: none; min-width: 370px; flex-wrap: nowrap; }
+.bs-exchange-row .bs-exchange-cell {
+  width: var(--bs-cell-width);
+  min-width: var(--bs-cell-width);
+  max-width: none;
+  flex: 0 0 var(--bs-cell-width);
+}
+.bs-exchange-cell [data-bs-hoisted] { width: 100%; min-height: 0; }
+.bs-exchange-cell { white-space: nowrap; }
+
+/* 실제 구성종목이 없는 자리만 접은 뒤 고정 표 높이도 함께 놓는다. */
+[data-bs-layout="3DZ1-0"] :is(.bs-workspace, .bs-primary, [data-node="3ECI-0"]) {
+  height: auto;
+  min-height: 0;
+}
+
+/* 실제 응답의 긴 수량도 셀 안에서 읽히도록 거래량과 비율을 두 줄로 둔다. */
+.bs-session-scroll { max-width: 100%; min-width: 0; overflow-x: auto; }
+.bs-session-scroll .bs-session-row { width: 370px; min-width: 370px; max-width: none; height: auto; min-height: 0; flex-wrap: nowrap; }
+.bs-session-row > [data-bs-hoisted] { width: var(--bs-cell-width); min-width: var(--bs-cell-width); max-width: none; height: auto; min-height: 0; flex: 0 0 var(--bs-cell-width); flex-direction: column; align-items: flex-end; }
+.bs-session-row > [data-bs-hoisted] [data-bs-hoisted] { width: auto; height: auto; min-height: 0; flex-shrink: 0; }
+.bs-readable-compact[data-bs-hoisted] { container-name: readable-quote; }
+.bs-readable-compact .bs-readable-row { min-height: 48px; }
+@container readable-quote (max-width: 783px) { .bs-readable-hint { display: block; } }
+
+/* 빈 응답에 고정 높이의 표 골격만 남기지 않는다. 데이터 대기 상태에는 적용하지 않는다. */
+.board-surface.bs-has-empty-table { min-height: 0; }
+.board-surface.bs-has-short-table { min-height: 0; }
+.bs-has-short-table :is(.bs-workspace, .bs-primary, .bs-rail),
+.board-surface .bs-short-table { height: auto; min-height: 0; }
+.bs-has-empty-table :is(.bs-workspace, .bs-primary, .bs-rail),
+.board-surface .bs-empty-table { height: auto; min-height: 0; }
+.bs-empty-table-message { padding: 20px 0; color: var(--color-k-dim); font-size: 13px; line-height: 20px; }
+.bs-empty-table-message[hidden] { display: none; }
+:is([data-bs-layout="133H-2"], [data-bs-layout="2R3M-1"], [data-bs-layout="2VDA-0"], [data-bs-layout="2SKU-1"]) .bs-rail { flex-direction: var(--bs-rail-direction, column); }
+
+/* 자료에 연결되지 않은 ETF 예시 그래프는 안내로 대체한다. 주변 통계는 유지한다. */
+[data-bs-layout="15N5-2"] :is(.bs-workspace, .bs-primary, .bs-rail, .bs-unavailable-graphic) { height: auto; min-height: 0; }
+[data-bs-layout="15N5-2"] .bs-workspace { flex-direction: column; }
+[data-bs-layout="15N5-2"] :is(.bs-primary, .bs-rail) { width: 100%; min-width: 0; flex: 0 0 auto; }
+[data-bs-layout="15N5-2"] [data-node="3CWA-0"] { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 24px; }
+[data-bs-layout="15N5-2"] [data-node="3CWA-0"] > * { width: auto; min-width: min(100%, 400px); height: auto; min-height: 0; flex: 1 1 400px; }
+[data-bs-layout="15N5-2"] [data-node="3D01-0"] { flex-direction: column; flex-wrap: nowrap; gap: 12px; }
+[data-bs-layout="15N5-2"] [data-node="3D01-0"] > * { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; }
+.board-surface .bs-unavailable-graphic { width: 100%; padding: 18px 0; }
+.bs-unavailable-graphic-source { display: none; }
+.bs-unavailable-graphic-message { color: var(--color-k-dim); font-size: 13px; line-height: 20px; }
+.bs-unavailable-graphic-section { display: flex; flex-direction: column; }
+.board-surface .bs-static-graphic-space { height: auto; min-height: 0; }
+@container board (max-width: 479px) {
+  [data-bs-layout="2SKU-1"] [data-node="3A4F-0"] [data-col="1"] { min-width: 100px; }
+}
+@container board (min-width: 960px) {
+  .bs-kpi:has(> .bs-kpi-cell[hidden]) { flex-wrap: wrap; height: auto; min-height: 0; }
+  .bs-kpi:has(> .bs-kpi-cell[hidden]) > .bs-kpi-cell { width: auto; min-width: fit-content; flex: 1 1 220px; }
+}
+@container board (max-width: 959px) {
+  .board-surface :is([data-node="3FFL-0"], [data-node="3F72-0"], [data-node="3F3K-0"], [data-node="36MY-0"], [data-node="3IG2-0"], [data-node="3Q8V-0"]) { flex-wrap: wrap; row-gap: 16px; }
+  .board-surface :is([data-node="3FFL-0"], [data-node="3F72-0"], [data-node="3F3K-0"], [data-node="36MY-0"], [data-node="3IG2-0"], [data-node="3Q8V-0"]) > :has(> [data-node]) { min-width: fit-content; flex: 1 1 140px; }
+  .board-surface [data-node="3S4O-0"] { flex-wrap: wrap; row-gap: 6px; }
+  .board-surface [data-node="3S4O-0"] > * { min-width: 32px; }
+}
+@container board (max-width: 719px) {
+  .bs-r-paired-table .bs-paired { grid-template-columns: minmax(0, 1fr); row-gap: 2px; }
+  .bs-r-paired-table [data-paired-source] { white-space: normal; }
+  .bs-table :is([data-name$="위 생략"], [data-name="표시 8종목"], [data-name="전체 50종목"]) { flex-wrap: wrap; gap: 8px; height: auto; min-height: 34px; }
+  .bs-table :is([data-name$="위 생략"], [data-name="표시 8종목"], [data-name="전체 50종목"]) > :empty { display: none; }
+  .bs-table :is([data-name$="위 생략"], [data-name="표시 8종목"], [data-name="전체 50종목"]) > :not(:empty) { min-width: max-content; }
+  .board-surface [data-node="36AT-0"] { min-width: 82px; }
+  .board-surface :is([data-node="3AE7-0"], [data-node="3AED-0"], [data-node="3AEJ-0"]) { min-width: 62px; }
+}
+.board-surface [data-node="3IFY-0"] [data-col="0"] { width: 112px; min-width: 112px; flex: 0 0 112px; }
+.board-surface [data-node="3KGF-0"] { min-width: 24px; }
+
+/* 넓어진 보유종목 표 아래의 보조 정보는 읽을 수 있는 두 열로 배치한다. */
+.bs-holdings-rail { display: flex; }
+@container board (min-width: 960px) {
+  .bs-holdings-rail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
+
+/* 비어 접힌 데이터의 조상 상자에 저작 시 고정 높이가 남지 않게 한다. */
+.board-surface .bs-reduced-content[data-bs-hoisted] { height: auto; min-height: 0; }
+.bs-workspace.bs-reduced-content { align-items: flex-start; }
+.board-surface .bs-rail > .bs-reduced-content { flex-basis: auto; }
+.board-surface :is(.bs-rail.bs-reduced-content, .bs-workspace > .bs-reduced-content) { align-self: flex-start; }
+.board-surface .bs-empty-orderbook-kpi { display: none !important; }
+.board-surface .bs-kpi:has(> .bs-empty-orderbook-kpi) { height: auto; min-height: 0; flex-wrap: wrap; }
+.board-surface .bs-kpi:has(> .bs-empty-orderbook-kpi) > .bs-kpi-cell { width: auto; flex: 1 1 220px; }
+.board-surface .bs-kpi:has(> .bs-empty-orderbook-kpi):not(:has(> .bs-kpi-cell:not(.bs-empty-orderbook-kpi))) { padding-block: 0; }
+/* 이 열은 숨긴 고정 잔량 막대의 제목뿐이다. 실제 가격·수량·합계 행은 유지한다. */
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TU5-1"] [data-row]:not([data-row="10"]) [data-col="3"] { display: none !important; }
+@container board (min-width: 960px) {
+  .board-surface:is([data-bs-board-id="13BC-2"], [data-bs-board-id="2TRW-1"]) .bs-readable-owner.bs-rail { width: 360px; min-width: 0; flex: 0 0 360px; }
+  .board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQF-0"].bs-readable-owner { width: 310px; min-width: 0; flex: 0 0 310px; }
+}
+.board-surface .bs-etf-period-original { display: none !important; }
+.board-surface [data-bs-primary-mockup="true"] { display: none !important; }
+.bs-query-context { padding: 14px 24px 0; font-size: 13px; line-height: 20px; color: var(--color-k-dim); overflow-wrap: anywhere; }
+.board-surface.bs-vi-snapshot :is([data-node="15RA-2"], [data-node="171H-2"], [data-node="171X-2"]) { display: none !important; }
+.board-surface.bs-vi-snapshot { min-height: 0; }
+.board-surface.bs-vi-snapshot :is([data-node="15R9-2"], [data-node="170E-2"]) { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; }
+.board-surface.bs-vi-snapshot :is([data-node="170J-2"], [data-node="170K-2"], [data-node="1VDL-1"]) { display: none !important; }
+.board-surface[data-bs-board-id="15R0-2"] .bs-readable-cell[data-col="0"] { align-items: flex-start; text-align: left; }
+.board-surface :is([data-node="33WQ-0"], [data-node="3533-0"], [data-node="3DRT-0"], [data-node="3FEA-0"], [data-node="3660-0"], [data-node="36F2-0"], [data-node="36KA-0"], [data-node="36QP-0"], [data-node="372E-0"], [data-node="3PSS-0"]) { background-color: transparent !important; }
+.board-surface[data-bs-board-id="13BC-2"] :is([data-node="153J-2"], [data-node="153Q-2"]) { background-color: transparent !important; }
+.board-surface[data-bs-board-id="13BC-2"] :is([data-node="153K-2"], [data-node="153R-2"]) { color: var(--color-k-dim) !important; font-family: var(--font-body); }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TZ7-1"] { background-color: #EE137B1A !important; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TZ8-1"] { color: var(--color-brand) !important; }
+.board-surface[data-bs-board-id="13BC-2"] [data-node="153J-2"]:has([data-missing="true"]) { display: none; }
+.board-surface[data-bs-board-id="2QX1-1"] :is([data-node="32HZ-0"], [data-node="32I1-0"]) { display: none; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="30AO-0"] { min-width: 190px; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="3SU2-0"] { min-width: max-content; }
+.board-surface[data-bs-board-id="3ODO-0"] :is([data-node="3P3E-0"], [data-node="3P6P-0"]) { height: auto; min-height: 0; align-self: flex-start; }
+.board-surface[data-bs-board-id="3ODO-0"] :is([data-node="3P63-0"], [data-node="3P6G-0"]) { height: auto; min-height: 0; flex-wrap: wrap; gap: 12px 16px; }
+.board-surface[data-bs-board-id="3ODO-0"] :is([data-node="3P63-0"], [data-node="3P6G-0"]) > * { width: auto; min-width: min(180px, 100%); height: auto; min-height: 0; flex: 1 1 180px; }
+.board-surface[data-bs-board-id="30TY-0"] [data-node="30U4-0"] { height: auto; min-height: 0; align-self: flex-start; }
+.board-surface[data-bs-board-id="3FR6-0"] :is([data-node="3G0N-0"], [data-node="3G0J-0"], [data-node="3G0F-0"]) { display: none !important; }
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3T8J-0"] { flex-wrap: wrap; gap: 8px; height: auto; min-height: 0; }
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3T8J-0"] > * { min-width: max-content; }
+.board-surface[data-bs-board-id="3ODO-0"] [data-node="3P3G-0"] .bs-readable-cell[data-col="0"] { align-items: flex-start; text-align: left; }
+.board-surface[data-bs-board-id="2SKU-1"] [data-node="3GLA-0"] { display: inline-flex; align-items: center; justify-content: center; width: auto; min-width: max-content; height: auto; min-height: 28px; padding: 4px 8px; border: 1px solid var(--color-k-line); border-radius: 4px; color: var(--color-k-text) !important; line-height: 18px; }
+.board-surface[data-bs-board-id="3ODO-0"] [data-node="3OZQ-0"] { overflow: visible; height: auto; min-height: 0; max-height: none; min-width: 0; max-width: 100%; }
+.board-surface[data-bs-board-id="3ODO-0"] [data-node="3OZR-0"] { flex-wrap: nowrap !important; overflow-x: auto; overflow-y: hidden; min-width: 0; max-width: 100%; height: auto; flex-shrink: 0; }
+.board-surface[data-bs-board-id="3ODO-0"] [data-node="3OZR-0"] > * { flex: 0 0 auto; }
+.board-surface[data-bs-board-id="3ODO-0"] :is([data-node="3P3G-0"], [data-node="3P48-0"]).bs-empty-table > :is(.bs-readable-scroll, .bs-readable-hint) { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3E9G-0"] { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; flex-direction: column; }
+.board-surface[data-bs-board-id="3DI2-0"] :is([data-node="3E9H-0"], [data-node="3E9I-0"]) { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; }
+.board-surface[data-bs-board-id="3DI2-0"] .bs-investor-group-title { width: 100%; min-width: var(--bs-table-width); height: auto; min-height: 32px; }
+.board-surface[data-bs-board-id="3DI2-0"] .bs-empty-table .bs-investor-group-title { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] .bs-empty-table > :is(.bs-readable-scroll, .bs-readable-hint) { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] :is([data-node="3DQK-0"], [data-node="3DQC-0"], [data-node="3DQ8-0"], [data-node="3DQ4-0"], [data-node="3DQI-0"]) { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQ3-0"] { height: auto; min-height: 0; padding-block: 16px; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQG-0"] { flex-direction: row !important; align-items: baseline; flex-wrap: wrap; gap: 16px; height: auto; min-height: 0; width: 100%; flex: 1 1 auto; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQH-0"] { font-size: 18px !important; line-height: 24px !important; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="14OR-2"] { min-width: 270px; }
+.board-surface[data-bs-board-id="137X-2"] :is([data-node="3C2X-0"], [data-node="3C34-0"]) { min-width: 124px; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="33C2-0"] > :not(.bs-unavailable-graphic-message) { display: none !important; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="3SKY-0"] { display: none !important; }
+.board-surface[data-bs-board-id="137X-2"] .bs-session-columns { display: grid; grid-template-columns: 46px 162px 162px; color: var(--color-k-dim); font-size: 11px; line-height: 18px; text-align: right; }
+.board-surface[data-bs-board-id="137X-2"] .bs-session-columns > :first-child { text-align: left; }
+.board-surface[data-bs-board-id="2RBO-1"] [data-node="2RG0-1"] { min-width: 270px; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TZE-1"]:has([data-missing="true"]) { display: none; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TU5-1"] { height: auto; min-height: 0; align-self: flex-start; }
+.board-surface:is([data-bs-board-id="2X5N-0"], [data-bs-board-id="30C1-0"]) .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+/* These source panels describe aggregates or fields the declared query never returns. */
+.board-surface[data-bs-board-id="31UD-0"] .bs-kpi,
+.board-surface[data-bs-board-id="31UD-0"] .bs-rail,
+.board-surface[data-bs-board-id="30ZW-0"] .bs-kpi,
+.board-surface[data-bs-board-id="30ZW-0"] .bs-rail,
+.board-surface[data-bs-board-id="316O-0"] .bs-kpi,
+.board-surface[data-bs-board-id="316O-0"] .bs-rail,
+.board-surface[data-bs-board-id="2Z49-0"] .bs-kpi,
+.board-surface[data-bs-board-id="2Z49-0"] .bs-rail,
+.board-surface[data-bs-board-id="3TOM-0"] .bs-kpi,
+.board-surface[data-bs-board-id="3TOM-0"] .bs-rail,
+.board-surface [data-node="3QES-0"] [data-col="1"],
+.board-surface [data-node="3QES-0"] [data-col="7"],
+.board-surface [data-node="3R7U-0"] [data-col="4"],
+.board-surface [data-node="3R7U-0"] [data-col="5"],
+.board-surface [data-node="3R7U-0"] [data-col="7"],
+.board-surface [data-node="3NJL-0"] [data-col="4"],
+.board-surface [data-node="3NJL-0"] [data-col="7"],
+.board-surface [data-node="3AXF-0"] [data-col="1"],
+.board-surface [data-node="3AXF-0"] [data-col="7"],
+.board-surface [data-node="3TS6-0"] [data-col="1"],
+.board-surface [data-node="3TS6-0"] [data-col="7"],
+.board-surface [data-node="3O8M-0"] { display: none !important; }
+.board-surface[data-bs-board-id="2YS8-0"] .bs-readable-cell:is([data-col="4"], [data-col="5"], [data-col="6"]),
+.board-surface[data-bs-board-id="2ZBB-0"] .bs-readable-cell:is([data-col="2"], [data-col="6"], [data-col="7"]) { display: none !important; }
+.board-surface[data-bs-board-id="2YS8-0"] [data-node="2YWX-0"] { min-width: 270px; flex-shrink: 0; }
+.board-surface[data-bs-board-id="2V71-0"] [data-node="3SGG-0"] { min-width: max-content; }
+.board-surface .bs-filter-popover { max-width: calc(100% - 16px); z-index: 30; }
+.board-surface .bs-filter-popover .bs-filter-option { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; height: auto; min-height: 52px; padding: 10px 12px; }
+.board-surface .bs-filter-option > [data-node] { width: 100%; max-width: 100%; white-space: normal; overflow-wrap: anywhere; font-size: 13px; line-height: 18px; }
+.board-surface .bs-filter-option > [data-node] + [data-node] { font-size: 12px; }
+.board-surface [data-node="3CXU-0"] :is([data-col="5"], [data-col="6"]) { display: none !important; }
+.board-surface:is([data-bs-board-id="31UD-0"], [data-bs-board-id="30ZW-0"], [data-bs-board-id="316O-0"], [data-bs-board-id="2Z49-0"], [data-bs-board-id="3TOM-0"]) :is(.bs-workspace, .bs-primary) { height: auto; min-height: 0; width: 100%; flex-basis: auto; }
+.bs-etf-period { display: flex; flex-direction: column; gap: 20px; padding: 20px 24px; min-width: 0; }
+.bs-etf-target { font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
+.bs-etf-period-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.bs-etf-period-label { padding-right: 8px; font-size: 13px; }
+.bs-etf-period-button { padding: 8px 16px; border: 1px solid var(--color-k-line); border-radius: 6px; background: var(--color-k-panel); color: var(--color-k-text); font: inherit; font-size: 13px; line-height: 20px; cursor: pointer; }
+.bs-etf-period-button[aria-pressed="true"] { background: var(--color-k-text); color: var(--color-k-panel); }
+.bs-etf-period-button:disabled { opacity: .6; cursor: default; }
+.bs-etf-period-button:focus-visible { outline: 2px solid var(--color-k-text); outline-offset: 3px; }
+.bs-etf-metrics { display: flex; flex-wrap: wrap; gap: 24px; padding: 20px 0; border-block: 1px solid var(--color-k-line-soft); }
+.bs-etf-metric { display: flex; flex: 1 1 180px; min-width: 0; flex-direction: column; gap: 10px; }
+.bs-etf-metric-label { font-size: 13px; line-height: 20px; color: var(--color-k-dim); }
+.bs-etf-metric-value { font-family: var(--font-mono); font-size: 20px; line-height: 34px; font-weight: 600; overflow-wrap: anywhere; }
+.bs-etf-metric-value.is-prominent { font-size: 28px; }
+.bs-etf-metric-value[data-tone="up"] { color: var(--color-up); }
+.bs-etf-metric-value[data-tone="down"] { color: var(--color-down); }
+.bs-etf-period-note { font-size: 12px; line-height: 20px; color: var(--color-k-dim); }
+@container board (max-width: 600px) {
+  .board-surface :is([data-node="2X5I-0"], [data-node="3205-0"], [data-node="2ZA5-0"], [data-node="3TWQ-0"], [data-node="315O-0"], [data-node="3NHF-0"]) { flex-wrap: wrap; gap: 8px; height: auto; }
+  .board-surface :is([data-node="2X5M-0"], [data-node="3209-0"], [data-node="2ZA9-0"], [data-node="3TWU-0"], [data-node="315S-0"], [data-node="3NHG-0"]) { flex: 0 0 100%; font-size: 20px; line-height: 28px; }
+  .bs-etf-period { padding: 16px; }
+  .bs-etf-period-label { width: 100%; }
+  .bs-etf-metrics { gap: 20px; }
+  .bs-etf-metric { flex-basis: calc(50% - 10px); }
+}
+
+/* Each query measure and each broker side has its own table. */
+.bs-flow-card .bs-header [data-slot-id="s001"] { font-size: 20px; line-height: 28px; }
+.bs-flow-card .bs-header [data-slot-id="s002"] { white-space: nowrap; }
+.board-surface .bs-flow-original { display: none !important; }
+.bs-flow-section { padding: 20px 24px 24px; }
+.bs-flow-context { color: var(--color-k-dim); font-size: 13px; line-height: 20px; margin-bottom: 18px; overflow-wrap: anywhere; }
+.bs-flow-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 24px; align-items: start; }
+.bs-flow-panel { min-width: 0; }
+.bs-flow-title { margin: 0 0 12px; font-family: var(--font-strong); font-size: 16px; line-height: 22px; color: var(--color-k-text); }
+.bs-flow-table { width: 100%; height: auto; min-height: 0; }
+.bs-flow-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1fr); gap: 12px; min-height: 46px; border-bottom: 1px solid var(--color-k-line-soft); align-items: center; }
+.bs-flow-row[data-row="head"] { min-height: 36px; color: var(--color-k-dim); font-size: 12px; }
+.bs-flow-cell { min-width: 0; padding-block: 10px; }
+.bs-flow-cell:last-child { text-align: right; }
+.bs-flow-identity { display: flex; gap: 10px; align-items: center; }
+.bs-flow-rank { font-family: var(--font-mono); font-size: 12px; color: var(--color-k-dim); width: 20px; flex: 0 0 20px; }
+.bs-flow-name { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.bs-flow-section [data-bs-hoisted] { width: auto; max-width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 1 auto; }
+.bs-flow-name-text { font-family: var(--font-body); font-size: 13px; line-height: 18px; color: var(--color-k-text); overflow-wrap: anywhere; }
+.bs-flow-code { font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--color-k-dim); }
+.bs-flow-value { display: flex; justify-content: flex-end; }
+.bs-flow-value-text { font-family: var(--font-mono); font-size: 13px; line-height: 18px; white-space: nowrap; }
+@container board (max-width: 479px) { .bs-flow-section { padding-inline: 16px; } }
+
+/* A list query and a one-shot search do not start a monitoring session. */
+.board-surface[data-bs-condition-read]:not([data-bs-condition-read=""]) :is(.bs-rail, .bs-condition-monitor-only, .bs-condition-monitor-mode, [data-node="2UPY-1"]) { display: none !important; }
+.board-surface[data-bs-condition-read]:not([data-bs-condition-read=""]) :is(.bs-workspace, .bs-primary, [data-node="34ND-0"]) { height: auto; min-height: 0; }
+.board-surface[data-bs-condition-read]:not([data-bs-condition-read=""]) .bs-primary { width: 100%; flex: 0 0 auto; border-right: 0; }
+.board-surface[data-bs-condition-read="list"] :is(.bs-readable-scroll, .bs-readable-hint) { display: none; }
+.board-surface[data-bs-condition-read="list"] .bs-condition-empty-card { display: none !important; }
+.board-surface[data-bs-condition-read="list"] .bs-readable-owner > .bs-empty-table-message { display: none !important; }
+.board-surface[data-bs-condition-read="list"] [data-node="34ND-0"] { flex-direction: column; gap: 0; width: 100%; }
+.board-surface[data-bs-condition-read="list"] :is([data-node="34NE-0"], [data-node="34NO-0"], [data-node="34NY-0"]) { width: 100%; flex: 0 0 auto; padding: 12px 0; }
+.board-surface[data-bs-condition-read="list"] [data-node="34ND-0"] [data-bs-hoisted] { height: auto; min-height: 0; }
+.board-surface[data-bs-condition-read="list"] :is([data-node="34NE-0"], [data-node="34NO-0"], [data-node="34NY-0"]) { background: transparent; border-color: var(--color-k-line-soft); }
+.board-surface[data-bs-condition-read="search"] [data-node="34ND-0"] { display: none !important; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-table { --bs-table-width: 270px !important; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-cell:not([data-col="1"]):not([data-col="5"]) { display: none !important; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-cell[data-col="1"] { --bs-cell-width: 150px !important; align-items: flex-start; text-align: left; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-cell[data-col="5"] { --bs-cell-width: 120px !important; }
+.bs-condition-query-context[hidden], .bs-condition-empty[hidden] { display: none; }
+
+/* Rail dates preserve all ten date characters beside the numeric measure. */
+.board-surface :is([data-node="3DVA-0"], [data-node="3DVE-0"], [data-node="3DVI-0"], [data-node="3DVM-0"], [data-node="3DWD-0"], [data-node="3SHB-0"], [data-node="3SHG-0"], [data-node="3SHL-0"], [data-node="3SHQ-0"], [data-node="3SHV-0"]) { min-width: 10ch; width: auto; flex-shrink: 0; white-space: nowrap; }
+.board-surface :is([data-node="3DV9-0"], [data-node="3DVD-0"], [data-node="3DVH-0"], [data-node="3DVL-0"]) { flex-wrap: wrap; gap: 6px 10px; height: auto; min-height: 0; }
+.board-surface :is([data-node="3DV9-0"], [data-node="3DVD-0"], [data-node="3DVH-0"], [data-node="3DVL-0"]) > :nth-child(2) { min-width: max-content; flex: 1 0 auto; }
+.board-surface :is([data-node="3DV9-0"], [data-node="3DVD-0"], [data-node="3DVH-0"], [data-node="3DVL-0"]) > :nth-child(3) { display: block; width: 100%; flex: 1 0 100%; white-space: normal; overflow-wrap: anywhere; }
+.board-surface [data-node="3DWE-0"] > [data-node] { flex-wrap: wrap; gap: 6px 10px; height: auto; min-height: 0; }
+.board-surface [data-node="3DWE-0"] > [data-node] > :nth-child(2) { min-width: 96px; flex-shrink: 0; }
+.board-surface [data-node="3SQC-0"] { min-width: max-content; flex-shrink: 0; }
+
+/* Full ranking rows from the current bounded response. */
+.board-surface .bs-expanded-ranking-original { display:none !important; }
+.bs-expanded-ranking { min-width:0; padding:20px 24px 24px; display:flex; flex-direction:column; gap:16px; }
+.bs-ranking-title { margin:0; font-family:var(--font-strong); font-size:20px; line-height:28px; }
+.bs-ranking-count,.bs-ranking-empty { color:var(--color-k-dim); font-size:13px; line-height:20px; }
+.bs-ranking-scroll { overflow-x:auto; min-width:0; width:100%; border-top:1px solid var(--color-k-line); }
+.bs-ranking-scroll:focus-visible { outline:2px solid var(--color-k-text); outline-offset:-2px; }
+.bs-ranking-table { width:100%; border-collapse:collapse; font-size:13px; line-height:18px; }
+.bs-ranking-table :is(th,td) { min-width:140px; padding:12px; border-bottom:1px solid var(--color-k-line-soft); text-align:right; font-weight:400; white-space:nowrap; }
+.bs-ranking-table th { font-size:12px; color:var(--color-k-dim); }
+.bs-ranking-table td { font-family:var(--font-mono); }
+.bs-ranking-table [data-field="_position"] { min-width:64px; width:64px; }
+.bs-ranking-table [data-field="stk_nm"] { min-width:200px; text-align:left; font-family:var(--font-body); white-space:normal; overflow-wrap:anywhere; }
+.bs-ranking-table [data-role="identifier"] { min-width:104px; }
+.bs-ranking-table [data-role="price"], .bs-ranking-table [data-kind="percent"] { min-width:120px; }
+.bs-ranking-table [data-tone="up"] { color:var(--color-up); }
+.bs-ranking-table [data-tone="down"] { color:var(--color-down); }
+.bs-ranking-note { color:var(--color-k-dim); font-size:12px; line-height:18px; }
+.board-surface .bs-ranking-sort { background:transparent !important; border-color:var(--color-k-line) !important; }
+.board-surface .bs-ranking-sort > * { color:var(--color-k-text) !important; }
+.board-surface .bs-ranking-sort-current { background:var(--color-k-text) !important; }
+.board-surface .bs-ranking-sort-current > * { color:var(--color-k-panel) !important; }
+@container board (max-width:479px) { .bs-expanded-ranking { padding-inline:16px; } }
+
+/* Each time-after-hours depth is a row, not an optional column. */
+.board-surface .bs-depth-scroll { overflow-x:auto; max-width:100%; height:auto; min-height:0; }
+.bs-depth-table { width: max(100%, 696px); min-width:696px; }
+.bs-depth-table .bs-depth-row { display:flex; flex-direction:row; min-width:696px; width:100%; flex-wrap:nowrap; min-height:40px; align-items:center; }
+.bs-depth-table .bs-depth-row > [data-col] { display:flex; justify-content:flex-end; align-items:center; box-sizing:border-box; width:140px; min-width:140px; flex:0 0 140px; padding:10px 12px; white-space:nowrap; text-align:right; font-size:13px; line-height:18px; }
+.bs-depth-table .bs-depth-row > [data-col="0"] { width:76px; min-width:76px; flex-basis:76px; justify-content:flex-start; text-align:left; }
+.bs-depth-table .bs-depth-row > [data-col="2"], .bs-depth-table .bs-depth-row > [data-col="3"] { width:180px; min-width:180px; flex-basis:180px; }
+.bs-depth-table .bs-depth-row > [data-col="4"] { width:120px; min-width:120px; flex-basis:120px; }
+
+.board-surface .bs-depth-table [data-bs-hoisted] { height:auto !important;min-height:0 !important;max-height:none !important; }
+
+/* 계좌 하단의 값 쌍은 결측 자리와 읽을 수 있는 행 높이를 함께 유지한다. */
+.bs-holdings-rail .bs-account-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 8px 16px; height: auto; min-height: 36px; padding-block: 6px; }
+.bs-holdings-rail .bs-account-detail-grid > [data-bs-hoisted] { width: auto; min-width: 0; min-height: 28px; }
+.bs-holdings-rail :is([data-node="38IV-0"], [data-node="3UP9-0"], [data-node="3UPE-0"], [data-node="38J5-0"], [data-node="3UNQ-0"]) { height: auto; min-height: 40px; padding-block: 6px; }
+.bs-holdings-rail [data-node="3UNR-0"] { font-size: 12px !important; line-height: 18px !important; }
+.board-surface[data-bs-board-id="2SKU-1"] :is([data-node="3U9L-0"], [data-node="3U9S-0"], [data-node="3U9Z-0"], [data-node="3UA6-0"], [data-node="3UAB-0"], [data-node="3UB6-0"]) { font-size: 14px !important; line-height: 20px !important; min-width: 20px; }
+
+.board-surface .bs-account-empty-section { height: auto; min-height: 0; flex: 0 0 auto; }
+.bs-account-empty-section > :not(:first-child):not(.bs-account-empty-note), .bs-account-unlabelled-empty { display: none !important; }
+.bs-account-empty-note { color: var(--color-k-dim); font-size: 12px; line-height: 18px; padding-block: 6px; }
+
+/* 순위 결과의 원본 8열을 유지하고 종목명을 왼쪽 정렬한다. */
+.board-surface[data-bs-board-id="2VDA-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; } .board-surface[data-bs-board-id="2VDA-0"] [data-node="3HMX-0"] > .bs-readable-hint { order: -1; padding: 0 0 6px; }
+
+/* 월별 대여 수량은 좁은 레일에서 두 개의 값 묶음을 차례로 배치한다. */
+.board-surface[data-bs-board-id="3K7K-0"] :is([data-node="3US4-0"], [data-node="3USB-0"], [data-node="3USI-0"], [data-node="3USV-0"], [data-node="3UT2-0"]) { flex-wrap: wrap; height: auto; gap: 8px 16px !important; }
+.board-surface[data-bs-board-id="3K7K-0"] :is([data-node="3US4-0"], [data-node="3USB-0"], [data-node="3USI-0"], [data-node="3USV-0"], [data-node="3UT2-0"]) > [data-node] { flex: 1 1 240px; min-width: 0; }
+
+/* 독립 열 제목을 한 칸에 합치지 않는 표: 종목·거래원 이름은 왼쪽 정렬한다. */
+.board-surface[data-bs-board-id="13K0-2"] [data-node="33Z2-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2SYW-1"] [data-node="3Q8R-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2UHM-1"] [data-node="2ULF-1"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2VO0-0"] [data-node="38TO-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2XA5-0"] [data-node="39FH-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2XY6-0"] [data-node="39V5-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2Y47-0"] [data-node="3A9M-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2YXS-0"] [data-node="3G5L-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2ZHC-0"] [data-node="3IYO-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2ZN9-0"] [data-node="3B82-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2ZZ7-0"] [data-node="3KPB-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="30O1-0"] [data-node="3RJU-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="30ZW-0"] [data-node="3R7U-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="316O-0"] [data-node="3NJL-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="31CL-0"] [data-node="37AW-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="31II-0"] [data-node="3ARB-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="31OF-0"] [data-node="3A7P-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="3OIM-0"] [data-node="3SUJ-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="3TCO-0"] [data-node="3TEG-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+
+/* ETF 이름·배수·분류 칩은 종목 칸 안에서 줄을 나눌 수 있다. */
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="1"] > [data-bs-col-item] { flex-wrap: wrap; max-width: 100%; }
+
+.board-surface[data-bs-board-id="15P5-2"] [data-node="3CCM-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+
+/* Source-confirmed unavailable filter comparison/status groups retain their anchors. */
+.bs-filter-unavailable-group { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.bs-filter-unavailable-group > :not(.bs-filter-unavailable-note) { display: none !important; }
+.bs-filter-unavailable-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+.board-surface[data-bs-board-id="13K0-2"] [data-node="33Z2-0"] .bs-readable-cell[data-col="0"] { display: none; }
+.board-surface[data-bs-board-id="13K0-2"] [data-node="33WD-0"] > [data-node="33YY-0"] {
+  width: 100%;
+  max-width: 100%;
+}
+
+.bs-filter-compact-rail { height:auto!important; min-height:0!important; flex-basis:auto!important; align-self:start; }
+
+.bs-account-residual-empty { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.bs-account-residual-empty > :not(.bs-account-residual-note):not(.bs-account-detail-navigation) { display: none !important; }
+.bs-account-residual-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+
+/* Price color describes the book side, while signed changes retain their tone. */
+.board-surface [data-bs-quote-side="ask"]:not([data-missing]) { color: var(--color-down) !important; }
+.board-surface [data-bs-quote-side="bid"]:not([data-missing]) { color: var(--color-up) !important; }
+.bs-quote-labelled-value { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.board-surface[data-bs-board-id="3JZ3-0"] [data-node="3KFV-0"] .bs-depth-column-unavailable { display: none !important; }
+.board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQF-0"].bs-orderbook-empty > [data-node="1JQJ-0"] { display: flex !important; }
+.board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQF-0"].bs-orderbook-empty { align-self: start; }
+.board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQF-0"] > .bs-orderbook-note { padding: 6px 20px 12px; }
+@container board (max-width: 959px) {
+  .board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQH-0"] > [data-node],
+  .board-surface[data-bs-board-id="3N4O-0"] [data-node="3P86-0"] > [data-node] { width: 100% !important; max-width: 100%; min-width: 0; }
+  .board-surface[data-bs-board-id="1JPU-0"] :is([data-node="34TS-0"], [data-node="1JYI-0"], [data-node="1JYW-0"], [data-node="1JZD-0"]) > [data-node],
+  .board-surface[data-bs-board-id="3N4O-0"] :is([data-node="3UDD-0"], [data-node="3UDT-0"], [data-node="3UF0-0"], [data-node="3UFL-0"]) > [data-node] { width: 100% !important; min-width: 0; justify-content: space-between; }
+}
+.board-surface .bs-footer:has(> .bs-quote-labelled-value) { flex-wrap: wrap; gap: 8px 16px; height: auto; padding-block: 12px; }
+.bs-footer > .bs-quote-labelled-value { flex: 0 0 auto; min-width: max-content; }
+.bs-quote-labelled-value > [data-node] { width: auto !important; min-width: 0; height: auto; }
+.bs-quote-value-label { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); white-space: nowrap; }
+.board-surface .bs-orderbook-unsupported { display: none !important; }
+.board-surface .bs-orderbook-empty { height: auto !important; min-height: 0 !important; flex-basis: auto !important; gap: 6px !important; }
+.bs-orderbook-empty > :not(.bs-orderbook-note):not(.bs-orderbook-navigation) { display: none !important; }
+.bs-orderbook-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; overflow-wrap: anywhere; }
+.bs-orderbook-note[hidden] { display: none; }
+.board-surface[data-bs-board-id="2TRW-1"] .bs-quote-totals { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); width: 100%; height: auto; min-height: 0; gap: 16px; }
+.bs-quote-totals > [data-node="33L6-0"] { grid-column: 1 / -1; }
+.board-surface .bs-quote-totals > [data-node] { width: auto; min-width: 0; height: auto; flex-wrap: wrap; gap: 6px; }
+.board-surface .bs-quote-totals > [data-node] > [data-node] { width: auto; min-width: 0; height: auto; }
+.board-surface[data-bs-board-id="2QRP-1"] .bs-session-quote-row > [data-col="1"] { display: none !important; }
+.board-surface[data-bs-board-id="2QRP-1"] .bs-session-quote-table { width: max(100%, 510px); min-width: 510px; }
+.board-surface[data-bs-board-id="2QRP-1"] [data-node="3IOX-0"], .board-surface[data-bs-board-id="3JT4-0"] [data-node="3JUO-0"] { height: auto; min-height: 0; flex-wrap: wrap; }
+.board-surface[data-bs-board-id="2QRP-1"] [data-node="3IOX-0"] > [data-node], .board-surface[data-bs-board-id="3JT4-0"] [data-node="3JUO-0"] > [data-node] { flex: 1 1 200px; min-width: 0; height: auto; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TS8-1"].bs-empty-table > :is(.bs-readable-scroll, .bs-readable-hint) { display: none !important; }
+.board-surface[data-bs-board-id="3JZ3-0"] [data-node="3UD2-0"].bs-orderbook-empty { flex-direction: row !important; align-items: center; }
+.board-surface[data-bs-board-id="3JZ3-0"] [data-node="3UD4-0"] { order: 1; padding-top: 0; }
+@container board (min-width: 960px) {
+  .board-surface[data-bs-board-id="3JZ3-0"] .bs-workspace > .bs-primary { flex: 1 1 0; width: auto; min-width: 0; }
+  .board-surface[data-bs-board-id="3JZ3-0"] .bs-rail { flex: 0 0 320px; min-width: 0; max-width: 100%; }
+}
+.bs-account-detail-context { color: var(--color-k-text); font: 14px/1.5 var(--font-strong); }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3S9V-0"] { overflow-x: auto; flex-wrap: nowrap !important; max-width: 100%; }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3S9V-0"] > [data-node] { flex: 1 0 216px !important; min-width: 216px; }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3SAD-0"] { flex-wrap: wrap; }
+
+.board-surface[data-bs-board-id="3IGR-0"] [data-node="3U5H-0"] { height: auto; min-height: 0; flex-basis: auto; align-self: start; }
+
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3UR3-0"] > [data-node],
+.board-surface[data-bs-board-id="3LGC-0"] :is([data-node="3MML-0"], [data-node="3UQ7-0"]) > [data-node] { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 244px), 1fr)); height: auto; min-height: 32px; gap: 8px 16px !important; padding-block: 4px; }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3UR3-0"] > [data-node] > [data-node],
+.board-surface[data-bs-board-id="3LGC-0"] :is([data-node="3MML-0"], [data-node="3UQ7-0"]) > [data-node] > [data-node] { width: auto; min-width: 0; min-height: 24px; }
+
+/* ETF 전체 시세에는 scalar 순위가 제공되지 않는다. */
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="0"] { display: none; }
+
+/* 받은 수급값과 출처를 보존하고, 완료된 빈 수급만 짧게 알린다. */
+.bs-instrument-empty-note { color:var(--color-k-dim); font-size:12px; line-height:1.6; }
+.board-surface[data-bs-board-id="137X-2"] .bs-empty-chart-flow { height:auto!important; min-height:0!important; }
+.board-surface[data-bs-board-id="137X-2"] .bs-empty-chart-flow :is([data-node="14SS-2"], [data-node="14SY-2"], [data-slot-id="s072"]) { display:none!important; }
+.board-surface[data-bs-board-id="3FR6-0"] .bs-empty-minute-summary { height:auto!important; min-height:0!important; }
+.board-surface[data-bs-board-id="3FR6-0"] .bs-empty-minute-summary > :not([data-node="3HAP-0"]):not(.bs-instrument-empty-note) { display:none!important; }
+.board-surface[data-bs-board-id="15N5-2"] [data-slot-id="s046"],
+.board-surface[data-bs-board-id="2RBO-1"] [data-slot-id="s065"] { display:none!important; }
+.board-surface[data-bs-board-id="15N5-2"] :is([data-node="3CWV-0"], [data-node="3CX0-0"]) { width:auto!important; min-width:0!important; height:auto!important; text-align:right; }
+.board-surface[data-bs-board-id="15N5-2"] :is([data-node="3CWT-0"], [data-node="3CWY-0"]) { height:auto!important; min-height:36px; gap:12px; }
+
+/* These responses have no scalar rank field; keep received data columns aligned. */
+.board-surface[data-bs-board-id="2VDA-0"] [data-node="3HMX-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="2YXS-0"] [data-node="3G5L-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="2ZHC-0"] [data-node="3IYO-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="2ZZ7-0"] [data-node="3KPB-0"] .bs-readable-cell[data-col="0"] { display: none; }
+.bs-ranking-unavailable-group { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface[data-bs-board-id="2R3M-1"] [data-node="3CRW-0"] :is([data-slot-id="s057"], [data-slot-id="s065"], [data-slot-id="s073"], [data-slot-id="s081"], [data-slot-id="s089"], [data-slot-id="s097"], [data-slot-id="s105"], [data-slot-id="s113"], [data-slot-id="s121"]) { display: none !important; }
+.bs-ranking-unavailable-group > :not(.bs-ranking-unavailable-note) { display: none !important; }
+.bs-ranking-unavailable-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+.bs-kpi.bs-ranking-unavailable-group > .bs-ranking-unavailable-note { padding-inline: 28px; }
+.bs-ranking-compact-rail { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.bs-ranking-duplicate-list { display: none !important; }
+.board-surface[data-bs-board-id="2R3M-1"] .bs-current-quote-empty-costs { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface[data-bs-board-id="2R3M-1"] .bs-current-quote-empty-costs > :not(.bs-current-quote-note) { display: none !important; }
+.board-surface[data-bs-board-id="2R3M-1"] [data-node="36MQ-0"]:has(> .bs-current-quote-empty-costs) { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.board-surface[data-bs-board-id="2R3M-1"] [data-node="3DFG-0"] .bs-current-quote-column-empty { display: none !important; }
+.bs-current-quote-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+@container board (max-width: 959px) {
+  .board-surface[data-bs-board-id="2ZN9-0"] :is([data-node="3054-0"], [data-node="3055-0"]) { height: auto !important; min-height: 0 !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3055-0"] { flex-wrap: wrap !important; gap: 8px !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3056-0"] { width: 100% !important; min-width: 0 !important; flex: 0 0 100% !important; flex-wrap: nowrap !important; overflow-x: auto !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] :is([data-node="3056-0"], [data-node="305J-0"]) > [data-node] { flex: 0 0 auto !important; white-space: nowrap; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="305J-0"] { width: max-content !important; min-width: max-content !important; flex: 0 0 auto !important; flex-wrap: nowrap !important; gap: 6px !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3BGY-0"],
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3BGY-0"] > [data-node] { width: 100% !important; min-width: 0 !important; }
+}
+.board-surface[data-bs-board-id="2YXS-0"] :is([data-slot-id="s330"], [data-slot-id="s333"], [data-slot-id="s336"], [data-slot-id="s339"], [data-slot-id="s342"], [data-slot-id="s346"], [data-slot-id="s349"], [data-slot-id="s352"], [data-slot-id="s355"]) { display: none !important; }
+
+/* Hide only source-confirmed absent ranking columns and specimen KPI cells. */
+.board-surface[data-bs-board-id="30C1-0"] [data-node="3LY6-0"] .bs-readable-cell:is([data-col="0"], [data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="30O1-0"] [data-node="3RJU-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="30ZW-0"] [data-node="3R7U-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="316O-0"] [data-node="3NJL-0"] .bs-readable-cell[data-col="0"] { display: none !important; }
+.bs-ranking-unavailable-cell { display: none !important; }
+.board-surface[data-bs-board-id="30C1-0"] :is([data-slot-id="s332"], [data-slot-id="s333"], [data-slot-id="s335"], [data-slot-id="s336"], [data-slot-id="s338"], [data-slot-id="s339"], [data-slot-id="s341"], [data-slot-id="s342"], [data-slot-id="s343"], [data-slot-id="s344"]) { display: none !important; }
+
+/* Exact query columns with no bound scalar values. */
+.board-surface[data-bs-board-id="2VDA-0"] [data-node="3HMX-0"] .bs-readable-cell:is([data-col="3"], [data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="2YXS-0"] [data-node="3G5L-0"] .bs-readable-cell[data-col="3"],
+.board-surface[data-bs-board-id="2ZHC-0"] [data-node="3IYO-0"] .bs-readable-cell:is([data-col="3"], [data-col="7"]),
+.board-surface[data-bs-board-id="2ZZ7-0"] [data-node="3KPB-0"] .bs-readable-cell:is([data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3T8I-0"] .bs-readable-cell[data-col="6"] { display: none !important; }
+.board-surface[data-bs-board-id="2VDA-0"] :is([data-slot-id="s292"], [data-slot-id="s295"], [data-slot-id="s298"], [data-slot-id="s301"]),
+.board-surface[data-bs-board-id="2ZHC-0"] :is([data-slot-id="s339"], [data-slot-id="s340"], [data-slot-id="s342"], [data-slot-id="s343"], [data-slot-id="s345"], [data-slot-id="s346"], [data-slot-id="s348"], [data-slot-id="s349"]),
+.board-surface[data-bs-board-id="2ZZ7-0"] :is([data-slot-id="s254"], [data-slot-id="s257"], [data-slot-id="s260"], [data-slot-id="s263"], [data-slot-id="s266"]) { display: none !important; }
+/* The minute context keeps session/basis data and its reserved action area. */
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3FRD-0"] { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.board-surface[data-bs-board-id="2VDA-0"] [data-slot-id="s300"] { color: var(--color-k-text) !important; }
+
+/* ELW lists keep only fields belonging to the received row. */
+.board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"]) .bs-readable-cell:is([data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="2ZN9-0"] [data-node="3B82-0"] .bs-readable-cell:is([data-col="0"], [data-col="3"]),
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="7"],
+.bs-elw-unavailable-line { display: none !important; }
+.board-surface[data-bs-board-id="2VIN-0"] :is(.bs-workspace, .bs-primary, .bs-rail) { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) :is(.bs-workspace, .bs-primary, .bs-rail, .bs-kpi, .bs-kpi-cell) { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-kpi { padding-block: 12px; flex-wrap: wrap; row-gap: 12px; }
+@container board (max-width: 959px) {
+  .board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-rail { width: 100% !important; min-width: 0 !important; }
+  .board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-rail > [data-node] { width: 100%; max-width: 100%; }
+}
+
+/* Only the four reviewed query lists; zero-valued received cells are retained. */
+.bs-rank-four .bs-rank-four-unsupported { display:none !important; }
+.bs-rank-four .bs-workspace, .bs-rank-four .bs-primary, .bs-rank-four .bs-rail { min-height:0 !important; height:auto !important; align-self:start; }
+.bs-rank-four .bs-workspace { align-items:start; }
+.bs-rank-four .bs-rail { width:100% !important; max-width:100% !important; }
+.bs-rank-four .bs-rail > [data-node] { min-width:0; max-width:100%; height:auto !important; min-height:0 !important; }
+.bs-rank-four .bs-kpi { display:grid !important; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); height:auto !important; min-height:0 !important; }
+.bs-rank-four .bs-kpi > [data-node] { width:auto !important; min-width:0 !important; height:auto !important; flex-basis:auto !important; }
+.bs-rank-four .bs-kpi [data-slot-id], .bs-rank-four .bs-rail [data-slot-id] { min-width:0 !important; max-width:100% !important; height:auto !important; white-space:normal !important; overflow-wrap:anywhere; line-height:1.5 !important; }
+.bs-rank-four .bs-ranking-unavailable-group { display:block !important; }
+.bs-rank-four .bs-readable-cell[data-col="1"] { align-items:flex-start; text-align:left; }
+.bs-rank-four .bs-readable-cell > [data-slot-id] { max-width:100%; white-space:normal; overflow-wrap:anywhere; }
+.bs-rank-four .bs-ranking-unavailable-note { white-space:normal; overflow-wrap:anywhere; }
+.bs-rank-four .bs-rail .bs-paired { display:none !important; }
+.board-surface[data-bs-board-id="2V71-0"] [data-node="2WBN-0"] .bs-readable-cell[data-col="7"],
+.board-surface[data-bs-board-id="3063-0"] [data-node="35L4-0"] .bs-readable-cell:is([data-col="0"],[data-col="2"],[data-col="6"],[data-col="7"]),
+.board-surface[data-bs-board-id="30HY-0"] [data-node="34IW-0"] .bs-readable-cell:is([data-col="2"],[data-col="7"]) { display:none !important; }
+.board-surface[data-bs-board-id="2V71-0"] :is([data-node="3SFY-0"],[data-node="3SG6-0"],[data-node="3SGN-0"],[data-node="3E9O-0"]),
+.board-surface[data-bs-board-id="3063-0"] :is([data-node="335R-0"],[data-node="335T-0"],[data-node="3TZQ-0"],[data-node="3SU1-0"]),
+.board-surface[data-bs-board-id="30HY-0"] :is([data-node="3SYD-0"],[data-node="3I65-0"],[data-node="3I68-0"]) { display:none !important; }
+.board-surface[data-bs-board-id="30HY-0"] :is([data-node="3I6F-0"],[data-node="3I6L-0"],[data-node="3I6S-0"]) { display:none !important; }
+/* These authored more/fold chips have no registered action; real state tabs remain. */
+.board-surface[data-bs-board-id="2V71-0"] [data-node="2WE2-0"],
+.board-surface[data-bs-board-id="3063-0"] [data-node="307J-0"],
+.board-surface[data-bs-board-id="30HY-0"] [data-node="30JE-0"],
+.board-surface[data-bs-board-id="31OF-0"] [data-node="31PV-0"] { display:none !important; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="335M-0"] { height:auto !important; min-height:0 !important; gap:8px; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="335P-0"] { width:auto !important; height:auto !important; background:transparent !important; }
+.board-surface[data-bs-board-id="2V71-0"] :is([data-node="3E9Z-0"],[data-node="3EA5-0"],[data-node="3EAA-0"],[data-node="3EAH-0"],[data-node="3EAL-0"],[data-node="3EAP-0"],[data-node="3EAT-0"]),
+.board-surface[data-bs-board-id="30HY-0"] [data-node="3I6V-0"] { display:flex !important; flex-wrap:wrap; gap:8px; height:auto !important; min-height:0 !important; align-items:baseline; }
+.board-surface[data-bs-board-id="2V71-0"] :is([data-node="3E9Z-0"],[data-node="3EA5-0"],[data-node="3EAA-0"],[data-node="3EAH-0"],[data-node="3EAL-0"],[data-node="3EAP-0"],[data-node="3EAT-0"]) > *,
+.board-surface[data-bs-board-id="30HY-0"] [data-node="3I6V-0"] > * { width:auto !important; min-width:0 !important; height:auto !important; flex:1 1 130px; }
+.board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row { display:grid !important; grid-template-columns:minmax(0,1fr) minmax(140px,auto); gap:12px; height:auto !important; min-height:0 !important; align-items:baseline; padding-block:8px; }
+.board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row > [data-slot-id] { width:auto !important; text-align:left; }
+.board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row > [data-slot-id]:last-child { text-align:right; }
+.board-surface[data-bs-board-id="31OF-0"] :is(.bs-kpi,.bs-rail) { display:none !important; }
+.board-surface[data-bs-board-id="31OF-0"] [data-node="3A7P-0"] { width:100% !important; box-sizing:border-box; min-height:0 !important; padding:20px; }
+.board-surface[data-bs-board-id="31OF-0"] [data-node="31SA-0"] { display:flex !important; flex-direction:row !important; flex-wrap:wrap; gap:8px; width:100% !important; height:auto !important; min-height:0 !important; }
+.board-surface[data-bs-board-id="31OF-0"] :is([data-node="31SK-0"],[data-node="31SB-0"]) { display:contents !important; }
+.board-surface[data-bs-board-id="31OF-0"] :is([data-node="31SK-0"],[data-node="31SB-0"]) > [data-node] { width:max-content !important; flex:0 0 auto !important; height:auto !important; }
+.board-surface[data-bs-board-id="31OF-0"] [data-node="31SA-0"] [data-slot-id] { white-space:nowrap !important; }
+.board-surface[data-bs-board-id="2V71-0"] [data-node="3EAD-0"]:not(.bs-ranking-unavailable-group) > [data-node="3EAE-0"] { display:flex !important; height:auto !important; }
+@container board (max-width:600px) {
+ .bs-rank-four .bs-workspace { grid-template-columns:minmax(0,1fr) !important; flex-direction:column !important; }
+ .bs-rank-four .bs-primary,.bs-rank-four .bs-rail { width:100% !important; max-width:100% !important; flex-basis:auto !important; }
+ .board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row { grid-template-columns:minmax(0,1fr); gap:2px; }
+}
+
+/* 13K0: retain six supported columns and use the available rail width. */
+.board-surface[data-bs-board-id="13K0-2"] :is([data-node="33WP-0"],[data-node="33X5-0"],[data-node="33XL-0"],[data-node="33Y1-0"],[data-node="33YH-0"],[data-node="33YX-0"]) { display:none !important; }
+.board-surface[data-bs-board-id="13K0-2"] [data-node="3447-0"][data-missing] { color:var(--color-k-dim) !important; }
+@container board (max-width:959px) {
+ .board-surface[data-bs-board-id="13K0-2"] :is([data-node="343Y-0"],[data-node="3448-0"],[data-node="344B-0"],[data-node="344E-0"],[data-node="344H-0"],[data-node="344Q-0"],[data-node="3454-0"],[data-node="3455-0"]) { width:100% !important; min-width:0 !important; }
+ .board-surface[data-bs-board-id="13K0-2"] :is([data-node="343Z-0"],[data-node="3440-0"],[data-node="3445-0"]) { min-width:0 !important; flex-wrap:wrap !important; height:auto !important; }
+ .board-surface[data-bs-board-id="13K0-2"] :is([data-node="344W-0"],[data-node="3450-0"],[data-node="3453-0"]) { min-width:0 !important; overflow-wrap:anywhere; }
+}
+
+/* Exact five-tab flow details. */
+.board-surface[data-bs-board-id="2ROJ-1"] [data-node="33JM-0"] .bs-readable-cell[data-col="5"],
+.board-surface[data-bs-board-id="2ROJ-1"] [data-node="3DWR-0"],
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="2RWU-1"],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="2S4O-1"] { display: none !important; }
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FFL-0"],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3F72-0"] {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  width: 100%; min-width: 0; height: auto; gap: 16px; padding-block: 16px;
+}
+.board-surface[data-bs-board-id="2RWK-1"] :is([data-node="3FFM-0"],[data-node="3FFQ-0"],[data-node="3FFU-0"],[data-node="3FFY-0"]),
+.board-surface[data-bs-board-id="2S4E-1"] :is([data-node="3F73-0"],[data-node="3F77-0"],[data-node="3F7B-0"],[data-node="3F7F-0"]) {
+  width: auto; min-width: 0; height: auto; padding: 0; overflow-wrap: anywhere;
+}
+.board-surface[data-bs-board-id="2RWK-1"] :is([data-node="3FFP-0"],[data-node="3FFT-0"],[data-node="3FFX-0"]),
+.board-surface[data-bs-board-id="2S4E-1"] :is([data-node="3F76-0"],[data-node="3F7A-0"],[data-node="3F7E-0"]) { display:none; }
+.board-surface[data-bs-board-id="2ROJ-1"] :is([data-node="3DWF-0"],[data-node="3DWL-0"]) {
+  display:grid; grid-template-columns:minmax(64px,.6fr) minmax(0,1.4fr); gap:8px 16px; height:auto; min-width:0;
+}
+.board-surface[data-bs-board-id="2ROJ-1"] :is([data-node="3DWF-0"],[data-node="3DWL-0"]) > [data-node] { width:auto; min-width:0; height:auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2ROJ-1"] :is([data-node="3DWI-0"],[data-node="3DWO-0"]) { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:6px 12px; }
+.board-surface[data-bs-board-id="2ROJ-1"] :is([data-node="3DWI-0"],[data-node="3DWO-0"]) > [data-node] { width:auto; height:auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2RWK-1"] :is([data-node="3SHA-0"],[data-node="3SHF-0"],[data-node="3SHK-0"],[data-node="3SHP-0"],[data-node="3SHU-0"]) {
+  display:grid; grid-template-columns:minmax(92px,.7fr) minmax(0,1.3fr); gap:12px; height:auto; min-height:24px;
+}
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3SH9-0"] [data-slot-id] { width:auto; min-width:0; height:auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2RWK-1"] :is([data-node="3FPM-0"],[data-node="3PB4-0"],[data-node="3FQ3-0"],[data-node="3FQB-0"],[data-node="3SH9-0"]) { height:auto; min-height:0; flex-wrap:wrap; gap:12px; }
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-numeric-list { display:flex; flex-wrap:wrap; width:100%; min-width:0; height:auto; gap:8px 20px; }
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-numeric-list > [data-node] { width:auto; min-width:0; height:auto; flex:0 1 auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-numeric-list [data-slot-id] { width:auto; min-width:0; height:auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FQC-0"] { display:none; }
+.bs-flow-date-heading { color:var(--color-k-dim); font-size:12px; width:100%; }
+.board-surface .bs-flow-residual-empty { height:auto; min-height:0; flex:0 0 auto; gap:8px; }
+.board-surface .bs-flow-residual-empty > :not(:first-child):not(.bs-flow-residual-note) { display:none !important; }
+.bs-flow-residual-note { color:var(--color-k-dim); font-size:13px; line-height:20px; padding-block:6px; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="2S5G-1"] [data-slot-id] { width:auto; min-width:0; height:auto; overflow-wrap:anywhere; }
+
+/* Keep long received values inside the exact strips and readable tables. */
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FFL-0"],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3F72-0"] {
+  display:grid !important; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));
+  height:auto !important; min-height:0 !important; gap:16px !important;
+}
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FFL-0"] > [data-node],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3F72-0"] > [data-node] { width:auto !important; min-width:0 !important; padding:0 !important; }
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FFL-0"] [data-slot-id],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3F72-0"] [data-slot-id] { width:100% !important; min-width:0 !important; height:auto !important; white-space:normal !important; overflow-wrap:anywhere; line-height:1.5; }
+.board-surface[data-bs-board-id="2ROJ-1"] [data-node="2RQD-1"] .bs-readable-cell,
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="2S68-1"] .bs-readable-cell { white-space:normal !important; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2ROJ-1"] [data-node="2RQD-1"] .bs-readable-cell [data-slot-id],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="2S68-1"] .bs-readable-cell [data-slot-id] { max-width:100%; min-width:0; white-space:normal !important; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2S4E-1"] :is([data-node="3SLT-0"],[data-node="3SMI-0"],[data-node="3SN7-0"]) { height:auto !important; white-space:normal !important; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3SNA-0"] { display:flex !important; flex-wrap:wrap !important; height:auto !important; min-height:0 !important; gap:8px !important; }
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3SNA-0"] > [data-node] { width:auto !important; flex:0 0 auto !important; height:auto !important; white-space:nowrap !important; }
+
+/* Distinct source lists preserve every received number without a shared chart axis. */
+.board-surface[data-bs-board-id="2S4E-1"] .bs-flow-replaced-graphic { height:auto !important; min-height:0 !important; }
+.board-surface[data-bs-board-id="2S4E-1"] .bs-flow-replaced-graphic > :not(.bs-flow-source-lists),
+.board-surface[data-bs-board-id="2S4E-1"] .bs-flow-replaced-date-axis { display:none !important; }
+.bs-flow-source-lists { display:grid; gap:18px; width:100%; min-width:0; }
+.bs-flow-source-list { min-width:0; }
+.bs-flow-source-title { color:var(--color-k-dim); font-size:12px; line-height:1.5; padding-bottom:6px; }
+.bs-flow-source-row { display:grid; grid-template-columns:minmax(48px,.6fr) minmax(0,1.4fr); align-items:baseline; gap:12px; padding-block:5px; min-width:0; }
+.bs-flow-source-label { color:var(--color-k-dim); font-size:12px; line-height:1.5; }
+.board-surface[data-bs-board-id="2S4E-1"] .bs-flow-source-row > [data-slot-id] { width:100% !important; height:auto !important; min-width:0 !important; white-space:normal !important; overflow-wrap:anywhere; line-height:1.5 !important; text-align:right; }
+
+/* Exact CC06 reviewed ranking lists. Other ranking/flow boards are unaffected. */
+.bs-rank-nine .bs-rank-nine-unsupported,.bs-rank-nine .bs-rank-nine-empty-row {display:none!important}
+.bs-rank-nine :is(.bs-workspace,.bs-primary,.bs-rail) {min-height:0!important;height:auto!important;align-self:start}
+.bs-rank-nine .bs-workspace {align-items:start}
+.bs-rank-nine .bs-rail {width:100%!important;max-width:100%!important}
+.bs-rank-nine .bs-rail > [data-node],.bs-rank-nine .bs-rank-nine-info {min-width:0!important;max-width:100%!important;width:100%!important;height:auto!important;min-height:0!important}
+.bs-rank-nine .bs-rank-nine-info > [data-node] {width:100%!important;min-width:0!important;height:auto!important;min-height:0!important}
+.bs-rank-nine .bs-rank-nine-info-row {display:flex!important;flex-wrap:wrap;gap:8px;align-items:baseline}
+.bs-rank-nine .bs-rank-nine-info-row.bs-rank-nine-empty-row {display:none!important}
+.bs-rank-nine .bs-rank-nine-info-row > [data-node] {width:auto!important;min-width:0!important;max-width:100%!important;height:auto!important;flex:1 1 130px}
+.bs-rank-nine .bs-rail [data-slot-id] {height:auto!important;min-width:0!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
+.bs-rank-nine .bs-rail .bs-paired {display:none!important}
+.bs-rank-nine [data-missing],.bs-rank-nine [data-pending] {color:var(--color-k-dim)!important}
+.bs-rank-nine .bs-ranking-unavailable-group {display:block!important;min-height:0!important;height:auto!important;width:100%!important;max-width:100%!important;overflow:visible!important}
+.bs-rank-nine .bs-ranking-unavailable-note {white-space:normal;overflow-wrap:anywhere;max-width:100%;width:100%;box-sizing:border-box}
+.bs-rank-nine .bs-readable-cell[data-col="1"] {align-items:flex-start;text-align:left}
+.bs-rank-nine .bs-readable-cell [data-slot-id] {max-width:100%;white-space:normal!important;overflow-wrap:anywhere;height:auto!important;line-height:1.5!important}
+.bs-rank-nine .bs-readable-cell > [data-node] {min-width:0!important;max-width:100%!important;height:auto!important}
+.bs-rank-nine .bs-readable-owner .bs-empty-table-message {display:none!important}
+.bs-rank-nine .bs-rank-nine-mini {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));width:100%!important;gap:12px;min-height:0!important}
+.bs-rank-nine .bs-rank-nine-mini-tile {width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;display:flex!important;flex-wrap:wrap;gap:8px;align-items:baseline}
+.bs-rank-nine .bs-rank-nine-mini-tile > [data-node] {width:auto!important;min-width:0!important;max-width:100%!important;height:auto!important}
+.bs-rank-nine .bs-rank-nine-mini-tile [data-slot-id] {max-width:100%!important;min-width:0!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
+.bs-rank-nine .bs-rank-nine-mini-title {font-size:13px;font-weight:600;margin-bottom:12px}
+.bs-rank-nine [data-card-action][aria-disabled="true"] {opacity:.5;cursor:not-allowed}
+@container board (min-width:960px) {
+ .bs-rank-nine .bs-workspace {min-width:0!important}
+ .bs-rank-nine .bs-primary {flex:1 1 0!important;width:0!important;min-width:0!important}
+ .bs-rank-nine .bs-rail {flex:0 0 360px!important;width:360px!important;min-width:0!important;box-sizing:border-box}
+}
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-empty > :not(.bs-ranking-unavailable-note) {display:none!important}
+.bs-rank-nine.bs-rank-nine-empty .bs-workspace {display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;height:auto!important;min-height:0!important}
+.bs-rank-nine.bs-rank-nine-empty :is(.bs-primary,.bs-rail) {width:100%!important;max-width:100%!important;flex:0 0 auto!important;height:auto!important;min-height:0!important}
+.bs-rank-nine.bs-rank-nine-empty .bs-ranking-unavailable-group > :not(.bs-ranking-unavailable-note) {display:none!important}
+@container board (max-width:600px) {
+ .bs-rank-nine .bs-workspace {grid-template-columns:minmax(0,1fr)!important;flex-direction:column!important}
+ .bs-rank-nine .bs-primary,.bs-rank-nine .bs-rail {width:100%!important;max-width:100%!important;flex-basis:auto!important}
+ .bs-rank-nine .bs-rank-nine-mini {grid-template-columns:minmax(0,1fr)}
+}
+
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="34X2-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="34X2-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="3"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="5"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2XKO-0"] [data-node="3DRG-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2XP6-0"] [data-node="3FC5-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2XTO-0"] [data-node="365N-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YA8-0"] [data-node="36EP-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YA8-0"] [data-node="36EP-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2YEQ-0"] [data-node="36JX-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YEQ-0"] [data-node="36JX-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2YJ8-0"] [data-node="36QC-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YJ8-0"] [data-node="36QC-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+
+/* Exact five reviewed FLOW ranking boards only. */
+.bs-flow-rank-five .bs-flow-five-unsupported,.bs-flow-rank-five .bs-flow-five-empty {display:none!important}
+.bs-flow-rank-five :is(.bs-workspace,.bs-primary,.bs-rail){height:auto!important;min-height:0!important;align-self:start}
+.bs-flow-rank-five .bs-workspace{display:grid!important;width:100%!important;min-width:0!important;max-width:100%!important;grid-template-columns:minmax(0,1fr);align-items:start}
+.bs-flow-rank-five :is(.bs-primary,.bs-rail){width:100%!important;min-width:0!important;max-width:100%!important}
+@container board (min-width:1100px){.bs-flow-rank-five .bs-workspace{grid-template-columns:minmax(0,1fr) minmax(300px,360px)}}
+.bs-flow-rank-five .bs-rail > [data-node]{width:100%!important;min-width:0!important;height:auto!important;min-height:0!important}
+.bs-flow-rank-five .bs-rail [data-slot-id],.bs-flow-rank-five .bs-kpi [data-slot-id]{min-width:0!important;max-width:100%!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
+.bs-flow-rank-five .bs-kpi{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));height:auto!important;min-height:0!important;align-items:start}
+.bs-flow-rank-five .bs-kpi > [data-node]{width:auto!important;min-width:0!important;height:auto!important;min-height:0!important;flex-basis:auto!important}
+.bs-flow-rank-five .bs-flow-five-sort{display:flex!important;flex-direction:row!important;gap:12px;grid-column:1/-1;align-items:center}
+.bs-flow-rank-five .bs-flow-five-sort > *{width:auto!important;height:auto!important}
+.bs-flow-five-kpi-note{grid-column:1/-1;color:var(--color-k-dim);font:12px/1.5 var(--font-body)}
+.bs-flow-five-kpi-note[hidden]{display:none}
+.bs-flow-rank-five .bs-readable-cell[data-col="1"]{text-align:left;align-items:flex-start}
+.bs-flow-rank-five .bs-readable-cell > [data-slot-id]{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.bs-flow-rank-five .bs-ranking-unavailable-group{display:block!important}
+.bs-flow-rank-five .bs-rail .bs-paired{display:none!important}
+.bs-flow-rank-five .bs-rail > [data-node] > [data-node]{max-width:100%;height:auto!important;min-height:0!important}
+.bs-flow-rank-five .bs-flow-five-mini{display:flex;flex-direction:column;width:100%;gap:0}
+.bs-flow-rank-five .bs-flow-five-mini-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,auto);gap:12px;align-items:baseline;border-bottom:1px solid var(--color-k-line);padding:10px 0;min-height:0!important;width:100%}
+.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]{width:auto!important;min-width:0!important;height:auto!important;text-align:left}
+.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]:last-child{text-align:right}
+.bs-flow-rank-five .bs-flow-five-separate{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;border-top:1px solid var(--color-k-line);padding-top:16px}
+.bs-flow-rank-five .bs-flow-five-separate > [data-slot-id]{width:auto!important;flex:1 1 140px}
+.bs-flow-rank-five .bs-flow-five-summary-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,auto);gap:12px;align-items:baseline;width:100%;padding-block:8px;height:auto!important;min-height:0!important}
+.bs-flow-rank-five .bs-flow-five-summary-row > [data-slot-id]{width:auto!important;min-width:0!important;height:auto!important}
+.bs-flow-rank-five .bs-flow-five-summary-row > [data-slot-id]:last-child{text-align:right}
+.board-surface[data-bs-board-id="2ZTA-0"] [data-node="38MX-0"] .bs-readable-cell[data-col="6"],.board-surface[data-bs-board-id="30TY-0"] [data-node="362Z-0"] .bs-readable-cell[data-col="7"]{display:none!important}
+@container board (max-width:600px){.bs-flow-rank-five .bs-workspace{grid-template-columns:minmax(0,1fr)!important;flex-direction:column!important}.bs-flow-rank-five :is(.bs-primary,.bs-rail){width:100%!important;max-width:100%!important;flex-basis:auto!important}.bs-flow-rank-five .bs-flow-five-mini-row{grid-template-columns:minmax(0,1fr);gap:3px}.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]:last-child{text-align:left}}
+
+/* Exact industry list and chart received-state layout. */
+.bs-sector-hidden { display:none!important; }
+.bs-sector-note { color:var(--color-k-dim);font:12px/1.6 var(--font-body);padding:12px 0;white-space:normal;overflow-wrap:anywhere; }
+.bs-sector-compact { height:auto!important;min-height:0!important;flex:0 0 auto!important; }
+.bs-sector-label { color:var(--color-k-dim);font:10px/1.4 var(--font-body);white-space:nowrap; }
+.bs-sector-labelled { height:auto!important;line-height:1.5!important;white-space:normal!important;overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail { overflow-x:auto!important;min-width:0!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail-row { display:grid!important;grid-template-columns:140px 150px 110px 160px 100px;min-width:660px!important;width:100%!important;align-items:center!important;gap:0!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail-cell { display:flex!important;min-width:0!important;width:auto!important;max-width:none!important;flex-direction:column!important;align-items:flex-end;justify-content:center;min-height:32px!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail-cell:first-child { align-items:flex-start; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-time { display:block!important;min-height:16px!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-rail { width:100%!important;min-width:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"] [data-node="3PSD-0"] { width:100%!important;min-width:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"] [data-node="3PSD-0"] > * { width:100%!important;min-width:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"].bs-sector-list-empty { height:auto!important;min-height:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"].bs-sector-list-empty .bs-workspace { height:auto!important;min-height:0!important;flex:0 0 auto!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-strip,
+.board-surface[data-bs-board-id="3BQB-0"] .bs-strip { height:auto!important;min-height:0!important;padding-block:12px!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-program-row { display:grid!important;grid-template-columns:44px repeat(3,minmax(0,1fr));gap:8px!important;height:auto!important;min-height:32px!important;width:100%!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-program-row > * { width:auto!important;min-width:0!important;height:auto!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-program-row [data-slot-id] { width:auto!important;min-width:0!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere; }
+
+.board-surface[data-bs-board-id="2TZN-1"] .bs-workspace { display:grid!important;grid-template-columns:minmax(0,1fr);width:100%!important;min-width:0!important;align-items:start; }
+.board-surface[data-bs-board-id="2TZN-1"] :is(.bs-primary,.bs-rail) { width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box; }
+@container board (min-width:1100px) { .board-surface[data-bs-board-id="2TZN-1"] .bs-workspace { grid-template-columns:minmax(0,1fr) 360px; } }
+.board-surface:is([data-bs-board-id="2TZN-1"],[data-bs-board-id="3BQB-0"],[data-bs-board-id="32S7-0"]) .bs-sector-compact > :not(.bs-sector-note) { display:none!important; }
+
+.board-surface[data-bs-board-id="32S7-0"] .bs-workspace {display:grid!important;grid-template-columns:minmax(0,1fr);width:100%!important;min-width:0!important;align-items:start}
+.board-surface[data-bs-board-id="32S7-0"] :is(.bs-primary,.bs-rail,.chart-card-body,.chart-price-pane) {width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box}
+@container board (min-width:1100px){.board-surface[data-bs-board-id="32S7-0"] .bs-workspace {grid-template-columns:minmax(0,1fr) 360px}}
+
+/* Industry chart summary values keep their full text inside each KPI cell. */
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] { display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));height:auto!important;min-height:0!important;align-items:start; }
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > .bs-kpi-cell { width:auto!important;min-width:0!important;max-width:100%;height:auto!important;min-height:0!important;box-sizing:border-box; }
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > .bs-kpi-cell > [data-slot-id] { width:100%!important;max-width:100%;height:auto!important;min-height:0!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.4!important; }
+
+/* Exact CC06 received mini identifiers stay intact beside long names. */
+.board-surface[data-bs-board-id="2XG6-0"] .bs-rank-nine-mini-tile [data-slot-id="s099"],
+.board-surface[data-bs-board-id="2XG6-0"] .bs-rank-nine-mini-tile [data-slot-id="s102"],
+.board-surface[data-bs-board-id="2XG6-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2XKO-0"] .bs-rank-nine-mini-tile [data-slot-id="s104"],
+.board-surface[data-bs-board-id="2XKO-0"] .bs-rank-nine-mini-tile [data-slot-id="s107"],
+.board-surface[data-bs-board-id="2XKO-0"] .bs-rank-nine-mini-tile [data-slot-id="s110"],
+.board-surface[data-bs-board-id="2XP6-0"] .bs-rank-nine-mini-tile [data-slot-id="s099"],
+.board-surface[data-bs-board-id="2XP6-0"] .bs-rank-nine-mini-tile [data-slot-id="s102"],
+.board-surface[data-bs-board-id="2XP6-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2XTO-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2XTO-0"] .bs-rank-nine-mini-tile [data-slot-id="s108"],
+.board-surface[data-bs-board-id="2XTO-0"] .bs-rank-nine-mini-tile [data-slot-id="s111"],
+.board-surface[data-bs-board-id="2YA8-0"] .bs-rank-nine-mini-tile [data-slot-id="s100"],
+.board-surface[data-bs-board-id="2YA8-0"] .bs-rank-nine-mini-tile [data-slot-id="s103"],
+.board-surface[data-bs-board-id="2YA8-0"] .bs-rank-nine-mini-tile [data-slot-id="s106"],
+.board-surface[data-bs-board-id="2YEQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s100"],
+.board-surface[data-bs-board-id="2YEQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s103"],
+.board-surface[data-bs-board-id="2YEQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s106"],
+.board-surface[data-bs-board-id="2YJ8-0"] .bs-rank-nine-mini-tile [data-slot-id="s099"],
+.board-surface[data-bs-board-id="2YJ8-0"] .bs-rank-nine-mini-tile [data-slot-id="s102"],
+.board-surface[data-bs-board-id="2YJ8-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s098"],
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s101"],
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s104"] {white-space:nowrap!important;overflow-wrap:normal!important;min-width:max-content!important;flex-shrink:0}
+
+.board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-primary {padding:12px 28px!important;gap:8px!important}
+.board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-rail {padding:0 28px 16px!important;gap:8px!important}
+.board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-ranking-unavailable-group {padding:0!important;border:0!important;margin:0!important}
+
+/* Exact WATCH query states; no inferred monitoring state or data. */
+.bs-watch-six .bs-watch-unsupported{display:none!important}
+.bs-watch-six :is(.bs-watch-missing-pill,.bs-watch-empty-detail){display:none!important}
+.bs-watch-six .bs-watch-disabled-action{opacity:.42;cursor:not-allowed!important}
+.bs-watch-six .bs-header{min-height:0!important;height:auto!important;align-items:center!important;gap:12px!important;flex-wrap:wrap!important;padding-block:20px!important}
+.bs-watch-six .bs-header>[data-node]{min-width:0!important;height:auto!important;max-width:100%!important;flex:0 1 auto!important}
+.bs-watch-six .bs-header [data-slot-id]{white-space:normal!important;overflow-wrap:anywhere!important;height:auto!important;max-width:100%!important}
+.bs-watch-six .bs-strip{height:auto!important;min-height:0!important;overflow:visible!important;flex-wrap:wrap!important;gap:10px!important}
+.bs-watch-six .bs-strip>[data-node]{width:auto!important;min-width:0!important;max-width:100%!important;height:auto!important;flex-wrap:wrap!important;overflow:visible!important}
+.bs-watch-six .bs-strip [data-slot-id]{height:auto!important;white-space:normal!important}
+.bs-watch-six .bs-workspace{min-width:0!important;min-height:0!important;height:auto!important;align-items:start!important}
+.bs-watch-six :is(.bs-primary,.bs-rail){min-width:0!important;min-height:0!important;height:auto!important;box-sizing:border-box!important;max-width:100%!important}
+.bs-watch-six .bs-rail>[data-node]{width:100%!important;max-width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;box-sizing:border-box}
+.bs-watch-six .bs-rail [data-slot-id]{max-width:100%!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.bs-watch-six .bs-watch-managed{min-width:0!important;max-width:100%!important;height:auto!important;min-height:0!important}
+.bs-watch-six .bs-watch-empty{display:block!important;padding-block:6px!important;min-height:0!important;max-height:none!important;height:auto!important;flex:0 0 auto!important}
+.bs-watch-six .bs-watch-empty>:not(.bs-watch-note){display:none!important}
+.bs-watch-six .bs-watch-note{font:12px/1.5 var(--font-body);color:var(--color-k-dim);white-space:normal;overflow-wrap:anywhere}
+.bs-watch-six .bs-watch-managed.bs-watch-empty{align-self:start!important}
+.board-surface.bs-watch-six :is(.bs-primary,.bs-rail){display:flex!important;flex-direction:column!important}
+.board-surface.bs-watch-six[data-bs-board-id="2UN6-1"][data-bs-condition-read]:not([data-bs-condition-read=""]) .bs-rail{display:none!important}
+.bs-watch-six .bs-readable-cell[style*="--bs-cell-width: 0px"]{display:none!important}
+.bs-watch-six .bs-empty-table-message{width:auto!important;min-width:0!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;box-sizing:border-box}
+.bs-watch-six [aria-disabled="true"]{opacity:.5;cursor:not-allowed!important}
+.bs-watch-six .bs-watch-unselected-monitor{background:transparent!important;border-color:var(--color-k-line)!important;color:var(--color-k-text)!important}
+.bs-watch-six .bs-watch-unselected-monitor *{color:var(--color-k-text)!important}
+.bs-watch-six[data-bs-board-id="2UHM-1"] [data-node="357F-0"]{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr))!important;gap:12px!important;height:auto!important;min-height:0!important}
+.bs-watch-six[data-bs-board-id="2UHM-1"] [data-node="357F-0"]>[data-node]{width:auto!important;min-width:0!important}
+@container board (min-width:960px){.canvas-tab-panel .bs-watch-six .bs-workspace{display:grid!important;grid-template-columns:minmax(0,1fr) 340px!important;gap:24px!important}.canvas-tab-panel .bs-watch-six :is(.bs-primary,.bs-rail){width:100%!important;flex:none!important}}
+@container board (max-width:959px){.canvas-tab-panel .bs-watch-six .bs-workspace{display:flex!important;flex-direction:column!important}.canvas-tab-panel .bs-watch-six :is(.bs-primary,.bs-rail){width:100%!important;flex:none!important}}
+
+/* The three sector summary fields fill both rows without changing their values. */
+@container board (min-width:440px) and (max-width:659px) {
+  .board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > [data-node="32WH-0"] { grid-column:1 / -1; }
+}
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32SE-0"] { height:auto!important;min-height:0!important; }
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32SF-0"] { position:static!important;margin-top:0!important;width:100%!important; }
+.board-surface[data-bs-board-id="32S7-0"] :is(.bs-sector-snapshot-status,[data-node="32SC-0"]) { color:var(--color-k-dim)!important; }
+
+/* The three flow templates reserve a readable side panel without stretching content. */
+.board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) :is(.bs-workspace,.bs-primary,.bs-rail) { height:auto!important;min-height:0!important; }
+.board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) .bs-workspace {flex:0 0 auto!important;align-items:flex-start;}
+@container board (min-width:960px) {
+ .board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) .bs-primary {width:auto!important;min-width:0!important;flex:1 1 0!important;}
+ .board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) .bs-rail {width:360px!important;min-width:0!important;flex:0 0 360px!important;}
+}
+@container board (max-width:959px) {
+ .board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) :is(.bs-primary,.bs-rail) {width:100%!important;min-width:0!important;flex:0 0 auto!important;}
+}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-source {width:100%;height:auto;min-width:0;display:flex;flex-direction:column;gap:8px;padding-block:12px;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-row {display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;width:100%;height:auto;min-width:0;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-value {display:flex!important;flex-wrap:wrap;gap:6px 12px;flex:1 1 180px!important;width:auto!important;min-width:0;height:auto;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-row [data-slot-id] {width:auto!important;min-width:0;height:auto;white-space:normal!important;overflow-wrap:anywhere;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-source-context {width:100%;height:auto;white-space:normal;color:var(--color-k-muted);font-size:12px;line-height:1.5;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-moved-date-axis {display:none!important;}
+
+
+/* Keep each received credit date whole when the independent row wraps. */
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="flow-credit-source"] :is([data-slot-id="s109"],[data-slot-id="s110"],[data-slot-id="s111"],[data-slot-id="s112"],[data-slot-id="s113"]) {min-width:max-content!important;flex:0 0 auto!important;white-space:nowrap!important;overflow-wrap:normal!important;}
+
+/* WATCH received-content follow-up: keep source values, collapse only absent sections. */
+.bs-watch-six .bs-watch-empty-rail{display:block!important;padding:18px 24px!important;min-height:0!important;height:auto!important}
+.bs-watch-six .bs-watch-empty-rail>:not(.bs-watch-rail-note):not(.bs-watch-selection-note){display:none!important}
+.bs-watch-six :is(.bs-watch-duplicate-note,.bs-watch-original-selection){display:none!important}
+.board-surface.bs-watch-six .bs-watch-empty-detail{display:none!important}
+.bs-watch-six .bs-watch-empty-owner>.bs-readable-scroll,.bs-watch-six .bs-watch-empty-owner>.bs-readable-hint{display:none!important}
+.bs-watch-six :is(.bs-watch-table-note,.bs-watch-primary-note){padding-block:16px!important;box-sizing:border-box!important;max-width:100%!important}
+.board-surface.bs-watch-six .bs-watch-primary-empty>:not(.bs-watch-primary-note){display:none!important}
+.canvas-tab-panel .board-surface.bs-watch-six.bs-watch-all-empty .bs-workspace{display:block!important}
+.canvas-tab-panel .board-surface.bs-watch-six.bs-watch-all-empty .bs-rail{display:none!important}
+.canvas-tab-panel .board-surface.bs-watch-six.bs-watch-all-empty .bs-primary{width:100%!important}
+.bs-watch-six .bs-watch-selection-note{margin-bottom:12px}
+.bs-watch-six .bs-watch-selected-field{display:flex;justify-content:space-between;gap:16px;padding-block:8px;flex-wrap:wrap}
+.bs-watch-six .bs-watch-selected-field>:last-child{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.bs-watch-six .bs-watch-selected-row{background:var(--color-k-panel2)!important;outline:1px solid var(--color-k-line);outline-offset:-1px}
+.bs-watch-six [data-bs-watch-select]{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMO-0"]{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))!important;gap:24px!important;width:100%!important;min-width:0!important;height:auto!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] :is([data-node="3EMP-0"],[data-node="3ENE-0"]){width:100%!important;min-width:0!important;height:auto!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMT-0"]>[data-node]{display:grid!important;grid-template-columns:minmax(90px,1fr) repeat(2,minmax(100px,1fr))!important;gap:12px!important;height:auto!important;min-height:30px!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMT-0"]>[data-node]>*{width:auto!important;min-width:0!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMT-0"] [data-slot-id]{width:auto!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3ENI-0"]{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))!important;gap:20px!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3ENI-0"]>[data-node]{width:auto!important;min-width:0!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3ENI-0"]>[data-node]>[data-node]{gap:12px!important;height:auto!important;min-height:30px!important;flex-wrap:wrap!important}
+.bs-watch-six[data-bs-board-id="2UBO-1"] [data-node="34AI-0"] .bs-readable-cell [data-slot-id]{max-width:100%!important;width:auto!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere!important}
+
+/* Received watch-group context needs two readable lines; absent siblings add no placeholder. */
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-missing{display:none!important}
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-row{height:auto!important;min-height:0!important;align-items:flex-start!important}
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-row>[data-node]{min-width:0!important;max-width:100%!important}
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-row [data-slot-id]{font-size:12px!important;line-height:18px!important;color:var(--color-k-dim)!important}
+
+/* Day-volume sorting keeps every existing choice reachable inside its own row. */
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X8Y-0"] {min-width:0;width:100%;gap:12px;flex-wrap:wrap;}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] {flex:1 1 0%!important;min-width:0!important;max-width:100%;overflow-x:auto!important;overflow-y:hidden;flex-wrap:nowrap!important;padding-block:2px 6px;}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] > * {flex:0 0 auto!important;min-width:max-content;white-space:nowrap;}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] > * > * {white-space:nowrap!important;}
+.board-surface[data-bs-board-id="2X5N-0"] .bs-day-volume-sort-hint {display:none;color:var(--color-k-dim);font-size:12px;line-height:1.5;}
+@container board (max-width:959px) {
+  .board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] {flex-basis:100%!important;}
+  .board-surface[data-bs-board-id="2X5N-0"] .bs-day-volume-sort-hint {display:block;}
+}
+
+/* The 10-level quote keeps received summary values when its separate trade feed is unavailable. */
+.board-surface[data-bs-board-id="13BC-2"] [data-node="3IMQ-0"].bs-quote-trades-unavailable { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-unavailable > .bs-readable-scroll,
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-unavailable > .bs-readable-hint { display: none !important; }
+
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-unavailable > .bs-empty-table-message { display: none !important; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-note { padding: 8px 16px; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-workspace:has(.bs-quote-trades-unavailable) { flex-direction: column !important; height: auto !important; min-height: 0 !important; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-workspace:has(.bs-quote-trades-unavailable) > .bs-primary { width: 100% !important; flex: 1 1 auto !important; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-workspace .bs-quote-trades-unavailable.bs-rail { width: 100% !important; flex: 0 0 auto !important; }
+
+/* 137X: give the fixed session columns room in the side summary. */
+@container board (min-width: 960px) {
+  .board-surface[data-bs-board-id="137X-2"] .bs-workspace > .bs-rail { width: 440px; flex: 0 0 440px; min-width: 0; }
+}
+.board-surface[data-bs-board-id="137X-2"] :is([data-node="14SS-2"], [data-node="14SV-2"], [data-node="14SY-2"]) { flex-wrap: wrap; gap: 4px 12px; height: auto; min-height: 18px; }
+.board-surface[data-bs-board-id="137X-2"] :is([data-node="14SS-2"], [data-node="14SV-2"], [data-node="14SY-2"]) > :last-child { margin-inline-start: auto; }
+
+/* 137X: keep consolidated investor labels and amounts in readable pairs. */
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"]:not([hidden]) { display: grid !important; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 8px; height: auto; min-height: 0; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > :is([data-node="33DK-0"], [data-node="33DN-0"]) { display: none; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > [data-slot-id] { min-width: 0; max-width: 100%; height: auto; }
+/* Valuation cells need enough content space for their actual formatted values. */
+.board-surface[data-bs-board-id="137X-2"] .bs-kpi { flex-wrap: wrap; height: auto; min-height: 0; row-gap: 16px; }
+.board-surface[data-bs-board-id="137X-2"] .bs-kpi > .bs-kpi-cell { width: auto; flex: 1 1 200px; min-width: fit-content; max-width: 100%; height: auto; }
+
+/* Preserve session header and row height when the expanded footer consumes rail space. */
+.board-surface[data-bs-board-id="137X-2"] .bs-session-scroll > * { flex-shrink: 0; }
+
+/* 137X: omit only empty/unavailable consolidated amount pairs. Received zero remains. */
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > :is([data-slot-id="s093"], [data-slot-id="s096"], [data-slot-id="s099"]):empty { display: none; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="33DH-0"] > :is([data-slot-id="s092"]:has(+ [data-slot-id="s093"]:is(:empty, [hidden])), [data-slot-id="s095"]:has(+ [data-slot-id="s096"]:is(:empty, [hidden])), [data-slot-id="s098"]:has(+ [data-slot-id="s099"]:is(:empty, [hidden]))) { display: none; }
+
+/* 기업정보의 가격 범위는 좁아지면 값 묶음 사이에 간격을 두고 다음 줄을 쓴다. */
+@container board (max-width: 1279px) {
+  .board-surface[data-bs-board-id="2RBO-1"] [data-node="2RCJ-1"] {
+    flex-wrap: wrap;
+    column-gap: 12px;
+    row-gap: 8px;
+  }
+  .board-surface[data-bs-board-id="2RBO-1"] [data-node="2RCJ-1"] > :is([data-node="2RCL-1"], [data-node="2RCK-1"]) {
+    flex: 0 0 auto;
+    max-width: 100%;
+    white-space: normal;
+  }
+}

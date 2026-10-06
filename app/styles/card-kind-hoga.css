@@ -2,6 +2,8 @@
   --hoga-ask: var(--color-down, #1f6fd4);
   --hoga-bid: var(--color-up, #d92b2b);
   width: 100%;
+  display: flex;
+  flex-direction: column;
   /* 좁은 창에서 사다리가 스스로 열을 줄인다(Paper 15Y5-2) — 창 폭이 아니라
      카드가 실제로 받은 폭을 본다. 캔버스 열 수는 카드마다 다르다. */
   container-type: inline-size;
@@ -12,6 +14,37 @@
   border-radius: var(--radius-xl, 14px);
   box-shadow: 0 8px 26px rgb(16 19 26 / 6%);
   font-family: var(--font-body, system-ui, sans-serif);
+}
+
+/* 보드 primary가 받은 여유 높이를 보이는 호가 행에 균등 배분한다.
+   독립 카드에서는 원래 최소 높이로 서고, 데이터가 접혀도 아래 빈 판을 남기지 않는다. */
+.card-kit-hoga-live-table,
+.card-kit-hoga-live-levels {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+
+.card-kit-hoga-live-table {
+  min-height: 0;
+  flex-shrink: 1;
+  overflow: auto;
+}
+
+.card-kit-hoga-live-header,
+.card-kit-hoga-live-toolbar,
+.card-kit-hoga-live-columns,
+.card-kit-hoga-live-center,
+.card-kit-hoga-live-footer {
+  flex-shrink: 0;
+}
+
+.board-surface[data-node="1JPV-0"] [data-node="1JQB-0"] {
+  min-width: 92px;
+}
+
+.board-surface[data-node="1JPV-0"] [data-node="1JQC-0"] {
+  white-space: nowrap;
 }
 
 .card-kit-hoga-live-header,
@@ -105,7 +138,7 @@
 .card-kit-hoga-live-columns,
 .card-kit-hoga-live-row {
   display: grid;
-  grid-template-columns: 58px minmax(72px, 1fr) 66px 88px minmax(78px, 1fr);
+  grid-template-columns: 146px minmax(100px, 1fr) 72px 88px minmax(48px, 1fr);
   align-items: center;
   column-gap: 8px;
 }
@@ -127,8 +160,9 @@
 
 .card-kit-hoga-live-row {
   position: relative;
-  min-height: 27px;
-  padding: 0 12px;
+  flex: 1 0 auto;
+  min-height: 32px;
+  padding: 6px 12px;
   border-bottom: 1px solid rgb(16 19 26 / 5%);
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 12px;
@@ -290,7 +324,7 @@
 
 /* 좁은 폭 — 건수·증감·상대 잔량을 접고 가격·잔량 2열만 남긴다(Paper 15ZZ-2).
    단수를 3단으로 줄이는 것은 렌더러가 한다(card-kind-호가.js visibleLevels). */
-@container (max-width: 420px) {
+@container (width < 420px) {
   .card-kit-hoga-live-columns,
   .card-kit-hoga-live-row {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -333,4 +367,16 @@
     outline: 1px solid currentColor;
     outline-offset: 1px;
   }
+}
+
+/* Keep received count and LP quantity legible without changing quote data. */
+.card-kit-hoga-live-count { white-space: pre; }
+.card-kit-hoga-live-columns, .card-kit-hoga-live-row { min-width: 510px; }
+.card-kit-hoga-live-subtitle, .card-kit-hoga-live-time, .card-kit-hoga-live-status,
+.card-kit-hoga-live-focus, .card-kit-hoga-live-depth, .card-kit-hoga-live-columns,
+.card-kit-hoga-live-center-label, .card-kit-hoga-live-center-hint, .card-kit-hoga-live-totals { font-size: 12px; line-height: 18px; }
+.card-kit-hoga-live-header { flex-wrap: wrap; gap: 8px; }
+.card-kit-hoga-live-center { flex-wrap: wrap; padding: 8px; }
+@container (max-width: 419px) {
+  .card-kit-hoga-live-columns, .card-kit-hoga-live-row { min-width: 0; }
 }

@@ -29,6 +29,7 @@ from .query_frame import ENTITY_MARKER_SHA256, ENTITY_MARKER_VERSION
 from .schemas import DiscoveryIntent
 
 Visibility = Literal["normal", "explicit", "hidden"]
+READ_ONLY_CONDITION_REFS = frozenset({"base:ka10171", "base:ka10172"})
 
 
 def model_schema_hash(model: type[BaseModel]) -> str:
@@ -147,7 +148,10 @@ class OperationCatalog:
         return tuple(
             document
             for document in self.documents
-            if document.kind in allowed and document.visibility != "hidden"
+            if (document.kind in allowed or (
+                intent in {DiscoveryIntent.AUTO, DiscoveryIntent.QUERY}
+                and document.operation_ref in READ_ONLY_CONDITION_REFS
+            )) and document.visibility != "hidden"
         )
 
     def details_for(self, tr_id: str) -> tuple[OperationDocument, ...]:
@@ -310,7 +314,9 @@ def build_operation_catalog() -> OperationCatalog:
         spec = TR_REGISTRY[tr_id]
         if spec.kind == "oauth" or tr_id in SPLIT_BASE_TR_IDS:
             continue
-        visibility: Visibility = "normal" if spec.kind == "query" else "explicit"
+        visibility: Visibility = "normal" if (
+            spec.kind == "query" or f"base:{tr_id}" in READ_ONLY_CONDITION_REFS
+        ) else "explicit"
         documents.append(
             OperationDocument(
                 operation_ref=f"base:{tr_id}",

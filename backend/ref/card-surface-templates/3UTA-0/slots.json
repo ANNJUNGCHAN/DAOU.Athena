@@ -963,10 +963,10 @@
         "field": "d2_pymn_alow_amt"
       },
       "table": null,
-      "mapping_id": "detail:kt00001:settlement_forecast",
-      "f": "d2_pymn_alow_amt",
+      "mapping_id": "detail:kt00001:withdrawal_and_order_capacity",
+      "f": "ord_alow_amt",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "주문가능금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
@@ -1002,7 +1002,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "출금가능 "
       },
       "paired_with": "s017",
       "collapse_group": null,
@@ -1049,7 +1050,7 @@
       "mapping_id": "detail:kt00004:cash_and_assets",
       "f": "tot_est_amt",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "유가잔고평가액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
@@ -1131,8 +1132,8 @@
         "field": "tot_evltv_prft"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_evltv_prft",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_evlt_pl",
       "alt_mappings": null,
       "kor": "총평가손익금액",
       "format": {
@@ -1162,15 +1163,16 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_buy_amt",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_pur_amt",
       "alt_mappings": null,
-      "kor": "총수익률",
+      "kor": "총매입금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "총매입 "
       },
       "paired_with": "s023",
       "collapse_group": null,

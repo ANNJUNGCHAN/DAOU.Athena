@@ -1,0 +1,29 @@
+{
+  "sourcePins": {
+    "app/styles/tokens.css": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2",
+    "app/styles/ui-kit.css": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039",
+    "app/canvas.css": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f",
+    "app/styles/integrated-cards.css": "907cd1f4a10bd1fd3e681fddc355d04679328fe45980fbfd1dc583c361fcb295",
+    "app/styles/board-surface.css": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+    "app/styles/card-component-target.css": "079c9f61d79842b5a54ee97ad32c59a501d604200d6bd6ed2158550b5a8f17e0",
+    "app/styles/canvas-tabs.css": "f2b0f2dd9e4aed631aca57ffea4a154bdf0ab7c918218446eb5ea228d85677c3",
+    "app/shell.css": "baad1c0c2491e8b9f871c9979857162bc42624057f79f89d3b0776f420ef0b2b",
+    "app/lib/facts-card.js": "4b4ed269f0486ec673737f087288419ec2fb37e2494be2661966080540df2404",
+    "app/lib/board-templates.index.generated.js": "6900ee747381edcf9f317a9d6b093270f125df77b75776683419d5af3d7701b3",
+    "app/lib/board-template-registry.js": "33dc3079d4c54726a63b22c27c4813e21238013af254a8ff9d4d2c8da627e020",
+    "app/lib/board-templates.CC-03.generated.js": "325580d73d9e8d50c177f2c1418c1a574255f0c907d736ca9946d244141c6cec",
+    "app/lib/board-templates.CC-05.generated.js": "fd3183c66a8fcc785b3156eec78be85d4226fc2ee2172c94bee1a39a406a4d00",
+    "app/lib/board-format.js": "3882ea2db5cd9c0c8d6a8b116b166287f861a3070962a03e30e03c86fd3cc07a",
+    "app/lib/board-display-policy-data.js": "bd7a74b6cc10d1b0fa7ca580dfac805774145ea5c441f2e4dd7e34a0a0eead28",
+    "app/lib/board-display-policy.js": "5b29d0939673cbd81dac1f2c1ecc3c7fac9ab1c9ecce780218a651a3294bd770",
+    "app/lib/board-static-graphics-data.js": "a35d1ddaf5779a8c453d387b3409c5ff629b6800fc886754f7bae1d3adb33b23",
+    "app/lib/board-etf-period.js": "e135b36d5c4f5dc6e6cd0125bc7cd478219f08da64b0c3563cb7c2faabcbaa1a",
+    "app/lib/board-flow-layout.js": "60ed7578afb23655db7b913a4d2a7802ca3cbaf17fa9fdf3f333d35ff3e9d01a",
+    "app/lib/board-ranking-result.js": "3d6f17bf33d9e33a15438abdd95ee26f9188e1cdf397778e641ac2f6c321e8c0",
+    "app/lib/board-popover-layout.js": "1cf5f59a7b165799cc4fe75a2e872c64085c4e5516e6ba71e80ef3b1ef642a80",
+    "app/lib/board-gold-quote.js": "8e5508912cfd3abe93a9b8fa38d5a9d912a0f004f214f59adcd198c245200259",
+    "app/lib/board-mount.js": "b81a12d2d57efab1fb65af3cf6332baa3d7c07168bcc1738e5223b5578960b2c",
+    "app/lib/build-board-display-policy.mjs": "5d5aa699fa90410f66e7c05fd59b4c592ac8e41ca668541a504bf738f659f2fc"
+  },
+  "sourceBasis": "Immutable v1 public snapshot23 plus historical producer metadata24; not current product equality"
+}

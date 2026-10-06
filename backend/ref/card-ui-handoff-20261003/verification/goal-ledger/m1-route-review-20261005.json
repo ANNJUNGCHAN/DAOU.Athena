@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "independent-review",
+  "scope": "M1_ROUTE_IDENTITY_ONLY",
+  "status": "APPROVED",
+  "author_id": "/root",
+  "reviewer_id": "/root/runtime_provenance_review",
+  "reviewed_commit_sha": "f0a35c3762547e604562aca5051c6383e84effae",
+  "reviewed_source_cohort": "card-ui-native-resume-20261005-01",
+  "reviewed_evidence_manifest_sha256": "69d09775c2b60097b0dddceee10f5d56824ec4abb5d935abb778601059bf399e",
+  "item_ids": [
+    "15J9-2",
+    "2VDA-0",
+    "2VIN-0",
+    "2VO0-0",
+    "2WZK-0",
+    "2XA5-0",
+    "2XY6-0",
+    "2Y47-0",
+    "2YXS-0",
+    "2Z49-0",
+    "2ZHC-0",
+    "2ZN9-0",
+    "2ZZ7-0",
+    "30C1-0",
+    "30O1-0",
+    "30ZW-0",
+    "316O-0",
+    "31II-0",
+    "31UD-0",
+    "32XM-0",
+    "3TCO-0",
+    "3TOM-0"
+  ],
+  "verification": {
+    "item_count": 22,
+    "artifact_count": 90,
+    "artifact_hash_mismatches": 0,
+    "source_closure_count": 1111,
+    "source_closure_hash_mismatches": 0,
+    "route_signature_duplicates": 0,
+    "observed_runtime_template_ids_non_null": 0,
+    "native_full_cycles_completed": 0
+  },
+  "approval_basis": [
+    "Each item has a source-bound session receipt, an observed route, a distinct route identity signature, and a persisted endpoint capture.",
+    "The two expanded-state routes bind persisted predecessor and endpoint captures for their presence-and-absence identity assertions.",
+    "Visible headings and static shapes were checked against the saved accessibility assertions; route controls are attributed to the observer-performed route chain.",
+    "The product source closure is bound to the reviewed commit and includes production runtime references while excluding audit-only handoff material."
+  ],
+  "limitations": [
+    "This approval confirms route identity only.",
+    "It does not confirm operation receipts, runtime template IDs, complete resize cycles, content-state coverage, full native item PASS, additional-flow PASS, or goal completion.",
+    "Candidate status text retained inside authored evidence is historical pre-review state and is not a full-item approval."
+  ],
+  "native_pass_count": 0,
+  "additional_pass_count": 0,
+  "goal_complete": false
+}

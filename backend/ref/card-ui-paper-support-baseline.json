@@ -1,0 +1,839 @@
+{
+  "schema": "athena.card-ui-paper-support-baseline.v1",
+  "paper_file_id": "01M3SB680J59QWZX6J4CGRVXT7",
+  "paper_file_url": "https://app.paper.design/file/01M3SB680J59QWZX6J4CGRVXT7",
+  "baseline_date": "2026-10-01",
+  "scope": "Supplementary renderer states: 21 common result/error cases and 25 auxiliary cases. These 46 drawings are separate from the 101 card template states in card-ui-paper-baseline.json.",
+  "data_provenance": "Current application renderer modules with deterministic synthetic QA fixtures. No account profile, credentials or real conversation contents are included. Baseline captures precede UI improvements and are not live questionnaire evidence.",
+  "verification": {
+    "editable_drawings": 46,
+    "common_result_drawings": 21,
+    "auxiliary_drawings": 25,
+    "source_comparison_receipts": 46,
+    "paper_inventory_matches": 46,
+    "index_read_verification": "passed",
+    "independent_visual_review": "not_claimed_by_this_index",
+    "native_questionnaire": "not_run"
+  },
+  "evidence_location": ".omc/artifacts/card-ui-audit (local ignored audit artifacts; paths below are relative to this directory)",
+  "limitations": [
+    "Source comparison statuses and notes are transcribed from the canonical author review receipts. This index check verifies counts, identities, evidence existence and live Paper inventory; it is not a new independent visual review of every drawing.",
+    "Paper drawings use editable elements. Native scrollbar chrome is omitted where recorded; long interior scroll regions in settings/model and natural backtest cases are expanded to show all content.",
+    "Source file hashes recorded after capture do not prove the exact code bytes at capture time. See source-hash-manifest.json for capture and recording timestamps.",
+    "The baseline timeline drawing intentionally retains the old raw-tree output. The new timeline renderer belongs to the separate improvement evidence.",
+    "2026-10-01 사용자 요청 이후 natural-form/natural-result/natural-error 3개는 codex/laya-experiments-20261001 브랜치의 참고 도면이다. 이 파일의 46개 기준선과 원본 검증 기록은 분리 전 상태를 보존한다."
+  ],
+  "canonical_receipts": [
+    "paper-support-reviewed-receipts.json",
+    "paper-auxiliary-runtime-receipts.json",
+    "paper-auxiliary-explorer-final-receipts.json"
+  ],
+  "cards": [
+    {
+      "case_id": "agent-empty",
+      "family": "auxiliary",
+      "name": "현재 · 자동화 · 빈 목록",
+      "artboard_id": "P4D-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/agent-empty-1120.html",
+        "source_html_sha256": "429ff75ff494c6738152016682e0527fa7cfe4ae0e582f9d741342d65370a8c4",
+        "source_screenshot": "auxiliary-baseline/screenshots/agent-empty-1120.png",
+        "source_screenshot_sha256": "90bf0bd71f48451e2243d917c0c1c469fc846ea8b90525768bccdc99634dabdd",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/agent-empty.json"
+      }
+    },
+    {
+      "case_id": "backtest-empty",
+      "family": "auxiliary",
+      "name": "현재 · 백테스트 · 시작 화면",
+      "artboard_id": "Q92-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/backtest-empty-1120.html",
+        "source_html_sha256": "ad0b5e10330f5bfcc8d7351fb74fe6a190e986ea8d4c1dd9eedcf2d78ac6284c",
+        "source_screenshot": "auxiliary-baseline/screenshots/backtest-empty-1120.png",
+        "source_screenshot_sha256": "b46d991a508e327efe75ec574b75f91d6a7e0d4925f0eba7a30e34db99e28ece",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/backtest-empty.json"
+      }
+    },
+    {
+      "case_id": "backtest-error",
+      "family": "auxiliary",
+      "name": "현재 · 백테스트 · 오류",
+      "artboard_id": "QJ8-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/backtest-error-1120.html",
+        "source_html_sha256": "510b24fc47afc4c69101e29471f3149739663ed635e814d6d6e50f3efac60007",
+        "source_screenshot": "auxiliary-baseline/screenshots/backtest-error-1120.png",
+        "source_screenshot_sha256": "3f6d9c78f518b5e35acbc932386392c609c4b4d085f16d28921cd1302ef00dc9",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/backtest-error.json"
+      },
+      "paper_adjustment": "Restore source inline action row; verified single-line button labels."
+    },
+    {
+      "case_id": "backtest-question",
+      "family": "auxiliary",
+      "name": "현재 · 백테스트 · 범위 질문",
+      "artboard_id": "QOQ-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/backtest-question-1120.html",
+        "source_html_sha256": "4fda23f471a8d4edbbefe51ff4ac5d5715d5aa9e21bf256538490f1337f70876",
+        "source_screenshot": "auxiliary-baseline/screenshots/backtest-question-1120.png",
+        "source_screenshot_sha256": "7aeafc191f793179ed9925f9d7f90db876482356608045e15eff8975ad8e86fb",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/backtest-question.json"
+      }
+    },
+    {
+      "case_id": "backtest-step",
+      "family": "auxiliary",
+      "name": "현재 · 백테스트 · 진행 단계",
+      "artboard_id": "QT5-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/backtest-step-1120.html",
+        "source_html_sha256": "8ef3025cd8980d0194a5852ced1edbbac8eeef0546a90d26a86c3a42506ff600",
+        "source_screenshot": "auxiliary-baseline/screenshots/backtest-step-1120.png",
+        "source_screenshot_sha256": "3be3fe95e78aba24139ef44a51e4cddd46425f9e366187c6249e323b3208fd72",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/backtest-step.json"
+      }
+    },
+    {
+      "case_id": "graph-collection-settings",
+      "family": "auxiliary",
+      "name": "현재 · 지식 그래프 · 수집 설정",
+      "artboard_id": "TRB-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Editable renderer baseline: spacing, typography, contrast, alignment, fit and repetition match source screenshot. Native control transform/opacity/arrow affordances and captured style fidelity delta applied where relevant. Synthetic data only; no chat invocation claim.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/graph-collection-settings-1120.html",
+        "source_html_sha256": "482a32ee62a6c091e33c4013f14d472bb5162d3041ddd040ac7d88d75d71daaa",
+        "source_screenshot": "auxiliary-baseline/screenshots/graph-collection-settings-1120.png",
+        "source_screenshot_sha256": "a02fa5cc57c0ceeb56ea330202dca18a8c884c9b689f1f525e38948ab4cce458"
+      }
+    },
+    {
+      "case_id": "graph-empty",
+      "family": "auxiliary",
+      "name": "현재 · 지식 그래프 · 빈 요약",
+      "artboard_id": "TSB-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Editable renderer baseline: spacing, typography, contrast, alignment, fit and repetition match source screenshot. Native control transform/opacity/arrow affordances and captured style fidelity delta applied where relevant. Synthetic data only; no chat invocation claim.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/graph-empty-1120.html",
+        "source_html_sha256": "630243b9921ab73d57fbbaff2fcc1f145c53550caf9f9965c304e9b52a0d9d8b",
+        "source_screenshot": "auxiliary-baseline/screenshots/graph-empty-1120.png",
+        "source_screenshot_sha256": "23e9ca421d23dc009df985b1ff6cd75917c563162d98a87a9f61fd74ccd8285f"
+      }
+    },
+    {
+      "case_id": "graph-summary",
+      "family": "auxiliary",
+      "name": "현재 · 지식 그래프 · 관계 요약",
+      "artboard_id": "TTK-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Editable renderer baseline: spacing, typography, contrast, alignment, fit and repetition match source screenshot. Native control transform/opacity/arrow affordances and captured style fidelity delta applied where relevant. Synthetic data only; no chat invocation claim.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/graph-summary-1120.html",
+        "source_html_sha256": "1f51b6e360401b18226ee9aca5f6a28cc700525665ba620cd646042167faa136",
+        "source_screenshot": "auxiliary-baseline/screenshots/graph-summary-1120.png",
+        "source_screenshot_sha256": "f8328fe7758a0c77affac5a3023d127e8b97e52ad41c04f19d230727c665aac3"
+      }
+    },
+    {
+      "case_id": "graph-themes",
+      "family": "auxiliary",
+      "name": "현재 · 지식 그래프 · 테마 묶음",
+      "artboard_id": "TV3-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Editable renderer baseline: spacing, typography, contrast, alignment, fit and repetition match source screenshot. Native control transform/opacity/arrow affordances and captured style fidelity delta applied where relevant. Synthetic data only; no chat invocation claim.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/graph-themes-1120.html",
+        "source_html_sha256": "d5f09077283d710300a7a41a3933cd4b6de2cee5a81867d93cb6a28f1ab32bcf",
+        "source_screenshot": "auxiliary-baseline/screenshots/graph-themes-1120.png",
+        "source_screenshot_sha256": "50bae12662c84d21a7d3db571cb0eca06f0b43a59b090e0fd502cda76b423c5f"
+      }
+    },
+    {
+      "case_id": "natural-error",
+      "family": "auxiliary",
+      "name": "현재 · 자연어 백테스트 · 오류 상태",
+      "artboard_id": "YEL-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/natural-error-1120.html",
+        "source_html_sha256": "e20899f550eee85a50dcda7f621e58b9357a81f4c9af6228e7b15b0efa21aff5",
+        "source_screenshot": "auxiliary-baseline/screenshots/natural-error-1120.png",
+        "source_screenshot_sha256": "25ba6a6c2f3eca150db2843195b7b213e2b571ac198ae3290281c9625417b23e",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/natural-error.json"
+      },
+      "current_scope": "separate_branch",
+      "branch": "codex/laya-experiments-20261001",
+      "paper_current_name": "실험 참고 · LAYA 백테스트 · 오류 상태"
+    },
+    {
+      "case_id": "natural-form",
+      "family": "auxiliary",
+      "name": "현재 · 자연어 백테스트 · 입력 폼",
+      "artboard_id": "UGH-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/natural-form-1120.html",
+        "source_html_sha256": "9b15cfec0941bc6dbfc09296957017698691be328b49f2157ceb664ea84dd043",
+        "source_screenshot": "auxiliary-baseline/screenshots/natural-form-1120.png",
+        "source_screenshot_sha256": "5fcd041d72a0db6e36bb5b69f45d9c56eeb0744a8893ad96da37a946f9633a68",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/natural-form.json"
+      },
+      "current_scope": "separate_branch",
+      "branch": "codex/laya-experiments-20261001",
+      "paper_current_name": "실험 참고 · LAYA 백테스트 · 입력 폼"
+    },
+    {
+      "case_id": "natural-result",
+      "family": "auxiliary",
+      "name": "현재 · 자연어 백테스트 · 결과",
+      "artboard_id": "W6Z-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/natural-result-1120.html",
+        "source_html_sha256": "d7b82f85001e3267da80bb2d6cab242b6d7c0b286295e8624b71fb1ea01e27cd",
+        "source_screenshot": "auxiliary-baseline/screenshots/natural-result-1120.png",
+        "source_screenshot_sha256": "ef4dc2d58f96713f6b634b714f532d7ff19d2aa19c95ca115de2370c5e650ff7",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/natural-result.json"
+      },
+      "current_scope": "separate_branch",
+      "branch": "codex/laya-experiments-20261001",
+      "paper_current_name": "실험 참고 · LAYA 백테스트 · 결과"
+    },
+    {
+      "case_id": "plugins-empty",
+      "family": "auxiliary",
+      "name": "현재 · 플러그인 · 빈 목록",
+      "artboard_id": "TX6-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Editable renderer baseline: spacing, typography, contrast, alignment, fit and repetition match source screenshot. Native control transform/opacity/arrow affordances and captured style fidelity delta applied where relevant. Synthetic data only; no chat invocation claim.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/plugins-empty-1120.html",
+        "source_html_sha256": "671757b8e9e5e21d5d300e3769243ee59cb8e3c8f10c71123785a0026834568a",
+        "source_screenshot": "auxiliary-baseline/screenshots/plugins-empty-1120.png",
+        "source_screenshot_sha256": "d4d3e91dd77c770ec2fc7762c0299b15800e25cbbbd2aa4062f68cabae0e9d76"
+      }
+    },
+    {
+      "case_id": "plugins-hub",
+      "family": "auxiliary",
+      "name": "현재 · 플러그인 · 허브",
+      "artboard_id": "TZK-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Editable renderer baseline: spacing, typography, contrast, alignment, fit and repetition match source screenshot. Native control transform/opacity/arrow affordances and captured style fidelity delta applied where relevant. Synthetic data only; no chat invocation claim.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/plugins-hub-1120.html",
+        "source_html_sha256": "c5d91f063feef3266aab2aa00882c609e405077061da5e6efe682d777ad0690e",
+        "source_screenshot": "auxiliary-baseline/screenshots/plugins-hub-1120.png",
+        "source_screenshot_sha256": "7082fdf69af6a902757710e97bdd5fa09cc2e41d610574836e589d7a66dd109c"
+      }
+    },
+    {
+      "case_id": "routine-approval",
+      "family": "auxiliary",
+      "name": "현재 · 감시 자동화 · 승인 카드",
+      "artboard_id": "WAW-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/routine-approval-1120.html",
+        "source_html_sha256": "f4294ffbe2d446dd9d54a086d196e10840e6fc4cb3c1e272f511fc328096f098",
+        "source_screenshot": "auxiliary-baseline/screenshots/routine-approval-1120.png",
+        "source_screenshot_sha256": "4289f8bd5a4402950d4aa45dadd2c155e8e7336704489410d154f16c35e1d55b",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/routine-approval.json"
+      }
+    },
+    {
+      "case_id": "settings-accounts",
+      "family": "auxiliary",
+      "name": "현재 · 설정 · 연결 계좌",
+      "artboard_id": "Y7E-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared: spacing, typography, contrast, alignment, fit and repetition retained. Existing vertical connection-action text is source behavior, not import artifact. Synthetic fixtures only.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/settings-accounts-1120.html",
+        "source_html_sha256": "96049ec88d2eeeb11925cf15facdf18d74a8e5ed1b7a168fad1b4c3a870bbe36",
+        "source_screenshot": "auxiliary-baseline/screenshots/settings-accounts-1120.png",
+        "source_screenshot_sha256": "a12412c9dc92029bb6e082d0bfd57cc19dcdb26dbe514f77cfdda826424eef5d"
+      }
+    },
+    {
+      "case_id": "settings-accounts-empty",
+      "family": "auxiliary",
+      "name": "현재 · 설정 · 연결 계좌 없음",
+      "artboard_id": "Y7F-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared: spacing, typography, contrast, alignment, fit and repetition retained. Existing vertical connection-action text is source behavior, not import artifact. Synthetic fixtures only.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/settings-accounts-empty-1120.html",
+        "source_html_sha256": "d625572ec142959aac7bb1b4c9a8c0a7276a6ffd308b819d3d7169ab081fc917",
+        "source_screenshot": "auxiliary-baseline/screenshots/settings-accounts-empty-1120.png",
+        "source_screenshot_sha256": "3e315411ed5503a65b2f7a1c6bc27ddc3b85d7240c7a1ec8db548237f4c7e399"
+      }
+    },
+    {
+      "case_id": "settings-history",
+      "family": "auxiliary",
+      "name": "현재 · 설정 · 대화 기록",
+      "artboard_id": "Y7J-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared: spacing, typography, contrast, alignment, fit and repetition retained. Existing vertical connection-action text is source behavior, not import artifact. Synthetic fixtures only.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/settings-history-1120.html",
+        "source_html_sha256": "41d0caec0cebd248458edaa3b457b7501f2abde42b330a0f95d3052f25ae8fab",
+        "source_screenshot": "auxiliary-baseline/screenshots/settings-history-1120.png",
+        "source_screenshot_sha256": "e66cd826b5e32762f1527fed4ecb7b4c930c2e4c747a9f65677049920f8137ba"
+      }
+    },
+    {
+      "case_id": "settings-model",
+      "family": "auxiliary",
+      "name": "현재 · 설정 · 모델",
+      "artboard_id": "Y7M-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared: spacing, typography, contrast, alignment, fit and repetition retained. Existing vertical connection-action text is source behavior, not import artifact. Synthetic fixtures only. Paper scroll clipping expanded to fit-content so all original scroll content is editable and visible; source viewport height360 remains documented in captured HTML.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/settings-model-1120.html",
+        "source_html_sha256": "edef7f5c975caa6f581cb0c9d0bf7053c05765ccedc8f7d160ed5d1d0064b242",
+        "source_screenshot": "auxiliary-baseline/screenshots/settings-model-1120.png",
+        "source_screenshot_sha256": "28bdf44391d6cc485ef15c0c5efd67c1e51a99a679985a161d345fc4b2f94b1c"
+      }
+    },
+    {
+      "case_id": "settings-screen",
+      "family": "auxiliary",
+      "name": "현재 · 설정 · 화면",
+      "artboard_id": "Y7P-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared: spacing, typography, contrast, alignment, fit and repetition retained. Existing vertical connection-action text is source behavior, not import artifact. Synthetic fixtures only. Paper scroll clipping expanded to fit-content so all original scroll content is editable and visible; source viewport height360 remains documented in captured HTML.",
+      "evidence": {
+        "receipt": "paper-auxiliary-runtime-receipts.json",
+        "source_html": "auxiliary-baseline/html/settings-screen-1120.html",
+        "source_html_sha256": "e6cd37d13fb0b386a468f72e547a5df46f435f4b4fee0526bc83d54d6d56efc1",
+        "source_screenshot": "auxiliary-baseline/screenshots/settings-screen-1120.png",
+        "source_screenshot_sha256": "78d961ceb4416c4b43bb56afaedd1459a654882a328815587dad4721f6f2cf67"
+      }
+    },
+    {
+      "case_id": "watch-check-error",
+      "family": "auxiliary",
+      "name": "현재 · 조건 감시 · 검사 오류",
+      "artboard_id": "XY5-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/watch-check-error-1120.html",
+        "source_html_sha256": "8ef745245d30a26e02f3afb0467c5a8f1e43be691bca96fcd41e776f5a5a0a09",
+        "source_screenshot": "auxiliary-baseline/screenshots/watch-check-error-1120.png",
+        "source_screenshot_sha256": "f31a5cee3e97c46b55a99ddec1d5af56797d44836981d6c35916337cb3f0d156",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/watch-check-error.json"
+      }
+    },
+    {
+      "case_id": "watch-check-pass",
+      "family": "auxiliary",
+      "name": "현재 · 조건 감시 · 검사 통과",
+      "artboard_id": "Y7Y-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/watch-check-pass-1120.html",
+        "source_html_sha256": "3eadd608e4179ad4189d781bfbf9e01ef1b741a697ea08c7fbe2fddaff2ff950",
+        "source_screenshot": "auxiliary-baseline/screenshots/watch-check-pass-1120.png",
+        "source_screenshot_sha256": "64173c16e2cb2b0600eac9b072fa78f71f166e33a06cc054420dad431509166d",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/watch-check-pass.json"
+      }
+    },
+    {
+      "case_id": "watch-create-question",
+      "family": "auxiliary",
+      "name": "현재 · 조건 감시 · 주기 질문",
+      "artboard_id": "TLM-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/watch-create-question-1120.html",
+        "source_html_sha256": "6d98ab563e0c34e3ef2212913be0597ec4daa9366d1b646ea90185f570366363",
+        "source_screenshot": "auxiliary-baseline/screenshots/watch-create-question-1120.png",
+        "source_screenshot_sha256": "a2ccccf5c4dc3faba8510b5d8c53c46c97073e12096c59c366b10fa62f8ad836",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/watch-create-question.json"
+      }
+    },
+    {
+      "case_id": "watch-create-receipt",
+      "family": "auxiliary",
+      "name": "현재 · 조건 감시 · 생성 확인",
+      "artboard_id": "TDP-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/watch-create-receipt-1120.html",
+        "source_html_sha256": "119ffe8014c2bfc03dbb791bc6a6cf1e06680eda85a39f1f00e0e4af3cbb2305",
+        "source_screenshot": "auxiliary-baseline/screenshots/watch-create-receipt-1120.png",
+        "source_screenshot_sha256": "59908477552e1c77d4c8def9268a6ac56e8644b0d6214f819739fbf97538aaa8",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/watch-create-receipt.json"
+      }
+    },
+    {
+      "case_id": "watch-progress",
+      "family": "auxiliary",
+      "name": "현재 · 조건 감시 · 검사 진행",
+      "artboard_id": "UFC-0",
+      "page_id": "p-B-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source screenshot compared for spacing, typography, contrast, alignment and artboard fit. Editable elements retained. Native margins, control states and asymmetric borders restored. Actual chat invocation remains not_run.",
+      "evidence": {
+        "receipt": "paper-auxiliary-explorer-final-receipts.json",
+        "source_html": "auxiliary-baseline/html/watch-progress-1120.html",
+        "source_html_sha256": "37f0786fd9d9023958de90fc9cf8f3c6d2cb2597d40bc147c4ce0eb49fab7511",
+        "source_screenshot": "auxiliary-baseline/screenshots/watch-progress-1120.png",
+        "source_screenshot_sha256": "5d7d7cf6145cc706f057e3caa8baf848395a80ed07ee1918a0e32fe929eea925",
+        "paper_fidelity_repairs": "paper-auxiliary-fidelity-repairs/watch-progress.json"
+      }
+    },
+    {
+      "case_id": "compound",
+      "family": "common-result",
+      "name": "현재 · 공통 / 요약과 상세 표",
+      "artboard_id": "JEK-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/compound-1120.html",
+        "source_html_sha256": "41cc9885df63501586a03b6e7ccb9ee66dec335594b7f41d86ec68302cb9b6ab",
+        "source_screenshot": "support-baseline/screenshots/compound-1120.png",
+        "source_screenshot_sha256": "9b68d1e716fa264b2e64af7daeeee7a0aff7f008220f1c898c0718c235586223"
+      }
+    },
+    {
+      "case_id": "event",
+      "family": "common-result",
+      "name": "현재 · 공통 / 일정·이벤트",
+      "artboard_id": "JGW-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/event-1120.html",
+        "source_html_sha256": "52b90655fc495cb8f989435087807505a1d40ca716f1c2c8f90de4fe3b5b2ae4",
+        "source_screenshot": "support-baseline/screenshots/event-1120.png",
+        "source_screenshot_sha256": "2b7ec8fb42820d47f2a909d45d0897168274ddaa20d8fb840e186fd18cd2a429"
+      }
+    },
+    {
+      "case_id": "event-empty",
+      "family": "common-result",
+      "name": "현재 · 공통 / 일정 · 빈 결과",
+      "artboard_id": "NQN-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/event-empty-1120.html",
+        "source_html_sha256": "502d61c3b31da536fd99199dfb846b13aba6079d5dc83be2d150e48469cd44dd",
+        "source_screenshot": "support-baseline/screenshots/event-empty-1120.png",
+        "source_screenshot_sha256": "b9373c18136ae43247a4217371083bd16a76b30b13aaf4d7bb6113827e266af1"
+      }
+    },
+    {
+      "case_id": "facts",
+      "family": "common-result",
+      "name": "현재 · 공통 / 핵심 지표",
+      "artboard_id": "E7S-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Compared current synthetic renderer at1120px: consistent spacing/type/contrast, same content lanes and source whitespace, no imported edge clipping. All rows remain editable.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/facts-1120.html",
+        "source_html_sha256": "312be23f69f13e0ddfed7dfae5a4df999cff0075c73d4cbd0ffcaa0dde00c116",
+        "source_screenshot": "support-baseline/screenshots/facts-1120.png",
+        "source_screenshot_sha256": "0b3760d30afda3e14f5d28e59ba828413022fb7ba86e6ddbe6aaeadc53958889"
+      }
+    },
+    {
+      "case_id": "free",
+      "family": "common-result",
+      "name": "현재 · 공통 / 자유 형식 결과",
+      "artboard_id": "JIJ-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/free-1120.html",
+        "source_html_sha256": "2c71549d9bde04a06b9ff586a9067cf12fd5b1efd0844a7e345206d547306ac9",
+        "source_screenshot": "support-baseline/screenshots/free-1120.png",
+        "source_screenshot_sha256": "e537e55f5dbc4299ae955db4101a93b5fdbb41436530326d8f83d2fcf6870b60"
+      }
+    },
+    {
+      "case_id": "long-facts",
+      "family": "common-result",
+      "name": "현재 · 공통 / 긴 지표 값",
+      "artboard_id": "O7G-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/long-facts-1120.html",
+        "source_html_sha256": "487cce3254e32f41e6cd81bb80a5243393146361b3085781fdcfe9f85d3216af",
+        "source_screenshot": "support-baseline/screenshots/long-facts-1120.png",
+        "source_screenshot_sha256": "5872fac3951ddb1b7ec97dd022df25a84ab5a6645978114e13e6bcfd75222472"
+      }
+    },
+    {
+      "case_id": "long-table",
+      "family": "common-result",
+      "name": "현재 · 공통 / 긴 표 제목·값",
+      "artboard_id": "ONN-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Original long title and crowded numeric cells preserved. Repaired Paper-only vertical alignment to source middle; spacing, contrast, lanes and fit checked.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/long-table-1120.html",
+        "source_html_sha256": "d19e51ba9023fa201270c6f685b0d4b66ac75867cc8e6035700c30e34005daa3",
+        "source_screenshot": "support-baseline/screenshots/long-table-1120.png",
+        "source_screenshot_sha256": "4e349eeb1ad13c025675a154b1edef3199fb6abffee27730ab3bc1fead4fb778"
+      }
+    },
+    {
+      "case_id": "reader",
+      "family": "common-result",
+      "name": "현재 · 공통 / 문서·기사 본문",
+      "artboard_id": "JFQ-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Current synthetic renderer content and measured layout preserved; spacing/type/contrast/lanes reviewed, all visible groups editable, artboard fits. Native scrollbar/fade treatment is not a vector control in this baseline drawing.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/reader-1120.html",
+        "source_html_sha256": "462383b8987ca150d2c0d7f2f5a0a0beebcad2db3e4e3b473ef6d7993f2e6ff3",
+        "source_screenshot": "support-baseline/screenshots/reader-1120.png",
+        "source_screenshot_sha256": "d8a988747ad62483daed27f8c76a1d7cc23e65f4326a91ec98114dcd6b0a8186"
+      }
+    },
+    {
+      "case_id": "reader-delayed",
+      "family": "common-result",
+      "name": "현재 · 공통 / 본문 · 응답 지연",
+      "artboard_id": "NPB-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/reader-delayed-1120.html",
+        "source_html_sha256": "75c65526fc282cd42f3006fc8d7458cd7c013e15575eff4e27de2359682cf401",
+        "source_screenshot": "support-baseline/screenshots/reader-delayed-1120.png",
+        "source_screenshot_sha256": "773d030f3bfcb4985298d3cba4d7fbca90747a3961923c2c04262722a4b50404"
+      }
+    },
+    {
+      "case_id": "reader-empty",
+      "family": "common-result",
+      "name": "현재 · 공통 / 본문 · 빈 결과",
+      "artboard_id": "NM7-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/reader-empty-1120.html",
+        "source_html_sha256": "04be339b9439da7e61ae06ef0343c5a48e83eca8a24d4da37a23a021332355f5",
+        "source_screenshot": "support-baseline/screenshots/reader-empty-1120.png",
+        "source_screenshot_sha256": "5cb68abbba21f4639f06e3dd3bbb7e0765fc2aee9a7e2e0692535b34f5fab1b3"
+      }
+    },
+    {
+      "case_id": "reader-error",
+      "family": "common-result",
+      "name": "현재 · 공통 / 본문 · 읽기 오류",
+      "artboard_id": "NO3-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/reader-error-1120.html",
+        "source_html_sha256": "e69bbb9e4037f69e27c284f6dd18fb7d9d3fc626650f34f98055875a770fac81",
+        "source_screenshot": "support-baseline/screenshots/reader-error-1120.png",
+        "source_screenshot_sha256": "09e9c66fe3c68d7779faa32ab09836c6db4f77d59eba1f987ccc54b8d3dbf9b0"
+      }
+    },
+    {
+      "case_id": "state-cancelled",
+      "family": "common-result",
+      "name": "현재 · 공통 / 요청 취소",
+      "artboard_id": "O5M-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/state-cancelled-1120.html",
+        "source_html_sha256": "076b5e1835ea6cadbb3302f559df7ec48319891cbb526101a02e8c3ff3a14b6e",
+        "source_screenshot": "support-baseline/screenshots/state-cancelled-1120.png",
+        "source_screenshot_sha256": "d056ed4c9dc56ca2a972a0cae8eefe26e49971dfe0dfaa6d01ae09f29911247c"
+      }
+    },
+    {
+      "case_id": "state-error",
+      "family": "common-result",
+      "name": "현재 · 공통 / 요청 오류",
+      "artboard_id": "O3I-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/state-error-1120.html",
+        "source_html_sha256": "c2080eb730d94f76e03a24e587d60c8b9331199392550795c7fc8bbfc4311146",
+        "source_screenshot": "support-baseline/screenshots/state-error-1120.png",
+        "source_screenshot_sha256": "79710bb1ad89c539aa0b24ef9301a5655c38a82e6d06cdad467c7c0da4e7b184"
+      }
+    },
+    {
+      "case_id": "state-timeout",
+      "family": "common-result",
+      "name": "현재 · 공통 / 응답 시간 초과",
+      "artboard_id": "O4D-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/state-timeout-1120.html",
+        "source_html_sha256": "e0c0af00ec8aed06b566bcbd6b6a92e4960cedac36cdb4f15c8ebad3ce3608a4",
+        "source_screenshot": "support-baseline/screenshots/state-timeout-1120.png",
+        "source_screenshot_sha256": "d4b9c1f3e9156300928bda93987512a718e7d5119d4146a6823578f5bf9ff377"
+      }
+    },
+    {
+      "case_id": "status",
+      "family": "common-result",
+      "name": "현재 · 공통 / 인증·서비스 상태",
+      "artboard_id": "JHV-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Current synthetic renderer content and measured layout preserved; spacing/type/contrast/lanes reviewed, all visible groups editable, artboard fits. Native scrollbar/fade treatment is not a vector control in this baseline drawing.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/status-1120.html",
+        "source_html_sha256": "5d46fedf0008c5e05b46c26551bd7bb28571fd2fcf8de7bd5aa62fa680233a08",
+        "source_screenshot": "support-baseline/screenshots/status-1120.png",
+        "source_screenshot_sha256": "4f15bc0dfaf64697cf459056d5507b8e3c40aa3ae7320d447b0cf851d9029356"
+      }
+    },
+    {
+      "case_id": "status-expired",
+      "family": "common-result",
+      "name": "현재 · 공통 / 인증 만료",
+      "artboard_id": "O6K-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/status-expired-1120.html",
+        "source_html_sha256": "2025b0576d363066ad1d068891a18da7276a9cefaeaa209fde985b654569eff1",
+        "source_screenshot": "support-baseline/screenshots/status-expired-1120.png",
+        "source_screenshot_sha256": "bd68603a34b4398b540a4c62b684accbace8f89e48841f5233ac2302176597dd"
+      }
+    },
+    {
+      "case_id": "stream",
+      "family": "common-result",
+      "name": "현재 · 공통 / 뉴스·공시 목록",
+      "artboard_id": "E93-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Compared current synthetic renderer at1120px: consistent spacing/type/contrast, same content lanes and source whitespace, no imported edge clipping. All rows remain editable.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/stream-1120.html",
+        "source_html_sha256": "8ae0c213806239ef1d1dba09c6b06e4009103c35593664ad13b3ea5fd72d0321",
+        "source_screenshot": "support-baseline/screenshots/stream-1120.png",
+        "source_screenshot_sha256": "705e0f17ce7b9b336bf7aec03e9d52f595f6871ef674117ad75081b7974e4967"
+      }
+    },
+    {
+      "case_id": "stream-empty",
+      "family": "common-result",
+      "name": "현재 · 공통 / 뉴스 · 빈 결과",
+      "artboard_id": "NLU-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/stream-empty-1120.html",
+        "source_html_sha256": "6040f1674fec007cf8e02a0de5646fae22ea6af9a199d3b03d29e54d5eac8799",
+        "source_screenshot": "support-baseline/screenshots/stream-empty-1120.png",
+        "source_screenshot_sha256": "9fbc0d948c714beb538a8296e233540d7446285b570a7a92c436940fc848c4e4"
+      }
+    },
+    {
+      "case_id": "table",
+      "family": "common-result",
+      "name": "현재 · 공통 / 표 결과",
+      "artboard_id": "E8E-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source-compared1120px: repaired centered table headers with alignItems center on converted cell frames. Type/contrast/spacing/row lanes and baseline whitespace now match; no artboard clipping.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/table-1120.html",
+        "source_html_sha256": "4ad07222bca73e0226791bffc4911613beb24adfd27c64383607c446709ebe9e",
+        "source_screenshot": "support-baseline/screenshots/table-1120.png",
+        "source_screenshot_sha256": "6bb7ac6112d0777d141b02aa02c08a7a21046456fd82fd608df312579aaa9777"
+      }
+    },
+    {
+      "case_id": "table-empty",
+      "family": "common-result",
+      "name": "현재 · 공통 / 표 · 빈 결과",
+      "artboard_id": "NLD-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/table-empty-1120.html",
+        "source_html_sha256": "8641296896452ba0b9ec31356542d4d98afae1fcea8abb2259f9f9c6b1566bea",
+        "source_screenshot": "support-baseline/screenshots/table-empty-1120.png",
+        "source_screenshot_sha256": "c871f24b75eca597e066d00f6ee77ecf7bfb0a9b73e7ce8b71ada0252b3ddce0"
+      }
+    },
+    {
+      "case_id": "timeline",
+      "family": "common-result",
+      "name": "현재 · 공통 / 타임라인 요청 현재 출력",
+      "artboard_id": "JJV-0",
+      "page_id": "p-9-0",
+      "verification": "drawn-reviewed",
+      "source_viewport_width": 1120,
+      "review_note": "Source compared. Spacing, hierarchy, contrast, alignment and artboard fit preserved. Fixed asymmetric border conversion where relevant; source empty height, overflow, and raw timeline tree intentionally retained for redesign. Native scrollbar chrome omitted from editable diagram.",
+      "evidence": {
+        "receipt": "paper-support-reviewed-receipts.json",
+        "source_html": "support-baseline/html/timeline-1120.html",
+        "source_html_sha256": "bb94b69f9ad0a23502eae15b15440845e2db2445b5663a5cc615805bc5fb0be4",
+        "source_screenshot": "support-baseline/screenshots/timeline-1120.png",
+        "source_screenshot_sha256": "ce25584dca2b6075d11c4a678cd5bacc1d38c9d7b2369ffc5591d581b7e1f665"
+      }
+    }
+  ]
+}

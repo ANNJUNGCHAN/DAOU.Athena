@@ -1134,8 +1134,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)"
+      "static": "blank",
+      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s040",
@@ -1217,7 +1218,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1244,10 +1246,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s042",
       "collapse_group": null,
@@ -1290,8 +1294,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s045",
@@ -1353,8 +1358,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s047",
@@ -1385,8 +1391,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s048",
@@ -1417,8 +1424,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s049",
@@ -1449,8 +1457,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s050",
@@ -1481,8 +1490,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)"
+      "static": "blank",
+      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s051",
@@ -1566,7 +1576,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1594,10 +1605,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s053",
       "collapse_group": null,
@@ -1641,8 +1654,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s056",
@@ -1705,8 +1719,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s058",
@@ -1737,8 +1752,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s059",
@@ -1769,8 +1785,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s060",
@@ -1801,8 +1818,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s061",
@@ -1833,8 +1851,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)"
+      "static": "blank",
+      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s062",
@@ -1918,7 +1937,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1946,10 +1966,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s064",
       "collapse_group": null,
@@ -1993,8 +2015,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s067",
@@ -2057,8 +2080,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s069",
@@ -2089,8 +2113,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s070",
@@ -2121,8 +2146,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s071",
@@ -2153,8 +2179,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s072",
@@ -2185,8 +2212,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)"
+      "static": "blank",
+      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s073",
@@ -2270,7 +2298,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2298,10 +2327,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s075",
       "collapse_group": null,
@@ -2345,8 +2376,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s078",
@@ -2409,8 +2441,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s080",
@@ -2441,8 +2474,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s081",
@@ -2473,8 +2507,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s082",
@@ -2505,8 +2540,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s083",
@@ -2537,8 +2573,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)"
+      "static": "blank",
+      "static_reason": "순위 — 전일거래량상위(ka10031) 응답에 순위 필드가 없다(배열 순서를 그대로 쓴 표시 순번)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s084",
@@ -2622,7 +2659,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2650,10 +2688,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s086",
       "collapse_group": null,
@@ -2697,8 +2737,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s089",
@@ -2761,8 +2802,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "전일 거래대금 — ka10031 응답에 거래대금 필드가 없다(전일 거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s091",
@@ -2793,8 +2835,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "당일 거래량 — ka10031 응답은 전일 거래량만 싣는다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s092",
@@ -2825,8 +2868,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)"
+      "static": "blank",
+      "static_reason": "당일 거래대금 — ka10031 응답에 거래대금 필드가 없다(거래량 셀 병기 줄)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s093",
@@ -2857,8 +2901,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "체결강도 — ka10031 응답에 체결강도 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s094",
@@ -2964,21 +3009,24 @@
       "node_path": "2/0/1/1/0/0/0/0",
       "paper_text": "이수페타시스",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": "base:ka10031",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "row_index": 0,
+      "dup_note": "같은 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s099",
@@ -2992,21 +3040,19 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": "base:ka10031",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "row_index": 0,
+      "dup_note": "같은 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s100",
@@ -3033,8 +3079,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s101",
@@ -3043,21 +3090,24 @@
       "node_path": "2/0/1/1/0/1/0/0",
       "paper_text": "한미반도체",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": "base:ka10031",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "row_index": 1,
+      "dup_note": "같은 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s102",
@@ -3071,21 +3121,19 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": "base:ka10031",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "row_index": 1,
+      "dup_note": "같은 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s103",
@@ -3112,8 +3160,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s104",
@@ -3122,21 +3171,24 @@
       "node_path": "2/0/1/1/0/2/0/0",
       "paper_text": "한화에어로스페이스",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": "base:ka10031",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "row_index": 2,
+      "dup_note": "같은 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s105",
@@ -3150,21 +3202,19 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": "base:ka10031",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "row_index": 2,
+      "dup_note": "같은 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s106",
@@ -3191,8 +3241,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s107",
@@ -3201,13 +3252,13 @@
       "node_path": "2/0/1/1/1/0/0/0",
       "paper_text": "SK하이닉스",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3215,7 +3266,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s108",
@@ -3229,8 +3281,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3243,7 +3295,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s109",
@@ -3270,8 +3323,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s110",
@@ -3280,13 +3334,13 @@
       "node_path": "2/0/1/1/1/1/0/0",
       "paper_text": "삼성전자",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3294,7 +3348,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s111",
@@ -3308,8 +3363,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3322,7 +3377,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s112",
@@ -3349,8 +3405,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s113",
@@ -3364,8 +3421,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": {
@@ -3378,7 +3435,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s114",
@@ -3392,8 +3450,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3406,7 +3464,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s115",
@@ -3433,8 +3492,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s116",
@@ -3443,13 +3503,13 @@
       "node_path": "2/0/1/1/2/0/0/0",
       "paper_text": "NAVER",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3457,7 +3517,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s117",
@@ -3471,8 +3532,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3485,7 +3546,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s118",
@@ -3512,8 +3574,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s119",
@@ -3522,13 +3585,13 @@
       "node_path": "2/0/1/1/2/1/0/0",
       "paper_text": "DB하이텍",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3536,7 +3599,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s120",
@@ -3550,8 +3614,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3564,7 +3628,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s121",
@@ -3591,8 +3656,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s122",
@@ -3601,13 +3667,13 @@
       "node_path": "2/0/1/1/2/2/0/0",
       "paper_text": "현대차",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3615,7 +3681,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s123",
@@ -3629,8 +3696,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3643,7 +3710,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s124",
@@ -3670,8 +3738,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s125",
@@ -3680,13 +3749,13 @@
       "node_path": "2/0/1/1/3/0/0/0",
       "paper_text": "기아",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3694,7 +3763,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s126",
@@ -3708,8 +3778,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3722,7 +3792,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s127",
@@ -3749,8 +3820,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s128",
@@ -3759,13 +3831,13 @@
       "node_path": "2/0/1/1/3/1/0/0",
       "paper_text": "카카오",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3773,7 +3845,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s129",
@@ -3787,8 +3860,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3801,7 +3874,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s130",
@@ -3828,8 +3902,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s131",
@@ -3838,13 +3913,13 @@
       "node_path": "2/0/1/1/3/2/0/0",
       "paper_text": "삼성SDI",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3852,7 +3927,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 — 종목정보 리스트(ka10099) 낱값 행"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s132",
@@ -3866,8 +3942,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -3880,7 +3956,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "조회 대상 종목 그리드 이름 아래 코드 병기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s133",
@@ -3907,8 +3984,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)"
+      "static": "blank",
+      "static_reason": "등락률 — 전일거래량상위(ka10031)·종목정보 리스트(ka10099) 응답에 등락률 필드가 없다(순위표 표준 열, 헌장 §4)",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s134",
@@ -3917,21 +3995,24 @@
       "node_path": "2/1/0/0/0/0",
       "paper_text": "삼성전자",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 22.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "선택 종목 이름 — 종목정보 리스트(ka10099) 재표시"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10031",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s135",
@@ -3945,35 +4026,20 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "code",
-      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "literal": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10099",
-          "f": "marketName",
-          "kor": "시장명",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "base:ka10099",
-          "f": "marketCode",
-          "kor": "시장구분코드",
-          "same_value": true
-        }
-      ],
-      "note": "'005930 · KOSPI' 한 텍스트에 코드·시장 두 값 — mapping은 코드"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10031",
+      "f": "stk_cd",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s136",
@@ -4008,21 +4074,23 @@
       "font_size_px": 36.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10031",
-      "f": "cur_prc",
-      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "선택 종목 현재가 — 순위표 1행 재표시"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10031",
+      "f": "cur_prc",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s138",
@@ -4036,28 +4104,20 @@
       "font_size_px": 14.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10031",
-      "f": "pred_pre_sig",
-      "alt_mappings": null,
       "kor": "전일대비기호",
       "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "text",
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10031",
-          "f": "pred_pre",
-          "kor": "전일대비",
-          "same_value": true
-        }
-      ],
-      "note": "'+1,850 · +1.24%' — 줄 첫 글자가 부호 글리프. 등락률은 ka10031 응답에 없다"
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10031",
+      "f": "pred_pre_sig",
+      "alt_mappings": [],
+      "row_index": 0,
+      "display_dup": true
     },
     {
       "slot_id": "s139",
@@ -4087,21 +4147,21 @@
       "node_path": "2/1/1/0/1",
       "paper_text": "반도체",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "upName",
-      "alt_mappings": null,
       "kor": "업종명",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "'같이 비교해볼 종목' 블록의 업종 칩 — 13K0-2에 귀속된 필드의 재표시"
+      "note": "'같이 비교해볼 종목' 블록의 업종 칩 — 13K0-2에 귀속된 필드의 재표시",
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s141",
@@ -4110,21 +4170,24 @@
       "node_path": "2/1/1/1/0/0",
       "paper_text": "SK하이닉스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "비교 후보 종목명 — 종목정보 리스트(ka10099)"
+      "note": "현재 목록의 추가 결과 1와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10031",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 1
     },
     {
       "slot_id": "s142",
@@ -4161,21 +4224,24 @@
       "node_path": "2/1/1/1/1/0",
       "paper_text": "DB하이텍",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "비교 후보 종목명 — 종목정보 리스트(ka10099)"
+      "note": "현재 목록의 추가 결과 2와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10031",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 2
     },
     {
       "slot_id": "s144",
@@ -4212,21 +4278,24 @@
       "node_path": "2/1/1/1/2/0",
       "paper_text": "한미반도체",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "name",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "비교 후보 종목명 — 종목정보 리스트(ka10099)"
+      "note": "현재 목록의 추가 결과 3와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10031",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 3
     },
     {
       "slot_id": "s146",
@@ -4359,9 +4428,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "lastPrice",
-      "alt_mappings": null,
       "kor": "전일종가",
       "format": {
         "unit": "text",
@@ -4373,7 +4439,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "13K0-2에 귀속된 필드의 재표시"
+      "note": "13K0-2에 귀속된 필드의 재표시",
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s152",
@@ -4408,9 +4477,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "listCount",
-      "alt_mappings": null,
       "kor": "상장주식수",
       "format": {
         "unit": "shares",
@@ -4422,15 +4488,10 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10099",
-          "f": "regDay",
-          "kor": "상장일",
-          "sep": " · "
-        }
-      ],
-      "note": "'59.7억주 · 1975.06.11' 한 텍스트에 두 값 — mapping은 상장주식수"
+      "note": "'59.7억주 · 1975.06.11' 한 텍스트에 두 값 — mapping은 상장주식수",
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s154",
@@ -4439,21 +4500,21 @@
       "node_path": "2/1/2/4/0/0",
       "paper_text": "정상",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "state",
-      "alt_mappings": null,
       "kor": "종목상태",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "13K0-2에 귀속된 필드의 재표시"
+      "note": "13K0-2에 귀속된 필드의 재표시",
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s155",
@@ -4462,21 +4523,21 @@
       "node_path": "2/1/2/4/1/0",
       "paper_text": "감리 없음",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "auditInfo",
-      "alt_mappings": null,
       "kor": "감리구분",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "13K0-2에 귀속된 필드의 재표시"
+      "note": "13K0-2에 귀속된 필드의 재표시",
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s156",
@@ -4485,21 +4546,21 @@
       "node_path": "2/1/2/4/2/0",
       "paper_text": "투자유의 아님",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10099",
-      "f": "orderWarning",
-      "alt_mappings": null,
       "kor": "투자유의종목여부",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "note": "13K0-2에 귀속된 필드의 재표시"
+      "note": "13K0-2에 귀속된 필드의 재표시",
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s157",

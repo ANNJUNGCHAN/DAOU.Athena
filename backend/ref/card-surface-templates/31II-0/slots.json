@@ -4210,19 +4210,24 @@
       "node_path": "2/0/3/0/1",
       "paper_text": "한미반도체 · 정적 VI",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10054",
+      "f": "stk_nm",
       "alt_mappings": null,
-      "kor": null,
-      "format": null,
+      "kor": "종목명",
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "display_dup": true,
+      "note": "VI 조회 응답 첫 행과 동일한 대상/시각. 현재 진행 상태나 예정 시각을 추정하지 않는다."
     },
     {
       "slot_id": "s137",
@@ -4249,7 +4254,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "note": "VI 조회 응답 첫 행과 동일한 대상/시각. 현재 진행 상태나 예정 시각을 추정하지 않는다."
     },
     {
       "slot_id": "s138",
@@ -4279,13 +4286,13 @@
       "node_path": "2/0/3/1/2/1",
       "paper_text": "09:41~",
       "region": "primary",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10054",
-      "f": "trde_cntr_proc_time",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매매체결처리시각",
       "format": {
@@ -4297,7 +4304,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "같은 체결처리시각의 중복 표기를 생략하는 고정 라벨"
     },
     {
       "slot_id": "s140",
@@ -4345,7 +4354,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": true,
+      "row_index": 0,
+      "note": "VI 조회 응답 첫 행과 동일한 대상/시각. 현재 진행 상태나 예정 시각을 추정하지 않는다."
     },
     {
       "slot_id": "s142",
@@ -4561,7 +4572,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "note": "VI 조회 응답 첫 행과 동일한 대상/시각. 현재 진행 상태나 예정 시각을 추정하지 않는다."
     },
     {
       "slot_id": "s151",

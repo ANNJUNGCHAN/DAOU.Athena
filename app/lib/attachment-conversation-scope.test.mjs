@@ -27,6 +27,8 @@ function setup(invoke = async () => ({ ok: true, attachments: [{ id: 'chosen', p
     stashDisplayedPane() {}, closeOrderTicketForConversationChange() {},
     mountStoredPane() {}, syncDisplayedTurn() {}, updateResultDock() {},
     applyRemoteLock() {}, setDot() {},
+    replayConversationCards: async () => false,
+    expectedSessionCards: () => false,
     conversationPanes: new Map([['new', {}]]), restoreConversation() {},
     state: 'idle', liveProgressEl: null, abortToken: 0,
   });

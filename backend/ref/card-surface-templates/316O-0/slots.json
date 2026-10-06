@@ -15,7 +15,6 @@
     1120
   ],
   "operation_refs": [
-    "base:ka10026",
     "base:ka10028"
   ],
   "state": {
@@ -446,8 +445,8 @@
             "s266",
             "s278"
           ],
-          "mapping_id": "base:ka10026",
-          "f": "high_low_per",
+          "mapping_id": "base:ka10028",
+          "f": "open_pric_pre_flu_rt",
           "kor": "고저PER",
           "note": "순위 열은 응답 배열의 행 순서다"
         },
@@ -497,7 +496,7 @@
             "s279",
             "s280"
           ],
-          "mapping_id": "base:ka10026",
+          "mapping_id": "base:ka10028",
           "f": "stk_nm",
           "kor": "종목명"
         },
@@ -547,7 +546,7 @@
             "s281",
             "s282"
           ],
-          "mapping_id": "base:ka10026",
+          "mapping_id": "base:ka10028",
           "f": "cur_prc",
           "kor": "현재가",
           "alt_mappings": [
@@ -635,8 +634,8 @@
             "s273",
             "s285"
           ],
-          "mapping_id": "base:ka10026",
-          "f": "sel_bid",
+          "mapping_id": null,
+          "f": null,
           "kor": "매도호가"
         },
         {
@@ -685,7 +684,7 @@
             "s286",
             "s287"
           ],
-          "mapping_id": "base:ka10026",
+          "mapping_id": "base:ka10028",
           "f": "now_trde_qty",
           "kor": "현재거래량"
         },
@@ -748,8 +747,8 @@
           "static": true,
           "unbound_reason": "시장 구분은 이 응답에 없다 — 종목코드에서 파생한 표기",
           "header_kor": "시장",
-          "mapping_id": "base:ka10026",
-          "f": "high_low_per",
+          "mapping_id": null,
+          "f": null,
           "note": "시장 구분 — 고저PER(ka10026) 응답에 시장 필드가 없다"
         }
       ]
@@ -852,20 +851,22 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10028",
-      "f": "open_pric_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "개별 수신 행 값을 전체 목록의 최고·최저 집계로 표시할 수 없음"
     },
     {
       "slot_id": "s005",
@@ -1285,20 +1286,22 @@
       "font_size_px": 24.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10028",
-      "f": "open_pric_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "개별 수신 행 값을 전체 목록의 최고·최저 집계로 표시할 수 없음"
     },
     {
       "slot_id": "s024",
@@ -1901,15 +1904,12 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1924,7 +1924,7 @@
       "node_path": "2/0/1/1/1/0",
       "paper_text": "레인보우로보틱스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -1933,7 +1933,7 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -1960,7 +1960,7 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -1992,20 +1992,16 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2029,17 +2025,12 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2079,10 +2070,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2111,9 +2103,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s055",
@@ -2138,8 +2130,8 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -2152,7 +2144,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": false,
-      "row_index": 0
+      "row_index": 0,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s058",
@@ -2170,7 +2164,7 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -2240,10 +2234,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2296,15 +2290,12 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2319,7 +2310,7 @@
       "node_path": "2/0/1/2/1/0",
       "paper_text": "이수페타시스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -2328,7 +2319,7 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -2355,7 +2346,7 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -2387,20 +2378,16 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2424,17 +2411,12 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2474,10 +2456,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2506,9 +2489,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s067",
@@ -2533,8 +2516,8 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": null,
@@ -2542,7 +2525,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 1
+      "row_index": 1,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s070",
@@ -2560,7 +2545,7 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -2630,10 +2615,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2686,15 +2671,12 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2709,7 +2691,7 @@
       "node_path": "2/0/1/3/1/0",
       "paper_text": "실리콘투",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -2718,7 +2700,7 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -2745,7 +2727,7 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -2777,20 +2759,16 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2814,17 +2792,12 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2864,10 +2837,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2896,9 +2870,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s079",
@@ -2923,8 +2897,8 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -2937,7 +2911,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 2
+      "row_index": 2,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s082",
@@ -2955,7 +2931,7 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -3025,10 +3001,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3081,15 +3057,12 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3104,7 +3077,7 @@
       "node_path": "2/0/1/4/1/0",
       "paper_text": "리가켐바이오",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -3113,7 +3086,7 @@
         "row": "3",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -3140,7 +3113,7 @@
         "row": "3",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -3172,20 +3145,16 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3209,17 +3178,12 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3259,10 +3223,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3291,9 +3256,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s091",
@@ -3318,8 +3283,8 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -3332,7 +3297,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 3
+      "row_index": 3,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s094",
@@ -3350,7 +3317,7 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -3420,10 +3387,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3476,15 +3443,12 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3499,7 +3463,7 @@
       "node_path": "2/0/1/5/1/0",
       "paper_text": "하나마이크론",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -3508,7 +3472,7 @@
         "row": "4",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -3535,7 +3499,7 @@
         "row": "4",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -3567,20 +3531,16 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3604,17 +3564,12 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3654,10 +3609,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3686,9 +3642,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s103",
@@ -3713,8 +3669,8 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -3727,7 +3683,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 4
+      "row_index": 4,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s106",
@@ -3745,7 +3703,7 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -3815,10 +3773,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3871,15 +3829,12 @@
         "row": "5",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3894,7 +3849,7 @@
       "node_path": "2/0/1/6/1/0",
       "paper_text": "대주전자재료",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -3903,7 +3858,7 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -3930,7 +3885,7 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -3962,20 +3917,16 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3999,17 +3950,12 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4049,10 +3995,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4081,9 +4028,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s115",
@@ -4108,8 +4055,8 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -4122,7 +4069,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 5
+      "row_index": 5,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s118",
@@ -4140,7 +4089,7 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -4210,10 +4159,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4266,15 +4215,12 @@
         "row": "6",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4289,7 +4235,7 @@
       "node_path": "2/0/1/7/1/0",
       "paper_text": "동진쎄미켐",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -4298,7 +4244,7 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -4325,7 +4271,7 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -4357,20 +4303,16 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4394,17 +4336,12 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4444,10 +4381,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4476,9 +4414,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s127",
@@ -4503,8 +4441,8 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -4517,7 +4455,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 6
+      "row_index": 6,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s130",
@@ -4535,7 +4475,7 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -4605,10 +4545,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4661,15 +4601,12 @@
         "row": "7",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4684,7 +4621,7 @@
       "node_path": "2/0/1/8/1/0",
       "paper_text": "주성엔지니어링",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -4693,7 +4630,7 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -4720,7 +4657,7 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -4752,20 +4689,16 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4789,17 +4722,12 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4839,10 +4767,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4871,9 +4800,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s139",
@@ -4898,8 +4827,8 @@
         "row": "7",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -4912,7 +4841,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 7
+      "row_index": 7,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s142",
@@ -4930,7 +4861,7 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -5000,10 +4931,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5056,15 +4987,12 @@
         "row": "8",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5079,7 +5007,7 @@
       "node_path": "2/0/1/9/1/0",
       "paper_text": "원익IPS",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -5088,7 +5016,7 @@
         "row": "8",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -5115,7 +5043,7 @@
         "row": "8",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -5147,20 +5075,16 @@
         "row": "8",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5184,17 +5108,12 @@
         "row": "8",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -5234,10 +5153,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5266,9 +5186,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s151",
@@ -5293,8 +5213,8 @@
         "row": "8",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -5307,7 +5227,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 8
+      "row_index": 8,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s154",
@@ -5325,7 +5247,7 @@
         "row": "8",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -5395,10 +5317,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5451,15 +5373,12 @@
         "row": "9",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5474,7 +5393,7 @@
       "node_path": "2/0/1/10/1/0",
       "paper_text": "한미반도체",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -5483,7 +5402,7 @@
         "row": "9",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -5510,7 +5429,7 @@
         "row": "9",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -5542,20 +5461,16 @@
         "row": "9",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5579,17 +5494,12 @@
         "row": "9",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -5629,10 +5539,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5661,9 +5572,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s163",
@@ -5688,8 +5599,8 @@
         "row": "9",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -5702,7 +5613,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 9
+      "row_index": 9,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s166",
@@ -5720,7 +5633,7 @@
         "row": "9",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -5790,10 +5703,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5846,15 +5759,12 @@
         "row": "10",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5869,7 +5779,7 @@
       "node_path": "2/0/1/11/1/0",
       "paper_text": "티씨케이",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -5878,7 +5788,7 @@
         "row": "10",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -5905,7 +5815,7 @@
         "row": "10",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -5937,20 +5847,16 @@
         "row": "10",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5974,17 +5880,12 @@
         "row": "10",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -6024,10 +5925,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6056,9 +5958,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s175",
@@ -6083,8 +5985,8 @@
         "row": "10",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -6097,7 +5999,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 10
+      "row_index": 10,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s178",
@@ -6115,7 +6019,7 @@
         "row": "10",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -6185,10 +6089,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6241,15 +6145,12 @@
         "row": "11",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6264,7 +6165,7 @@
       "node_path": "2/0/1/12/1/0",
       "paper_text": "HD현대일렉트릭",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -6273,7 +6174,7 @@
         "row": "11",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -6300,7 +6201,7 @@
         "row": "11",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -6332,20 +6233,16 @@
         "row": "11",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6369,17 +6266,12 @@
         "row": "11",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -6419,10 +6311,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6451,9 +6344,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s187",
@@ -6478,8 +6371,8 @@
         "row": "11",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -6492,7 +6385,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 11
+      "row_index": 11,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s190",
@@ -6510,7 +6405,7 @@
         "row": "11",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -6580,10 +6475,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6636,15 +6531,12 @@
         "row": "12",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6659,7 +6551,7 @@
       "node_path": "2/0/1/13/1/0",
       "paper_text": "알테오젠",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -6668,7 +6560,7 @@
         "row": "12",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -6695,7 +6587,7 @@
         "row": "12",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -6727,20 +6619,16 @@
         "row": "12",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6764,17 +6652,12 @@
         "row": "12",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -6814,10 +6697,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6846,9 +6730,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s199",
@@ -6873,8 +6757,8 @@
         "row": "12",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -6887,7 +6771,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 12
+      "row_index": 12,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s202",
@@ -6905,7 +6791,7 @@
         "row": "12",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -6975,10 +6861,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7031,15 +6917,12 @@
         "row": "13",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7054,7 +6937,7 @@
       "node_path": "2/0/1/14/1/0",
       "paper_text": "삼양식품",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -7063,7 +6946,7 @@
         "row": "13",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -7090,7 +6973,7 @@
         "row": "13",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -7122,20 +7005,16 @@
         "row": "13",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7159,17 +7038,12 @@
         "row": "13",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -7209,10 +7083,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7241,9 +7116,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s211",
@@ -7268,8 +7143,8 @@
         "row": "13",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -7282,7 +7157,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 13
+      "row_index": 13,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s214",
@@ -7300,7 +7177,7 @@
         "row": "13",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -7370,10 +7247,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7426,15 +7303,12 @@
         "row": "14",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7449,7 +7323,7 @@
       "node_path": "2/0/1/15/1/0",
       "paper_text": "현대로템",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -7458,7 +7332,7 @@
         "row": "14",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -7485,7 +7359,7 @@
         "row": "14",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -7517,20 +7391,16 @@
         "row": "14",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7554,17 +7424,12 @@
         "row": "14",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -7604,10 +7469,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7636,9 +7502,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s223",
@@ -7663,8 +7529,8 @@
         "row": "14",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -7677,7 +7543,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 14
+      "row_index": 14,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s226",
@@ -7695,7 +7563,7 @@
         "row": "14",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -7765,10 +7633,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7821,15 +7689,12 @@
         "row": "15",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7844,7 +7709,7 @@
       "node_path": "2/0/1/16/1/0",
       "paper_text": "LS일렉트릭",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -7853,7 +7718,7 @@
         "row": "15",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -7880,7 +7745,7 @@
         "row": "15",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -7912,20 +7777,16 @@
         "row": "15",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7949,17 +7810,12 @@
         "row": "15",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -7999,10 +7855,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8031,9 +7888,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s235",
@@ -8058,8 +7915,8 @@
         "row": "15",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -8072,7 +7929,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 15
+      "row_index": 15,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s238",
@@ -8090,7 +7949,7 @@
         "row": "15",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -8160,10 +8019,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8216,15 +8075,12 @@
         "row": "16",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8239,7 +8095,7 @@
       "node_path": "2/0/1/17/1/0",
       "paper_text": "삼성전자",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -8248,7 +8104,7 @@
         "row": "16",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -8275,7 +8131,7 @@
         "row": "16",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -8307,20 +8163,16 @@
         "row": "16",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8344,17 +8196,12 @@
         "row": "16",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -8394,10 +8241,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8426,9 +8274,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s247",
@@ -8453,8 +8301,8 @@
         "row": "16",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -8467,7 +8315,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 16
+      "row_index": 16,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s250",
@@ -8485,7 +8335,7 @@
         "row": "16",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -8555,10 +8405,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8611,15 +8461,12 @@
         "row": "17",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8634,7 +8481,7 @@
       "node_path": "2/0/1/18/1/0",
       "paper_text": "롯데케미칼",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -8643,7 +8490,7 @@
         "row": "17",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -8670,7 +8517,7 @@
         "row": "17",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -8702,20 +8549,16 @@
         "row": "17",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8739,17 +8582,12 @@
         "row": "17",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -8789,10 +8627,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8821,9 +8660,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s259",
@@ -8848,8 +8687,8 @@
         "row": "17",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -8862,7 +8701,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 17
+      "row_index": 17,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s262",
@@ -8880,7 +8721,7 @@
         "row": "17",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -8950,10 +8791,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9006,15 +8847,12 @@
         "row": "18",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9029,7 +8867,7 @@
       "node_path": "2/0/1/19/1/0",
       "paper_text": "덕산네오룩스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -9038,7 +8876,7 @@
         "row": "18",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -9065,7 +8903,7 @@
         "row": "18",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -9097,20 +8935,16 @@
         "row": "18",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9134,17 +8968,12 @@
         "row": "18",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -9184,10 +9013,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9216,9 +9046,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s271",
@@ -9243,8 +9073,8 @@
         "row": "18",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -9257,7 +9087,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 18
+      "row_index": 18,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s274",
@@ -9275,7 +9107,7 @@
         "row": "18",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -9345,10 +9177,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9401,15 +9233,12 @@
         "row": "19",
         "col": 0
       },
-      "mapping_id": "base:ka10026",
-      "f": "high_low_per",
+      "mapping_id": "base:ka10028",
+      "f": "open_pric_pre_flu_rt",
       "alt_mappings": null,
       "kor": "고저PER",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9424,7 +9253,7 @@
       "node_path": "2/0/1/20/1/0",
       "paper_text": "이마트",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
@@ -9433,7 +9262,7 @@
         "row": "19",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
@@ -9460,7 +9289,7 @@
         "row": "19",
         "col": 1
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "stk_cd",
       "alt_mappings": null,
       "kor": "종목코드",
@@ -9492,20 +9321,16 @@
         "row": "19",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9529,17 +9354,12 @@
         "row": "19",
         "col": 2
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10026",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -9579,10 +9399,11 @@
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9611,9 +9432,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s283",
@@ -9638,8 +9459,8 @@
         "row": "19",
         "col": 4
       },
-      "mapping_id": "base:ka10026",
-      "f": "sel_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도호가",
       "format": {
@@ -9652,7 +9473,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "row_index": 19
+      "row_index": 19,
+      "static": "blank",
+      "unbound_reason": "조회 목록에 해당 필드가 없으며 다른 순위 목록의 같은 행을 합치지 않음"
     },
     {
       "slot_id": "s286",
@@ -9670,7 +9493,7 @@
         "row": "19",
         "col": 5
       },
-      "mapping_id": "base:ka10026",
+      "mapping_id": "base:ka10028",
       "f": "now_trde_qty",
       "alt_mappings": null,
       "kor": "현재거래량",
@@ -9740,10 +9563,10 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "percent",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -10525,9 +10348,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": null,
@@ -10573,9 +10396,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": null,
@@ -10621,9 +10444,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": null,
@@ -10669,9 +10492,9 @@
       "alt_mappings": null,
       "kor": "시가대비",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 1,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": null,

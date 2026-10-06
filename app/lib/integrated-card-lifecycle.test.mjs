@@ -154,3 +154,35 @@ test('same identity after a failed state cannot restore an old receiving label',
   assert.equal(run.root.__athenaBoardRealtimeReceived, false);
   assert.equal(run.root.displayedRealtimeStatus, 'active');
 });
+
+test('a target with no real-time binding retains the REST snapshot without a failure banner', async () => {
+  const run = fixture(async (channel) => channel.endsWith('unmount') ? { ok: true } : {
+    ok: false, status: 'error', error: 'no realtime policy matched this card/mode/target',
+  });
+  run.context.syncIntegratedRealtime(run.root, {});
+  await run.tasks.get(run.root);
+  assert.equal(run.root.realtime.status, 'snapshot');
+  assert.equal(run.root.hasError, false);
+  assert.equal(run.root.realtime.mounted, false);
+  assert.equal(run.root.realtime.mountAttempted, false);
+  assert.equal(run.root.__athenaRealtimeFallbackCapable, false);
+});
+
+test('switching tabs immediately clears a prior error and rejects its late failure', async () => {
+  let finishOld;
+  const old = new Promise((resolve) => { finishOld = resolve; });
+  let calls = 0;
+  const run = fixture(() => ++calls === 1 ? old : { ok: true, status: 'active' });
+  run.context.syncIntegratedRealtime(run.root, { mode: 'quote' });
+  await new Promise((resolve) => setImmediate(resolve));
+  const first = run.tasks.get(run.root);
+  run.root.hasError = true;
+  run.context.syncIntegratedRealtime(run.root, { mode: 'chart' });
+  assert.equal(run.root.hasError, false);
+  finishOld({ ok: false, status: 'error', error: 'previous tab failed' });
+  await first;
+  assert.equal(run.root.hasError, false);
+  await run.tasks.get(run.root);
+  assert.equal(run.root.realtime.status, 'active');
+  assert.equal(run.root.hasError, false);
+});

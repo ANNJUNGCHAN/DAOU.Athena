@@ -1,0 +1,43 @@
+{
+  "pins": {
+    "PREPARED-MANIFEST.json": "cba0a3e8cddbbb229fae378c9e6f2a1d388651962fae262d352961bf610cf588",
+    "SOURCE-RECEIPT.json": "0131dcd0975c9d69e364a26574fbd5f3a97ce76f0932f200b822372e55cc5bdf",
+    "EXECUTION-PROPOSAL.md": "d4a0f5dbb39451a4b14f8a88152b052f80ae8fa32ac9f6e9b61f287752ad1921",
+    "run.cjs": "2570c11cc924ea322fd1fcba8343acdf3556acdfbe48a87c32c7f634868e07ee",
+    "browser.js": "528167a5d42f6a2803d8d0a8b66195d547f87eeb2b2fc630b24476daec58f5f8"
+  },
+  "phaseCount": 6,
+  "snapshotCount": 42,
+  "liveSourcesPinned": 13,
+  "states": 18,
+  "max": [
+    2560,
+    1392
+  ],
+  "narrow": [
+    1411,
+    1166
+  ],
+  "sameInputObserverSnapshot": true,
+  "wrappersExactlyReconstructed": 2,
+  "contractBoard": "137X-2",
+  "candidateOnlyFixedEdgeOptions": true,
+  "syntax": [
+    {
+      "file": "run.cjs",
+      "exit": 0
+    },
+    {
+      "file": "browser.js",
+      "exit": 0
+    },
+    {
+      "file": "prepare.cjs",
+      "exit": 0
+    }
+  ],
+  "runsAbsent": true,
+  "rendererLaunches": 0,
+  "productWrites": 0,
+  "appNativeProviderNetwork": 0
+}

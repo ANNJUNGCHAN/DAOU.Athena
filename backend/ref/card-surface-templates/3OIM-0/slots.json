@@ -2301,9 +2301,9 @@
       "alt_mappings": null,
       "kor": "주문단가",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "unit": "shares",
         "precision": 0,
+        "sign": false,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -2723,7 +2723,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "literal": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3025,7 +3026,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "literal": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3211,7 +3213,10 @@
       "f": "loan_dt",
       "alt_mappings": null,
       "kor": "대출일",
-      "format": null,
+      "format": {
+        "kind": "date",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null

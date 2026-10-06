@@ -1,0 +1,140 @@
+{
+  "status": "HANDOFF_WIP_SOURCE_REVIEW",
+  "productPinCount": 13,
+  "manifestFilesChecked": 65,
+  "phaseSyntaxOnly": true,
+  "rendererExecuted": false,
+  "productWrites": 0,
+  "fixturePacks": {
+    "date-axis": {
+      "filesChecked": 48,
+      "status": "PORTABLE_PREPARED_NOT_EXECUTED",
+      "states": 18
+    },
+    "rest-state": {
+      "filesChecked": 17,
+      "status": "PORTABLE_PREPARED_NOT_EXECUTED",
+      "states": null
+    }
+  },
+  "resumeMemoryCases": [
+    {
+      "scenario": "restored",
+      "writes": 1,
+      "startsAgent": false,
+      "startsApp": false
+    },
+    {
+      "scenario": "already-current",
+      "writes": 0,
+      "startsAgent": false,
+      "startsApp": false
+    },
+    {
+      "scenario": "existing-local-plan-preserved",
+      "writes": 0,
+      "startsAgent": false,
+      "startsApp": false
+    }
+  ],
+  "accountChart": {
+    "recordsVerified": 26,
+    "adaptations": [
+      {
+        "target": "verification/account-chart/focused-consumer.cjs",
+        "changedLineCount": 1,
+        "changed": [
+          {
+            "line": 6,
+            "original": "const root = path.resolve(__dirname, '../../../..');",
+            "portable": "const root = path.resolve(__dirname, '../../../../..');"
+          }
+        ]
+      },
+      {
+        "target": "verification/account-chart/renderer-boundaries.cjs",
+        "changedLineCount": 2,
+        "changed": [
+          {
+            "line": 3,
+            "original": "const source=fs.readFileSync(\"C:\\\\Projects\\\\DAOU.Athena\\\\app\\\\canvas.js\",'utf8').replace(/\\r\\n/g,'\\n');",
+            "portable": "const source=fs.readFileSync(path.resolve(__dirname,'../../../../../app/canvas.js'),'utf8').replace(/\\r\\n/g,'\\n');"
+          },
+          {
+            "line": 32,
+            "original": " const {createChartRemounts}=require(\"C:\\\\Projects\\\\DAOU.Athena\\\\app\\\\lib\\\\main\\\\chart-remount.js\");",
+            "portable": " const {createChartRemounts}=require(path.resolve(__dirname,'../../../../../app/lib/main/chart-remount.js'));"
+          }
+        ]
+      },
+      {
+        "target": "verification/account-chart/await-boundaries.cjs",
+        "changedLineCount": 0,
+        "changed": []
+      },
+      {
+        "target": "verification/account-chart/original-nine-replay.cjs",
+        "changedLineCount": 0,
+        "changed": []
+      },
+      {
+        "target": "verification/account-chart/consumer-check.cjs",
+        "changedLineCount": 3,
+        "changed": [
+          {
+            "line": 5,
+            "original": "const root = path.resolve(__dirname, '../../../..');",
+            "portable": "const root = path.resolve(__dirname, '../../../../..');"
+          },
+          {
+            "line": 72,
+            "original": "const original = fs.readFileSync(path.join(root, 'app/lib/board-mount.js'), 'utf8');",
+            "portable": "const original = fs.readFileSync(path.join(__dirname, 'baseline-board-mount.js'), 'utf8');"
+          },
+          {
+            "line": 73,
+            "original": "const candidate = fs.readFileSync(path.join(__dirname, 'app/lib/board-mount.js'), 'utf8');",
+            "portable": "const candidate = fs.readFileSync(path.join(root, 'app/lib/board-mount.js'), 'utf8');"
+          }
+        ]
+      },
+      {
+        "target": "verification/account-chart/contract-owner-check.cjs",
+        "changedLineCount": 1,
+        "changed": [
+          {
+            "line": 5,
+            "original": "const root = path.resolve(__dirname, '../../../..');",
+            "portable": "const root = path.resolve(__dirname, '../../../../..');"
+          }
+        ]
+      }
+    ],
+    "portableExecution": "NOT_RUN",
+    "originalCandidateSourceApproval": "Excluded; review is portability and provenance only",
+    "extraTwentyAssemblyByteExact": true,
+    "generatedOutputIgnoreCovered": true
+  },
+  "securityPolicy": {
+    "exactConfigSha256": "7dc06222f80c555035ad812709b28686f60409e997d330ddf9a846304e00af8e",
+    "exactAllowedMetadataPaths": 8,
+    "publicStylesheetHashConfirmed": true,
+    "differentHashAndOutsidePathRejected": true,
+    "independentSecurityGateRun": false
+  },
+  "documentPins": {
+    "AGENTS.md": "9d505469a4d7869a8666a0d41f5091d86630f1429413a2127214cf4070534a98",
+    "backend/ref/card-ui-handoff-20261003/README.md": "a077440e9e7ddd1269deb8462932e84236cb149cd122985e72cdd0b9ac46720d",
+    "backend/ref/card-ui-handoff-20261003/PLAN.md": "9b9ac058f00cddaec539035017480eedd46d1be50c217cd93e3d6321edaa8787",
+    "backend/ref/card-ui-handoff-20261003/STATE.json": "a36bf72d447aa6ef754f32db26d84f083eed123a612b8ef951697593225a8481",
+    "backend/ref/card-ui-handoff-20261003/resume.mjs": "0e1587b9763bf4d3d6bb9ab057e91e43ddf447a5e3438479b469820517f1b4ce"
+  },
+  "boundaries": {
+    "complete10194Required": true,
+    "currentNativeIncomplete": true,
+    "unitSuiteFailedAcknowledged": true,
+    "companyQuestionnaireExcludedFromApproval": true,
+    "accountChartPack": "AVAILABLE_STATIC_REVIEW",
+    "privacyScope": "Inspected root docs and public date/rest/account source + hashes; no native images or private stores opened"
+  }
+}

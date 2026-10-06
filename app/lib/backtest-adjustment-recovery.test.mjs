@@ -76,7 +76,7 @@ function harness(first = mismatch()) {
   const context = vm.createContext({
     state: { view: 'running', jobId: 'old-job' }, spec: { symbols: ['005930'], period: 'day',
       adjusted: true, fromDt: '20260101', toDt: '20260930' }, workspaceGeneration: 1,
-    pollTimer: null, stopPolling() {}, isVisible: () => true, schedulePoll: tick => timers.push(tick),
+    pollTimer: null, optimizeElapsedTimer: null, stopPolling() {}, isVisible: () => true, schedulePoll: tick => timers.push(tick),
     mounted: true, syncChatTechniqueAttr() {}, coverageKey: () => null, coverageAsked: null,
     clear: node => { node.children = []; }, container, el: element,
     errorStateBadge: canvas.errorStateBadge, ERROR_BADGE_DISABLED: '비활성',

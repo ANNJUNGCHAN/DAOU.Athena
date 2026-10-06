@@ -135,6 +135,7 @@ test('primary destroy는 호가 envelope 신원을 지우고 lease를 한 번만
     {
       clearTimeout() {},
       settleBoardChartMount() {},
+      closeParentRankingFilter() {},
       aitsChartPanels: { destroyPanel: () => false },
       window: { athena: { send() {} } },
     },

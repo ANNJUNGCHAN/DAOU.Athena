@@ -896,9 +896,55 @@ async function loadCompletedHistoryRun(runId, deps, isCurrent) {
   return { runId, result, trades };
 }
 
+function backtestResultTarget(result) {
+  const recorded = result && result.metrics && result.metrics.run_target;
+  if (recorded && Array.isArray(recorded.symbols)) {
+    return { symbols: recorded.symbols, period: recorded.period, fromDt: recorded.from, toDt: recorded.to };
+  }
+  // Code executions receive their target separately; stored Python is not a target document.
+  return result && result.metrics && result.metrics.run_path === 'form'
+    ? targetFromYaml(result.source || '') : {};
+}
+
+function backtestTradeCell(value, unit, digits) {
+  const missing = value === null || value === undefined || value === '';
+  const raw = missing ? '—' : String(value);
+  const number = missing ? NaN : Number(value);
+  if (!Number.isFinite(number)) return el('td', 'backtest-trades-cell', raw);
+  const tiny = number !== 0 && Math.abs(number) < 10 ** -digits;
+  const shown = number.toLocaleString('ko-KR', tiny
+    ? { notation: 'scientific', maximumSignificantDigits: 6 }
+    : { maximumFractionDigits: digits });
+  const approximate = Number(shown.replace(/,/g, '')) !== number;
+  const label = (approximate ? '≈ ' : '') + shown;
+  const cell = el('td', 'backtest-trades-cell');
+  const detail = el('details', 'backtest-trade-value');
+  const summary = el('summary', 'backtest-trade-value-summary', label);
+  summary.title = '원값 ' + raw + ' ' + unit;
+  summary.setAttribute('aria-label', '표시 ' + (approximate ? '약 ' : '') + shown + ' ' + unit + ', 원값 ' + raw + ' ' + unit + '. 펼쳐서 원값 확인');
+  detail.appendChild(summary);
+  detail.appendChild(el('span', 'backtest-trade-raw', '원값 ' + raw + ' ' + unit));
+  cell.appendChild(detail);
+  return cell;
+}
+
+function backtestContextText(target, result) {
+  const item = target || {};
+  const codes = Array.isArray(item.symbols) ? item.symbols.filter(code => typeof code === 'string' && code.trim()) : [];
+  const parts = [codes.length ? '종목 ' + codes.join(', ') : '종목 정보 미제공'];
+  if (item.period) parts.push(({ day: '일봉', week: '주봉', month: '월봉' })[item.period] || String(item.period));
+  if (item.fromDt && item.toDt) parts.push('설정 기간 ' + item.fromDt + ' ~ ' + item.toDt);
+  else {
+    const dates = ((result && result.equity) || []).map(point => point && point.dt).filter(Boolean);
+    if (dates.length) parts.push('결과 기간 ' + dates[0] + ' ~ ' + dates[dates.length - 1]);
+  }
+  return parts.join(' · ');
+}
+
 function renderCompletedHistoryRun(loaded, renderers) {
   const wrap = el('div', 'backtest-result');
   wrap.appendChild(el('div', 'backtest-card-title', `저장된 실행 ${loaded.runId} · 읽기 전용`));
+  wrap.appendChild(el('div', 'backtest-result-context', backtestContextText(backtestResultTarget(loaded.result), loaded.result)));
   wrap.appendChild(renderers.metrics(loaded.result.metrics || null));
   wrap.appendChild(renderers.equity(loaded.result, loaded.trades));
   wrap.appendChild(renderers.stdout(loaded.result.stdout || ''));
@@ -1008,6 +1054,7 @@ function createBacktestCanvas(options) {
   let historyPreview = null;
   let workspaceCleared = false;
   let pollTimer = null;
+  let optimizeElapsedTimer = null;
   let loadRequestId = 0;
   let mounted = false;
   let editorHandle = null;
@@ -2076,21 +2123,32 @@ function createBacktestCanvas(options) {
     const generation = workspaceGeneration;
     const errors = spec ? runErrors() : ['최적화할 기법을 먼저 고르세요'];
     if (errors.length) {
-      setState({ view: 'design', tab: 'design', designTab: 'form',
-        formErrors: ['최적화 전에 종목·기간과 실행 조건을 확인해 주세요.', ...errors],
-        optimizeBusy: false, optimizeError: '' });
-      return;
+      setState({ view: 'design', tab: 'optimize',
+        optimizeBusy: false, optimizeError: ['최적화 전에 종목·기간과 실행 조건을 확인해 주세요.', ...errors].join(' ') });
+      return { ok: false, errors };
     }
     const ranges = optimizeRanges();
-    if (!ranges.length) { setState({ optimizeError: '훑을 파라미터가 없습니다' }); return; }
-    setState({ optimizeBusy: true, optimizeError: '', formErrors: [] });
+    if (!ranges.length) {
+      setState({ optimizeError: '훑을 파라미터가 없습니다' });
+      return { ok: false, errors: ['훑을 파라미터가 없습니다'] };
+    }
+    const method = state.optimizeMethod || 'grid';
+    const samples = method === 'random' ? Number(state.optimizeSamples == null ? 100 : state.optimizeSamples) : null;
+    if (method === 'random' && (!Number.isInteger(samples) || samples < 1 || samples > 1000)) {
+      const message = '랜덤 표본 수는 1~1000 사이의 정수로 입력하세요.';
+      setState({ optimizeError: message });
+      return { ok: false, errors: [message] };
+    }
+    const startedAt = Date.now();
+    setState({ optimizeBusy: true, optimizeError: '', optimizeFailure: null, optimizeStartedAt: startedAt, optimizeElapsedMs: null, formErrors: [] });
     try {
       const body = {
         yaml: currentYaml(),
         ranges,
-        method: state.optimizeMethod || 'grid',
+        method,
         ascending: runPath !== 'code' && ranges.length >= 2 ? [ranges[0].name, ranges[1].name] : undefined,
       };
+      if (method === 'random') body.samples = samples;
       if (runPath === 'code') {
         if (projectIde && projectIde.isDirty()) throw new Error('저장하고 최적화하세요 — 저장하지 않은 편집이 있습니다');
         const activeFile = activeProjectFile();
@@ -2103,10 +2161,14 @@ function createBacktestCanvas(options) {
       if (generation !== workspaceGeneration) return;
       const res = await deps.optimize(body);
       if (generation !== workspaceGeneration) return;
-      setState({ optimizeBusy: false, optimizeResult: res });
+      setState({ optimizeBusy: false, optimizeResult: res, optimizeElapsedMs: Date.now() - startedAt });
+      return { ok: true };
     } catch (err) {
       if (generation !== workspaceGeneration) return;
-      setState({ optimizeBusy: false, optimizeError: String((err && err.message) || err) });
+      setState({ optimizeBusy: false, optimizeError: String((err && err.message) || err),
+        optimizeElapsedMs: Date.now() - startedAt,
+        optimizeFailure: err && (err.code || err.causeCode) ? { code: err.code || null, causeCode: err.causeCode || null } : null });
+      return { ok: false, errors: [String((err && err.message) || err)] };
     }
   }
 
@@ -2359,29 +2421,31 @@ function createBacktestCanvas(options) {
       || String(envelope.project_id || '') !== String(project.id)
       || receiptRoot !== root || !path || /^(?:[A-Za-z]:|\/)/.test(path)
       || path.split('/').includes('..') || (root && !path.startsWith(`${root}/`))) {
-      return { applied: false, path: path || null };
+      return null;
     }
 
     const before = codeSource;
     if (typeof ide.hasDirtyFile === 'function' && ide.hasDirtyFile(path)) {
       setState({ codeErrors: [`${path}의 디스크 내용이 바뀌었지만 저장하지 않은 편집은 덮지 않았습니다`] });
-      return { applied: false, path };
+      return makeReceipt('file_written', { path, saved: true,
+        errors: ['디스크에는 저장됐지만 저장하지 않은 편집은 보존했습니다.'] });
     }
     const open = ide.activeFile();
     const adopted = typeof ide.adoptExternalWrite === 'function'
       ? ide.adoptExternalWrite(path, envelope.source) : false;
     if (open && open.path === path && open.dirty && !adopted) {
       setState({ codeErrors: [`${path}의 디스크 내용이 바뀌었지만 저장하지 않은 편집은 덮지 않았습니다`] });
-      return { applied: false, path };
+      return makeReceipt('file_written', { path, saved: true,
+        errors: ['디스크에는 저장됐지만 저장하지 않은 편집은 보존했습니다.'] });
     }
 
     if (typeof ide.refreshTree === 'function') await ide.refreshTree();
     const stillCurrent = () => generation === workspaceGeneration
       && ide.currentProject() && String(ide.currentProject().id) === String(project.id)
       && normalizeRoot(ide.currentRootPath()) === root;
-    if (!stillCurrent()) return { applied: false, path };
+    if (!stillCurrent()) return null;
     await loadProjectFiles(project.id, root);
-    if (!stillCurrent()) return { applied: false, path };
+    if (!stillCurrent()) return null;
     const entry = userStrategyId ? userStrategies.find((item) => item.id === userStrategyId) : null;
     const strategyPath = (entry && entry.path) || techniqueState().path || TECHNIQUE_STRATEGY_PATH;
     if (path === strategyPath) {
@@ -2395,7 +2459,13 @@ function createBacktestCanvas(options) {
       scheduleTechniqueCheck();
       void loadMap();
     } else render();
-    return { applied: true, path };
+    return remember(makeReceipt('file_written', {
+      applied: true, saved: true, path,
+      note: path === strategyPath ? '저장한 내용을 편집기에 반영했습니다.' : '저장한 파일 목록을 새로고쳤습니다.',
+      rows: path === strategyPath ? [codeRow(before, envelope.source)] : [],
+      action: path === strategyPath
+        ? { label_ko: 'diff 보기', open: 'diff', ref: { path, before, after: envelope.source, projectId: project.id } } : null,
+    }));
   }
 
   function envelopeNote(envelope) {
@@ -2747,7 +2817,7 @@ function createBacktestCanvas(options) {
       setState({ view: tab === 'result' && state.result ? 'result' : 'design', tab });
     }
     return remember(makeReceipt('navigate', {
-      applied: true, note: envelopeNote(payload),
+      applied: true, note: envelopeNote(payload) || `${MODE_TABS.find(([key]) => key === tab)[1]} 화면을 열었습니다.`,
       tab: state.tab, designTab: state.designTab,
     }));
   }
@@ -2829,7 +2899,7 @@ function createBacktestCanvas(options) {
 
   // 채팅 카드의 [탐색 시작] — 화면의 [탐색 시작]과 같은 자리.
   function startOptimizeFromChat() {
-    if (state.optimizeSuggested) setState({ optimizeSuggested: null });
+    setState({ view: 'design', tab: 'optimize', optimizeSuggested: null });
     if (state.optimizeBusy) return Promise.resolve();
     return runOptimize();
   }
@@ -3014,6 +3084,7 @@ function createBacktestCanvas(options) {
   }
 
   function render() {
+    if (optimizeElapsedTimer !== null) { clearInterval(optimizeElapsedTimer); optimizeElapsedTimer = null; }
     if (!mounted) return;
     syncChatTechniqueAttr();
     // 대상이 바뀐 첫 그리기에서 한 번만 캐시 상태를 묻는다 — 같은 열쇠로 두 번 묻지 않는다.
@@ -3121,12 +3192,11 @@ function createBacktestCanvas(options) {
     return MODE_TABS_LIST;
   }
 
-  // 기법 하나의 화면 하위 탭(보드 20~23) — 초안은 코드·노드뿐이고, 목록에 오른 기법은
-  // 폼 뒤로 이력·최적화까지 여기 선다(규칙 32-04). 결과는 돌려본 뒤에만 문이 열린다.
+  // 폴더 초안도 실행 이력과 최적화 상태를 볼 수 있다. 폼은 등록된 기법에만 선다.
   function workspaceTabs() {
     let tabs = techniqueDraft ? TECHNIQUE_DRAFT_TABS : USER_TECHNIQUE_TABS;
     if (state.result) tabs = tabs.concat([['result', '결과']]);
-    if (!techniqueDraft) tabs = tabs.concat(WORKSPACE_EXTRA_TABS);
+    tabs = tabs.concat(WORKSPACE_EXTRA_TABS);
     return tabs;
   }
 
@@ -3241,10 +3311,8 @@ function createBacktestCanvas(options) {
       return wrap;
     }
     const subtabs = el('div', 'backtest-subtabs');
-    // 초안에서는 하위 탭이 둘뿐이다 — 폼도 아직 없다(보드 20). 목록에서 고른 내
-    // 기법은 폼과 이력·최적화까지 여기 선다(workspaceTabs). 결과는 어느 쪽이든
-    // 돌려본 뒤에만 하위 탭으로 선다(단계 카드의 [결과 보기]가 여는 자리 — 모드 탭이
-    // 없으니 여기가 그 문이다).
+    // 폴더 초안도 이력·최적화를 이 화면에서 연다. 폼은 등록된 기법에만,
+    // 결과는 돌려본 뒤에만 선다. 채팅 이동도 같은 하위 탭을 사용한다.
     const tabs = workspaceTabs();
     const designTab = workspaceTabKey(tabs);
     tabs.forEach(([key, label]) => {
@@ -3758,7 +3826,11 @@ function createBacktestCanvas(options) {
     if (!action || typeof action !== 'object') return false;
     const open = String(action.open || '');
     if (open === 'diff') {
-      if (!techniqueState().lastDiff) return false;
+      const diff = techniqueState().lastDiff;
+      if (!diff || (action.ref?.path && action.ref.path !== diff.path)
+        || (action.ref?.projectId && action.ref.projectId !== projectIde?.currentProject()?.id)
+        || (action.ref?.before != null && action.ref.before !== diff.before)
+        || (action.ref?.after != null && action.ref.after !== diff.after)) return false;
       techniqueDiffOpen = true;
       setState({ view: 'design', tab: 'design', designTab: 'code' });
       return true;
@@ -4340,15 +4412,19 @@ function createBacktestCanvas(options) {
     });
     const addInput = el('input', 'backtest-field-input backtest-symbol-add');
     addInput.type = 'text';
-    addInput.placeholder = '종목코드 추가 (005930)';
+    addInput.placeholder = '종목코드 입력 후 Enter (005930)';
+    addInput.setAttribute('aria-label', '종목코드 입력 후 Enter로 추가');
     addInput.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter') return;
+      event.preventDefault();
       spec = SpecModel.addSymbol(spec, addInput.value);
       addInput.value = '';
+      if (state.formErrors && state.formErrors.length) state.formErrors = runErrors();
       render();
     });
     chips.appendChild(addInput);
     card.appendChild(chips);
+    card.appendChild(el('div', 'backtest-symbol-hint', '종목코드를 입력하고 Enter를 눌러 선택하세요.'));
 
     const row = el('div', 'backtest-field-row');
     const periodGroup = el('div', 'backtest-segment');
@@ -5220,6 +5296,7 @@ function createBacktestCanvas(options) {
     const runPathValue = (state.result.metrics && state.result.metrics.run_path) === 'code'
       ? '코드 경로' : '폼 경로';
     wrap.appendChild(el('div', 'backtest-result-runpath', runPathValue));
+    wrap.appendChild(el('div', 'backtest-result-context', backtestContextText(backtestResultTarget(state.result), state.result)));
     wrap.appendChild(renderMetricTiles());
     wrap.appendChild(renderEquity());
     wrap.appendChild(renderStdout());
@@ -5244,7 +5321,7 @@ function createBacktestCanvas(options) {
   function renderEquity(result = state.result, trades = state.trades) {
     const wrap = el('div', 'backtest-equity');
     const head = el('div', 'backtest-card-head');
-    head.appendChild(el('div', 'backtest-card-title', '자산곡선'));
+    head.appendChild(el('div', 'backtest-card-title', '자산곡선 · 시작값 1배'));
     const legend = el('div', 'backtest-equity-legend');
     legend.appendChild(el('span', 'backtest-legend-strategy', '전략'));
     legend.appendChild(el('span', 'backtest-legend-benchmark', '매수보유'));
@@ -5271,9 +5348,14 @@ function createBacktestCanvas(options) {
 
   function renderStdout(text = (state.result && state.result.stdout) || restoredLog || '') {
     const wrap = el('div', 'backtest-stdout');
+    if (!text) {
+      wrap.classList.add('is-empty');
+      wrap.appendChild(el('div', 'backtest-stdout-empty', '코드 출력이 없습니다'));
+      return wrap;
+    }
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-card-title', '코드 출력'));
-    head.appendChild(el('div', 'backtest-card-note', 'print 그대로'));
+    head.appendChild(el('div', 'backtest-card-note', '실행 중 출력한 내용'));
     wrap.appendChild(head);
     wrap.appendChild(el('pre', 'backtest-stdout-text', text || '출력이 없습니다'));
     return wrap;
@@ -5284,15 +5366,16 @@ function createBacktestCanvas(options) {
     const wrap = el('div', 'backtest-trades');
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-trades-title', `체결 ${formatNumeric(trades.length)}건`));
-    head.appendChild(el('div', 'backtest-card-note', '수수료·세금 반영 후 손익'));
+    head.appendChild(el('div', 'backtest-card-note', '모의 수량은 소수 허용 · 수수료·세금 반영 후 손익'));
     wrap.appendChild(head);
+    if (trades.length) wrap.appendChild(el('div', 'backtest-trades-precision', '수량은 최대 소수 6자리, 금액은 최대 소수 2자리로 표시합니다. 더 작은 값은 지수 표기하며 반올림된 값은 ≈로 표시합니다. 숫자를 펼치면 원값을 볼 수 있습니다.'));
     if (!trades.length) {
       wrap.appendChild(el('div', 'backtest-trades-empty', '체결이 없습니다'));
       return wrap;
     }
     const table = el('table', 'backtest-trades-table');
     const headRow = el('tr', 'backtest-trades-row backtest-trades-head');
-    ['일자', '방향', '체결가', '수량', '비용', '손익', '사유'].forEach((label) => {
+    ['일자', '방향', '체결가 (원)', '수량 (주)', '비용 (원)', '손익 (원)', '사유'].forEach((label) => {
       headRow.appendChild(el('th', 'backtest-trades-cell', label));
     });
     table.appendChild(headRow);
@@ -5300,12 +5383,12 @@ function createBacktestCanvas(options) {
       const row = el('tr', 'backtest-trades-row');
       row.appendChild(el('td', 'backtest-trades-cell', formatDatetime(trade.dt)));
       row.appendChild(el('td', `backtest-trades-cell is-${trade.side}`, SIDE_LABEL[trade.side] || trade.side));
-      row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(trade.price)));
-      row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(trade.qty)));
+      row.appendChild(backtestTradeCell(trade.price, '원', 2));
+      row.appendChild(backtestTradeCell(trade.qty, '주', 6));
       // 비용은 수수료+세금이다 — 수수료만 보여주면 매도 거래세가 사라진 것처럼 읽힌다.
       const cost = (Number(trade.fee) || 0) + (Number(trade.tax) || 0);
-      row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(cost)));
-      row.appendChild(el('td', 'backtest-trades-cell', formatNumeric(trade.pnl)));
+      row.appendChild(backtestTradeCell(cost, '원', 2));
+      row.appendChild(backtestTradeCell(trade.pnl, '원', 2));
       row.appendChild(el('td', 'backtest-trades-cell', REASON_LABEL[trade.reason] || trade.reason));
       table.appendChild(row);
     });
@@ -5321,7 +5404,7 @@ function createBacktestCanvas(options) {
       ? result.flags
       : (result.metrics && Array.isArray(result.metrics.flags) ? result.metrics.flags : []);
     if (flags.length) {
-      wrap.appendChild(el('div', 'backtest-assumptions-flags', `플래그 · ${flags.join(' · ')}`));
+      wrap.appendChild(el('div', 'backtest-assumptions-flags', `실행 참고 · ${flags.join(' · ')}`));
     }
     return wrap;
   }
@@ -5390,19 +5473,24 @@ function createBacktestCanvas(options) {
       });
       row.setAttribute('aria-pressed', String(isOn));
       row.appendChild(el('span', 'backtest-history-check', isOn ? '■' : '□'));
-      row.appendChild(el('span', 'backtest-history-id', String(run.run_id).slice(0, 8)));
-      row.appendChild(el('span', `backtest-history-status is-${run.status}`, run.status));
+      const identity = el('span', 'backtest-history-id', String(run.run_id).slice(0, 8));
+      identity.setAttribute('title', String(run.run_id));
+      row.appendChild(identity);
+      row.appendChild(el('span', 'backtest-history-date', run.started_at ? formatDatetime(run.started_at) : '실행 시각 미제공'));
+      row.appendChild(el('span', `backtest-history-status is-${run.status}`, ({ done: '완료', failed: '실패', running: '실행 중' })[run.status] || run.status));
       const total = run.metrics && run.metrics.total_return;
       row.appendChild(el(
-        'span', 'backtest-history-return',
+        'span', `backtest-history-return ${total != null && Number.isFinite(Number(total)) ? (Number(total) > 0 ? 'is-up' : Number(total) < 0 ? 'is-down' : 'is-flat') : 'is-flat'}`,
         run.status === 'done' ? formatPercentValue(total) : '—',
       ));
-      wrap.appendChild(row);
+      const line = el('div', 'backtest-history-line');
+      line.appendChild(row);
       if (run.status === 'done') {
         const open = button('backtest-version-activate', '결과 보기', () => { void openHistoryResult(run); });
         open.setAttribute('aria-label', `${String(run.run_id).slice(0, 8)} 결과 보기`);
-        wrap.appendChild(open);
+        line.appendChild(open);
       }
+      wrap.appendChild(line);
     });
 
     if (selected.length === 2) {
@@ -5522,15 +5610,16 @@ function createBacktestCanvas(options) {
     const wrap = el('div', 'backtest-optimize');
     const head = el('div', 'backtest-card-head');
     head.appendChild(el('div', 'backtest-card-title', '파라미터 최적화'));
-    head.appendChild(el('div', 'backtest-card-note', '추가 TR 호출 없음 — 캐시 밖 구간은 먼저 수집 승인'));
+    head.appendChild(el('div', 'backtest-card-note', '저장된 시세로 비교합니다. 부족한 기간의 자료를 받으려면 먼저 승인이 필요합니다.'));
     wrap.appendChild(head);
 
+    wrap.appendChild(el('div', 'backtest-result-context', backtestContextText(spec)));
     const ranges = optimizeRanges();
     const setup = el('div', 'backtest-optimize-setup');
     ranges.forEach((r) => {
       setup.appendChild(el(
         'div', 'backtest-optimize-range',
-        `${r.name} ${r.start} → ${r.stop} · step ${r.step}`,
+        `${r.name} · 범위 ${r.start} ~ ${r.stop} · 간격 ${r.step}${spec && spec.params && spec.params[r.name] && spec.params[r.name].default != null ? ' · 기본값 ' + spec.params[r.name].default : ''}`,
       ));
     });
     if (!ranges.length) {
@@ -5545,20 +5634,46 @@ function createBacktestCanvas(options) {
         setState({ optimizeMethod: value });
       });
       seg.setAttribute('aria-pressed', String(isOn));
+      seg.disabled = !!state.optimizeBusy;
       methods.appendChild(seg);
     });
     wrap.appendChild(methods);
+    if ((state.optimizeMethod || 'grid') === 'random') {
+      const field = el('label', 'backtest-field');
+      field.appendChild(el('span', 'backtest-field-label', '랜덤 표본 수 · 기본 100'));
+      const input = el('input', 'backtest-field-input backtest-optimize-samples');
+      input.type = 'number'; input.min = '1'; input.max = '1000'; input.step = '1';
+      input.value = state.optimizeSamples == null ? '100' : String(state.optimizeSamples);
+      input.disabled = !!state.optimizeBusy;
+      input.addEventListener('input', () => { state.optimizeSamples = input.value; });
+      field.appendChild(input); wrap.appendChild(field);
+      wrap.appendChild(el('div', 'backtest-card-note', '탐색 조합이 적으면 실제 표본 수도 줄어듭니다.'));
+    }
+    if (state.optimizeBusy || state.optimizeElapsedMs != null) {
+      const elapsed = el('div', 'backtest-card-note backtest-optimize-elapsed');
+      const update = () => {
+        const seconds = Math.floor(Math.max(0, state.optimizeBusy ? Date.now() - state.optimizeStartedAt : state.optimizeElapsedMs) / 1000);
+        elapsed.textContent = state.optimizeBusy ? `요청 후 ${seconds}초 경과 · 완료 조합 수와 남은 시간은 제공되지 않습니다.` : `요청 종료까지 ${seconds}초`;
+      };
+      update(); wrap.appendChild(elapsed);
+      if (state.optimizeBusy) optimizeElapsedTimer = setInterval(() => {
+        if (!elapsed.isConnected || !isVisible()) { clearInterval(optimizeElapsedTimer); optimizeElapsedTimer = null; return; }
+        update();
+      }, 1000);
+    }
 
     // 채팅이 제안한 설정이면 버튼을 켜두되 누르지는 않는다 — 탐색을 시작하는 것은 사람이다.
     const suggested = state.optimizeSuggested;
-    wrap.appendChild(button(
+    const start = button(
       `backtest-optimize-start${suggested ? ' is-suggested' : ''}`,
       state.optimizeBusy ? '탐색 중…' : '탐색 시작',
       () => {
         if (suggested) setState({ optimizeSuggested: null });
         if (!state.optimizeBusy) void runOptimize();
       },
-    ));
+    );
+    start.disabled = !!state.optimizeBusy;
+    wrap.appendChild(start);
     if (suggested) {
       wrap.appendChild(el(
         'div', 'backtest-optimize-suggested',
@@ -5568,6 +5683,10 @@ function createBacktestCanvas(options) {
 
     if (state.optimizeError) {
       wrap.appendChild(el('div', 'backtest-design-error-line', state.optimizeError));
+    }
+    if (state.optimizeFailure) {
+      const codes = [...new Set([state.optimizeFailure.code, state.optimizeFailure.causeCode].filter(Boolean))];
+      wrap.appendChild(el('div', 'backtest-card-note backtest-optimize-failure-code', '오류 코드: ' + codes.join(' / ')));
     }
     if (state.optimizeResult) wrap.appendChild(renderOptimizeResult(state.optimizeResult));
     return wrap;

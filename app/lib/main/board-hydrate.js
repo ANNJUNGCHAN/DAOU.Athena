@@ -72,10 +72,13 @@ function buildTargetBag(target) {
 }
 
 // 요청 몸체는 계약이 정한 세 필드뿐이다. 값이 없는 필드는 아예 싣지 않는다.
-function buildHydrateBody({ boardId, target, account, slotIds } = {}) {
+function buildHydrateBody({ boardId, target, account, slotIds, rankingOperationRef, chartOperationRef, flowOperationRef } = {}) {
   const board = clean(boardId);
   if (!board) throw new TypeError('board_id가 없다');
   const body = { board_id: board };
+  if (board === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(flowOperationRef)) body.flow_operation_ref = flowOperationRef;
+  if(board==='32S7-0'&&clean(chartOperationRef))body.chart_operation_ref=clean(chartOperationRef);
+  if ((board === '4B22-1' || board === '13K0-2') && clean(rankingOperationRef)) body.ranking_operation_ref = clean(rankingOperationRef);
   const bag = buildTargetBag(target);
   if (bag) body.target = bag;
   const accountValue = clean(account);
@@ -174,10 +177,10 @@ function raceWithAbort(promise, signal) {
   });
 }
 
-async function hydrateBoard({ backendBase, fetchImpl, token, boardId, target, account, slotIds, timeoutMs = 12_000 } = {}) {
+async function hydrateBoard({ backendBase, fetchImpl, token, boardId, target, account, slotIds, rankingOperationRef, chartOperationRef, flowOperationRef, timeoutMs = 12_000 } = {}) {
   let body;
   try {
-    body = buildHydrateBody({ boardId, target, account, slotIds });
+    body = buildHydrateBody({ boardId, target, account, slotIds, rankingOperationRef, chartOperationRef, flowOperationRef });
   } catch (error) {
     return { ok: false, status: 'invalid', error: String((error && error.message) || error) };
   }
@@ -244,6 +247,9 @@ async function hydrateBoard({ backendBase, fetchImpl, token, boardId, target, ac
     filled: Object.keys(slotValues).length,
     operations,
     primary_envelope: primaryEnvelope,
+    ranking_result: body.board_id === '4B22-1' && payload.ranking_result?.board_id === body.board_id
+      && payload.ranking_result.operation_ref === body.ranking_operation_ref
+      ? payload.ranking_result : null,
     // 하이드레이션으로 채워진 슬롯도 실시간 갱신을 받으려면 observation_id가 붙은
     // 원본 계약이 필요하다(렌더러가 realtimeSlotIndex를 다시 만든다).
     surface_contract: contract,

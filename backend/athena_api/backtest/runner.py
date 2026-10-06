@@ -442,6 +442,9 @@ class BacktestRunner:
                     flags.append(CODE_PATH_WARMUP_FLAG)
                 # 결과 화면·채팅이 "어느 경로로 나온 수치인가"를 구분해야 한다(§6.2).
                 metrics_payload["run_path"] = "code" if source is not None else "form"
+                # Persist the validated target of this run, including Python executions.
+                if spec.data is not None:
+                    metrics_payload["run_target"] = spec.data.model_dump(mode="json", by_alias=True)
                 if flags:
                     metrics_payload["flags"] = flags
                 # 자산곡선과 같은 봉 위에 겹치는 벤치마크. 목록 응답(GET /runs)은 이 배열을
