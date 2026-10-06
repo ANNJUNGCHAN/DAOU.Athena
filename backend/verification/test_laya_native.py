@@ -186,7 +186,7 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
                                             "learn_from_dismissals": False})
         cases = [
             ("athena_graph_view", {"graph.action": "propose_edit", "graph.edit_op": "remove"},
-             {"edit": {"object": "반도체", "relation": "interested_in"}}, graph_view_tools),
+             {"edit": {"object": "반도체", "relation": "interested_in", "relation_id": "relation:fixture-interest"}}, graph_view_tools),
             ("athena_routine", {"routine.action": "propose", "routine.control": "pause"},
              {"propose": {"routine_id": "fixture"}}, routine_tools),
             ("athena_routine", {"routine.action": "draft", "routine.source": "price.current", "routine.goal": "true", "routine.operator": ">="},

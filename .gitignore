@@ -115,6 +115,10 @@ datasets/eval-runs/
 !/backend/verification/test_ws_feed_status.py
 !/backend/verification/test_index_realtime_semantics.py
 !/backend/verification/test_canvas_delivery_correlation.py
+!/backend/verification/test_natural_backtest.py
+!/backend/verification/test_natural_laya.py
+!/backend/verification/test_natural_schema.py
+!/backend/verification/test_natural_api.py
 
 # Re-ignore paths the installer staging filter also omits inside keep trees.
 **/node_modules/

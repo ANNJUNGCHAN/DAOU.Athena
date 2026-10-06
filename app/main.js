@@ -960,6 +960,8 @@ const chartSeries = require('./lib/main/chart-series');
 // 백테스트 REST 프록시(P4, backtest-mode-plan.md §8.1) — routineHttp와 같은 원칙이지만
 // main.js 밖 순수 함수라 단위 테스트(backtest-bridge.test.js)를 직접 붙일 수 있다.
 const backtestBridge = require('./lib/main/backtest-bridge');
+const { prepareNaturalStrategy } = require('./lib/main/natural-strategy-author');
+const naturalAuthorRequests = new Map();
 
 let chartRealtimeFeed = null;
 let chartRealtimeRegistrar = null;
@@ -2005,6 +2007,29 @@ ipcMain.handle('athena:backtest-plan', async (_e, body = {}) => {
   return callBacktestBridge(backtestBridge.planBacktest, body);
 });
 ipcMain.handle('athena:backtest-run', async (_e, body = {}) => {
+  if (body.decision_mode === 'natural' && body.operation === 'prepare') {
+    const senderId = _e.sender.id;
+    naturalAuthorRequests.get(senderId)?.abort();
+    const controller = new AbortController();
+    naturalAuthorRequests.set(senderId, controller);
+    const abort = () => controller.abort();
+    _e.sender.once('destroyed', abort);
+    app.once('before-quit', abort);
+    try {
+      const backendBase = await backendEndpoint.waitForBackendUrl({
+        timeoutMs: backendLauncher.STARTUP_HARD_TIMEOUT_MS + 5_000,
+      });
+      return await prepareNaturalStrategy({ strategy: body.strategy, backendBase,
+        selection: resolveActiveModelSelection(), userDataPath: app.getPath('userData'),
+        fetchImpl: fetch, runClaudeQuery, signal: controller.signal });
+    } catch (error) {
+      return { ok: false, status: 0, error: String(error.message || error) };
+    } finally {
+      _e.sender.removeListener('destroyed', abort);
+      app.removeListener('before-quit', abort);
+      if (naturalAuthorRequests.get(senderId) === controller) naturalAuthorRequests.delete(senderId);
+    }
+  }
   const res = await callBacktestBridge(backtestBridge.runBacktest, body);
   attachSessionJob(res, 'run_id', 'backtest.run');
   return res;
@@ -6293,7 +6318,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     }
     mdlog(`Selector 단일 dispatch 폴백 — ${selectorResult.reason}`);
   } catch (error) {
-    if (selectorController.signal.aborted) {
+    if (selectorController.signal.aborted || liveSubmitContexts.get(turnConversationId) !== submit) {
       return {
         ok: false,
         source: 'selector-fast',

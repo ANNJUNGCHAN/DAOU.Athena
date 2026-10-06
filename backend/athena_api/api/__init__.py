@@ -3,6 +3,7 @@
 from fastapi import APIRouter
 
 from athena_api.api.backtest import router as backtest_router
+from athena_api.api.backtest_natural import router as backtest_natural_router
 from athena_api.api.backtest_technique import router as backtest_technique_router
 from athena_api.api.batch import router as batch_router
 from athena_api.api.brain import router as brain_router
@@ -10,8 +11,8 @@ from athena_api.api.canvas_push import router as canvas_push_router
 from athena_api.api.catalog import router as catalog_router
 from athena_api.api.chart_page import router as chart_page_router
 from athena_api.api.instruments import router as instruments_router
-from athena_api.api.llm_tools import router as llm_tools_router
 from athena_api.api.laya import router as laya_router
+from athena_api.api.llm_tools import router as llm_tools_router
 from athena_api.api.nudge_guard import router as nudge_guard_router
 from athena_api.api.oauth_status import router as oauth_status_router
 from athena_api.api.projects import router as projects_router
@@ -27,6 +28,7 @@ from athena_api.generated.routes import router as generated_router
 router = APIRouter()
 router.include_router(generated_router)
 router.include_router(backtest_router)
+router.include_router(backtest_natural_router)
 router.include_router(backtest_technique_router)
 router.include_router(batch_router)
 router.include_router(brain_router)

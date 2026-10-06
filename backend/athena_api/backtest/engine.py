@@ -21,6 +21,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Literal
 
@@ -61,6 +62,20 @@ class BacktestResult:
     trades: tuple[Trade, ...]
     equity: tuple[EquityPoint, ...]
     costs_flag: str | None  # `costs=None`이었으면 costs.UNSET_COSTS_FLAG, 아니면 None.
+
+
+@dataclass(frozen=True, slots=True)
+class DecisionState:
+    """종가 판단 시점의 실제 모의 계좌. 이 봉의 체결·리스크 처리가 끝난 상태다."""
+
+    bar_index: int
+    dt: str
+    cash: float
+    qty: float
+    entry_price: float
+    holding: bool
+    pending_entry: bool
+    pending_exit: bool
 
 
 def _format_dt(value: object) -> str:
@@ -119,11 +134,14 @@ def run_backtest(
     costs: CostsSpec | None,
     *,
     initial_cash: float = DEFAULT_INITIAL_CASH,
+    decide: Callable[[DecisionState], tuple[bool, bool]] | None = None,
 ) -> BacktestResult:
     """signals(§6.2 계약) + 캔들 df → 체결·포지션·자산곡선.
 
     `df`와 `signals`는 같은 오름차순 DatetimeIndex를 공유해야 한다. 인덱스 0번 봉은
     체결 대상이 될 수 없다 — 그 이전 봉(신호의 출처)이 없기 때문이다.
+    `decide`가 있으면 이 봉의 체결·리스크 처리 후 계좌 상태로 종가 신호를 받는다.
+    이 경우 signals 값 대신 콜백 결과를 쓰고, 체결·비용 계산은 같은 경로를 지난다.
     """
     resolved_costs, costs_flag = costs_mod.resolve_costs(costs)
 
@@ -189,9 +207,18 @@ def run_backtest(
 
         # 오늘 종가로 확정된 신호를 다음 체결 대기열에 올린다(§6.4 규칙 1·2). 보유 중이면
         # entry를, 무보유면 exit를 무시하는 것은 아래 게이트(`not holding`/`holding`)가 그대로 한다.
-        if bool(signals["entry"].iloc[i]) and not holding and not pending_entry:
+        if decide is None:
+            entry_signal = bool(signals["entry"].iloc[i])
+            exit_signal = bool(signals["exit"].iloc[i])
+        else:
+            entry_signal, exit_signal = decide(DecisionState(
+                bar_index=i, dt=dt, cash=cash, qty=qty,
+                entry_price=entry_exec_price if holding else 0.0,
+                holding=holding, pending_entry=pending_entry, pending_exit=pending_exit,
+            ))
+        if entry_signal and not holding and not pending_entry:
             pending_entry = True
-        if bool(signals["exit"].iloc[i]) and holding and not pending_exit:
+        if exit_signal and holding and not pending_exit:
             pending_exit = True
 
         position_value = qty * bar["close"] if holding else 0.0
@@ -207,4 +234,4 @@ def run_backtest(
     return BacktestResult(trades=tuple(trades), equity=tuple(equity_points), costs_flag=costs_flag)
 
 
-__all__ = ["BacktestResult", "EquityPoint", "Trade", "run_backtest"]
+__all__ = ["BacktestResult", "DecisionState", "EquityPoint", "Trade", "run_backtest"]

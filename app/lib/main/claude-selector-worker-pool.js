@@ -28,6 +28,8 @@ function buildSelectorWorkerArgs({ model = null, effort = null } = {}) {
     '--verbose',
     '--setting-sources', '',
     '--tools', '',
+    // --tools only covers built-ins; keep registered MCP schemas out as well.
+    '--mcp-config', '{"mcpServers":{}}', '--strict-mcp-config',
     '--disallowedTools', DISALLOWED_EXECUTION_TOOLS,
     '--no-session-persistence',
     '--max-turns', '1',

@@ -37,6 +37,7 @@ const TechniqueCreateDialog = isNode
 // 작업공간 봉인·복원 판정(41·42번 보드) — 무엇을 남기고 무엇이 돌아왔는가는 이 순수
 // 모듈 하나가 정한다. 화면은 그 판정을 그리기만 한다.
 const SessionRestore = isNode ? require('./session-restore') : window.AthenaLib.SessionRestore;
+const Natural = isNode ? require('./backtest-natural') : window.AthenaLib.BacktestNatural;
 
 const { formatNumeric, formatDatetime } = FactsCard;
 
@@ -1057,6 +1058,7 @@ function createBacktestCanvas(options) {
   let optimizeElapsedTimer = null;
   let loadRequestId = 0;
   let mounted = false;
+  let naturalPanel = null;
   let editorHandle = null;
   // 프로젝트 IDE는 한 번 만들어 계속 들고 있다 — render()가 매번 DOM을 새로 만들어도
   // 열린 탭·저장 안 한 버퍼가 살아남아야 한다.
@@ -3137,6 +3139,10 @@ function createBacktestCanvas(options) {
       void loadCoverage();
     }
     clear(container);
+    if (state.naturalOpen && naturalPanel) {
+      container.appendChild(naturalPanel.element);
+      return;
+    }
     if (state.view === 'empty') {
       container.appendChild(renderMessagePanel('', '기법을 불러오는 중입니다…'));
       return;
@@ -3518,6 +3524,19 @@ function createBacktestCanvas(options) {
   function renderTechniqueList() {
     const wrap = el('div', 'backtest-technique-wrap');
     const total = userStrategies.length + (showBuiltInTechniques ? presets.length : 0);
+    const naturalInvoke = deps.naturalInvoke || (!isNode && window.athena && window.athena.invoke);
+    if (Natural && naturalInvoke) {
+      wrap.appendChild(button('backtest-technique-new', '자연어 전략 · LAYA 모의 감시 열기', () => {
+        if (!naturalPanel) naturalPanel = Natural.createPanel({
+          document, invoke: naturalInvoke, setTimeoutImpl, clearTimeoutImpl,
+          isVisible: () => state.naturalOpen && isVisible(),
+          onClose: () => { state.naturalOpen = false; render(); },
+        });
+        state.naturalOpen = true;
+        render();
+        void naturalPanel.monitor.refresh();
+      }));
+    }
     wrap.appendChild(renderNewTechniqueCard());
     const head = el('div', 'backtest-technique-head');
     const titles = el('div', 'backtest-technique-head-copy');
