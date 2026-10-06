@@ -5863,8 +5863,8 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         preflight: selectorResult.preflight,
         signal: selectorController.signal,
         isCurrent: () => runtime.activeSelectorFastRun === selectorController,
-        selectOperation: layaRouting.isLayaEnabled() ? ({ question, candidates, signal, isCurrent }) => layaClient.operation_selection({
-          text: question, candidates, signal, isCurrent,
+        selectCatalogOperation: layaRouting.isLayaEnabled() ? ({ question, catalog_version, signal, isCurrent }) => layaClient.select_catalog_operation({
+          text: question, catalog_version, signal, isCurrent,
         }) : undefined,
         classify: ({ prompt, signal }) => selectorClaudePool.run({
           prompt,

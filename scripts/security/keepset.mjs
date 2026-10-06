@@ -75,6 +75,7 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "backend/verification/test_natural_schema.py",
   "backend/verification/test_natural_api.py",
   "backend/verification/test_laya_decisions.py",
+  "backend/verification/test_laya_full_catalog.py",
   "backend/verification/test_product_scope.py",
   "backend/verification/test_release_version.py",
   "backend/verification/verify_mcp_bundled_runtime.py",

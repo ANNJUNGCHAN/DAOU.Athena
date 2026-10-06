@@ -67,3 +67,84 @@ test('user cancellation and stale responses cannot become accepted fallback work
   const late = client(async () => { current = false; return { ok: true, json: async () => accepted() }; });
   await assert.rejects(late.operation_selection({ ...input, isCurrent: () => current }), { name: 'AbortError' });
 });
+
+function acceptedCatalog() {
+  const symbol = { type: 'string', pattern: '^\\d{6}$' };
+  return { status: 'accepted', task: 'operation_selection', choice: 'base:ka10046', confidence: 0.96,
+    catalog_version: 'all-operations-v1', considered_count: 266, evaluated_count: 266, question_count: 306,
+    candidate: { operation_ref: 'base:ka10046', kind: 'query', name: '체결강도 시간별 조회', detail_group: null,
+      required_arguments: [{ alias: 'symbol', required: true, json_schema: symbol }],
+      argument_contracts: { type: 'object', properties: { symbol, limit: { type: 'integer' } },
+        required: ['symbol'], additionalProperties: false } }, reason: 'not forwarded' };
+}
+const catalogInput = { text: '시간별 체결강도', catalog_version: 'all-operations-v1' };
+
+test('full-catalog request sends only text and version; backend supplies an operation and complete contract', async () => {
+  const response = acceptedCatalog();
+  const api = client(async (url, init) => {
+    assert.equal(url, 'http://127.0.0.1:9000/api/v1/laya/select-operation');
+    assert.equal(init.headers.Authorization, 'Bearer synthetic-test-token');
+    assert.equal(init.redirect, 'error');
+    assert.deepEqual(JSON.parse(init.body), catalogInput);
+    return { ok: true, json: async () => response };
+  });
+  const selected = await api.select_catalog_operation({ ...catalogInput, candidates });
+  assert.equal(selected.choice, 'base:ka10046');
+  assert.deepEqual(selected.candidate.argument_contracts.properties.limit, { type: 'integer' });
+  assert.equal(Object.hasOwn(selected, 'reason'), false);
+});
+
+test('full-catalog selection requires complete coverage, matching version, and a read-only contract', async () => {
+  const changes = [
+    (r) => { r.status = 'fallback'; },
+    (r) => { r.task = 'card_display'; },
+    (r) => { r.catalog_version = 'older-version'; },
+    (r) => { r.evaluated_count = 265; },
+    (r) => { r.considered_count = r.evaluated_count = 0; },
+    (r) => { r.question_count = 0; },
+    (r) => { r.choice = 'base:ka10003'; },
+    (r) => { r.confidence = NaN; },
+    (r) => { r.candidate = null; },
+    (r) => { delete r.candidate.argument_contracts; },
+    (r) => { r.candidate.argument_contracts.additionalProperties = true; },
+    (r) => { r.candidate.argument_contracts.required = ['missing']; },
+    (r) => { r.candidate.required_arguments = []; },
+    (r) => { r.choice = r.candidate.operation_ref = 'base:kt10000'; r.candidate.kind = 'order'; },
+    (r) => { r.choice = r.candidate.operation_ref = 'base:ka10173'; r.candidate.kind = 'websocket'; },
+    (r) => { r.choice = r.candidate.operation_ref = 'websocket:0B'; },
+    (r) => { r.choice = r.candidate.operation_ref = 'detail:ka10007:prices'; r.candidate.detail_group = 'volume'; },
+  ];
+  for (const change of changes) {
+    const response = acceptedCatalog();
+    change(response);
+    const api = client(async () => ({ ok: true, json: async () => response }));
+    assert.equal(await api.select_catalog_operation(catalogInput), null, change.toString());
+  }
+});
+
+test('only the two read-only condition websocket references are eligible', async () => {
+  for (const ref of ['base:ka10171', 'base:ka10172']) {
+    const response = acceptedCatalog();
+    response.choice = response.candidate.operation_ref = ref;
+    response.candidate.kind = 'websocket';
+    const api = client(async () => ({ ok: true, json: async () => response }));
+    assert.equal((await api.select_catalog_operation(catalogInput)).choice, ref);
+  }
+});
+
+test('full-catalog timeout bounds stalled fetch and stalled JSON response', async () => {
+  for (const fetchImpl of [() => new Promise(() => {}), async () => ({ ok: true, json: () => new Promise(() => {}) })]) {
+    const api = client(fetchImpl, { fullCatalogTimeoutMs: 5 });
+    assert.equal(await api.select_catalog_operation(catalogInput), null);
+  }
+});
+
+test('full-catalog response cannot survive cancellation or a replaced turn', async () => {
+  const controller = new AbortController();
+  const pending = client(() => new Promise(() => {})).select_catalog_operation({ ...catalogInput, signal: controller.signal });
+  controller.abort();
+  await assert.rejects(pending, { name: 'AbortError' });
+  let current = true;
+  const api = client(async () => { current = false; return { ok: true, json: async () => acceptedCatalog() }; });
+  await assert.rejects(api.select_catalog_operation({ ...catalogInput, isCurrent: () => current }), { name: 'AbortError' });
+});

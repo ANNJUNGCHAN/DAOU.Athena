@@ -10,7 +10,13 @@ from typing import Annotated
 from fastapi import APIRouter, Header, Request
 
 from athena_api.account_sync import require_loopback
+from athena_api.dependencies import SelectorServiceDep
 from athena_api.laya import DecisionRequest, DecisionResponse, LayaDecisionService
+from athena_api.laya.catalog_selection import (
+    CatalogSelectionRequest,
+    CatalogSelectionResponse,
+    LayaCatalogSelectionService,
+)
 from athena_api.security import require_local_bearer
 
 router = APIRouter(prefix="/api/v1/laya", tags=["Local decisions"])
@@ -34,3 +40,24 @@ async def decide(
         service = LayaDecisionService(request.app.state.settings)
         request.app.state.laya_decisions = service
     return await service.decide(payload)
+
+
+@router.post(
+    "/select-operation",
+    response_model=CatalogSelectionResponse,
+    operation_id="laya_select_operation",
+    openapi_extra={"x-athena-llm-exposed": False, "x-athena-side-effect": "none"},
+)
+async def select_operation(
+    payload: CatalogSelectionRequest,
+    request: Request,
+    selector: SelectorServiceDep,
+    authorization: Annotated[str, Header(alias="Authorization")] = "",
+) -> CatalogSelectionResponse:
+    require_loopback(request)
+    require_local_bearer(request, authorization)
+    service = getattr(request.app.state, "laya_catalog_decisions", None)
+    if service is None:
+        service = LayaCatalogSelectionService(request.app.state.settings)
+        request.app.state.laya_catalog_decisions = service
+    return await service.select_operation(payload, selector)

@@ -26,16 +26,56 @@ function normalizeCandidates(candidates) {
   return result;
 }
 
-function createLayaRouting({ getBackendUrl, getBearerToken, fetchImpl = fetch, timeoutMs = 2000 } = {}) {
-  async function selectOperation({ text, candidates, signal, isCurrent = () => true } = {}) {
+function isObject(value) {
+  return value != null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function acceptedCatalogSelection(result, catalogVersion) {
+  if (!isObject(result) || result.status !== 'accepted' || result.task !== 'operation_selection'
+      || typeof catalogVersion !== 'string' || !catalogVersion.trim() || result.catalog_version !== catalogVersion
+      || !Number.isFinite(result.confidence) || result.confidence < 0 || result.confidence > 1
+      || !Number.isSafeInteger(result.considered_count) || result.considered_count < 1
+      || result.evaluated_count !== result.considered_count
+      || !Number.isSafeInteger(result.question_count) || result.question_count < 1) return null;
+  const candidate = result.candidate;
+  if (!isObject(candidate) || typeof candidate.operation_ref !== 'string'
+      || result.choice !== candidate.operation_ref || typeof candidate.name !== 'string' || !candidate.name.trim()) return null;
+  const ref = candidate.operation_ref;
+  const detail = /^detail:[A-Za-z][A-Za-z0-9_]*:([A-Za-z0-9_]+)$/.exec(ref);
+  const base = /^base:[A-Za-z][A-Za-z0-9_]*$/.test(ref);
+  const readOnlyCondition = candidate.kind === 'websocket' && ['base:ka10171', 'base:ka10172'].includes(ref);
+  if (!(readOnlyCondition || (['query', 'detail'].includes(candidate.kind) && (base || detail)))
+      || (candidate.kind === 'detail' && !detail)
+      || (detail ? candidate.detail_group !== detail[1] : candidate.detail_group != null)) return null;
+  const schema = candidate.argument_contracts;
+  if (!isObject(schema) || schema.type !== 'object' || !isObject(schema.properties)
+      || !Array.isArray(schema.required) || schema.additionalProperties !== false
+      || !Array.isArray(candidate.required_arguments)) return null;
+  if (Object.values(schema.properties).some((spec) => !isObject(spec))
+      || schema.required.some((name) => typeof name !== 'string' || !Object.hasOwn(schema.properties, name))
+      || new Set(schema.required).size !== schema.required.length) return null;
+  const required = candidate.required_arguments;
+  if (required.length !== schema.required.length || new Set(required.map((field) => field && field.alias)).size !== required.length
+      || required.some((field) => !isObject(field) || field.required !== true
+        || !schema.required.includes(field.alias) || !isObject(field.json_schema))) return null;
+  // The authenticated backend owns membership and the complete argument schema.
+  // Do not reapply the old three-candidate shortlist to its selected operation.
+  return {
+    status: 'accepted', task: 'operation_selection', choice: ref, confidence: result.confidence,
+    catalog_version: result.catalog_version, candidate,
+    considered_count: result.considered_count, evaluated_count: result.evaluated_count,
+    question_count: result.question_count,
+  };
+}
+
+function createLayaRouting({ getBackendUrl, getBearerToken, fetchImpl = fetch, timeoutMs = 2000,
+  fullCatalogTimeoutMs = 5500 } = {}) {
+  async function requestDecision(path, body, { signal, isCurrent }, budgetMs) {
     ensureCurrent(signal, isCurrent);
-    const supplied = normalizeCandidates(candidates);
-    if (!supplied || typeof text !== 'string' || !text.trim()) return null;
-    const choices = new Set(supplied.map((item) => item.id));
     let endpoint;
     let token;
     try {
-      endpoint = new URL('/api/v1/laya/decide', getBackendUrl());
+      endpoint = new URL(path, getBackendUrl());
       token = getBearerToken();
     } catch { return null; }
     if (endpoint.protocol !== 'http:' || !['127.0.0.1', 'localhost', '[::1]'].includes(endpoint.hostname)
@@ -45,7 +85,7 @@ function createLayaRouting({ getBackendUrl, getBearerToken, fetchImpl = fetch, t
     let cancel;
     const interrupted = new Promise((resolve) => {
       cancel = () => { controller.abort(); resolve(null); };
-      timer = setTimeout(cancel, timeoutMs);
+      timer = setTimeout(cancel, budgetMs);
       if (signal) signal.addEventListener('abort', cancel, { once: true });
     });
     // Bound the entire response, including JSON parsing, even if fetch ignores
@@ -55,7 +95,7 @@ function createLayaRouting({ getBackendUrl, getBearerToken, fetchImpl = fetch, t
       const response = await fetchImpl(endpoint.href, {
         method: 'POST', redirect: 'error', signal: controller.signal,
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ task: 'operation_selection', text, candidates: supplied }),
+        body: JSON.stringify(body),
       });
       return response.ok ? response.json() : null;
     }).catch(() => null);
@@ -66,13 +106,31 @@ function createLayaRouting({ getBackendUrl, getBearerToken, fetchImpl = fetch, t
       if (signal) signal.removeEventListener('abort', cancel);
     }
     ensureCurrent(signal, isCurrent);
+    return result;
+  }
+
+  async function selectOperation({ text, candidates, signal, isCurrent = () => true } = {}) {
+    ensureCurrent(signal, isCurrent);
+    const supplied = normalizeCandidates(candidates);
+    if (!supplied || typeof text !== 'string' || !text.trim()) return null;
+    const choices = new Set(supplied.map((item) => item.id));
+    const result = await requestDecision('/api/v1/laya/decide',
+      { task: 'operation_selection', text, candidates: supplied }, { signal, isCurrent }, timeoutMs);
     if (!result || result.status !== 'accepted' || result.task !== 'operation_selection' || !choices.has(result.choice)
         || !Number.isFinite(result.confidence) || result.confidence < 0 || result.confidence > 1) return null;
     // Confidence/margin policy belongs to the authenticated backend. Free text
     // reasons and invented arguments never reach the existing dispatch contract.
     return { task: 'operation_selection', choice: result.choice, confidence: result.confidence };
   }
-  return { operation_selection: selectOperation };
+
+  async function selectCatalogOperation({ text, catalog_version, signal, isCurrent = () => true } = {}) {
+    ensureCurrent(signal, isCurrent);
+    if (typeof text !== 'string' || !text.trim() || typeof catalog_version !== 'string' || !catalog_version.trim()) return null;
+    const result = await requestDecision('/api/v1/laya/select-operation', { text, catalog_version },
+      { signal, isCurrent }, fullCatalogTimeoutMs);
+    return acceptedCatalogSelection(result, catalog_version);
+  }
+  return { operation_selection: selectOperation, select_catalog_operation: selectCatalogOperation };
 }
 
-module.exports = { createLayaRouting, isLayaEnabled };
+module.exports = { acceptedCatalogSelection, createLayaRouting, isLayaEnabled };

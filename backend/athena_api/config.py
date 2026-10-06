@@ -106,6 +106,7 @@ class Settings(BaseSettings):
     laya_enabled: bool = False
     laya_base_url: str = "http://127.0.0.1:8768"
     laya_timeout_seconds: float = Field(default=1.2, ge=0.1, le=5.0)
+    laya_catalog_timeout_seconds: float = Field(default=5.0, ge=0.1, le=15.0)
     laya_circuit_seconds: float = Field(default=20.0, ge=1.0, le=120.0)
     laya_min_confidence: float = Field(default=0.8, ge=0.5, le=1.0)
     laya_min_margin: float = Field(default=0.15, ge=0.0, le=1.0)

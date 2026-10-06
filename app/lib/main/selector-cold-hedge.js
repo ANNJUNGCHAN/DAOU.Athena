@@ -1,6 +1,7 @@
 'use strict';
 
 const { isDeepStrictEqual } = require('node:util');
+const { acceptedCatalogSelection } = require('./laya-routing');
 
 const CLASSIFIERS_PER_TURN = 2;
 const GLOBAL_CLASSIFIER_LIMIT = 4;
@@ -192,6 +193,14 @@ function buildClassificationPrompt(question, preflight) {
 
 function buildArgumentExtractionPrompt(question, preflight) {
   const candidate = compactCandidate(preflight.candidates[0]);
+  const contract = candidate.argument_contracts;
+  if (contract && contract.type === 'object' && contract.properties && !Array.isArray(contract.properties)
+      && Array.isArray(contract.required) && contract.additionalProperties === false) {
+    // A complete catalog schema already contains every required field and its
+    // constraints. Keep that schema intact instead of sending those fields twice.
+    delete candidate.required_arguments;
+    candidate.name = preflight.candidates[0].name || null;
+  }
   return [
     'Extract arguments for the already selected read-only operation. Do not choose a route or call tools.',
     'Return exactly one JSON object: {"arguments":{}}. Fill only fields in the contract; do not invent missing values.',
@@ -229,6 +238,7 @@ function extractClassifierText(result) {
 
 function candidateKind(candidate) {
   const kind = String(candidate.kind || '').toLowerCase();
+  if (kind === 'websocket' && ['base:ka10171', 'base:ka10172'].includes(candidate.operation_ref)) return 'query';
   if (kind === 'detail' || String(candidate.operation_ref || candidate.ref || '').startsWith('detail:')) return 'detail';
   if (['query', 'base', 'tr'].includes(kind)) return 'query';
   return null;
@@ -358,6 +368,7 @@ async function dispatchValidated(proposal, {
   modelCalls,
   extras = {},
 }) {
+  if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
   const dispatched = await dispatchProposal(proposal);
   if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
   if (!dispatched || dispatched.handled !== true) {
@@ -382,6 +393,7 @@ function createSelectorColdHedge({
     preflight,
     classify,
     selectOperation,
+    selectCatalogOperation,
     dispatchProposal,
     signal,
     isCurrent = () => true,
@@ -433,25 +445,34 @@ function createSelectorColdHedge({
 
     let classificationPreflight = preflight;
     let layaSelected = false;
+    let layaCatalogSelected = false;
     const selectable = candidates.filter((candidate) => candidateKind(candidate));
-    if (typeof selectOperation === 'function' && selectable.length >= 2) {
-      const choices = buildOperationChoices(preflight);
+    const fullCatalog = typeof selectCatalogOperation === 'function';
+    if (fullCatalog || (typeof selectOperation === 'function' && selectable.length >= 2)) {
+      const choices = fullCatalog ? null : buildOperationChoices(preflight);
       let selection = null;
-      try { selection = await selectOperation({ question, candidates: choices, signal, isCurrent }); }
+      try {
+        selection = fullCatalog
+          ? await selectCatalogOperation({ question, catalog_version: preflight.catalog_version, signal, isCurrent })
+          : await selectOperation({ question, candidates: choices, signal, isCurrent });
+      }
       catch (error) {
         if ((signal && signal.aborted) || !isCurrent() || error.name === 'AbortError') throw abortError(signal);
       }
       if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
-      const index = selection && selection.task === 'operation_selection'
+      const catalogSelection = fullCatalog ? acceptedCatalogSelection(selection, preflight.catalog_version) : null;
+      const index = !fullCatalog && selection && selection.task === 'operation_selection'
         ? choices.findIndex((choice) => choice.id === selection.choice) : -1;
-      if (index >= 0) {
-        classificationPreflight = { ...preflight, candidates: [selectable[index]] };
+      const selected = catalogSelection ? catalogSelection.candidate : (index >= 0 ? selectable[index] : null);
+      if (selected) {
+        classificationPreflight = { ...preflight, candidates: [selected] };
         layaSelected = true;
+        layaCatalogSelected = fullCatalog;
         const selectedProposal = schemaGatedProposal(classificationPreflight);
         if (selectedProposal) {
           return dispatchValidated(selectedProposal, {
-            dispatchProposal, signal, isCurrent, decisionCache, question, preflight,
-            modelCalls: 0, extras: { layaSelected: true },
+            dispatchProposal, signal, isCurrent, decisionCache: fullCatalog ? null : decisionCache, question, preflight,
+            modelCalls: 0, extras: { layaSelected: true, ...(fullCatalog ? { layaCatalogSelected: true } : {}) },
           });
         }
       }
@@ -512,11 +533,12 @@ function createSelectorColdHedge({
       dispatchProposal,
       signal,
       isCurrent,
-      decisionCache,
+      // Full-catalog decisions cannot share the old three-candidate fingerprint.
+      decisionCache: layaCatalogSelected ? null : decisionCache,
       question,
       preflight,
       modelCalls: CLASSIFIERS_PER_TURN,
-      extras: { layaSelected },
+      extras: { layaSelected, ...(layaCatalogSelected ? { layaCatalogSelected: true } : {}) },
     });
   };
 }
