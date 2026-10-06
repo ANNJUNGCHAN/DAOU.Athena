@@ -11,6 +11,68 @@ const { runConversationSessionTurn } = require('./conversation-session-turn');
 const { createProviderRuntimeController } = require('./provider-runtime-bootstrap');
 const { runSelectorFastPath } = require('./selector-fast-path');
 
+function catalogReply() {
+  const symbol = { type: 'string', pattern: '^\\d{6}$' };
+  return { status: 'accepted', task: 'operation_selection', choice: 'base:ka10046', confidence: 0.96,
+    catalog_version: 'fixture-v1', considered_count: 266, evaluated_count: 266, question_count: 266,
+    candidate: { operation_ref: 'base:ka10046', kind: 'query', name: '체결강도 조회', detail_group: null,
+      execution_policy: 'selector_query', required_arguments: [{ alias: 'symbol', required: true, json_schema: symbol }],
+      argument_contracts: { type: 'object', properties: { symbol }, required: ['symbol'], additionalProperties: false } } };
+}
+const catalogInput = { text: '시간별 체결강도', catalog_version: 'fixture-v1' };
+const catalogClient = (fetchImpl, extra = {}) => createLayaRouting({
+  baseUrl: 'http://127.0.0.1:18765', bearerToken: 'fixture-only', fetchImpl, ...extra,
+});
+
+test('catalog experiment defaults off and preserves the current session API', async () => {
+  const { isLayaCatalogEnabled } = require('./laya-routing');
+  for (const env of [{}, { ATHENA_LAYA_ENABLED: 'true' }, { ATHENA_LAYA_CATALOG_ENABLED: 'false' }]) {
+    assert.equal(isLayaCatalogEnabled(env), false);
+  }
+  assert.equal(isLayaCatalogEnabled({ ATHENA_LAYA_CATALOG_ENABLED: 'true' }), true);
+  const api = catalogClient(async (url, init) => {
+    assert.equal(String(url), 'http://127.0.0.1:18765/api/v1/laya/select-operation');
+    assert.equal(init.headers.Authorization, 'Bearer fixture-only');
+    assert.equal(init.redirect, 'error');
+    assert.deepEqual(JSON.parse(init.body), catalogInput);
+    return { ok: true, json: async () => catalogReply() };
+  });
+  assert.equal(typeof api.createSession().run, 'function');
+  assert.equal((await api.select_catalog_operation({ ...catalogInput, candidates: [] })).choice, 'base:ka10046');
+});
+
+test('catalog transport rejects credential destinations and malformed full-coverage contracts', async () => {
+  for (const extra of [{ baseUrl: 'https://127.0.0.1' }, { baseUrl: 'http://remote.test' },
+    { baseUrl: 'http://user:password@127.0.0.1' }, { bearerToken: '' }]) {
+    assert.equal(await catalogClient(() => assert.fail('must not fetch'), extra).select_catalog_operation(catalogInput), null);
+  }
+  for (const change of [r => { r.catalog_version = 'old'; }, r => { r.evaluated_count--; },
+    r => { r.confidence = NaN; }, r => { r.candidate.kind = 'order'; },
+    r => { r.candidate.argument_contracts.additionalProperties = true; },
+    r => { r.candidate.required_arguments = []; }, r => { r.candidate.execution_policy = 'order'; },
+    r => { r.choice = r.candidate.operation_ref = 'base:ka10173'; r.candidate.kind = 'websocket'; },
+    r => { r.choice = r.candidate.operation_ref = 'detail:ka10007:prices'; r.candidate.detail_group = 'volume'; }]) {
+    const reply = catalogReply(); change(reply);
+    const api = catalogClient(async () => ({ ok: true, json: async () => reply }));
+    assert.equal(await api.select_catalog_operation(catalogInput), null, change.toString());
+  }
+  assert.equal(await catalogClient(() => assert.fail('oversized input')).select_catalog_operation({ ...catalogInput, text: 'x'.repeat(4001) }), null);
+});
+
+test('catalog deadline bounds stalled transport and JSON; cancellation or stale reply cannot select', async () => {
+  for (const fetchImpl of [() => new Promise(() => {}), async () => ({ ok: true, json: () => new Promise(() => {}) })]) {
+    const api = catalogClient(fetchImpl, { fullCatalogTimeoutMs: 5 });
+    assert.equal(await api.select_catalog_operation(catalogInput), null);
+  }
+  const controller = new AbortController();
+  const pending = catalogClient(() => new Promise(() => {})).select_catalog_operation({ ...catalogInput, signal: controller.signal });
+  controller.abort();
+  await assert.rejects(pending, { name: 'AbortError' });
+  let current = true;
+  const api = catalogClient(async () => { current = false; return { ok: true, json: async () => catalogReply() }; });
+  await assert.rejects(api.select_catalog_operation({ ...catalogInput, isCurrent: () => current }), { name: 'AbortError' });
+});
+
 test('LAYA provider handoff presents a recommendation without binding tool or supplied arguments', () => {
   const { ticketPrompt } = require('./laya-routing');
   const prompt = ticketPrompt('선택한 알림을 멈춰 줘', 'fixture-ticket', {

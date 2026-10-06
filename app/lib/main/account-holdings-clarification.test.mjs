@@ -83,6 +83,7 @@ function harness({ responses, stale = false, accountChange = false, supersedeAt 
     persistLocalLiveResult: (_query, result) => { answers.push(result); return result; },
     emitRestCanvasForOrigin: async payload => { emitted.push(payload); return { verifiedVisible: true }; },
     selectorColdHedge: { runSelectorColdHedge: async request => { cold.push(request); return { handled: false, reason: 'synthetic-decline' }; } },
+    isLayaCatalogEnabled: () => false,
     selectorClaudePool: {}, mdlog() {},
     getLiveMcpConfig: () => { throw Object.assign(new Error('Public provider boundary, not executed'), { code: 'PUBLIC_PROVIDER_BOUNDARY' }); },
   });

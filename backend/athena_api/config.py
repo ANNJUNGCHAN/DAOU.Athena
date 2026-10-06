@@ -181,6 +181,8 @@ class Settings(BaseSettings):
     laya_python_executable: Path | None = None
     laya_device: Literal["cuda", "cpu"] = "cuda"
     laya_timeout_seconds: float = Field(default=2.5, gt=0, le=30)
+    laya_catalog_enabled: bool = False
+    laya_catalog_timeout_seconds: float = Field(default=5.0, ge=0.1, le=15.0)
     brain_use_claude_cli_extraction: bool = False
     # Hourly self-enqueue period for IngestionCoordinator (ADR §9 gate G005). Manual runs
     # still go through the existing enqueue(JobTrigger.MANUAL) path unaffected by this.

@@ -36,7 +36,7 @@ const { createCodexChatRuntime } = require('./lib/main/codex-chat-runtime');
 const { createConversationSessionPool } = require('./lib/main/conversation-session-pool');
 const { terminateTree } = require('./lib/main/proc-utils');
 const { runConversationSessionTurn } = require('./lib/main/conversation-session-turn');
-const { createLayaRouting } = require('./lib/main/laya-routing');
+const { createLayaRouting, isLayaCatalogEnabled } = require('./lib/main/laya-routing');
 const { buildLayaTurnContext } = require('./lib/main/laya-turn-context');
 const { assertSessionStopsSucceeded } = require('./lib/main/provider-session-shutdown');
 // 툴 호출 진행 단계(board-33) 라벨링에 render_canvas 판정 하나만 빌려 쓴다 —
@@ -6305,6 +6305,8 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         preflight: selectorResult.preflight,
         signal: selectorController.signal,
         isCurrent: () => runtime.activeSelectorFastRun === selectorController,
+        selectCatalogOperation: isLayaCatalogEnabled() ? ({ question, catalog_version, signal, isCurrent }) =>
+          layaRouting.select_catalog_operation({ text: question, catalog_version, signal, isCurrent }) : undefined,
         classify: ({ prompt, signal }) => selectorClaudePool.run({
           prompt,
           timeoutMs: 12_000,

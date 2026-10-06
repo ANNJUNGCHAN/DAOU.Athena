@@ -74,6 +74,7 @@ test("query and project regressions are kept by exact path only", () => {
   for (const path of [
     "backend/verification/test_company_info_projection.py",
     "backend/verification/test_laya_llm_tool_timeouts.py",
+    "backend/verification/test_laya_full_catalog.py",
     "backend/verification/test_project_list_responsiveness.py",
   ]) {
     assert.equal(isKeepPath(path), true, path);

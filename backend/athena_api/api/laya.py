@@ -5,6 +5,8 @@ from fastapi import APIRouter, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from athena_api.account_sync import require_loopback
+from athena_api.dependencies import SelectorServiceDep
+from athena_api.laya.catalog_selection import CatalogSelectionRequest, CatalogSelectionResponse, LayaCatalogSelectionService
 from athena_api.laya.contracts import canonical
 from athena_api.laya.service import TurnExpired
 from athena_api.laya.native import plan_native, refine_native, SUPPORTED_TOOLS
@@ -63,6 +65,20 @@ def bound_service(request, authorization, ticket):
     except TurnExpired:
         raise HTTPException(409, "Semantic turn expired or belongs to another session") from None
     return current
+
+
+@router.post("/select-operation", response_model=CatalogSelectionResponse,
+             operation_id="laya_select_operation",
+             openapi_extra={"x-athena-llm-exposed": False, "x-athena-side-effect": "none"})
+async def select_operation(payload: CatalogSelectionRequest, request: Request,
+                           selector: SelectorServiceDep,
+                           authorization: Annotated[str, Header()] = ""):
+    current = service(request, authorization)
+    selection = getattr(request.app.state, "laya_catalog_selection", None)
+    if selection is None:
+        selection = LayaCatalogSelectionService(request.app.state.settings, current)
+        request.app.state.laya_catalog_selection = selection
+    return await until_disconnect(request, selection.select_operation(payload, selector))
 
 
 @router.post("/turns", openapi_extra={"x-athena-llm-exposed": False})

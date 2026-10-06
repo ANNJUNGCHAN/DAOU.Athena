@@ -2,6 +2,53 @@
 
 const { randomUUID } = require('node:crypto');
 
+function isLayaCatalogEnabled(env = process.env) {
+  return /^(?:1|true|on|yes)$/i.test(String(env.ATHENA_LAYA_CATALOG_ENABLED || '').trim());
+}
+
+function ensureCatalogCurrent(signal, isCurrent) {
+  if (signal?.aborted || !isCurrent()) {
+    const error = new Error('Catalog selection was cancelled or replaced');
+    error.name = 'AbortError';
+    throw error;
+  }
+}
+
+function acceptedCatalogSelection(result, catalogVersion) {
+  const object = value => value != null && typeof value === 'object' && !Array.isArray(value);
+  if (!object(result) || result.status !== 'accepted' || result.task !== 'operation_selection'
+    || typeof catalogVersion !== 'string' || !catalogVersion.trim() || result.catalog_version !== catalogVersion
+    || !Number.isFinite(result.confidence) || result.confidence < 0 || result.confidence > 1
+    || !Number.isSafeInteger(result.considered_count) || result.considered_count < 1
+    || result.evaluated_count !== result.considered_count
+    || !Number.isSafeInteger(result.question_count) || result.question_count < 1) return null;
+  const candidate = result.candidate;
+  if (!object(candidate) || typeof candidate.operation_ref !== 'string'
+    || result.choice !== candidate.operation_ref || typeof candidate.name !== 'string' || !candidate.name.trim()) return null;
+  const ref = candidate.operation_ref;
+  const detail = /^detail:[A-Za-z][A-Za-z0-9_]*:([A-Za-z0-9_]+)$/.exec(ref);
+  const base = /^base:[A-Za-z][A-Za-z0-9_]*$/.test(ref);
+  const condition = candidate.kind === 'websocket' && ['base:ka10171', 'base:ka10172'].includes(ref);
+  if (!(condition || (candidate.kind === 'query' && (base || detail)))
+    || (detail ? candidate.detail_group !== detail[1] : candidate.detail_group != null)
+    || candidate.execution_policy !== (detail ? 'selector_detail' : 'selector_query')) return null;
+  const schema = candidate.argument_contracts;
+  if (!object(schema) || schema.type !== 'object' || !object(schema.properties)
+    || !Array.isArray(schema.required) || schema.additionalProperties !== false
+    || !Array.isArray(candidate.required_arguments)) return null;
+  if (Object.values(schema.properties).some(spec => !object(spec))
+    || schema.required.some(name => typeof name !== 'string' || !Object.hasOwn(schema.properties, name))
+    || new Set(schema.required).size !== schema.required.length) return null;
+  const required = candidate.required_arguments;
+  if (required.length !== schema.required.length || new Set(required.map(field => field?.alias)).size !== required.length
+    || required.some(field => !object(field) || field.required !== true
+      || !schema.required.includes(field.alias) || !object(field.json_schema))) return null;
+  // Membership and schemas come from the authenticated canonical backend catalog.
+  return { status: 'accepted', task: 'operation_selection', choice: ref, confidence: result.confidence,
+    catalog_version: result.catalog_version, candidate, considered_count: result.considered_count,
+    evaluated_count: result.evaluated_count, question_count: result.question_count };
+}
+
 const TICKET_TOOLS = Object.freeze([
   'athena_search', 'athena_describe', 'athena_resolve', 'athena_call',
   'athena_routine', 'athena_brain', 'athena_graph_view', 'athena_nudge_guard',
@@ -78,7 +125,41 @@ function forwardDirect(result, callbacks, id) {
   return { ok: true, layaDirect: true, finalResult: { result: answer }, spawnedFresh: false };
 }
 
-function createLayaRouting({ baseUrl, bearerToken, fetchImpl = globalThis.fetch, timeoutMs = 5000, uuid = randomUUID, now = Date.now } = {}) {
+function createLayaRouting({ baseUrl, bearerToken, fetchImpl = globalThis.fetch, timeoutMs = 5000,
+  fullCatalogTimeoutMs = 5500, uuid = randomUUID, now = Date.now } = {}) {
+  async function selectCatalogOperation({ text, catalog_version, signal, isCurrent = () => true } = {}) {
+    ensureCatalogCurrent(signal, isCurrent);
+    if (typeof text !== 'string' || !text.trim() || text.length > 4000
+      || typeof catalog_version !== 'string' || !catalog_version.trim() || catalog_version.length > 128) return null;
+    let url, token;
+    try {
+      url = new URL('/api/v1/laya/select-operation', typeof baseUrl === 'function' ? baseUrl() : baseUrl);
+      token = typeof bearerToken === 'function' ? bearerToken() : bearerToken;
+    } catch { return null; }
+    if (url.protocol !== 'http:' || !['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)
+      || url.username || url.password || typeof token !== 'string' || !token.trim()) return null;
+    const controller = new AbortController();
+    let timer, cancel;
+    const interrupted = new Promise(resolve => {
+      cancel = () => { controller.abort(); resolve(null); };
+      timer = setTimeout(cancel, fullCatalogTimeoutMs);
+      signal?.addEventListener('abort', cancel, { once: true });
+    });
+    // Bound fetch and response parsing even if an injected transport ignores abort.
+    const pending = Promise.resolve().then(async () => {
+      if (controller.signal.aborted) return null;
+      const response = await fetchImpl(url, { method: 'POST', redirect: 'error', signal: controller.signal,
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ text, catalog_version }) });
+      return response.ok ? response.json() : null;
+    }).catch(() => null);
+    let result;
+    try { result = await Promise.race([pending, interrupted]); }
+    finally { clearTimeout(timer); signal?.removeEventListener('abort', cancel); }
+    ensureCatalogCurrent(signal, isCurrent);
+    return acceptedCatalogSelection(result, catalog_version);
+  }
+
   async function request(method, suffix, body, env, { signal, deadline } = {}) {
     const remaining = deadline === undefined ? timeoutMs : Math.min(timeoutMs, deadline - now());
     if (remaining <= 0 || signal?.aborted) throw new Error('Laya request deadline or cancellation');
@@ -203,7 +284,7 @@ function createLayaRouting({ baseUrl, bearerToken, fetchImpl = globalThis.fetch,
       close() { closed = true; if (active) cancel(active); },
     });
   }
-  return Object.freeze({ createSession });
+  return Object.freeze({ createSession, select_catalog_operation: selectCatalogOperation });
 }
 
-module.exports = { createLayaRouting, ticketPrompt, forwardDirect, TICKET_TOOLS };
+module.exports = { createLayaRouting, isLayaCatalogEnabled, acceptedCatalogSelection, ticketPrompt, forwardDirect, TICKET_TOOLS };

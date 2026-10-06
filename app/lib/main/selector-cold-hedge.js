@@ -1,5 +1,8 @@
 'use strict';
 
+const { isDeepStrictEqual } = require('node:util');
+const { acceptedCatalogSelection } = require('./laya-routing');
+
 const CLASSIFIERS_PER_TURN = 2;
 const GLOBAL_CLASSIFIER_LIMIT = 4;
 
@@ -192,6 +195,39 @@ function strictJson(value) {
   return parsed;
 }
 
+function buildArgumentExtractionPrompt(question, preflight) {
+  const candidate = compactCandidate(preflight.candidates[0]);
+  delete candidate.required_arguments;
+  candidate.name = preflight.candidates[0].name;
+  return [
+    'Extract arguments for the already selected read-only operation. Do not choose a route or call tools.',
+    'Return exactly one JSON object: {"arguments":{}}. Fill only fields in the contract; do not invent missing values.',
+    `Question: ${String(question || '')}`,
+    `Bound arguments: ${JSON.stringify(compactBoundArguments(preflight.bound_arguments))}`,
+    `Argument contract: ${JSON.stringify(candidate)}`,
+  ].join('\n');
+}
+
+function mergeSelectedArguments(candidate, boundArguments, extracted) {
+  const { specs } = collectArgumentContract(candidate);
+  const bound = Object.entries(compactBoundArguments(boundArguments))
+    .filter(([name, value]) => specs.has(name) && valueMatches(value, specs.get(name)));
+  for (const [name, value] of bound) {
+    if (Object.hasOwn(extracted, name) && !isDeepStrictEqual(extracted[name], value)) throw new Error('bound_argument_conflict');
+  }
+  return { ...Object.fromEntries(bound), ...extracted };
+}
+
+function validateExtractedArguments(raw, preflight) {
+  const output = strictJson(raw);
+  if (Object.keys(output).length !== 1 || !output.arguments || typeof output.arguments !== 'object'
+    || Array.isArray(output.arguments)) throw new Error('arguments_only_required');
+  const selected = preflight.candidates[0];
+  return validateProposal({ intent: 'query', operation_ref: selected.operation_ref,
+    detail_group: selected.detail_group,
+    arguments: mergeSelectedArguments(selected, preflight.bound_arguments, output.arguments) }, preflight);
+}
+
 function extractClassifierText(result) {
   if (!result || result.ok !== true) throw new Error('classifier_failed');
   if (result.finalResult && typeof result.finalResult.result === 'string') return result.finalResult.result;
@@ -201,6 +237,7 @@ function extractClassifierText(result) {
 
 function candidateKind(candidate) {
   const kind = String(candidate.kind || '').toLowerCase();
+  if (kind === 'websocket' && ['base:ka10171', 'base:ka10172'].includes(candidate.operation_ref)) return 'query';
   if (kind === 'detail' || String(candidate.operation_ref || candidate.ref || '').startsWith('detail:')) return 'detail';
   if (['query', 'base', 'tr'].includes(kind)) return 'query';
   return null;
@@ -315,6 +352,7 @@ async function dispatchValidated(proposal, {
   modelCalls,
   extras = {},
 }) {
+  if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
   const dispatched = await dispatchProposal(proposal);
   if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
   if (!dispatched || dispatched.handled !== true) {
@@ -338,6 +376,7 @@ function createSelectorColdHedge({
     question,
     preflight,
     classify,
+    selectCatalogOperation,
     dispatchProposal,
     signal,
     isCurrent = () => true,
@@ -345,7 +384,7 @@ function createSelectorColdHedge({
     if (typeof classify !== 'function' || typeof dispatchProposal !== 'function') {
       throw new TypeError('classify와 dispatchProposal이 필요하다');
     }
-    if (signal && signal.aborted) throw abortError(signal);
+    if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
     const candidates = Array.isArray(preflight && preflight.candidates) ? preflight.candidates : [];
     if (!candidates.length || candidates.length > 3 || Object.hasOwn(preflight, 'plan_token')) {
       return { handled: false, reason: 'invalid_preflight', modelCalls: 0 };
@@ -387,6 +426,29 @@ function createSelectorColdHedge({
       });
     }
 
+    let classificationPreflight = preflight;
+    let layaCatalogSelected = false;
+    if (typeof selectCatalogOperation === 'function') {
+      let selection;
+      try { selection = await selectCatalogOperation({ question, catalog_version: preflight.catalog_version, signal, isCurrent }); }
+      catch (error) {
+        if ((signal && signal.aborted) || !isCurrent() || error?.name === 'AbortError') throw abortError(signal);
+      }
+      if ((signal && signal.aborted) || !isCurrent()) throw abortError(signal);
+      const accepted = acceptedCatalogSelection(selection, preflight.catalog_version);
+      if (accepted) {
+        classificationPreflight = { ...preflight, candidates: [accepted.candidate] };
+        layaCatalogSelected = true;
+        const selectedProposal = schemaGatedProposal(classificationPreflight);
+        if (selectedProposal) {
+          const proposal = validateProposal({ ...selectedProposal, arguments: mergeSelectedArguments(
+            accepted.candidate, preflight.bound_arguments, selectedProposal.arguments) }, classificationPreflight);
+          return dispatchValidated(proposal, { dispatchProposal, signal, isCurrent, decisionCache: null,
+            question, preflight, modelCalls: 0, extras: { layaCatalogSelected: true } });
+        }
+      }
+    }
+
     const release = await limiter.acquire(CLASSIFIERS_PER_TURN, signal);
     if ((signal && signal.aborted) || !isCurrent()) {
       release();
@@ -397,11 +459,13 @@ function createSelectorColdHedge({
       if (!controller.signal.aborted) controller.abort(signal && signal.reason);
     });
     if (signal) signal.addEventListener('abort', abortChildren, { once: true });
-    const prompt = buildClassificationPrompt(question, preflight);
+    const prompt = layaCatalogSelected ? buildArgumentExtractionPrompt(question, classificationPreflight)
+      : buildClassificationPrompt(question, preflight);
     const tasks = controllers.map((controller, index) => Promise.resolve()
       .then(() => classify({ prompt, signal: controller.signal, index }))
       .then(extractClassifierText)
-      .then((text) => validateProposal(text, preflight)));
+      .then((text) => layaCatalogSelected ? validateExtractedArguments(text, classificationPreflight)
+        : validateProposal(text, preflight)));
     Promise.allSettled(tasks).finally(() => {
       if (signal) signal.removeEventListener('abort', abortChildren);
       release();
@@ -426,10 +490,11 @@ function createSelectorColdHedge({
       dispatchProposal,
       signal,
       isCurrent,
-      decisionCache,
+      decisionCache: layaCatalogSelected ? null : decisionCache,
       question,
       preflight,
       modelCalls: CLASSIFIERS_PER_TURN,
+      extras: layaCatalogSelected ? { layaCatalogSelected: true } : {},
     });
   };
 }
@@ -442,6 +507,7 @@ module.exports = {
   DEFAULT_DECISION_TTL_MS,
   GLOBAL_CLASSIFIER_LIMIT,
   buildClassificationPrompt,
+  buildArgumentExtractionPrompt,
   createDecisionCache,
   createPairLimiter,
   createSelectorColdHedge,
