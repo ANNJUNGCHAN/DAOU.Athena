@@ -5760,6 +5760,7 @@ async function pluginRefresh() {
     if (res && typeof res.revision === 'number') pluginRevision = res.revision;
     pluginCanvas.setData({
       installed: servers.map(pluginRowFromServer),
+      recommended: pluginCatalog.recommendedFor(servers.map((server) => server.alias)),
       restartRequired: pluginRegistryChangedThisSession,
     });
     // 채팅의 @멘션 목록과 키우미 메뉴가 같은 레지스트리를 본다 — 여기서만

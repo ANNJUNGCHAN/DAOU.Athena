@@ -967,7 +967,7 @@ function createBacktestCanvas(options) {
       discardFileDraft() { return { ok: false, reason: '백테스트 화면이 없습니다' }; },
       runFromChat() { return []; },
       validateFromChat() { return Promise.resolve({ ok: false, errors: [] }); },
-      startOptimizeFromChat() {},
+      startOptimizeFromChat() { return Promise.resolve({ ok: false, errors: ['백테스트 화면이 없습니다'] }); },
       openStep() { return false; },
     };
   }
@@ -2158,13 +2158,13 @@ function createBacktestCanvas(options) {
         const project = projectIde ? projectIde.currentProject() : null;
         if (project) body.project_id = project.id;
       }
-      if (generation !== workspaceGeneration) return;
+      if (generation !== workspaceGeneration) return { ok: false, stale: true };
       const res = await deps.optimize(body);
-      if (generation !== workspaceGeneration) return;
+      if (generation !== workspaceGeneration) return { ok: false, stale: true };
       setState({ optimizeBusy: false, optimizeResult: res, optimizeElapsedMs: Date.now() - startedAt });
-      return { ok: true };
+      return { ok: true, result: res };
     } catch (err) {
-      if (generation !== workspaceGeneration) return;
+      if (generation !== workspaceGeneration) return { ok: false, stale: true };
       setState({ optimizeBusy: false, optimizeError: String((err && err.message) || err),
         optimizeElapsedMs: Date.now() - startedAt,
         optimizeFailure: err && (err.code || err.causeCode) ? { code: err.code || null, causeCode: err.causeCode || null } : null });
@@ -2173,11 +2173,23 @@ function createBacktestCanvas(options) {
   }
 
   // 전략 파라미터를 그대로 서치 축으로 쓴다 — 사용자가 축을 새로 정의할 이유가 없다.
-  function optimizeRanges() {
-    if (!spec) return [];
+  function optimizeParamSpecs() {
     const entry = userStrategyId && userStrategies.find((item) => item.id === userStrategyId);
     // 복원된 workspace에는 이전 화면의 추정 범위가 남을 수 있다.
-    const params = runPath === 'code' && entry && entry.param_specs ? entry.param_specs : spec.params;
+    return runPath === 'code' && entry && entry.param_specs ? entry.param_specs : spec.params;
+  }
+
+  function optimizeRanges() {
+    if (!spec) return [];
+    // 채팅이 명시한 범위(propose_optimize ranges)가 있으면 그것을 훑는다. 그 사이 수정
+    // 반영·IDE 저장으로 PARAMS가 바뀌었을 수 있으니 매번 현재 파라미터로 다시 검증하고,
+    // 더는 맞지 않으면 버리고 기본 격자로 돌아간다(화면 갱신은 부르는 쪽이 한다).
+    if (Array.isArray(state.optimizeRanges) && state.optimizeRanges.length) {
+      const current = requestedOptimizeRanges(state.optimizeRanges);
+      if (current) return current;
+      state = Object.assign({}, state, { optimizeRanges: null });
+    }
+    const params = optimizeParamSpecs();
     return Object.keys(params).slice(0, 2).map((name) => {
       const p = params[name];
       const step = p.step || 1;
@@ -2188,6 +2200,25 @@ function createBacktestCanvas(options) {
         name, start: p.min, stop: p.max, step: coarse, is_int: p.type === 'int',
       };
     });
+  }
+
+  // 채팅이 보낸 범위를 현재 기법의 파라미터로 검증한다. 이름이 없거나 범위가 깨졌으면
+  // 통째로 거절한다(일부만 받아 다른 축을 훑지 않는다). 정수 여부는 선언 type을 따른다.
+  function requestedOptimizeRanges(raw) {
+    if (!spec || !Array.isArray(raw) || !raw.length) return null;
+    const params = optimizeParamSpecs();
+    const ranges = [];
+    for (const item of raw) {
+      const name = item && typeof item.name === 'string' ? item.name.trim() : '';
+      const start = Number(item && item.start);
+      const stop = Number(item && item.stop);
+      const step = Number(item && item.step);
+      if (!name || !Object.prototype.hasOwnProperty.call(params, name)
+        || !Number.isFinite(start) || !Number.isFinite(stop) || !Number.isFinite(step)
+        || step <= 0 || stop < start) return null;
+      ranges.push({ name, start, stop, step, is_int: params[name].type === 'int' });
+    }
+    return ranges;
   }
 
   async function applyBestParams() {
@@ -2827,18 +2858,29 @@ function createBacktestCanvas(options) {
     const note = envelopeNote(payload);
     if (isBusyView()) return busyReceipt('optimize_request', note);
     const method = payload.method;
+    const ranges = requestedOptimizeRanges(payload.ranges);
+    if (payload.ranges != null && !ranges) {
+      return remember(makeReceipt('optimize_request', {
+        note,
+        errors: [spec
+          ? '요청한 탐색 범위가 현재 기법의 파라미터와 맞지 않습니다'
+          : '열린 기법이 없어 탐색 범위를 적용하지 못했습니다 — 기법을 먼저 여세요'],
+      }));
+    }
     setState({
       view: 'design',
       tab: 'optimize',
       optimizeMethod: OPTIMIZE_METHODS.some(([m]) => m === method)
         ? method
         : state.optimizeMethod,
+      optimizeRanges: ranges,
       // 문구가 없으면 true만 남긴다 — 화면이 기본 문장을 대신 적는다.
       optimizeSuggested: note || true,
     });
     return remember(makeReceipt('optimize_request', {
       applied: true, note, tab: state.tab, designTab: state.designTab,
       method: state.optimizeMethod || 'grid',
+      ranges: optimizeRanges(),
     }));
   }
 
@@ -2900,7 +2942,7 @@ function createBacktestCanvas(options) {
   // 채팅 카드의 [탐색 시작] — 화면의 [탐색 시작]과 같은 자리.
   function startOptimizeFromChat() {
     setState({ view: 'design', tab: 'optimize', optimizeSuggested: null });
-    if (state.optimizeBusy) return Promise.resolve();
+    if (state.optimizeBusy) return Promise.resolve({ ok: false, errors: ['이미 탐색 중입니다'] });
     return runOptimize();
   }
 
@@ -3063,6 +3105,7 @@ function createBacktestCanvas(options) {
         : null,
       warnings: (res.warnings || []).map((w) => (w && w.message) || String(w)),
       cells,
+      trials: Array.isArray(res.trials) ? res.trials.length : 0,
     };
   }
 
@@ -3728,7 +3771,8 @@ function createBacktestCanvas(options) {
     techniqueAutoRunSource = null;
     techniqueDiffOpen = false;
     dropTechniqueNodesView();
-    state = Object.assign({}, state, { technique: TECHNIQUE_EMPTY });
+    // 채팅이 정한 탐색 범위는 그 기법의 파라미터 이름이다 — 다음 기법으로 넘기지 않는다.
+    state = Object.assign({}, state, { technique: TECHNIQUE_EMPTY, optimizeRanges: null });
   }
 
   // technique은 통째로 갈아 끼운다 — setState가 얕은 병합이라 조각만 넣으면 나머지 키가
