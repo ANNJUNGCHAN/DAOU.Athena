@@ -141,8 +141,9 @@ _INPUT_SCHEMA: dict[str, Any] = {
                     "type": "string",
                     "description": (
                         "관계의 출발 노드 id. athena_brain action=entity의 entity_id, "
-                        "또는 관계 목록이 준 상대 노드 id를 그대로 쓴다. 성향 관계의 "
-                        "주체가 투자자 본인이어도 투자자 프로필 id를 넣는다."
+                        "또는 관계 목록이 준 상대 노드 id를 그대로 쓴다. 성향 관계처럼 "
+                        "주체가 투자자 본인이면 subject와 subject_id를 모두 생략한다 — "
+                        "서버가 투자자 프로필 id를 채운다."
                     ),
                 },
                 "object_id": {
@@ -312,6 +313,12 @@ async def dispatch(arguments: dict[str, Any]) -> types.CallToolResult:
     relation_id = _text(edit.get("relation_id"))
     subject_id = _text(edit.get("subject_id"))
     object_id = _text(edit.get("object_id"))
+    if op == "add" and subject_id is None and _text(edit.get("subject")) is None:
+        # 주체를 비운 성향 관계는 투자자 본인이다. 분석 그래프는 투자자 노드를 숨기므로
+        # 모델이 그 id를 찾을 길이 없다 — 고정 id를 서버가 채운다.
+        from athena_api.brain.store import INVESTOR_PROFILE_ENTITY_ID
+
+        subject_id = INVESTOR_PROFILE_ENTITY_ID
     if op == "remove" and relation_id is None:
         return _blocked(
             f"op=remove에는 relation_id가 필요하다. {_RECOVERY}"

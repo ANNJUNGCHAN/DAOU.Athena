@@ -59,8 +59,9 @@ def test_add_proposal_requires_both_endpoint_ids() -> None:
         },
         {
             "op": "add",
+            "subject": "SK하이닉스",
             "object": "삼성전자",
-            "relation": "researched",
+            "relation": "competes_with",
             "object_id": "entity:samsung",
         },
     ):
@@ -83,3 +84,34 @@ def test_change_is_blocked_instead_of_forcing_relation_certainty() -> None:
     assert result.isError
     text = "".join(getattr(block, "text", "") for block in result.content)
     assert "add/remove" in text
+
+
+def test_investor_preference_add_gets_the_fixed_investor_profile_id() -> None:
+    from athena_api.brain.store import INVESTOR_PROFILE_ENTITY_ID
+
+    result = _run(
+        {
+            "action": "propose_edit",
+            "edit": {
+                "op": "add",
+                "object": "배당주",
+                "relation": "prefers",
+                "object_id": "entity:dividend",
+            },
+        }
+    )
+    assert not result.isError
+    payload = json.loads(result.content[0].text)
+    assert payload["subject"] is None
+    assert payload["subject_id"] == INVESTOR_PROFILE_ENTITY_ID
+
+
+def test_named_subject_add_still_requires_its_own_id() -> None:
+    edit = {
+        "op": "add",
+        "subject": "삼성전자",
+        "object": "애플",
+        "relation": "supplies",
+        "object_id": "entity:apple",
+    }
+    assert _run({"action": "propose_edit", "edit": edit}).isError

@@ -671,7 +671,7 @@ function buildGraphModePrefix(context, today) {
     // "어느 쪽을 지울지 알려주세요"라고 산문으로 되물어 도구를 아예 안 불렀다.
     // 사용자에게는 "될 때도 있고 안 될 때도 있는" 기능이 된다(제보 "계속 물어봐").
     '- 지우라·고치라·추가하라는 요청에는 **반드시 propose_edit을 부른다.** 후보가 여러 개면 되묻지 말고 **각각 카드를 하나씩 띄운다** — 사람이 고를 자리는 카드이고, 카드가 곧 그 질문이다. "어느 쪽을 지울까요?"라고 산문으로 되묻는 것은 같은 질문을 두 번 하는 것이다.',
-    '- op=remove일 때는 relation_id를 반드시 함께 싣는다(athena_brain action=entity가 관계마다 relation_id로 준다). 없으면 제안이 거절된다. op=add는 subject_id와 object_id를 모두 싣는다. 관계 수정(change)은 제안할 수 없으니 기존 관계 remove와 새 관계 add 두 제안으로 나눈다.',
+    '- op=remove일 때는 relation_id를 반드시 함께 싣는다(athena_brain action=entity가 관계마다 relation_id로 준다). 없으면 제안이 거절된다. op=add는 subject_id와 object_id를 모두 싣는다(투자자 본인의 성향 관계는 subject와 subject_id를 생략하면 서버가 투자자 프로필 id를 채운다). 관계 수정(change)은 제안할 수 없으니 기존 관계 remove와 새 관계 add 두 제안으로 나눈다.',
     '- athena_brain이 "노출이 꺼져 있다"고 503을 주면 지어내지 말고 그 사실을 말한다 — 수집·노출 탭의 모델 전달 토글이 꺼진 것이다.',
     '- **아래 컨텍스트와 athena_brain이 준 값만 말한다.** 없는 것은 없다고 말한다. 성향·관계·수치를 추측해 채우지 마라.',
     '- **사실과 추론을 섞지 마라.** 신호마다 tier(체결·잔고 = 행동 = 사실 / 대화 = 말 = 추론)와 confidence(EXTRACTED=사실 · INFERRED=추론 · AMBIGUOUS=불확실)가 있다. 말과 행동이 어긋나는 신호는 어긋난다는 사실 자체가 답이다 — 한쪽을 골라 단정하지 마라.',
