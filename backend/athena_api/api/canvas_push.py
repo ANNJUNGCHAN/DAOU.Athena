@@ -30,6 +30,7 @@ from athena_api.canvas_card_registry import (
     resolve_canvas_card,
 )
 from athena_api.canvas_field_registry import get_operation_field_contract
+from athena_api.canvas_condition_query import is_condition_read_plan, render_condition_query
 from athena_api.canvas_transform import (
     build_aits_chart_envelope_data,
     build_compound_generic,
@@ -47,6 +48,7 @@ from athena_api.card_surface_contract import (
     json_path_values,
     observation_id_for,
     resolve_section_titles_ko,
+    with_ranking_rail_rows,
 )
 from athena_api.card_surface_templates import get_registry as get_card_surface_registry
 from athena_api.dependencies import (
@@ -657,6 +659,8 @@ def _bind_semantic_values(
     card_contract: dict[str, Any],
     operation_ref: str,
     source: Any,
+    *,
+    surface_target: Mapping[str, Any] | None = None,
 ) -> None:
     """Attach only product-safe values while retaining occurrence identity."""
 
@@ -670,7 +674,7 @@ def _bind_semantic_values(
             continue
         indexed_values = [
             (index, value)
-            for index, value in enumerate(_json_path_values(source, contract.json_path))
+            for index, value in enumerate(_json_path_values(source, contract.json_path, preserve_array_rows=True))
             if not isinstance(value, (dict, list, tuple, set))
         ]
         is_array_field = "[]" in contract.json_path
@@ -769,7 +773,28 @@ def _bind_semantic_values(
         for observation in observations
     ]
     # 보드 슬롯 값은 같은 source·같은 경로 평가기에서 나온다(표면과 관찰이 갈리지 않게).
-    attach_surface_contract(card_contract, operation_ref, source)
+    surface_source = source
+    if isinstance(source, dict) and surface_target is not None:
+        from athena_api.elw_display_identity import elw_detail_source
+        from athena_api.stock_display_identity import stock_detail_source
+        surface = card_contract.get('surface_contract') or {}
+        board_id = surface.get('board_id', '')
+        surface_source = elw_detail_source(board_id, operation_ref, source, surface_target)
+        surface_source = stock_detail_source(board_id, surface_source, surface_target)
+    attach_surface_contract(card_contract, operation_ref, surface_source)
+    from athena_api.watch_surface_identity import project_watch_surface
+    if isinstance(card_contract.get('surface_contract'), dict):
+        card_contract['surface_contract'] = project_watch_surface(
+            card_contract['surface_contract'], {operation_ref: (source, surface_target or {})}, surface_target or {})
+    if operation_ref == 'base:ka10054':
+        from athena_api.canvas_vi_snapshot import vi_snapshot_surface
+        snapshot = vi_snapshot_surface(operation_ref, surface_source)
+        if snapshot is not None:
+            card_contract['initial_surface_contract'] = snapshot
+    if isinstance(card_contract.get('surface_contract'), dict) and surface_target is not None:
+        from athena_api.surface_display_units import annotate_surface_display_units
+        card_contract['surface_contract'] = annotate_surface_display_units(
+            card_contract['surface_contract'], {operation_ref: surface_target})
 
 
 def _integrated_card_contract(
@@ -1020,6 +1045,9 @@ class BoardHydrateRequest(BaseModel):
     # 렌더러가 현재 보드에서 실제로 부족한 슬롯만 보낸다. 생략은 구버전
     # 클라이언트 호환을 위해 모든 값 바인딩 슬롯을 뜻한다.
     slot_ids: list[str] | None = Field(default=None, max_length=512)
+    ranking_operation_ref: str | None = Field(default=None, min_length=1, max_length=64)
+    chart_operation_ref: str | None = Field(default=None, min_length=1, max_length=64)
+    flow_operation_ref: str | None = Field(default=None, min_length=1, max_length=64)
 
 
 def _hydrate_operation_refs(board: Any, slot_ids: list[str] | None) -> tuple[str, ...]:
@@ -1101,15 +1129,25 @@ def _initial_surface_contract(
         )
     }
     source_data = source.model_dump(by_alias=True)
+    from athena_api.elw_display_identity import elw_detail_source
+    from athena_api.stock_display_identity import stock_detail_source
     bound: dict[str, Any] = {}
     for operation_ref in board.operation_refs:
         if operation_ref in queried_refs:
-            bound.update(bind_surface_values(operation_ref, source_data))
+            display_source = elw_detail_source(board_id, operation_ref, source_data, target)
+            display_source = stock_detail_source(board_id, display_source, target)
+            bound.update(bind_surface_values(operation_ref, display_source))
     contract = build_board_surface_contract(
         board_id, bound, registry, active_operation_refs=queried_refs
     )
     if contract is None:
         return None
+    from athena_api.surface_display_units import annotate_surface_display_units
+    from athena_api.watch_surface_identity import project_watch_surface
+    contract = project_watch_surface(contract, {ref: (source, target) for ref in queried_refs}, target)
+    contract = annotate_surface_display_units(contract, {ref: target for ref in queried_refs})
+    from athena_api.flow_display_context import annotate_flow_display_context
+    contract = annotate_flow_display_context(contract, {ref: (source, target) for ref in queried_refs}, target, getattr(selector, "_instrument_identity", None))
     filled = {entry["slot_id"] for entry in contract["slot_values"]}
     contract["hydration_slot_ids"] = [
         slot.slot_id
@@ -1291,6 +1329,20 @@ async def _hydrate_operation(
     if not document.generic_callable:
         return unbound("not_generic_callable")
     target: Mapping[str, Any] = payload.target
+    if payload.board_id == '2U5L-1' and operation_ref == 'base:ka10095':
+        from athena_api.watch_surface_identity import member_codes
+        if selector is None or hydrated_results is None:
+            return unbound('membership_unavailable')
+        member_status, _ = await _hydrate_operation(
+            'base:ka01301', selector.catalog.find_exact('base:ka01301'), payload,
+            request, client, fetched, semaphore, selector, chained, hydrated_results)
+        member_result = hydrated_results.get('base:ka01301')
+        if not member_result:
+            return unbound(member_status.get('reason') or 'membership_unavailable')
+        codes = member_codes(member_result[0])
+        if not codes:
+            return unbound('membership_empty')
+        target = {**target, 'stk_cd': '|'.join(codes)}
     if selector is not None and chained is not None:
         chain_values = await _resolve_chained_arguments(
             document, target, request, client, selector, chained, semaphore
@@ -1318,7 +1370,11 @@ async def _hydrate_operation(
         return unbound(fetch_error)
     if hydrated_results is not None:
         hydrated_results[operation_ref] = (result, arguments)
-    bound = bind_surface_values(operation_ref, result.model_dump(by_alias=True))
+    from athena_api.elw_display_identity import elw_detail_source
+    from athena_api.stock_display_identity import stock_detail_source
+    source = elw_detail_source(payload.board_id, operation_ref, result.model_dump(by_alias=True), target)
+    source = stock_detail_source(payload.board_id, source, target)
+    bound = bind_surface_values(operation_ref, source)
     return (
         {
             "operation_ref": operation_ref,
@@ -1392,6 +1448,14 @@ async def internal_canvas_board_hydrate(
     if data_client is None or not data_client.is_ready:
         raise KiwoomNotReadyError("Kiwoom data service is not ready")
 
+    if payload.flow_operation_ref is not None:
+        if board.board_id != '2QFO-2' or payload.flow_operation_ref not in {'base:ka10059', 'base:ka10061'}:
+            raise HTTPException(status_code=422, detail='unsupported investor query source')
+
+    if payload.chart_operation_ref is not None:
+        allowed = {source.get('mapping_id') for source in ((board.primary or {}).get('props_from') or ())}
+        if board.board_id != '32S7-0' or payload.chart_operation_ref not in allowed:
+            raise HTTPException(status_code=422, detail='unsupported sector chart operation')
     operations: list[dict[str, Any]] = []
     bound: dict[str, Any] = {}
     # 한 실제 TR은 detail group이 여러 개여도 요청 인자와 upstream 응답이 같다.
@@ -1404,7 +1468,28 @@ async def internal_canvas_board_hydrate(
     chained: dict[tuple[str, str, str], asyncio.Task[str | None]] = {}
     hydrated_results: dict[str, tuple[BaseModel, BaseModel]] = {}
     semaphore = asyncio.Semaphore(BOARD_HYDRATE_MAX_CONCURRENCY)
-    operation_refs = list(_hydrate_operation_refs(board, payload.slot_ids))
+    from athena_api.ranking_expanded_result import (
+        EXPANDED_BOARD, build_ranking_result, is_expanded_ranking_operation,
+    )
+    active_operation_refs: tuple[str, ...] = ()
+    if payload.flow_operation_ref is not None:
+        active_operation_refs = (payload.flow_operation_ref,)
+    if board.board_id == '32S7-0' and payload.chart_operation_ref:
+        active_operation_refs = (payload.chart_operation_ref,)
+    if payload.ranking_operation_ref is not None and board.board_id == EXPANDED_BOARD:
+        if not is_expanded_ranking_operation(payload.ranking_operation_ref):
+            raise HTTPException(status_code=422, detail="unsupported expanded ranking operation")
+        operation_refs = [payload.ranking_operation_ref]
+    else:
+        operation_refs = list(_hydrate_operation_refs(board, payload.slot_ids))
+        if payload.flow_operation_ref is not None:
+            operation_refs = [payload.flow_operation_ref]
+        if payload.ranking_operation_ref is not None:
+            if board.board_id != "13K0-2" or payload.ranking_operation_ref not in {"base:ka10032", "base:ka00198"}:
+                raise HTTPException(status_code=422, detail="unsupported board ranking source")
+            active_operation_refs = (payload.ranking_operation_ref,)
+            if payload.ranking_operation_ref not in operation_refs:
+                operation_refs.append(payload.ranking_operation_ref)
     primary = board.primary if isinstance(board.primary, Mapping) else {}
     if primary.get("renderer") == "athena-chart":
         for source in primary.get("props_from") or ():
@@ -1466,8 +1551,21 @@ async def internal_canvas_board_hydrate(
         operations.append(status)
         bound.update(values)
 
-    surface_contract = build_board_surface_contract(board.board_id, bound, registry)
+    surface_contract = with_ranking_rail_rows(
+        build_board_surface_contract(board.board_id, bound, registry, active_operation_refs),
+        {operation: result for operation, (result, _arguments) in hydrated_results.items()},
+        registry=registry, active_operation_refs=active_operation_refs,
+    )
     assert surface_contract is not None
+    from athena_api.surface_display_units import annotate_surface_display_units
+    from athena_api.watch_surface_identity import project_watch_surface
+    surface_contract = project_watch_surface(surface_contract, hydrated_results, payload.target)
+    surface_contract = annotate_surface_display_units(surface_contract, {
+        operation: arguments.model_dump(by_alias=True)
+        for operation, (_result, arguments) in hydrated_results.items()
+    })
+    from athena_api.flow_display_context import annotate_flow_display_context
+    surface_contract = annotate_flow_display_context(surface_contract, hydrated_results, payload.target, getattr(selector, "_instrument_identity", None))
     filled = {entry["slot_id"] for entry in surface_contract["slot_values"]}
     retryable_refs = {
         status["operation_ref"]
@@ -1518,6 +1616,8 @@ async def internal_canvas_board_hydrate(
     if primary.get("renderer") == "athena-chart":
         for source in primary.get("props_from") or ():
             operation_ref = source.get("mapping_id") if isinstance(source, Mapping) else None
+            if board.board_id == '32S7-0' and payload.chart_operation_ref and operation_ref != payload.chart_operation_ref:
+                continue
             hydrated = (
                 hydrated_results.get(operation_ref) if isinstance(operation_ref, str) else None
             )
@@ -1528,7 +1628,7 @@ async def internal_canvas_board_hydrate(
                 operation_ref,
                 {
                     "data": result.model_dump(by_alias=True),
-                    "canvas_context": {"symbol": payload.target.get("stk_cd")},
+                    "canvas_context": {"symbol": arguments.model_dump(by_alias=True).get("inds_cd") if board.board_id == "32S7-0" else payload.target.get("stk_cd")},
                 },
             )
             if isinstance(built, str):
@@ -1620,6 +1720,16 @@ async def internal_canvas_board_hydrate(
                 "source_operations": source_operations,
             }
 
+    ranking_result = None
+    if board.board_id == EXPANDED_BOARD and payload.ranking_operation_ref is not None:
+        hydrated = hydrated_results.get(payload.ranking_operation_ref)
+        if hydrated is not None:
+            result, arguments = hydrated
+            ranking_result = build_ranking_result(
+                board.board_id, payload.ranking_operation_ref,
+                result.model_dump(by_alias=True), arguments,
+            )
+
     return JSONResponse(
         content={
             "board_id": board.board_id,
@@ -1627,6 +1737,7 @@ async def internal_canvas_board_hydrate(
             "operations": operations,
             "surface_contract": surface_contract,
             "primary_envelope": primary_envelope,
+            "ranking_result": ranking_result,
         }
     )
 
@@ -1693,9 +1804,11 @@ def _correlation(
 def _chart_reload_metadata(
     canvas_kind: str, payload: RenderPlanRequest, verified_arguments: dict[str, Any]
 ) -> dict[str, Any]:
-    if canvas_kind != "chart":
-        return {}
+    # Every read-only card hydrates with the original criteria, including table
+    # sorting and issuer/LP filters. Only chart reload correlation is chart-only.
     metadata: dict[str, Any] = {"operation_args": dict(verified_arguments)}
+    if canvas_kind != "chart":
+        return metadata
     if payload.dataset_id is None and payload.delivery_id is not None:
         metadata["correlation"] = {
             "dataset_id": payload.delivery_id,
@@ -2452,13 +2565,20 @@ async def canvas_render_plan(
             transform_ms=_elapsed_ms(transform_start),
             next_actions=["resolve_again"],
         )
-    _bind_semantic_values(card_contract, operation_ref, call_payload.get("data"))
+    surface_target = dict(verified_plan.arguments)
+    sealed_context = call_payload.get('canvas_context')
+    if isinstance(sealed_context, Mapping) and sealed_context.get('symbol'):
+        surface_target.setdefault('stk_cd', sealed_context['symbol'])
+    _bind_semantic_values(card_contract, operation_ref, call_payload.get("data"), surface_target=surface_target)
     if full_responses:
+        from athena_api.flow_display_context import annotate_flow_display_context
+        if (card_contract.get("surface_contract") or {}).get("board_id") in {"2QFO-2", "2ROJ-1"}:
+            card_contract["surface_contract"] = annotate_flow_display_context(card_contract.get("surface_contract"), {operation_ref: (full_responses[0], surface_target)}, surface_target, getattr(selector, "_instrument_identity", None))
         initial_contract = _initial_surface_contract(
             card_contract,
             source=full_responses[0],
             tr_id=document.tr_id,
-            target=verified_plan.arguments,
+            target=surface_target,
             selector=selector,
         )
         if initial_contract is not None:
@@ -2612,6 +2732,14 @@ async def canvas_render_plan(
             canvas_kind, payload, getattr(verified_plan, "arguments", None) or {}
         ),
     }
+    from athena_api.ranking_expanded_result import build_ranking_result
+    ranking_source_board = (card_contract.get("surface_contract") or {}).get("board_id", "")
+    ranking_result = build_ranking_result(
+        ranking_source_board, operation_ref, call_payload.get("data"),
+        getattr(verified_plan, "arguments", None) or {},
+    )
+    if ranking_result is not None:
+        envelope["ranking_result"] = ranking_result
     if target_label is not None:
         envelope["target_label"] = target_label
     if renderer_id is not None:
@@ -2707,6 +2835,7 @@ async def canvas_render_query(
     client: OptionalDataClientDep,
     selector: SelectorServiceDep,
     account: AccountAliasDep,
+    ws_client: OptionalWsClientDep = None,
 ) -> JSONResponse:
     # MCP previously used call-query before rebuilding a card without its signed
     # target identity. Keep that endpoint's pre-execution rejection contract for
@@ -2715,6 +2844,12 @@ async def canvas_render_query(
         payload.plan_token, selector.catalog, expected_account=account
     )
     document = selector.catalog.find_exact(verified_plan.operation_ref)
+    # These two condition commands return a read-only page over WebSocket.
+    # Their dedicated path does not loosen query-only or subscription dispatch.
+    if is_condition_read_plan(document, verified_plan):
+        return await render_condition_query(
+            payload, request, response, ws_client, selector, account
+        )
     if document is None or document.kind != "query":
         # This raises before consuming the token or dispatching: order plans keep
         # their sanitized ticket draft and remain available for human confirmation.

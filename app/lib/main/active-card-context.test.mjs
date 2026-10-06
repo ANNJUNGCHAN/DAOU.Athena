@@ -509,7 +509,7 @@ test('main routes grounded card questions past card-producing fast paths and inc
   assert.match(inner, /modePromptRequired \|\| providerAnswerRequired/);
   assert.match(inner, /shouldAttemptCardFirstLookup\(query, submit\.cardContext, activeCardContext\)/);
   assert.match(inner, /const cardRetrievalBlocked/);
-  assert.match(inner, /const selectorResult = cardRetrievalBlocked/);
+  assert.match(inner, /let selectorResult = cardRetrievalBlocked/);
   assert.match(inner, /domesticMarketDatasetCandidate/);
   assert.match(source, /cardContext: payload\.cardContext/);
 });

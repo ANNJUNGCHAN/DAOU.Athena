@@ -345,6 +345,21 @@ def analyze_question(
         rejected = set(items)
         values[:] = [item for item in values if item not in rejected]
 
+    # Subscription-right quotes are an instrument collection, not a missing
+    # single-stock target. Derive the same product capability as the catalog.
+    subscription_rights_quote = (
+        stated("신주인수권", "subscription rights")
+        and stated("시세", "quote", "price")
+        and execution is not ExecutionKind.ORDER
+    )
+    if subscription_rights_quote:
+        subject = RoutingSubject.INSTRUMENT
+        execution = ExecutionKind.QUERY
+        add(entity_kinds, EntityKind.STOCK)
+        add(data_intents, DataIntent.SCREENING)
+        add(measures, Measure.PRICE)
+        add(result_shapes, RoutingResultShape.COLLECTION)
+
     chart_request = stated("chart", "candle", "차트", "캔들")
     ohlc = stated(
         "opening price", "session high", "session low", "시가", "고가", "저가", "종가"
@@ -443,7 +458,26 @@ def analyze_question(
         elif stated("daily history", "daily historical", "일별 이력", "일자별 이력"):
             add(data_intents, DataIntent.HISTORY)
             add(temporal_scopes, TemporalScope.DAILY)
-    volatility_request = stated("volatility interruption", "vi 발동", "변동성 완화")
+    volatility_terms = ("volatility interruption", "vi 발동", "vi발동", "변동성 완화", "변동성완화장치")
+    volatility_request = stated(*volatility_terms)
+    volatility_snapshot = (
+        volatility_request
+        and stated("현황", "목록", "리스트", "발동종목", "발동 종목", "status", "list")
+        and not stated("구독", "감시", "등록", "해제", "중지", "종료", "취소",
+                       "subscribe", "subscription", "monitor", "register", "remove", "stop", "end", "cancel")
+        and execution is not ExecutionKind.ORDER
+    )
+    if volatility_snapshot:
+        # A current VI list is a read; '실시간 현황' alone is not a request to
+        # register a stream. Keep explicit subscription/control actions separate.
+        subject = RoutingSubject.INSTRUMENT
+        execution = ExecutionKind.QUERY
+        action = None
+        add(entity_kinds, EntityKind.STOCK)
+        discard(data_intents, DataIntent.SUBSCRIPTION)
+        discard(temporal_scopes, TemporalScope.REALTIME)
+        discard(result_shapes, RoutingResultShape.STREAM)
+        add(temporal_scopes, TemporalScope.CURRENT)
     market_wide_stock_wording = stated(
         "domestic stocks", "domestic equities", "stocks", "equities", "국내주식"
     )
@@ -831,6 +865,24 @@ def analyze_question(
         add(temporal_scopes, TemporalScope.REALTIME)
         add(result_shapes, RoutingResultShape.COLLECTION, RoutingResultShape.STREAM)
 
+    # A saved formula's one-shot result uses the condition websocket transport;
+    # "조회" describes the read action, not a REST-only execution constraint.
+    condition_once = (
+        EntityKind.CONDITION in entity_kinds
+        and stated("1회", "일회", "한 번", "일반 조회", "요청 일반", "run once", "one-shot")
+        and not condition_list
+        and not condition_lifecycle
+        and not stated("실시간", "감시", "등록", "해제", "중지", "종료", "취소",
+                       "realtime", "monitor", "subscribe", "unsubscribe", "stop", "end", "cancel")
+    )
+    if condition_once:
+        subject = RoutingSubject.COLLECTION
+        execution = ExecutionKind.WEBSOCKET
+        add(entity_kinds, EntityKind.STOCK)
+        add(data_intents, DataIntent.SUBSCRIPTION, DataIntent.SCREENING)
+        discard(result_shapes, RoutingResultShape.COLLECTION)
+        add(result_shapes, RoutingResultShape.STREAM)
+
     explicit_historical_period = stated(
         "by trading day",
         "each trading day",
@@ -1175,7 +1227,7 @@ def analyze_question(
     )
     if market_wide_stock_screen:
         add(entity_kinds, EntityKind.STOCK)
-    target_scope_present = authored_target or stated(
+    target_scope_present = authored_target or subscription_rights_quote or volatility_snapshot or stated(
         "account",
         "portfolio",
         "holdings",
@@ -1275,6 +1327,8 @@ def analyze_question(
     aggregation = _aggregation_scope(tuple(result_shapes))
     range_kind = _range_kind(tuple(temporal_scopes))
     capabilities: list[CapabilityKind] = []
+    if subscription_rights_quote:
+        capabilities.append(CapabilityKind.EQUITY_SUBSCRIPTION_RIGHTS)
     if sector_collection:
         capabilities.append(CapabilityKind.SECTOR_INDEX_COLLECTION)
     if stated(
@@ -1304,7 +1358,7 @@ def analyze_question(
         ),
         (
             CapabilityKind.VOLATILITY_INDICATOR,
-            ("volatility interruption", "vi 발동", "변동성 완화"),
+            volatility_terms,
         ),
         (
             CapabilityKind.INVESTOR_FLOW,
@@ -1464,7 +1518,7 @@ def analyze_question(
         ),
         (
             CapabilityKind.GOLD_ORDERBOOK,
-            ("order-book", "order book", "bid and ask", "매수·매도 호가", "호가와 잔량"),
+            ("order-book", "order book", "bid and ask", "매수·매도 호가", "호가와 잔량", "호가"),
         ),
         (
             CapabilityKind.GOLD_DAILY,

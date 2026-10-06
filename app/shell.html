@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="styles/integrated-cards.css" />
 <link rel="stylesheet" href="styles/canvas-tabs.css" />
 <link rel="stylesheet" href="styles/board-surface.css" />
+<link rel="stylesheet" href="styles/board-gold-quote.css" />
 <link rel="stylesheet" href="styles/card-component-target.css" />
 <link rel="stylesheet" href="styles/plugin-canvas.css" />
 <link rel="stylesheet" href="shell.css" />
@@ -260,11 +261,12 @@
                    보강 횟수는 cluster-map에 없는 값이라 걸 수 없다. -->
               <select id="graphWindowFilter" class="filter-chip is-control" aria-label="기간"></select>
               <select id="graphDegreeFilter" class="filter-chip is-control" aria-label="최소 연결 수"></select>
+              <button type="button" id="graphFitView" class="filter-chip is-control graph-fit-view" title="현재 표시 중인 지도 전체를 화면에 맞춥니다">전체 맞춤</button>
             </div>
           </div>
           <div id="graphMapGuide" class="graph-map-guide">
             <span class="graph-map-guide-title">테마 지도</span>
-            <span class="graph-map-guide-desc">노드를 끌어 옮길 수 있습니다 · 휠 또는 Ctrl+휠로 확대 · 채팅으로 물어도 같은 곳이 열립니다</span>
+            <span class="graph-map-guide-desc">노드를 끌어 옮길 수 있습니다 · 휠 또는 Ctrl+휠로 확대 · 빈 곳 두 번 클릭 또는 전체 맞춤으로 지도 전체 보기</span>
           </div>
         </div>
         <div id="graphBody"></div>
@@ -492,6 +494,7 @@
 <script src="lib/markdown.js"></script>
 <script src="lib/rest-canvas-paint.js"></script>
 <script src="lib/canvas-layout.js"></script>
+<script src="lib/timeline-card.js"></script>
 <script src="lib/empty-canvas.js"></script>
 <script src="lib/backtest-empty-prompts.js"></script>
 <script src="lib/column-fold.js"></script>
@@ -515,7 +518,16 @@
 <script src="lib/board-templates.index.generated.js"></script>
 <script src="lib/board-template-registry.js"></script>
 <script src="lib/board-format.js"></script>
+<script src="lib/board-display-policy-data.js"></script>
+<script src="lib/board-display-policy.js"></script>
+<script src="lib/board-static-graphics-data.js"></script>
+<script src="lib/board-etf-period.js"></script>
+<script src="lib/board-flow-layout.js"></script>
+<script src="lib/board-ranking-result.js"></script>
+<script src="lib/board-popover-layout.js"></script>
+<script src="lib/board-gold-quote.js"></script>
 <script src="lib/board-mount.js"></script>
+<script src="lib/condition-query-list.js"></script>
 <script src="lib/board-card-actions.js"></script>
 <script src="lib/canvas-tabs.js"></script>
 <script src="lib/paper-card-routing.js"></script>
@@ -524,6 +536,8 @@
 <script src="lib/card-kind-차트.js"></script>
 <script src="lib/card-kind-종목정보.js"></script>
 <script src="lib/card-kind-호가.js"></script>
+<script src="lib/board-orderbook-bindings.js"></script>
+<script src="lib/board-orderbook.js"></script>
 <script src="lib/card-kind-수급.js"></script>
 <script src="lib/card-kind-프로그램매매.js"></script>
 <script src="lib/card-kind-거래원.js"></script>

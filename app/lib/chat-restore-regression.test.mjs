@@ -46,6 +46,39 @@ test('restored assistant Markdown uses safe DOM rendering; user input stays lite
   assert.equal(user.children.length, 0);
 });
 
+test('Markdown tables preserve numeric units and literal text through rerendering', () => {
+  const ctx = context();
+  const host = ctx.document.createElement('div');
+  const source = '| 이름 | 가격 | 비율 | 수량 |\n|---|---|---|---|\n| <img src=x> | 74,200원 | -3.56% | 5,846,278,608,123주 |';
+  ctx.window.AthenaLib.Markdown.render(host, source);
+  ctx.window.AthenaLib.Markdown.render(host, source);
+  const scroll = host.querySelector('.md-table-scroll');
+  assert.equal(host.children.length, 1);
+  assert.equal(scroll.tabIndex, 0);
+  assert.equal(scroll.getAttribute('role'), 'region');
+  assert.deepEqual(Array.from(host.querySelectorAll('.md-table-number'), (cell) => cell.textContent), ['74,200원', '-3.56%', '5,846,278,608,123주']);
+  assert.equal(host.querySelector('img'), null);
+  assert.ok(host.textContent.includes('<img src=x>'));
+});
+
+test('table inline emphasis and code render safely while formatted numbers keep numeric layout', () => {
+  const ctx = context();
+  const host = ctx.document.createElement('div');
+  const source = '| **항목** | 가격 | 코드 | 설명 |\n|---|---|---|---|\n| 합성 | **5,846,278,608,123원** | `005930` | **<img src=x onerror=alert(1)>** <script>alert(2)</script> |';
+  ctx.window.AthenaLib.Markdown.render(host, source);
+  ctx.window.AthenaLib.Markdown.render(host, source);
+  assert.equal(host.children.length, 1);
+  const nodes = [];
+  function visit(node) { nodes.push(node); node.children.forEach(visit); }
+  visit(host);
+  assert.deepEqual(nodes.filter(n => n.nodeName === 'strong').map(n => n.textContent), ['항목', '5,846,278,608,123원', '<img src=x onerror=alert(1)>']);
+  assert.equal(nodes.find(n => n.nodeName === 'code').textContent, '005930');
+  assert.deepEqual(Array.from(host.querySelectorAll('.md-table-number'), n => n.textContent), ['5,846,278,608,123원', '005930']);
+  assert.ok(!nodes.some(n => n.nodeName === 'img' || n.nodeName === 'script'));
+  assert.ok(host.textContent.includes('<script>alert(2)</script>'));
+  assert.ok(!host.textContent.includes('**'));
+});
+
 test('opening saved Aegis conversation refreshes tasks after workspace restoration', () => {
   const calls = [];
   const ctx = context({

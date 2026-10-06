@@ -116,3 +116,14 @@ test('new one-time alerts use the real draft action and retain user constraints'
   assert.match(text, /adopt 제안은 비영속 제안일 뿐 알림 초안 생성이 아니다/);
   assert.match(text, /status="draft"를 확인하기 전에는 초안을 만들었다고 말하지 않는다/);
 });
+
+test('global quiet-hour proposals use the read-only guard tool across providers', () => {
+  for (const provider of ['claude', 'codex', 'grok']) {
+    const text = prompt.buildLiveSystemPrompt(provider);
+    assert.match(text, /알림 방해 금지 시간·조용 시간·말걸기 횟수는 개별 루틴이 아니라 전역 말걸기 가드/);
+    assert.match(text, /athena_nudge_guard action=get/);
+    assert.match(text, /action=propose의\npropose\.quiet_hours=\{start:"HH:MM",end:"HH:MM"\}/);
+    assert.match(text, /개별 알림의 시간·조건 변경은 기존 루틴 경로/);
+    assert.match(text, /사용자가 \[확인\]을 누르기 전에는\n적용됐다고 말하지 마라/);
+  }
+});

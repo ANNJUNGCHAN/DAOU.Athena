@@ -608,15 +608,14 @@
       "alt_mappings": null,
       "kor": "거래소구분",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
+        "kind": "text",
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "뒤쪽 1g 단위·09:00~15:30은 KRX 금시장 제도 상수(고정 문구)"
+      "note": "뒤쪽 1g 단위·09:00~15:30은 KRX 금시장 제도 상수(고정 문구)",
+      "row_index": 0
     },
     {
       "slot_id": "s004",
@@ -782,7 +781,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s011",
@@ -801,9 +801,9 @@
       "alt_mappings": null,
       "kor": "등락율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s010",
@@ -819,7 +819,8 @@
       ],
       "note": "주값은 전일대비(+850)이지만 등락율은 이 보드에서 값 슬롯을 단독으로 갖는 자리가 여기뿐이라 slot mapping을 등락율로 둔다 — 전일대비는 실시간 체결 표 전일대비 열이 대표 자리",
       "display_dup": true,
-      "dup_note": "요약 칸 병기 줄 — 중앙 밴드 슬롯 s049에도 같은 두 값이 나온다"
+      "dup_note": "요약 칸 병기 줄 — 중앙 밴드 슬롯 s049에도 같은 두 값이 나온다",
+      "row_index": 0
     },
     {
       "slot_id": "s012",
@@ -848,7 +849,8 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "실시간 체결 표 시각 열과 같은 필드 — 헤더 기준 시각 재표시",
-      "paired_note": "KPI 1칸 셋째 줄 — 주값 s010의 기준 시각 병기(부모 프레임이 달라 paired_with는 비운다)"
+      "paired_note": "KPI 1칸 셋째 줄 — 주값 s010의 기준 시각 병기(부모 프레임이 달라 paired_with는 비운다)",
+      "row_index": 0
     },
     {
       "slot_id": "s013",
@@ -895,7 +897,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s015",
@@ -909,8 +912,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -923,7 +926,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "최우선 매도호가 잔량 — 호가 배열의 매도 1단 잔량"
+      "dup_note": "최우선 매도호가 잔량 — 호가 배열의 매도 1단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s016",
@@ -970,7 +975,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s018",
@@ -984,8 +990,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -998,7 +1004,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "최우선 매수호가 잔량 — 호가 배열의 매수 1단 잔량"
+      "dup_note": "최우선 매수호가 잔량 — 호가 배열의 매수 1단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s019",
@@ -1045,7 +1053,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s021",
@@ -1064,14 +1073,16 @@
       "alt_mappings": null,
       "kor": "누적 거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s020",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s022",
@@ -1118,7 +1129,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s024",
@@ -1144,7 +1156,8 @@
       },
       "paired_with": "s023",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s025",
@@ -1212,7 +1225,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -1223,7 +1236,8 @@
       "display_dup": true,
       "dup_note": "레일 체결강도 블록과 같은 값 — 요약 칸 재표시",
       "note": "뒤쪽 총 잔량 4,180g은 사다리 잔량 합계 파생",
-      "paired_note": "KPI 6칸 셋째 줄 — 주값 s026의 병기(부모 프레임이 달라 paired_with는 비운다)"
+      "paired_note": "KPI 6칸 셋째 줄 — 주값 s026의 병기(부모 프레임이 달라 paired_with는 비운다)",
+      "row_index": 0
     },
     {
       "slot_id": "s028",
@@ -1341,8 +1355,8 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -1354,7 +1368,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "호가 배열 매도 5단 호가"
+      "note": "호가 배열 매도 5단 호가",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s033",
@@ -1404,8 +1420,8 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -1418,7 +1434,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매도 5단 잔량"
+      "dup_note": "호가 배열 매도 5단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s035",
@@ -1436,8 +1454,8 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -1450,7 +1468,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매도 4단 호가"
+      "dup_note": "호가 배열 매도 4단 호가",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s036",
@@ -1500,8 +1520,8 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -1514,7 +1534,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매도 4단 잔량"
+      "dup_note": "호가 배열 매도 4단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s038",
@@ -1532,8 +1554,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -1546,7 +1568,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매도 3단 호가"
+      "dup_note": "호가 배열 매도 3단 호가",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s039",
@@ -1596,8 +1620,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -1610,7 +1634,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매도 3단 잔량"
+      "dup_note": "호가 배열 매도 3단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s041",
@@ -1628,8 +1654,8 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -1642,7 +1668,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매도 2단 호가"
+      "dup_note": "호가 배열 매도 2단 호가",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s042",
@@ -1692,8 +1720,8 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -1706,7 +1734,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매도 2단 잔량"
+      "dup_note": "호가 배열 매도 2단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s044",
@@ -1738,7 +1768,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "최우선 매도호가 — 요약 칸 s014와 같은 값"
+      "dup_note": "최우선 매도호가 — 요약 칸 s014와 같은 값",
+      "row_index": 0
     },
     {
       "slot_id": "s045",
@@ -1788,8 +1819,8 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -1802,7 +1833,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매도 1단 잔량"
+      "dup_note": "호가 배열 매도 1단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s047",
@@ -1851,7 +1884,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "요약 칸 현재가와 같은 값 — 사다리 중앙 밴드 재표시"
+      "dup_note": "요약 칸 현재가와 같은 값 — 사다리 중앙 밴드 재표시",
+      "row_index": 0
     },
     {
       "slot_id": "s049",
@@ -1870,10 +1904,8 @@
       "alt_mappings": null,
       "kor": "전일대비기호",
       "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "kind": "text",
+        "tone": "neutral"
       },
       "paired_with": "s048",
       "collapse_group": null,
@@ -1891,7 +1923,8 @@
           "kor": "등락율",
           "sep": " · "
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s050",
@@ -1910,8 +1943,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "time",
-        "sign": false,
+        "kind": "percent",
         "precision": 1,
         "tone": "neutral"
       },
@@ -1928,7 +1960,8 @@
           "sep": " · "
         }
       ],
-      "paired_note": "중앙 밴드 둘째 줄 — 주값 s048의 병기(부모 프레임이 달라 paired_with는 비운다)"
+      "paired_note": "중앙 밴드 둘째 줄 — 주값 s048의 병기(부모 프레임이 달라 paired_with는 비운다)",
+      "row_index": 0
     },
     {
       "slot_id": "s051",
@@ -1960,7 +1993,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "최우선 매수호가 — 요약 칸 s017과 같은 값"
+      "dup_note": "최우선 매수호가 — 요약 칸 s017과 같은 값",
+      "row_index": 0
     },
     {
       "slot_id": "s052",
@@ -2010,8 +2044,8 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -2024,7 +2058,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매수 1단 잔량"
+      "dup_note": "호가 배열 매수 1단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s054",
@@ -2042,8 +2078,8 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -2056,7 +2092,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매수 2단 호가"
+      "dup_note": "호가 배열 매수 2단 호가",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s055",
@@ -2106,8 +2144,8 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -2120,7 +2158,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매수 2단 잔량"
+      "dup_note": "호가 배열 매수 2단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s057",
@@ -2138,8 +2178,8 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -2152,7 +2192,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매수 3단 호가"
+      "dup_note": "호가 배열 매수 3단 호가",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s058",
@@ -2202,8 +2244,8 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -2216,7 +2258,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매수 3단 잔량"
+      "dup_note": "호가 배열 매수 3단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s060",
@@ -2234,8 +2278,8 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -2248,7 +2292,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매수 4단 호가"
+      "dup_note": "호가 배열 매수 4단 호가",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s061",
@@ -2298,8 +2344,8 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -2312,7 +2358,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매수 4단 잔량"
+      "dup_note": "호가 배열 매수 4단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s063",
@@ -2330,8 +2378,8 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -2344,7 +2392,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매수 5단 호가"
+      "dup_note": "호가 배열 매수 5단 호가",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s064",
@@ -2394,8 +2444,8 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka50101",
-      "f": "gold_bid",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금현물호가",
       "format": {
@@ -2408,7 +2458,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "호가 배열 매수 5단 잔량"
+      "dup_note": "호가 배열 매수 5단 잔량",
+      "static": "blank",
+      "unbound_reason": "ka50101 gold_bid는 시각별 체결·최우선호가 이력이며 깊이별 가격이나 잔량을 제공하지 않는다."
     },
     {
       "slot_id": "s066",
@@ -2775,14 +2827,15 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s081",
@@ -3074,7 +3127,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3164,7 +3217,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -3260,7 +3313,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3351,7 +3404,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -3447,7 +3500,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3538,7 +3591,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -3634,7 +3687,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3725,7 +3778,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -3821,7 +3874,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3912,7 +3965,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4008,7 +4061,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4099,7 +4152,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4195,7 +4248,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4286,7 +4339,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4382,7 +4435,7 @@
       "alt_mappings": null,
       "kor": "전일 대비(원)",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4473,7 +4526,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4694,7 +4747,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "금현물 LP 부재를 결측 표기 해당 없음으로 그린다"
+      "note": "금현물 LP 부재를 결측 표기 해당 없음으로 그린다",
+      "row_index": 0
     },
     {
       "slot_id": "s146",
@@ -4734,9 +4788,7 @@
       "alt_mappings": null,
       "kor": "거래소구분",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
+        "kind": "text",
         "tone": "neutral"
       },
       "paired_with": null,
@@ -4751,7 +4803,8 @@
           "kor": "체결시간",
           "sep": " · "
         }
-      ]
+      ],
+      "row_index": 0
     }
   ],
   "unbound_fields": [],

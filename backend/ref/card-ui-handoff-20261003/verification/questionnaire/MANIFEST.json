@@ -1,0 +1,32 @@
+{
+  "status": "INDEPENDENT_SOURCE_APPROVED_NATIVE_SCOPE_LIMITED",
+  "files": 5,
+  "bytes": 3262522,
+  "entries": [
+    {
+      "path": "candidate/card-ui-questionnaire.html",
+      "bytes": 1199181,
+      "sha256": "626dfd16487799a6fe564a5c601428a81698a4d89c6704ff2bc164798e3fd71d"
+    },
+    {
+      "path": "candidate/card-ui-questionnaire.json",
+      "bytes": 2058221,
+      "sha256": "c082361f5ba84dae9ee807a737ddcd8b75dc6f01d8873761571a4a6fcf4e07db"
+    },
+    {
+      "path": "REPORT.md",
+      "bytes": 2884,
+      "sha256": "8d5f38ca0ec1027c32f9a0cb44997bbb60a6c6916e6686f8eb5e22ef95d23a84"
+    },
+    {
+      "path": "REVIEW-RECEIPT.json",
+      "bytes": 1637,
+      "sha256": "91b6835b2c13ce2dca4ae51f57d7e23ba8112e40225066734e6e876aabd81b0d"
+    },
+    {
+      "path": "STATUS.md",
+      "bytes": 599,
+      "sha256": "a1446b4a6feff95df0493154a0169d742a72f6a31803849ff737e15062a4281b"
+    }
+  ]
+}

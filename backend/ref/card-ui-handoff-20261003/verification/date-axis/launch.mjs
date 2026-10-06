@@ -1,0 +1,6 @@
+import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';import {createRequire} from 'node:module';import {spawnSync} from 'node:child_process';import crypto from 'node:crypto';
+const dir=path.dirname(fileURLToPath(import.meta.url)),repo=path.resolve(dir,'../../../../..'),manifest=JSON.parse(fs.readFileSync(path.join(dir,'PORTABLE-MANIFEST.json'))),sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+for(const [file,pin]of Object.entries(manifest.phaseFiles))if(sha(fs.readFileSync(path.join(dir,file)))!==pin)throw Error('Portable phase mismatch');
+if(!process.argv.includes('--execute-reviewed')){console.log(JSON.stringify({status:'PREPARED_ONLY_NO_EXECUTION',kind:'date-axis',repoRelativeRoot:true}));process.exit(0);}
+const mode=process.argv.find(a=>a.startsWith('--fixture-mode='))?.split('=')[1];if(!['baseline','candidate'].includes(mode))throw Error('Explicit variant required');
+const electron=createRequire(path.join(repo,'app/package.json'))('electron');const result=spawnSync(electron,[path.join(dir,'run.cjs'),'--fixture-mode='+mode],{cwd:repo,stdio:'inherit',windowsHide:true});if(result.error)throw Error('Electron launch failed');process.exit(result.status??1);

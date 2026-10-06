@@ -215,14 +215,11 @@
       "node_path": "0/0/1",
       "paper_text": "전체 시장 · 업종 21개",
       "region": "header",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "list",
-      "alt_mappings": null,
       "kor": "업종코드리스트",
       "format": {
         "unit": "text",
@@ -234,7 +231,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "부모 2TZN-1 업종표 목록의 재표시 — 낱값은 이 보드가 편다"
+      "dup_note": "부모 2TZN-1 업종표 목록의 재표시 — 낱값은 이 보드가 편다",
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s004",
@@ -537,14 +536,11 @@
       "node_path": "1/1/1",
       "paper_text": "21개 업종",
       "region": "strip",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "list",
-      "alt_mappings": null,
       "kor": "업종코드리스트",
       "format": {
         "unit": "text",
@@ -555,7 +551,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s019",
@@ -606,14 +604,11 @@
       "node_path": "2/0/1",
       "paper_text": "21개 업종 · 선택 반도체 · 09:42 기준",
       "region": "workspace",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "list",
-      "alt_mappings": null,
       "kor": "업종코드리스트",
       "format": {
         "unit": "time",
@@ -625,14 +620,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10101",
-          "f": "name",
-          "kor": "업종명",
-          "sep": " · "
-        }
-      ]
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s022",
@@ -646,15 +635,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "marketCode",
-      "alt_mappings": null,
       "kor": "시장구분코드",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s023",
@@ -663,14 +651,11 @@
       "node_path": "2/1/0/0/1",
       "paper_text": "11개",
       "region": "workspace",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "list",
-      "alt_mappings": null,
       "kor": "업종코드리스트",
       "format": {
         "unit": "text",
@@ -682,7 +667,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "derived": "KOSPI 업종 수(list 집계)"
+      "derived": "KOSPI 업종 수(list 집계)",
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s024",
@@ -709,7 +696,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s025",
@@ -731,7 +720,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s026",
@@ -758,7 +749,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s027",
@@ -780,7 +773,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s028",
@@ -807,7 +802,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s029",
@@ -829,7 +826,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s030",
@@ -856,7 +855,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s031",
@@ -878,7 +879,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s032",
@@ -926,7 +929,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s034",
@@ -948,7 +953,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s035",
@@ -975,7 +982,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s036",
@@ -997,7 +1006,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s037",
@@ -1024,7 +1035,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s038",
@@ -1046,7 +1059,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s039",
@@ -1073,7 +1088,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s040",
@@ -1095,7 +1112,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s041",
@@ -1122,7 +1141,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 8,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s042",
@@ -1144,7 +1165,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 8,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s043",
@@ -1171,7 +1194,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 9,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s044",
@@ -1193,7 +1218,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 9,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s045",
@@ -1220,7 +1247,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 10,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s046",
@@ -1242,7 +1271,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 10,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s047",
@@ -1256,15 +1287,14 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "marketCode",
-      "alt_mappings": null,
       "kor": "시장구분코드",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s048",
@@ -1273,14 +1303,11 @@
       "node_path": "2/1/1/0/1",
       "paper_text": "6개",
       "region": "workspace",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "list",
-      "alt_mappings": null,
       "kor": "업종코드리스트",
       "format": {
         "unit": "text",
@@ -1292,7 +1319,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "derived": "KOSDAQ 업종 수(list 집계)"
+      "derived": "KOSDAQ 업종 수(list 집계)",
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s049",
@@ -1319,7 +1348,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 11,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s050",
@@ -1341,7 +1372,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 11,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s051",
@@ -1368,7 +1401,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 12,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s052",
@@ -1390,7 +1425,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 12,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s053",
@@ -1417,7 +1454,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 13,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s054",
@@ -1439,7 +1478,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 13,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s055",
@@ -1466,7 +1507,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 14,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s056",
@@ -1488,7 +1531,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 14,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s057",
@@ -1515,7 +1560,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 15,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s058",
@@ -1537,7 +1584,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 15,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s059",
@@ -1564,7 +1613,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 16,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s060",
@@ -1586,7 +1637,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 16,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s061",
@@ -1595,14 +1648,11 @@
       "node_path": "2/1/2/0/0",
       "paper_text": "KOSPI200",
       "region": "workspace",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "marketCode",
-      "alt_mappings": null,
       "kor": "시장구분코드",
       "format": {
         "unit": "text",
@@ -1613,7 +1663,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s062",
@@ -1622,14 +1674,11 @@
       "node_path": "2/1/2/0/1",
       "paper_text": "4개",
       "region": "workspace",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "list",
-      "alt_mappings": null,
       "kor": "업종코드리스트",
       "format": {
         "unit": "text",
@@ -1641,7 +1690,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "derived": "KOSPI200 업종 수(list 집계)"
+      "derived": "KOSPI200 업종 수(list 집계)",
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s063",
@@ -1668,7 +1719,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 17,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s064",
@@ -1695,7 +1748,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 17,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s065",
@@ -1722,7 +1777,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 18,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s066",
@@ -1749,7 +1806,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 18,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s067",
@@ -1776,7 +1835,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 19,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s068",
@@ -1803,7 +1864,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 19,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s069",
@@ -1830,7 +1893,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 20,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s070",
@@ -1857,7 +1922,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 20,
+      "note": "단일 요청 시장의 실제 응답 순서. 시안 그룹별로 같은 응답 첫 행을 반복하지 않는다."
     },
     {
       "slot_id": "s071",
@@ -1866,14 +1933,11 @@
       "node_path": "2/2/0",
       "paper_text": "전체 21개 표시",
       "region": "workspace",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "list",
-      "alt_mappings": null,
       "kor": "업종코드리스트",
       "format": {
         "unit": "text",
@@ -1884,7 +1948,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s072",
@@ -1893,14 +1959,11 @@
       "node_path": "2/2/1",
       "paper_text": "KOSPI 11 · KOSDAQ 6 · KOSPI200 4",
       "region": "workspace",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10101",
-      "f": "marketCode",
-      "alt_mappings": null,
       "kor": "시장구분코드",
       "format": {
         "unit": "text",
@@ -1912,7 +1975,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "derived": "시장별 업종 수(list 집계)"
+      "derived": "시장별 업종 수(list 집계)",
+      "static": true,
+      "static_reason": "조회 결과 순서 안내 고정 라벨"
     },
     {
       "slot_id": "s073",

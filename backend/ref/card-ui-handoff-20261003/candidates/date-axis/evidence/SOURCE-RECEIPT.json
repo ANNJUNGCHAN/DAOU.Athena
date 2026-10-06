@@ -1,0 +1,121 @@
+{
+  "status": "AUTHOR_FROZEN_REQUIRES_INDEPENDENT_REVIEW",
+  "manifest": "67f7db0fc973c2ccf1a0ea5cdba577c706cf3985785b00d1e5cff8075228df87",
+  "report": "f21edd5476b1d8d640b7311832cc857976c62d6b9d1c33f5cea95c4606878f9b",
+  "proposal": "78202b8431cfb5ef7888c5719a463d5b1ca8bb3c54a212b646b48debc3d86cb2",
+  "product": {
+    "app/lib/chart-card.js": "5d8c46389c95950083b34d7626a722f409d815b822cf105059ef198983d46e38",
+    "app/lib/lightweight-charts-axis.mjs": "7ae82ad415d76d0e4926ac34b7711931a35ba9f28572639a1a12230569beac48",
+    "app/lib/lightweight-charts-axis.LICENSE.txt": "70c9d5382506dd184465425c08a99ad9bd6d9ac1313c252968ba0b585e5ef823",
+    "app/lib/lightweight-charts-axis.NOTICE.txt": "0113d041489a7d311dc241018d213f2b16f7977f6def008def32c77d0afbde30"
+  },
+  "upstreamModule": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f",
+  "changes": [
+    {
+      "offset": 127868,
+      "before": "e.needAlignCoordinate?this.tg(t,e.coord,e.label):e.coord",
+      "after": "this.tg(t,e.coord,e.label)"
+    },
+    {
+      "offset": 128048,
+      "before": "e.needAlignCoordinate?this.tg(t,e.coord,e.label):e.coord",
+      "after": "this.tg(t,e.coord,e.label)"
+    }
+  ],
+  "observerInputRunHTMLViewportSameAsV2": true,
+  "baselineReuse": {
+    "directory": "C:\\Projects\\DAOU.Athena\\.omc\\artifacts\\card-ui-audit\\chart-date-axis-public-v2",
+    "reportSha256": "d20d19ff40fa4d685ff1ab4859c12b1e33161e754b3196f4f8fcc2748b91426d",
+    "states": 18,
+    "captures": 18,
+    "baselineHtmlExact": true,
+    "originalSourceFilesExact": true,
+    "fresh": false
+  },
+  "productionConsumer": {
+    "status": "AUTHOR_ACTUAL_LIBRARY_CONSUMER_PASS_NOT_PIXEL_APPROVAL",
+    "actualProductionClass": "Jn",
+    "actualProductionDrawMethod": "Bm",
+    "baselineOutside": 2,
+    "candidateOutside": 0,
+    "baseline": [
+      {
+        "label": "10월",
+        "x": 99,
+        "y": 15,
+        "font": "12px sans-serif",
+        "left": 89,
+        "right": 109
+      },
+      {
+        "label": "7월",
+        "x": 30,
+        "y": 15,
+        "font": "12px sans-serif",
+        "left": 20,
+        "right": 40
+      },
+      {
+        "label": "2019년",
+        "x": 0,
+        "y": 15,
+        "font": "bold 12px sans-serif",
+        "left": -20,
+        "right": 20
+      },
+      {
+        "label": "2021년",
+        "x": 50,
+        "y": 15,
+        "font": "bold 12px sans-serif",
+        "left": 30,
+        "right": 70
+      }
+    ],
+    "result": [
+      {
+        "label": "10월",
+        "x": 89.5,
+        "y": 15,
+        "font": "12px sans-serif",
+        "left": 79.5,
+        "right": 99.5
+      },
+      {
+        "label": "7월",
+        "x": 30,
+        "y": 15,
+        "font": "12px sans-serif",
+        "left": 20,
+        "right": 40
+      },
+      {
+        "label": "2019년",
+        "x": 19.5,
+        "y": 15,
+        "font": "bold 12px sans-serif",
+        "left": -0.5,
+        "right": 39.5
+      },
+      {
+        "label": "2021년",
+        "x": 50,
+        "y": 15,
+        "font": "bold 12px sans-serif",
+        "left": 30,
+        "right": 70
+      }
+    ],
+    "dateLabelsFontOrderAndInteriorPositionsPreserved": true,
+    "alreadyAlignedBehaviorUnchanged": true,
+    "originalAlignmentHelperByteIdentical": true,
+    "libraryVersion": "5.2.1",
+    "rendererLaunches": 0,
+    "productWrites": 0,
+    "privateReads": 0
+  },
+  "sourceSyntaxExit": 0,
+  "rendererLaunches": 0,
+  "productWrites": 0,
+  "privateReads": 0
+}

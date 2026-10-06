@@ -13,7 +13,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 function runMainCardRoutingDecision({ query, submit, activeCardContext }) {
   const source = fs.readFileSync(path.join(here, '..', '..', 'main.js'), 'utf8');
   const start = source.indexOf('  const cardFirstLookupRequired = ');
-  const end = source.indexOf('  const finishCardProducingResult = ', start);
+  const end = source.indexOf('  const holdingsTurn = ', start);
   assert.ok(start >= 0 && end > start, 'main card-first routing decision must remain executable');
   const activeCardQna = cardContext;
   const continuation = null;

@@ -62,6 +62,9 @@ function safeText(value, max = 500) {
 
 function userFacingProviderError(text) {
   const raw = safeText(text);
+  if (/^Failed to authenticate:\s*OAuth session expired and could not be refreshed$/i.test(raw)) {
+    return 'Claude 인증이 만료되었습니다. 설정 > 모델에서 Claude 계정의 ‘재인증’을 눌러 로그인을 완료한 뒤 다시 요청해 주세요.';
+  }
   if (/weekly limit/i.test(raw) || /hit your/i.test(raw)) return '이번 주 모델 한도에 닿았습니다';
   if (/rate[_ ]limit/i.test(raw)) return '모델 요청 한도에 닿았습니다';
   return raw;

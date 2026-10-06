@@ -360,7 +360,10 @@ _SEARCH_INPUT_SCHEMA: dict[str, Any] = {
             "enum": _DISCOVERY_INTENT_ENUM,
             "default": "auto",
             "description": (
-                "auto/query는 조회 표면만 랭킹한다. 실시간 구독은 'websocket'을 쓴다. "
+                "auto/query는 조회 표면과 저장된 조건검색 목록·일회 조회를 랭킹한다. "
+                "조건검색의 ka10171(CNSRLST), ka10172(CNSRREQ, search_type=0)는 "
+                "통신 종류가 websocket이어도 읽기 전용 조회이며 발급된 plan_token을 render_canvas에 전달한다. "
+                "실시간 구독은 'websocket'을 쓴다. "
                 "증권사 주문과 자동매매는 제품 범위 밖이며 제공하지 않는다."
             ),
         },

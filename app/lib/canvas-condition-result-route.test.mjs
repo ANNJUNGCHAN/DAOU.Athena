@@ -1,0 +1,41 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+
+const source = fs.readFileSync(new URL('../canvas.js', import.meta.url), 'utf8');
+
+for (const [parentId, childId, slot] of [['2UN6-1', '15L8-2', 's013'], ['31II-0', '15R0-2', 's043']]) {
+test(`a cached ${childId} alternate opens and returns without a new hydrate request`, async () => {
+  const state = {};
+  for (const key of ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
+    'emptyRowsByBoard', 'emptyColumnsByBoard', 'emptyValueSlotsByBoard', 'deferredValueSlotsByBoard']) state[key] = new Map();
+  const context = vm.createContext({
+    Map, boardMount: { realtimeSlotIndex: () => new Map() },
+    realtimeBindingsOf: () => [], boardStateOf: () => state,
+    window: { athena: { invoke: () => { throw new Error('Unexpected new query'); } } },
+  });
+  for (const [start, end] of [
+    ['function slotValuesOf(', '// 상태 보드 링크'],
+    ['const WATCHLIST_SLOT_GROUPS =', 'function seedBoardState('],
+    ['function seedBoardState(', 'function boardMountOptions('],
+    ['async function hydrateBoardSlots(', '// 마운트 결과에서'],
+  ]) {
+    const a = source.indexOf(start), b = source.indexOf(end, a);
+    assert.ok(a >= 0 && b > a);
+    vm.runInContext(source.slice(a, b), context);
+  }
+  const parent = { board_id: parentId, slot_values: [{ slot_id: 's045', value: '합성 종목' }], hydration_slot_ids: [] };
+  const child = { board_id: childId, slot_values: [{ slot_id: slot, value: '합성 종목' }], hydration_slot_ids: [], empty_rows: ['synthetic-empty-row'] };
+  context.seedBoardState(state, parent, {});
+  context.seedBoardState(state, child, {});
+  context.activateBoardState(state, childId);
+  assert.equal(state.values[slot], '합성 종목');
+  assert.deepEqual(Array.from(state.emptyRows), ['synthetic-empty-row']);
+  const mounted = { plan: { missing: ['static-unbound-slot'] } };
+  assert.equal(await context.hydrateBoardSlots({}, {}, mounted), mounted);
+  context.activateBoardState(state, parentId);
+  assert.equal(state.values.s045, '합성 종목');
+  assert.equal(state.values[slot], undefined);
+});
+}

@@ -96,7 +96,7 @@ test('orb request uses the history selection path to leave Pallas, load messages
             ] };
           }
           if (name === 'athena:conversations-list') return state;
-          if (name === 'athena:session-replay-cards') return {};
+          if (name === 'athena:session-replay-cards') return { replayed: 0, status: 'empty' };
           throw new Error(`Unexpected IPC: ${name}`);
         },
       },
@@ -108,7 +108,8 @@ test('orb request uses the history selection path to leave Pallas, load messages
       dispatchEvent() {},
     },
   });
-  vm.runInContext(declaration(chat, 'restoreConversation')
+  vm.runInContext(section(chat, 'let pendingSessionCardReplay = null;', '// sidebar.js가 부르는 다리')
+    + declaration(chat, 'restoreConversation')
     + section(chat, 'window.AthenaShell.registerOpenConversation(', '// Claude 데스크톱의 @')
     + 'let pendingOrbConversationRefresh = null;\n' + section(chat, 'async function refreshOrbConversation(', '// ---------- 루틴 승인 카드')
     + section(sidebar, '  async function loadConversations(', '  async function openRoutineInAgent(')
@@ -202,4 +203,94 @@ test('orb completion replaces a restored partial turn once and never appends to 
   ctx.switchingConversation = true;
   listeners.get('athena:orb-turn-committed')({ conversationId: 'orb' });
   assert.equal(vm.runInContext('pendingOrbConversationRefresh', ctx), 'orb');
+});
+
+import sessionBridgeLib from './main/session-bridge.js';
+
+function replayPersistenceFixture(cards) {
+  const rows = new Map([['public-A', { canvasCards: structuredClone(cards) }]]);
+  const sends = [], charts = [];
+  const bridge = sessionBridgeLib.createSessionBridge({
+    store: { getSession: id => rows.get(id), putCards: (id, next) => rows.set(id, { canvasCards: structuredClone(next) }) },
+    setTimer: () => 1, clearTimer() {},
+  });
+  const context = vm.createContext({
+    ipcMain: { handle: (_, fn) => { context.replay = fn; }, on: (_, fn) => { context.report = fn; } },
+    historyConversationId: () => 'public-A', getSessionBridge: () => bridge, ensureSessionRecord: () => bridge,
+    knownConversation: id => ['public-A', 'public-B'].includes(id),
+    shellWin: { isDestroyed: () => false, webContents: { send: (...args) => sends.push(args) } },
+    flushDeferredShellEvents() {}, crypto: { randomUUID: () => 'public-new-dataset' },
+    restCorrelationKey: c => !!c?.dataset_id, activeRestAccountId: () => 'public-account', mdlog() {},
+    emitRestCanvasAndWaitForPaint: (...args) => { charts.push(args); return Promise.resolve(); },
+  });
+  vm.runInContext(section(main, 'const pendingCanvasCards = new Map();', 'function sendLiveCanvasResult')
+    + section(main, "ipcMain.handle('athena:session-replay-cards'", '// 과거 대화 열기(2026-09-02')
+    + section(main, "ipcMain.on('athena:session-cards'", '// 렌더러는 바뀐 조각'), context);
+  return { context, rows, sends, charts, bridge,
+    report: (cards, discardPending = false, conversationId = 'public-A') => {
+      context.report(null, { conversationId, cards, discardPending }); bridge.flush(conversationId);
+    },
+    pending: () => JSON.parse(vm.runInContext('JSON.stringify([...pendingCanvasCards])', context)),
+  };
+}
+const replayCards = [
+  { cardId: 'public-fixture', kind: 'table', channel: 'fixture', envelope: { type: 'table' }, protected: true },
+  { cardId: 'public-live', kind: 'table', channel: 'live', envelope: { canvas_type: 'table', data: { columns: ['공개 열'], rows: [[0]] } }, protected: false },
+];
+
+test('history replay preserves both saved envelopes through a partial report and a retry, then releases completed mounts', () => {
+  const f = replayPersistenceFixture(replayCards);
+  assert.equal(f.context.replay(null, { id: 'public-A' }).replayed, 2);
+  assert.deepEqual(f.sends.map(([channel, body]) => [channel, body.sessionCardId]),
+    [['athena:add-canvas', 'public-fixture'], ['athena:add-canvas-live', 'public-live']]);
+  f.report([replayCards[0]]);
+  assert.deepEqual(f.rows.get('public-A').canvasCards, replayCards, 'the first partial report must not delete an unmounted stored envelope');
+  assert.equal(f.context.replay(null, { id: 'public-A' }).replayed, 2);
+  f.report(replayCards);
+  assert.equal(f.pending().length, 0);
+  assert.deepEqual(f.rows.get('public-A').canvasCards, replayCards);
+});
+
+test('history replay explicit clear still persists empty and stale conversations cannot enqueue restored cards', () => {
+  const f = replayPersistenceFixture(replayCards);
+  assert.equal(f.context.replay(null, { id: 'public-B' }).status, 'stale');
+  assert.equal(f.pending().length, 0);
+  f.context.replay(null, { id: 'public-A' });
+  f.report([], true);
+  assert.deepEqual(f.rows.get('public-A').canvasCards, []);
+  assert.equal(f.pending().length, 0);
+  assert.equal(f.context.replay(null, { id: 'public-A' }).status, 'empty');
+  assert.equal(f.sends.length, 2, 'empty history does not reconstruct cards from prior messages');
+});
+
+test('history replay retains newer live pending identity and keeps other conversations and invalid IDs isolated', () => {
+  const f = replayPersistenceFixture(replayCards);
+  vm.runInContext("rememberPendingCanvasCard('public-A', { envelope: { canvas_type: 'table', revision: 'newer' } }, 'public-live'); rememberPendingCanvasCard('public-B', { envelope: { canvas_type: 'table' } }, 'other-pending');", f.context);
+  f.context.replay(null, { id: 'public-A' }); f.report([]);
+  const saved = f.rows.get('public-A').canvasCards;
+  assert.equal(saved.find(c => c.cardId === 'public-live').envelope.revision, 'newer');
+  assert.equal(saved.some(c => c.cardId === 'other-pending'), false);
+  assert.equal(saved.find(c => c.cardId === 'public-fixture').channel, 'fixture');
+  assert.equal(saved.find(c => c.cardId === 'public-fixture').protected, true);
+  f.report([], true);
+  assert.deepEqual(f.pending().map(([id]) => id), ['other-pending']);
+  const invalid = replayPersistenceFixture([null, { cardId: 'no-envelope' },
+    { cardId: '', envelope: { type: 'table' } }, { cardId: 42, envelope: { type: 'table' } }]);
+  invalid.context.replay(null, { id: 'public-A' });
+  assert.equal(invalid.pending().length, 0, 'replay cannot create anonymous pending identities');
+});
+
+test('history chart replay protects the stored envelope while preserving its existing paint authority path', () => {
+  const card = { cardId: 'public-chart', kind: 'chart', channel: 'live', protected: true,
+    envelope: { canvas_type: 'chart', operation_ref: 'public-chart-operation', operation_args: { stk_cd: '000111' },
+      correlation: { dataset_id: 'public-stored-dataset' }, data: { chart: [{ time: '2026-09-01', value: 0 }], chart_meta: { source: 'public' } } } };
+  const f = replayPersistenceFixture([card]);
+  f.context.replay(null, { id: 'public-A' }); f.report([]);
+  assert.deepEqual(f.rows.get('public-A').canvasCards, [card]);
+  assert.equal(f.charts.length, 1);
+  assert.equal(f.charts[0][0].sessionCardId, card.cardId);
+  assert.equal(f.charts[0][0].envelope.correlation.dataset_id, 'public-new-dataset');
+  assert.equal(f.charts[0][0].operationArgs.stk_cd, '000111');
+  assert.equal(f.charts[0][1].conversationId, 'public-A');
+  f.report([card]); assert.equal(f.pending().length, 0);
 });

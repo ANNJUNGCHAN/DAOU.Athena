@@ -68,6 +68,7 @@ class FinancingKind(StrEnum):
 class CapabilityKind(StrEnum):
     EQUITY_CORPORATE_FUNDAMENTALS = "equity_corporate_fundamentals"
     EQUITY_VALUATION = "equity_valuation"
+    EQUITY_SUBSCRIPTION_RIGHTS = "equity_subscription_rights"
     IDENTITY_CAPITAL = "identity_capital"
     STOCK_INFORMATION = "stock_information"
     VOLATILITY_INDICATOR = "volatility_indicator"
@@ -757,6 +758,8 @@ def _profile_axes(
         financing.append(FinancingKind.CASH)
     capabilities: list[CapabilityKind] = []
     if EntityKind.STOCK in entity_kinds:
+        if _contains(name, "신주인수권", "subscription rights"):
+            capabilities.append(CapabilityKind.EQUITY_SUBSCRIPTION_RIGHTS)
         if _contains(name, "기본정보", "자본금", "재무", "fundamental"):
             capabilities.append(CapabilityKind.EQUITY_CORPORATE_FUNDAMENTALS)
         if _contains(name, "PER", "PBR", "valuation", "평가"):

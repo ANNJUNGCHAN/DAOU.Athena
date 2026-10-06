@@ -13,7 +13,7 @@
 // 승인 카드를 띄운다." 그래서 409 응답의 detail을 봉투에 함께 싣는다 —
 // ok:false이지만 캔버스가 detail로 승인 상태를 구성할 수 있어야 한다.
 
-async function backtestHttp(method, path, jsonBody, { backendBase, fetchImpl, backendAccountAlias }) {
+async function backtestHttp(method, path, jsonBody, { backendBase, fetchImpl, backendAccountAlias, captureTransportCode = false }) {
   const opts = { method };
   if (jsonBody !== undefined) {
     opts.headers = { 'Content-Type': 'application/json' };
@@ -22,13 +22,27 @@ async function backtestHttp(method, path, jsonBody, { backendBase, fetchImpl, ba
   if (backendAccountAlias) {
     opts.headers = { ...opts.headers, 'X-Athena-Account': backendAccountAlias };
   }
+  function transportFailure(e) {
+    const failure = { ok: false, status: 0, error: String((e && e.message) || e) };
+    if (captureTransportCode) {
+      const allowed = new Set(['UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_SOCKET', 'ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'ABORT_ERR']);
+      const code = e && e.name === 'AbortError' ? 'ABORT_ERR' : e && e.code;
+      failure.code = allowed.has(code) ? code : null;
+      failure.causeCode = e && e.cause && allowed.has(e.cause.code) ? e.cause.code : null;
+    }
+    return failure;
+  }
   let res;
   try {
     res = await fetchImpl(`${backendBase}${path}`, opts);
   } catch (e) {
-    return { ok: false, status: 0, error: String((e && e.message) || e) };
+    return transportFailure(e);
   }
-  const body = await res.json().catch(() => ({}));
+  let bodyFailure = null;
+  const body = await res.json().catch((e) => { bodyFailure = e; return {}; });
+  if (captureTransportCode && bodyFailure) {
+    return transportFailure(bodyFailure);
+  }
   if (!res.ok) {
     const detail = body && body.detail;
     const message = (detail && typeof detail === 'object' && (detail.message || detail.error))
@@ -178,7 +192,7 @@ function diagnoseBacktest({ backendBase, fetchImpl, ...body }) {
 }
 
 function optimizeBacktest({ backendBase, fetchImpl, ...body }) {
-  return backtestHttp('POST', '/api/v1/backtest/optimize', body, { backendBase, fetchImpl });
+  return backtestHttp('POST', '/api/v1/backtest/optimize', body, { backendBase, fetchImpl, captureTransportCode: true });
 }
 
 function optimizePlan({ backendBase, fetchImpl, ...body }) {

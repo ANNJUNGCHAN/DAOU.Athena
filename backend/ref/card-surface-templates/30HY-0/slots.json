@@ -875,20 +875,27 @@
       "node_path": "1/3/1",
       "paper_text": "SK하이닉스",
       "region": "kpi",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s020",
@@ -902,20 +909,23 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s021",
@@ -1419,7 +1429,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s042",
@@ -1428,7 +1439,7 @@
       "node_path": "2/0/1/1/1/0",
       "paper_text": "SK하이닉스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1437,23 +1448,21 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_nm",
-          "kor": "종목명",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s043",
@@ -1484,21 +1493,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90009",
-          "f": "for_netprps_stk_cd",
-          "kor": "외인순매수종목코드",
-          "same_value": true
-        },
-        {
-          "mapping_id": "base:ka90009",
-          "f": "orgn_netprps_stk_cd",
-          "kor": "기관순매수종목코드",
-          "same_value": true
-        }
-      ],
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s044",
@@ -1529,8 +1525,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "현재가 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s045",
@@ -1561,8 +1557,8 @@
       "paired_with": "s044",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "전일대비·등락률 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s046",
@@ -1580,28 +1576,22 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_amt",
-          "kor": "외국인순매매액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s047",
@@ -1619,28 +1609,21 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_qty",
       "alt_mappings": null,
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s046",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_qty",
-          "kor": "외국인순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s048",
@@ -1658,28 +1641,22 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_amt",
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_amt",
-          "kor": "기관순매매금액",
-          "same_value": true
-        }
-      ],
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s049",
@@ -1697,28 +1674,21 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_qty",
       "alt_mappings": null,
       "kor": "기관순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s048",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_qty",
-          "kor": "기관순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s050",
@@ -1741,15 +1711,17 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s051",
@@ -1773,14 +1745,15 @@
       "kor": "순매매량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s050",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s052",
@@ -1811,7 +1784,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s053",
@@ -1835,14 +1809,15 @@
       "kor": "합계연속순매매수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s052",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 0
     },
     {
       "slot_id": "s054",
@@ -1873,8 +1848,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "누적거래량 — ka10131·ka90009 응답에 거래량 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s055",
@@ -1905,7 +1880,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s056",
@@ -1914,7 +1890,7 @@
       "node_path": "2/0/1/2/1/0",
       "paper_text": "삼성전자",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -1923,23 +1899,21 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_nm",
-          "kor": "종목명",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s057",
@@ -1970,21 +1944,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90009",
-          "f": "for_netprps_stk_cd",
-          "kor": "외인순매수종목코드",
-          "same_value": true
-        },
-        {
-          "mapping_id": "base:ka90009",
-          "f": "orgn_netprps_stk_cd",
-          "kor": "기관순매수종목코드",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s058",
@@ -2015,8 +1976,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "현재가 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s059",
@@ -2047,8 +2008,8 @@
       "paired_with": "s058",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "전일대비·등락률 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s060",
@@ -2066,28 +2027,22 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_amt",
-          "kor": "외국인순매매액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s061",
@@ -2105,28 +2060,21 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_qty",
       "alt_mappings": null,
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s060",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_qty",
-          "kor": "외국인순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s062",
@@ -2144,28 +2092,22 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_amt",
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_amt",
-          "kor": "기관순매매금액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s063",
@@ -2183,28 +2125,21 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_qty",
       "alt_mappings": null,
       "kor": "기관순매수수량",
       "format": {
         "unit": "shares",
         "sign": true,
-        "precision": 1,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": "s062",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_qty",
-          "kor": "기관순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s064",
@@ -2227,15 +2162,17 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s065",
@@ -2259,14 +2196,15 @@
       "kor": "순매매량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s064",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s066",
@@ -2297,7 +2235,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s067",
@@ -2321,14 +2260,15 @@
       "kor": "합계연속순매매수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s066",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s068",
@@ -2359,8 +2299,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "누적거래량 — ka10131·ka90009 응답에 거래량 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s069",
@@ -2391,7 +2331,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s070",
@@ -2400,7 +2341,7 @@
       "node_path": "2/0/1/3/1/0",
       "paper_text": "현대차",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2409,23 +2350,21 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_nm",
-          "kor": "종목명",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s071",
@@ -2456,21 +2395,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90009",
-          "f": "for_netprps_stk_cd",
-          "kor": "외인순매수종목코드",
-          "same_value": true
-        },
-        {
-          "mapping_id": "base:ka90009",
-          "f": "orgn_netprps_stk_cd",
-          "kor": "기관순매수종목코드",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s072",
@@ -2501,8 +2427,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "현재가 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s073",
@@ -2533,8 +2459,8 @@
       "paired_with": "s072",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "전일대비·등락률 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s074",
@@ -2552,28 +2478,22 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_amt",
-          "kor": "외국인순매매액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s075",
@@ -2591,28 +2511,21 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_qty",
       "alt_mappings": null,
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s074",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_qty",
-          "kor": "외국인순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s076",
@@ -2630,28 +2543,22 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_amt",
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_amt",
-          "kor": "기관순매매금액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s077",
@@ -2669,28 +2576,21 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_qty",
       "alt_mappings": null,
       "kor": "기관순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s076",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_qty",
-          "kor": "기관순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s078",
@@ -2713,15 +2613,17 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s079",
@@ -2745,14 +2647,15 @@
       "kor": "순매매량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s078",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s080",
@@ -2783,7 +2686,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s081",
@@ -2807,14 +2711,15 @@
       "kor": "합계연속순매매수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s080",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s082",
@@ -2845,8 +2750,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "누적거래량 — ka10131·ka90009 응답에 거래량 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s083",
@@ -2877,7 +2782,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s084",
@@ -2886,7 +2792,7 @@
       "node_path": "2/0/1/4/1/0",
       "paper_text": "KB금융",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -2895,23 +2801,21 @@
         "row": "3",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_nm",
-          "kor": "종목명",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s085",
@@ -2942,21 +2846,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90009",
-          "f": "for_netprps_stk_cd",
-          "kor": "외인순매수종목코드",
-          "same_value": true
-        },
-        {
-          "mapping_id": "base:ka90009",
-          "f": "orgn_netprps_stk_cd",
-          "kor": "기관순매수종목코드",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s086",
@@ -2987,8 +2878,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "현재가 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s087",
@@ -3019,8 +2910,8 @@
       "paired_with": "s086",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "전일대비·등락률 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s088",
@@ -3038,28 +2929,22 @@
         "row": "3",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_amt",
-          "kor": "외국인순매매액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s089",
@@ -3077,28 +2962,21 @@
         "row": "3",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_qty",
       "alt_mappings": null,
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s088",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_qty",
-          "kor": "외국인순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s090",
@@ -3116,28 +2994,22 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_amt",
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_amt",
-          "kor": "기관순매매금액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s091",
@@ -3155,28 +3027,21 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_qty",
       "alt_mappings": null,
       "kor": "기관순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s090",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_qty",
-          "kor": "기관순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s092",
@@ -3199,15 +3064,17 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s093",
@@ -3231,14 +3098,15 @@
       "kor": "순매매량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s092",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s094",
@@ -3269,7 +3137,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s095",
@@ -3293,14 +3162,15 @@
       "kor": "합계연속순매매수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s094",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3
     },
     {
       "slot_id": "s096",
@@ -3331,8 +3201,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "누적거래량 — ka10131·ka90009 응답에 거래량 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s097",
@@ -3363,7 +3233,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s098",
@@ -3372,7 +3243,7 @@
       "node_path": "2/0/1/5/1/0",
       "paper_text": "NAVER",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3381,23 +3252,21 @@
         "row": "4",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_nm",
-          "kor": "종목명",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s099",
@@ -3428,21 +3297,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90009",
-          "f": "for_netprps_stk_cd",
-          "kor": "외인순매수종목코드",
-          "same_value": true
-        },
-        {
-          "mapping_id": "base:ka90009",
-          "f": "orgn_netprps_stk_cd",
-          "kor": "기관순매수종목코드",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s100",
@@ -3473,8 +3329,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "현재가 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s101",
@@ -3505,8 +3361,8 @@
       "paired_with": "s100",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "전일대비·등락률 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s102",
@@ -3524,28 +3380,22 @@
         "row": "4",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_amt",
-          "kor": "외국인순매매액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s103",
@@ -3563,28 +3413,21 @@
         "row": "4",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_qty",
       "alt_mappings": null,
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s102",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_qty",
-          "kor": "외국인순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s104",
@@ -3602,28 +3445,22 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_amt",
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_amt",
-          "kor": "기관순매매금액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s105",
@@ -3641,28 +3478,21 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_qty",
       "alt_mappings": null,
       "kor": "기관순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s104",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_qty",
-          "kor": "기관순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s106",
@@ -3685,15 +3515,17 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s107",
@@ -3717,14 +3549,15 @@
       "kor": "순매매량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s106",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s108",
@@ -3755,7 +3588,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s109",
@@ -3779,14 +3613,15 @@
       "kor": "합계연속순매매수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s108",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4
     },
     {
       "slot_id": "s110",
@@ -3817,8 +3652,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "누적거래량 — ka10131·ka90009 응답에 거래량 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s111",
@@ -3849,7 +3684,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s112",
@@ -3858,7 +3694,7 @@
       "node_path": "2/0/1/6/1/0",
       "paper_text": "POSCO홀딩스",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -3867,23 +3703,21 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_nm",
-          "kor": "종목명",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s113",
@@ -3914,21 +3748,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90009",
-          "f": "for_netprps_stk_cd",
-          "kor": "외인순매수종목코드",
-          "same_value": true
-        },
-        {
-          "mapping_id": "base:ka90009",
-          "f": "orgn_netprps_stk_cd",
-          "kor": "기관순매수종목코드",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s114",
@@ -3959,8 +3780,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "현재가 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s115",
@@ -3991,8 +3812,8 @@
       "paired_with": "s114",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "전일대비·등락률 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s116",
@@ -4010,28 +3831,22 @@
         "row": "5",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_amt",
-          "kor": "외국인순매매액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s117",
@@ -4049,28 +3864,21 @@
         "row": "5",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_qty",
       "alt_mappings": null,
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s116",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "frgnr_nettrde_qty",
-          "kor": "외국인순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s118",
@@ -4088,28 +3896,22 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_amt",
       "alt_mappings": null,
       "kor": "기관순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_amt",
-          "kor": "기관순매매금액",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s119",
@@ -4127,28 +3929,21 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netprps_qty",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_qty",
       "alt_mappings": null,
       "kor": "기관순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s118",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "orgn_nettrde_qty",
-          "kor": "기관순매매량",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s120",
@@ -4171,15 +3966,17 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s121",
@@ -4203,14 +4000,15 @@
       "kor": "순매매량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s120",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s122",
@@ -4241,7 +4039,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s123",
@@ -4265,14 +4064,15 @@
       "kor": "합계연속순매매수량",
       "format": {
         "unit": "shares",
-        "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "sign": true,
+        "precision": 0,
+        "tone": "change"
       },
       "paired_with": "s122",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5
     },
     {
       "slot_id": "s124",
@@ -4303,8 +4103,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "누적거래량 — ka10131·ka90009 응답에 거래량 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s125",
@@ -4345,20 +4145,23 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10131",
-      "f": "nettrde_amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s125",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "한 종목 순매매액을 생략 구간 합계로 표시할 근거가 없음"
     },
     {
       "slot_id": "s127",
@@ -4389,7 +4192,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s128",
@@ -4398,7 +4202,7 @@
       "node_path": "2/0/1/8/1/0",
       "paper_text": "LG화학",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4407,23 +4211,21 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netslmt_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매도종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_nm",
-          "kor": "종목명",
-          "same_value": true
-        }
-      ],
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 6
     },
     {
       "slot_id": "s129",
@@ -4441,8 +4243,8 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netslmt_stk_cd",
+      "mapping_id": "base:ka10131",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "외인순매도종목코드",
       "format": {
@@ -4454,7 +4256,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 6
     },
     {
       "slot_id": "s130",
@@ -4485,8 +4288,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "현재가 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s131",
@@ -4517,8 +4320,8 @@
       "paired_with": "s130",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "전일대비·등락률 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s132",
@@ -4536,20 +4339,22 @@
         "row": "6",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netslmt_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매도금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 6
     },
     {
       "slot_id": "s133",
@@ -4567,20 +4372,21 @@
         "row": "6",
         "col": 3
       },
-      "mapping_id": "base:ka90009",
-      "f": "for_netslmt_qty",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_qty",
       "alt_mappings": null,
       "kor": "외인순매도수량",
       "format": {
         "unit": "shares",
         "sign": true,
-        "precision": 1,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": "s132",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 6
     },
     {
       "slot_id": "s134",
@@ -4598,20 +4404,22 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netslmt_amt",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_amt",
       "alt_mappings": null,
       "kor": "기관순매도금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 6
     },
     {
       "slot_id": "s135",
@@ -4629,20 +4437,21 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netslmt_qty",
+      "mapping_id": "base:ka10131",
+      "f": "orgn_nettrde_qty",
       "alt_mappings": null,
       "kor": "기관순매도수량",
       "format": {
         "unit": "shares",
         "sign": true,
-        "precision": 1,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": "s134",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 6
     },
     {
       "slot_id": "s136",
@@ -4665,15 +4474,17 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s137",
@@ -4698,13 +4509,14 @@
       "format": {
         "unit": "shares",
         "sign": true,
-        "precision": 1,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": "s136",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s138",
@@ -4735,7 +4547,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s139",
@@ -4760,13 +4573,14 @@
       "format": {
         "unit": "shares",
         "sign": true,
-        "precision": 1,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": "s138",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 6
     },
     {
       "slot_id": "s140",
@@ -4797,8 +4611,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "누적거래량 — ka10131·ka90009 응답에 거래량 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s141",
@@ -4829,7 +4643,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s142",
@@ -4838,7 +4653,7 @@
       "node_path": "2/0/1/9/1/0",
       "paper_text": "카카오",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -4847,23 +4662,21 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netslmt_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "기관순매도종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_nm",
-          "kor": "종목명",
-          "same_value": true
-        }
-      ],
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 7
     },
     {
       "slot_id": "s143",
@@ -4881,8 +4694,8 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka90009",
-      "f": "orgn_netslmt_stk_cd",
+      "mapping_id": "base:ka10131",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "기관순매도종목코드",
       "format": {
@@ -4894,7 +4707,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 7
     },
     {
       "slot_id": "s144",
@@ -4925,8 +4739,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "현재가 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s145",
@@ -4957,8 +4771,8 @@
       "paired_with": "s144",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "전일대비·등락률 — ka10131·ka90009 응답에 시세 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s146",
@@ -4981,15 +4795,17 @@
       "alt_mappings": null,
       "kor": "외국인순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 7
     },
     {
       "slot_id": "s147",
@@ -5014,13 +4830,14 @@
       "format": {
         "unit": "shares",
         "sign": true,
-        "precision": 1,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": "s146",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 7
     },
     {
       "slot_id": "s148",
@@ -5043,15 +4860,17 @@
       "alt_mappings": null,
       "kor": "기관순매매금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 7
     },
     {
       "slot_id": "s149",
@@ -5076,13 +4895,14 @@
       "format": {
         "unit": "shares",
         "sign": true,
-        "precision": 1,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": "s148",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "row_index": 7
     },
     {
       "slot_id": "s150",
@@ -5105,15 +4925,17 @@
       "alt_mappings": null,
       "kor": "순매매액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s151",
@@ -5138,13 +4960,14 @@
       "format": {
         "unit": "shares",
         "sign": true,
-        "precision": 1,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": "s150",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s152",
@@ -5175,7 +4998,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s153",
@@ -5200,13 +5024,14 @@
       "format": {
         "unit": "shares",
         "sign": true,
-        "precision": 1,
+        "precision": 0,
         "tone": "change"
       },
       "paired_with": "s152",
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 7
     },
     {
       "slot_id": "s154",
@@ -5237,8 +5062,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "누적거래량 — ka10131·ka90009 응답에 거래량 필드가 없다(보드가 그린 신설 값)"
+      "static": "blank",
+      "unbound_reason": "ka10131 동일 종목 목록에 없는 현재가·거래량; 외부 시세 추정 금지"
     },
     {
       "slot_id": "s155",
@@ -5322,7 +5147,7 @@
       "node_path": "2/1/0/0/0",
       "paper_text": "삼성전자",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
@@ -5331,11 +5156,18 @@
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s159",
@@ -5350,7 +5182,7 @@
       "anchor": null,
       "table": null,
       "mapping_id": "base:ka10131",
-      "f": "rank",
+      "f": "stk_cd",
       "alt_mappings": null,
       "kor": "순위",
       "format": {
@@ -5362,27 +5194,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_cd",
-          "kor": "종목코드",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "base:ka90009",
-          "f": "for_netprps_stk_cd",
-          "kor": "외인순매수종목코드",
-          "same_value": true
-        },
-        {
-          "mapping_id": "base:ka90009",
-          "f": "orgn_netprps_stk_cd",
-          "kor": "기관순매수종목코드",
-          "same_value": true
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s160",
@@ -5691,20 +5505,15 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "첫 결과 순위 "
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "stk_nm",
-          "kor": "종목명",
-          "sep": " · "
-        }
-      ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s173",
@@ -5723,23 +5532,18 @@
       "alt_mappings": null,
       "kor": "합계연속순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s172",
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10131",
-          "f": "nettrde_amt",
-          "kor": "순매매액",
-          "same_value": true
-        }
-      ],
-      "display_dup": false
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s174",
@@ -5804,20 +5608,27 @@
       "node_path": "2/1/2/1/0",
       "paper_text": "SK하이닉스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s177",
@@ -5831,20 +5642,23 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s178",
@@ -5853,20 +5667,27 @@
       "node_path": "2/1/2/2/0",
       "paper_text": "삼성전자",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s179",
@@ -5880,20 +5701,23 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s180",
@@ -5902,20 +5726,27 @@
       "node_path": "2/1/2/3/0",
       "paper_text": "현대차",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s181",
@@ -5929,20 +5760,23 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s182",
@@ -5951,20 +5785,27 @@
       "node_path": "2/1/2/4/0",
       "paper_text": "KB금융",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s183",
@@ -5978,20 +5819,23 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s184",
@@ -6000,20 +5844,27 @@
       "node_path": "2/1/2/5/0",
       "paper_text": "NAVER",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s185",
@@ -6027,20 +5878,23 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s186",
@@ -6049,20 +5903,27 @@
       "node_path": "2/1/2/6/0",
       "paper_text": "POSCO홀딩스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_stk_nm",
+      "mapping_id": "base:ka10131",
+      "f": "stk_nm",
       "alt_mappings": null,
       "kor": "외인순매수종목명",
-      "format": null,
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s187",
@@ -6076,20 +5937,23 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90009",
-      "f": "for_netprps_amt",
+      "mapping_id": "base:ka10131",
+      "f": "frgnr_nettrde_amt",
       "alt_mappings": null,
       "kor": "외인순매수금액",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 5,
+      "dup_note": "동일 조회 목록의 명시한 행 재표시"
     },
     {
       "slot_id": "s188",

@@ -1,0 +1,464 @@
+{
+  "status": "PORTABLE_PREPARED_NOT_EXECUTED",
+  "libraryVersion": "5.2.1",
+  "snapshot": {
+    "styles/tokens.css": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2",
+    "styles/ui-kit.css": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039",
+    "canvas.css": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f",
+    "chat.css": "14fde712c881f763b71bff5bfe54003fc283aafa285b957e2b2caa4af2c25898",
+    "styles/card-kinds.css": "e9222d06a906db7eaf23d80904460001ccc27878e7d2d4c03e1777aeea137849",
+    "styles/integrated-cards.css": "907cd1f4a10bd1fd3e681fddc355d04679328fe45980fbfd1dc583c361fcb295",
+    "styles/board-surface.css": "1e5d9c8d8ac212138f3c7302e14f300af2b994de503d58af0e6fcc67bdd7a05d",
+    "styles/card-component-target.css": "079c9f61d79842b5a54ee97ad32c59a501d604200d6bd6ed2158550b5a8f17e0",
+    "styles/canvas-tabs.css": "f2b0f2dd9e4aed631aca57ffea4a154bdf0ab7c918218446eb5ea228d85677c3",
+    "shell.css": "baad1c0c2491e8b9f871c9979857162bc42624057f79f89d3b0776f420ef0b2b",
+    "lib/ui-kit.js": "7ca826c3a9e3196370192952b50eebb61a085f18a9805a25807e475595596b4b",
+    "lib/facts-card.js": "4b4ed269f0486ec673737f087288419ec2fb37e2494be2661966080540df2404",
+    "lib/card-primitives.js": "a5f4f514653b872cc2d3c313e77dc48a8ba1af98c722a3ef9455e24bcb6ee2d7",
+    "lib/card-kinds.js": "1b8c5c75f93c2419c230924613c3465a7f4eeab097d21bf7ebdc84ddc82d2ae7",
+    "lib/board-templates.index.generated.js": "6900ee747381edcf9f317a9d6b093270f125df77b75776683419d5af3d7701b3",
+    "lib/board-templates.CC-03.generated.js": "325580d73d9e8d50c177f2c1418c1a574255f0c907d736ca9946d244141c6cec",
+    "lib/board-template-registry.js": "33dc3079d4c54726a63b22c27c4813e21238013af254a8ff9d4d2c8da627e020",
+    "lib/board-format.js": "3882ea2db5cd9c0c8d6a8b116b166287f861a3070962a03e30e03c86fd3cc07a",
+    "lib/board-display-policy-data.js": "283fb40a4b87f57c8d98b83698af4d908989b5b0c2907d7241d6a0cfbad7fd5e",
+    "lib/board-display-policy.js": "9b6790b4f03ccdb8e2aa2dd8a3d523563875b6201365cca9be88fb3e1a8a9d4d",
+    "lib/board-static-graphics-data.js": "a35d1ddaf5779a8c453d387b3409c5ff629b6800fc886754f7bae1d3adb33b23",
+    "lib/board-etf-period.js": "e135b36d5c4f5dc6e6cd0125bc7cd478219f08da64b0c3563cb7c2faabcbaa1a",
+    "lib/board-flow-layout.js": "60ed7578afb23655db7b913a4d2a7802ca3cbaf17fa9fdf3f333d35ff3e9d01a",
+    "lib/board-ranking-result.js": "3d6f17bf33d9e33a15438abdd95ee26f9188e1cdf397778e641ac2f6c321e8c0",
+    "lib/board-popover-layout.js": "1cf5f59a7b165799cc4fe75a2e872c64085c4e5516e6ba71e80ef3b1ef642a80",
+    "lib/board-gold-quote.js": "8e5508912cfd3abe93a9b8fa38d5a9d912a0f004f214f59adcd198c245200259",
+    "lib/board-mount.js": "b81a12d2d57efab1fb65af3cf6332baa3d7c07168bcc1738e5223b5578960b2c",
+    "styles/board-surface.candidate.css": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+    "lib/chart-resample.js": "f5dae3c972eba724eff746f6270e65d9b66116aa61a2c70f0a56547da26f5d91",
+    "lib/chart-indicators.js": "7eb77408819040449737fe6d8d9d51ee8512bd33aae2f02179f039a9718e29a7",
+    "lib/chart-indicator-registry.js": "d5ffec0a595b209d72ee511cc1e6da870abe54150b4b532d9e57d4b415dcaccb",
+    "lib/chart-indicator-panel.js": "d17a399dccf20e2d9cc28008070d0e85ebacfca377a2f98dfbd595ccbe1c671a",
+    "lib/chart-toolbar.js": "1ee10f193e6ce1b86c3380b9843c80bfc860dc222ad5e59cdea8960ba7d0ef6e",
+    "lib/chart-indicator-render.js": "3e4e210b29440449b27683a640569389a3a612da53182682b1454fdfd24285b0",
+    "lib/chart-volume-profile.js": "4613e017205001a1285a9a47aee8bc0016dd7ab3ae480bdc89628ea7ca03b0a3",
+    "lib/chart-authoring-store.js": "30cd6c7e0c28990a6a60011e43d8a41a6b16be20ae42ee8447e2888bb4b733c1",
+    "lib/chart-drawings.js": "a8e454d32ff9b5962dd72a181876e52265e6e46a1120708a2e98101d7599e807",
+    "lib/chart-tick-fold.js": "67fb8f5387949cdf3b48f81e1215570733ba1f20fb2989874870eb612e1c5f68",
+    "lib/aits-chart-panel.js": "0ba66a91b0a326fb8f7af0d2b0aa6392ce3372b616c5e90b8d2e6a912d142163",
+    "lib/chart-card.js": "42c7b6df0441260b47f8ccc3056b06893fe22f6631394c1984561a0ea999b084",
+    "node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f",
+    "lib/chart-card.candidate.js": "5d8c46389c95950083b34d7626a722f409d815b822cf105059ef198983d46e38",
+    "lib/lightweight-charts-axis.mjs": "7ae82ad415d76d0e4926ac34b7711931a35ba9f28572639a1a12230569beac48"
+  },
+  "liveSources": {
+    "app/lib/chart-resample.js": "f5dae3c972eba724eff746f6270e65d9b66116aa61a2c70f0a56547da26f5d91",
+    "app/lib/chart-indicators.js": "7eb77408819040449737fe6d8d9d51ee8512bd33aae2f02179f039a9718e29a7",
+    "app/lib/chart-indicator-registry.js": "d5ffec0a595b209d72ee511cc1e6da870abe54150b4b532d9e57d4b415dcaccb",
+    "app/lib/chart-indicator-panel.js": "d17a399dccf20e2d9cc28008070d0e85ebacfca377a2f98dfbd595ccbe1c671a",
+    "app/lib/chart-toolbar.js": "1ee10f193e6ce1b86c3380b9843c80bfc860dc222ad5e59cdea8960ba7d0ef6e",
+    "app/lib/chart-indicator-render.js": "3e4e210b29440449b27683a640569389a3a612da53182682b1454fdfd24285b0",
+    "app/lib/chart-volume-profile.js": "4613e017205001a1285a9a47aee8bc0016dd7ab3ae480bdc89628ea7ca03b0a3",
+    "app/lib/chart-authoring-store.js": "30cd6c7e0c28990a6a60011e43d8a41a6b16be20ae42ee8447e2888bb4b733c1",
+    "app/lib/chart-drawings.js": "a8e454d32ff9b5962dd72a181876e52265e6e46a1120708a2e98101d7599e807",
+    "app/lib/chart-tick-fold.js": "67fb8f5387949cdf3b48f81e1215570733ba1f20fb2989874870eb612e1c5f68",
+    "app/lib/aits-chart-panel.js": "0ba66a91b0a326fb8f7af0d2b0aa6392ce3372b616c5e90b8d2e6a912d142163",
+    "app/lib/chart-card.js": "42c7b6df0441260b47f8ccc3056b06893fe22f6631394c1984561a0ea999b084",
+    "app/node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f"
+  },
+  "phaseFiles": {
+    "run.cjs": "98edb330d6780c88e35d477f37ba2b1cac0420192a351db7de3adbfaa95bbbf9",
+    "launch.mjs": "6e86cc6d8e79c1ce9fc52a1439db23034d190075e2c703b0ddafe3227e8abb88",
+    "browser.js": "528167a5d42f6a2803d8d0a8b66195d547f87eeb2b2fc630b24476daec58f5f8",
+    "baseline.html": "ac95e002ed7035d4414e7eac4967de7ec7a1b640f79b88b70306a9877059ec71",
+    "candidate.html": "b6997cb389bf64befa418ac81f827e3f160a3485429eecf3daa52cb8f864ea78"
+  },
+  "states": [
+    {
+      "name": "month-max-latest",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "latest"
+    },
+    {
+      "name": "month-max-first",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "first"
+    },
+    {
+      "name": "month-max-middle",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "middle"
+    },
+    {
+      "name": "month-narrow-latest",
+      "period": "month",
+      "width": 1411,
+      "height": 1166,
+      "edge": "latest"
+    },
+    {
+      "name": "month-narrow-first",
+      "period": "month",
+      "width": 1411,
+      "height": 1166,
+      "edge": "first"
+    },
+    {
+      "name": "month-narrow-middle",
+      "period": "month",
+      "width": 1411,
+      "height": 1166,
+      "edge": "middle"
+    },
+    {
+      "name": "month-remax-latest",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "latest"
+    },
+    {
+      "name": "month-remax-first",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "first"
+    },
+    {
+      "name": "month-remax-middle",
+      "period": "month",
+      "width": 2560,
+      "height": 1392,
+      "edge": "middle"
+    },
+    {
+      "name": "week-max-latest",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "latest"
+    },
+    {
+      "name": "week-max-first",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "first"
+    },
+    {
+      "name": "week-max-middle",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "middle"
+    },
+    {
+      "name": "week-narrow-latest",
+      "period": "week",
+      "width": 1411,
+      "height": 1166,
+      "edge": "latest"
+    },
+    {
+      "name": "week-narrow-first",
+      "period": "week",
+      "width": 1411,
+      "height": 1166,
+      "edge": "first"
+    },
+    {
+      "name": "week-narrow-middle",
+      "period": "week",
+      "width": 1411,
+      "height": 1166,
+      "edge": "middle"
+    },
+    {
+      "name": "week-remax-latest",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "latest"
+    },
+    {
+      "name": "week-remax-first",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "first"
+    },
+    {
+      "name": "week-remax-middle",
+      "period": "week",
+      "width": 2560,
+      "height": 1392,
+      "edge": "middle"
+    }
+  ],
+  "scope": "Actual BoardMount/AITS/ChartCard/LWC primary with public deterministic synthetic OHLCV only; no main/IPC/provider/profile",
+  "sourceCSS": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+  "candidateOptions": {
+    "fixLeftEdge": false,
+    "fixRightEdge": false,
+    "existingLibraryAlignmentHelperOnBothTimeAxisDrawPaths": true
+  },
+  "softwareCompositingLikeV6": true,
+  "productCandidate": {
+    "app/lib/chart-card.js": "5d8c46389c95950083b34d7626a722f409d815b822cf105059ef198983d46e38",
+    "app/lib/lightweight-charts-axis.mjs": "7ae82ad415d76d0e4926ac34b7711931a35ba9f28572639a1a12230569beac48",
+    "app/lib/lightweight-charts-axis.LICENSE.txt": "70c9d5382506dd184465425c08a99ad9bd6d9ac1313c252968ba0b585e5ef823",
+    "app/lib/lightweight-charts-axis.NOTICE.txt": "0113d041489a7d311dc241018d213f2b16f7977f6def008def32c77d0afbde30"
+  },
+  "minimalLibraryChanges": [
+    {
+      "offset": 127868,
+      "before": "e.needAlignCoordinate?this.tg(t,e.coord,e.label):e.coord",
+      "after": "this.tg(t,e.coord,e.label)"
+    },
+    {
+      "offset": 128048,
+      "before": "e.needAlignCoordinate?this.tg(t,e.coord,e.label):e.coord",
+      "after": "this.tg(t,e.coord,e.label)"
+    }
+  ],
+  "upstreamModuleSha256": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f",
+  "inverseLibraryExact": true,
+  "chartBaselineSha256": "42c7b6df0441260b47f8ccc3056b06893fe22f6631394c1984561a0ea999b084",
+  "chartURLChangeOnly": true,
+  "observerInputViewportAndRunByteIdentical": true,
+  "baselineReuse": {
+    "directory": "C:\\Projects\\DAOU.Athena\\.omc\\artifacts\\card-ui-audit\\chart-date-axis-public-v2",
+    "reportSha256": "d20d19ff40fa4d685ff1ab4859c12b1e33161e754b3196f4f8fcc2748b91426d",
+    "states": 18,
+    "captures": 18,
+    "baselineHtmlExact": true,
+    "originalSourceFilesExact": true,
+    "fresh": false
+  },
+  "priorV2CandidateFailures": [
+    {
+      "name": "month-max-middle",
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ],
+      "ticks": [
+        {
+          "text": "2019년",
+          "left": -15.723673113654627,
+          "right": 23.401326886345373,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 94
+        }
+      ]
+    },
+    {
+      "name": "month-narrow-middle",
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ],
+      "ticks": [
+        {
+          "text": "2019년",
+          "left": -16.845654537803284,
+          "right": 22.279345462196716,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 216
+        }
+      ]
+    },
+    {
+      "name": "month-remax-middle",
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ],
+      "ticks": [
+        {
+          "text": "2019년",
+          "left": -15.723673113654627,
+          "right": 23.401326886345373,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 333
+        }
+      ]
+    },
+    {
+      "name": "week-max-latest",
+      "issues": [
+        "date-glyph-outside-canvas:10월"
+      ],
+      "ticks": [
+        {
+          "text": "10월",
+          "left": -2.3129653930664062,
+          "right": 21.272972106933594,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 387
+        }
+      ]
+    },
+    {
+      "name": "week-max-middle",
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ],
+      "ticks": [
+        {
+          "text": "2019년",
+          "left": -17.251851481776043,
+          "right": 21.873148518223957,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 451
+        }
+      ]
+    },
+    {
+      "name": "week-narrow-middle",
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ],
+      "ticks": [
+        {
+          "text": "2019년",
+          "left": -17.31812882697443,
+          "right": 21.80687117302557,
+          "canvasWidth": 568,
+          "canvasHeight": 28,
+          "frame": 563
+        }
+      ]
+    },
+    {
+      "name": "week-remax-latest",
+      "issues": [
+        "date-glyph-outside-canvas:10월"
+      ],
+      "ticks": [
+        {
+          "text": "10월",
+          "left": -2.3129653930664062,
+          "right": 21.272972106933594,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 593
+        }
+      ]
+    },
+    {
+      "name": "week-remax-middle",
+      "issues": [
+        "date-glyph-outside-canvas:2019년"
+      ],
+      "ticks": [
+        {
+          "text": "2019년",
+          "left": -17.251851481776043,
+          "right": 21.873148518223957,
+          "canvasWidth": 826,
+          "canvasHeight": 28,
+          "frame": 672
+        }
+      ]
+    }
+  ],
+  "productWrites": 0,
+  "rendererLaunches": 0,
+  "privateReads": 0,
+  "publicExportsAndVersionPreserved": true,
+  "actualProductionConsumer": {
+    "status": "AUTHOR_ACTUAL_LIBRARY_CONSUMER_PASS_NOT_PIXEL_APPROVAL",
+    "actualProductionClass": "Jn",
+    "actualProductionDrawMethod": "Bm",
+    "baselineOutside": 2,
+    "candidateOutside": 0,
+    "baseline": [
+      {
+        "label": "10월",
+        "x": 99,
+        "y": 15,
+        "font": "12px sans-serif",
+        "left": 89,
+        "right": 109
+      },
+      {
+        "label": "7월",
+        "x": 30,
+        "y": 15,
+        "font": "12px sans-serif",
+        "left": 20,
+        "right": 40
+      },
+      {
+        "label": "2019년",
+        "x": 0,
+        "y": 15,
+        "font": "bold 12px sans-serif",
+        "left": -20,
+        "right": 20
+      },
+      {
+        "label": "2021년",
+        "x": 50,
+        "y": 15,
+        "font": "bold 12px sans-serif",
+        "left": 30,
+        "right": 70
+      }
+    ],
+    "result": [
+      {
+        "label": "10월",
+        "x": 89.5,
+        "y": 15,
+        "font": "12px sans-serif",
+        "left": 79.5,
+        "right": 99.5
+      },
+      {
+        "label": "7월",
+        "x": 30,
+        "y": 15,
+        "font": "12px sans-serif",
+        "left": 20,
+        "right": 40
+      },
+      {
+        "label": "2019년",
+        "x": 19.5,
+        "y": 15,
+        "font": "bold 12px sans-serif",
+        "left": -0.5,
+        "right": 39.5
+      },
+      {
+        "label": "2021년",
+        "x": 50,
+        "y": 15,
+        "font": "bold 12px sans-serif",
+        "left": 30,
+        "right": 70
+      }
+    ],
+    "dateLabelsFontOrderAndInteriorPositionsPreserved": true,
+    "alreadyAlignedBehaviorUnchanged": true,
+    "originalAlignmentHelperByteIdentical": true,
+    "libraryVersion": "5.2.1",
+    "rendererLaunches": 0,
+    "productWrites": 0,
+    "privateReads": 0
+  },
+  "sourcePackaging": "Repository app/lib bundle with original license/notice; no node_modules product mutation",
+  "historicalManifestSHA": "67f7db0fc973c2ccf1a0ea5cdba577c706cf3985785b00d1e5cff8075228df87",
+  "portability": {
+    "rootRelative": true,
+    "output": "Ignored .omc/artifacts/card-ui-handoff-resume/date-axis",
+    "archivedOldRun": true,
+    "originalInputsPreserved": true,
+    "rendererStarts": 0
+  }
+}

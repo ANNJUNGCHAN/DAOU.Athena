@@ -1123,8 +1123,8 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10027",
-      "f": "pred_pre_flu_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비등락률상위",
       "format": {
@@ -1136,7 +1136,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "순위 = 응답 배열(전일대비등락률상위) 원소 순서"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s040",
@@ -1244,7 +1245,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1271,10 +1273,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s043",
       "collapse_group": null,
@@ -1344,7 +1348,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "현재 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1379,8 +1384,8 @@
       "paired_with": "s046",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "거래대금은 ka10027 응답에 없다 — 현재거래량×현재가 파생 표기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s048",
@@ -1402,7 +1407,10 @@
       "f": "sel_req",
       "alt_mappings": null,
       "kor": "매도잔량",
-      "format": null,
+      "format": {
+        "kind": "number",
+        "prefix": "매도 "
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
@@ -1429,10 +1437,11 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1485,8 +1494,8 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10027",
-      "f": "pred_pre_flu_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비등락률상위",
       "format": {
@@ -1499,7 +1508,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "순위표 2행 순위 재표시"
+      "dup_note": "순위표 2행 순위 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s052",
@@ -1580,11 +1591,15 @@
       "f": "stk_cls",
       "alt_mappings": null,
       "kor": "종목분류",
-      "format": null,
+      "format": {
+        "kind": "text",
+        "prefix": "분류 ",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "종목 셀 코드 옆 종목분류 칩. 1위 행은 같은 자리에 전일대비기호 칩('상한가')이 온다"
+      "note": "공식 ka10027 응답의 종목분류 코드 원문. 코드별 명칭 정의가 없어 보통주 등의 의미를 추정하지 않는다."
     },
     {
       "slot_id": "s055",
@@ -1610,7 +1625,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1639,10 +1655,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s055",
       "collapse_group": null,
@@ -1716,7 +1734,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "현재 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1753,8 +1772,8 @@
       "paired_with": "s058",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "거래대금은 ka10027 응답에 없다 — 현재거래량×현재가 파생 표기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s060",
@@ -1777,10 +1796,11 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매도 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1809,10 +1829,11 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": "s060",
       "collapse_group": null,
@@ -1868,8 +1889,8 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10027",
-      "f": "pred_pre_flu_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비등락률상위",
       "format": {
@@ -1882,7 +1903,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "순위표 3행 순위 재표시"
+      "dup_note": "순위표 3행 순위 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s064",
@@ -1963,12 +1986,17 @@
       "f": "stk_cls",
       "alt_mappings": null,
       "kor": "종목분류",
-      "format": null,
+      "format": {
+        "kind": "text",
+        "prefix": "분류 ",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목분류 칩 재표시"
+      "dup_note": "종목분류 칩 재표시",
+      "note": "공식 ka10027 응답의 종목분류 코드 원문. 코드별 명칭 정의가 없어 보통주 등의 의미를 추정하지 않는다."
     },
     {
       "slot_id": "s067",
@@ -1994,7 +2022,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2023,10 +2052,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s067",
       "collapse_group": null,
@@ -2100,7 +2131,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "현재 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2137,8 +2169,8 @@
       "paired_with": "s070",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "거래대금은 ka10027 응답에 없다 — 현재거래량×현재가 파생 표기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s072",
@@ -2161,10 +2193,11 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매도 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2193,10 +2226,11 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": "s072",
       "collapse_group": null,
@@ -2252,8 +2286,8 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:ka10027",
-      "f": "pred_pre_flu_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비등락률상위",
       "format": {
@@ -2266,7 +2300,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "순위표 4행 순위 재표시"
+      "dup_note": "순위표 4행 순위 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s076",
@@ -2347,12 +2383,17 @@
       "f": "stk_cls",
       "alt_mappings": null,
       "kor": "종목분류",
-      "format": null,
+      "format": {
+        "kind": "text",
+        "prefix": "분류 ",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목분류 칩 재표시"
+      "dup_note": "종목분류 칩 재표시",
+      "note": "공식 ka10027 응답의 종목분류 코드 원문. 코드별 명칭 정의가 없어 보통주 등의 의미를 추정하지 않는다."
     },
     {
       "slot_id": "s079",
@@ -2378,7 +2419,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2407,10 +2449,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s079",
       "collapse_group": null,
@@ -2484,7 +2528,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "현재 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2521,8 +2566,8 @@
       "paired_with": "s082",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "거래대금은 ka10027 응답에 없다 — 현재거래량×현재가 파생 표기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s084",
@@ -2545,10 +2590,11 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매도 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2577,10 +2623,11 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": "s084",
       "collapse_group": null,
@@ -2636,8 +2683,8 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:ka10027",
-      "f": "pred_pre_flu_rt_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비등락률상위",
       "format": {
@@ -2650,7 +2697,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "순위표 5행 순위 재표시"
+      "dup_note": "순위표 5행 순위 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s088",
@@ -2731,12 +2780,17 @@
       "f": "stk_cls",
       "alt_mappings": null,
       "kor": "종목분류",
-      "format": null,
+      "format": {
+        "kind": "text",
+        "prefix": "분류 ",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목분류 칩 재표시"
+      "dup_note": "종목분류 칩 재표시",
+      "note": "공식 ka10027 응답의 종목분류 코드 원문. 코드별 명칭 정의가 없어 보통주 등의 의미를 추정하지 않는다."
     },
     {
       "slot_id": "s091",
@@ -2762,7 +2816,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2791,10 +2846,12 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": "s091",
       "collapse_group": null,
@@ -2868,7 +2925,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "현재 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2905,8 +2963,8 @@
       "paired_with": "s094",
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "거래대금은 ka10027 응답에 없다 — 현재거래량×현재가 파생 표기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s096",
@@ -2929,10 +2987,11 @@
       "alt_mappings": null,
       "kor": "매도잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매도 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2961,10 +3020,11 @@
       "alt_mappings": null,
       "kor": "매수잔량",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
+        "precision": 0,
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수 "
       },
       "paired_with": "s096",
       "collapse_group": null,
@@ -3109,7 +3169,7 @@
       "node_path": "2/0/1/1/0/0/0/0",
       "paper_text": "이수페타시스",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -3118,12 +3178,15 @@
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "row_index": 0
     },
     {
       "slot_id": "s104",
@@ -3142,16 +3205,14 @@
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목코드 재표시"
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "row_index": 0
     },
     {
       "slot_id": "s105",
@@ -3179,17 +3240,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "row_index": 0
     },
     {
       "slot_id": "s106",
@@ -3198,7 +3250,7 @@
       "node_path": "2/0/1/1/0/1/0/0",
       "paper_text": "한미반도체",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -3207,12 +3259,15 @@
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "row_index": 1
     },
     {
       "slot_id": "s107",
@@ -3231,16 +3286,14 @@
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목코드 재표시"
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "row_index": 1
     },
     {
       "slot_id": "s108",
@@ -3268,17 +3321,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "row_index": 1
     },
     {
       "slot_id": "s109",
@@ -3287,7 +3331,7 @@
       "node_path": "2/0/1/1/0/2/0/0",
       "paper_text": "한화에어로스페이스",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -3296,12 +3340,15 @@
       "f": "stk_nm",
       "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "kind": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "row_index": 2
     },
     {
       "slot_id": "s110",
@@ -3320,16 +3367,14 @@
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목코드 재표시"
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "row_index": 2
     },
     {
       "slot_id": "s111",
@@ -3357,17 +3402,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "dup_note": "같은 조회 목록의 명시한 행 재표시",
+      "row_index": 2
     },
     {
       "slot_id": "s112",
@@ -3376,13 +3412,13 @@
       "node_path": "2/0/1/1/1/0/0/0",
       "paper_text": "SK하이닉스",
       "region": "primary",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목명",
       "format": null,
@@ -3390,7 +3426,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "종목명 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
     },
     {
       "slot_id": "s113",
@@ -3404,814 +3442,8 @@
       "font_size_px": 10.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
-      "kor": "종목코드",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목코드 재표시"
-    },
-    {
-      "slot_id": "s114",
-      "node_id": "3DY8-0",
-      "node_name": "+2.05%",
-      "node_path": "2/0/1/1/1/0/1",
-      "paper_text": "+2.05%",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
-      "kor": "등락률",
-      "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
-    },
-    {
-      "slot_id": "s115",
-      "node_id": "3DY6-0",
-      "node_name": "삼성전자",
-      "node_path": "2/0/1/1/1/1/0/0",
-      "paper_text": "삼성전자",
-      "region": "primary",
-      "kind": "label",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
-      "kor": "종목명",
-      "format": null,
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목명 재표시"
-    },
-    {
-      "slot_id": "s116",
-      "node_id": "3DY5-0",
-      "node_name": "005930",
-      "node_path": "2/0/1/1/1/1/0/1",
-      "paper_text": "005930",
-      "region": "primary",
-      "kind": "value",
-      "layer": "병기",
-      "font_size_px": 10.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
-      "kor": "종목코드",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목코드 재표시"
-    },
-    {
-      "slot_id": "s117",
-      "node_id": "3DY3-0",
-      "node_name": "+1.24%",
-      "node_path": "2/0/1/1/1/1/1",
-      "paper_text": "+1.24%",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
-      "kor": "등락률",
-      "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
-    },
-    {
-      "slot_id": "s118",
-      "node_id": "3DY1-0",
-      "node_name": "KODEX 200",
-      "node_path": "2/0/1/1/1/2/0/0",
-      "paper_text": "KODEX 200",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
-      "kor": "종목명",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목명 재표시"
-    },
-    {
-      "slot_id": "s119",
-      "node_id": "3DY0-0",
-      "node_name": "069500",
-      "node_path": "2/0/1/1/1/2/0/1",
-      "paper_text": "069500",
-      "region": "primary",
-      "kind": "value",
-      "layer": "병기",
-      "font_size_px": 10.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
-      "kor": "종목코드",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목코드 재표시"
-    },
-    {
-      "slot_id": "s120",
-      "node_id": "3DXY-0",
-      "node_name": "+0.86%",
-      "node_path": "2/0/1/1/1/2/1",
-      "paper_text": "+0.86%",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
-      "kor": "등락률",
-      "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
-    },
-    {
-      "slot_id": "s121",
-      "node_id": "3DXV-0",
-      "node_name": "NAVER",
-      "node_path": "2/0/1/1/2/0/0/0",
-      "paper_text": "NAVER",
-      "region": "primary",
-      "kind": "label",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
-      "kor": "종목명",
-      "format": null,
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목명 재표시"
-    },
-    {
-      "slot_id": "s122",
-      "node_id": "3DXU-0",
-      "node_name": "035420",
-      "node_path": "2/0/1/1/2/0/0/1",
-      "paper_text": "035420",
-      "region": "primary",
-      "kind": "value",
-      "layer": "병기",
-      "font_size_px": 10.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
-      "kor": "종목코드",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목코드 재표시"
-    },
-    {
-      "slot_id": "s123",
-      "node_id": "3DXS-0",
-      "node_name": "+0.85%",
-      "node_path": "2/0/1/1/2/0/1",
-      "paper_text": "+0.85%",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
-      "kor": "등락률",
-      "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
-    },
-    {
-      "slot_id": "s124",
-      "node_id": "3DXQ-0",
-      "node_name": "DB하이텍",
-      "node_path": "2/0/1/1/2/1/0/0",
-      "paper_text": "DB하이텍",
-      "region": "primary",
-      "kind": "label",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
-      "kor": "종목명",
-      "format": null,
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목명 재표시"
-    },
-    {
-      "slot_id": "s125",
-      "node_id": "3DXP-0",
-      "node_name": "000990",
-      "node_path": "2/0/1/1/2/1/0/1",
-      "paper_text": "000990",
-      "region": "primary",
-      "kind": "value",
-      "layer": "병기",
-      "font_size_px": 10.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
-      "kor": "종목코드",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목코드 재표시"
-    },
-    {
-      "slot_id": "s126",
-      "node_id": "3DXN-0",
-      "node_name": "-0.34%",
-      "node_path": "2/0/1/1/2/1/1",
-      "paper_text": "-0.34%",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
-      "kor": "등락률",
-      "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
-    },
-    {
-      "slot_id": "s127",
-      "node_id": "3DXL-0",
-      "node_name": "현대차",
-      "node_path": "2/0/1/1/2/2/0/0",
-      "paper_text": "현대차",
-      "region": "primary",
-      "kind": "label",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
-      "kor": "종목명",
-      "format": null,
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목명 재표시"
-    },
-    {
-      "slot_id": "s128",
-      "node_id": "3DXK-0",
-      "node_name": "005380",
-      "node_path": "2/0/1/1/2/2/0/1",
-      "paper_text": "005380",
-      "region": "primary",
-      "kind": "value",
-      "layer": "병기",
-      "font_size_px": 10.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
-      "kor": "종목코드",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목코드 재표시"
-    },
-    {
-      "slot_id": "s129",
-      "node_id": "3DXI-0",
-      "node_name": "-0.52%",
-      "node_path": "2/0/1/1/2/2/1",
-      "paper_text": "-0.52%",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
-      "kor": "등락률",
-      "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
-    },
-    {
-      "slot_id": "s130",
-      "node_id": "3DXF-0",
-      "node_name": "기아",
-      "node_path": "2/0/1/1/3/0/0/0",
-      "paper_text": "기아",
-      "region": "primary",
-      "kind": "label",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
-      "kor": "종목명",
-      "format": null,
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목명 재표시"
-    },
-    {
-      "slot_id": "s131",
-      "node_id": "3DXE-0",
-      "node_name": "000270",
-      "node_path": "2/0/1/1/3/0/0/1",
-      "paper_text": "000270",
-      "region": "primary",
-      "kind": "value",
-      "layer": "병기",
-      "font_size_px": 10.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
-      "kor": "종목코드",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목코드 재표시"
-    },
-    {
-      "slot_id": "s132",
-      "node_id": "3DXC-0",
-      "node_name": "-0.70%",
-      "node_path": "2/0/1/1/3/0/1",
-      "paper_text": "-0.70%",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
-      "kor": "등락률",
-      "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
-    },
-    {
-      "slot_id": "s133",
-      "node_id": "3DXA-0",
-      "node_name": "카카오",
-      "node_path": "2/0/1/1/3/1/0/0",
-      "paper_text": "카카오",
-      "region": "primary",
-      "kind": "label",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
-      "kor": "종목명",
-      "format": null,
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목명 재표시"
-    },
-    {
-      "slot_id": "s134",
-      "node_id": "3DX9-0",
-      "node_name": "035720",
-      "node_path": "2/0/1/1/3/1/0/1",
-      "paper_text": "035720",
-      "region": "primary",
-      "kind": "value",
-      "layer": "병기",
-      "font_size_px": 10.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
-      "kor": "종목코드",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목코드 재표시"
-    },
-    {
-      "slot_id": "s135",
-      "node_id": "3DX7-0",
-      "node_name": "-0.83%",
-      "node_path": "2/0/1/1/3/1/1",
-      "paper_text": "-0.83%",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
-      "kor": "등락률",
-      "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
-    },
-    {
-      "slot_id": "s136",
-      "node_id": "3DX5-0",
-      "node_name": "삼성SDI",
-      "node_path": "2/0/1/1/3/2/0/0",
-      "paper_text": "삼성SDI",
-      "region": "primary",
-      "kind": "label",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
-      "kor": "종목명",
-      "format": null,
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목명 재표시"
-    },
-    {
-      "slot_id": "s137",
-      "node_id": "3DX4-0",
-      "node_name": "006400",
-      "node_path": "2/0/1/1/3/2/0/1",
-      "paper_text": "006400",
-      "region": "primary",
-      "kind": "value",
-      "layer": "병기",
-      "font_size_px": 10.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
-      "alt_mappings": null,
-      "kor": "종목코드",
-      "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목코드 재표시"
-    },
-    {
-      "slot_id": "s138",
-      "node_id": "3DX2-0",
-      "node_name": "-1.12%",
-      "node_path": "2/0/1/1/3/2/1",
-      "paper_text": "-1.12%",
-      "region": "primary",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
-      "kor": "등락률",
-      "format": {
-        "unit": "percent",
-        "sign": true,
-        "precision": 2,
-        "tone": "change"
-      },
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
-    },
-    {
-      "slot_id": "s139",
-      "node_id": "2XLP-0",
-      "node_name": "이수페타시스",
-      "node_path": "2/1/0/0/0/0",
-      "paper_text": "이수페타시스",
-      "region": "rail",
-      "kind": "label",
-      "layer": "직접",
-      "font_size_px": 22.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
-      "kor": "종목명",
-      "format": null,
-      "paired_with": null,
-      "collapse_group": null,
-      "expanded_board": null,
-      "display_dup": true,
-      "dup_note": "종목명 재표시"
-    },
-    {
-      "slot_id": "s140",
-      "node_id": "2XLO-0",
-      "node_name": "007660 · KOSPI",
-      "node_path": "2/1/0/0/0/1",
-      "paper_text": "007660 · KOSPI",
-      "region": "rail",
-      "kind": "value",
-      "layer": "직접",
-      "font_size_px": 12.0,
-      "anchor": null,
-      "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_cd",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목코드",
       "format": {
@@ -4225,7 +3457,778 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "종목코드 재표시",
-      "note": "종목코드 병기. 'KOSPI'는 ka10027 응답에 시장 구분 필드가 없어 종목코드에서 파생한 표기"
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s114",
+      "node_id": "3DY8-0",
+      "node_name": "+2.05%",
+      "node_path": "2/0/1/1/1/0/1",
+      "paper_text": "+2.05%",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "등락률",
+      "format": {
+        "unit": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "등락률 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s115",
+      "node_id": "3DY6-0",
+      "node_name": "삼성전자",
+      "node_path": "2/0/1/1/1/1/0/0",
+      "paper_text": "삼성전자",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목명",
+      "format": null,
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목명 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s116",
+      "node_id": "3DY5-0",
+      "node_name": "005930",
+      "node_path": "2/0/1/1/1/1/0/1",
+      "paper_text": "005930",
+      "region": "primary",
+      "kind": "value",
+      "layer": "병기",
+      "font_size_px": 10.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목코드",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목코드 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s117",
+      "node_id": "3DY3-0",
+      "node_name": "+1.24%",
+      "node_path": "2/0/1/1/1/1/1",
+      "paper_text": "+1.24%",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "등락률",
+      "format": {
+        "unit": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "등락률 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s118",
+      "node_id": "3DY1-0",
+      "node_name": "KODEX 200",
+      "node_path": "2/0/1/1/1/2/0/0",
+      "paper_text": "KODEX 200",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목명",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목명 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s119",
+      "node_id": "3DY0-0",
+      "node_name": "069500",
+      "node_path": "2/0/1/1/1/2/0/1",
+      "paper_text": "069500",
+      "region": "primary",
+      "kind": "value",
+      "layer": "병기",
+      "font_size_px": 10.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목코드",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목코드 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s120",
+      "node_id": "3DXY-0",
+      "node_name": "+0.86%",
+      "node_path": "2/0/1/1/1/2/1",
+      "paper_text": "+0.86%",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "등락률",
+      "format": {
+        "unit": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "등락률 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s121",
+      "node_id": "3DXV-0",
+      "node_name": "NAVER",
+      "node_path": "2/0/1/1/2/0/0/0",
+      "paper_text": "NAVER",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목명",
+      "format": null,
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목명 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s122",
+      "node_id": "3DXU-0",
+      "node_name": "035420",
+      "node_path": "2/0/1/1/2/0/0/1",
+      "paper_text": "035420",
+      "region": "primary",
+      "kind": "value",
+      "layer": "병기",
+      "font_size_px": 10.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목코드",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목코드 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s123",
+      "node_id": "3DXS-0",
+      "node_name": "+0.85%",
+      "node_path": "2/0/1/1/2/0/1",
+      "paper_text": "+0.85%",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "등락률",
+      "format": {
+        "unit": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "등락률 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s124",
+      "node_id": "3DXQ-0",
+      "node_name": "DB하이텍",
+      "node_path": "2/0/1/1/2/1/0/0",
+      "paper_text": "DB하이텍",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목명",
+      "format": null,
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목명 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s125",
+      "node_id": "3DXP-0",
+      "node_name": "000990",
+      "node_path": "2/0/1/1/2/1/0/1",
+      "paper_text": "000990",
+      "region": "primary",
+      "kind": "value",
+      "layer": "병기",
+      "font_size_px": 10.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목코드",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목코드 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s126",
+      "node_id": "3DXN-0",
+      "node_name": "-0.34%",
+      "node_path": "2/0/1/1/2/1/1",
+      "paper_text": "-0.34%",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "등락률",
+      "format": {
+        "unit": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "등락률 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s127",
+      "node_id": "3DXL-0",
+      "node_name": "현대차",
+      "node_path": "2/0/1/1/2/2/0/0",
+      "paper_text": "현대차",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목명",
+      "format": null,
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목명 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s128",
+      "node_id": "3DXK-0",
+      "node_name": "005380",
+      "node_path": "2/0/1/1/2/2/0/1",
+      "paper_text": "005380",
+      "region": "primary",
+      "kind": "value",
+      "layer": "병기",
+      "font_size_px": 10.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목코드",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목코드 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s129",
+      "node_id": "3DXI-0",
+      "node_name": "-0.52%",
+      "node_path": "2/0/1/1/2/2/1",
+      "paper_text": "-0.52%",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "등락률",
+      "format": {
+        "unit": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "등락률 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s130",
+      "node_id": "3DXF-0",
+      "node_name": "기아",
+      "node_path": "2/0/1/1/3/0/0/0",
+      "paper_text": "기아",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목명",
+      "format": null,
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목명 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s131",
+      "node_id": "3DXE-0",
+      "node_name": "000270",
+      "node_path": "2/0/1/1/3/0/0/1",
+      "paper_text": "000270",
+      "region": "primary",
+      "kind": "value",
+      "layer": "병기",
+      "font_size_px": 10.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목코드",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목코드 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s132",
+      "node_id": "3DXC-0",
+      "node_name": "-0.70%",
+      "node_path": "2/0/1/1/3/0/1",
+      "paper_text": "-0.70%",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "등락률",
+      "format": {
+        "unit": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "등락률 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s133",
+      "node_id": "3DXA-0",
+      "node_name": "카카오",
+      "node_path": "2/0/1/1/3/1/0/0",
+      "paper_text": "카카오",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목명",
+      "format": null,
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목명 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s134",
+      "node_id": "3DX9-0",
+      "node_name": "035720",
+      "node_path": "2/0/1/1/3/1/0/1",
+      "paper_text": "035720",
+      "region": "primary",
+      "kind": "value",
+      "layer": "병기",
+      "font_size_px": 10.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목코드",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목코드 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s135",
+      "node_id": "3DX7-0",
+      "node_name": "-0.83%",
+      "node_path": "2/0/1/1/3/1/1",
+      "paper_text": "-0.83%",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "등락률",
+      "format": {
+        "unit": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "등락률 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s136",
+      "node_id": "3DX5-0",
+      "node_name": "삼성SDI",
+      "node_path": "2/0/1/1/3/2/0/0",
+      "paper_text": "삼성SDI",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목명",
+      "format": null,
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목명 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s137",
+      "node_id": "3DX4-0",
+      "node_name": "006400",
+      "node_path": "2/0/1/1/3/2/0/1",
+      "paper_text": "006400",
+      "region": "primary",
+      "kind": "value",
+      "layer": "병기",
+      "font_size_px": 10.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "종목코드",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목코드 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s138",
+      "node_id": "3DX2-0",
+      "node_name": "-1.12%",
+      "node_path": "2/0/1/1/3/2/1",
+      "paper_text": "-1.12%",
+      "region": "primary",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
+      "kor": "등락률",
+      "format": {
+        "unit": "percent",
+        "sign": true,
+        "precision": 2,
+        "tone": "change"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "등락률 재표시",
+      "static": "blank",
+      "unbound_reason": "이 조회에서 지원하지 않거나 중복 표시인 항목"
+    },
+    {
+      "slot_id": "s139",
+      "node_id": "2XLP-0",
+      "node_name": "이수페타시스",
+      "node_path": "2/1/0/0/0/0",
+      "paper_text": "이수페타시스",
+      "region": "rail",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 22.0,
+      "anchor": null,
+      "table": null,
+      "kor": "종목명",
+      "format": {
+        "unit": "text"
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목명 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
+    },
+    {
+      "slot_id": "s140",
+      "node_id": "2XLO-0",
+      "node_name": "007660 · KOSPI",
+      "node_path": "2/1/0/0/0/1",
+      "paper_text": "007660 · KOSPI",
+      "region": "rail",
+      "kind": "value",
+      "layer": "직접",
+      "font_size_px": 12.0,
+      "anchor": null,
+      "table": null,
+      "kor": "종목코드",
+      "format": {
+        "unit": "text",
+        "literal": true
+      },
+      "paired_with": null,
+      "collapse_group": null,
+      "expanded_board": null,
+      "display_dup": true,
+      "dup_note": "종목코드 재표시",
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다.",
+      "mapping_id": "base:ka10027",
+      "f": "stk_cd",
+      "alt_mappings": [],
+      "row_index": 0
     },
     {
       "slot_id": "s141",
@@ -4260,21 +4263,24 @@
       "font_size_px": 36.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "cur_prc",
-      "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "현재가 재표시"
+      "dup_note": "현재가 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "cur_prc",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s143",
@@ -4288,37 +4294,25 @@
       "font_size_px": 14.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "pred_pre",
-      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원",
+        "prefix": "전일비 "
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "레일 선택 종목 전일대비 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "flu_rt",
-          "kor": "등락률",
-          "sep": " · "
-        },
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": " · ",
-          "aspect": "sign",
-          "note": "전일대비기호 1(상한)을 '상한가'로 표기"
-        }
-      ]
+      "mapping_id": "base:ka10027",
+      "f": "pred_pre",
+      "alt_mappings": [],
+      "row_index": 0,
+      "note": "현재 목록의 첫 번째 결과와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s144",
@@ -4348,19 +4342,19 @@
       "node_path": "2/1/1/0/1",
       "paper_text": "반도체",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
-      "alt_mappings": null,
       "kor": null,
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다",
+      "unbound_reason": "현재 목록 응답에서 미제공 — 별도 응답의 행 순서는 종목 일치 근거가 아니다"
     },
     {
       "slot_id": "s146",
@@ -4369,21 +4363,25 @@
       "node_path": "2/1/1/1/0/0",
       "paper_text": "SK하이닉스",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "종목명 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 1,
+      "note": "현재 목록의 추가 결과 1와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s147",
@@ -4397,9 +4395,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4412,16 +4407,11 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "mapping_id": "base:ka10027",
+      "f": "flu_rt",
+      "alt_mappings": [],
+      "row_index": 1,
+      "note": "현재 목록의 추가 결과 1와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s148",
@@ -4430,21 +4420,25 @@
       "node_path": "2/1/1/1/1/0",
       "paper_text": "DB하이텍",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "종목명 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 2,
+      "note": "현재 목록의 추가 결과 2와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s149",
@@ -4458,9 +4452,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4473,16 +4464,11 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "mapping_id": "base:ka10027",
+      "f": "flu_rt",
+      "alt_mappings": [],
+      "row_index": 2,
+      "note": "현재 목록의 추가 결과 2와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s150",
@@ -4491,21 +4477,25 @@
       "node_path": "2/1/1/1/2/0",
       "paper_text": "한미반도체",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "stk_nm",
-      "alt_mappings": null,
       "kor": "종목명",
-      "format": null,
+      "format": {
+        "unit": "text"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "종목명 재표시"
+      "dup_note": "종목명 재표시",
+      "mapping_id": "base:ka10027",
+      "f": "stk_nm",
+      "alt_mappings": [],
+      "row_index": 3,
+      "note": "현재 목록의 추가 결과 3와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s151",
@@ -4519,9 +4509,6 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10027",
-      "f": "flu_rt",
-      "alt_mappings": null,
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4534,16 +4521,11 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "등락률 재표시",
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka10027",
-          "f": "pred_pre_sig",
-          "kor": "전일대비기호",
-          "sep": null,
-          "aspect": "sign",
-          "note": "± 부호와 상승·하락 색"
-        }
-      ]
+      "mapping_id": "base:ka10027",
+      "f": "flu_rt",
+      "alt_mappings": [],
+      "row_index": 3,
+      "note": "현재 목록의 추가 결과 3와 동일한 응답 행. 다른 목록이나 별도 종목 조회값을 행 번호로 결합하지 않는다."
     },
     {
       "slot_id": "s152",

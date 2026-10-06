@@ -2391,18 +2391,15 @@ function renderGraphEditProposalCard() {
   const note = document.createElement('div');
   note.className = 'question-card-note';
   // 아직 아무것도 안 바뀌었다는 사실을 화면이 말한다 — 모델의 notice와 같은 내용이다.
-  // 문구는 **실제로 걸릴 경로**를 말한다(2026-09-03). 두 경로가 있다:
-  //   · relationId가 있으면(op=remove) 누른 순간 그래프에서 바로 사라진다.
-  //   · 없으면(추가·수정, 또는 모델이 id를 안 실은 경우) 답변 문장이 채팅으로 나가고
-  //     반영은 다음 수집 배치가 한다.
-  // 앞 판은 둘을 구분하지 않아, 즉시 지워지는데도 "다음 수집 때"라고 말했다 —
-  // 그 전 판은 반대로 "그 답이 그래프를 갱신합니다"라 즉시로 읽혔고, 숫자가 안
-  // 줄어드니 같은 카드를 계속 누르는 무한 루프처럼 느껴졌다(실제 제보). 어느 쪽이든
-  // 화면이 사실과 다르면 사람은 고장으로 읽는다.
-  const immediate = graphEditProposal.op === 'remove' && !!graphEditProposal.relationId;
-  note.textContent = immediate
+  // answerGraphEditProposal과 같은 조건으로 직접 반영과 채팅 제출을 구분한다.
+  const immediateRemove = graphEditProposal.op === 'remove' && !!graphEditProposal.relationId;
+  const immediateWrite = ['add', 'change'].includes(graphEditProposal.op)
+    && graphEditProposal.subjectId && graphEditProposal.objectId;
+  note.textContent = immediateRemove
     ? '아직 그래프는 그대로입니다. 누르면 바로 지워집니다.'
-    : '아직 그래프는 그대로입니다. 누르면 그 답이 채팅으로 보내지고, 다음 수집 때 그래프에 반영됩니다.';
+    : (immediateWrite
+      ? '아직 그래프는 그대로입니다. 적용하면 그래프에 바로 반영됩니다.'
+      : '아직 그래프는 그대로입니다. 누르면 그 답이 채팅으로 보내지고, 다음 수집 때 그래프에 반영됩니다.');
   host.appendChild(note);
 
   const actions = document.createElement('div');
@@ -2554,6 +2551,75 @@ function restoreConversation(switched, messages, snapshot, { stored = false, con
   }
 }
 
+let pendingSessionCardReplay = null;
+let sessionCardReplayNotice = null;
+
+function expectedSessionCards(snapshot) {
+  if (!snapshot) return false;
+  if (Array.isArray(snapshot.canvasCards) && snapshot.canvasCards.some((card) => card && card.envelope)) return true;
+  return Array.isArray(snapshot.messages) && snapshot.messages.some((message) => message && (
+    (Array.isArray(message.cardRefs) && message.cardRefs.length > 0)
+    || (Array.isArray(message.toolSteps) && message.toolSteps.some((step) => step && step.done && !step.error && !step.retrying
+      && (step.label === '카드 그리는 중' || step.label === '카드 표시 완료')))));
+}
+
+function clearSessionCardReplayNotice() {
+  if (sessionCardReplayNotice) sessionCardReplayNotice.remove();
+  sessionCardReplayNotice = null;
+}
+
+function showSessionCardReplayNotice(conversationId, text) {
+  clearSessionCardReplayNotice();
+  const notice = document.createElement('div');
+  notice.className = 'past-empty';
+  notice.setAttribute('role', 'status');
+  const message = document.createElement('p');
+  message.textContent = text;
+  const retry = document.createElement('button');
+  retry.type = 'button';
+  retry.className = 'uk-btn uk-btn-ghost';
+  retry.textContent = '카드 다시 불러오기';
+  retry.addEventListener('click', () => {
+    if (conversationId !== displayedConversationId) return;
+    retry.disabled = true;
+    void replayConversationCards(conversationId, { retry: true });
+  });
+  notice.append(message, retry);
+  $history.appendChild(notice);
+  sessionCardReplayNotice = notice;
+}
+
+function replayConversationCards(conversationId, { expected = false, retry = false } = {}) {
+  if (conversationId !== displayedConversationId) return Promise.resolve(false);
+  if (pendingSessionCardReplay && pendingSessionCardReplay.conversationId === conversationId
+    && pendingSessionCardReplay.revision === conversationSelectionRevision) return pendingSessionCardReplay.promise;
+  clearSessionCardReplayNotice();
+  const attempt = { conversationId, revision: conversationSelectionRevision, promise: null };
+  pendingSessionCardReplay = attempt;
+  const current = () => pendingSessionCardReplay === attempt && displayedConversationId === conversationId
+    && conversationSelectionRevision === attempt.revision;
+  attempt.promise = (async () => {
+    try {
+      const result = await window.athena.invoke('athena:session-replay-cards', { id: conversationId });
+      if (!current()) return false;
+      if (result && result.status === 'stale') return false;
+      if (result && result.status === 'empty') {
+        if (expected || retry) showSessionCardReplayNotice(conversationId, '이 대화에 저장된 카드가 없습니다. 과거 작업 기록은 그대로 유지됩니다.');
+        return false;
+      }
+      if (!result || result.status !== 'dispatched' || !(result.replayed > 0)) throw new Error('card replay unavailable');
+      // This confirms dispatch only. The stored activity is not a new paint receipt.
+      return true;
+    } catch {
+      if (current()) showSessionCardReplayNotice(conversationId, '저장된 카드를 불러오지 못했습니다. 대화 내용은 그대로 유지됩니다.');
+      return false;
+    } finally {
+      if (pendingSessionCardReplay === attempt) pendingSessionCardReplay = null;
+    }
+  })();
+  return attempt.promise;
+}
+
 // sidebar.js가 부르는 다리(shell.js 버스). 돌아갔으면 true.
 window.AthenaShell.registerOpenConversation(async (conv) => {
   if (!conv || !conv.id) return false;
@@ -2563,7 +2629,7 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
   // 갈아타기 전에 이 세션의 지연 보고를 흘린다 — main은 받은 시점의 세션에 적으므로
   // 전환 뒤에 도착한 보고는 앞 세션의 작업공간을 다음 세션 기록에 적는다.
   switchingConversation = true;
-  conversationSelectionRevision += 1;
+  if (displayedConversationId !== conv.id) conversationSelectionRevision += 1;
   try {
     const editor = window.AthenaBacktestCanvas;
     if (editor && typeof editor.flushEditor === 'function' && !(await editor.flushEditor())) return false;
@@ -2571,7 +2637,10 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
     const switched = await window.athena.invoke('athena:conversations-set-active', { id: conv.id })
       .catch(() => null);
     if (!switched || !switched.restorable) return false;
-    if (switched.isCurrent && displayedConversationId === conv.id) return true;
+    if (switched.isCurrent && displayedConversationId === conv.id) {
+      void replayConversationCards(conv.id, { retry: true });
+      return true;
+    }
     // 메시지의 원본은 세션 스토어다(42번 보드). 스냅샷의 currentId 경로만 그린다 — 분기가
     // 있어도 한 줄로 보인다. 스토어에 없으면(이 배선 전에 만든 대화) 브레인 이력으로 폴백.
     const snapshot = await window.athena.invoke('athena:session-load', { id: conv.id }).catch(() => null);
@@ -2593,7 +2662,7 @@ window.AthenaShell.registerOpenConversation(async (conv) => {
     restoreConversation(switched, messages, snapshot, { stored, conversationId: conv.id });
     syncDisplayedTurn();
     // 카드는 main이 저장된 봉투를 같은 페인트 채널로 다시 흘린다 — 캔버스를 비운 뒤라 순서가 맞는다.
-    void window.athena.invoke('athena:session-replay-cards', { id: conv.id }).catch(() => {});
+    void replayConversationCards(conv.id, { expected: expectedSessionCards(snapshot) });
     return true;
   } finally {
     switchingConversation = false;
@@ -4737,9 +4806,9 @@ function appendMainCardConfirmation(card, r, conversationId) {
   yes.addEventListener('click', () => { void view.confirm(); });
   other.addEventListener('click', () => {
     view.typedEligible = false;
-    view.retire();
     routineMainCardConfirmations.remove(r.id, view.originConversationId, candidate);
-    const seed = `루틴 ID ${r.id}의 메인 카드 후보를 다른 카드로 제안해줘. propose_main_card로 같은 초안을 갱신해줘 — `;
+    status.textContent = '변경할 카드를 입력해 주세요';
+    const seed = `「${r.note || '이 알림'}」의 메인 카드 후보를 바꾸고 싶어. 같은 초안(루틴 ID ${r.id})의 조건은 유지해줘. 원하는 카드: `;
     if (window.AthenaShell && typeof window.AthenaShell.seedChatInput === 'function') {
       window.AthenaShell.seedChatInput(seed);
     }
@@ -5376,6 +5445,7 @@ window.addEventListener('athena:plugin-out-of-mode', (event) => {
 // 구독은 이 파일 하나뿐이다(canvas.js에서 같은 채널을 또 들으면 액션이 두 번
 // 적용된다). 캔버스 API는 canvas.js가 window.AthenaBacktestCanvas로 올려둔다.
 const BACKTEST_CHANGE_TITLES = {
+  file_written: '파일 저장',
   spec_draft: '설정 반영',
   code_draft: '코드 반영',
   file_draft: '파일 반영',
@@ -5658,8 +5728,8 @@ function renderBacktestChangeCard(receipt) {
   // 파일 초안은 실패한 게 아니라 아직 안 쓴 것이다 — 같은 '반영 안 됨'으로 적으면
   // 사람이 "안 됐구나"로 읽고 다시 시키게 된다(디스크에 쓰는 건 아래 [적용]이다).
   statePill.textContent = receipt.applied
-    ? '반영됨'
-    : (receipt.canApply ? '적용 대기' : '반영 안 됨');
+    ? (receipt.saved ? '저장됨' : '반영됨')
+    : (receipt.saved ? '저장됨 · 편집 보존' : (receipt.canApply ? '적용 대기' : '반영 안 됨'));
   head.appendChild(statePill);
   // 지도가 몇 판이 됐는가(보드 14-B) — 반영 한 번이 지도 한 판이다.
   if (receipt.version && receipt.version.from != null && receipt.version.to != null) {
@@ -5669,6 +5739,13 @@ function renderBacktestChangeCard(receipt) {
     head.appendChild(versionPill);
   }
   card.appendChild(head);
+
+  if (receipt.kind === 'file_written' && receipt.path) {
+    const path = document.createElement('div');
+    path.className = 'backtest-change-row';
+    path.textContent = receipt.path;
+    card.appendChild(path);
+  }
 
   if (receipt.note) {
     const note = document.createElement('div');
@@ -5719,6 +5796,16 @@ function renderBacktestChangeCard(receipt) {
   const status = document.createElement('span');
   status.className = 'agent-mode';
   const canvasApi = () => window.AthenaBacktestCanvas;
+
+  if (receipt.kind === 'file_written' && receipt.applied && receipt.action) {
+    const open = _btn(receipt.action.label_ko, 'routine-btn');
+    open.addEventListener('click', () => {
+      if (canvasApi()?.openStep(receipt.action) === false) {
+        status.textContent = '이후 변경으로 이 diff는 더 이상 열 수 없습니다.';
+      }
+    });
+    actions.appendChild(open);
+  }
 
   if (receipt.canUndo) {
     const undo = _btn('되돌리기', 'routine-btn');
@@ -5842,23 +5929,43 @@ function renderBacktestChangeCard(receipt) {
   // "반영 안 됨"이라 적어놓고 탐색만 시작되는 갈라짐을 막는다.
   if (receipt.kind === 'optimize_request' && receipt.applied) {
     const start = _btn('탐색 시작', 'routine-btn routine-btn-approve');
-    start.addEventListener('click', () => {
+    start.addEventListener('click', async () => {
       const api = canvasApi();
       if (!api || typeof api.startOptimizeFromChat !== 'function') return;
-      api.startOptimizeFromChat();
       start.disabled = true;
-      start.textContent = '탐색 시작됨';
+      start.textContent = '탐색 중…';
+      showErrors([]);
+      status.textContent = '';
+      try {
+        const result = await api.startOptimizeFromChat();
+        if (result?.ok) {
+          start.textContent = '탐색 완료';
+          status.textContent = '최적화 화면에서 결과를 확인하세요.';
+        } else {
+          start.disabled = false;
+          start.textContent = '탐색 시작';
+          showErrors(result?.errors || ['탐색이 완료되지 않았습니다. 최적화 화면을 확인하세요.']);
+        }
+      } catch (err) {
+        start.disabled = false;
+        start.textContent = '탐색 시작';
+        showErrors([String(err?.message || err)]);
+      }
     });
     actions.appendChild(start);
   }
 
-  actions.appendChild(status);
-  card.appendChild(actions);
+  if (actions.childElementCount) {
+    actions.appendChild(status);
+    card.appendChild(actions);
+  }
 
-  const notice = document.createElement('div');
-  notice.className = 'agent-source';
-  notice.textContent = '실행·수집·저장·활성화·배포는 버튼으로만 됩니다';
-  card.appendChild(notice);
+  if (receipt.kind !== 'file_written' && receipt.kind !== 'navigate') {
+    const notice = document.createElement('div');
+    notice.className = 'agent-source';
+    notice.textContent = '실행·수집은 버튼으로 시작합니다';
+    card.appendChild(notice);
+  }
 
   _mountTurn(line, card);
 }

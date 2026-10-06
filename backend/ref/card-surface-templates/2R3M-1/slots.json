@@ -1004,10 +1004,9 @@
       "format": {
         "kind": "korean",
         "sign": false,
-        "precision": 2,
         "tone": "neutral",
-        "suffix": "원",
-        "scale": "백만"
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4861,10 +4860,9 @@
       "format": {
         "kind": "korean",
         "sign": false,
-        "precision": 1,
         "tone": "neutral",
-        "suffix": "원",
-        "scale": "억"
+        "scale": "억",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5153,7 +5151,8 @@
         "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5343,10 +5342,9 @@
       "format": {
         "kind": "korean",
         "sign": false,
-        "precision": 2,
         "tone": "neutral",
-        "suffix": "원",
-        "scale": "백만"
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6764,10 +6762,9 @@
       "format": {
         "kind": "korean",
         "sign": false,
-        "precision": 2,
         "tone": "neutral",
-        "suffix": "원",
-        "scale": "백만"
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s223",
       "collapse_group": null,
@@ -7068,10 +7065,9 @@
       "format": {
         "kind": "korean",
         "sign": false,
-        "precision": 2,
         "tone": "neutral",
-        "suffix": "원",
-        "scale": "백만"
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s234",
       "collapse_group": null,
@@ -7372,10 +7368,9 @@
       "format": {
         "kind": "korean",
         "sign": false,
-        "precision": 2,
         "tone": "neutral",
-        "suffix": "원",
-        "scale": "백만"
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": "s245",
       "collapse_group": null,
@@ -7477,7 +7472,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7497,22 +7493,14 @@
       "table": null,
       "mapping_id": "base:0H",
       "f": "11",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0H",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:0H",
-          "f": "25"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,

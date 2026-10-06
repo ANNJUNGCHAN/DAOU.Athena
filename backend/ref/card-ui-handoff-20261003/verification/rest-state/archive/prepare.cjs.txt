@@ -1,0 +1,25 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict'),cp=require('node:child_process');
+const root=path.resolve(__dirname,'../../../..'),author=path.join(root,'.omc/artifacts/card-ui-audit/rest-timeout995-candidate'),sha=x=>crypto.createHash('sha256').update(x).digest('hex');
+const authorFreeze=JSON.parse(fs.readFileSync(path.join(author,'AUTHOR-FREEZE.json')));
+for(const [file,pin] of Object.entries(authorFreeze.baseline))assert.equal(sha(fs.readFileSync(path.join(root,file))),pin,'Shared live source guard '+file);
+const excerpt=(text,start,end)=>{const a=text.indexOf(start),b=text.indexOf(end,a);assert(a>=0&&b>a);return text.slice(a,b);};
+const common=['app/styles/tokens.css','app/styles/ui-kit.css','app/lib/ui-kit.js','app/lib/integrated-card-surface.js','app/lib/canvas-layout.js'];
+const snapshot={};const write=(file,value)=>{fs.mkdirSync(path.dirname(path.join(__dirname,file)),{recursive:true});fs.writeFileSync(path.join(__dirname,file),value);snapshot[file]=sha(value);};
+for(const file of common)write('snapshot/'+file,fs.readFileSync(path.join(root,file)));
+for(const mode of ['baseline','candidate']){
+ const source=fs.readFileSync(path.join(author,mode,'app/canvas.js'),'utf8');
+ const consumer=[excerpt(source,'function attachRestRetryAction(',"window.athena.on('athena:rest-retry-available'"),excerpt(source,'function paintedDataCardsFor(','function renderLiveNotice('),excerpt(source,'function makeCard(','async function addCard(')].join('\n');
+ write('snapshot/'+mode+'/consumer.js',consumer);
+ write('snapshot/'+mode+'/canvas.css',fs.readFileSync(path.join(author,mode,'app/canvas.css')));
+ const html=`<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="snapshot/app/styles/tokens.css"><link rel="stylesheet" href="snapshot/app/styles/ui-kit.css"><link rel="stylesheet" href="snapshot/${mode}/canvas.css"><style>html,body{margin:0;height:100%;}body{background:#f5f3ef}.grid{height:100vh;box-sizing:border-box;overflow:auto;} .fixture-control{min-height:360px;} </style><div class="grid" id="grid"></div><script src="snapshot/app/lib/ui-kit.js"></script><script src="snapshot/app/lib/integrated-card-surface.js"></script><script src="snapshot/app/lib/canvas-layout.js"></script><script src="environment.js"></script><script src="snapshot/${mode}/consumer.js"></script><script src="browser.js"></script>`;
+ write(mode+'.html',html);
+}
+const cases=[];
+for(const type of ['chart','table'])for(const state of ['timeout','error','cancelled'])cases.push({id:type+'-'+state,type,state,retained:false});
+for(const type of ['chart','table'])cases.push({id:type+'-cancelled-retained',type,state:'cancelled',retained:true});
+cases.push({id:'normal-chart',type:'chart',normal:true},{id:'normal-table',type:'table',normal:true},{id:'expanded-chart-timeout',type:'chart',state:'timeout',expanded:true});
+const stages=[{id:'max',width:2560,height:1392},{id:'native-narrow',width:2122,height:1166},{id:'target-narrow',width:1411,height:1166},{id:'remax',width:2560,height:1392}];
+const manifest={status:'PREPARED_NOT_EXECUTED',scope:'actual state card functions; no provider or mounted chart renderer',authorManifest:sha(fs.readFileSync(path.join(author,'AUTHOR-FREEZE.json'))),livePins:authorFreeze.baseline,snapshot,cases,stages,phaseFiles:{},expected:{normalChartMinimum:420,normalTableNatural:true,retryTarget:36},exceptions:['Error','TypeError','RangeError','SyntaxError'],productWrites:0,appStarts:0,providerCalls:0,privateReads:0};
+for(const file of ['environment.js','browser.js','run.cjs','prepare.cjs']){const content=fs.readFileSync(path.join(__dirname,file));manifest.phaseFiles[file]=sha(content);if(file.endsWith('.js')||file.endsWith('.cjs')){const syntax=cp.spawnSync(process.execPath,['--check',path.join(__dirname,file)],{encoding:'utf8'});assert.equal(syntax.status,0,syntax.stderr);}}
+fs.writeFileSync(path.join(__dirname,'PREPARED-MANIFEST.json'),JSON.stringify(manifest,null,2)+'\n');console.log(JSON.stringify({manifest:sha(fs.readFileSync(path.join(__dirname,'PREPARED-MANIFEST.json'))),cases:cases.length,stages:stages.length,snapshot:Object.keys(snapshot).length,sourceUnchanged:true}));

@@ -33,6 +33,18 @@ logger = logging.getLogger(__name__)
 
 SCHEMA_VERSION = "card-surface.v1"
 
+# These queries have authored result surfaces. Their fields also appear as
+# supplementary details on product defaults, which must not win by state rank.
+_OPERATION_ENTRY_BOARDS = {
+    "base:ka30001": "2Y47-0",
+    "base:ka30002": "2Z49-0",
+    "base:ka30005": "2ZN9-0",
+    "base:ka30009": "2XA5-0",
+    "base:ka30010": "2VO0-0",
+    "base:ka30011": "2XY6-0",
+    "base:ka40001": "2WZK-0",
+}
+
 # 헌장 §2.3의 밀도 예산(하드). 위반은 그 보드를 제품 표면에서 뺀다 — Paper 보드가
 # 아닌 밀도로 저작된 슬롯 표는 표면이 될 수 없다. `rows_max`는 헌장 문법 C("표시
 # 행수 = 응답 행수, 상한 20")에 표 바닥의 합계·평균 두 줄을 더한 선이다. 헌장 A5가
@@ -294,6 +306,9 @@ class CardSurfaceRegistry:
         board_ids = self.by_operation.get(operation_ref)
         if not board_ids:
             return None
+        preferred = _OPERATION_ENTRY_BOARDS.get(operation_ref)
+        if preferred in board_ids:
+            return self.boards[preferred]
         ordered = sorted(
             board_ids,
             key=lambda board_id: (

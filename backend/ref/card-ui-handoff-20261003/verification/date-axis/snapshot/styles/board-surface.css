@@ -1,0 +1,1547 @@
+/* 보드 표면 반응형 — 컨테이너 쿼리 5단 (캔버스 탭·반응형 카드 계획 §2).
+ *
+ * 기준은 창이 아니라 보드 컨테이너 폭이다. 창을 2분할·4분할·최소로 줄여도
+ * 같은 규칙이 돈다.
+ *
+ *   XL  ≥ 1280   Paper 1:1 (되돌리기 base만, 시각 변화 0)
+ *   L   960–1279 레일 360px · 우선순위 7 이상 열 접기(표 6열)
+ *   M   720–959  레일이 primary 아래로 · 6 이상 접기(표 5열) · KPI 3칸 · 스트립 가로 스크롤
+ *   S   480–719  5 이상 접기(표 4열) · KPI 2칸
+ *   XS  < 480    4 이상 접기(표 3열) · KPI 1칸
+ *
+ * 단계는 겹쳐 쌓인다 — max-width 규칙이라 XS에서는 L·M·S 규칙이 함께 살아 있고,
+ * 그래서 "4 이상 접기"가 4·5·6·7·8을 다 접는다(밀도 예산 상한이 8열이다).
+ *
+ * 인라인 원문과 싸우지 않는 방법 — `!important` 0건:
+ *
+ * 1) 추출 원문은 영역 노드마다 인라인 `width`/`flex-*`를 갖는다(27장 전수 실측).
+ *    board-mount의 `applyResponsiveHooks`가 마운트 시점에 **그 다섯 속성만**
+ *    같은 요소의 `--bs-width`/`--bs-flex-*`로 옮긴다. 아래 base 규칙이 그 값을
+ *    그대로 되돌리므로 XL 계산값은 Paper와 같고, L 이하 컨테이너 규칙은
+ *    인라인과 겨루지 않고 이긴다(같은 특이도, 뒤에 오는 선언).
+ * 2) `display`·색·패딩·글꼴·테두리는 건드리지 않는다 — Paper의 레이아웃 모델
+ *    (flex)을 grid로 바꾸지 않고, 좁아질 때는 `flex-wrap`으로만 접는다.
+ * 3) 열 접기·병기 활성에 쓰는 `.bs-col`·`.bs-paired`는 추출기가 새로 넣는
+ *    요소라 인라인 스타일이 아예 없다.
+ *
+ * 값·문구는 어느 단계에서도 바뀌지 않는다 — 접힌 열은 삭제가 아니라 병기 줄로
+ * 내려간다(계획 §2, 헌장 문법 A·B). */
+
+/* hoist 토큰은 상속되면 안 된다 — 커스텀 속성 기본값은 상속이라, 보드 루트가
+ * 자기 Paper 폭(--bs-width: 1360px)을 실으면 그 아래 모든 영역 노드가 `var(--bs-width,
+ * auto)`에서 fallback 대신 **보드 폭**을 물려받는다. 실측(실보드 6장, 컨테이너
+ * 1171~1186px): bs-kpi·bs-workspace·bs-strip·bs-kpi-cell이 전부 1360px로 서서
+ * overflow_x가 89~5,659px 났다 — 인라인 원문에는 그 노드에 width가 없는데도.
+ * 등록 속성으로 상속을 끊으면 자기 인라인 원문을 갖고 있던 노드만 되돌아가고,
+ * 나머지는 계약대로 auto/flex 기본값으로 흐른다. */
+@property --bs-width { syntax: "*"; inherits: false; }
+@property --bs-height { syntax: "*"; inherits: false; }
+@property --bs-flex-basis { syntax: "*"; inherits: false; }
+@property --bs-flex-grow { syntax: "*"; inherits: false; }
+@property --bs-flex-shrink { syntax: "*"; inherits: false; }
+
+.board-surface {
+  container-type: inline-size;
+  container-name: board;
+  /* 보드 고유 폭(Paper 원문)을 되돌리되, 뷰포트가 좁으면 뷰포트를 따른다.
+   * min-width:0 이 없으면 flex 항목 기본 min-content(2SKU-1 Paper 1360px)가
+   * max-width:100%를 이기고 컨테이너가 M(720–959)에 못 들어간다. */
+  width: var(--bs-width, 1440px);
+  max-width: min(100%, 1440px);
+  min-width: 0;
+  margin: 0 auto;
+}
+
+/* 카드 높이는 카드가 정한다 — 보드가 아니다(계획 §1 "카드 크기 = 뷰포트 크기,
+ * 따라서 모든 카드 크기가 동일하다").
+ *
+ * Paper 보드의 루트 높이는 보드마다 다르다(생성물 96장 실측: 766·824·846·880·
+ * 896·900·930·934·936·960·1000·1018·1029·1034·1039·1040px 16종 + fit-content 8장
+ * + 미지정 4장). 그 값이 `--bs-height`로 걷혀 되돌리기 규칙(아래 `[data-bs-hoisted]`)
+ * 을 타고 **표면 루트**에까지 들어오면, 같은 크기의 카드 상자 안에서 눈에 보이는
+ * 유리 패널만 보드마다 달라진다 — 실측(컨테이너 1360px · 카드 상자 1138px):
+ * 계좌 952 · 주문 880 · 종목 1040 · 호가 880 · 수급 934 · 탐색 900 · 순위 1040px.
+ * 사용자가 "순위 카드가 미묘하게 다르다"고 본 자리가 이것이다.
+ *
+ * 그래서 루트에서만 그 값을 무르고(안쪽 영역·표 행·KPI 칸은 그대로 — 되돌리기
+ * 계약과 좁은 단계의 최소 높이 바닥은 안쪽 값으로 돈다) 카드 자리를 채우게 한다.
+ * `height: auto` + `min-height: 100%`이지 `height: 100%`가 아니다: 원문 루트 다수가
+ * 인라인 `overflow: clip`을 실어, 자리보다 긴 본문을 고정 높이에 가두면 넘친
+ * 부분이 잘려 사라진다(§8 정보 정직성). 길면 표면이 자라고 자리가 스크롤한다.
+ *
+ * 특이도(0,2,0)로 아래 base·@container의 `[data-bs-hoisted]`(0,1,0)를 이긴다 —
+ * 순서에 기대지 않으므로 단계 규칙을 어느 자리에 더해도 이 계약은 안 흔들린다. */
+.board-surface[data-bs-hoisted] {
+  height: auto;
+  min-height: 100%;
+}
+
+/* 카드 껍데기도 카드가 정한다 — 보드마다 다른 원문 껍데기(생성물 96장 루트 실측:
+ * 라운드 28px 62장 · 16px 27장 · 24px 3장 · 미지정 4장, 배경 panel 92장 ·
+ * 페이지 배경 4장)를 board-mount의 normalizeCardShell이 `--bs-shell-*`로 걷어내고
+ * 여기서 한 벌만 입힌다. 라운드 정본은 28px(2026-09-07 사용자 확정 — 다수값).
+ * 그림자는 원문 값 그대로다(#10131A1A 0 18px 48px). 새 색은 만들지 않는다:
+ * 배경·선은 tokens.css의 유리 사다리 토큰이고 그림자만 값으로 쓴다(canvas.css
+ * `.card`의 접지 그림자와 같은 문법). */
+.board-surface[data-bs-card-shell="true"] {
+  background-color: var(--color-k-panel);
+  border: 1px solid var(--color-k-line-soft);
+  border-radius: var(--radius-card);
+  box-shadow: 0 18px 48px rgb(16 19 26 / 10%);
+}
+
+/* Paper 아트보드 프레임이 루트로 잡힌 보드(실측 4장) — 폭·프레임 패딩을 카드
+ * 계약으로 되세운다. 1360px은 나머지 92장 루트의 실측 폭이고, 이 4장의 자식도
+ * 이미 그 폭으로 서 있다(프레임 패딩 40px을 더해 아트보드 1440px이 된 것이다).
+ * 폭만 세우면 그 패딩만큼 자식이 넘치므로 둘은 한 짝으로 간다. */
+.board-surface[data-bs-card-frame="true"] {
+  width: 1360px;
+  max-width: min(100%, 1360px);
+  padding: 0;
+}
+
+/* ---------- XL base — 인라인에서 걷어낸 값을 그대로 되돌린다 ---------- */
+
+/* 영역 밖 고정 상자(표 열·KPI 칸·헤더 블록)도 걷어낸다 — board-mount의
+ * hoistRigidBox가 실제로 옮긴 노드에만 이 표시를 남긴다. 되돌리기 값이 곧
+ * Paper 원문이라 XL 계산값은 1:1이다. 영역 규칙보다 **먼저** 와야 한다:
+ * 같은 특이도(0,1,0)라 뒤에 오는 쪽이 이기고, 영역·단계 규칙이 이겨야 한다. */
+[data-bs-hoisted] {
+  width: var(--bs-width, auto);
+  height: var(--bs-height, auto);
+  flex-basis: var(--bs-flex-basis, auto);
+  flex-grow: var(--bs-flex-grow, 0);
+  flex-shrink: var(--bs-flex-shrink, 1);
+}
+
+/* left+고정폭 absolute 상자도 같은 규약이다 — markInsetAbsoluteBox가 인라인 `left`를
+ * `--bs-inset-x`로 옮기고 여기서 되돌린다. XL 계산값은 Paper 원문 그대로다. */
+[data-bs-inset-x="true"] { left: var(--bs-inset-x); }
+
+/* bottom+고정높이 absolute 상자 — 흐름 안 내용이 그 자리를 쓰면 클릭이 이웃으로
+ * 간다(실측 2RJ7-1 「호가 열기」 hit → 「예상 체결 시간」). markInsetAbsoluteBox가
+ * 부모 padding-bottom을 상자 높이+bottom만큼 늘린다. z-index로 덮지 않는다. */
+[data-bs-reserve-bottom="true"] { padding-bottom: var(--bs-reserve-bottom); }
+
+.bs-workspace,
+.bs-primary,
+.bs-rail,
+.bs-kpi,
+.bs-kpi-cell,
+.bs-table,
+.bs-strip {
+  width: var(--bs-width, auto);
+  flex-basis: var(--bs-flex-basis, auto);
+  flex-grow: var(--bs-flex-grow, 0);
+  flex-shrink: var(--bs-flex-shrink, 1);
+}
+
+.bs-workspace { flex-wrap: nowrap; }
+.bs-kpi { flex-wrap: nowrap; }
+.bs-strip { flex-wrap: nowrap; overflow-x: visible; }
+.bs-primary { min-width: 0; }
+.bs-rail { min-width: 0; }
+
+/* scroll owner는 추출기가 role/이름/tabindex를 책임진다. outline은 박스 크기를
+ * 바꾸지 않으므로 XL Paper geometry를 유지하면서 키보드 위치를 드러낸다. */
+.bs-r-scroll:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: -2px;
+}
+
+/* canvas가 responsive group 안의 plain Paper leaf에만 role=button을 보강한다. */
+:is(.bs-r-flow, .bs-r-scroll, .bs-r-scroll-table) [data-state-board][role="button"]:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: 2px;
+}
+
+/* canvas는 Paper CTA의 문구 잎에 키보드 semantics를 붙인다. 바깥 CTA 상자는 이미
+ * 44px이지만 role=button의 실제 hit target은 잎의 16px line box이므로 같은 최소
+ * 면적을 잎에도 준다. 고정 폭은 두지 않아 Paper 문구와 버튼 배치는 그대로 둔다. */
+[data-card-action][role="button"] {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- 줄바꿈 정책 — 글자 단위 분절은 어느 단계에서도 없다 ----------
+ *
+ * 앞선 판단은 `overflow-wrap: anywhere`(Paper 원문)를 분절의 원인으로 보고 손대지
+ * 않기로 했지만, 그건 원인의 절반이었다. 한글은 CSS 기본값(`word-break: normal`)에서
+ * **음절 사이가 이미 줄바꿈 기회**다 — 실측 2QM7-2(삼성전자 수급)에는 `anywhere`가
+ * 0건인데도 "모건스탠리"가 "모건스탠 / 리"로 쪼개진다. 그래서 정책 선언은
+ * `word-break: keep-all`이고, 추출 원문 97장에 그 선언은 0건이다.
+ *
+ * `anywhere`는 여기에 숫자·라틴까지 얹는 두 번째 원인이다("149,50 / 0", 실측
+ * 2R3M-1 컨테이너 1171px). 인라인 선언은 이 규칙보다 세므로 board-mount의
+ * stripCharacterWrap이 마운트 시점에 걷어낸다 — 다섯 레이아웃 속성과 달리
+ * 되돌리지 않는다: 한 글자씩 눕는 것은 Paper가 그린 문면이 아니라 폭이 부족할 때의
+ * 브라우저 기본 동작이다.
+ *
+ * 이제 남는 부족분은 줄바꿈이 아니라 가로 넘침으로 나온다(실측 컨테이너 537px에서
+ * 4~90px · 377px에서 25~250px). 그건 이 파일 아래의 수단으로 받는다: 열 접기 →
+ * 가로 스크롤. 값·문구를 쪼개서 폭을 맞추는 길은 닫는다(사용자 확정 2026-09-07). */
+.board-surface {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+/* 값 자리(숫자·통화·%·코드·시각)는 어절 경계조차 없으므로 nowrap이 유일한 규약이다.
+ * 소유자(`.bs-r-flow`/`.bs-r-scroll`) 아래로 한정하던 L 단계 규칙을 base로 넓힌다 —
+ * 반응형 기계가 아예 안 붙은 보드 25장(97장 실측)은 그 한정 때문에 값 nowrap을
+ * 하나도 못 받았고, 2QM7-2·15L8-2가 거기 있다. XL에서는 Paper 폭이 이미 한 줄을
+ * 담으므로 계산값이 안 바뀐다. */
+:is(.bs-r-atomic, [data-bs-value-atomic="true"], [data-paired-source]) {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+/* 추출기가 넣은 접기 래퍼 — XL에서는 박스 트리에서 사라진다(픽셀 동일). */
+.bs-col { display: contents; }
+
+/* 병기 줄 — 열이 접힐 때만 켜진다. 인라인 스타일이 없는 요소라 !important가 필요 없다. */
+.bs-paired { display: none; font-variant-numeric: tabular-nums; }
+
+.bs-r-paired-table .bs-paired {
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: baseline;
+  column-gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+.bs-r-paired-table .bs-paired-label {
+  color: var(--color-k-dim);
+  white-space: normal;
+  /* 좁은 칸에서도 줄바꿈은 어절 경계에서만 한다. `anywhere`는 `5일 누적`을
+   * `5일 누`/`적`으로 쪼갠다(2QFO-2 960 실측) — 이 웨이브가 없애려는 분절이다. */
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+.bs-r-paired-table [data-paired-source] {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+.bs-r-paired-table [data-bs-value-atomic="true"] {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+.bs-r-scroll-table:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: -2px;
+}
+.bs-scroll-table-semantics {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  min-width: max-content;
+}
+.bs-scroll-table-cell-semantics {
+  display: flex;
+  flex-shrink: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* KPI 칸 — XL·L에서는 인라인 원문 폭(추출 실측 138px)을 되돌린다. M 이하에서만
+ * 흐름 폭으로 바뀐다. flex-basis에서 빼는 24px은 칸 사이 gap 몫이다(원문 12px):
+ * 넉넉히 빼도 한 줄에 한 칸 더 들어가지는 않으므로 3칸/2칸이 정확히 지켜진다. */
+
+/* ---------- L: 960–1279 — 표는 7열째부터 접는다 ---------- */
+@container board (max-width: 1279px) {
+  /* 걷어낸 고정 상자는 Paper 값을 출발점으로 삼되, 좁아지면 같이 움직인다.
+   *
+   * 폭: 원문의 `flex-shrink: 0`을 여기서만 놓아준다. 실보드 원문에
+   *     `white-space: nowrap`은 0건이라(6장 실측) 줄어든 칸의 글자는 잘리지 않고
+   *     줄바꿈으로 내려간다 — 값이 사라지지 않는다.
+   * 높이: 고정 높이가 최소 높이가 된다. 줄바꿈으로 내용이 늘면 상자도 같이
+   *     자라야 한다 — 안 그러면 넘친 줄이 아래 영역 위에 겹쳐 찍힌다(실측
+   *     2SKU-1 컨테이너 621px: KPI 줄 116px 상자 안에 2줄 232px). 줄어드는 일은
+   *     없다: Paper 높이가 그대로 바닥이다.
+   *
+   * XL에서는 base가 다섯 값을 그대로 되돌리므로 Paper 픽셀은 그대로다. */
+  [data-bs-hoisted] {
+    flex-shrink: 1;
+    max-width: 100%;
+    /* flex item의 기본 min-width:auto는 안쪽 숫자/열의 min-content 폭을 지켜
+     * max-width보다 크게 버틴다. 2R3M-1·2QFO-2 XS 표면 넘침의 직접 원인이다. */
+    min-width: 0;
+    height: auto;
+    min-height: var(--bs-height, auto);
+  }
+
+  /* 위에서 놓아준 flex-shrink는 **가로 축** 몫이다. 부모가 세로로 쌓으면 같은
+   * 선언이 높이를 줄여 「Paper 높이가 바닥」이라는 위 계약을 세로로만 뒤집는다 —
+   * 실측 1WOB-1 목록 본문(높이 520px 고정) 안의 행 20개가 내용 48px에서 36px로
+   * 눌려 13px씩 뚫렸다. 세로로 쌓인 상자는 원문 flex-shrink를 그대로 지킨다.
+   * 폭은 `--bs-width`와 위 `max-width: 100%`가 맡으므로 가로 계약은 안 바뀐다. */
+  [data-bs-hoisted][data-bs-col-item="true"] { flex-shrink: var(--bs-flex-shrink, 1); }
+
+  /* left+고정폭 absolute 상자는 부모가 좁아져도 자기 left에 서 있어 그대로 가로
+   * 넘침이 된다(실측 137X-2 Chart Tooltip Label left 748px: 2분할 303 · 4분할 387 ·
+   * 최소 547px). left를 오른쪽 끝에 걸리는 값으로 죄면 상자는 Paper 폭을 유지한 채
+   * 안으로 들어온다 — 폭은 base가 되돌린 `--bs-width`와 위 `max-width: 100%`가 맡는다.
+   * 넉넉한 폭에서는 min()이 Paper의 left를 그대로 고르므로 XL 이하도 자리가 안 바뀐다. */
+  [data-bs-inset-x="true"] { left: min(var(--bs-inset-x), max(0px, 100% - var(--bs-width, 0px))); }
+
+  /* KPI 줄에는 남는 폭을 통째로 받는 탄력 칸이 있다(Paper 원문 `flex-basis: 0%`).
+   * 보드가 Paper 폭(1360px)보다 좁아지면 그 칸 하나가 부족분을 다 뒤집어써서
+   * 글자가 한 자씩 세로로 눕는다 — 실측 2SKU-1 "현금 비중 28.0%" 칸이 컨테이너
+   * 1169px에서 265px → 74px. 한국어는 `overflow-wrap: anywhere`(Paper 원문)로
+   * 한 글자까지 쪼개져서 자동 최소 크기가 칸을 못 지킨다. 바닥을 주면 부족분을
+   * 줄 전체가 나눠 진다(다른 칸은 이미 shrink가 풀려 있다).
+   *
+   * 바닥은 그 칸의 Paper 문면이 **한 줄로 서는 폭**이다. 상수 160px은 24px 값
+   * 한 줄을 못 담아(실측 3ODO-0·3OIM-0 "4,820,000원" 127px + 좌우 패딩 48px = 175px)
+   * 값이 두 줄로 접히고, 그만큼 칸이 Paper 78px을 넘겨 자란다. `fit-content`는
+   * max-content를 쓰되 남은 폭에서 잘리므로 좁은 단계에서 칸이 줄을 밀어내지 않는다. */
+  .bs-kpi-cell[data-bs-kpi-elastic="true"] { min-width: fit-content; }
+
+  /* 줄바꿈 정책(base)이 켜지면 값·문구가 안 쪼개지므로 칸의 min-content가 「가장 긴
+   * 한 줄」이다. 위 `[data-bs-hoisted] { min-width: 0 }`이 그 바닥을 놓아 버려서
+   * 칸이 0까지 줄고 안쪽 문면이 옆 칸 위로 흘러 겹친다 — 원문이 `flex-shrink: 0`인
+   * 히어로 칸은 탄력 칸 바닥의 대상이 아니다(실측 2QM7-2 「모건스탠리 +842억원」).
+   * `fit-content`는 남은 폭에서 잘리므로 좁은 단계에서 줄을 밀어내지 않고, 글자를
+   * 이고 있는 칸만 받으므로 빈 spacer는 그대로 0이다(시세 스트립 6~8칸 계약). */
+  .bs-kpi-cell[data-bs-kpi-content="true"] { min-width: fit-content; }
+
+  /* 의미 단위가 먼저 다음 줄로 이동하고, 단위 안의 글자는 쪼개지지 않는다.
+   * 값 표시는 responsive owner 밖에서도 쓰이므로 반드시 owner 아래로 한정한다. */
+  .bs-r-flow { flex-wrap: wrap; }
+  .bs-r-flow > * { flex-shrink: 0; }
+  :is(.bs-r-flow, .bs-r-scroll) :is(.bs-r-atomic, [data-bs-value-atomic="true"]) {
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+  /* 병기 줄은 접힌 열을 대신하는 **아랫줄**이다. 추출기가 그 사본을 행의 둘째 칸에
+   * 넣는데, 그 칸이 가로 칸이면 사본이 옆으로 늘어서서 칸을 밀어낸다(실측 2TZN-1
+   * 업종 행 둘째 칸 58px 안에 병기 4줄 — 최소 폭에서 표면 66px 넘침). 칸을 접게 하고
+   * 사본에 한 줄을 통째로 주면 원래 내용은 첫 줄에 남고 병기만 아래로 내려간다. */
+  [data-bs-paired-host="true"] { flex-wrap: wrap; min-width: 0; }
+  [data-bs-paired-host="true"] > .bs-paired { flex-basis: 100%; }
+  /* L에서 레일이 옆에 붙으면 primary 툴바 폭이 Paper 943px을 못 지킨다(실측 2Z49-0
+   * 카드 1035 · primary 673 · 툴바 616). space-between 가로 줄의 마지막 잎
+   * (목록 상태 3T2T-0, nowrap 166px)이 레일 위 「키움증권」으로 넘어가 클릭을 훔친다.
+   * M까지 미루면 그 겹침이 L에서 남는다. 접히면 잎은 아랫줄로 가고 글자는 안 사라진다. */
+  [data-bs-wrap-row="true"] { min-width: 0; flex-wrap: wrap; }
+  .bs-r-scroll-table { min-width: 0; max-width: 100%; overflow-x: auto; }
+  .bs-r-scroll-table > .bs-scroll-table-semantics { width: max-content; min-width: 100%; }
+  .bs-r-scroll-table .bs-scroll-table-semantics [data-bs-hoisted] {
+    width: var(--bs-width, auto);
+    height: var(--bs-height, auto);
+    flex-basis: var(--bs-flex-basis, auto);
+    flex-grow: var(--bs-flex-grow, 0);
+    flex-shrink: var(--bs-flex-shrink, 1);
+    max-width: none;
+  }
+
+  /* Paper 원문은 primary에 고정 폭과 `flex-shrink: 0`을 함께 싣는다(실보드 6장
+   * 전수 실측 — 900·820·880·880·824·420px). 레일만 360px로 줄이면 primary가
+   * 그대로 서 있어 합이 컨테이너를 넘는다(실측 overflow_x 89~148px). L부터는
+   * primary가 남은 폭을 받는 쪽이다 — 레일이 고정, primary가 유동. */
+  .bs-primary { width: auto; flex-basis: 0%; flex-grow: 1; flex-shrink: 1; }
+  /* 레일은 360px가 목표 폭이지 상한이 아니다 — 안쪽 블록이 더 줄 수 없으면
+   * (실측 2R3M-1 레일 min-content 384px) 360px에 가두는 순간 그만큼이 그대로
+   * 가로 넘침이 된다. 최소치를 내용에 맡기면 남는 폭은 primary가 가져간다. */
+  .bs-rail {
+    width: 360px; flex-basis: 360px; flex-grow: 0; flex-shrink: 0; min-width: min-content;
+  }
+  .bs-col[data-col-priority="7"],
+  .bs-col[data-col-priority="8"] { display: none; }
+  .bs-paired[data-paired-col~="7"],
+  .bs-paired[data-paired-col~="8"] { display: block; }
+  .bs-r-paired-table .bs-paired[data-paired-col~="7"] { display: grid; }
+}
+
+/* ---------- M: 720–959 — 6열째부터 접고 KPI는 3칸 흐름 ---------- */
+@container board (max-width: 959px) {
+  .bs-workspace { flex-wrap: wrap; }
+  .bs-primary { width: 100%; flex-basis: 100%; flex-grow: 1; order: 1; }
+  /* 한 행 안의 중첩 primary도 위 100% 규칙을 받는다. 부모가 nowrap이면 뒤 섹션이
+   * 0px까지 눌려 끝 정렬 문구가 카드 왼쪽으로 샌다(3GRO-0 2분할). 형제와 나란히
+   * 놓인 중첩 primary 구조만 아래 줄로 쌓아 각 섹션의 Paper 의미와 전 항목을 보존한다. */
+  [data-bs-primary-row="true"] { flex-wrap: wrap; }
+  /* 레일이 primary 아래로 내려가 한 줄을 통째로 쓰므로 L의 min-content 바닥은
+   * 여기서 놓는다 — 안 놓으면 레일이 Paper 폭(실측 480·538px)으로 되살아나
+   * 좁은 창에서 오히려 더 넘친다. */
+  .bs-rail { width: 100%; flex-basis: 100%; flex-grow: 1; order: 2; min-width: 0; }
+  /* 헤더도 한 줄을 고집하지 않는다 — 제목 묶음과 스트립이 양끝으로 벌어져 있어
+   * 좁아지면 둘의 min-content 합이 그대로 가로 넘침이 된다(실측 135M-2 49px). */
+  .bs-header { flex-wrap: wrap; }
+  /* 머리·스트립이 접혀도 그 안의 가로 묶음이 한 줄을 고집하면 그만큼이 그대로 가로
+   * 넘침이다 — flex item 기본 `min-width: auto`가 자식들의 min-content를 지킨다
+   * (실측 2XTO-0 `2XXN-0` 기능 네비 421px ↔ 컨테이너 378px에서 표면 37px, 최소
+   * 프리셋 3회 재현). wrap-row 접기 자체는 L에서 이미 켠다(2Z49-0). */
+  /* 칸이 전부 탄력(`flex-basis: 0%`)인 줄은 폭이 부족해도 줄바꿈이 발동하지 않는다 —
+   * 각 칸이 0을 기준으로 남는 폭을 나눠 가지기 때문이다. 그 칸에는 자기 문면이 한
+   * 줄로 서는 바닥을 준다(실측 2SKU-1 「예수금 KPI 4칸」: 칸 91px 안에 내용 144px,
+   * 사슬로 표면 9px). `fit-content`는 남은 폭에서 잘리므로 넉넉한 단계에서 줄을
+   * 밀어내지 않고, 글자를 이고 있는 칸만 받으므로 빈 spacer는 그대로 0이다. */
+  /* 표시는 board-mount가 소유자의 **직계 자식**에만 남기므로 부모 한정이 필요 없다.
+   * 접기 소유자(`.bs-r-flow`)에도 같은 바닥이 필요하다 — flow는 `flex-wrap`만 주고,
+   * 칸이 탄력이면 그 wrap이 발동하지 않는다(실측 2T63-1 「Order Progress」 5장). */
+  [data-bs-elastic-cell="true"] { min-width: fit-content; }
+  .bs-kpi { flex-wrap: wrap; }
+  .bs-kpi-cell { width: auto; flex-basis: calc(33.3333% - 24px); flex-grow: 1; }
+  .bs-strip { overflow-x: auto; }
+  .bs-r-scroll { min-width: 0; max-width: 100%; overflow-x: auto; }
+  .bs-r-scroll > * { flex-shrink: 0; min-width: max-content; }
+  /* 스트립은 좁아지면 가로로 스크롤한다(바로 위). 칩까지 같이 줄어들면 스크롤할
+   * 것이 없어지고 글자만 한 자씩 세로로 눕는다 — 한국어 원문이 `overflow-wrap:
+   * anywhere`라 자동 최소 크기가 한 글자다(실측 컨테이너 377px에서 칩 7개 전부). */
+  .bs-strip > * { flex-shrink: 0; }
+  /* 스트립이 세로로 쌓은 양끝 줄은 헤더와 같은 축으로 M부터 접는다(위 `.bs-header`).
+   * XS까지 미루면 S 구간에서 칩 묶음이 자기 스크롤 경계에서 잘리고 그 **바로 옆에**
+   * 형제 문구가 간격 없이 붙어 겹쳐 읽힌다 — 실측 캡처 board-2XTO-0-640x540:
+   * 칩이 「예상차」로 잘린 자리 위에 「● 실시간 갱신」이 얹힌다.
+   * 바로 위 `flex-shrink: 0`은 스트립을 가로로 스크롤시키려고 칩을 안 줄이는 규약인데,
+   * 접을 줄에는 그 예외가 필요하다: 줄이 스트립 폭까지 줄어야 접기가 발동한다.
+   * 칩 묶음은 자기 자신이 `.bs-r-scroll` 소유자라 스크롤을 스스로 맡는다.
+   * primary가 이고 있는 줄은 그대로 XS에서 접는다 — 137X-2 Chart Toolbar가 S에서는
+   * 다 들어간다는 실측이 있어 그 판단을 뒤집지 않는다. */
+  .bs-strip > [data-bs-split-row="true"] {
+    flex-shrink: 1;
+    min-width: 0;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .bs-strip [data-bs-split-row="true"] { flex-wrap: wrap; }
+  .bs-strip [data-bs-split-row="true"] > * { min-width: 0; }
+  .bs-col[data-col-priority="6"] { display: none; }
+  .bs-paired[data-paired-col~="6"] { display: block; }
+  .bs-r-paired-table .bs-paired[data-paired-col~="6"] { display: grid; }
+}
+
+/* ---------- S: 480–719 — 5열째부터 접고 KPI는 2칸 흐름 ---------- */
+@container board (max-width: 719px) {
+  .bs-kpi-cell { flex-basis: calc(50% - 24px); }
+  .bs-col[data-col-priority="5"] { display: none; }
+  .bs-paired[data-paired-col~="5"] { display: block; }
+  .bs-r-paired-table .bs-paired[data-paired-col~="5"] { display: grid; }
+}
+
+/* ---------- XS: < 480 — 4열째부터 접고 KPI는 1칸 세로 ---------- */
+@container board (max-width: 479px) {
+  /* primary가 이고 있는 양끝 줄은 여기서 접는다 — .bs-header가 M에서 접히는 것과
+   * 같은 판단이고, 접는 폭만 한 단계 늦다(실측: 137X-2 Chart Toolbar가 S(535·619px)
+   * 에서는 다 들어가고 XS(375px)에서만 149px을 낸다). 값·문구는 그대로 남고
+   * 묶음이 아랫줄로 내려갈 뿐이다. */
+  [data-bs-split-row="true"] { flex-wrap: wrap; }
+  /* 줄이 접혀도 묶음 하나가 컨테이너보다 넓으면 그만큼이 그대로 넘침이다 — 인라인
+   * 폭이 없는 묶음은 걷어내기 표시가 없어 flex 기본 min-width:auto가 min-content를
+   * 지킨다(실측 137X-2 주기 칩 묶음 352px ↔ 줄 318px). 바닥을 놓고 묶음 안에서도
+   * 접게 하면 칩은 아랫줄로 내려가고 글자는 하나도 안 사라진다. */
+  [data-bs-split-row="true"] > * { min-width: 0; flex-wrap: wrap; }
+  .bs-kpi-cell { flex-basis: 100%; }
+  .bs-col[data-col-priority="4"] { display: none; }
+  .bs-paired[data-paired-col~="4"] { display: block; }
+  .bs-r-paired-table .bs-paired[data-paired-col~="4"] { display: grid; }
+}
+
+/* 상태 보드 조작(스트립 칩·탭). canvas.js가 계약의 control 문구와 맞는 노드에
+ * data-state-board를 찍는다 — 여기서는 그게 누를 수 있는 것임을 보이기만 한다.
+ * 인라인 원문(색·폰트)은 건드리지 않는다. */
+[data-state-board] { cursor: pointer; }
+
+/* 카드 액션(호가 열기·종목 상세 열기) — 상태 보드 칩과 같은 규약이다: canvas.js가
+ * Paper 문구와 맞는 잎에 data-card-action을 찍고, 여기서는 누를 수 있음만 보인다. */
+[data-card-action] { cursor: pointer; }
+
+[data-card-action][role="button"]:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: 2px;
+}
+
+/* 카드 안에서 보드가 앉는 자리. 보드 본문이 길면 카드 안에서 세로 스크롤한다
+ * (계획 §1 "카드 크기 = 뷰포트 크기").
+ *
+ * 높이 100%는 그 계약의 세로 절반이다 — 자리가 내용 높이를 그대로 쓰면(auto)
+ * 아래 `min-height: 100%`가 기댈 확정 높이가 없어 표면이 Paper 보드 높이에
+ * 그대로 주저앉는다(실측: 카드 상자 1138px 안에서 자리·표면이 833~1040px). */
+.board-surface-host {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+}
+
+/* ---------- 카드 = 보드 그 자체 ----------
+ *
+ * 보드 표면 카드에는 통합 카드 크롬을 아예 만들지 않는다: 카드 머리(제목·기준
+ * 시각·×)는 탭 스트립이, 헤더·스트립·푸터는 Paper 보드가 이미 갖고 있다
+ * (canvas.js renderBoardSurfaceCard · integrated-card-surface ensureScaffold).
+ * 남은 카드 껍데기도 유리·테두리·여백을 보드에 내준다 — 안 그러면 보드의 둥근
+ * 패널 위에 카드 유리가 한 겹 더 얹혀 테두리가 두 줄로 보이고, 좌우 여백
+ * 32px만큼 보드가 쓸 폭이 줄어 같은 창에서 열이 더 일찍 접힌다. */
+.card[data-board-surface="true"] {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  min-width: 0;
+}
+
+.card[data-board-surface="true"] .integrated-card-content { gap: 0; }
+
+/* 카드 자리에서 보드까지 확정 높이를 잇는다 — `min-height: 100%`(표면)와
+ * `height: 100%`(자리)는 부모 높이가 확정일 때만 의미가 있고, 통합 카드 뼈대는
+ * 그 사이에 두 겹(panels · panel)을 더 끼운다:
+ *
+ *   .card(100%) → .card-body.integrated-card-content(flex: 1) → .integrated-card-panels
+ *   → .integrated-card-panel → .board-surface-host → .board-surface
+ *
+ * 두 겹이 auto로 서면 사슬이 거기서 끊겨 표면이 다시 Paper 보드 높이로 주저앉는다
+ * (실측: 이 두 줄 없이는 833~1042px로 흩어졌다). 보드 표면 카드에만 한정한다 —
+ * 모자이크 통합 카드는 패널 여러 장을 세로로 쌓는 뼈대가 그대로 맞다. */
+.card[data-board-surface="true"] .integrated-card-panels { flex: 1 1 auto; min-height: 0; }
+.card[data-board-surface="true"] .integrated-card-panel { height: 100%; min-height: 0; }
+.card[data-board-surface="true"] .integrated-card-panel:has(> .board-surface-host) { display: flex; flex-direction: column; }
+.card[data-board-surface="true"] .integrated-card-panel > .board-surface-host { height: auto; flex: 1 1 0; min-height: 0; }
+.card[data-board-surface="true"] .integrated-card-panel:has(> .board-surface-host) > :not(.board-surface-host) { flex: 0 0 auto; }
+
+/* 집중 보기는 본문 높이만 사용한다. 고정 원본 폭도 스크롤바가 차지한 폭을 양보한다. */
+.canvas-tab-panel .board-surface[data-bs-hoisted] { min-height: 0; }
+.board-surface > [data-bs-hoisted] { max-width: 100%; min-width: 0; }
+.board-surface .bs-quote-scroll { overflow-x: auto; max-width: 100%; height: auto; min-height: 0; }
+.bs-quote-table { width: 990px; min-width: 990px; }
+@container board (min-width: 1280px) {
+  .canvas-tab-panel .board-surface .bs-workspace > .bs-primary { flex-shrink: 1; }
+}
+
+/* 검토한 표는 열을 접는 대신 읽을 수 있는 폭을 보존한다. */
+:is([data-bs-layout="15J9-2"], [data-bs-layout="2SCE-1"], [data-bs-layout="3LGC-0"], [data-bs-layout="3MTJ-0"]) .bs-workspace {
+  flex-direction: column;
+  height: auto;
+  min-height: 0;
+}
+:is([data-bs-layout="15J9-2"], [data-bs-layout="2SCE-1"], [data-bs-layout="3LGC-0"], [data-bs-layout="3MTJ-0"]) :is(.bs-primary, .bs-rail) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 auto;
+}
+.bs-readable-owner[data-bs-hoisted] { width: 100%; height: auto; min-height: 0; flex: 0 0 auto; container-type: inline-size; container-name: readable; }
+.bs-readable-scroll {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  flex: 0 0 auto;
+}
+.bs-readable-scroll:focus-visible, .bs-exchange-scroll:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: -2px;
+}
+.bs-readable-table { width: max(100%, var(--bs-table-width)); }
+.board-surface .bs-readable-remainder { width:100%; height:auto; min-height:0; flex:0 0 auto; }
+.bs-readable-table .bs-col { display: contents; }
+.bs-readable-table .bs-readable-row {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: var(--bs-table-width);
+  max-width: none;
+  height: auto;
+  min-height: 70px;
+  flex: 0 0 auto;
+  gap: var(--bs-table-gap);
+}
+.bs-readable-table .bs-readable-row[data-row="head"] { min-height: 40px; }
+.bs-readable-table .bs-readable-cell {
+  width: var(--bs-cell-width);
+  min-width: var(--bs-cell-width);
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 var(--bs-cell-width);
+  padding: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: right;
+  font-size: 13px;
+  line-height: 18px;
+  box-sizing: border-box;
+}
+.bs-readable-cell[data-col="0"], [data-bs-layout="3LGC-0"] .bs-readable-cell[data-col="2"],
+.board-surface:is([data-bs-board-id="2Z49-0"], [data-bs-board-id="3TOM-0"]) .bs-readable-cell[data-col="2"],
+.board-surface:is([data-bs-board-id="4A9H-1"], [data-bs-board-id="4AGN-1"], [data-bs-board-id="4ANS-1"], [data-bs-board-id="4AUX-1"], [data-bs-board-id="2YS8-0"], [data-bs-board-id="2ZBB-0"], [data-bs-board-id="2V71-0"]) .bs-readable-cell[data-col="1"] {
+  align-items: flex-start;
+  text-align: left;
+}
+.bs-readable-table .bs-readable-cell [data-bs-hoisted] {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  flex-shrink: 0;
+}
+.bs-readable-table [data-bs-table-text="true"] { font-size: 13px; line-height: 18px; }
+.bs-readable-table [data-row="head"] [data-bs-table-text="true"],
+.bs-readable-cell > [data-bs-table-text="true"] ~ [data-bs-table-text="true"] { font-size: 12px; }
+.bs-readable-hint { display: none; color: var(--color-k-dim); font-size: 12px; line-height: 18px; padding-top: 6px; }
+.board-surface .bs-session-quote-scroll { overflow-x: auto; max-width: 100%; height: auto; min-height: 0; }
+.bs-session-quote-table { width: max(100%, 660px); min-width: 660px; }
+.bs-session-quote-table .bs-session-quote-row { display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; min-height: 40px; height: auto; }
+.bs-session-quote-row > [data-col] { display: flex; justify-content: flex-end; align-items: center; box-sizing: border-box; min-width: 150px; width: 150px; flex: 0 0 150px; padding: 10px 12px; text-align: right; font-size: 13px; line-height: 18px; }
+.bs-session-quote-row > [data-col="2"], .bs-session-quote-row > [data-col="3"] { width: 180px; min-width: 180px; flex-basis: 180px; }
+.board-surface .bs-session-quote-table [data-bs-hoisted] { height: auto; min-height: 0; max-height: none; }
+[data-bs-layout="30HY-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+[data-bs-layout="3NVG-0"] [data-node="3PCB-0"] { overflow-wrap: anywhere; }
+[data-bs-layout="3NVG-0"] [data-node="3PAQ-0"] { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); height: auto; min-height: 0; }
+[data-bs-layout="3NVG-0"] [data-node="3PAQ-0"] > [data-node] { width: auto; min-width: 0; height: auto; }
+@container board (max-width: 719px) {
+  [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] { flex-direction: column; }
+  [data-bs-layout="3NVG-0"] [data-node="3PBN-0"] > [data-node] { width: 100%; min-width: 0; flex: 0 0 auto; padding-inline: 0; }
+  [data-bs-layout="3NVG-0"] [data-node="3PC2-0"] { padding-left: 0 !important; border-left: 0 !important; }
+  [data-bs-layout="3NVG-0"] [data-node="3PBS-0"] { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); height: auto; min-height: 0; }
+  [data-bs-layout="3NVG-0"] [data-node="3PBS-0"] > [data-node] { width: auto; min-width: 0; min-height: 64px; }
+}
+@container readable (max-width: 1069px) { .bs-readable-hint { display: block; } }
+[data-bs-layout="3MTJ-0"] .bs-readable-owner { container-name: readable-settlement; }
+@container readable-settlement (max-width: 1011px) { .bs-readable-hint { display: block; } }
+[data-bs-layout="2SCE-1"] [data-node="3890-0"] { flex-wrap: wrap; height: auto; min-height: 0; }
+[data-bs-layout="2SCE-1"] [data-node="3891-0"] { flex-shrink: 0; min-width: max-content; }
+
+/* 테마 요약 → 종목 표 → 확산 근거: 원본 정보를 넓은 행으로 나눈다. */
+[data-bs-layout="15J9-2"] :is([data-node="15JM-2"], [data-node="15KI-2"], [data-node="3HJL-0"], [data-node="32I4-0"]) {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 auto;
+}
+[data-bs-layout="15J9-2"] [data-node="15JM-2"] { flex-direction: row; gap: 28px; flex-wrap: wrap; align-items: center; }
+[data-bs-layout="15J9-2"] [data-node="15JQ-2"] { width: 220px; flex: 0 0 220px; }
+.bs-theme-summary-details { display: flex; flex-direction: column; gap: 20px; flex: 1 1 300px; min-width: 0; }
+.bs-theme-summary-details > [data-bs-hoisted] { width: 100%; height: auto; min-height: 0; }
+.bs-theme-evidence-columns { display: flex; flex-wrap: wrap; gap: 28px; width: 100%; }
+.bs-theme-evidence-columns > [data-bs-hoisted], .bs-theme-metrics { flex: 1 1 300px; width: 0; min-width: 0; }
+.bs-theme-metrics { display: flex; flex-direction: column; gap: 14px; }
+[data-bs-layout="15J9-2"] .bs-readable-cell { padding-inline: 0; }
+/* 업종별 주가 응답에는 업종 강도·테마 확산·기여도 자료가 없다. 실제 종목 표만 남긴다. */
+[data-bs-layout="15J9-2"] :is([data-node="15JM-2"], [data-node="15JK-2"], .bs-readable-cell[data-col="5"]) { display: none !important; }
+[data-bs-layout="15J9-2"] .bs-readable-table { --bs-table-width: 890px !important; }
+[data-bs-layout="15J9-2"] .bs-workspace { flex: 0 0 auto; }
+
+/* 신주인수권 조회는 응답 순서와 실제 가격·거래량만 보존한다. */
+[data-bs-layout="32XM-0"] :is([data-node="332S-0"], [data-node="332O-0"], [data-node="332G-0"], [data-node="3324-0"], [data-node="3ONT-0"], [data-node="3ONW-0"], [data-node="3ONZ-0"], [data-node="3OOA-0"], [data-node="3OOO-0"], .bs-readable-cell[data-col="6"], .bs-readable-cell[data-col="7"]) { display: none !important; }
+[data-bs-layout="32XM-0"] .bs-readable-cell[data-col="5"] > :nth-child(2) { display: none !important; }
+[data-bs-layout="32XM-0"] :is([data-node="333K-0"], [data-node="333G-0"]) { flex-wrap: wrap; gap: 8px 12px; }
+[data-bs-layout="32XM-0"] :is([data-node="333K-0"], [data-node="333G-0"]) > * { flex: 0 0 auto; max-width: 100%; }
+[data-bs-layout="32XM-0"] [data-node="333J-0"] { font-size: 14px !important; line-height: 20px !important; }
+[data-bs-layout="32XM-0"] :is(.bs-workspace, .bs-primary, .bs-rail, .bs-kpi, .bs-kpi-cell) { height: auto; min-height: 0; }
+[data-bs-layout="32XM-0"] .bs-workspace { flex: 0 0 auto; align-items: flex-start; }
+[data-bs-layout="32XM-0"] .bs-kpi { padding-block: 16px; flex-wrap: wrap; row-gap: 12px; }
+[data-bs-layout="32XM-0"] .bs-kpi-cell { width: auto; flex: 1 1 240px; }
+[data-bs-layout="32XM-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+@container board (min-width: 960px) {
+  [data-bs-layout="32XM-0"] .bs-primary { width: auto; flex: 1 1 0; }
+  [data-bs-layout="32XM-0"] .bs-rail { width: 300px; min-width: 0; flex: 0 0 300px; }
+}
+
+/* 신용·대차 표의 100% 폭이 보조 영역을 누르지 않게 각 영역의 몫을 정한다. */
+[data-bs-board-id="2RWK-1"] :is(.bs-workspace, .bs-primary, .bs-rail) { height: auto; min-height: 0; }
+[data-bs-board-id="2RWK-1"] .bs-workspace { flex: 0 0 auto; align-items: flex-start; }
+@container board (min-width: 960px) {
+  [data-bs-board-id="2RWK-1"] .bs-primary { width: auto; flex: 1 1 0; }
+  [data-bs-board-id="2RWK-1"] .bs-rail { width: 360px; min-width: 0; flex: 0 0 360px; }
+}
+
+/* 펼친 종목의 두 패널은 본문 폭 안에서 균등 분할하고, 333px보다 작아지면 한 열. */
+:is([data-bs-layout="3D4I-0"], [data-bs-layout="3EWN-0"]) :is(.bs-workspace, .bs-primary, .bs-rail) {
+  height: auto;
+  min-height: 0;
+}
+.board-surface .bs-detail-panels {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.board-surface .bs-detail-panel {
+  width: auto;
+  min-width: min(100%, 333px);
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  flex: 1 1 333px;
+}
+.bs-detail-panel [data-bs-hoisted] { min-height: 0; }
+
+/* 거래소 비교의 머리글과 숫자에 동일한 370px 열 계약을 준다. */
+.bs-exchange-scroll { max-width: 100%; min-width: 0; overflow-x: auto; }
+.bs-exchange-scroll .bs-exchange-row { width: 370px; max-width: none; min-width: 370px; flex-wrap: nowrap; }
+.bs-exchange-row .bs-exchange-cell {
+  width: var(--bs-cell-width);
+  min-width: var(--bs-cell-width);
+  max-width: none;
+  flex: 0 0 var(--bs-cell-width);
+}
+.bs-exchange-cell [data-bs-hoisted] { width: 100%; min-height: 0; }
+.bs-exchange-cell { white-space: nowrap; }
+
+/* 실제 구성종목이 없는 자리만 접은 뒤 고정 표 높이도 함께 놓는다. */
+[data-bs-layout="3DZ1-0"] :is(.bs-workspace, .bs-primary, [data-node="3ECI-0"]) {
+  height: auto;
+  min-height: 0;
+}
+
+/* 실제 응답의 긴 수량도 셀 안에서 읽히도록 거래량과 비율을 두 줄로 둔다. */
+.bs-session-scroll { max-width: 100%; min-width: 0; overflow-x: auto; }
+.bs-session-scroll .bs-session-row { width: 370px; min-width: 370px; max-width: none; height: auto; min-height: 0; flex-wrap: nowrap; }
+.bs-session-row > [data-bs-hoisted] { width: var(--bs-cell-width); min-width: var(--bs-cell-width); max-width: none; height: auto; min-height: 0; flex: 0 0 var(--bs-cell-width); flex-direction: column; align-items: flex-end; }
+.bs-session-row > [data-bs-hoisted] [data-bs-hoisted] { width: auto; height: auto; min-height: 0; flex-shrink: 0; }
+.bs-readable-compact[data-bs-hoisted] { container-name: readable-quote; }
+.bs-readable-compact .bs-readable-row { min-height: 48px; }
+@container readable-quote (max-width: 783px) { .bs-readable-hint { display: block; } }
+
+/* 빈 응답에 고정 높이의 표 골격만 남기지 않는다. 데이터 대기 상태에는 적용하지 않는다. */
+.board-surface.bs-has-empty-table { min-height: 0; }
+.board-surface.bs-has-short-table { min-height: 0; }
+.bs-has-short-table :is(.bs-workspace, .bs-primary, .bs-rail),
+.board-surface .bs-short-table { height: auto; min-height: 0; }
+.bs-has-empty-table :is(.bs-workspace, .bs-primary, .bs-rail),
+.board-surface .bs-empty-table { height: auto; min-height: 0; }
+.bs-empty-table-message { padding: 20px 0; color: var(--color-k-dim); font-size: 13px; line-height: 20px; }
+.bs-empty-table-message[hidden] { display: none; }
+:is([data-bs-layout="133H-2"], [data-bs-layout="2R3M-1"], [data-bs-layout="2VDA-0"], [data-bs-layout="2SKU-1"]) .bs-rail { flex-direction: var(--bs-rail-direction, column); }
+
+/* 자료에 연결되지 않은 ETF 예시 그래프는 안내로 대체한다. 주변 통계는 유지한다. */
+[data-bs-layout="15N5-2"] :is(.bs-workspace, .bs-primary, .bs-rail, .bs-unavailable-graphic) { height: auto; min-height: 0; }
+[data-bs-layout="15N5-2"] .bs-workspace { flex-direction: column; }
+[data-bs-layout="15N5-2"] :is(.bs-primary, .bs-rail) { width: 100%; min-width: 0; flex: 0 0 auto; }
+[data-bs-layout="15N5-2"] [data-node="3CWA-0"] { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 24px; }
+[data-bs-layout="15N5-2"] [data-node="3CWA-0"] > * { width: auto; min-width: min(100%, 400px); height: auto; min-height: 0; flex: 1 1 400px; }
+[data-bs-layout="15N5-2"] [data-node="3D01-0"] { flex-direction: column; flex-wrap: nowrap; gap: 12px; }
+[data-bs-layout="15N5-2"] [data-node="3D01-0"] > * { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; }
+.board-surface .bs-unavailable-graphic { width: 100%; padding: 18px 0; }
+.bs-unavailable-graphic-source { display: none; }
+.bs-unavailable-graphic-message { color: var(--color-k-dim); font-size: 13px; line-height: 20px; }
+.bs-unavailable-graphic-section { display: flex; flex-direction: column; }
+.board-surface .bs-static-graphic-space { height: auto; min-height: 0; }
+@container board (max-width: 479px) {
+  [data-bs-layout="2SKU-1"] [data-node="3A4F-0"] [data-col="1"] { min-width: 100px; }
+}
+@container board (min-width: 960px) {
+  .bs-kpi:has(> .bs-kpi-cell[hidden]) { flex-wrap: wrap; height: auto; min-height: 0; }
+  .bs-kpi:has(> .bs-kpi-cell[hidden]) > .bs-kpi-cell { width: auto; min-width: fit-content; flex: 1 1 220px; }
+}
+@container board (max-width: 959px) {
+  .board-surface :is([data-node="3FFL-0"], [data-node="3F72-0"], [data-node="3F3K-0"], [data-node="36MY-0"], [data-node="3IG2-0"], [data-node="3Q8V-0"]) { flex-wrap: wrap; row-gap: 16px; }
+  .board-surface :is([data-node="3FFL-0"], [data-node="3F72-0"], [data-node="3F3K-0"], [data-node="36MY-0"], [data-node="3IG2-0"], [data-node="3Q8V-0"]) > :has(> [data-node]) { min-width: fit-content; flex: 1 1 140px; }
+  .board-surface [data-node="3S4O-0"] { flex-wrap: wrap; row-gap: 6px; }
+  .board-surface [data-node="3S4O-0"] > * { min-width: 32px; }
+}
+@container board (max-width: 719px) {
+  .bs-r-paired-table .bs-paired { grid-template-columns: minmax(0, 1fr); row-gap: 2px; }
+  .bs-r-paired-table [data-paired-source] { white-space: normal; }
+  .bs-table :is([data-name$="위 생략"], [data-name="표시 8종목"], [data-name="전체 50종목"]) { flex-wrap: wrap; gap: 8px; height: auto; min-height: 34px; }
+  .bs-table :is([data-name$="위 생략"], [data-name="표시 8종목"], [data-name="전체 50종목"]) > :empty { display: none; }
+  .bs-table :is([data-name$="위 생략"], [data-name="표시 8종목"], [data-name="전체 50종목"]) > :not(:empty) { min-width: max-content; }
+  .board-surface [data-node="36AT-0"] { min-width: 82px; }
+  .board-surface :is([data-node="3AE7-0"], [data-node="3AED-0"], [data-node="3AEJ-0"]) { min-width: 62px; }
+}
+.board-surface [data-node="3IFY-0"] [data-col="0"] { width: 112px; min-width: 112px; flex: 0 0 112px; }
+.board-surface [data-node="3KGF-0"] { min-width: 24px; }
+
+/* 넓어진 보유종목 표 아래의 보조 정보는 읽을 수 있는 두 열로 배치한다. */
+.bs-holdings-rail { display: flex; }
+@container board (min-width: 960px) {
+  .bs-holdings-rail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
+
+/* 비어 접힌 데이터의 조상 상자에 저작 시 고정 높이가 남지 않게 한다. */
+.board-surface .bs-reduced-content[data-bs-hoisted] { height: auto; min-height: 0; }
+.bs-workspace.bs-reduced-content { align-items: flex-start; }
+.board-surface .bs-rail > .bs-reduced-content { flex-basis: auto; }
+.board-surface :is(.bs-rail.bs-reduced-content, .bs-workspace > .bs-reduced-content) { align-self: flex-start; }
+.board-surface .bs-empty-orderbook-kpi { display: none !important; }
+.board-surface .bs-kpi:has(> .bs-empty-orderbook-kpi) { height: auto; min-height: 0; flex-wrap: wrap; }
+.board-surface .bs-kpi:has(> .bs-empty-orderbook-kpi) > .bs-kpi-cell { width: auto; flex: 1 1 220px; }
+.board-surface .bs-kpi:has(> .bs-empty-orderbook-kpi):not(:has(> .bs-kpi-cell:not(.bs-empty-orderbook-kpi))) { padding-block: 0; }
+/* 이 열은 숨긴 고정 잔량 막대의 제목뿐이다. 실제 가격·수량·합계 행은 유지한다. */
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TU5-1"] [data-row]:not([data-row="10"]) [data-col="3"] { display: none !important; }
+@container board (min-width: 960px) {
+  .board-surface:is([data-bs-board-id="13BC-2"], [data-bs-board-id="2TRW-1"]) .bs-readable-owner.bs-rail { width: 360px; min-width: 0; flex: 0 0 360px; }
+  .board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQF-0"].bs-readable-owner { width: 310px; min-width: 0; flex: 0 0 310px; }
+}
+.board-surface .bs-etf-period-original { display: none !important; }
+.board-surface [data-bs-primary-mockup="true"] { display: none !important; }
+.bs-query-context { padding: 14px 24px 0; font-size: 13px; line-height: 20px; color: var(--color-k-dim); overflow-wrap: anywhere; }
+.board-surface.bs-vi-snapshot :is([data-node="15RA-2"], [data-node="171H-2"], [data-node="171X-2"]) { display: none !important; }
+.board-surface.bs-vi-snapshot { min-height: 0; }
+.board-surface.bs-vi-snapshot :is([data-node="15R9-2"], [data-node="170E-2"]) { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; }
+.board-surface.bs-vi-snapshot :is([data-node="170J-2"], [data-node="170K-2"], [data-node="1VDL-1"]) { display: none !important; }
+.board-surface[data-bs-board-id="15R0-2"] .bs-readable-cell[data-col="0"] { align-items: flex-start; text-align: left; }
+.board-surface :is([data-node="33WQ-0"], [data-node="3533-0"], [data-node="3DRT-0"], [data-node="3FEA-0"], [data-node="3660-0"], [data-node="36F2-0"], [data-node="36KA-0"], [data-node="36QP-0"], [data-node="372E-0"], [data-node="3PSS-0"]) { background-color: transparent !important; }
+.board-surface[data-bs-board-id="13BC-2"] :is([data-node="153J-2"], [data-node="153Q-2"]) { background-color: transparent !important; }
+.board-surface[data-bs-board-id="13BC-2"] :is([data-node="153K-2"], [data-node="153R-2"]) { color: var(--color-k-dim) !important; font-family: var(--font-body); }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TZ7-1"] { background-color: #EE137B1A !important; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TZ8-1"] { color: var(--color-brand) !important; }
+.board-surface[data-bs-board-id="13BC-2"] [data-node="153J-2"]:has([data-missing="true"]) { display: none; }
+.board-surface[data-bs-board-id="2QX1-1"] :is([data-node="32HZ-0"], [data-node="32I1-0"]) { display: none; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="30AO-0"] { min-width: 190px; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="3SU2-0"] { min-width: max-content; }
+.board-surface[data-bs-board-id="3ODO-0"] :is([data-node="3P3E-0"], [data-node="3P6P-0"]) { height: auto; min-height: 0; align-self: flex-start; }
+.board-surface[data-bs-board-id="3ODO-0"] :is([data-node="3P63-0"], [data-node="3P6G-0"]) { height: auto; min-height: 0; flex-wrap: wrap; gap: 12px 16px; }
+.board-surface[data-bs-board-id="3ODO-0"] :is([data-node="3P63-0"], [data-node="3P6G-0"]) > * { width: auto; min-width: min(180px, 100%); height: auto; min-height: 0; flex: 1 1 180px; }
+.board-surface[data-bs-board-id="30TY-0"] [data-node="30U4-0"] { height: auto; min-height: 0; align-self: flex-start; }
+.board-surface[data-bs-board-id="3FR6-0"] :is([data-node="3G0N-0"], [data-node="3G0J-0"], [data-node="3G0F-0"]) { display: none !important; }
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3T8J-0"] { flex-wrap: wrap; gap: 8px; height: auto; min-height: 0; }
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3T8J-0"] > * { min-width: max-content; }
+.board-surface[data-bs-board-id="3ODO-0"] [data-node="3P3G-0"] .bs-readable-cell[data-col="0"] { align-items: flex-start; text-align: left; }
+.board-surface[data-bs-board-id="2SKU-1"] [data-node="3GLA-0"] { display: inline-flex; align-items: center; justify-content: center; width: auto; min-width: max-content; height: auto; min-height: 28px; padding: 4px 8px; border: 1px solid var(--color-k-line); border-radius: 4px; color: var(--color-k-text) !important; line-height: 18px; }
+.board-surface[data-bs-board-id="3ODO-0"] [data-node="3OZQ-0"] { overflow: visible; height: auto; min-height: 0; max-height: none; min-width: 0; max-width: 100%; }
+.board-surface[data-bs-board-id="3ODO-0"] [data-node="3OZR-0"] { flex-wrap: nowrap !important; overflow-x: auto; overflow-y: hidden; min-width: 0; max-width: 100%; height: auto; flex-shrink: 0; }
+.board-surface[data-bs-board-id="3ODO-0"] [data-node="3OZR-0"] > * { flex: 0 0 auto; }
+.board-surface[data-bs-board-id="3ODO-0"] :is([data-node="3P3G-0"], [data-node="3P48-0"]).bs-empty-table > :is(.bs-readable-scroll, .bs-readable-hint) { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3E9G-0"] { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; flex-direction: column; }
+.board-surface[data-bs-board-id="3DI2-0"] :is([data-node="3E9H-0"], [data-node="3E9I-0"]) { width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 0 auto; }
+.board-surface[data-bs-board-id="3DI2-0"] .bs-investor-group-title { width: 100%; min-width: var(--bs-table-width); height: auto; min-height: 32px; }
+.board-surface[data-bs-board-id="3DI2-0"] .bs-empty-table .bs-investor-group-title { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] .bs-empty-table > :is(.bs-readable-scroll, .bs-readable-hint) { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] :is([data-node="3DQK-0"], [data-node="3DQC-0"], [data-node="3DQ8-0"], [data-node="3DQ4-0"], [data-node="3DQI-0"]) { display: none !important; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQ3-0"] { height: auto; min-height: 0; padding-block: 16px; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQG-0"] { flex-direction: row !important; align-items: baseline; flex-wrap: wrap; gap: 16px; height: auto; min-height: 0; width: 100%; flex: 1 1 auto; }
+.board-surface[data-bs-board-id="3DI2-0"] [data-node="3DQH-0"] { font-size: 18px !important; line-height: 24px !important; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="14OR-2"] { min-width: 270px; }
+.board-surface[data-bs-board-id="137X-2"] :is([data-node="3C2X-0"], [data-node="3C34-0"]) { min-width: 124px; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="33C2-0"] > :not(.bs-unavailable-graphic-message) { display: none !important; }
+.board-surface[data-bs-board-id="137X-2"] [data-node="3SKY-0"] { display: none !important; }
+.board-surface[data-bs-board-id="137X-2"] .bs-session-columns { display: grid; grid-template-columns: 46px 162px 162px; color: var(--color-k-dim); font-size: 11px; line-height: 18px; text-align: right; }
+.board-surface[data-bs-board-id="137X-2"] .bs-session-columns > :first-child { text-align: left; }
+.board-surface[data-bs-board-id="2RBO-1"] [data-node="2RG0-1"] { min-width: 270px; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TZE-1"]:has([data-missing="true"]) { display: none; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TU5-1"] { height: auto; min-height: 0; align-self: flex-start; }
+.board-surface:is([data-bs-board-id="2X5N-0"], [data-bs-board-id="30C1-0"]) .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+/* These source panels describe aggregates or fields the declared query never returns. */
+.board-surface[data-bs-board-id="31UD-0"] .bs-kpi,
+.board-surface[data-bs-board-id="31UD-0"] .bs-rail,
+.board-surface[data-bs-board-id="30ZW-0"] .bs-kpi,
+.board-surface[data-bs-board-id="30ZW-0"] .bs-rail,
+.board-surface[data-bs-board-id="316O-0"] .bs-kpi,
+.board-surface[data-bs-board-id="316O-0"] .bs-rail,
+.board-surface[data-bs-board-id="2Z49-0"] .bs-kpi,
+.board-surface[data-bs-board-id="2Z49-0"] .bs-rail,
+.board-surface[data-bs-board-id="3TOM-0"] .bs-kpi,
+.board-surface[data-bs-board-id="3TOM-0"] .bs-rail,
+.board-surface [data-node="3QES-0"] [data-col="1"],
+.board-surface [data-node="3QES-0"] [data-col="7"],
+.board-surface [data-node="3R7U-0"] [data-col="4"],
+.board-surface [data-node="3R7U-0"] [data-col="5"],
+.board-surface [data-node="3R7U-0"] [data-col="7"],
+.board-surface [data-node="3NJL-0"] [data-col="4"],
+.board-surface [data-node="3NJL-0"] [data-col="7"],
+.board-surface [data-node="3AXF-0"] [data-col="1"],
+.board-surface [data-node="3AXF-0"] [data-col="7"],
+.board-surface [data-node="3TS6-0"] [data-col="1"],
+.board-surface [data-node="3TS6-0"] [data-col="7"],
+.board-surface [data-node="3O8M-0"] { display: none !important; }
+.board-surface[data-bs-board-id="2YS8-0"] .bs-readable-cell:is([data-col="4"], [data-col="5"], [data-col="6"]),
+.board-surface[data-bs-board-id="2ZBB-0"] .bs-readable-cell:is([data-col="2"], [data-col="6"], [data-col="7"]) { display: none !important; }
+.board-surface[data-bs-board-id="2YS8-0"] [data-node="2YWX-0"] { min-width: 270px; flex-shrink: 0; }
+.board-surface[data-bs-board-id="2V71-0"] [data-node="3SGG-0"] { min-width: max-content; }
+.board-surface .bs-filter-popover { max-width: calc(100% - 16px); z-index: 30; }
+.board-surface .bs-filter-popover .bs-filter-option { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; height: auto; min-height: 52px; padding: 10px 12px; }
+.board-surface .bs-filter-option > [data-node] { width: 100%; max-width: 100%; white-space: normal; overflow-wrap: anywhere; font-size: 13px; line-height: 18px; }
+.board-surface .bs-filter-option > [data-node] + [data-node] { font-size: 12px; }
+.board-surface [data-node="3CXU-0"] :is([data-col="5"], [data-col="6"]) { display: none !important; }
+.board-surface:is([data-bs-board-id="31UD-0"], [data-bs-board-id="30ZW-0"], [data-bs-board-id="316O-0"], [data-bs-board-id="2Z49-0"], [data-bs-board-id="3TOM-0"]) :is(.bs-workspace, .bs-primary) { height: auto; min-height: 0; width: 100%; flex-basis: auto; }
+.bs-etf-period { display: flex; flex-direction: column; gap: 20px; padding: 20px 24px; min-width: 0; }
+.bs-etf-target { font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
+.bs-etf-period-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.bs-etf-period-label { padding-right: 8px; font-size: 13px; }
+.bs-etf-period-button { padding: 8px 16px; border: 1px solid var(--color-k-line); border-radius: 6px; background: var(--color-k-panel); color: var(--color-k-text); font: inherit; font-size: 13px; line-height: 20px; cursor: pointer; }
+.bs-etf-period-button[aria-pressed="true"] { background: var(--color-k-text); color: var(--color-k-panel); }
+.bs-etf-period-button:disabled { opacity: .6; cursor: default; }
+.bs-etf-period-button:focus-visible { outline: 2px solid var(--color-k-text); outline-offset: 3px; }
+.bs-etf-metrics { display: flex; flex-wrap: wrap; gap: 24px; padding: 20px 0; border-block: 1px solid var(--color-k-line-soft); }
+.bs-etf-metric { display: flex; flex: 1 1 180px; min-width: 0; flex-direction: column; gap: 10px; }
+.bs-etf-metric-label { font-size: 13px; line-height: 20px; color: var(--color-k-dim); }
+.bs-etf-metric-value { font-family: var(--font-mono); font-size: 20px; line-height: 34px; font-weight: 600; overflow-wrap: anywhere; }
+.bs-etf-metric-value.is-prominent { font-size: 28px; }
+.bs-etf-metric-value[data-tone="up"] { color: var(--color-up); }
+.bs-etf-metric-value[data-tone="down"] { color: var(--color-down); }
+.bs-etf-period-note { font-size: 12px; line-height: 20px; color: var(--color-k-dim); }
+@container board (max-width: 600px) {
+  .board-surface :is([data-node="2X5I-0"], [data-node="3205-0"], [data-node="2ZA5-0"], [data-node="3TWQ-0"], [data-node="315O-0"], [data-node="3NHF-0"]) { flex-wrap: wrap; gap: 8px; height: auto; }
+  .board-surface :is([data-node="2X5M-0"], [data-node="3209-0"], [data-node="2ZA9-0"], [data-node="3TWU-0"], [data-node="315S-0"], [data-node="3NHG-0"]) { flex: 0 0 100%; font-size: 20px; line-height: 28px; }
+  .bs-etf-period { padding: 16px; }
+  .bs-etf-period-label { width: 100%; }
+  .bs-etf-metrics { gap: 20px; }
+  .bs-etf-metric { flex-basis: calc(50% - 10px); }
+}
+
+/* Each query measure and each broker side has its own table. */
+.bs-flow-card .bs-header [data-slot-id="s001"] { font-size: 20px; line-height: 28px; }
+.bs-flow-card .bs-header [data-slot-id="s002"] { white-space: nowrap; }
+.board-surface .bs-flow-original { display: none !important; }
+.bs-flow-section { padding: 20px 24px 24px; }
+.bs-flow-context { color: var(--color-k-dim); font-size: 13px; line-height: 20px; margin-bottom: 18px; overflow-wrap: anywhere; }
+.bs-flow-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 24px; align-items: start; }
+.bs-flow-panel { min-width: 0; }
+.bs-flow-title { margin: 0 0 12px; font-family: var(--font-strong); font-size: 16px; line-height: 22px; color: var(--color-k-text); }
+.bs-flow-table { width: 100%; height: auto; min-height: 0; }
+.bs-flow-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1fr); gap: 12px; min-height: 46px; border-bottom: 1px solid var(--color-k-line-soft); align-items: center; }
+.bs-flow-row[data-row="head"] { min-height: 36px; color: var(--color-k-dim); font-size: 12px; }
+.bs-flow-cell { min-width: 0; padding-block: 10px; }
+.bs-flow-cell:last-child { text-align: right; }
+.bs-flow-identity { display: flex; gap: 10px; align-items: center; }
+.bs-flow-rank { font-family: var(--font-mono); font-size: 12px; color: var(--color-k-dim); width: 20px; flex: 0 0 20px; }
+.bs-flow-name { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.bs-flow-section [data-bs-hoisted] { width: auto; max-width: 100%; min-width: 0; height: auto; min-height: 0; flex: 0 1 auto; }
+.bs-flow-name-text { font-family: var(--font-body); font-size: 13px; line-height: 18px; color: var(--color-k-text); overflow-wrap: anywhere; }
+.bs-flow-code { font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--color-k-dim); }
+.bs-flow-value { display: flex; justify-content: flex-end; }
+.bs-flow-value-text { font-family: var(--font-mono); font-size: 13px; line-height: 18px; white-space: nowrap; }
+@container board (max-width: 479px) { .bs-flow-section { padding-inline: 16px; } }
+
+/* A list query and a one-shot search do not start a monitoring session. */
+.board-surface[data-bs-condition-read]:not([data-bs-condition-read=""]) :is(.bs-rail, .bs-condition-monitor-only, .bs-condition-monitor-mode, [data-node="2UPY-1"]) { display: none !important; }
+.board-surface[data-bs-condition-read]:not([data-bs-condition-read=""]) :is(.bs-workspace, .bs-primary, [data-node="34ND-0"]) { height: auto; min-height: 0; }
+.board-surface[data-bs-condition-read]:not([data-bs-condition-read=""]) .bs-primary { width: 100%; flex: 0 0 auto; border-right: 0; }
+.board-surface[data-bs-condition-read="list"] :is(.bs-readable-scroll, .bs-readable-hint) { display: none; }
+.board-surface[data-bs-condition-read="list"] .bs-condition-empty-card { display: none !important; }
+.board-surface[data-bs-condition-read="list"] .bs-readable-owner > .bs-empty-table-message { display: none !important; }
+.board-surface[data-bs-condition-read="list"] [data-node="34ND-0"] { flex-direction: column; gap: 0; width: 100%; }
+.board-surface[data-bs-condition-read="list"] :is([data-node="34NE-0"], [data-node="34NO-0"], [data-node="34NY-0"]) { width: 100%; flex: 0 0 auto; padding: 12px 0; }
+.board-surface[data-bs-condition-read="list"] [data-node="34ND-0"] [data-bs-hoisted] { height: auto; min-height: 0; }
+.board-surface[data-bs-condition-read="list"] :is([data-node="34NE-0"], [data-node="34NO-0"], [data-node="34NY-0"]) { background: transparent; border-color: var(--color-k-line-soft); }
+.board-surface[data-bs-condition-read="search"] [data-node="34ND-0"] { display: none !important; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-table { --bs-table-width: 270px !important; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-cell:not([data-col="1"]):not([data-col="5"]) { display: none !important; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-cell[data-col="1"] { --bs-cell-width: 150px !important; align-items: flex-start; text-align: left; }
+.board-surface[data-bs-condition-read="search"] .bs-readable-cell[data-col="5"] { --bs-cell-width: 120px !important; }
+.bs-condition-query-context[hidden], .bs-condition-empty[hidden] { display: none; }
+
+/* Rail dates preserve all ten date characters beside the numeric measure. */
+.board-surface :is([data-node="3DVA-0"], [data-node="3DVE-0"], [data-node="3DVI-0"], [data-node="3DVM-0"], [data-node="3DWD-0"], [data-node="3SHB-0"], [data-node="3SHG-0"], [data-node="3SHL-0"], [data-node="3SHQ-0"], [data-node="3SHV-0"]) { min-width: 10ch; width: auto; flex-shrink: 0; white-space: nowrap; }
+.board-surface :is([data-node="3DV9-0"], [data-node="3DVD-0"], [data-node="3DVH-0"], [data-node="3DVL-0"]) { flex-wrap: wrap; gap: 6px 10px; height: auto; min-height: 0; }
+.board-surface :is([data-node="3DV9-0"], [data-node="3DVD-0"], [data-node="3DVH-0"], [data-node="3DVL-0"]) > :nth-child(2) { min-width: max-content; flex: 1 0 auto; }
+.board-surface :is([data-node="3DV9-0"], [data-node="3DVD-0"], [data-node="3DVH-0"], [data-node="3DVL-0"]) > :nth-child(3) { display: block; width: 100%; flex: 1 0 100%; white-space: normal; overflow-wrap: anywhere; }
+.board-surface [data-node="3DWE-0"] > [data-node] { flex-wrap: wrap; gap: 6px 10px; height: auto; min-height: 0; }
+.board-surface [data-node="3DWE-0"] > [data-node] > :nth-child(2) { min-width: 96px; flex-shrink: 0; }
+.board-surface [data-node="3SQC-0"] { min-width: max-content; flex-shrink: 0; }
+
+/* Full ranking rows from the current bounded response. */
+.board-surface .bs-expanded-ranking-original { display:none !important; }
+.bs-expanded-ranking { min-width:0; padding:20px 24px 24px; display:flex; flex-direction:column; gap:16px; }
+.bs-ranking-title { margin:0; font-family:var(--font-strong); font-size:20px; line-height:28px; }
+.bs-ranking-count,.bs-ranking-empty { color:var(--color-k-dim); font-size:13px; line-height:20px; }
+.bs-ranking-scroll { overflow-x:auto; min-width:0; width:100%; border-top:1px solid var(--color-k-line); }
+.bs-ranking-scroll:focus-visible { outline:2px solid var(--color-k-text); outline-offset:-2px; }
+.bs-ranking-table { width:100%; border-collapse:collapse; font-size:13px; line-height:18px; }
+.bs-ranking-table :is(th,td) { min-width:140px; padding:12px; border-bottom:1px solid var(--color-k-line-soft); text-align:right; font-weight:400; white-space:nowrap; }
+.bs-ranking-table th { font-size:12px; color:var(--color-k-dim); }
+.bs-ranking-table td { font-family:var(--font-mono); }
+.bs-ranking-table [data-field="_position"] { min-width:64px; width:64px; }
+.bs-ranking-table [data-field="stk_nm"] { min-width:200px; text-align:left; font-family:var(--font-body); white-space:normal; overflow-wrap:anywhere; }
+.bs-ranking-table [data-role="identifier"] { min-width:104px; }
+.bs-ranking-table [data-role="price"], .bs-ranking-table [data-kind="percent"] { min-width:120px; }
+.bs-ranking-table [data-tone="up"] { color:var(--color-up); }
+.bs-ranking-table [data-tone="down"] { color:var(--color-down); }
+.bs-ranking-note { color:var(--color-k-dim); font-size:12px; line-height:18px; }
+.board-surface .bs-ranking-sort { background:transparent !important; border-color:var(--color-k-line) !important; }
+.board-surface .bs-ranking-sort > * { color:var(--color-k-text) !important; }
+.board-surface .bs-ranking-sort-current { background:var(--color-k-text) !important; }
+.board-surface .bs-ranking-sort-current > * { color:var(--color-k-panel) !important; }
+@container board (max-width:479px) { .bs-expanded-ranking { padding-inline:16px; } }
+
+/* Each time-after-hours depth is a row, not an optional column. */
+.board-surface .bs-depth-scroll { overflow-x:auto; max-width:100%; height:auto; min-height:0; }
+.bs-depth-table { width: max(100%, 696px); min-width:696px; }
+.bs-depth-table .bs-depth-row { display:flex; flex-direction:row; min-width:696px; width:100%; flex-wrap:nowrap; min-height:40px; align-items:center; }
+.bs-depth-table .bs-depth-row > [data-col] { display:flex; justify-content:flex-end; align-items:center; box-sizing:border-box; width:140px; min-width:140px; flex:0 0 140px; padding:10px 12px; white-space:nowrap; text-align:right; font-size:13px; line-height:18px; }
+.bs-depth-table .bs-depth-row > [data-col="0"] { width:76px; min-width:76px; flex-basis:76px; justify-content:flex-start; text-align:left; }
+.bs-depth-table .bs-depth-row > [data-col="2"], .bs-depth-table .bs-depth-row > [data-col="3"] { width:180px; min-width:180px; flex-basis:180px; }
+.bs-depth-table .bs-depth-row > [data-col="4"] { width:120px; min-width:120px; flex-basis:120px; }
+
+.board-surface .bs-depth-table [data-bs-hoisted] { height:auto !important;min-height:0 !important;max-height:none !important; }
+
+/* 계좌 하단의 값 쌍은 결측 자리와 읽을 수 있는 행 높이를 함께 유지한다. */
+.bs-holdings-rail .bs-account-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 8px 16px; height: auto; min-height: 36px; padding-block: 6px; }
+.bs-holdings-rail .bs-account-detail-grid > [data-bs-hoisted] { width: auto; min-width: 0; min-height: 28px; }
+.bs-holdings-rail :is([data-node="38IV-0"], [data-node="3UP9-0"], [data-node="3UPE-0"], [data-node="38J5-0"], [data-node="3UNQ-0"]) { height: auto; min-height: 40px; padding-block: 6px; }
+.bs-holdings-rail [data-node="3UNR-0"] { font-size: 12px !important; line-height: 18px !important; }
+.board-surface[data-bs-board-id="2SKU-1"] :is([data-node="3U9L-0"], [data-node="3U9S-0"], [data-node="3U9Z-0"], [data-node="3UA6-0"], [data-node="3UAB-0"], [data-node="3UB6-0"]) { font-size: 14px !important; line-height: 20px !important; min-width: 20px; }
+
+.board-surface .bs-account-empty-section { height: auto; min-height: 0; flex: 0 0 auto; }
+.bs-account-empty-section > :not(:first-child):not(.bs-account-empty-note), .bs-account-unlabelled-empty { display: none !important; }
+.bs-account-empty-note { color: var(--color-k-dim); font-size: 12px; line-height: 18px; padding-block: 6px; }
+
+/* 순위 결과의 원본 8열을 유지하고 종목명을 왼쪽 정렬한다. */
+.board-surface[data-bs-board-id="2VDA-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; } .board-surface[data-bs-board-id="2VDA-0"] [data-node="3HMX-0"] > .bs-readable-hint { order: -1; padding: 0 0 6px; }
+
+/* 월별 대여 수량은 좁은 레일에서 두 개의 값 묶음을 차례로 배치한다. */
+.board-surface[data-bs-board-id="3K7K-0"] :is([data-node="3US4-0"], [data-node="3USB-0"], [data-node="3USI-0"], [data-node="3USV-0"], [data-node="3UT2-0"]) { flex-wrap: wrap; height: auto; gap: 8px 16px !important; }
+.board-surface[data-bs-board-id="3K7K-0"] :is([data-node="3US4-0"], [data-node="3USB-0"], [data-node="3USI-0"], [data-node="3USV-0"], [data-node="3UT2-0"]) > [data-node] { flex: 1 1 240px; min-width: 0; }
+
+/* 독립 열 제목을 한 칸에 합치지 않는 표: 종목·거래원 이름은 왼쪽 정렬한다. */
+.board-surface[data-bs-board-id="13K0-2"] [data-node="33Z2-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2SYW-1"] [data-node="3Q8R-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2UHM-1"] [data-node="2ULF-1"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2VO0-0"] [data-node="38TO-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2XA5-0"] [data-node="39FH-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2XY6-0"] [data-node="39V5-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2Y47-0"] [data-node="3A9M-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2YXS-0"] [data-node="3G5L-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2ZHC-0"] [data-node="3IYO-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2ZN9-0"] [data-node="3B82-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="2ZZ7-0"] [data-node="3KPB-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="30O1-0"] [data-node="3RJU-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="30ZW-0"] [data-node="3R7U-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="316O-0"] [data-node="3NJL-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="31CL-0"] [data-node="37AW-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="31II-0"] [data-node="3ARB-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="31OF-0"] [data-node="3A7P-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="3OIM-0"] [data-node="3SUJ-0"] .bs-readable-cell[data-col="1"],
+.board-surface[data-bs-board-id="3TCO-0"] [data-node="3TEG-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+
+/* ETF 이름·배수·분류 칩은 종목 칸 안에서 줄을 나눌 수 있다. */
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="1"] > [data-bs-col-item] { flex-wrap: wrap; max-width: 100%; }
+
+.board-surface[data-bs-board-id="15P5-2"] [data-node="3CCM-0"] .bs-readable-cell[data-col="1"] { align-items: flex-start; text-align: left; }
+
+/* Source-confirmed unavailable filter comparison/status groups retain their anchors. */
+.bs-filter-unavailable-group { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.bs-filter-unavailable-group > :not(.bs-filter-unavailable-note) { display: none !important; }
+.bs-filter-unavailable-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+.board-surface[data-bs-board-id="13K0-2"] [data-node="33Z2-0"] .bs-readable-cell[data-col="0"] { display: none; }
+
+.bs-filter-compact-rail { height:auto!important; min-height:0!important; flex-basis:auto!important; align-self:start; }
+
+.bs-account-residual-empty { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.bs-account-residual-empty > :not(.bs-account-residual-note):not(.bs-account-detail-navigation) { display: none !important; }
+.bs-account-residual-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+
+/* Price color describes the book side, while signed changes retain their tone. */
+.board-surface [data-bs-quote-side="ask"]:not([data-missing]) { color: var(--color-down) !important; }
+.board-surface [data-bs-quote-side="bid"]:not([data-missing]) { color: var(--color-up) !important; }
+.bs-quote-labelled-value { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.board-surface[data-bs-board-id="3JZ3-0"] [data-node="3KFV-0"] .bs-depth-column-unavailable { display: none !important; }
+.board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQF-0"].bs-orderbook-empty > [data-node="1JQJ-0"] { display: flex !important; }
+.board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQF-0"].bs-orderbook-empty { align-self: start; }
+.board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQF-0"] > .bs-orderbook-note { padding: 6px 20px 12px; }
+@container board (max-width: 959px) {
+  .board-surface[data-bs-board-id="1JPU-0"] [data-node="1JQH-0"] > [data-node],
+  .board-surface[data-bs-board-id="3N4O-0"] [data-node="3P86-0"] > [data-node] { width: 100% !important; max-width: 100%; min-width: 0; }
+  .board-surface[data-bs-board-id="1JPU-0"] :is([data-node="34TS-0"], [data-node="1JYI-0"], [data-node="1JYW-0"], [data-node="1JZD-0"]) > [data-node],
+  .board-surface[data-bs-board-id="3N4O-0"] :is([data-node="3UDD-0"], [data-node="3UDT-0"], [data-node="3UF0-0"], [data-node="3UFL-0"]) > [data-node] { width: 100% !important; min-width: 0; justify-content: space-between; }
+}
+.board-surface .bs-footer:has(> .bs-quote-labelled-value) { flex-wrap: wrap; gap: 8px 16px; height: auto; padding-block: 12px; }
+.bs-footer > .bs-quote-labelled-value { flex: 0 0 auto; min-width: max-content; }
+.bs-quote-labelled-value > [data-node] { width: auto !important; min-width: 0; height: auto; }
+.bs-quote-value-label { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); white-space: nowrap; }
+.board-surface .bs-orderbook-unsupported { display: none !important; }
+.board-surface .bs-orderbook-empty { height: auto !important; min-height: 0 !important; flex-basis: auto !important; gap: 6px !important; }
+.bs-orderbook-empty > :not(.bs-orderbook-note):not(.bs-orderbook-navigation) { display: none !important; }
+.bs-orderbook-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; overflow-wrap: anywhere; }
+.bs-orderbook-note[hidden] { display: none; }
+.board-surface[data-bs-board-id="2TRW-1"] .bs-quote-totals { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); width: 100%; height: auto; min-height: 0; gap: 16px; }
+.bs-quote-totals > [data-node="33L6-0"] { grid-column: 1 / -1; }
+.board-surface .bs-quote-totals > [data-node] { width: auto; min-width: 0; height: auto; flex-wrap: wrap; gap: 6px; }
+.board-surface .bs-quote-totals > [data-node] > [data-node] { width: auto; min-width: 0; height: auto; }
+.board-surface[data-bs-board-id="2QRP-1"] .bs-session-quote-row > [data-col="1"] { display: none !important; }
+.board-surface[data-bs-board-id="2QRP-1"] .bs-session-quote-table { width: max(100%, 510px); min-width: 510px; }
+.board-surface[data-bs-board-id="2QRP-1"] [data-node="3IOX-0"], .board-surface[data-bs-board-id="3JT4-0"] [data-node="3JUO-0"] { height: auto; min-height: 0; flex-wrap: wrap; }
+.board-surface[data-bs-board-id="2QRP-1"] [data-node="3IOX-0"] > [data-node], .board-surface[data-bs-board-id="3JT4-0"] [data-node="3JUO-0"] > [data-node] { flex: 1 1 200px; min-width: 0; height: auto; }
+.board-surface[data-bs-board-id="2TRW-1"] [data-node="2TS8-1"].bs-empty-table > :is(.bs-readable-scroll, .bs-readable-hint) { display: none !important; }
+.board-surface[data-bs-board-id="3JZ3-0"] [data-node="3UD2-0"].bs-orderbook-empty { flex-direction: row !important; align-items: center; }
+.board-surface[data-bs-board-id="3JZ3-0"] [data-node="3UD4-0"] { order: 1; padding-top: 0; }
+@container board (min-width: 960px) {
+  .board-surface[data-bs-board-id="3JZ3-0"] .bs-workspace > .bs-primary { flex: 1 1 0; width: auto; min-width: 0; }
+  .board-surface[data-bs-board-id="3JZ3-0"] .bs-rail { flex: 0 0 320px; min-width: 0; max-width: 100%; }
+}
+.bs-account-detail-context { color: var(--color-k-text); font: 14px/1.5 var(--font-strong); }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3S9V-0"] { overflow-x: auto; flex-wrap: nowrap !important; max-width: 100%; }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3S9V-0"] > [data-node] { flex: 1 0 216px !important; min-width: 216px; }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3SAD-0"] { flex-wrap: wrap; }
+
+.board-surface[data-bs-board-id="3IGR-0"] [data-node="3U5H-0"] { height: auto; min-height: 0; flex-basis: auto; align-self: start; }
+
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3UR3-0"] > [data-node],
+.board-surface[data-bs-board-id="3LGC-0"] :is([data-node="3MML-0"], [data-node="3UQ7-0"]) > [data-node] { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(100%, 244px), 1fr)); height: auto; min-height: 32px; gap: 8px 16px !important; padding-block: 4px; }
+.board-surface[data-bs-board-id="3GRO-0"] [data-node="3UR3-0"] > [data-node] > [data-node],
+.board-surface[data-bs-board-id="3LGC-0"] :is([data-node="3MML-0"], [data-node="3UQ7-0"]) > [data-node] > [data-node] { width: auto; min-width: 0; min-height: 24px; }
+
+/* ETF 전체 시세에는 scalar 순위가 제공되지 않는다. */
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="0"] { display: none; }
+
+/* 받은 수급값과 출처를 보존하고, 완료된 빈 수급만 짧게 알린다. */
+.bs-instrument-empty-note { color:var(--color-k-dim); font-size:12px; line-height:1.6; }
+.board-surface[data-bs-board-id="137X-2"] .bs-empty-chart-flow { height:auto!important; min-height:0!important; }
+.board-surface[data-bs-board-id="137X-2"] .bs-empty-chart-flow :is([data-node="14SS-2"], [data-node="14SY-2"], [data-slot-id="s072"]) { display:none!important; }
+.board-surface[data-bs-board-id="3FR6-0"] .bs-empty-minute-summary { height:auto!important; min-height:0!important; }
+.board-surface[data-bs-board-id="3FR6-0"] .bs-empty-minute-summary > :not([data-node="3HAP-0"]):not(.bs-instrument-empty-note) { display:none!important; }
+.board-surface[data-bs-board-id="15N5-2"] [data-slot-id="s046"],
+.board-surface[data-bs-board-id="2RBO-1"] [data-slot-id="s065"] { display:none!important; }
+.board-surface[data-bs-board-id="15N5-2"] :is([data-node="3CWV-0"], [data-node="3CX0-0"]) { width:auto!important; min-width:0!important; height:auto!important; text-align:right; }
+.board-surface[data-bs-board-id="15N5-2"] :is([data-node="3CWT-0"], [data-node="3CWY-0"]) { height:auto!important; min-height:36px; gap:12px; }
+
+/* These responses have no scalar rank field; keep received data columns aligned. */
+.board-surface[data-bs-board-id="2VDA-0"] [data-node="3HMX-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="2YXS-0"] [data-node="3G5L-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="2ZHC-0"] [data-node="3IYO-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="2ZZ7-0"] [data-node="3KPB-0"] .bs-readable-cell[data-col="0"] { display: none; }
+.bs-ranking-unavailable-group { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface[data-bs-board-id="2R3M-1"] [data-node="3CRW-0"] :is([data-slot-id="s057"], [data-slot-id="s065"], [data-slot-id="s073"], [data-slot-id="s081"], [data-slot-id="s089"], [data-slot-id="s097"], [data-slot-id="s105"], [data-slot-id="s113"], [data-slot-id="s121"]) { display: none !important; }
+.bs-ranking-unavailable-group > :not(.bs-ranking-unavailable-note) { display: none !important; }
+.bs-ranking-unavailable-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+.bs-kpi.bs-ranking-unavailable-group > .bs-ranking-unavailable-note { padding-inline: 28px; }
+.bs-ranking-compact-rail { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.bs-ranking-duplicate-list { display: none !important; }
+.board-surface[data-bs-board-id="2R3M-1"] .bs-current-quote-empty-costs { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface[data-bs-board-id="2R3M-1"] .bs-current-quote-empty-costs > :not(.bs-current-quote-note) { display: none !important; }
+.board-surface[data-bs-board-id="2R3M-1"] [data-node="36MQ-0"]:has(> .bs-current-quote-empty-costs) { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.board-surface[data-bs-board-id="2R3M-1"] [data-node="3DFG-0"] .bs-current-quote-column-empty { display: none !important; }
+.bs-current-quote-note { color: var(--color-k-dim); font: 12px/1.5 var(--font-body); padding-block: 6px; }
+@container board (max-width: 959px) {
+  .board-surface[data-bs-board-id="2ZN9-0"] :is([data-node="3054-0"], [data-node="3055-0"]) { height: auto !important; min-height: 0 !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3055-0"] { flex-wrap: wrap !important; gap: 8px !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3056-0"] { width: 100% !important; min-width: 0 !important; flex: 0 0 100% !important; flex-wrap: nowrap !important; overflow-x: auto !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] :is([data-node="3056-0"], [data-node="305J-0"]) > [data-node] { flex: 0 0 auto !important; white-space: nowrap; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="305J-0"] { width: max-content !important; min-width: max-content !important; flex: 0 0 auto !important; flex-wrap: nowrap !important; gap: 6px !important; }
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3BGY-0"],
+  .board-surface[data-bs-board-id="2ZN9-0"] [data-node="3BGY-0"] > [data-node] { width: 100% !important; min-width: 0 !important; }
+}
+.board-surface[data-bs-board-id="2YXS-0"] :is([data-slot-id="s330"], [data-slot-id="s333"], [data-slot-id="s336"], [data-slot-id="s339"], [data-slot-id="s342"], [data-slot-id="s346"], [data-slot-id="s349"], [data-slot-id="s352"], [data-slot-id="s355"]) { display: none !important; }
+
+/* Hide only source-confirmed absent ranking columns and specimen KPI cells. */
+.board-surface[data-bs-board-id="30C1-0"] [data-node="3LY6-0"] .bs-readable-cell:is([data-col="0"], [data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="30O1-0"] [data-node="3RJU-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="30ZW-0"] [data-node="3R7U-0"] .bs-readable-cell[data-col="0"],
+.board-surface[data-bs-board-id="316O-0"] [data-node="3NJL-0"] .bs-readable-cell[data-col="0"] { display: none !important; }
+.bs-ranking-unavailable-cell { display: none !important; }
+.board-surface[data-bs-board-id="30C1-0"] :is([data-slot-id="s332"], [data-slot-id="s333"], [data-slot-id="s335"], [data-slot-id="s336"], [data-slot-id="s338"], [data-slot-id="s339"], [data-slot-id="s341"], [data-slot-id="s342"], [data-slot-id="s343"], [data-slot-id="s344"]) { display: none !important; }
+
+/* Exact query columns with no bound scalar values. */
+.board-surface[data-bs-board-id="2VDA-0"] [data-node="3HMX-0"] .bs-readable-cell:is([data-col="3"], [data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="2YXS-0"] [data-node="3G5L-0"] .bs-readable-cell[data-col="3"],
+.board-surface[data-bs-board-id="2ZHC-0"] [data-node="3IYO-0"] .bs-readable-cell:is([data-col="3"], [data-col="7"]),
+.board-surface[data-bs-board-id="2ZZ7-0"] [data-node="3KPB-0"] .bs-readable-cell:is([data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3T8I-0"] .bs-readable-cell[data-col="6"] { display: none !important; }
+.board-surface[data-bs-board-id="2VDA-0"] :is([data-slot-id="s292"], [data-slot-id="s295"], [data-slot-id="s298"], [data-slot-id="s301"]),
+.board-surface[data-bs-board-id="2ZHC-0"] :is([data-slot-id="s339"], [data-slot-id="s340"], [data-slot-id="s342"], [data-slot-id="s343"], [data-slot-id="s345"], [data-slot-id="s346"], [data-slot-id="s348"], [data-slot-id="s349"]),
+.board-surface[data-bs-board-id="2ZZ7-0"] :is([data-slot-id="s254"], [data-slot-id="s257"], [data-slot-id="s260"], [data-slot-id="s263"], [data-slot-id="s266"]) { display: none !important; }
+/* The minute context keeps session/basis data and its reserved action area. */
+.board-surface[data-bs-board-id="3FR6-0"] [data-node="3FRD-0"] { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.board-surface[data-bs-board-id="2VDA-0"] [data-slot-id="s300"] { color: var(--color-k-text) !important; }
+
+/* ELW lists keep only fields belonging to the received row. */
+.board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"]) .bs-readable-cell:is([data-col="6"], [data-col="7"]),
+.board-surface[data-bs-board-id="2ZN9-0"] [data-node="3B82-0"] .bs-readable-cell:is([data-col="0"], [data-col="3"]),
+.board-surface[data-bs-board-id="2VIN-0"] [data-node="3QN3-0"] .bs-readable-cell[data-col="7"],
+.bs-elw-unavailable-line { display: none !important; }
+.board-surface[data-bs-board-id="2VIN-0"] :is(.bs-workspace, .bs-primary, .bs-rail) { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) :is(.bs-workspace, .bs-primary, .bs-rail, .bs-kpi, .bs-kpi-cell) { height: auto !important; min-height: 0 !important; flex-basis: auto !important; }
+.board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-kpi { padding-block: 12px; flex-wrap: wrap; row-gap: 12px; }
+@container board (max-width: 959px) {
+  .board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-rail { width: 100% !important; min-width: 0 !important; }
+  .board-surface:is([data-bs-board-id="2VO0-0"], [data-bs-board-id="2XA5-0"], [data-bs-board-id="2XY6-0"], [data-bs-board-id="2Y47-0"], [data-bs-board-id="2ZN9-0"]) .bs-rail > [data-node] { width: 100%; max-width: 100%; }
+}
+
+/* Only the four reviewed query lists; zero-valued received cells are retained. */
+.bs-rank-four .bs-rank-four-unsupported { display:none !important; }
+.bs-rank-four .bs-workspace, .bs-rank-four .bs-primary, .bs-rank-four .bs-rail { min-height:0 !important; height:auto !important; align-self:start; }
+.bs-rank-four .bs-workspace { align-items:start; }
+.bs-rank-four .bs-rail { width:100% !important; max-width:100% !important; }
+.bs-rank-four .bs-rail > [data-node] { min-width:0; max-width:100%; height:auto !important; min-height:0 !important; }
+.bs-rank-four .bs-kpi { display:grid !important; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); height:auto !important; min-height:0 !important; }
+.bs-rank-four .bs-kpi > [data-node] { width:auto !important; min-width:0 !important; height:auto !important; flex-basis:auto !important; }
+.bs-rank-four .bs-kpi [data-slot-id], .bs-rank-four .bs-rail [data-slot-id] { min-width:0 !important; max-width:100% !important; height:auto !important; white-space:normal !important; overflow-wrap:anywhere; line-height:1.5 !important; }
+.bs-rank-four .bs-ranking-unavailable-group { display:block !important; }
+.bs-rank-four .bs-readable-cell[data-col="1"] { align-items:flex-start; text-align:left; }
+.bs-rank-four .bs-readable-cell > [data-slot-id] { max-width:100%; white-space:normal; overflow-wrap:anywhere; }
+.bs-rank-four .bs-ranking-unavailable-note { white-space:normal; overflow-wrap:anywhere; }
+.bs-rank-four .bs-rail .bs-paired { display:none !important; }
+.board-surface[data-bs-board-id="2V71-0"] [data-node="2WBN-0"] .bs-readable-cell[data-col="7"],
+.board-surface[data-bs-board-id="3063-0"] [data-node="35L4-0"] .bs-readable-cell:is([data-col="0"],[data-col="2"],[data-col="6"],[data-col="7"]),
+.board-surface[data-bs-board-id="30HY-0"] [data-node="34IW-0"] .bs-readable-cell:is([data-col="2"],[data-col="7"]) { display:none !important; }
+.board-surface[data-bs-board-id="2V71-0"] :is([data-node="3SFY-0"],[data-node="3SG6-0"],[data-node="3SGN-0"],[data-node="3E9O-0"]),
+.board-surface[data-bs-board-id="3063-0"] :is([data-node="335R-0"],[data-node="335T-0"],[data-node="3TZQ-0"],[data-node="3SU1-0"]),
+.board-surface[data-bs-board-id="30HY-0"] :is([data-node="3SYD-0"],[data-node="3I65-0"],[data-node="3I68-0"]) { display:none !important; }
+.board-surface[data-bs-board-id="30HY-0"] :is([data-node="3I6F-0"],[data-node="3I6L-0"],[data-node="3I6S-0"]) { display:none !important; }
+/* These authored more/fold chips have no registered action; real state tabs remain. */
+.board-surface[data-bs-board-id="2V71-0"] [data-node="2WE2-0"],
+.board-surface[data-bs-board-id="3063-0"] [data-node="307J-0"],
+.board-surface[data-bs-board-id="30HY-0"] [data-node="30JE-0"],
+.board-surface[data-bs-board-id="31OF-0"] [data-node="31PV-0"] { display:none !important; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="335M-0"] { height:auto !important; min-height:0 !important; gap:8px; }
+.board-surface[data-bs-board-id="3063-0"] [data-node="335P-0"] { width:auto !important; height:auto !important; background:transparent !important; }
+.board-surface[data-bs-board-id="2V71-0"] :is([data-node="3E9Z-0"],[data-node="3EA5-0"],[data-node="3EAA-0"],[data-node="3EAH-0"],[data-node="3EAL-0"],[data-node="3EAP-0"],[data-node="3EAT-0"]),
+.board-surface[data-bs-board-id="30HY-0"] [data-node="3I6V-0"] { display:flex !important; flex-wrap:wrap; gap:8px; height:auto !important; min-height:0 !important; align-items:baseline; }
+.board-surface[data-bs-board-id="2V71-0"] :is([data-node="3E9Z-0"],[data-node="3EA5-0"],[data-node="3EAA-0"],[data-node="3EAH-0"],[data-node="3EAL-0"],[data-node="3EAP-0"],[data-node="3EAT-0"]) > *,
+.board-surface[data-bs-board-id="30HY-0"] [data-node="3I6V-0"] > * { width:auto !important; min-width:0 !important; height:auto !important; flex:1 1 130px; }
+.board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row { display:grid !important; grid-template-columns:minmax(0,1fr) minmax(140px,auto); gap:12px; height:auto !important; min-height:0 !important; align-items:baseline; padding-block:8px; }
+.board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row > [data-slot-id] { width:auto !important; text-align:left; }
+.board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row > [data-slot-id]:last-child { text-align:right; }
+.board-surface[data-bs-board-id="31OF-0"] :is(.bs-kpi,.bs-rail) { display:none !important; }
+.board-surface[data-bs-board-id="31OF-0"] [data-node="3A7P-0"] { width:100% !important; box-sizing:border-box; min-height:0 !important; padding:20px; }
+.board-surface[data-bs-board-id="31OF-0"] [data-node="31SA-0"] { display:flex !important; flex-direction:row !important; flex-wrap:wrap; gap:8px; width:100% !important; height:auto !important; min-height:0 !important; }
+.board-surface[data-bs-board-id="31OF-0"] :is([data-node="31SK-0"],[data-node="31SB-0"]) { display:contents !important; }
+.board-surface[data-bs-board-id="31OF-0"] :is([data-node="31SK-0"],[data-node="31SB-0"]) > [data-node] { width:max-content !important; flex:0 0 auto !important; height:auto !important; }
+.board-surface[data-bs-board-id="31OF-0"] [data-node="31SA-0"] [data-slot-id] { white-space:nowrap !important; }
+.board-surface[data-bs-board-id="2V71-0"] [data-node="3EAD-0"]:not(.bs-ranking-unavailable-group) > [data-node="3EAE-0"] { display:flex !important; height:auto !important; }
+@container board (max-width:600px) {
+ .bs-rank-four .bs-workspace { grid-template-columns:minmax(0,1fr) !important; flex-direction:column !important; }
+ .bs-rank-four .bs-primary,.bs-rank-four .bs-rail { width:100% !important; max-width:100% !important; flex-basis:auto !important; }
+ .board-surface[data-bs-board-id="30HY-0"] .bs-rank-four-mini-row { grid-template-columns:minmax(0,1fr); gap:2px; }
+}
+
+/* 13K0: retain six supported columns and use the available rail width. */
+.board-surface[data-bs-board-id="13K0-2"] :is([data-node="33WP-0"],[data-node="33X5-0"],[data-node="33XL-0"],[data-node="33Y1-0"],[data-node="33YH-0"],[data-node="33YX-0"]) { display:none !important; }
+.board-surface[data-bs-board-id="13K0-2"] [data-node="3447-0"][data-missing] { color:var(--color-k-dim) !important; }
+@container board (max-width:959px) {
+ .board-surface[data-bs-board-id="13K0-2"] :is([data-node="343Y-0"],[data-node="3448-0"],[data-node="344B-0"],[data-node="344E-0"],[data-node="344H-0"],[data-node="344Q-0"],[data-node="3454-0"],[data-node="3455-0"]) { width:100% !important; min-width:0 !important; }
+ .board-surface[data-bs-board-id="13K0-2"] :is([data-node="343Z-0"],[data-node="3440-0"],[data-node="3445-0"]) { min-width:0 !important; flex-wrap:wrap !important; height:auto !important; }
+ .board-surface[data-bs-board-id="13K0-2"] :is([data-node="344W-0"],[data-node="3450-0"],[data-node="3453-0"]) { min-width:0 !important; overflow-wrap:anywhere; }
+}
+
+/* Exact five-tab flow details. */
+.board-surface[data-bs-board-id="2ROJ-1"] [data-node="33JM-0"] .bs-readable-cell[data-col="5"],
+.board-surface[data-bs-board-id="2ROJ-1"] [data-node="3DWR-0"],
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="2RWU-1"],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="2S4O-1"] { display: none !important; }
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FFL-0"],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3F72-0"] {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  width: 100%; min-width: 0; height: auto; gap: 16px; padding-block: 16px;
+}
+.board-surface[data-bs-board-id="2RWK-1"] :is([data-node="3FFM-0"],[data-node="3FFQ-0"],[data-node="3FFU-0"],[data-node="3FFY-0"]),
+.board-surface[data-bs-board-id="2S4E-1"] :is([data-node="3F73-0"],[data-node="3F77-0"],[data-node="3F7B-0"],[data-node="3F7F-0"]) {
+  width: auto; min-width: 0; height: auto; padding: 0; overflow-wrap: anywhere;
+}
+.board-surface[data-bs-board-id="2RWK-1"] :is([data-node="3FFP-0"],[data-node="3FFT-0"],[data-node="3FFX-0"]),
+.board-surface[data-bs-board-id="2S4E-1"] :is([data-node="3F76-0"],[data-node="3F7A-0"],[data-node="3F7E-0"]) { display:none; }
+.board-surface[data-bs-board-id="2ROJ-1"] :is([data-node="3DWF-0"],[data-node="3DWL-0"]) {
+  display:grid; grid-template-columns:minmax(64px,.6fr) minmax(0,1.4fr); gap:8px 16px; height:auto; min-width:0;
+}
+.board-surface[data-bs-board-id="2ROJ-1"] :is([data-node="3DWF-0"],[data-node="3DWL-0"]) > [data-node] { width:auto; min-width:0; height:auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2ROJ-1"] :is([data-node="3DWI-0"],[data-node="3DWO-0"]) { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:6px 12px; }
+.board-surface[data-bs-board-id="2ROJ-1"] :is([data-node="3DWI-0"],[data-node="3DWO-0"]) > [data-node] { width:auto; height:auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2RWK-1"] :is([data-node="3SHA-0"],[data-node="3SHF-0"],[data-node="3SHK-0"],[data-node="3SHP-0"],[data-node="3SHU-0"]) {
+  display:grid; grid-template-columns:minmax(92px,.7fr) minmax(0,1.3fr); gap:12px; height:auto; min-height:24px;
+}
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3SH9-0"] [data-slot-id] { width:auto; min-width:0; height:auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2RWK-1"] :is([data-node="3FPM-0"],[data-node="3PB4-0"],[data-node="3FQ3-0"],[data-node="3FQB-0"],[data-node="3SH9-0"]) { height:auto; min-height:0; flex-wrap:wrap; gap:12px; }
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-numeric-list { display:flex; flex-wrap:wrap; width:100%; min-width:0; height:auto; gap:8px 20px; }
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-numeric-list > [data-node] { width:auto; min-width:0; height:auto; flex:0 1 auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-numeric-list [data-slot-id] { width:auto; min-width:0; height:auto; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FQC-0"] { display:none; }
+.bs-flow-date-heading { color:var(--color-k-dim); font-size:12px; width:100%; }
+.board-surface .bs-flow-residual-empty { height:auto; min-height:0; flex:0 0 auto; gap:8px; }
+.board-surface .bs-flow-residual-empty > :not(:first-child):not(.bs-flow-residual-note) { display:none !important; }
+.bs-flow-residual-note { color:var(--color-k-dim); font-size:13px; line-height:20px; padding-block:6px; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="2S5G-1"] [data-slot-id] { width:auto; min-width:0; height:auto; overflow-wrap:anywhere; }
+
+/* Keep long received values inside the exact strips and readable tables. */
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FFL-0"],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3F72-0"] {
+  display:grid !important; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));
+  height:auto !important; min-height:0 !important; gap:16px !important;
+}
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FFL-0"] > [data-node],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3F72-0"] > [data-node] { width:auto !important; min-width:0 !important; padding:0 !important; }
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="3FFL-0"] [data-slot-id],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3F72-0"] [data-slot-id] { width:100% !important; min-width:0 !important; height:auto !important; white-space:normal !important; overflow-wrap:anywhere; line-height:1.5; }
+.board-surface[data-bs-board-id="2ROJ-1"] [data-node="2RQD-1"] .bs-readable-cell,
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="2S68-1"] .bs-readable-cell { white-space:normal !important; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2ROJ-1"] [data-node="2RQD-1"] .bs-readable-cell [data-slot-id],
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="2S68-1"] .bs-readable-cell [data-slot-id] { max-width:100%; min-width:0; white-space:normal !important; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2S4E-1"] :is([data-node="3SLT-0"],[data-node="3SMI-0"],[data-node="3SN7-0"]) { height:auto !important; white-space:normal !important; overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3SNA-0"] { display:flex !important; flex-wrap:wrap !important; height:auto !important; min-height:0 !important; gap:8px !important; }
+.board-surface[data-bs-board-id="2S4E-1"] [data-node="3SNA-0"] > [data-node] { width:auto !important; flex:0 0 auto !important; height:auto !important; white-space:nowrap !important; }
+
+/* Distinct source lists preserve every received number without a shared chart axis. */
+.board-surface[data-bs-board-id="2S4E-1"] .bs-flow-replaced-graphic { height:auto !important; min-height:0 !important; }
+.board-surface[data-bs-board-id="2S4E-1"] .bs-flow-replaced-graphic > :not(.bs-flow-source-lists),
+.board-surface[data-bs-board-id="2S4E-1"] .bs-flow-replaced-date-axis { display:none !important; }
+.bs-flow-source-lists { display:grid; gap:18px; width:100%; min-width:0; }
+.bs-flow-source-list { min-width:0; }
+.bs-flow-source-title { color:var(--color-k-dim); font-size:12px; line-height:1.5; padding-bottom:6px; }
+.bs-flow-source-row { display:grid; grid-template-columns:minmax(48px,.6fr) minmax(0,1.4fr); align-items:baseline; gap:12px; padding-block:5px; min-width:0; }
+.bs-flow-source-label { color:var(--color-k-dim); font-size:12px; line-height:1.5; }
+.board-surface[data-bs-board-id="2S4E-1"] .bs-flow-source-row > [data-slot-id] { width:100% !important; height:auto !important; min-width:0 !important; white-space:normal !important; overflow-wrap:anywhere; line-height:1.5 !important; text-align:right; }
+
+/* Exact CC06 reviewed ranking lists. Other ranking/flow boards are unaffected. */
+.bs-rank-nine .bs-rank-nine-unsupported,.bs-rank-nine .bs-rank-nine-empty-row {display:none!important}
+.bs-rank-nine :is(.bs-workspace,.bs-primary,.bs-rail) {min-height:0!important;height:auto!important;align-self:start}
+.bs-rank-nine .bs-workspace {align-items:start}
+.bs-rank-nine .bs-rail {width:100%!important;max-width:100%!important}
+.bs-rank-nine .bs-rail > [data-node],.bs-rank-nine .bs-rank-nine-info {min-width:0!important;max-width:100%!important;width:100%!important;height:auto!important;min-height:0!important}
+.bs-rank-nine .bs-rank-nine-info > [data-node] {width:100%!important;min-width:0!important;height:auto!important;min-height:0!important}
+.bs-rank-nine .bs-rank-nine-info-row {display:flex!important;flex-wrap:wrap;gap:8px;align-items:baseline}
+.bs-rank-nine .bs-rank-nine-info-row.bs-rank-nine-empty-row {display:none!important}
+.bs-rank-nine .bs-rank-nine-info-row > [data-node] {width:auto!important;min-width:0!important;max-width:100%!important;height:auto!important;flex:1 1 130px}
+.bs-rank-nine .bs-rail [data-slot-id] {height:auto!important;min-width:0!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
+.bs-rank-nine .bs-rail .bs-paired {display:none!important}
+.bs-rank-nine [data-missing],.bs-rank-nine [data-pending] {color:var(--color-k-dim)!important}
+.bs-rank-nine .bs-ranking-unavailable-group {display:block!important;min-height:0!important;height:auto!important;width:100%!important;max-width:100%!important;overflow:visible!important}
+.bs-rank-nine .bs-ranking-unavailable-note {white-space:normal;overflow-wrap:anywhere;max-width:100%;width:100%;box-sizing:border-box}
+.bs-rank-nine .bs-readable-cell[data-col="1"] {align-items:flex-start;text-align:left}
+.bs-rank-nine .bs-readable-cell [data-slot-id] {max-width:100%;white-space:normal!important;overflow-wrap:anywhere;height:auto!important;line-height:1.5!important}
+.bs-rank-nine .bs-readable-cell > [data-node] {min-width:0!important;max-width:100%!important;height:auto!important}
+.bs-rank-nine .bs-readable-owner .bs-empty-table-message {display:none!important}
+.bs-rank-nine .bs-rank-nine-mini {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));width:100%!important;gap:12px;min-height:0!important}
+.bs-rank-nine .bs-rank-nine-mini-tile {width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;display:flex!important;flex-wrap:wrap;gap:8px;align-items:baseline}
+.bs-rank-nine .bs-rank-nine-mini-tile > [data-node] {width:auto!important;min-width:0!important;max-width:100%!important;height:auto!important}
+.bs-rank-nine .bs-rank-nine-mini-tile [data-slot-id] {max-width:100%!important;min-width:0!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
+.bs-rank-nine .bs-rank-nine-mini-title {font-size:13px;font-weight:600;margin-bottom:12px}
+.bs-rank-nine [data-card-action][aria-disabled="true"] {opacity:.5;cursor:not-allowed}
+@container board (min-width:960px) {
+ .bs-rank-nine .bs-workspace {min-width:0!important}
+ .bs-rank-nine .bs-primary {flex:1 1 0!important;width:0!important;min-width:0!important}
+ .bs-rank-nine .bs-rail {flex:0 0 360px!important;width:360px!important;min-width:0!important;box-sizing:border-box}
+}
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-empty > :not(.bs-ranking-unavailable-note) {display:none!important}
+.bs-rank-nine.bs-rank-nine-empty .bs-workspace {display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;height:auto!important;min-height:0!important}
+.bs-rank-nine.bs-rank-nine-empty :is(.bs-primary,.bs-rail) {width:100%!important;max-width:100%!important;flex:0 0 auto!important;height:auto!important;min-height:0!important}
+.bs-rank-nine.bs-rank-nine-empty .bs-ranking-unavailable-group > :not(.bs-ranking-unavailable-note) {display:none!important}
+@container board (max-width:600px) {
+ .bs-rank-nine .bs-workspace {grid-template-columns:minmax(0,1fr)!important;flex-direction:column!important}
+ .bs-rank-nine .bs-primary,.bs-rank-nine .bs-rail {width:100%!important;max-width:100%!important;flex-basis:auto!important}
+ .bs-rank-nine .bs-rank-nine-mini {grid-template-columns:minmax(0,1fr)}
+}
+
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="34X2-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="34X2-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="3"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="5"]{display:none!important}
+.board-surface[data-bs-board-id="2XG6-0"] [data-node="352Q-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2XKO-0"] [data-node="3DRG-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2XP6-0"] [data-node="3FC5-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2XTO-0"] [data-node="365N-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YA8-0"] [data-node="36EP-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YA8-0"] [data-node="36EP-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2YEQ-0"] [data-node="36JX-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YEQ-0"] [data-node="36JX-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+.board-surface[data-bs-board-id="2YJ8-0"] [data-node="36QC-0"] .bs-readable-cell[data-col="0"]{display:none!important}
+.board-surface[data-bs-board-id="2YJ8-0"] [data-node="36QC-0"] .bs-readable-cell[data-col="6"]{display:none!important}
+
+/* Exact five reviewed FLOW ranking boards only. */
+.bs-flow-rank-five .bs-flow-five-unsupported,.bs-flow-rank-five .bs-flow-five-empty {display:none!important}
+.bs-flow-rank-five :is(.bs-workspace,.bs-primary,.bs-rail){height:auto!important;min-height:0!important;align-self:start}
+.bs-flow-rank-five .bs-workspace{display:grid!important;width:100%!important;min-width:0!important;max-width:100%!important;grid-template-columns:minmax(0,1fr);align-items:start}
+.bs-flow-rank-five :is(.bs-primary,.bs-rail){width:100%!important;min-width:0!important;max-width:100%!important}
+@container board (min-width:1100px){.bs-flow-rank-five .bs-workspace{grid-template-columns:minmax(0,1fr) minmax(300px,360px)}}
+.bs-flow-rank-five .bs-rail > [data-node]{width:100%!important;min-width:0!important;height:auto!important;min-height:0!important}
+.bs-flow-rank-five .bs-rail [data-slot-id],.bs-flow-rank-five .bs-kpi [data-slot-id]{min-width:0!important;max-width:100%!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.5!important}
+.bs-flow-rank-five .bs-kpi{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));height:auto!important;min-height:0!important;align-items:start}
+.bs-flow-rank-five .bs-kpi > [data-node]{width:auto!important;min-width:0!important;height:auto!important;min-height:0!important;flex-basis:auto!important}
+.bs-flow-rank-five .bs-flow-five-sort{display:flex!important;flex-direction:row!important;gap:12px;grid-column:1/-1;align-items:center}
+.bs-flow-rank-five .bs-flow-five-sort > *{width:auto!important;height:auto!important}
+.bs-flow-five-kpi-note{grid-column:1/-1;color:var(--color-k-dim);font:12px/1.5 var(--font-body)}
+.bs-flow-five-kpi-note[hidden]{display:none}
+.bs-flow-rank-five .bs-readable-cell[data-col="1"]{text-align:left;align-items:flex-start}
+.bs-flow-rank-five .bs-readable-cell > [data-slot-id]{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.bs-flow-rank-five .bs-ranking-unavailable-group{display:block!important}
+.bs-flow-rank-five .bs-rail .bs-paired{display:none!important}
+.bs-flow-rank-five .bs-rail > [data-node] > [data-node]{max-width:100%;height:auto!important;min-height:0!important}
+.bs-flow-rank-five .bs-flow-five-mini{display:flex;flex-direction:column;width:100%;gap:0}
+.bs-flow-rank-five .bs-flow-five-mini-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,auto);gap:12px;align-items:baseline;border-bottom:1px solid var(--color-k-line);padding:10px 0;min-height:0!important;width:100%}
+.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]{width:auto!important;min-width:0!important;height:auto!important;text-align:left}
+.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]:last-child{text-align:right}
+.bs-flow-rank-five .bs-flow-five-separate{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;border-top:1px solid var(--color-k-line);padding-top:16px}
+.bs-flow-rank-five .bs-flow-five-separate > [data-slot-id]{width:auto!important;flex:1 1 140px}
+.bs-flow-rank-five .bs-flow-five-summary-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,auto);gap:12px;align-items:baseline;width:100%;padding-block:8px;height:auto!important;min-height:0!important}
+.bs-flow-rank-five .bs-flow-five-summary-row > [data-slot-id]{width:auto!important;min-width:0!important;height:auto!important}
+.bs-flow-rank-five .bs-flow-five-summary-row > [data-slot-id]:last-child{text-align:right}
+.board-surface[data-bs-board-id="2ZTA-0"] [data-node="38MX-0"] .bs-readable-cell[data-col="6"],.board-surface[data-bs-board-id="30TY-0"] [data-node="362Z-0"] .bs-readable-cell[data-col="7"]{display:none!important}
+@container board (max-width:600px){.bs-flow-rank-five .bs-workspace{grid-template-columns:minmax(0,1fr)!important;flex-direction:column!important}.bs-flow-rank-five :is(.bs-primary,.bs-rail){width:100%!important;max-width:100%!important;flex-basis:auto!important}.bs-flow-rank-five .bs-flow-five-mini-row{grid-template-columns:minmax(0,1fr);gap:3px}.bs-flow-rank-five .bs-flow-five-mini-row > [data-slot-id]:last-child{text-align:left}}
+
+/* Exact industry list and chart received-state layout. */
+.bs-sector-hidden { display:none!important; }
+.bs-sector-note { color:var(--color-k-dim);font:12px/1.6 var(--font-body);padding:12px 0;white-space:normal;overflow-wrap:anywhere; }
+.bs-sector-compact { height:auto!important;min-height:0!important;flex:0 0 auto!important; }
+.bs-sector-label { color:var(--color-k-dim);font:10px/1.4 var(--font-body);white-space:nowrap; }
+.bs-sector-labelled { height:auto!important;line-height:1.5!important;white-space:normal!important;overflow-wrap:anywhere; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail { overflow-x:auto!important;min-width:0!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail-row { display:grid!important;grid-template-columns:140px 150px 110px 160px 100px;min-width:660px!important;width:100%!important;align-items:center!important;gap:0!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail-cell { display:flex!important;min-width:0!important;width:auto!important;max-width:none!important;flex-direction:column!important;align-items:flex-end;justify-content:center;min-height:32px!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-detail-cell:first-child { align-items:flex-start; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-time { display:block!important;min-height:16px!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-rail { width:100%!important;min-width:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"] [data-node="3PSD-0"] { width:100%!important;min-width:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"] [data-node="3PSD-0"] > * { width:100%!important;min-width:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"].bs-sector-list-empty { height:auto!important;min-height:0!important; }
+.board-surface[data-bs-board-id="3BQB-0"].bs-sector-list-empty .bs-workspace { height:auto!important;min-height:0!important;flex:0 0 auto!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-strip,
+.board-surface[data-bs-board-id="3BQB-0"] .bs-strip { height:auto!important;min-height:0!important;padding-block:12px!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-program-row { display:grid!important;grid-template-columns:44px repeat(3,minmax(0,1fr));gap:8px!important;height:auto!important;min-height:32px!important;width:100%!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-program-row > * { width:auto!important;min-width:0!important;height:auto!important; }
+.board-surface[data-bs-board-id="2TZN-1"] .bs-sector-program-row [data-slot-id] { width:auto!important;min-width:0!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere; }
+
+.board-surface[data-bs-board-id="2TZN-1"] .bs-workspace { display:grid!important;grid-template-columns:minmax(0,1fr);width:100%!important;min-width:0!important;align-items:start; }
+.board-surface[data-bs-board-id="2TZN-1"] :is(.bs-primary,.bs-rail) { width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box; }
+@container board (min-width:1100px) { .board-surface[data-bs-board-id="2TZN-1"] .bs-workspace { grid-template-columns:minmax(0,1fr) 360px; } }
+.board-surface:is([data-bs-board-id="2TZN-1"],[data-bs-board-id="3BQB-0"],[data-bs-board-id="32S7-0"]) .bs-sector-compact > :not(.bs-sector-note) { display:none!important; }
+
+.board-surface[data-bs-board-id="32S7-0"] .bs-workspace {display:grid!important;grid-template-columns:minmax(0,1fr);width:100%!important;min-width:0!important;align-items:start}
+.board-surface[data-bs-board-id="32S7-0"] :is(.bs-primary,.bs-rail,.chart-card-body,.chart-price-pane) {width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box}
+@container board (min-width:1100px){.board-surface[data-bs-board-id="32S7-0"] .bs-workspace {grid-template-columns:minmax(0,1fr) 360px}}
+
+/* Industry chart summary values keep their full text inside each KPI cell. */
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] { display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));height:auto!important;min-height:0!important;align-items:start; }
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > .bs-kpi-cell { width:auto!important;min-width:0!important;max-width:100%;height:auto!important;min-height:0!important;box-sizing:border-box; }
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > .bs-kpi-cell > [data-slot-id] { width:100%!important;max-width:100%;height:auto!important;min-height:0!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.4!important; }
+
+/* Exact CC06 received mini identifiers stay intact beside long names. */
+.board-surface[data-bs-board-id="2XG6-0"] .bs-rank-nine-mini-tile [data-slot-id="s099"],
+.board-surface[data-bs-board-id="2XG6-0"] .bs-rank-nine-mini-tile [data-slot-id="s102"],
+.board-surface[data-bs-board-id="2XG6-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2XKO-0"] .bs-rank-nine-mini-tile [data-slot-id="s104"],
+.board-surface[data-bs-board-id="2XKO-0"] .bs-rank-nine-mini-tile [data-slot-id="s107"],
+.board-surface[data-bs-board-id="2XKO-0"] .bs-rank-nine-mini-tile [data-slot-id="s110"],
+.board-surface[data-bs-board-id="2XP6-0"] .bs-rank-nine-mini-tile [data-slot-id="s099"],
+.board-surface[data-bs-board-id="2XP6-0"] .bs-rank-nine-mini-tile [data-slot-id="s102"],
+.board-surface[data-bs-board-id="2XP6-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2XTO-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2XTO-0"] .bs-rank-nine-mini-tile [data-slot-id="s108"],
+.board-surface[data-bs-board-id="2XTO-0"] .bs-rank-nine-mini-tile [data-slot-id="s111"],
+.board-surface[data-bs-board-id="2YA8-0"] .bs-rank-nine-mini-tile [data-slot-id="s100"],
+.board-surface[data-bs-board-id="2YA8-0"] .bs-rank-nine-mini-tile [data-slot-id="s103"],
+.board-surface[data-bs-board-id="2YA8-0"] .bs-rank-nine-mini-tile [data-slot-id="s106"],
+.board-surface[data-bs-board-id="2YEQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s100"],
+.board-surface[data-bs-board-id="2YEQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s103"],
+.board-surface[data-bs-board-id="2YEQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s106"],
+.board-surface[data-bs-board-id="2YJ8-0"] .bs-rank-nine-mini-tile [data-slot-id="s099"],
+.board-surface[data-bs-board-id="2YJ8-0"] .bs-rank-nine-mini-tile [data-slot-id="s102"],
+.board-surface[data-bs-board-id="2YJ8-0"] .bs-rank-nine-mini-tile [data-slot-id="s105"],
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s098"],
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s101"],
+.board-surface[data-bs-board-id="2YNQ-0"] .bs-rank-nine-mini-tile [data-slot-id="s104"] {white-space:nowrap!important;overflow-wrap:normal!important;min-width:max-content!important;flex-shrink:0}
+
+.board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-primary {padding:12px 28px!important;gap:8px!important}
+.board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-rail {padding:0 28px 16px!important;gap:8px!important}
+.board-surface[data-bs-board-id="2YNQ-0"].bs-rank-nine-empty .bs-ranking-unavailable-group {padding:0!important;border:0!important;margin:0!important}
+
+/* Exact WATCH query states; no inferred monitoring state or data. */
+.bs-watch-six .bs-watch-unsupported{display:none!important}
+.bs-watch-six :is(.bs-watch-missing-pill,.bs-watch-empty-detail){display:none!important}
+.bs-watch-six .bs-watch-disabled-action{opacity:.42;cursor:not-allowed!important}
+.bs-watch-six .bs-header{min-height:0!important;height:auto!important;align-items:center!important;gap:12px!important;flex-wrap:wrap!important;padding-block:20px!important}
+.bs-watch-six .bs-header>[data-node]{min-width:0!important;height:auto!important;max-width:100%!important;flex:0 1 auto!important}
+.bs-watch-six .bs-header [data-slot-id]{white-space:normal!important;overflow-wrap:anywhere!important;height:auto!important;max-width:100%!important}
+.bs-watch-six .bs-strip{height:auto!important;min-height:0!important;overflow:visible!important;flex-wrap:wrap!important;gap:10px!important}
+.bs-watch-six .bs-strip>[data-node]{width:auto!important;min-width:0!important;max-width:100%!important;height:auto!important;flex-wrap:wrap!important;overflow:visible!important}
+.bs-watch-six .bs-strip [data-slot-id]{height:auto!important;white-space:normal!important}
+.bs-watch-six .bs-workspace{min-width:0!important;min-height:0!important;height:auto!important;align-items:start!important}
+.bs-watch-six :is(.bs-primary,.bs-rail){min-width:0!important;min-height:0!important;height:auto!important;box-sizing:border-box!important;max-width:100%!important}
+.bs-watch-six .bs-rail>[data-node]{width:100%!important;max-width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;box-sizing:border-box}
+.bs-watch-six .bs-rail [data-slot-id]{max-width:100%!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.bs-watch-six .bs-watch-managed{min-width:0!important;max-width:100%!important;height:auto!important;min-height:0!important}
+.bs-watch-six .bs-watch-empty{display:block!important;padding-block:6px!important;min-height:0!important;max-height:none!important;height:auto!important;flex:0 0 auto!important}
+.bs-watch-six .bs-watch-empty>:not(.bs-watch-note){display:none!important}
+.bs-watch-six .bs-watch-note{font:12px/1.5 var(--font-body);color:var(--color-k-dim);white-space:normal;overflow-wrap:anywhere}
+.bs-watch-six .bs-watch-managed.bs-watch-empty{align-self:start!important}
+.board-surface.bs-watch-six :is(.bs-primary,.bs-rail){display:flex!important;flex-direction:column!important}
+.board-surface.bs-watch-six[data-bs-board-id="2UN6-1"][data-bs-condition-read]:not([data-bs-condition-read=""]) .bs-rail{display:none!important}
+.bs-watch-six .bs-readable-cell[style*="--bs-cell-width: 0px"]{display:none!important}
+.bs-watch-six .bs-empty-table-message{width:auto!important;min-width:0!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;box-sizing:border-box}
+.bs-watch-six [aria-disabled="true"]{opacity:.5;cursor:not-allowed!important}
+.bs-watch-six .bs-watch-unselected-monitor{background:transparent!important;border-color:var(--color-k-line)!important;color:var(--color-k-text)!important}
+.bs-watch-six .bs-watch-unselected-monitor *{color:var(--color-k-text)!important}
+.bs-watch-six[data-bs-board-id="2UHM-1"] [data-node="357F-0"]{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr))!important;gap:12px!important;height:auto!important;min-height:0!important}
+.bs-watch-six[data-bs-board-id="2UHM-1"] [data-node="357F-0"]>[data-node]{width:auto!important;min-width:0!important}
+@container board (min-width:960px){.canvas-tab-panel .bs-watch-six .bs-workspace{display:grid!important;grid-template-columns:minmax(0,1fr) 340px!important;gap:24px!important}.canvas-tab-panel .bs-watch-six :is(.bs-primary,.bs-rail){width:100%!important;flex:none!important}}
+@container board (max-width:959px){.canvas-tab-panel .bs-watch-six .bs-workspace{display:flex!important;flex-direction:column!important}.canvas-tab-panel .bs-watch-six :is(.bs-primary,.bs-rail){width:100%!important;flex:none!important}}
+
+/* The three sector summary fields fill both rows without changing their values. */
+@container board (min-width:440px) and (max-width:659px) {
+  .board-surface[data-bs-board-id="32S7-0"] [data-node="32WC-0"] > [data-node="32WH-0"] { grid-column:1 / -1; }
+}
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32SE-0"] { height:auto!important;min-height:0!important; }
+.board-surface[data-bs-board-id="32S7-0"] [data-node="32SF-0"] { position:static!important;margin-top:0!important;width:100%!important; }
+.board-surface[data-bs-board-id="32S7-0"] :is(.bs-sector-snapshot-status,[data-node="32SC-0"]) { color:var(--color-k-dim)!important; }
+
+/* The three flow templates reserve a readable side panel without stretching content. */
+.board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) :is(.bs-workspace,.bs-primary,.bs-rail) { height:auto!important;min-height:0!important; }
+.board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) .bs-workspace {flex:0 0 auto!important;align-items:flex-start;}
+@container board (min-width:960px) {
+ .board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) .bs-primary {width:auto!important;min-width:0!important;flex:1 1 0!important;}
+ .board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) .bs-rail {width:360px!important;min-width:0!important;flex:0 0 360px!important;}
+}
+@container board (max-width:959px) {
+ .board-surface:is([data-bs-board-id="2ROJ-1"],[data-bs-board-id="2RWK-1"],[data-bs-board-id="2S4E-1"]) :is(.bs-primary,.bs-rail) {width:100%!important;min-width:0!important;flex:0 0 auto!important;}
+}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-source {width:100%;height:auto;min-width:0;display:flex;flex-direction:column;gap:8px;padding-block:12px;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-row {display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;width:100%;height:auto;min-width:0;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-value {display:flex!important;flex-wrap:wrap;gap:6px 12px;flex:1 1 180px!important;width:auto!important;min-width:0;height:auto;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-independent-row [data-slot-id] {width:auto!important;min-width:0;height:auto;white-space:normal!important;overflow-wrap:anywhere;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-source-context {width:100%;height:auto;white-space:normal;color:var(--color-k-muted);font-size:12px;line-height:1.5;}
+.board-surface[data-bs-board-id="2RWK-1"] .bs-flow-moved-date-axis {display:none!important;}
+
+
+/* Keep each received credit date whole when the independent row wraps. */
+.board-surface[data-bs-board-id="2RWK-1"] [data-node="flow-credit-source"] :is([data-slot-id="s109"],[data-slot-id="s110"],[data-slot-id="s111"],[data-slot-id="s112"],[data-slot-id="s113"]) {min-width:max-content!important;flex:0 0 auto!important;white-space:nowrap!important;overflow-wrap:normal!important;}
+
+/* WATCH received-content follow-up: keep source values, collapse only absent sections. */
+.bs-watch-six .bs-watch-empty-rail{display:block!important;padding:18px 24px!important;min-height:0!important;height:auto!important}
+.bs-watch-six .bs-watch-empty-rail>:not(.bs-watch-rail-note):not(.bs-watch-selection-note){display:none!important}
+.bs-watch-six :is(.bs-watch-duplicate-note,.bs-watch-original-selection){display:none!important}
+.board-surface.bs-watch-six .bs-watch-empty-detail{display:none!important}
+.bs-watch-six .bs-watch-empty-owner>.bs-readable-scroll,.bs-watch-six .bs-watch-empty-owner>.bs-readable-hint{display:none!important}
+.bs-watch-six :is(.bs-watch-table-note,.bs-watch-primary-note){padding-block:16px!important;box-sizing:border-box!important;max-width:100%!important}
+.board-surface.bs-watch-six .bs-watch-primary-empty>:not(.bs-watch-primary-note){display:none!important}
+.canvas-tab-panel .board-surface.bs-watch-six.bs-watch-all-empty .bs-workspace{display:block!important}
+.canvas-tab-panel .board-surface.bs-watch-six.bs-watch-all-empty .bs-rail{display:none!important}
+.canvas-tab-panel .board-surface.bs-watch-six.bs-watch-all-empty .bs-primary{width:100%!important}
+.bs-watch-six .bs-watch-selection-note{margin-bottom:12px}
+.bs-watch-six .bs-watch-selected-field{display:flex;justify-content:space-between;gap:16px;padding-block:8px;flex-wrap:wrap}
+.bs-watch-six .bs-watch-selected-field>:last-child{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.bs-watch-six .bs-watch-selected-row{background:var(--color-k-panel2)!important;outline:1px solid var(--color-k-line);outline-offset:-1px}
+.bs-watch-six [data-bs-watch-select]{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMO-0"]{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))!important;gap:24px!important;width:100%!important;min-width:0!important;height:auto!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] :is([data-node="3EMP-0"],[data-node="3ENE-0"]){width:100%!important;min-width:0!important;height:auto!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMT-0"]>[data-node]{display:grid!important;grid-template-columns:minmax(90px,1fr) repeat(2,minmax(100px,1fr))!important;gap:12px!important;height:auto!important;min-height:30px!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMT-0"]>[data-node]>*{width:auto!important;min-width:0!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3EMT-0"] [data-slot-id]{width:auto!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3ENI-0"]{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))!important;gap:20px!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3ENI-0"]>[data-node]{width:auto!important;min-width:0!important}
+.bs-watch-six[data-bs-board-id="3D4I-0"] [data-node="3ENI-0"]>[data-node]>[data-node]{gap:12px!important;height:auto!important;min-height:30px!important;flex-wrap:wrap!important}
+.bs-watch-six[data-bs-board-id="2UBO-1"] [data-node="34AI-0"] .bs-readable-cell [data-slot-id]{max-width:100%!important;width:auto!important;height:auto!important;white-space:normal!important;overflow-wrap:anywhere!important}
+
+/* Received watch-group context needs two readable lines; absent siblings add no placeholder. */
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-missing{display:none!important}
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-row{height:auto!important;min-height:0!important;align-items:flex-start!important}
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-row>[data-node]{min-width:0!important;max-width:100%!important}
+.bs-watch-six[data-bs-board-id="2U5L-1"] .bs-watch-group-row [data-slot-id]{font-size:12px!important;line-height:18px!important;color:var(--color-k-dim)!important}
+
+/* Day-volume sorting keeps every existing choice reachable inside its own row. */
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X8Y-0"] {min-width:0;width:100%;gap:12px;flex-wrap:wrap;}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] {flex:1 1 0%!important;min-width:0!important;max-width:100%;overflow-x:auto!important;overflow-y:hidden;flex-wrap:nowrap!important;padding-block:2px 6px;}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] > * {flex:0 0 auto!important;min-width:max-content;white-space:nowrap;}
+.board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] > * > * {white-space:nowrap!important;}
+.board-surface[data-bs-board-id="2X5N-0"] .bs-day-volume-sort-hint {display:none;color:var(--color-k-dim);font-size:12px;line-height:1.5;}
+@container board (max-width:959px) {
+  .board-surface[data-bs-board-id="2X5N-0"] [data-node="2X92-0"] {flex-basis:100%!important;}
+  .board-surface[data-bs-board-id="2X5N-0"] .bs-day-volume-sort-hint {display:block;}
+}
+
+/* The 10-level quote keeps received summary values when its separate trade feed is unavailable. */
+.board-surface[data-bs-board-id="13BC-2"] [data-node="3IMQ-0"].bs-quote-trades-unavailable { height: auto !important; min-height: 0 !important; flex-basis: auto !important; align-self: start; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-unavailable > .bs-readable-scroll,
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-unavailable > .bs-readable-hint { display: none !important; }
+
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-unavailable > .bs-empty-table-message { display: none !important; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-quote-trades-note { padding: 8px 16px; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-workspace:has(.bs-quote-trades-unavailable) { flex-direction: column !important; height: auto !important; min-height: 0 !important; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-workspace:has(.bs-quote-trades-unavailable) > .bs-primary { width: 100% !important; flex: 1 1 auto !important; }
+.board-surface[data-bs-board-id="13BC-2"] .bs-workspace .bs-quote-trades-unavailable.bs-rail { width: 100% !important; flex: 0 0 auto !important; }

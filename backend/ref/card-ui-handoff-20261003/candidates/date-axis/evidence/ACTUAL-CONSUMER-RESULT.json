@@ -1,0 +1,82 @@
+{
+  "status": "AUTHOR_ACTUAL_LIBRARY_CONSUMER_PASS_NOT_PIXEL_APPROVAL",
+  "actualProductionClass": "Jn",
+  "actualProductionDrawMethod": "Bm",
+  "baselineOutside": 2,
+  "candidateOutside": 0,
+  "baseline": [
+    {
+      "label": "10월",
+      "x": 99,
+      "y": 15,
+      "font": "12px sans-serif",
+      "left": 89,
+      "right": 109
+    },
+    {
+      "label": "7월",
+      "x": 30,
+      "y": 15,
+      "font": "12px sans-serif",
+      "left": 20,
+      "right": 40
+    },
+    {
+      "label": "2019년",
+      "x": 0,
+      "y": 15,
+      "font": "bold 12px sans-serif",
+      "left": -20,
+      "right": 20
+    },
+    {
+      "label": "2021년",
+      "x": 50,
+      "y": 15,
+      "font": "bold 12px sans-serif",
+      "left": 30,
+      "right": 70
+    }
+  ],
+  "result": [
+    {
+      "label": "10월",
+      "x": 89.5,
+      "y": 15,
+      "font": "12px sans-serif",
+      "left": 79.5,
+      "right": 99.5
+    },
+    {
+      "label": "7월",
+      "x": 30,
+      "y": 15,
+      "font": "12px sans-serif",
+      "left": 20,
+      "right": 40
+    },
+    {
+      "label": "2019년",
+      "x": 19.5,
+      "y": 15,
+      "font": "bold 12px sans-serif",
+      "left": -0.5,
+      "right": 39.5
+    },
+    {
+      "label": "2021년",
+      "x": 50,
+      "y": 15,
+      "font": "bold 12px sans-serif",
+      "left": 30,
+      "right": 70
+    }
+  ],
+  "dateLabelsFontOrderAndInteriorPositionsPreserved": true,
+  "alreadyAlignedBehaviorUnchanged": true,
+  "originalAlignmentHelperByteIdentical": true,
+  "libraryVersion": "5.2.1",
+  "rendererLaunches": 0,
+  "productWrites": 0,
+  "privateReads": 0
+}

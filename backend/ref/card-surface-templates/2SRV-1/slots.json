@@ -743,15 +743,16 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
+      "mapping_id": "detail:kt00018:portfolio_summary",
       "f": "tot_prft_rt",
       "alt_mappings": null,
-      "kor": "수익률",
+      "kor": "총수익률(%)",
       "format": {
         "unit": "percent",
         "sign": true,
         "precision": 2,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "총수익률 "
       },
       "paired_with": "s012",
       "collapse_group": null,
@@ -834,7 +835,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "출금가능 "
       },
       "paired_with": "s015",
       "collapse_group": null,
@@ -962,10 +964,10 @@
         "field": "tot_evltv_prft"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_evltv_prft",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_evlt_pl",
       "alt_mappings": null,
-      "kor": "총 평가손익",
+      "kor": "총평가손익금액",
       "format": {
         "unit": "krw_ko",
         "sign": true,
@@ -993,15 +995,16 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_buy_amt",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_pur_amt",
       "alt_mappings": null,
-      "kor": "총 매입가",
+      "kor": "총매입금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "총매입 "
       },
       "paired_with": "s021",
       "collapse_group": null,
@@ -1099,14 +1102,16 @@
       "font_size_px": 15.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10073",
-      "f": "dt_stk_rlzt_pl",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "일자별종목별실현손익",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "고정 섹션 제목 — 조회 응답 값이 아니다"
     },
     {
       "slot_id": "s027",
@@ -1120,14 +1125,16 @@
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10074",
-      "f": "dt_rlzt_pl",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "일자별실현손익",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "고정 섹션 제목 — 조회 응답 값이 아니다"
     },
     {
       "slot_id": "s028",
@@ -1196,7 +1203,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "당일 투자원금 "
       },
       "paired_with": "s029",
       "collapse_group": null,
@@ -1263,18 +1271,13 @@
       "table": null,
       "mapping_id": "detail:kt00004:profit_and_loss",
       "f": "invt_bsamt",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00004:profit_and_loss",
-          "f": "lspft_ratio"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "당월투자원금",
       "format": {
-        "unit": "percent",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "당월 투자원금 "
       },
       "paired_with": "s032",
       "collapse_group": null,
@@ -1348,18 +1351,15 @@
       "table": null,
       "mapping_id": "detail:kt00004:profit_and_loss",
       "f": "lspft_amt",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00004:profit_and_loss",
-          "f": "lspft_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "누적투자원금",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "누적 투자원금 ",
+        "suffix": "원"
       },
       "paired_with": "s035",
       "collapse_group": null,
@@ -1451,7 +1451,8 @@
         "unit": "text",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수수료 "
       },
       "paired_with": "s038",
       "collapse_group": null,
@@ -1623,10 +1624,10 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10074",
+      "mapping_id": "base:ka10073",
       "f": "dt",
       "alt_mappings": null,
-      "kor": "일자",
+      "kor": "dt",
       "format": {
         "unit": "date",
         "sign": false,
@@ -1635,7 +1636,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s047",
@@ -1653,19 +1655,20 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "stk_nm",
       "alt_mappings": null,
-      "kor": "종목명",
+      "kor": "stk_nm",
       "format": {
-        "unit": "count",
+        "unit": "text",
         "sign": false,
         "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s048",
@@ -1683,10 +1686,10 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
-      "f": "stk_cd_1",
+      "mapping_id": "base:ka10073",
+      "f": "stk_cd",
       "alt_mappings": null,
-      "kor": "종목코드1",
+      "kor": "stk_cd",
       "format": {
         "unit": "text",
         "sign": false,
@@ -1695,7 +1698,8 @@
       },
       "paired_with": "s047",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s049",
@@ -1713,14 +1717,15 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "crd_tp",
       "alt_mappings": null,
-      "kor": "신용구분",
+      "kor": "crd_tp",
       "format": null,
       "paired_with": "s047",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s050",
@@ -1738,10 +1743,10 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "tdy_sel_pl",
       "alt_mappings": null,
-      "kor": "당일매도손익",
+      "kor": "tdy_sel_pl",
       "format": {
         "unit": "text",
         "sign": true,
@@ -1750,7 +1755,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s051",
@@ -1768,8 +1774,8 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10072",
-      "f": "tdy_sel_pl_1",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "당일매도손익1",
       "format": {
@@ -1780,7 +1786,9 @@
       },
       "paired_with": "s050",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s052",
@@ -1798,19 +1806,10 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "detail:kt00004:profit_and_loss",
-      "f": "tdy_lspft_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "991"
-        },
-        {
-          "mapping_id": "base:ka10170",
-          "f": "tot_prft_rt"
-        }
-      ],
-      "kor": "당일손익율",
+      "mapping_id": "base:ka10073",
+      "f": "pl_rt",
+      "alt_mappings": null,
+      "kor": "pl_rt",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -1831,7 +1830,8 @@
           "f": "tot_prft_rt",
           "sep": null
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s053",
@@ -1849,10 +1849,10 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:kt00015",
-      "f": "tax_sum_cmsn",
+      "mapping_id": "base:ka10073",
+      "f": "tdy_trde_cmsn",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -1861,7 +1861,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s054",
@@ -1882,7 +1883,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_htssel_cmsn",
       "alt_mappings": null,
-      "kor": "당일hts매도수수료",
+      "kor": "tdy_htssel_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -1891,7 +1892,8 @@
       },
       "paired_with": "s053",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s055",
@@ -1909,10 +1911,10 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:00",
-      "f": "939",
+      "mapping_id": "base:ka10073",
+      "f": "tdy_trde_tax",
       "alt_mappings": null,
-      "kor": "당일매매세금",
+      "kor": "tdy_trde_tax",
       "format": {
         "unit": "text",
         "sign": true,
@@ -1921,7 +1923,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s056",
@@ -1939,8 +1942,8 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10074",
-      "f": "trde_tax",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매매세금",
       "format": {
@@ -1951,7 +1954,9 @@
       },
       "paired_with": "s055",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s057",
@@ -1969,10 +1974,10 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:kt00015",
-      "f": "cntr_dt",
+      "mapping_id": "base:ka10073",
+      "f": "dt",
       "alt_mappings": null,
-      "kor": "체결일",
+      "kor": "dt",
       "format": {
         "unit": "date",
         "sign": false,
@@ -1981,7 +1986,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s058",
@@ -2002,11 +2008,17 @@
       "mapping_id": "base:ka10073",
       "f": "stk_nm",
       "alt_mappings": null,
-      "kor": null,
-      "format": null,
+      "kor": "stk_nm",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s059",
@@ -2024,10 +2036,10 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
-      "f": "stk_cd_1",
+      "mapping_id": "base:ka10073",
+      "f": "stk_cd",
       "alt_mappings": null,
-      "kor": "종목코드1",
+      "kor": "stk_cd",
       "format": {
         "unit": "text",
         "sign": false,
@@ -2036,7 +2048,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s060",
@@ -2057,11 +2070,12 @@
       "mapping_id": "base:ka10073",
       "f": "crd_tp",
       "alt_mappings": null,
-      "kor": "신용구분",
+      "kor": "crd_tp",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s061",
@@ -2079,10 +2093,10 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10074",
+      "mapping_id": "base:ka10073",
       "f": "tdy_sel_pl",
       "alt_mappings": null,
-      "kor": "당일매도손익",
+      "kor": "tdy_sel_pl",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2091,7 +2105,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s062",
@@ -2109,8 +2124,8 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10072",
-      "f": "tdy_sel_pl_1",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "당일매도손익1",
       "format": {
@@ -2121,7 +2136,9 @@
       },
       "paired_with": "s061",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s063",
@@ -2139,19 +2156,10 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "pl_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "991"
-        },
-        {
-          "mapping_id": "base:ka10170",
-          "f": "tot_prft_rt"
-        }
-      ],
-      "kor": "손익율",
+      "alt_mappings": null,
+      "kor": "pl_rt",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -2160,7 +2168,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s064",
@@ -2178,10 +2187,10 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:kt00015",
-      "f": "tax_sum_cmsn",
+      "mapping_id": "base:ka10073",
+      "f": "tdy_trde_cmsn",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2190,7 +2199,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s065",
@@ -2211,7 +2221,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_htssel_cmsn",
       "alt_mappings": null,
-      "kor": "당일hts매도수수료",
+      "kor": "tdy_htssel_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2220,7 +2230,8 @@
       },
       "paired_with": "s064",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s066",
@@ -2238,10 +2249,10 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "tdy_trde_tax",
       "alt_mappings": null,
-      "kor": "당일매매세금",
+      "kor": "tdy_trde_tax",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2250,7 +2261,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 1
     },
     {
       "slot_id": "s067",
@@ -2268,8 +2280,8 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10074",
-      "f": "trde_tax",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매매세금",
       "format": {
@@ -2280,7 +2292,9 @@
       },
       "paired_with": "s066",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s068",
@@ -2301,7 +2315,7 @@
       "mapping_id": "base:ka10073",
       "f": "dt",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "dt",
       "format": {
         "unit": "date",
         "sign": false,
@@ -2310,7 +2324,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s069",
@@ -2331,11 +2346,17 @@
       "mapping_id": "base:ka10073",
       "f": "stk_nm",
       "alt_mappings": null,
-      "kor": null,
-      "format": null,
+      "kor": "stk_nm",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s070",
@@ -2353,10 +2374,10 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
-      "f": "stk_cd_1",
+      "mapping_id": "base:ka10073",
+      "f": "stk_cd",
       "alt_mappings": null,
-      "kor": "종목코드1",
+      "kor": "stk_cd",
       "format": {
         "unit": "text",
         "sign": false,
@@ -2365,7 +2386,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s071",
@@ -2383,14 +2405,15 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "crd_tp",
       "alt_mappings": null,
-      "kor": "신용구분",
+      "kor": "crd_tp",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s072",
@@ -2408,10 +2431,10 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10085",
+      "mapping_id": "base:ka10073",
       "f": "tdy_sel_pl",
       "alt_mappings": null,
-      "kor": "당일매도손익",
+      "kor": "tdy_sel_pl",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2420,7 +2443,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s073",
@@ -2438,8 +2462,8 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10072",
-      "f": "tdy_sel_pl_1",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "당일매도손익1",
       "format": {
@@ -2450,7 +2474,9 @@
       },
       "paired_with": "s072",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s074",
@@ -2470,17 +2496,8 @@
       },
       "mapping_id": "base:ka10073",
       "f": "pl_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "991"
-        },
-        {
-          "mapping_id": "base:ka10170",
-          "f": "tot_prft_rt"
-        }
-      ],
-      "kor": null,
+      "alt_mappings": null,
+      "kor": "pl_rt",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -2489,7 +2506,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s075",
@@ -2507,10 +2525,10 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:kt00015",
-      "f": "tax_sum_cmsn",
+      "mapping_id": "base:ka10073",
+      "f": "tdy_trde_cmsn",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2519,7 +2537,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s076",
@@ -2540,7 +2559,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_htssel_cmsn",
       "alt_mappings": null,
-      "kor": "당일hts매도수수료",
+      "kor": "tdy_htssel_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2549,7 +2568,8 @@
       },
       "paired_with": "s075",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s077",
@@ -2570,7 +2590,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_trde_tax",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_tax",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2579,7 +2599,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 2
     },
     {
       "slot_id": "s078",
@@ -2597,8 +2618,8 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10074",
-      "f": "trde_tax",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매매세금",
       "format": {
@@ -2609,7 +2630,9 @@
       },
       "paired_with": "s077",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s079",
@@ -2630,7 +2653,7 @@
       "mapping_id": "base:ka10073",
       "f": "dt",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "dt",
       "format": {
         "unit": "date",
         "sign": false,
@@ -2639,7 +2662,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3
     },
     {
       "slot_id": "s080",
@@ -2660,11 +2684,17 @@
       "mapping_id": "base:ka10073",
       "f": "stk_nm",
       "alt_mappings": null,
-      "kor": null,
-      "format": null,
+      "kor": "stk_nm",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3
     },
     {
       "slot_id": "s081",
@@ -2682,10 +2712,10 @@
         "row": "3",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
-      "f": "stk_cd_1",
+      "mapping_id": "base:ka10073",
+      "f": "stk_cd",
       "alt_mappings": null,
-      "kor": "종목코드1",
+      "kor": "stk_cd",
       "format": {
         "unit": "text",
         "sign": false,
@@ -2694,7 +2724,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3
     },
     {
       "slot_id": "s082",
@@ -2712,14 +2743,15 @@
         "row": "3",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "crd_tp",
       "alt_mappings": null,
-      "kor": "신용구분",
+      "kor": "crd_tp",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3
     },
     {
       "slot_id": "s083",
@@ -2740,7 +2772,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_sel_pl",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_sel_pl",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2749,7 +2781,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3
     },
     {
       "slot_id": "s084",
@@ -2767,8 +2800,8 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10072",
-      "f": "tdy_sel_pl_1",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "당일매도손익1",
       "format": {
@@ -2779,7 +2812,9 @@
       },
       "paired_with": "s083",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s085",
@@ -2797,19 +2832,10 @@
         "row": "3",
         "col": 3
       },
-      "mapping_id": "base:ka10077",
+      "mapping_id": "base:ka10073",
       "f": "pl_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "991"
-        },
-        {
-          "mapping_id": "base:ka10170",
-          "f": "tot_prft_rt"
-        }
-      ],
-      "kor": "손익율",
+      "alt_mappings": null,
+      "kor": "pl_rt",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -2818,7 +2844,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3
     },
     {
       "slot_id": "s086",
@@ -2836,10 +2863,10 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:kt00015",
-      "f": "tax_sum_cmsn",
+      "mapping_id": "base:ka10073",
+      "f": "tdy_trde_cmsn",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2848,7 +2875,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3
     },
     {
       "slot_id": "s087",
@@ -2869,7 +2897,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_htssel_cmsn",
       "alt_mappings": null,
-      "kor": "당일hts매도수수료",
+      "kor": "tdy_htssel_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2878,7 +2906,8 @@
       },
       "paired_with": "s086",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3
     },
     {
       "slot_id": "s088",
@@ -2896,10 +2925,10 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10074",
+      "mapping_id": "base:ka10073",
       "f": "tdy_trde_tax",
       "alt_mappings": null,
-      "kor": "당일매매세금",
+      "kor": "tdy_trde_tax",
       "format": {
         "unit": "text",
         "sign": true,
@@ -2908,7 +2937,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 3
     },
     {
       "slot_id": "s089",
@@ -2926,8 +2956,8 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10074",
-      "f": "trde_tax",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매매세금",
       "format": {
@@ -2938,7 +2968,9 @@
       },
       "paired_with": "s088",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s090",
@@ -2959,7 +2991,7 @@
       "mapping_id": "base:ka10073",
       "f": "dt",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "dt",
       "format": {
         "unit": "date",
         "sign": false,
@@ -2968,7 +3000,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4
     },
     {
       "slot_id": "s091",
@@ -2989,11 +3022,17 @@
       "mapping_id": "base:ka10073",
       "f": "stk_nm",
       "alt_mappings": null,
-      "kor": null,
-      "format": null,
+      "kor": "stk_nm",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4
     },
     {
       "slot_id": "s092",
@@ -3011,10 +3050,10 @@
         "row": "4",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
-      "f": "stk_cd_1",
+      "mapping_id": "base:ka10073",
+      "f": "stk_cd",
       "alt_mappings": null,
-      "kor": "종목코드1",
+      "kor": "stk_cd",
       "format": {
         "unit": "text",
         "sign": false,
@@ -3023,7 +3062,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4
     },
     {
       "slot_id": "s093",
@@ -3041,14 +3081,15 @@
         "row": "4",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "crd_tp",
       "alt_mappings": null,
-      "kor": "신용구분",
+      "kor": "crd_tp",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4
     },
     {
       "slot_id": "s094",
@@ -3069,7 +3110,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_sel_pl",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_sel_pl",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3078,7 +3119,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4
     },
     {
       "slot_id": "s095",
@@ -3096,8 +3138,8 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10072",
-      "f": "tdy_sel_pl_1",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "당일매도손익1",
       "format": {
@@ -3108,7 +3150,9 @@
       },
       "paired_with": "s094",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s096",
@@ -3126,19 +3170,10 @@
         "row": "4",
         "col": 3
       },
-      "mapping_id": "base:ka10170",
-      "f": "prft_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "991"
-        },
-        {
-          "mapping_id": "base:ka10170",
-          "f": "tot_prft_rt"
-        }
-      ],
-      "kor": "수익률",
+      "mapping_id": "base:ka10073",
+      "f": "pl_rt",
+      "alt_mappings": null,
+      "kor": "pl_rt",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -3147,7 +3182,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4
     },
     {
       "slot_id": "s097",
@@ -3165,10 +3201,10 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:kt00015",
-      "f": "tax_sum_cmsn",
+      "mapping_id": "base:ka10073",
+      "f": "tdy_trde_cmsn",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3177,7 +3213,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4
     },
     {
       "slot_id": "s098",
@@ -3198,7 +3235,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_htssel_cmsn",
       "alt_mappings": null,
-      "kor": "당일hts매도수수료",
+      "kor": "tdy_htssel_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3207,7 +3244,8 @@
       },
       "paired_with": "s097",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4
     },
     {
       "slot_id": "s099",
@@ -3225,10 +3263,10 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10077",
+      "mapping_id": "base:ka10073",
       "f": "tdy_trde_tax",
       "alt_mappings": null,
-      "kor": "당일매매세금",
+      "kor": "tdy_trde_tax",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3237,7 +3275,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 4
     },
     {
       "slot_id": "s100",
@@ -3255,8 +3294,8 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10074",
-      "f": "trde_tax",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매매세금",
       "format": {
@@ -3267,7 +3306,9 @@
       },
       "paired_with": "s099",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s101",
@@ -3288,7 +3329,7 @@
       "mapping_id": "base:ka10073",
       "f": "dt",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "dt",
       "format": {
         "unit": "date",
         "sign": false,
@@ -3297,7 +3338,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s102",
@@ -3318,11 +3360,17 @@
       "mapping_id": "base:ka10073",
       "f": "stk_nm",
       "alt_mappings": null,
-      "kor": null,
-      "format": null,
+      "kor": "stk_nm",
+      "format": {
+        "unit": "text",
+        "sign": false,
+        "precision": 0,
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s103",
@@ -3340,10 +3388,10 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
-      "f": "stk_cd_1",
+      "mapping_id": "base:ka10073",
+      "f": "stk_cd",
       "alt_mappings": null,
-      "kor": "종목코드1",
+      "kor": "stk_cd",
       "format": {
         "unit": "text",
         "sign": false,
@@ -3352,7 +3400,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s104",
@@ -3370,14 +3419,15 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "crd_tp",
       "alt_mappings": null,
-      "kor": "신용구분",
+      "kor": "crd_tp",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s105",
@@ -3398,7 +3448,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_sel_pl",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_sel_pl",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3407,7 +3457,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s106",
@@ -3425,8 +3476,8 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10072",
-      "f": "tdy_sel_pl_1",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "당일매도손익1",
       "format": {
@@ -3437,7 +3488,9 @@
       },
       "paired_with": "s105",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s107",
@@ -3455,19 +3508,10 @@
         "row": "5",
         "col": 3
       },
-      "mapping_id": "base:04",
-      "f": "8019",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "991"
-        },
-        {
-          "mapping_id": "base:ka10170",
-          "f": "tot_prft_rt"
-        }
-      ],
-      "kor": "손익률(실현손익)",
+      "mapping_id": "base:ka10073",
+      "f": "pl_rt",
+      "alt_mappings": null,
+      "kor": "pl_rt",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -3476,7 +3520,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s108",
@@ -3494,10 +3539,10 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:kt00015",
-      "f": "tax_sum_cmsn",
+      "mapping_id": "base:ka10073",
+      "f": "tdy_trde_cmsn",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3506,7 +3551,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s109",
@@ -3527,7 +3573,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_htssel_cmsn",
       "alt_mappings": null,
-      "kor": "당일hts매도수수료",
+      "kor": "tdy_htssel_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3536,7 +3582,8 @@
       },
       "paired_with": "s108",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s110",
@@ -3557,7 +3604,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_trde_tax",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_tax",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3566,7 +3613,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 5
     },
     {
       "slot_id": "s111",
@@ -3584,8 +3632,8 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10074",
-      "f": "trde_tax",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매매세금",
       "format": {
@@ -3596,7 +3644,9 @@
       },
       "paired_with": "s110",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s112",
@@ -3617,7 +3667,7 @@
       "mapping_id": "base:ka10073",
       "f": "dt",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "dt",
       "format": {
         "unit": "date",
         "sign": false,
@@ -3626,7 +3676,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6
     },
     {
       "slot_id": "s113",
@@ -3647,7 +3698,7 @@
       "mapping_id": "base:ka10073",
       "f": "stk_nm",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "stk_nm",
       "format": {
         "unit": "text",
         "sign": false,
@@ -3656,7 +3707,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6
     },
     {
       "slot_id": "s114",
@@ -3674,10 +3726,10 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
-      "f": "stk_cd_1",
+      "mapping_id": "base:ka10073",
+      "f": "stk_cd",
       "alt_mappings": null,
-      "kor": "종목코드1",
+      "kor": "stk_cd",
       "format": {
         "unit": "text",
         "sign": false,
@@ -3686,7 +3738,8 @@
       },
       "paired_with": "s113",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6
     },
     {
       "slot_id": "s115",
@@ -3704,14 +3757,15 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka10072",
+      "mapping_id": "base:ka10073",
       "f": "crd_tp",
       "alt_mappings": null,
-      "kor": "신용구분",
+      "kor": "crd_tp",
       "format": null,
       "paired_with": "s113",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6
     },
     {
       "slot_id": "s116",
@@ -3732,7 +3786,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_sel_pl",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_sel_pl",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3741,7 +3795,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6
     },
     {
       "slot_id": "s117",
@@ -3759,8 +3814,8 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka10072",
-      "f": "tdy_sel_pl_1",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "당일매도손익1",
       "format": {
@@ -3771,7 +3826,9 @@
       },
       "paired_with": "s116",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s118",
@@ -3791,17 +3848,8 @@
       },
       "mapping_id": "base:ka10073",
       "f": "pl_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "991"
-        },
-        {
-          "mapping_id": "base:ka10170",
-          "f": "tot_prft_rt"
-        }
-      ],
-      "kor": null,
+      "alt_mappings": null,
+      "kor": "pl_rt",
       "format": {
         "unit": "percent",
         "sign": true,
@@ -3810,7 +3858,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6
     },
     {
       "slot_id": "s119",
@@ -3828,10 +3877,10 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:kt00015",
-      "f": "tax_sum_cmsn",
+      "mapping_id": "base:ka10073",
+      "f": "tdy_trde_cmsn",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3840,7 +3889,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6
     },
     {
       "slot_id": "s120",
@@ -3861,7 +3911,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_htssel_cmsn",
       "alt_mappings": null,
-      "kor": "당일hts매도수수료",
+      "kor": "tdy_htssel_cmsn",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3870,7 +3920,8 @@
       },
       "paired_with": "s119",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6
     },
     {
       "slot_id": "s121",
@@ -3891,7 +3942,7 @@
       "mapping_id": "base:ka10073",
       "f": "tdy_trde_tax",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "tdy_trde_tax",
       "format": {
         "unit": "text",
         "sign": true,
@@ -3900,7 +3951,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 6
     },
     {
       "slot_id": "s122",
@@ -3918,8 +3970,8 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10074",
-      "f": "trde_tax",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매매세금",
       "format": {
@@ -3930,7 +3982,9 @@
       },
       "paired_with": "s121",
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "일자별 종목 실현손익 응답의 세부 분해값 미제공 — 다른 종목·계좌 합계로 대체하지 않는다"
     },
     {
       "slot_id": "s123",
@@ -3946,16 +4000,7 @@
       "table": null,
       "mapping_id": "base:ka10072",
       "f": "dt_stk_div_rlzt_pl",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10072",
-          "f": "loan_dt"
-        },
-        {
-          "mapping_id": "base:ka10073",
-          "f": "loan_dt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "일자별종목별실현손익",
       "format": {
         "unit": "count",
@@ -4357,14 +4402,16 @@
       "font_size_px": 13.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10077",
-      "f": "tdy_rlzt_pl_dtl",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "당일실현손익상세",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "고정 섹션 제목 — 조회 응답 값이 아니다"
     },
     {
       "slot_id": "s139",
@@ -4383,9 +4430,7 @@
       "alt_mappings": null,
       "kor": "일자",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
+        "kind": "date",
         "tone": "neutral"
       },
       "paired_with": null,
@@ -4459,24 +4504,7 @@
       "table": null,
       "mapping_id": "base:ka10077",
       "f": "cntr_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10077",
-          "f": "buy_uv"
-        },
-        {
-          "mapping_id": "base:ka10077",
-          "f": "cntr_pric"
-        },
-        {
-          "mapping_id": "base:ka10170",
-          "f": "buy_avg_pric"
-        },
-        {
-          "mapping_id": "base:ka10170",
-          "f": "sel_avg_pric"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "체결량",
       "format": {
         "unit": "shares",
@@ -4574,43 +4602,11 @@
       "alt_mappings": [
         {
           "mapping_id": "base:00",
-          "f": "910"
-        },
-        {
-          "mapping_id": "base:00",
           "f": "911"
-        },
-        {
-          "mapping_id": "base:ka10072",
-          "f": "buy_uv"
-        },
-        {
-          "mapping_id": "base:ka10072",
-          "f": "cntr_pric"
         },
         {
           "mapping_id": "base:ka10073",
           "f": "cntr_qty"
-        },
-        {
-          "mapping_id": "base:ka10073",
-          "f": "buy_uv"
-        },
-        {
-          "mapping_id": "base:ka10073",
-          "f": "cntr_pric"
-        },
-        {
-          "mapping_id": "base:ka10076",
-          "f": "cntr_pric"
-        },
-        {
-          "mapping_id": "base:kt00007",
-          "f": "cntr_uv"
-        },
-        {
-          "mapping_id": "detail:kt00009:order_execution_status",
-          "f": "cntr_uv"
         }
       ],
       "kor": "체결량",
@@ -5206,12 +5202,7 @@
       "table": null,
       "mapping_id": "detail:kt00016:performance_summary",
       "f": "tot_amt_fr",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:kt00016:performance_summary",
-          "f": "tot_amt_to"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "순자산액계_초",
       "format": {
         "unit": "krw_ko",

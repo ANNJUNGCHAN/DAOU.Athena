@@ -454,8 +454,8 @@
             "s251"
           ],
           "unbound_reason": "종목명·종목코드 — ka10055 응답에 종목 식별 필드가 없다(순위 표면이 요구하는 신설 필드)",
-          "mapping_id": "base:ka10055",
-          "f": "tdy_pred_cntr_qty",
+          "mapping_id": null,
+          "f": null,
           "note": "종목명·코드 — 당일전일체결량(ka10055) 응답에 종목 필드가 없다(조회 종목 맥락 표기)"
         },
         {
@@ -667,8 +667,8 @@
             "s259"
           ],
           "unbound_reason": "시장 구분 — ka10055 응답에 시장·거래소 구분 필드가 없다",
-          "mapping_id": "base:ka10055",
-          "f": "tdy_pred_cntr_qty",
+          "mapping_id": null,
+          "f": null,
           "note": "시장 구분 — 당일전일체결량(ka10055) 응답에 시장 필드가 없다"
         }
       ]
@@ -1840,7 +1840,7 @@
       "node_path": "2/0/1/1/0",
       "paper_text": "1",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -1854,17 +1854,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 0,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s052",
@@ -1948,10 +1947,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1976,22 +1976,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10055",
-          "f": "pred_pre_sig"
-        },
-        {
-          "mapping_id": "base:ka10055",
-          "f": "flu_rt"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s054",
       "collapse_group": null,
@@ -2036,10 +2028,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2161,10 +2150,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2206,7 +2194,7 @@
       "node_path": "2/0/1/2/0",
       "paper_text": "2",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -2220,17 +2208,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 1,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s063",
@@ -2314,10 +2301,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2342,13 +2330,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s065",
       "collapse_group": null,
@@ -2393,10 +2382,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2518,10 +2504,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2563,7 +2548,7 @@
       "node_path": "2/0/1/3/0",
       "paper_text": "3",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -2577,17 +2562,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 2,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s074",
@@ -2671,10 +2655,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2699,13 +2684,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s076",
       "collapse_group": null,
@@ -2750,10 +2736,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2875,10 +2858,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2920,7 +2902,7 @@
       "node_path": "2/0/1/4/0",
       "paper_text": "4",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -2934,17 +2916,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 3,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s085",
@@ -3028,10 +3009,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3056,13 +3038,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s087",
       "collapse_group": null,
@@ -3107,10 +3090,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3232,10 +3212,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3277,7 +3256,7 @@
       "node_path": "2/0/1/5/0",
       "paper_text": "5",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -3291,17 +3270,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 4,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s096",
@@ -3385,10 +3363,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3413,13 +3392,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s098",
       "collapse_group": null,
@@ -3464,10 +3444,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3589,10 +3566,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3634,7 +3610,7 @@
       "node_path": "2/0/1/6/0",
       "paper_text": "6",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -3648,17 +3624,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 5,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s107",
@@ -3742,10 +3717,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3770,13 +3746,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s109",
       "collapse_group": null,
@@ -3821,10 +3798,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3946,10 +3920,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3991,7 +3964,7 @@
       "node_path": "2/0/1/7/0",
       "paper_text": "7",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -4005,17 +3978,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 6,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s118",
@@ -4099,10 +4071,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4127,13 +4100,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s120",
       "collapse_group": null,
@@ -4178,10 +4152,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4303,10 +4274,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4348,7 +4318,7 @@
       "node_path": "2/0/1/8/0",
       "paper_text": "8",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -4362,17 +4332,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 7,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s129",
@@ -4456,10 +4425,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4484,13 +4454,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s131",
       "collapse_group": null,
@@ -4535,10 +4506,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4660,10 +4628,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4705,7 +4672,7 @@
       "node_path": "2/0/1/9/0",
       "paper_text": "9",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -4719,17 +4686,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 8,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s140",
@@ -4813,10 +4779,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4841,13 +4808,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s142",
       "collapse_group": null,
@@ -4892,10 +4860,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5017,10 +4982,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5062,7 +5026,7 @@
       "node_path": "2/0/1/10/0",
       "paper_text": "10",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -5076,17 +5040,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 9,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s151",
@@ -5170,10 +5133,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5198,13 +5162,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s153",
       "collapse_group": null,
@@ -5249,10 +5214,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5374,10 +5336,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5419,7 +5380,7 @@
       "node_path": "2/0/1/11/0",
       "paper_text": "11",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -5433,17 +5394,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 10,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s162",
@@ -5527,10 +5487,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5555,13 +5516,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s164",
       "collapse_group": null,
@@ -5606,10 +5568,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5731,10 +5690,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5776,7 +5734,7 @@
       "node_path": "2/0/1/12/0",
       "paper_text": "12",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -5790,17 +5748,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 11,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s173",
@@ -5884,10 +5841,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5912,13 +5870,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s175",
       "collapse_group": null,
@@ -5963,10 +5922,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6088,10 +6044,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6133,7 +6088,7 @@
       "node_path": "2/0/1/13/0",
       "paper_text": "13",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -6147,17 +6102,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 12,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s184",
@@ -6241,10 +6195,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6269,13 +6224,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s186",
       "collapse_group": null,
@@ -6320,10 +6276,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6445,10 +6398,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6490,7 +6442,7 @@
       "node_path": "2/0/1/14/0",
       "paper_text": "14",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -6504,17 +6456,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 13,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s195",
@@ -6598,10 +6549,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6626,13 +6578,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s197",
       "collapse_group": null,
@@ -6677,10 +6630,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6802,10 +6752,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6847,7 +6796,7 @@
       "node_path": "2/0/1/15/0",
       "paper_text": "15",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -6861,17 +6810,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 14,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s206",
@@ -6955,10 +6903,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6983,13 +6932,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s208",
       "collapse_group": null,
@@ -7034,10 +6984,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7159,10 +7106,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7204,7 +7150,7 @@
       "node_path": "2/0/1/16/0",
       "paper_text": "16",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -7218,17 +7164,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 15,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s217",
@@ -7312,10 +7257,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7340,13 +7286,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s219",
       "collapse_group": null,
@@ -7391,10 +7338,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7516,10 +7460,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7561,7 +7504,7 @@
       "node_path": "2/0/1/17/0",
       "paper_text": "17",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -7575,17 +7518,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 16,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s228",
@@ -7669,10 +7611,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7697,13 +7640,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s230",
       "collapse_group": null,
@@ -7748,10 +7692,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7873,10 +7814,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7918,7 +7858,7 @@
       "node_path": "2/0/1/18/0",
       "paper_text": "18",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -7932,17 +7872,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 17,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s239",
@@ -8026,10 +7965,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8054,13 +7994,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s241",
       "collapse_group": null,
@@ -8105,10 +8046,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8230,10 +8168,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8275,7 +8212,7 @@
       "node_path": "2/0/1/19/0",
       "paper_text": "19",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -8289,17 +8226,16 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "순위 행 번호 — ka10055 응답에 순위 필드가 없다(배열 순서 파생)",
-      "static_reason": "순위 열 — 당일전일체결량(tdy_pred_cntr_qty) 응답 배열의 차례, 별도 순위 필드가 없다"
+      "display_dup": true,
+      "row_index": 18,
+      "dup_note": "같은 응답 목록의 각 체결 행 표시 순번",
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 체결 행 번호이며 시장 순위가 아님"
     },
     {
       "slot_id": "s250",
@@ -8383,10 +8319,11 @@
       "alt_mappings": null,
       "kor": "체결가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8411,13 +8348,14 @@
       },
       "mapping_id": "base:ka10055",
       "f": "pred_pre",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": "s252",
       "collapse_group": null,
@@ -8462,10 +8400,7 @@
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8587,10 +8522,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,

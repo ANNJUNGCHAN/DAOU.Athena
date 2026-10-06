@@ -1,0 +1,155 @@
+{
+  "status": "REVIEW_CORRECTED_RENDERED_PASS",
+  "scope": "actual state card functions; no provider or mounted chart renderer",
+  "authorManifest": "7c65ef33f7afac389b8a8eeec0817a174fff454a88bc65b7180b832828b6648d",
+  "livePins": {
+    "app/canvas.js": "ef2e0a1c78ef1727296449a4e0af1d32ef5dcdbdb488efda6d20f30f9173df02",
+    "app/canvas.css": "c828898524af6024735b61969d7d097799a0e2848db9acb136087ed601fe98b5"
+  },
+  "snapshot": {
+    "snapshot/app/styles/tokens.css": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2",
+    "snapshot/app/styles/ui-kit.css": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039",
+    "snapshot/app/lib/ui-kit.js": "7ca826c3a9e3196370192952b50eebb61a085f18a9805a25807e475595596b4b",
+    "snapshot/app/lib/integrated-card-surface.js": "bf04133c156e724d1dc4abd293979c837e43af1aeee6bd79b36c4fa482e62bb5",
+    "snapshot/app/lib/canvas-layout.js": "8db24e94ec7cc9b02142d919f93a26dfece02a22993a916183c27817d6004713",
+    "snapshot/baseline/consumer.js": "3c4e104a743cf10ed9684e79c08a986f8d4c5cdf7fb2028b9f8be895aeabd999",
+    "snapshot/baseline/canvas.css": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f",
+    "baseline.html": "0683e07ce991c5ab742300cc932b9991fc79ee5b584d350c3b2ab6bae6884626",
+    "snapshot/candidate/consumer.js": "84a19ca157432a43bebc06f433fe8c97887e172d00e54162ad8d4271b9870870",
+    "snapshot/candidate/canvas.css": "c828898524af6024735b61969d7d097799a0e2848db9acb136087ed601fe98b5",
+    "candidate.html": "dc1fde474aff89c8382a31312b1dc5b5ad9a72e54b0e3a215677ffca61679d87"
+  },
+  "cases": [
+    {
+      "id": "chart-timeout",
+      "type": "chart",
+      "state": "timeout",
+      "retained": false
+    },
+    {
+      "id": "chart-error",
+      "type": "chart",
+      "state": "error",
+      "retained": false
+    },
+    {
+      "id": "chart-cancelled",
+      "type": "chart",
+      "state": "cancelled",
+      "retained": false
+    },
+    {
+      "id": "table-timeout",
+      "type": "table",
+      "state": "timeout",
+      "retained": false
+    },
+    {
+      "id": "table-error",
+      "type": "table",
+      "state": "error",
+      "retained": false
+    },
+    {
+      "id": "table-cancelled",
+      "type": "table",
+      "state": "cancelled",
+      "retained": false
+    },
+    {
+      "id": "chart-cancelled-retained",
+      "type": "chart",
+      "state": "cancelled",
+      "retained": true
+    },
+    {
+      "id": "table-cancelled-retained",
+      "type": "table",
+      "state": "cancelled",
+      "retained": true
+    },
+    {
+      "id": "normal-chart",
+      "type": "chart",
+      "normal": true
+    },
+    {
+      "id": "normal-table",
+      "type": "table",
+      "normal": true
+    },
+    {
+      "id": "expanded-chart-timeout",
+      "type": "chart",
+      "state": "timeout",
+      "expanded": true
+    }
+  ],
+  "stages": [
+    {
+      "id": "max",
+      "width": 2560,
+      "height": 1392
+    },
+    {
+      "id": "native-narrow",
+      "width": 2122,
+      "height": 1166
+    },
+    {
+      "id": "target-narrow",
+      "width": 1411,
+      "height": 1166
+    },
+    {
+      "id": "remax",
+      "width": 2560,
+      "height": 1392
+    }
+  ],
+  "phaseFiles": {
+    "run.cjs": "a0f315dc54e956d65ee92b143868a8fcc1a986f657857d199db228dedbef4728",
+    "launch.mjs": "e65a8e8f52af2422fd370fa07037be6cc9bae156c3734d6abf1874ebd0d18706",
+    "browser.js": "e9169b1ffcaa5159c741f01ad0755da013d9fca7be8e69e4201897e7c8aacb32",
+    "compare-workflows.cjs": "afa74fb6b489aa932b1fa1da672fb703e642e5160d61c32ca9febb30a271c1fa",
+    "verify-current-source.cjs": "5c65e2d35f3b31ec24d73d2a680d5c08e5d524f397cfc0f0912e460d11417aaf",
+    "environment.js": "60533c29c4f6bc33928cbc332ca9d54f55c40daab3e6d9cc0c1eacefdae81853",
+    "baseline.html": "0683e07ce991c5ab742300cc932b9991fc79ee5b584d350c3b2ab6bae6884626",
+    "candidate.html": "dc1fde474aff89c8382a31312b1dc5b5ad9a72e54b0e3a215677ffca61679d87"
+  },
+  "expected": {
+    "normalChartMinimum": 420,
+    "normalTableNatural": true,
+    "retryTarget": 36
+  },
+  "reviewCorrection": {
+    "restOnlyMarker": "data-rest-state",
+    "workflowKindsMeasured": [
+      "event",
+      "action",
+      "status"
+    ],
+    "statesCompared": 44,
+    "workflowGeometryMismatches": 0,
+    "restMarkerLeaks": 0,
+    "evidence": ".omc/artifacts/card-ui-handoff-resume/rest-state/runs/workflow-regression.json"
+  },
+  "exceptions": [
+    "Error",
+    "TypeError",
+    "RangeError",
+    "SyntaxError"
+  ],
+  "productWrites": 0,
+  "appStarts": 0,
+  "providerCalls": 0,
+  "privateReads": 0,
+  "historicalManifestSHA": "cf910de759a54cbe2b3db0a2d6778932873cf5d384c7d9f9707486713f708bb5",
+  "portability": {
+    "rootRelative": true,
+    "output": "Ignored .omc/artifacts/card-ui-handoff-resume/rest-state",
+    "archivedOldRun": true,
+    "originalInputsPreserved": true,
+    "rendererStarts": 2
+  }
+}

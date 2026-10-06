@@ -1113,10 +1113,10 @@
         "field": "tot_evlt_amt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_evlt_amt",
+      "mapping_id": "detail:kt00004:cash_and_assets",
+      "f": "aset_evlt_amt",
       "alt_mappings": null,
-      "kor": "총 평가금액",
+      "kor": "예탁자산평가액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
@@ -1148,18 +1148,7 @@
       "table": null,
       "mapping_id": "detail:kt00018:portfolio_summary",
       "f": "tot_prft_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10085",
-          "f": "acnt_prft_rt",
-          "kor": "계좌수익률"
-        },
-        {
-          "mapping_id": "detail:kt00016:performance_summary",
-          "f": "prft_rt",
-          "kor": "수익률"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "총수익률(%)",
       "format": {
         "unit": "percent",
@@ -1226,10 +1215,10 @@
         "field": "d2_pymn_alow_amt"
       },
       "table": null,
-      "mapping_id": "detail:kt00001:settlement_forecast",
-      "f": "d2_pymn_alow_amt",
+      "mapping_id": "detail:kt00001:withdrawal_and_order_capacity",
+      "f": "ord_alow_amt",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "주문가능금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
@@ -1314,9 +1303,9 @@
       },
       "table": null,
       "mapping_id": "detail:kt00004:cash_and_assets",
-      "f": "aset_evlt_amt",
+      "f": "tot_est_amt",
       "alt_mappings": null,
-      "kor": null,
+      "kor": "유가잔고평가액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
@@ -1399,10 +1388,10 @@
         "field": "tot_evltv_prft"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_evltv_prft",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_evlt_pl",
       "alt_mappings": null,
-      "kor": "총 평가손익",
+      "kor": "총평가손익금액",
       "format": {
         "unit": "krw_ko",
         "sign": true,
@@ -1430,15 +1419,16 @@
         "field": "tot_prft_rt"
       },
       "table": null,
-      "mapping_id": "base:ka01690",
-      "f": "tot_buy_amt",
+      "mapping_id": "detail:kt00018:portfolio_summary",
+      "f": "tot_pur_amt",
       "alt_mappings": null,
-      "kor": "총 매입가",
+      "kor": "총매입금액",
       "format": {
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "총매입 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1793,14 +1783,14 @@
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "stk_nm",
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "stk_nm",
-          "kor": "종목명"
+          "kor": null
         }
       ],
       "kor": null,
@@ -1915,12 +1905,12 @@
           "kor": "상품코드"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "stk_cd",
-          "kor": "종목코드"
+          "kor": "종목번호"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "stk_cd",
           "kor": "종목번호"
         }
@@ -2052,28 +2042,7 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "crd_tp_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "917",
-          "kor": "신용구분"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "crd_tp",
-          "kor": "신용구분"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "crd_tp",
-          "kor": "신용구분"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "crd_tp",
-          "kor": "신용구분"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분명",
       "format": null,
       "paired_with": null,
@@ -2138,14 +2107,14 @@
           "kor": "보유수량"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_qty",
           "kor": "현재잔고"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "rmnd_qty",
+          "kor": null
         }
       ],
       "kor": null,
@@ -2178,29 +2147,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "trde_able_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10085",
-          "f": "clrn_alow_qty",
-          "kor": "청산가능수량"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "setl_remn",
-          "kor": "결제잔고"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "setl_remn",
-          "kor": "결제잔고"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매매가능수량",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s038",
       "collapse_group": null,
@@ -2272,14 +2226,14 @@
           "kor": "매입가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "buy_uv",
           "kor": "매입단가"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "avg_prc",
+          "kor": null
         }
       ],
       "kor": null,
@@ -2322,6 +2276,11 @@
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "pur_amt",
           "kor": "매입금액"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pur_amt",
+          "kor": "매입금액"
         }
       ],
       "kor": "매입금액",
@@ -2329,7 +2288,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s040",
       "collapse_group": null,
@@ -2388,14 +2348,14 @@
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_prc",
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "cur_prc",
-          "kor": "현재가"
+          "kor": null
         }
       ],
       "kor": null,
@@ -2403,7 +2363,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2428,44 +2389,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "pred_close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:00",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:04",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_prc",
-          "kor": "현재가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일종가",
       "format": {
-        "unit": "percent",
+        "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s042",
       "collapse_group": null,
@@ -2498,14 +2429,14 @@
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "evlt_amt",
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "evlt_amt",
-          "kor": "평가금액"
+          "kor": null
         }
       ],
       "kor": null,
@@ -2538,19 +2469,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "poss_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "evlt_wght",
-          "kor": "평가비중"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "보유비중(%)",
       "format": {
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s044",
       "collapse_group": null,
@@ -2598,6 +2524,11 @@
           "mapping_id": "base:ka01690",
           "f": "evltv_prft",
           "kor": "평가손익"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_amt",
+          "kor": null
         }
       ],
       "kor": null,
@@ -2639,7 +2570,7 @@
         {
           "mapping_id": "detail:kt00004:position_valuation",
           "f": "pl_rt",
-          "kor": "손익율"
+          "kor": "수익률(%)"
         }
       ],
       "kor": "수익률(%)",
@@ -2688,17 +2619,7 @@
         {
           "mapping_id": "detail:kt00004:position_valuation",
           "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
+          "kor": null
         }
       ],
       "kor": null,
@@ -2706,7 +2627,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2734,18 +2656,8 @@
       "alt_mappings": [
         {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "pred_sellq",
-          "kor": "전일매도수량"
+          "f": "pred_buyq",
+          "kor": "전일매수수량"
         }
       ],
       "kor": "전일매수수량",
@@ -2753,7 +2665,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s048",
       "collapse_group": null,
@@ -2804,14 +2717,14 @@
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "stk_nm",
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "stk_nm",
-          "kor": "종목명"
+          "kor": null
         }
       ],
       "kor": null,
@@ -2843,29 +2756,9 @@
       "f": "stk_cd",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
+          "f": "stk_cd",
+          "kor": "종목번호"
         }
       ],
       "kor": "종목번호",
@@ -2900,33 +2793,7 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "crd_tp_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분명",
       "format": null,
       "paired_with": null,
@@ -2971,14 +2838,14 @@
           "kor": "보유수량"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_qty",
           "kor": "현재잔고"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "rmnd_qty",
+          "kor": null
         }
       ],
       "kor": null,
@@ -3013,39 +2880,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "trde_able_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "930",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "rmnd_qty",
-          "kor": "보유 수량"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_qty",
-          "kor": "현재잔고"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매매가능수량",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s053",
       "collapse_group": null,
@@ -3097,14 +2939,14 @@
           "kor": "매입가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "buy_uv",
           "kor": "매입단가"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "avg_prc",
+          "kor": null
         }
       ],
       "kor": null,
@@ -3141,29 +2983,9 @@
       "f": "pur_amt",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "931",
-          "kor": "매입단가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "buy_uv",
-          "kor": "매입 단가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "pur_pric",
-          "kor": "매입가"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "buy_uv",
-          "kor": "매입단가"
+          "f": "pur_amt",
+          "kor": "매입금액"
         }
       ],
       "kor": "매입금액",
@@ -3171,7 +2993,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s055",
       "collapse_group": null,
@@ -3220,14 +3043,14 @@
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_prc",
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "cur_prc",
-          "kor": "현재가"
+          "kor": null
         }
       ],
       "kor": null,
@@ -3235,7 +3058,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3262,44 +3086,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "pred_close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:00",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:04",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_prc",
-          "kor": "현재가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일종가",
       "format": {
-        "unit": "percent",
+        "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s057",
       "collapse_group": null,
@@ -3333,14 +3127,14 @@
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "evlt_amt",
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "evlt_amt",
-          "kor": "평가금액"
+          "kor": null
         }
       ],
       "kor": null,
@@ -3375,29 +3169,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "poss_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "보유비중(%)",
       "format": {
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s059",
       "collapse_group": null,
@@ -3438,6 +3217,11 @@
           "mapping_id": "base:ka01690",
           "f": "evltv_prft",
           "kor": "평가손익"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_amt",
+          "kor": null
         }
       ],
       "kor": null,
@@ -3474,9 +3258,9 @@
       "f": "prft_rt",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka01690",
-          "f": "evltv_prft",
-          "kor": "평가손익"
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_rt",
+          "kor": "수익률(%)"
         }
       ],
       "kor": "수익률(%)",
@@ -3515,17 +3299,7 @@
         {
           "mapping_id": "detail:kt00004:position_valuation",
           "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
+          "kor": null
         }
       ],
       "kor": null,
@@ -3533,7 +3307,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3563,18 +3338,8 @@
       "alt_mappings": [
         {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "pred_sellq",
-          "kor": "전일매도수량"
+          "f": "pred_buyq",
+          "kor": "전일매수수량"
         }
       ],
       "kor": "전일매수수량",
@@ -3582,7 +3347,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s063",
       "collapse_group": null,
@@ -3634,14 +3400,14 @@
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "stk_nm",
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "stk_nm",
-          "kor": "종목명"
+          "kor": null
         }
       ],
       "kor": null,
@@ -3678,29 +3444,9 @@
       "f": "stk_cd",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
+          "f": "stk_cd",
+          "kor": "종목번호"
         }
       ],
       "kor": "종목번호",
@@ -3735,33 +3481,7 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "crd_tp_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분명",
       "format": null,
       "paired_with": null,
@@ -3806,14 +3526,14 @@
           "kor": "보유수량"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_qty",
           "kor": "현재잔고"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "rmnd_qty",
+          "kor": null
         }
       ],
       "kor": null,
@@ -3848,39 +3568,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "trde_able_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "930",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "rmnd_qty",
-          "kor": "보유 수량"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_qty",
-          "kor": "현재잔고"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매매가능수량",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s068",
       "collapse_group": null,
@@ -3932,14 +3627,14 @@
           "kor": "매입가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "buy_uv",
           "kor": "매입단가"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "avg_prc",
+          "kor": null
         }
       ],
       "kor": null,
@@ -3976,29 +3671,9 @@
       "f": "pur_amt",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "931",
-          "kor": "매입단가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "buy_uv",
-          "kor": "매입 단가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "pur_pric",
-          "kor": "매입가"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "buy_uv",
-          "kor": "매입단가"
+          "f": "pur_amt",
+          "kor": "매입금액"
         }
       ],
       "kor": "매입금액",
@@ -4006,7 +3681,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s070",
       "collapse_group": null,
@@ -4055,14 +3731,14 @@
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_prc",
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "cur_prc",
-          "kor": "현재가"
+          "kor": null
         }
       ],
       "kor": null,
@@ -4070,7 +3746,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4097,44 +3774,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "pred_close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:00",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:04",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_prc",
-          "kor": "현재가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일종가",
       "format": {
-        "unit": "percent",
+        "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s072",
       "collapse_group": null,
@@ -4168,14 +3815,14 @@
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "evlt_amt",
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "evlt_amt",
-          "kor": "평가금액"
+          "kor": null
         }
       ],
       "kor": null,
@@ -4210,29 +3857,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "poss_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "보유비중(%)",
       "format": {
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s074",
       "collapse_group": null,
@@ -4273,6 +3905,11 @@
           "mapping_id": "base:ka01690",
           "f": "evltv_prft",
           "kor": "평가손익"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_amt",
+          "kor": null
         }
       ],
       "kor": null,
@@ -4309,9 +3946,9 @@
       "f": "prft_rt",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka01690",
-          "f": "evltv_prft",
-          "kor": "평가손익"
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_rt",
+          "kor": "수익률(%)"
         }
       ],
       "kor": "수익률(%)",
@@ -4350,17 +3987,7 @@
         {
           "mapping_id": "detail:kt00004:position_valuation",
           "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
+          "kor": null
         }
       ],
       "kor": null,
@@ -4368,7 +3995,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4398,18 +4026,8 @@
       "alt_mappings": [
         {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "pred_sellq",
-          "kor": "전일매도수량"
+          "f": "pred_buyq",
+          "kor": "전일매수수량"
         }
       ],
       "kor": "전일매수수량",
@@ -4417,7 +4035,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s078",
       "collapse_group": null,
@@ -4469,14 +4088,14 @@
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "stk_nm",
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "stk_nm",
-          "kor": "종목명"
+          "kor": null
         }
       ],
       "kor": null,
@@ -4508,29 +4127,9 @@
       "f": "stk_cd",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
+          "f": "stk_cd",
+          "kor": "종목번호"
         }
       ],
       "kor": "종목번호",
@@ -4565,33 +4164,7 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "crd_tp_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분명",
       "format": null,
       "paired_with": null,
@@ -4636,14 +4209,14 @@
           "kor": "보유수량"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_qty",
           "kor": "현재잔고"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "rmnd_qty",
+          "kor": null
         }
       ],
       "kor": null,
@@ -4678,39 +4251,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "trde_able_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "930",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "rmnd_qty",
-          "kor": "보유 수량"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_qty",
-          "kor": "현재잔고"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매매가능수량",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s083",
       "collapse_group": null,
@@ -4762,14 +4310,14 @@
           "kor": "매입가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "buy_uv",
           "kor": "매입단가"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "avg_prc",
+          "kor": null
         }
       ],
       "kor": null,
@@ -4806,29 +4354,9 @@
       "f": "pur_amt",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "931",
-          "kor": "매입단가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "buy_uv",
-          "kor": "매입 단가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "pur_pric",
-          "kor": "매입가"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "buy_uv",
-          "kor": "매입단가"
+          "f": "pur_amt",
+          "kor": "매입금액"
         }
       ],
       "kor": "매입금액",
@@ -4836,7 +4364,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s085",
       "collapse_group": null,
@@ -4885,14 +4414,14 @@
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_prc",
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "cur_prc",
-          "kor": "현재가"
+          "kor": null
         }
       ],
       "kor": null,
@@ -4900,7 +4429,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4927,44 +4457,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "pred_close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:00",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:04",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_prc",
-          "kor": "현재가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일종가",
       "format": {
-        "unit": "percent",
+        "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s087",
       "collapse_group": null,
@@ -4998,14 +4498,14 @@
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "evlt_amt",
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "evlt_amt",
-          "kor": "평가금액"
+          "kor": null
         }
       ],
       "kor": null,
@@ -5040,29 +4540,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "poss_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "보유비중(%)",
       "format": {
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s089",
       "collapse_group": null,
@@ -5103,6 +4588,11 @@
           "mapping_id": "base:ka01690",
           "f": "evltv_prft",
           "kor": "평가손익"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_amt",
+          "kor": null
         }
       ],
       "kor": null,
@@ -5139,9 +4629,9 @@
       "f": "prft_rt",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka01690",
-          "f": "evltv_prft",
-          "kor": "평가손익"
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_rt",
+          "kor": "수익률(%)"
         }
       ],
       "kor": "수익률(%)",
@@ -5180,17 +4670,7 @@
         {
           "mapping_id": "detail:kt00004:position_valuation",
           "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
+          "kor": null
         }
       ],
       "kor": null,
@@ -5198,7 +4678,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5228,18 +4709,8 @@
       "alt_mappings": [
         {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "pred_sellq",
-          "kor": "전일매도수량"
+          "f": "pred_buyq",
+          "kor": "전일매수수량"
         }
       ],
       "kor": "전일매수수량",
@@ -5247,7 +4718,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s093",
       "collapse_group": null,
@@ -5299,14 +4771,14 @@
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "stk_nm",
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "stk_nm",
-          "kor": "종목명"
+          "kor": null
         }
       ],
       "kor": null,
@@ -5338,29 +4810,9 @@
       "f": "stk_cd",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
+          "f": "stk_cd",
+          "kor": "종목번호"
         }
       ],
       "kor": "종목번호",
@@ -5395,33 +4847,7 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "crd_tp_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분명",
       "format": null,
       "paired_with": null,
@@ -5466,14 +4892,14 @@
           "kor": "보유수량"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_qty",
           "kor": "현재잔고"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "rmnd_qty",
+          "kor": null
         }
       ],
       "kor": null,
@@ -5508,39 +4934,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "trde_able_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "930",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "rmnd_qty",
-          "kor": "보유 수량"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_qty",
-          "kor": "현재잔고"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매매가능수량",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s098",
       "collapse_group": null,
@@ -5592,14 +4993,14 @@
           "kor": "매입가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "buy_uv",
           "kor": "매입단가"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "avg_prc",
+          "kor": null
         }
       ],
       "kor": null,
@@ -5636,29 +5037,9 @@
       "f": "pur_amt",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "931",
-          "kor": "매입단가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "buy_uv",
-          "kor": "매입 단가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "pur_pric",
-          "kor": "매입가"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "buy_uv",
-          "kor": "매입단가"
+          "f": "pur_amt",
+          "kor": "매입금액"
         }
       ],
       "kor": "매입금액",
@@ -5666,7 +5047,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s100",
       "collapse_group": null,
@@ -5715,14 +5097,14 @@
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_prc",
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "cur_prc",
-          "kor": "현재가"
+          "kor": null
         }
       ],
       "kor": null,
@@ -5730,7 +5112,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5757,44 +5140,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "pred_close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:00",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:04",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_prc",
-          "kor": "현재가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일종가",
       "format": {
-        "unit": "percent",
+        "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s102",
       "collapse_group": null,
@@ -5828,14 +5181,14 @@
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "evlt_amt",
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "evlt_amt",
-          "kor": "평가금액"
+          "kor": null
         }
       ],
       "kor": null,
@@ -5870,29 +5223,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "poss_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "보유비중(%)",
       "format": {
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s104",
       "collapse_group": null,
@@ -5933,6 +5271,11 @@
           "mapping_id": "base:ka01690",
           "f": "evltv_prft",
           "kor": "평가손익"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_amt",
+          "kor": null
         }
       ],
       "kor": null,
@@ -5969,9 +5312,9 @@
       "f": "prft_rt",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka01690",
-          "f": "evltv_prft",
-          "kor": "평가손익"
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_rt",
+          "kor": "수익률(%)"
         }
       ],
       "kor": "수익률(%)",
@@ -6010,17 +5353,7 @@
         {
           "mapping_id": "detail:kt00004:position_valuation",
           "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
+          "kor": null
         }
       ],
       "kor": null,
@@ -6028,7 +5361,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6058,18 +5392,8 @@
       "alt_mappings": [
         {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "pred_sellq",
-          "kor": "전일매도수량"
+          "f": "pred_buyq",
+          "kor": "전일매수수량"
         }
       ],
       "kor": "전일매수수량",
@@ -6077,7 +5401,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s108",
       "collapse_group": null,
@@ -6129,14 +5454,14 @@
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "stk_nm",
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "stk_nm",
-          "kor": "종목명"
+          "kor": null
         }
       ],
       "kor": null,
@@ -6168,29 +5493,9 @@
       "f": "stk_cd",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
+          "f": "stk_cd",
+          "kor": "종목번호"
         }
       ],
       "kor": "종목번호",
@@ -6225,33 +5530,7 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "crd_tp_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분명",
       "format": null,
       "paired_with": null,
@@ -6296,14 +5575,14 @@
           "kor": "보유수량"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_qty",
           "kor": "현재잔고"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "rmnd_qty",
+          "kor": null
         }
       ],
       "kor": null,
@@ -6338,39 +5617,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "trde_able_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "930",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "rmnd_qty",
-          "kor": "보유 수량"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_qty",
-          "kor": "현재잔고"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매매가능수량",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s113",
       "collapse_group": null,
@@ -6422,14 +5676,14 @@
           "kor": "매입가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "buy_uv",
           "kor": "매입단가"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "avg_prc",
+          "kor": null
         }
       ],
       "kor": null,
@@ -6466,29 +5720,9 @@
       "f": "pur_amt",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "931",
-          "kor": "매입단가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "buy_uv",
-          "kor": "매입 단가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "pur_pric",
-          "kor": "매입가"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "buy_uv",
-          "kor": "매입단가"
+          "f": "pur_amt",
+          "kor": "매입금액"
         }
       ],
       "kor": "매입금액",
@@ -6496,7 +5730,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s115",
       "collapse_group": null,
@@ -6545,14 +5780,14 @@
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_prc",
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "cur_prc",
-          "kor": "현재가"
+          "kor": null
         }
       ],
       "kor": null,
@@ -6560,7 +5795,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6587,44 +5823,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "pred_close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:00",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:04",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_prc",
-          "kor": "현재가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일종가",
       "format": {
-        "unit": "percent",
+        "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s117",
       "collapse_group": null,
@@ -6658,14 +5864,14 @@
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "evlt_amt",
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "evlt_amt",
-          "kor": "평가금액"
+          "kor": null
         }
       ],
       "kor": null,
@@ -6700,29 +5906,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "poss_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "보유비중(%)",
       "format": {
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s119",
       "collapse_group": null,
@@ -6763,6 +5954,11 @@
           "mapping_id": "base:ka01690",
           "f": "evltv_prft",
           "kor": "평가손익"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_amt",
+          "kor": null
         }
       ],
       "kor": null,
@@ -6799,9 +5995,9 @@
       "f": "prft_rt",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka01690",
-          "f": "evltv_prft",
-          "kor": "평가손익"
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_rt",
+          "kor": "수익률(%)"
         }
       ],
       "kor": "수익률(%)",
@@ -6840,17 +6036,7 @@
         {
           "mapping_id": "detail:kt00004:position_valuation",
           "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
+          "kor": null
         }
       ],
       "kor": null,
@@ -6858,7 +6044,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6888,18 +6075,8 @@
       "alt_mappings": [
         {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "pred_sellq",
-          "kor": "전일매도수량"
+          "f": "pred_buyq",
+          "kor": "전일매수수량"
         }
       ],
       "kor": "전일매수수량",
@@ -6907,7 +6084,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s123",
       "collapse_group": null,
@@ -6959,14 +6137,14 @@
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "stk_nm",
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "stk_nm",
-          "kor": "종목명"
+          "kor": null
         }
       ],
       "kor": null,
@@ -6998,29 +6176,9 @@
       "f": "stk_cd",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
+          "f": "stk_cd",
+          "kor": "종목번호"
         }
       ],
       "kor": "종목번호",
@@ -7055,33 +6213,7 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "crd_tp_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분명",
       "format": null,
       "paired_with": null,
@@ -7126,14 +6258,14 @@
           "kor": "보유수량"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_qty",
           "kor": "현재잔고"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "rmnd_qty",
+          "kor": null
         }
       ],
       "kor": null,
@@ -7168,39 +6300,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "trde_able_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "930",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "rmnd_qty",
-          "kor": "보유 수량"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_qty",
-          "kor": "현재잔고"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매매가능수량",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s128",
       "collapse_group": null,
@@ -7252,14 +6359,14 @@
           "kor": "매입가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "buy_uv",
           "kor": "매입단가"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "avg_prc",
+          "kor": null
         }
       ],
       "kor": null,
@@ -7296,29 +6403,9 @@
       "f": "pur_amt",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "931",
-          "kor": "매입단가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "buy_uv",
-          "kor": "매입 단가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "pur_pric",
-          "kor": "매입가"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "buy_uv",
-          "kor": "매입단가"
+          "f": "pur_amt",
+          "kor": "매입금액"
         }
       ],
       "kor": "매입금액",
@@ -7326,7 +6413,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s130",
       "collapse_group": null,
@@ -7375,14 +6463,14 @@
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_prc",
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "cur_prc",
-          "kor": "현재가"
+          "kor": null
         }
       ],
       "kor": null,
@@ -7390,7 +6478,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7417,44 +6506,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "pred_close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:00",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:04",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_prc",
-          "kor": "현재가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일종가",
       "format": {
-        "unit": "percent",
+        "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s132",
       "collapse_group": null,
@@ -7488,14 +6547,14 @@
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "evlt_amt",
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "evlt_amt",
-          "kor": "평가금액"
+          "kor": null
         }
       ],
       "kor": null,
@@ -7530,29 +6589,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "poss_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "보유비중(%)",
       "format": {
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s134",
       "collapse_group": null,
@@ -7593,6 +6637,11 @@
           "mapping_id": "base:ka01690",
           "f": "evltv_prft",
           "kor": "평가손익"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_amt",
+          "kor": null
         }
       ],
       "kor": null,
@@ -7629,9 +6678,9 @@
       "f": "prft_rt",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka01690",
-          "f": "evltv_prft",
-          "kor": "평가손익"
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_rt",
+          "kor": "수익률(%)"
         }
       ],
       "kor": "수익률(%)",
@@ -7670,17 +6719,7 @@
         {
           "mapping_id": "detail:kt00004:position_valuation",
           "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
+          "kor": null
         }
       ],
       "kor": null,
@@ -7688,7 +6727,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -7718,18 +6758,8 @@
       "alt_mappings": [
         {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "pred_sellq",
-          "kor": "전일매도수량"
+          "f": "pred_buyq",
+          "kor": "전일매수수량"
         }
       ],
       "kor": "전일매수수량",
@@ -7737,7 +6767,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s138",
       "collapse_group": null,
@@ -7789,14 +6820,14 @@
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "stk_nm",
           "kor": "종목명"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "stk_nm",
-          "kor": "종목명"
+          "kor": null
         }
       ],
       "kor": null,
@@ -7828,29 +6859,9 @@
       "f": "stk_cd",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
+          "f": "stk_cd",
+          "kor": "종목번호"
         }
       ],
       "kor": "종목번호",
@@ -7885,33 +6896,7 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "crd_tp_nm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "302",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "stk_nm",
-          "kor": "종목명"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "stk_nm",
-          "kor": "종목명"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "신용구분명",
       "format": null,
       "paired_with": null,
@@ -7956,14 +6941,14 @@
           "kor": "보유수량"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_qty",
           "kor": "현재잔고"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "rmnd_qty",
+          "kor": null
         }
       ],
       "kor": null,
@@ -7998,39 +6983,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "trde_able_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:04",
-          "f": "930",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "rmnd_qty",
-          "kor": "보유 수량"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "rmnd_qty",
-          "kor": "보유수량"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_qty",
-          "kor": "현재잔고"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "매매가능수량",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "가능 "
       },
       "paired_with": "s143",
       "collapse_group": null,
@@ -8082,14 +7042,14 @@
           "kor": "매입가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
           "mapping_id": "detail:kt00005:settled_positions",
           "f": "buy_uv",
           "kor": "매입단가"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "avg_prc",
+          "kor": null
         }
       ],
       "kor": null,
@@ -8126,29 +7086,9 @@
       "f": "pur_amt",
       "alt_mappings": [
         {
-          "mapping_id": "base:04",
-          "f": "931",
-          "kor": "매입단가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "buy_uv",
-          "kor": "매입 단가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "pur_pric",
-          "kor": "매입가"
-        },
-        {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "avg_prc",
-          "kor": "평균단가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "buy_uv",
-          "kor": "매입단가"
+          "f": "pur_amt",
+          "kor": "매입금액"
         }
       ],
       "kor": "매입금액",
@@ -8156,7 +7096,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매입 "
       },
       "paired_with": "s145",
       "collapse_group": null,
@@ -8205,14 +7146,14 @@
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "cur_prc",
           "kor": "현재가"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "cur_prc",
-          "kor": "현재가"
+          "kor": null
         }
       ],
       "kor": null,
@@ -8220,7 +7161,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8247,44 +7189,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "pred_close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:00",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:04",
-          "f": "10",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka01690",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "cur_prc",
-          "kor": "현재가"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "cur_prc",
-          "kor": "현재가"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일종가",
       "format": {
-        "unit": "percent",
+        "unit": "krw",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 종가 "
       },
       "paired_with": "s147",
       "collapse_group": null,
@@ -8318,14 +7230,14 @@
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00004:position_valuation",
+          "mapping_id": "detail:kt00005:settled_positions",
           "f": "evlt_amt",
           "kor": "평가금액"
         },
         {
-          "mapping_id": "detail:kt00005:settled_positions",
+          "mapping_id": "detail:kt00004:position_valuation",
           "f": "evlt_amt",
-          "kor": "평가금액"
+          "kor": null
         }
       ],
       "kor": null,
@@ -8360,29 +7272,14 @@
       },
       "mapping_id": "detail:kt00018:holdings",
       "f": "poss_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka01690",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        },
-        {
-          "mapping_id": "detail:kt00005:settled_positions",
-          "f": "evlt_amt",
-          "kor": "평가금액"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "보유비중(%)",
       "format": {
         "unit": "percent",
         "sign": false,
         "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "보유 비중 "
       },
       "paired_with": "s149",
       "collapse_group": null,
@@ -8423,6 +7320,11 @@
           "mapping_id": "base:ka01690",
           "f": "evltv_prft",
           "kor": "평가손익"
+        },
+        {
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_amt",
+          "kor": null
         }
       ],
       "kor": null,
@@ -8459,9 +7361,9 @@
       "f": "prft_rt",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka01690",
-          "f": "evltv_prft",
-          "kor": "평가손익"
+          "mapping_id": "detail:kt00004:position_valuation",
+          "f": "pl_rt",
+          "kor": "수익률(%)"
         }
       ],
       "kor": "수익률(%)",
@@ -8500,17 +7402,7 @@
         {
           "mapping_id": "detail:kt00004:position_valuation",
           "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
+          "kor": null
         }
       ],
       "kor": null,
@@ -8518,7 +7410,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "오늘 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8548,18 +7441,8 @@
       "alt_mappings": [
         {
           "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_buyq",
-          "kor": "금일매수수량"
-        },
-        {
-          "mapping_id": "detail:kt00004:position_valuation",
-          "f": "tdy_sellq",
-          "kor": "금일매도수량"
-        },
-        {
-          "mapping_id": "detail:kt00018:holdings",
-          "f": "pred_sellq",
-          "kor": "전일매도수량"
+          "f": "pred_buyq",
+          "kor": "전일매수수량"
         }
       ],
       "kor": "전일매수수량",
@@ -8567,7 +7450,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": "s153",
       "collapse_group": null,
@@ -8604,7 +7488,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "평가액 합계 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -8632,7 +7517,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "매수금액 합계 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9151,19 +8037,9 @@
           "kor": "대출일"
         },
         {
-          "mapping_id": "base:04",
-          "f": "918",
-          "kor": "만기일"
-        },
-        {
           "mapping_id": "base:ka10085",
           "f": "loan_dt",
           "kor": "대출일"
-        },
-        {
-          "mapping_id": "base:ka10085",
-          "f": "expr_dt",
-          "kor": "만기일"
         },
         {
           "mapping_id": "detail:kt00004:position_valuation",
@@ -9182,7 +8058,10 @@
         }
       ],
       "kor": "대출일",
-      "format": null,
+      "format": {
+        "kind": "date",
+        "tone": "neutral"
+      },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
@@ -9517,7 +8396,8 @@
         "unit": "text",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "세금 "
       },
       "paired_with": "s186",
       "collapse_group": null,
@@ -9613,7 +8493,8 @@
         "unit": "text",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "수수료 상세 "
       },
       "paired_with": "s189",
       "collapse_group": null,
@@ -9669,7 +8550,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매수 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -9695,7 +8577,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "전일 매도 "
       },
       "paired_with": "s192",
       "collapse_group": {
@@ -9947,7 +8830,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
