@@ -795,7 +795,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -818,9 +819,9 @@
       "alt_mappings": null,
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s010",
@@ -833,7 +834,9 @@
           "kor": "전일비",
           "sep": " · "
         }
-      ]
+      ],
+      "display_dup": true,
+      "dup_note": "현재가 옆 등락률은 같은 시세의 flu_rt를 소수 둘째 자리까지 재표시한다. 방향 기호나 거래량 전일비를 등락률로 사용하지 않는다."
     },
     {
       "slot_id": "s012",
@@ -1081,17 +1084,10 @@
       "table": null,
       "mapping_id": "detail:ka10004:snapshot_time",
       "f": "bid_req_base_tm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0D",
-          "f": "21"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "호가잔량기준시간",
       "format": {
-        "unit": "shares",
-        "sign": false,
-        "precision": 0,
+        "kind": "date",
         "tone": "neutral"
       },
       "paired_with": null,
@@ -2571,7 +2567,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2591,13 +2588,13 @@
       "anchor": null,
       "table": null,
       "mapping_id": "detail:ka10007:expected_market",
-      "f": "smbol",
+      "f": "flu_rt",
       "alt_mappings": null,
-      "kor": "부호",
+      "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
-        "precision": 0,
+        "precision": 2,
         "tone": "change"
       },
       "paired_with": "s061",
@@ -2616,7 +2613,9 @@
           "kor": "등락률",
           "sep": " · "
         }
-      ]
+      ],
+      "display_dup": true,
+      "dup_note": "현재가 옆 등락률은 같은 시세의 flu_rt를 소수 둘째 자리까지 재표시한다. 방향 기호나 거래량 전일비를 등락률로 사용하지 않는다."
     },
     {
       "slot_id": "s063",
@@ -2635,7 +2634,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -3887,7 +3886,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "change"
@@ -4157,7 +4156,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4182,13 +4182,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4273,7 +4274,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4338,7 +4339,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4363,13 +4365,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4454,7 +4457,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4519,7 +4522,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4544,13 +4548,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4635,7 +4640,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4700,7 +4705,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4725,13 +4731,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4816,7 +4823,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -4881,7 +4888,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4906,13 +4914,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4997,7 +5006,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -5062,7 +5071,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5087,13 +5097,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5178,7 +5189,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -5243,7 +5254,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5268,13 +5280,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5359,7 +5372,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -5424,7 +5437,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5449,13 +5463,14 @@
       },
       "mapping_id": "base:0B",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5540,7 +5555,7 @@
       "alt_mappings": null,
       "kor": "체결강도",
       "format": {
-        "unit": "date",
+        "kind": "percent",
         "sign": false,
         "precision": 1,
         "tone": "neutral"
@@ -5826,7 +5841,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5853,7 +5869,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,

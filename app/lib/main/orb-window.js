@@ -196,6 +196,9 @@ function syncOrbVisibility(shellWin, orbWin) {
   if (!orbWin || orbWin.isDestroyed()) return false;
   const shouldShow = shouldShowOrbForShell(shellWin);
   if (shouldShow && !orbWin.isVisible()) orbWin.showInactive();
+  // Windows 실창에서 생성 옵션과 달리 topmost가 풀린 경우, 셸이 아닌 오브만
+  // 표시 정책을 복구하며, 활성화나 포커스 이동 없이 기존 알림 위치를 유지한다.
+  if (shouldShow && !orbWin.isAlwaysOnTop()) orbWin.setAlwaysOnTop(true);
   if (!shouldShow && orbWin.isVisible()) orbWin.hide();
   return shouldShow;
 }

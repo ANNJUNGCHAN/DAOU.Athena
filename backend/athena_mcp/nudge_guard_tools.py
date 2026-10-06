@@ -67,6 +67,7 @@ _INPUT_SCHEMA: dict[str, Any] = {
                 },
                 "quiet_hours": {
                     "type": "object",
+                    "description": "알림 방해 금지 시간(조용 시간). 시작·끝을 HH:MM으로 제안하며 자정을 넘을 수 있다.",
                     "properties": {
                         "start": {"type": "string", "description": "'HH:MM'"},
                         "end": {"type": "string", "description": "'HH:MM'"},
@@ -80,7 +81,8 @@ _INPUT_SCHEMA: dict[str, Any] = {
 }
 
 _DESCRIPTION = (
-    "말걸기(프로액티브 발화) 가드 설정의 제안·조회. propose는 **제안일 뿐 "
+    "알림 방해 금지 시간·조용 시간·하루 말걸기 횟수 등 전역 말걸기 가드 설정의 제안·조회. "
+    "개별 알림이나 예약의 시간·조건 변경은 athena_routine을 사용한다. propose는 **제안일 뿐 "
     "저장이 아니다** — 대화 창 확인 카드에서 사람이 [확인]을 눌러야 값이 "
     "바뀌고, 확인 전에는 어떤 값도 바뀌지 않는다(저장됐다고 말하지 마라)."
 )

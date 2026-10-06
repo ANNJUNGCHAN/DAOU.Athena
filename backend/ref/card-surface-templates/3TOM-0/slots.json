@@ -309,8 +309,8 @@
             "s136",
             "s147"
           ],
-          "mapping_id": "base:ka30002",
-          "f": "trde_ori_elwnettrde_upper",
+          "mapping_id": null,
+          "f": null,
           "kor": "거래원별ELW순매매상위",
           "note": "창구 열 — 요청 발행사코드(isscomp_cd)별로 오는 배열 원소, 응답에 창구명 필드가 없다"
         },
@@ -460,8 +460,8 @@
             "s145",
             "s156"
           ],
-          "mapping_id": "base:ka30002",
-          "f": "trde_ori_elwnettrde_upper",
+          "mapping_id": null,
+          "f": null,
           "kor": "거래원별ELW순매매상위",
           "note": "비중 열 — 창구 순매매의 전체 대비 비율(배열 원소 파생, 비중 필드 없음)"
         }
@@ -861,8 +861,8 @@
       "font_size_px": 24.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수",
       "format": {
@@ -875,7 +875,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "매수 1위 창구 순매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s018",
@@ -937,8 +939,8 @@
       "font_size_px": 24.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수",
       "format": {
@@ -951,7 +953,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "매도 1위 창구 순매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s021",
@@ -1007,8 +1011,8 @@
       "font_size_px": 24.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수",
       "format": {
@@ -1021,7 +1025,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "외국계 창구 순매수 합계",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s024",
@@ -1077,8 +1083,8 @@
       "font_size_px": 24.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -1091,7 +1097,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "집계 범위 — 응답 배열 원소 수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s027",
@@ -1565,7 +1573,7 @@
       "node_path": "2/0/1/1/0",
       "paper_text": "1",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -1574,8 +1582,8 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -1587,7 +1595,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s048",
@@ -1605,8 +1615,8 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -1618,7 +1628,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s049",
@@ -1627,7 +1639,7 @@
       "node_path": "2/0/1/1/2/0",
       "paper_text": "삼성전자 콜",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
@@ -1700,10 +1712,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1884,8 +1896,8 @@
         "row": "0",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -1897,7 +1909,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s058",
@@ -1906,7 +1920,7 @@
       "node_path": "2/0/1/2/0",
       "paper_text": "2",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -1915,8 +1929,8 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -1928,7 +1942,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s059",
@@ -1946,8 +1962,8 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -1959,7 +1975,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s060",
@@ -1968,7 +1986,7 @@
       "node_path": "2/0/1/2/2/0",
       "paper_text": "SK하이닉스 콜",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
@@ -2041,10 +2059,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2225,8 +2243,8 @@
         "row": "1",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -2238,7 +2256,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s069",
@@ -2247,7 +2267,7 @@
       "node_path": "2/0/1/3/0",
       "paper_text": "3",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -2256,8 +2276,8 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -2269,7 +2289,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s070",
@@ -2287,8 +2309,8 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -2300,7 +2322,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s071",
@@ -2309,7 +2333,7 @@
       "node_path": "2/0/1/3/2/0",
       "paper_text": "현대차 콜",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
@@ -2382,10 +2406,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2566,8 +2590,8 @@
         "row": "2",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -2579,7 +2603,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s080",
@@ -2588,7 +2614,7 @@
       "node_path": "2/0/1/4/0",
       "paper_text": "4",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -2597,8 +2623,8 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -2610,7 +2636,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s081",
@@ -2628,8 +2656,8 @@
         "row": "3",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -2641,7 +2669,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s082",
@@ -2723,10 +2753,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2907,8 +2937,8 @@
         "row": "3",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -2920,7 +2950,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s091",
@@ -2929,7 +2961,7 @@
       "node_path": "2/0/1/5/0",
       "paper_text": "5",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -2938,8 +2970,8 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -2951,7 +2983,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s092",
@@ -2969,8 +3003,8 @@
         "row": "4",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -2982,7 +3016,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s093",
@@ -2991,7 +3027,7 @@
       "node_path": "2/0/1/5/2/0",
       "paper_text": "이수페타시스 콜",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
@@ -3064,10 +3100,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3248,8 +3284,8 @@
         "row": "4",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -3261,7 +3297,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s102",
@@ -3270,7 +3308,7 @@
       "node_path": "2/0/1/6/0",
       "paper_text": "6",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -3279,8 +3317,8 @@
         "row": "5",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -3292,7 +3330,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s103",
@@ -3310,8 +3350,8 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -3323,7 +3363,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s104",
@@ -3332,7 +3374,7 @@
       "node_path": "2/0/1/6/2/0",
       "paper_text": "한미반도체 콜",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
@@ -3405,10 +3447,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3589,8 +3631,8 @@
         "row": "5",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -3602,7 +3644,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s113",
@@ -3611,7 +3655,7 @@
       "node_path": "2/0/1/7/0",
       "paper_text": "7",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -3620,8 +3664,8 @@
         "row": "6",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -3633,7 +3677,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s114",
@@ -3651,8 +3697,8 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -3664,7 +3710,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s115",
@@ -3673,7 +3721,7 @@
       "node_path": "2/0/1/7/2/0",
       "paper_text": "삼성전자 풋",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
@@ -3746,10 +3794,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3930,8 +3978,8 @@
         "row": "6",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -3943,7 +3991,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s124",
@@ -3952,7 +4002,7 @@
       "node_path": "2/0/1/8/0",
       "paper_text": "8",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -3961,8 +4011,8 @@
         "row": "7",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -3974,7 +4024,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s125",
@@ -3992,8 +4044,8 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -4005,7 +4057,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s126",
@@ -4014,7 +4068,7 @@
       "node_path": "2/0/1/8/2/0",
       "paper_text": "현대차 풋",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
@@ -4087,10 +4141,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4271,8 +4325,8 @@
         "row": "7",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -4284,7 +4338,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s135",
@@ -4293,7 +4349,7 @@
       "node_path": "2/0/1/9/0",
       "paper_text": "9",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -4302,8 +4358,8 @@
         "row": "8",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -4315,7 +4371,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s136",
@@ -4333,8 +4391,8 @@
         "row": "8",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -4346,7 +4404,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s137",
@@ -4355,7 +4415,7 @@
       "node_path": "2/0/1/9/2/0",
       "paper_text": "NAVER 풋",
       "region": "table",
-      "kind": "label",
+      "kind": "value",
       "layer": "펼침",
       "font_size_px": 13.0,
       "anchor": null,
@@ -4428,10 +4488,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4612,8 +4672,8 @@
         "row": "8",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -4625,7 +4685,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s146",
@@ -4634,7 +4696,7 @@
       "node_path": "2/0/1/10/0",
       "paper_text": "10",
       "region": "table",
-      "kind": "value",
+      "kind": "label",
       "layer": "펼침",
       "font_size_px": 12.0,
       "anchor": null,
@@ -4643,8 +4705,8 @@
         "row": "9",
         "col": 0
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -4656,7 +4718,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "text",
+      "static_reason": "표시 순번 고정 라벨 — 응답 종목 행 번호"
     },
     {
       "slot_id": "s147",
@@ -4674,8 +4738,8 @@
         "row": "9",
         "col": 1
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -4687,7 +4751,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s148",
@@ -4769,10 +4835,10 @@
       },
       "mapping_id": "base:ka30002",
       "f": "stkpc_flu",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "주가등락",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4953,8 +5019,8 @@
         "row": "9",
         "col": 7
       },
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -4966,7 +5032,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "응답에 창구명·비중이 없으며 목록 원소를 라벨/비율로 변환하지 않음"
     },
     {
       "slot_id": "s157",
@@ -5028,8 +5096,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -5042,7 +5110,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "선택 창구 순번",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s160",
@@ -5056,8 +5126,8 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수",
       "format": {
@@ -5069,7 +5139,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s161",
@@ -5083,8 +5155,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "buy_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
@@ -5105,7 +5177,9 @@
           "sep": " · 매도 "
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s162",
@@ -5140,8 +5214,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "buy_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매수거래량",
       "format": {
@@ -5153,7 +5227,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s164",
@@ -5188,8 +5264,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "sel_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매도거래량",
       "format": {
@@ -5201,7 +5277,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s166",
@@ -5236,8 +5314,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "trde_ori_elwnettrde_upper",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래원별ELW순매매상위",
       "format": {
@@ -5250,7 +5328,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "선택 창구 비중 — 순매매 전체 대비 파생",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s168",
@@ -5377,8 +5457,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수",
       "format": {
@@ -5391,7 +5471,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "순매수 부호별 창구 수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s174",
@@ -5405,8 +5487,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수",
       "format": {
@@ -5419,7 +5501,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "순매수 부호별 창구 비율",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s175",
@@ -5454,8 +5538,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수",
       "format": {
@@ -5468,7 +5552,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "외국계 창구 순매수 합계",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s177",
@@ -5503,8 +5589,8 @@
       "font_size_px": null,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka30002",
-      "f": "netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "순매수",
       "format": {
@@ -5517,7 +5603,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "note": "기관 창구 순매수 합계",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "종목별 응답을 창구 순위·전체 합계·외국계/기관 집계로 해석할 수 없음"
     },
     {
       "slot_id": "s179",

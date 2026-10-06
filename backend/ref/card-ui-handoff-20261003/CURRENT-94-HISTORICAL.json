@@ -1,0 +1,1469 @@
+{
+  "source": "backend/ref/card-ui-questionnaire.json",
+  "sourceSHA": "c4af99b4173cf2fa7049dc5c9b366ac2cdccb43fd9a2aae5788e1435aaed529b",
+  "cutoff": 853,
+  "scope": 94,
+  "evidenceRule": "Recorded width presence alone does not prove same-card max/narrow/remax or current commit regression. Native854+ are separate follow-up records.",
+  "rows": [
+    {
+      "template_id": "133H-2",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "default",
+      "evidence_count": 4,
+      "recorded_widths": [
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "137X-2",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "default",
+      "evidence_count": 10,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "13BC-2",
+      "prompt": "삼성전자 매수·매도 호가 가격",
+      "card_kind": "orderbook",
+      "variant": "default",
+      "evidence_count": 8,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "13K0-2",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "default",
+      "evidence_count": 25,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "15J9-2",
+      "prompt": null,
+      "card_kind": "explorer",
+      "variant": "default",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "15L8-2",
+      "prompt": "저장된 조건검색식으로 종목 찾아줘",
+      "card_kind": "explorer",
+      "variant": "default",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "15N5-2",
+      "prompt": "069500 ETF 종목 정보",
+      "card_kind": "instrument",
+      "variant": "default",
+      "evidence_count": 8,
+      "recorded_widths": [
+        1361,
+        1811,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "15P5-2",
+      "prompt": "ELW 만기와 위험 보여줘",
+      "card_kind": "instrument",
+      "variant": "default",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "15R0-2",
+      "prompt": "실시간 VI 발동 현황",
+      "card_kind": "explorer",
+      "variant": "default",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        1904
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "1JPU-0",
+      "prompt": "삼성전자 매수·매도 호가 잔량",
+      "card_kind": "orderbook",
+      "variant": "default",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "1WOB-1",
+      "prompt": "최근 5일 KRX 전체시장 외국인 순매수 상위 종목",
+      "card_kind": "flow",
+      "variant": "default",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2QFO-2",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "tab",
+      "evidence_count": 8,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2QM7-2",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "tab",
+      "evidence_count": 7,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2QRP-1",
+      "prompt": "삼성전자 매수·매도 호가 가격",
+      "card_kind": "orderbook",
+      "variant": "tab",
+      "evidence_count": 5,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2QX1-1",
+      "prompt": "삼성전자 매수·매도 호가 가격",
+      "card_kind": "orderbook",
+      "variant": "tab",
+      "evidence_count": 8,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2R3M-1",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "tab",
+      "evidence_count": 5,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2RBO-1",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "tab",
+      "evidence_count": 6,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2RJ7-1",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "tab",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2ROJ-1",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "tab",
+      "evidence_count": 12,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2RWK-1",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "tab",
+      "evidence_count": 12,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2S4E-1",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "tab",
+      "evidence_count": 10,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2SCE-1",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "tab",
+      "evidence_count": 8,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2SKU-1",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "tab",
+      "evidence_count": 10,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2SRV-1",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "tab",
+      "evidence_count": 6,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2SYW-1",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "tab",
+      "evidence_count": 5,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2TRW-1",
+      "prompt": "삼성전자 매수·매도 호가 가격",
+      "card_kind": "orderbook",
+      "variant": "tab",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2TZN-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "tab",
+      "evidence_count": 8,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2U5L-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "tab",
+      "evidence_count": 10,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2UBO-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "tab",
+      "evidence_count": 13,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2UHM-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "tab",
+      "evidence_count": 10,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2UN6-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "tab",
+      "evidence_count": 14,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2V71-0",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "tab",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2VDA-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "tab",
+      "evidence_count": 7,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2VIN-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "tab",
+      "evidence_count": 12,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2VO0-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "tab",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2WZK-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 12,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2X5N-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "sort",
+      "evidence_count": 14,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2XA5-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2XG6-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "sort",
+      "evidence_count": 11,
+      "recorded_widths": [
+        1361,
+        1411,
+        2046,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2XKO-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "sort",
+      "evidence_count": 15,
+      "recorded_widths": [
+        1361,
+        1411,
+        2046,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2XP6-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "sort",
+      "evidence_count": 16,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2XTO-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "sort",
+      "evidence_count": 18,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2XY6-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2Y47-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2YA8-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "sort",
+      "evidence_count": 12,
+      "recorded_widths": [
+        1361,
+        1411,
+        1904,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2YEQ-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "sort",
+      "evidence_count": 13,
+      "recorded_widths": [
+        1361,
+        1411,
+        1904,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2YJ8-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "sort",
+      "evidence_count": 12,
+      "recorded_widths": [
+        1361,
+        1411,
+        1904,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2YNQ-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "sort",
+      "evidence_count": 7,
+      "recorded_widths": [
+        1361,
+        1411,
+        1904,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2YS8-0",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "sort",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2YXS-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2Z49-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2ZBB-0",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "sort",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2ZHC-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2ZN9-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 7,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2ZTA-0",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "2ZZ7-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3063-0",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "30C1-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "30HY-0",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "30O1-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "30TY-0",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "30ZW-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "316O-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "31CL-0",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "31II-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 2,
+      "recorded_widths": [
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "31OF-0",
+      "prompt": "삼성전자 일자별 투자자 순매수 금액",
+      "card_kind": "flow",
+      "variant": "sort",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "31UD-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "sort",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "32S7-0",
+      "prompt": "코스피 종합 지수 최근 3개월 일봉 차트",
+      "card_kind": "instrument",
+      "variant": "tab",
+      "evidence_count": 15,
+      "recorded_widths": [
+        1361,
+        1411,
+        1904,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "32XM-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "tab",
+      "evidence_count": 5,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3BQB-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "expand",
+      "evidence_count": 7,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3D4I-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "expand",
+      "evidence_count": 6,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3DI2-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "expand",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3DZ1-0",
+      "prompt": "ELW 만기와 위험 보여줘",
+      "card_kind": "instrument",
+      "variant": "expand",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3EWN-0",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "expand",
+      "evidence_count": 5,
+      "recorded_widths": [
+        1361,
+        1411,
+        2122,
+        2560
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3FR6-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "expand",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3GRO-0",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "expand",
+      "evidence_count": 6,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3IGR-0",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "expand",
+      "evidence_count": 5,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3JT4-0",
+      "prompt": "삼성전자 매수·매도 호가 가격",
+      "card_kind": "orderbook",
+      "variant": "expand",
+      "evidence_count": 5,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3JZ3-0",
+      "prompt": "삼성전자 매수·매도 호가 가격",
+      "card_kind": "orderbook",
+      "variant": "expand",
+      "evidence_count": 6,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3K7K-0",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "expand",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3LGC-0",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "expand",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3MTJ-0",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "expand",
+      "evidence_count": 6,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3N4O-0",
+      "prompt": "삼성전자 매수·매도 호가 잔량",
+      "card_kind": "orderbook",
+      "variant": "expand",
+      "evidence_count": 3,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3NVG-0",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "expand",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3ODO-0",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "expand",
+      "evidence_count": 5,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3OIM-0",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "expand",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3TCO-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "expand",
+      "evidence_count": 1,
+      "recorded_widths": [
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3TOM-0",
+      "prompt": "삼성전자 최근 3개월 차트",
+      "card_kind": "instrument",
+      "variant": "expand",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "3UTA-0",
+      "prompt": "보유 종목별 평가 손익",
+      "card_kind": "account",
+      "variant": "expand",
+      "evidence_count": 1,
+      "recorded_widths": [
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "4A9H-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "expand",
+      "evidence_count": 4,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "4AGN-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "expand",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "4ANS-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "expand",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "4AUX-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "expand",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "failed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    },
+    {
+      "template_id": "4B22-1",
+      "prompt": "KRX 전체시장 거래대금 상위 종목, 관리종목 제외",
+      "card_kind": "explorer",
+      "variant": "expand",
+      "evidence_count": 2,
+      "recorded_widths": [
+        1361,
+        2122
+      ],
+      "last_whole_call": "passed",
+      "last_whole_ui": "passed",
+      "responsive_cycle": "REQUIRES_CURRENT_SAME_CARD_CYCLE_EVIDENCE",
+      "actual_template_id": "UNCONFIRMED_FROM_PUBLIC_QUESTIONNAIRE"
+    }
+  ]
+}

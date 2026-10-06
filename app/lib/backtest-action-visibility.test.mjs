@@ -61,7 +61,7 @@ test('strategy tabs retain analysis surfaces and reject retired deployment navig
   assert.deepEqual(Array.from(ctx.workspaceTabs(), ([key]) => key), ['code', 'nodes', 'form', 'result', 'history', 'optimize']);
   assert.equal(ctx.navigateAction({ tab: 'deploy' }), null);
   ctx.techniqueDraft = true;
-  assert.deepEqual(Array.from(ctx.workspaceTabs(), ([key]) => key), ['code', 'nodes', 'result']);
+  assert.deepEqual(Array.from(ctx.workspaceTabs(), ([key]) => key), ['code', 'nodes', 'result', 'history', 'optimize']);
 });
 
 test('an old deployment workspace restores its code and falls back to the strategy editor', async () => {

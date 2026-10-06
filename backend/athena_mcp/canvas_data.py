@@ -63,11 +63,19 @@ def _order_confirmation_required(details: dict[str, Any] | None = None) -> types
 
 
 _WS_RECEIPTS = {
+    "completed": "조건검색 조회 요청을 완료했습니다.",
     "started": "실시간 데이터 수신을 시작했습니다. 캔버스에서 확인하세요.",
     "stopped": "실시간 데이터 수신을 중지했습니다.",
     "reconnecting": "실시간 데이터 연결을 복구하고 있습니다. 캔버스에서 확인하세요.",
     "reconnected": "실시간 데이터 연결을 복구했습니다. 캔버스에서 확인하세요.",
     "error": "실시간 데이터 연결에 실패했습니다. 인증 및 연결 상태를 확인하세요.",
+}
+
+_CONDITION_WS_STATES = {
+    ("base:ka10171", "CNSRLST"): "completed",
+    ("base:ka10172", "CNSRREQ"): "completed",
+    ("base:ka10173", "CNSRREQ"): "started",
+    ("base:ka10174", "CNSRCLR"): "stopped",
 }
 
 
@@ -93,6 +101,19 @@ def _ws_state(payload: dict[str, Any]) -> str | None:
     if return_code is None or str(return_code).strip() not in {"0", "+0", "00"}:
         return "error"
 
+    # Condition-list/one-shot acknowledgements are commands, not REG streams.
+    # Match the public operation and command together; never infer a live feed
+    # or expose the condition names/stock rows from a successful acknowledgement.
+    trnm = data.get("trnm", payload.get("trnm"))
+    operation_ref = payload.get("operation_ref")
+    command_state = (
+        _CONDITION_WS_STATES.get((operation_ref, trnm))
+        if isinstance(operation_ref, str) and isinstance(trnm, str)
+        else None
+    )
+    if command_state is not None:
+        return command_state
+
     raw_state = data.get("lifecycle") or data.get("state")
     if not isinstance(raw_state, str):
         raw_state = payload.get("lifecycle") or payload.get("state")
@@ -115,7 +136,6 @@ def _ws_state(payload: dict[str, Any]) -> str | None:
         if normalized in _WS_RECEIPTS:
             return normalized
 
-    trnm = data.get("trnm", payload.get("trnm"))
     if trnm == "REG":
         return "started"
     if trnm == "REMOVE":

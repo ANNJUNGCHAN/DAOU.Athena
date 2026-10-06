@@ -118,13 +118,20 @@ function renderMarkdownInto(container, mdText) {
           const tr = document.createElement('tr');
           for (const cell of cells) {
             const td = document.createElement('td');
-            td.textContent = cell; // 텍스트 노드 — innerHTML 금지
+            appendInline(td, cell);
+            if (/^[+\-−]?\d[\d,.\s/%:()+\-−원주억만천백개건배]*$/u.test(td.textContent)) td.className = 'md-table-number';
             tr.appendChild(td);
           }
           tbody.appendChild(tr);
         }
         table.appendChild(tbody);
-        container.appendChild(table);
+        const scroll = document.createElement('div');
+        scroll.className = 'md-table-scroll';
+        scroll.tabIndex = 0;
+        scroll.setAttribute('role', 'region');
+        scroll.setAttribute('aria-label', '표, 좌우 방향키로 이동');
+        scroll.appendChild(table);
+        container.appendChild(scroll);
       }
       continue;
     }

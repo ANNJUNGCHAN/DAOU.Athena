@@ -1,0 +1,135 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "scope": "actual state card functions; no provider or mounted chart renderer",
+  "authorManifest": "7c65ef33f7afac389b8a8eeec0817a174fff454a88bc65b7180b832828b6648d",
+  "livePins": {
+    "app/canvas.js": "4d91c637c5411c0d50adb1583261d3caf41e088452cbb98a35026674803e1940",
+    "app/canvas.css": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f"
+  },
+  "snapshot": {
+    "snapshot/app/styles/tokens.css": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2",
+    "snapshot/app/styles/ui-kit.css": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039",
+    "snapshot/app/lib/ui-kit.js": "7ca826c3a9e3196370192952b50eebb61a085f18a9805a25807e475595596b4b",
+    "snapshot/app/lib/integrated-card-surface.js": "bf04133c156e724d1dc4abd293979c837e43af1aeee6bd79b36c4fa482e62bb5",
+    "snapshot/app/lib/canvas-layout.js": "8db24e94ec7cc9b02142d919f93a26dfece02a22993a916183c27817d6004713",
+    "snapshot/baseline/consumer.js": "3c4e104a743cf10ed9684e79c08a986f8d4c5cdf7fb2028b9f8be895aeabd999",
+    "snapshot/baseline/canvas.css": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f",
+    "baseline.html": "c7056d75fb386a05465ecc3b7fe213cbaab95a1b0f4689d403abbc0ce451d49d",
+    "snapshot/candidate/consumer.js": "5a5976734482763e4e05d259a9cda451a86486fd30b6ea5933e5db656bc3424c",
+    "snapshot/candidate/canvas.css": "99a2e40042c38292191d84989bc2cc7472fa442c736a5a97b7d722ff6aebeb99",
+    "candidate.html": "45574458c09f3fa0def24922f5c5a70e6086cc63d4d6c85db0abce4f0cb76396"
+  },
+  "cases": [
+    {
+      "id": "chart-timeout",
+      "type": "chart",
+      "state": "timeout",
+      "retained": false
+    },
+    {
+      "id": "chart-error",
+      "type": "chart",
+      "state": "error",
+      "retained": false
+    },
+    {
+      "id": "chart-cancelled",
+      "type": "chart",
+      "state": "cancelled",
+      "retained": false
+    },
+    {
+      "id": "table-timeout",
+      "type": "table",
+      "state": "timeout",
+      "retained": false
+    },
+    {
+      "id": "table-error",
+      "type": "table",
+      "state": "error",
+      "retained": false
+    },
+    {
+      "id": "table-cancelled",
+      "type": "table",
+      "state": "cancelled",
+      "retained": false
+    },
+    {
+      "id": "chart-cancelled-retained",
+      "type": "chart",
+      "state": "cancelled",
+      "retained": true
+    },
+    {
+      "id": "table-cancelled-retained",
+      "type": "table",
+      "state": "cancelled",
+      "retained": true
+    },
+    {
+      "id": "normal-chart",
+      "type": "chart",
+      "normal": true
+    },
+    {
+      "id": "normal-table",
+      "type": "table",
+      "normal": true
+    },
+    {
+      "id": "expanded-chart-timeout",
+      "type": "chart",
+      "state": "timeout",
+      "expanded": true
+    }
+  ],
+  "stages": [
+    {
+      "id": "max",
+      "width": 2560,
+      "height": 1392
+    },
+    {
+      "id": "native-narrow",
+      "width": 2122,
+      "height": 1166
+    },
+    {
+      "id": "target-narrow",
+      "width": 1411,
+      "height": 1166
+    },
+    {
+      "id": "remax",
+      "width": 2560,
+      "height": 1392
+    }
+  ],
+  "phaseFiles": {
+    "environment.js": "60533c29c4f6bc33928cbc332ca9d54f55c40daab3e6d9cc0c1eacefdae81853",
+    "browser.js": "735d652c7a6e1aaf748ce7d175c1c02a7373b2767e7097059dc137fc91baccc8",
+    "run.cjs": "21938ec72a3a4e3e0ae0d4dd21240d90ac47ae3526cb83ebc63562f2696b03f5",
+    "prepare.cjs": "b734f0815128933c3e1f378fd35719e6c9f8ae13864b6b3214fae7ec973d1191",
+    "AUTHOR-PREPARATION.md": "aa637bb71ad20219a07d596c2cb09ee8766aca23718d3152b96b54e008c4665a",
+    "EXECUTION-PROPOSAL.json": "1dc092dbdf22a6dfd9450a2f1345db6af77763d328da06c157ae7a06af07fc77",
+    "finalize.cjs": "b5225fce7b5fe3d6bc5fe2cb188b5510f6c265cd41e64303c5fc44495db86cd4",
+    "freeze-entry.cjs": "20b0fe40611daced483c02ee8cea1a6b476a2c446a0b9a3b71a563a3bf321b95"
+  },
+  "expected": {
+    "normalChartMinimum": 420,
+    "normalTableNatural": true,
+    "retryTarget": 36
+  },
+  "exceptions": [
+    "Error",
+    "TypeError",
+    "RangeError",
+    "SyntaxError"
+  ],
+  "productWrites": 0,
+  "appStarts": 0,
+  "providerCalls": 0,
+  "privateReads": 0
+}

@@ -338,7 +338,7 @@
             "s105"
           ],
           "mapping_id": "base:ka40006",
-          "f": "navidex",
+          "f": "nav",
           "kor": "NAV지수",
           "header_ko": "NAV",
           "format": {
@@ -780,13 +780,9 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka40007",
-      "f": "stk_cls",
+      "mapping_id": "base:ka40002",
+      "f": "etfobjt_idex_nm",
       "alt_mappings": [
-        {
-          "mapping_id": "base:ka40002",
-          "f": "etfobjt_idex_nm"
-        },
         {
           "mapping_id": "base:ka40006",
           "f": "etfobjt_idex_nm"
@@ -839,28 +835,18 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka40007",
-      "f": "stex_tp",
+      "mapping_id": "base:0G",
+      "f": "20",
       "alt_mappings": [
         {
-          "mapping_id": "base:0G",
-          "f": "20"
-        },
-        {
           "mapping_id": "base:ka40007",
-          "f": "cntr_tm"
-        },
-        {
-          "mapping_id": "base:ka40008",
           "f": "cntr_tm"
         }
       ],
       "kor": "거래소구분",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time",
+        "prefix": "체결 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -947,22 +933,14 @@
       "table": null,
       "mapping_id": "base:0G",
       "f": "11",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0G",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:0G",
-          "f": "25"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "sign": true,
+        "tone": "change",
+        "prefix": "전일비 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1000,22 +978,16 @@
         {
           "mapping_id": "base:ka40003",
           "f": "nav"
-        },
-        {
-          "mapping_id": "base:ka40003",
-          "f": "navetfdispty_rt"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "dispty_rt"
         }
       ],
       "kor": "NAV",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "absolute": true,
+        "prefix": "NAV "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1299,16 +1271,8 @@
       "f": "37",
       "alt_mappings": [
         {
-          "mapping_id": "base:0G",
-          "f": "38"
-        },
-        {
           "mapping_id": "base:ka40009",
           "f": "navpred_pre"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "navflu_rt"
         }
       ],
       "kor": "NAV전일대비",
@@ -1401,8 +1365,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka40008",
-      "f": "cur_prc_n",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가n",
       "format": {
@@ -1413,7 +1377,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 시점 값을 전일 종가·전일 수량으로 대체할 수 없음"
     },
     {
       "slot_id": "s022",
@@ -1431,24 +1397,18 @@
       "f": "pred_pre",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka40007",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:ka40008",
-          "f": "pre_sig"
-        },
-        {
           "mapping_id": "base:ka40008",
           "f": "pred_pre"
         }
       ],
       "kor": "전일대비",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "전일비 ",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1517,22 +1477,14 @@
       "table": null,
       "mapping_id": "base:ka40003",
       "f": "trace_eor_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0G",
-          "f": "39"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "trace_eor_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "추적오차율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
         "precision": 2,
-        "tone": "change"
+        "tone": "change",
+        "divisor": 100
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1567,10 +1519,12 @@
       "alt_mappings": null,
       "kor": "추적현재가",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "divisor": 100,
+        "prefix": "추적현재가 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1598,18 +1552,15 @@
       "table": null,
       "mapping_id": "base:ka40003",
       "f": "trace_pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40003",
-          "f": "trace_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "추적전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "precision": 2,
+        "tone": "change",
+        "divisor": 100,
+        "prefix": "추적전일대비 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1662,10 +1613,9 @@
       "alt_mappings": null,
       "kor": "누적거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": " (단위 미확인)"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1691,7 +1641,8 @@
         "unit": "shares",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "누적 거래량 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1709,8 +1660,8 @@
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka40008",
-      "f": "acc_trde_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "누적거래량",
       "format": {
@@ -1721,7 +1672,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 시점 값을 전일 종가·전일 수량으로 대체할 수 없음"
     },
     {
       "slot_id": "s031",
@@ -2021,15 +1974,17 @@
       "alt_mappings": null,
       "kor": "외인순매수",
       "format": {
-        "unit": "krw_ko",
+        "unit": "shares",
         "sign": true,
         "precision": 0,
-        "tone": "change"
+        "tone": "change",
+        "prefix": "시간대별 조회 "
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s044",
@@ -2049,13 +2004,15 @@
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
+        "sign": true,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "change",
+        "prefix": "수익률 조회 "
       },
-      "paired_with": "s043",
+      "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s045",
@@ -2125,13 +2082,15 @@
       "kor": "기관순매수수량",
       "format": {
         "unit": "shares",
-        "sign": false,
+        "sign": true,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "change",
+        "prefix": "수익률 조회 "
       },
-      "paired_with": "s046",
+      "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s048",
@@ -2215,18 +2174,12 @@
       "table": null,
       "mapping_id": "base:ka40009",
       "f": "repl_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40009",
-          "f": "conv_pric"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "대용가",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "prefix": "대용가 "
       },
       "paired_with": "s050",
       "collapse_group": null,
@@ -2433,7 +2386,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "ETF 과세: "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2446,37 +2400,21 @@
       "node_path": "1/1/3/4/1/1",
       "paper_text": "ETN·원주가격 해당 없음",
       "region": "rail",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
       "mapping_id": "base:ka40006",
       "f": "etntxon_type",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "wonju_pric"
-        },
-        {
-          "mapping_id": "base:ka40007",
-          "f": "wonju_pric"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "drstk"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "wonju_pric"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "ETN과세유형",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "prefix": "ETN 과세: "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2546,10 +2484,8 @@
       "alt_mappings": null,
       "kor": "ETF대상지수코드",
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "text",
+        "prefix": "대상지수 코드 "
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2773,12 +2709,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "tm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "etftisl_trnsn"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "time",
@@ -2809,12 +2740,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "text",
@@ -2845,32 +2771,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:ka40006",
-          "f": "flu_rt"
-        },
-        {
-          "mapping_id": "base:ka40008",
-          "f": "pre_sig_n"
-        },
-        {
-          "mapping_id": "base:ka40008",
-          "f": "pred_pre_n"
-        },
-        {
-          "mapping_id": "base:ka40010",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:ka40010",
-          "f": "pred_pre"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -2936,23 +2837,15 @@
         "col": 2
       },
       "mapping_id": "base:ka40006",
-      "f": "navidex",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "nav"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "etfnavarray"
-        }
-      ],
+      "f": "nav",
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2977,19 +2870,10 @@
       },
       "mapping_id": "base:ka40006",
       "f": "navetf",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "nav"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "etfnavarray"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "괴리율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -3017,18 +2901,14 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trace_idex",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "trace_idex_pred_pre_sig"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "divisor": 100
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3053,18 +2933,14 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trace_idex_pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "trace_idex_pred_pre_sig"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "추적지수전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "precision": 2,
+        "tone": "change",
+        "divisor": 100
       },
       "paired_with": "s076",
       "collapse_group": null,
@@ -3097,16 +2973,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "base:ka40007",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "shares",
@@ -3137,22 +3004,13 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "base:ka40007",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
       },
       "paired_with": "s078",
       "collapse_group": null,
@@ -3175,14 +3033,9 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka40010",
-      "f": "for_netprps",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "etftisl_trnsn"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "krw_ko",
@@ -3193,7 +3046,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0
+      "row_index": 0,
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음"
     },
     {
       "slot_id": "s081",
@@ -3211,14 +3066,9 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka40008",
-      "f": "for_netprps_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40008",
-          "f": "etfnetprps_qty_array"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
@@ -3237,7 +3087,9 @@
           "sep": null
         }
       ],
-      "row_index": 0
+      "row_index": 0,
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음"
     },
     {
       "slot_id": "s082",
@@ -3268,8 +3120,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "기관 순매수 금액 — ka40010은 외인순매수(for_netprps)만 제공, 기관은 수량 필드뿐",
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음",
       "row_index": 0,
       "static_reason": "기관 순매수 금액 — ETF op에 금액 필드가 없다(수량만: ka40008 orgn_netprps_qty). 수량은 병기 s083이 받는다"
     },
@@ -3289,8 +3141,8 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka40008",
-      "f": "orgn_netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기관순매수수량",
       "format": {
@@ -3302,7 +3154,9 @@
       "paired_with": "s082",
       "collapse_group": null,
       "expanded_board": null,
-      "row_index": 0
+      "row_index": 0,
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음"
     },
     {
       "slot_id": "s084",
@@ -3320,20 +3174,15 @@
         "row": "0",
         "col": 7
       },
-      "mapping_id": "base:ka40007",
-      "f": "objt_idex_pre_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40007",
-          "f": "etftisl_cntr_array"
-        }
-      ],
+      "mapping_id": "base:ka40006",
+      "f": "navidex",
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
-        "sign": false,
+        "kind": "percent",
         "precision": 2,
-        "tone": "neutral"
+        "sign": true,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3358,15 +3207,10 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trace",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40007",
-          "f": "etftisl_cntr_array"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "추적오차율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -3394,12 +3238,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "tm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "etftisl_trnsn"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "time",
@@ -3431,12 +3270,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "text",
@@ -3468,12 +3302,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -3540,23 +3369,15 @@
         "col": 2
       },
       "mapping_id": "base:ka40006",
-      "f": "navidex",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "nav"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "etfnavarray"
-        }
-      ],
+      "f": "nav",
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3582,19 +3403,10 @@
       },
       "mapping_id": "base:ka40006",
       "f": "navetf",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "nav"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "etfnavarray"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "괴리율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -3623,18 +3435,14 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trace_idex",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "trace_idex_pred_pre_sig"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "divisor": 100
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3660,18 +3468,14 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trace_idex_pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "trace_idex_pred_pre_sig"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "추적지수전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "precision": 2,
+        "tone": "change",
+        "divisor": 100
       },
       "paired_with": "s091",
       "collapse_group": null,
@@ -3705,16 +3509,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "base:ka40007",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "shares",
@@ -3746,22 +3541,13 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "base:ka40007",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
       },
       "paired_with": "s093",
       "collapse_group": null,
@@ -3785,14 +3571,9 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka40010",
-      "f": "for_netprps",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "etftisl_trnsn"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "krw_ko",
@@ -3804,7 +3585,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 1,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음"
     },
     {
       "slot_id": "s096",
@@ -3822,14 +3605,9 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka40008",
-      "f": "for_netprps_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "etftisl_trnsn"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
@@ -3849,7 +3627,9 @@
         }
       ],
       "row_index": 1,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음"
     },
     {
       "slot_id": "s097",
@@ -3880,8 +3660,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "기관 순매수 금액 — ka40010은 외인순매수(for_netprps)만 제공, 기관은 수량 필드뿐",
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음",
       "row_index": 1,
       "static_reason": "기관 순매수 금액 — ETF op에 금액 필드가 없다(수량만: ka40008 orgn_netprps_qty). 수량은 병기 s098이 받는다"
     },
@@ -3901,8 +3681,8 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka40008",
-      "f": "orgn_netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기관순매수수량",
       "format": {
@@ -3915,7 +3695,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 1,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음"
     },
     {
       "slot_id": "s099",
@@ -3933,20 +3715,15 @@
         "row": "1",
         "col": 7
       },
-      "mapping_id": "base:ka40007",
-      "f": "objt_idex_pre_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40007",
-          "f": "etftisl_cntr_array"
-        }
-      ],
+      "mapping_id": "base:ka40006",
+      "f": "navidex",
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
-        "sign": false,
+        "kind": "percent",
         "precision": 2,
-        "tone": "neutral"
+        "sign": true,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3972,15 +3749,10 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trace",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40007",
-          "f": "etftisl_cntr_array"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "추적오차율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -4009,12 +3781,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "tm",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "etftisl_trnsn"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "time",
@@ -4046,12 +3813,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "close_pric",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "text",
@@ -4083,12 +3845,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -4155,23 +3912,15 @@
         "col": 2
       },
       "mapping_id": "base:ka40006",
-      "f": "navidex",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "nav"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "etfnavarray"
-        }
-      ],
+      "f": "nav",
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "precision": 2,
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4197,19 +3946,10 @@
       },
       "mapping_id": "base:ka40006",
       "f": "navetf",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "nav"
-        },
-        {
-          "mapping_id": "base:ka40009",
-          "f": "etfnavarray"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "괴리율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -4238,18 +3978,14 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trace_idex",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "trace_idex_pred_pre_sig"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "divisor": 100
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4275,18 +4011,14 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trace_idex_pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40006",
-          "f": "trace_idex_pred_pre_sig"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "추적지수전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "precision": 2,
+        "tone": "change",
+        "divisor": 100
       },
       "paired_with": "s106",
       "collapse_group": null,
@@ -4320,16 +4052,7 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "base:ka40007",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "shares",
@@ -4361,22 +4084,13 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "base:ka40007",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "korean",
+        "scale": "백만",
+        "suffix": "원",
+        "prefix": "거래대금 "
       },
       "paired_with": "s108",
       "collapse_group": null,
@@ -4400,14 +4114,9 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka40010",
-      "f": "for_netprps",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "etftisl_trnsn"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "krw_ko",
@@ -4419,7 +4128,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 2,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음"
     },
     {
       "slot_id": "s111",
@@ -4437,14 +4148,9 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka40008",
-      "f": "for_netprps_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40010",
-          "f": "etftisl_trnsn"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": "외인순매수수량",
       "format": {
         "unit": "shares",
@@ -4464,7 +4170,9 @@
         }
       ],
       "row_index": 2,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음"
     },
     {
       "slot_id": "s112",
@@ -4495,8 +4203,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "기관 순매수 금액 — ka40010은 외인순매수(for_netprps)만 제공, 기관은 수량 필드뿐",
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음",
       "row_index": 2,
       "static_reason": "기관 순매수 금액 — ETF op에 금액 필드가 없다(수량만: ka40008 orgn_netprps_qty). 수량은 병기 s113이 받는다"
     },
@@ -4516,8 +4224,8 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka40008",
-      "f": "orgn_netprps_qty",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기관순매수수량",
       "format": {
@@ -4530,7 +4238,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "row_index": 2,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "서로 다른 시간대 목록을 같은 행 번호로 합칠 수 없음"
     },
     {
       "slot_id": "s114",
@@ -4548,20 +4258,15 @@
         "row": "2",
         "col": 7
       },
-      "mapping_id": "base:ka40007",
-      "f": "objt_idex_pre_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40007",
-          "f": "etftisl_cntr_array"
-        }
-      ],
+      "mapping_id": "base:ka40006",
+      "f": "navidex",
+      "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "percent",
-        "sign": false,
+        "kind": "percent",
         "precision": 2,
-        "tone": "neutral"
+        "sign": true,
+        "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4587,15 +4292,10 @@
       },
       "mapping_id": "base:ka40006",
       "f": "trace",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40007",
-          "f": "etftisl_cntr_array"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "추적오차율",
       "format": {
-        "unit": "percent",
+        "kind": "percent",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -4797,12 +4497,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "cntr_dt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40008",
-          "f": "dt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "date",
@@ -4833,16 +4528,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "text",
@@ -4873,16 +4559,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -4961,10 +4638,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "divisor": 100
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4992,10 +4670,11 @@
       "alt_mappings": null,
       "kor": "추적전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "precision": 2,
+        "tone": "change",
+        "divisor": 100
       },
       "paired_with": "s127",
       "collapse_group": null,
@@ -5028,12 +4707,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40008",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "shares",
@@ -5064,12 +4738,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "cntr_dt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40008",
-          "f": "dt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "date",
@@ -5101,16 +4770,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "text",
@@ -5142,16 +4802,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -5232,10 +4883,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "divisor": 100
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5264,10 +4916,11 @@
       "alt_mappings": null,
       "kor": "추적전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "precision": 2,
+        "tone": "change",
+        "divisor": 100
       },
       "paired_with": "s134",
       "collapse_group": null,
@@ -5301,12 +4954,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40008",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "shares",
@@ -5338,12 +4986,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "cntr_dt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40008",
-          "f": "dt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "date",
@@ -5375,16 +5018,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "text",
@@ -5416,16 +5050,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:ka40003",
-          "f": "pre_rt"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "전일대비",
       "format": {
         "unit": "krw_ko",
@@ -5506,10 +5131,11 @@
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "divisor": 100
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5538,10 +5164,11 @@
       "alt_mappings": null,
       "kor": "추적전일대비",
       "format": {
-        "unit": "text",
+        "kind": "number",
         "sign": true,
-        "precision": 0,
-        "tone": "change"
+        "precision": 2,
+        "tone": "change",
+        "divisor": 100
       },
       "paired_with": "s141",
       "collapse_group": null,
@@ -5575,12 +5202,7 @@
       },
       "mapping_id": "base:ka40003",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka40008",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": null,
       "kor": null,
       "format": {
         "unit": "shares",

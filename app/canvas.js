@@ -2,7 +2,6 @@ const { sanitize } = window.AthenaLib.Sanitize;
 const { renderMarkdownInto } = window.AthenaLib.Markdown;
 const { button, emptyState, errorNote, removeCard } = window.AthenaLib.UiKit;
 const { widthGradeFor, dropTargetsFor, exceedsHeightBudget, MIN_CARDS } = window.AthenaLib.CanvasLayout;
-const { foldColumns } = window.AthenaLib.ColumnFold;
 const { createChartCard } = window.AthenaLib.ChartCard;
 const { AITS_CHART_RENDERER_ID, createAitsChartPanelAdapter, fromAthenaChartData, parseAitsChartSnapshot, panelIdFor } = window.AthenaLib.AitsChartPanel;
 const { classifyCell, changeTone, formatNumeric, formatDatetime, groupFactsFields } = window.AthenaLib.FactsCard;
@@ -14,6 +13,7 @@ const semanticDetailSheet = window.AthenaLib.SemanticDetailSheet;
 const semanticWorkspace = window.AthenaLib.SemanticWorkspace;
 const paperCardRouting = window.AthenaLib.PaperCardRouting;
 const boardMount = window.AthenaLib.BoardMount;
+const boardFlowLayout = window.AthenaLib.BoardFlowLayout;
 const boardTemplateRegistry = window.AthenaLib.BoardTemplateRegistry;
 const boardCardActions = window.AthenaLib.BoardCardActions;
 const canvasTabs = window.AthenaLib.CanvasTabs;
@@ -584,11 +584,18 @@ window.AthenaCanvasCards = Object.assign(window.AthenaCanvasCards || {}, {
   flushReport: reportSessionCards,
 });
 
-window.athena.on('athena:add-canvas', ({ type, sessionCardId }) => {
+window.athena.on('athena:add-canvas', ({ type, sessionCardId, conversationId }) => {
+  if (conversationId && canvasConversationId && conversationId !== canvasConversationId) return;
+  const paintRevision = canvasPaintRevision;
+  const renderKey = sessionCardId ? String(paintRevision) + ':' + sessionCardId : null;
+  if (renderKey && (sessionCardRenders.has(renderKey)
+    || Array.from(grid.querySelectorAll('.card')).some((card) => card.dataset.sessionCardId === sessionCardId))) return;
+  if (renderKey) sessionCardRenders.add(renderKey);
   Promise.resolve(addCard(type)).then((node) => {
+    if (paintRevision !== canvasPaintRevision) { if (node && node.classList) destroyCard(node); return; }
     tagSessionCard(lastCardOr(node), { channel: 'fixture', kind: type, envelope: { type }, cardId: sessionCardId || null });
     reportSessionCards();
-  });
+  }).finally(() => { if (renderKey) sessionCardRenders.delete(renderKey); });
 });
 
 // 카드 비우기 — 옛 판에서는 main이 캔버스 창을 수축시킬 때 `athena:clear-canvases`
@@ -742,6 +749,7 @@ function attachRestRetryAction(card, retryId) {
   action.className = 'rest-retry-action';
   const button = document.createElement('button');
   button.type = 'button';
+  button.className = 'uk-btn uk-btn-ghost';
   // Paper 1IG3-0 — 중단 카드의 행동 문구는 상태 모델이 정한다(결과가 남아 있으면
   // 「결과 유지 · 다시 검색」). 나머지 상태는 지금까지의 「다시 시도」 그대로다.
   button.textContent = card.dataset.restActionLabel || '다시 시도';
@@ -804,6 +812,7 @@ window.athena.on('athena:rest-retry-available', (payload = {}) => {
 // 갈아타는 찰나에 늦게 도착한 카드까지 걸러야 다른 대화의 캔버스에 섞이지 않는다.
 let canvasConversationId = null;
 let canvasPaintRevision = 0;
+const sessionCardRenders = new Set();
 window.athena.on('athena:init', (payload) => { if (payload && payload.conversationId) canvasConversationId = payload.conversationId; });
 window.athena.on('athena:conversation-active', ({ conversationId } = {}) => {
   if (conversationId && conversationId !== canvasConversationId) {
@@ -815,7 +824,14 @@ window.athena.on('athena:add-canvas-live', async (result) => {
   if (result && result.conversationId && canvasConversationId && result.conversationId !== canvasConversationId) return;
   const rendererReceivedAt = performance.now();
   const paintRevision = canvasPaintRevision;
-  const node = await addLiveCard(result);
+  const sessionCardId = result && result.sessionCardId;
+  const renderKey = sessionCardId ? String(paintRevision) + ':' + sessionCardId : null;
+  if (renderKey && (sessionCardRenders.has(renderKey)
+    || Array.from(grid.querySelectorAll('.card')).some((card) => card.dataset.sessionCardId === sessionCardId))) return;
+  if (renderKey) sessionCardRenders.add(renderKey);
+  let node;
+  try { node = await addLiveCard(result); }
+  finally { if (renderKey) sessionCardRenders.delete(renderKey); }
   if (paintRevision !== canvasPaintRevision) { if (node && node.classList) destroyCard(node); return; }
   if (!node || !result || (result.status !== 'success' && result.status !== 'fallback')) return;
   tagSessionCard(lastCardOr(node), { channel: 'live', kind: result.envelope && result.envelope.canvas_type || null, envelope: result.envelope || null, cardId: result.sessionCardId || null });
@@ -957,6 +973,7 @@ async function renderPrimaryEnvelope(envelope, options = {}) {
   if (envelope.canvas_type === 'event' && !envelope.fell_back) return renderEventCard(envelope);
   if (envelope.canvas_type === 'action' && !envelope.fell_back) return renderActionCard(envelope);
   if (envelope.canvas_type === 'status' && !envelope.fell_back) return renderStatusCard(envelope);
+  if (envelope.canvas_type === 'timeline' && !envelope.fell_back) return renderTimelineCard(envelope);
   return renderFreeCanvas(envelope);
 }
 
@@ -1002,14 +1019,119 @@ function stateLinksOf(contract) {
 // 하이드레이션 대상 — 백엔드는 op의 manifest request alias로 적은 인자 가방을 받는다
 // (BoardHydrateRequest.target은 dict다). 봉투가 실어온 인자를 그대로 넘기고 종목코드만
 // 봉투 머리에서 보강한다 — 백엔드가 op마다 자기 alias만 골라 쓴다.
+const RANKING_BOARD_OPERATIONS = Object.freeze({
+  '13K0-2': 'base:ka10032', '2X5N-0': 'base:ka10030', '2XG6-0': 'base:ka10031',
+  '2XKO-0': 'base:ka10027', '2XP6-0': 'base:ka10029', '2XTO-0': 'base:ka10020',
+  '2YA8-0': 'base:ka10021', '2YEQ-0': 'base:ka10022', '2YJ8-0': 'base:ka10023',
+  '2YNQ-0': 'base:ka10098',
+});
+
+function expandedRankingSourceBoard(state) {
+  return state.rankingExpandedSourceBoard || state.rankingReturnBoard || '13K0-2';
+}
+
+function expandedRankingOperation(state) {
+  const sourceBoard = expandedRankingSourceBoard(state);
+  return state.rankingSourceBoard === sourceBoard && state.rankingSourceOperation
+    ? state.rankingSourceOperation : RANKING_BOARD_OPERATIONS[sourceBoard] || 'base:ka10032';
+}
+
+function selectedRankingRailSource(state) {
+  return state.rankingSourceBoard === '13K0-2'
+    && ['base:ka10032', 'base:ka00198'].includes(state.rankingSourceOperation)
+    ? state.rankingSourceOperation : 'base:ka10032';
+}
+
+const RANKING_RAIL_GROUPS = [
+  ['s128', 's129', 's131', 's132', 's134'], ['s145', 's146'],
+  ['s147', 's148'], ['s149', 's150'],
+];
+
+function rankingRailCode(value) {
+  const raw = value && typeof value === 'object' ? value.value : value;
+  return typeof raw === 'string' && raw.trim() ? raw.trim() : null;
+}
+
+function rankingRailRows(contract) {
+  if (contract?.board_id !== '13K0-2' || !Array.isArray(contract.ranking_rail_rows)) return null;
+  const rows = new Map();
+  for (const item of contract.ranking_rail_rows) {
+    if (!item || !Number.isInteger(item.row) || !RANKING_RAIL_GROUPS[item.row] || rows.has(item.row)
+      || !['base:ka10032', 'base:ka00198'].includes(item.source)
+      || (item.code !== null && !rankingRailCode(item.code)) || !Array.isArray(item.empty_slots)
+      || item.empty_slots.some(id => !RANKING_RAIL_GROUPS[item.row].includes(id))) return null;
+    rows.set(item.row, { code: rankingRailCode(item.code), source: item.source, empty_slots: item.empty_slots.slice() });
+  }
+  return rows;
+}
+
+function mergeRankingRailValues(state, incoming, contract) {
+  const boardId = state.boardId;
+  const next = { ...state.values };
+  const identities = new Map(state.rankingRailRowsByBoard?.get(boardId) || []);
+  const retired = state.rankingRailRetiredByBoard?.get(boardId) || new Set();
+  const clearRow = (row) => {
+    for (const slotId of RANKING_RAIL_GROUPS[row]) { delete next[slotId]; retired.add(slotId); }
+  };
+  const rows = rankingRailRows(contract);
+  if (rows) {
+    for (const [row, identity] of rows) {
+      if (!identity.code || !identities.get(row)?.code || identities.get(row).code !== identity.code) clearRow(row);
+      for (const slotId of identity.empty_slots) delete next[slotId];
+      identities.set(row, identity);
+    }
+  } else {
+    // A legacy patch cannot establish comparison identity from its display name.
+    if (Object.hasOwn(incoming, 's129') && rankingRailCode(next.s129) !== rankingRailCode(incoming.s129)) {
+      clearRow(0); identities.delete(0);
+    }
+    for (let row = 1; row < RANKING_RAIL_GROUPS.length; row++) {
+      if (!Object.hasOwn(incoming, RANKING_RAIL_GROUPS[row][0])) continue;
+      clearRow(row); identities.delete(row);
+    }
+  }
+  (state.rankingRailRowsByBoard ||= new Map()).set(boardId, identities);
+  (state.rankingRailRetiredByBoard ||= new Map()).set(boardId, retired);
+  return Object.assign(next, incoming);
+}
+
+function excludeRetiredRankingRailSlots(state) {
+  if (state.boardId !== '13K0-2') return;
+  const retired = state.rankingRailRetiredByBoard?.get(state.boardId);
+  if (!retired?.size) return;
+  // Observation ids identify source/path/row, not a stock. Old-envelope indexes
+  // must not reattach a previous stock's stream after this row changes identity.
+  for (const [bindingId, slots] of state.realtimeSlots) {
+    const keep = slots.filter(slotId => !retired.has(slotId));
+    if (keep.length) state.realtimeSlots.set(bindingId, keep);
+    else {
+      state.realtimeSlots.delete(bindingId);
+      state.realtimeSlots.observationByBinding?.delete(bindingId);
+    }
+  }
+}
+
 function boardHydrateTarget(envelope, host) {
   const args = (envelope && (envelope.operation_args || envelope.arguments)) || {};
   const target = args && typeof args === 'object' && !Array.isArray(args) ? { ...args } : {};
   const stkCd = cardStkCd(envelope) || args.stk_cd || (envelope && envelope.symbol) || args.symbol;
   if (stkCd) target.stk_cd = stkCd;
   const state = host && host.__athenaBoard;
+  if (state && state.boardId === '3D4I-0' && state.watchlistExpandedSymbol) {
+    target.stk_cd = state.watchlistExpandedSymbol;
+  }
+  if (state && state.boardId === '15N5-2' && state.etfDetailIdentity) {
+    target.stk_cd = state.etfDetailIdentity.code;
+  }
+  if (state && state.boardId === '2WZK-0' && state.etfReturnIdentity) {
+    target.stk_cd = state.etfReturnIdentity.code;
+  }
+  if (state && state.boardId === '2WZK-0' && state.etfReturnPeriod !== undefined) {
+    target.dt = state.etfReturnPeriod;
+  }
   if (rankingBoardControls && state && rankingBoardControls.isFamilyBoard(state.boardId)) {
-    return rankingBoardControls.targetFor(target, state.rankingCriteria, state.boardId);
+    return rankingBoardControls.targetFor(target, state.rankingCriteria,
+      state.boardId === '4B22-1' ? expandedRankingSourceBoard(state) : state.boardId);
   }
   return target;
 }
@@ -1028,6 +1150,7 @@ function boardStateOf(host) {
       values: {}, links: [], unbound: [], boardId: null,
       valuesByBoard: new Map(), unboundByBoard: new Map(), hydrationByBoard: new Map(),
       realtimeByBoard: new Map(),
+      rankingRailRowsByBoard: new Map(), rankingRailRetiredByBoard: new Map(),
       // 자료가 한 칸도 없는 되풀이 줄(계약의 empty_rows) — 보드별로 격리한다.
       emptyRows: [], emptyRowsByBoard: new Map(),
       // 값이 한 줄도 없는 표의 열(계약의 empty_columns).
@@ -1059,9 +1182,149 @@ function boardStateOf(host) {
   return host.__athenaBoard;
 }
 
+const WATCHLIST_SLOT_GROUPS = [{"slot_ids":["s028","s029","s030","s031","s032","s033","s035","s036","s037","s039","s041","s043","s046","s047","s048","s002","s192"],"quote_slot_ids":["s028","s031","s032","s033","s035","s036","s037","s039","s041","s043","s046","s047","s048","s002","s192"],"member_slot_ids":["s029","s030"]},{"slot_ids":["s049","s050","s051","s052","s053","s054","s056","s057","s058","s060","s062","s064","s067","s068","s069"],"quote_slot_ids":["s049","s052","s053","s054","s056","s057","s058","s060","s062","s064","s067","s068","s069"],"member_slot_ids":["s050","s051"]},{"slot_ids":["s070","s071","s072","s073","s074","s075","s077","s078","s079","s081","s083","s085","s088","s089","s090","s193","s196","s198"],"quote_slot_ids":["s070","s073","s074","s075","s077","s078","s079","s081","s083","s085","s088","s089","s090","s193","s196","s198"],"member_slot_ids":["s071","s072"]},{"slot_ids":["s091","s092","s093","s094","s095","s097","s098","s099","s101","s103","s105","s108","s109","s110"],"quote_slot_ids":["s091","s093","s094","s095","s097","s098","s099","s101","s103","s105","s108","s109","s110"],"member_slot_ids":["s092"]},{"slot_ids":["s111","s112","s113","s114","s115","s117","s118","s119","s121","s123","s125","s128","s129","s130"],"quote_slot_ids":["s111","s113","s114","s115","s117","s118","s119","s121","s123","s125","s128","s129","s130"],"member_slot_ids":["s112"]},{"slot_ids":["s131","s132","s133","s134","s135","s137","s138","s139","s141","s143","s145","s148","s149","s150"],"quote_slot_ids":["s131","s133","s134","s135","s137","s138","s139","s141","s143","s145","s148","s149","s150"],"member_slot_ids":["s132"]},{"slot_ids":["s151","s152","s153","s154","s155","s157","s158","s159","s161","s163","s165","s168","s169","s170"],"quote_slot_ids":["s151","s153","s154","s155","s157","s158","s159","s161","s163","s165","s168","s169","s170"],"member_slot_ids":["s152"]},{"slot_ids":["s171","s172","s173","s174","s175","s177","s178","s179","s181","s183","s185","s188","s189","s190"],"quote_slot_ids":["s171","s173","s174","s175","s177","s178","s179","s181","s183","s185","s188","s189","s190"],"member_slot_ids":["s172"]}];
+const WATCH_SOURCE_SLOTS = {"2UBO-1":["s003","s017","s023","s024","s025","s027","s028","s029","s030","s031","s032","s034","s035","s036","s037","s038","s039","s041","s042","s043","s044","s045","s046","s048","s049","s050","s051","s052","s053","s055","s056","s057","s058","s059","s060","s062","s063","s064","s065","s067","s075","s076","s077","s078","s079","s080","s081","s082","s083","s084","s085","s086","s087","s088","s089","s090","s091","s092","s093","s094","s095","s096","s097","s098","s099","s100","s101","s102","s103","s104","s105","s106","s107","s108","s111","s113","s114","s115","s119","s122","s123","s124","s125","s126","s127","s128","s129","s130"],"3D4I-0":["s002","s022","s023","s025","s026","s027","s029","s031","s033","s035","s037","s039","s041","s043","s048","s049","s051","s052","s054","s055","s057","s058","s060","s061","s068","s069","s071","s072","s074","s075","s077","s078","s083","s085","s087","s089","s092","s094","s096","s098","s102","s104","s109","s127"],"3EWN-0":["s002","s022","s023","s025","s026","s027","s029","s031","s033","s035","s037","s039","s041","s043","s048","s049","s051","s052","s054","s055","s057","s058","s060","s061","s065","s067","s069","s071","s073","s075","s080","s082","s084","s086","s088","s091","s093","s095","s097","s099","s100","s103","s105","s110","s115","s116","s117","s118","s119","s120","s121","s122","s123","s124","s125","s126","s128"]};
+  const watchlistCode = v => typeof v === 'string' && /^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(v) && v !== '000000' ? v : null;
+  function reconcileWatchlistContract(previous, contract, config) {
+    if (contract?.board_id !== '2U5L-1') return { contract, state: previous };
+    const all = new Set(config.flatMap(r => r.slot_ids));
+    const entries = new Map((previous?.entries || []).map(e => [e.slot_id, { ...e }]));
+    const oldRows = previous?.rows || [];
+    const retired = new Set(previous?.retired || []);
+    const metadata = contract.watchlist_rows;
+    const rows = Array.isArray(metadata?.rows) ? metadata.rows : [];
+    const valid = rows.length === 8 && typeof metadata.membership_received === 'boolean'
+      && (metadata.group == null || typeof metadata.group === 'string')
+      && rows.every((r, i) => r.row === i && (r.code === null || watchlistCode(r.code))
+        && ['received', 'absent', 'empty', 'ambiguous'].includes(r.quote_state)
+        && ['slot_ids', 'quote_slot_ids', 'member_slot_ids'].every(k => Array.isArray(r[k]) && JSON.stringify(r[k]) === JSON.stringify(config[i][k]))
+        && ['present_slots', 'empty_slots'].every(k => Array.isArray(r[k]) && r[k].every(s => config[i].slot_ids.includes(s))));
+    const clear = ids => ids.forEach(id => {
+      if (entries.has(id)) retired.add(id);
+      entries.delete(id);
+    });
+    const incoming = new Map((contract.slot_values || []).map(e => [e.slot_id, e]));
+    // A rejected/explicit-null identity contract cannot revive legacy sample
+    // values or apply arbitrary row updates. An absent legacy contract is also
+    // refused for managed slots; non-managed groups retain normal behavior.
+    if (!valid) clear(all);
+    else {
+      if (previous?.group != null && metadata.group != null && previous.group !== metadata.group) clear(all);
+      if (metadata.membership_received) rows.forEach((r, index) => {
+        if (!r.code || r.code !== oldRows[index]?.code) clear(config[index].slot_ids);
+        if (r.quote_state === 'empty' || r.quote_state === 'ambiguous') clear(config[index].quote_slot_ids);
+        clear(r.empty_slots);
+        for (const id of r.present_slots) {
+          const e = incoming.get(id);
+          if (!e || e.value == null || r.empty_slots.includes(id)) continue;
+          const prior = entries.get(id);
+          if (prior?.observation_id && prior.observation_id !== e.observation_id) retired.add(id);
+          entries.set(id, { ...e });
+        }
+      });
+    }
+    for (const [id, e] of incoming) if (!all.has(id)) entries.set(id, { ...e });
+    const filled = new Set(entries.keys());
+    const empty = new Set((contract.empty_value_slots || []).filter(id => !filled.has(id)));
+    for (const id of all) if (!filled.has(id)) empty.add(id);
+    const visible = groups => (groups || []).filter(group => !group.slot_ids?.some(id => filled.has(id)));
+    const next = { ...contract, slot_values: [...entries.values()],
+      empty_value_slots: [...empty], empty_rows: visible(contract.empty_rows),
+      empty_columns: visible(contract.empty_columns),
+      unbound_slots: (contract.unbound_slots || []).filter(id => !filled.has(id)) };
+    return { contract: next, state: { entries: [...entries.values()],
+      rows: valid && metadata.membership_received ? rows : oldRows,
+      group: valid ? metadata.group : null, retired: [...retired] } };
+  }
+
+function reconcileWatchSourceState(state, contract, reset = false) {
+  const id = contract?.board_id, managed = WATCH_SOURCE_SLOTS[id];
+  if (!managed) return contract;
+  const cache = state.watchSourceStateByBoard ||= new Map(), previous = reset ? null : cache.get(id);
+  const context = contract.watch_source_context;
+  const valid = context && Array.isArray(context.slots) && Array.isArray(context.presence)
+    && context.slots.every(row => managed.includes(row.slot_id))
+    && context.presence.every(row => managed.includes(row.slot_id));
+  const key = valid ? JSON.stringify([context.kind, context.requested_code || null,
+    context.detail_requested_code || context.source_requested_code || null,
+    context.list_period || null, context.detail_period || null]) : '';
+  const same = previous?.key === key && valid;
+  const entries = same ? new Map(previous.entries) : new Map();
+  const identities = same ? new Map(previous.identities) : new Map(), retired = new Set();
+  const present = new Map((valid ? context.presence : []).map(row => [row.slot_id, row]));
+  const incoming = new Map((contract.slot_values || []).filter(row => managed.includes(row.slot_id)).map(row => [row.slot_id, row]));
+  if (!same) for (const slot of managed) retired.add(slot);
+  for (const row of valid ? context.slots : []) {
+    if (same && row.row_state === 'absent') continue;
+    const identity = [row.mapping_id, row.identity || ''].join('|'), old = identities.get(row.slot_id);
+    if (old !== identity || row.row_state === 'empty' || present.get(row.slot_id)?.empty) {
+      entries.delete(row.slot_id); retired.add(row.slot_id);
+    }
+    identities.set(row.slot_id, identity);
+    if (row.row_state !== 'empty' && !present.get(row.slot_id)?.empty && incoming.has(row.slot_id)) {
+      const next = incoming.get(row.slot_id), last = entries.get(row.slot_id);
+      if (last?.observation_id !== next.observation_id || last?.row_index !== next.row_index) retired.add(row.slot_id);
+      entries.set(row.slot_id, next);
+    }
+  }
+  const populated = new Set(entries.keys()), empties = new Set(contract.empty_value_slots || []);
+  for (const slot of managed) populated.has(slot) ? empties.delete(slot) : empties.add(slot);
+  const emptyGroups = groups => (groups || []).filter(group => !group.slot_ids?.some(slot => populated.has(slot)));
+  const result = {...contract, slot_values: [...(contract.slot_values || []).filter(row => !managed.includes(row.slot_id)), ...entries.values()],
+    empty_value_slots:[...empties], empty_rows:emptyGroups(contract.empty_rows), empty_columns:emptyGroups(contract.empty_columns),
+    unbound_slots:(contract.unbound_slots || []).filter(slot => !populated.has(slot))};
+  cache.set(id, {key, entries, identities, retired, context: valid ? context : null});
+  return result;
+}
+
+function reconcileWatchlistState(state, contract, reset = false) {
+  if (contract?.board_id !== '2U5L-1') return reconcileWatchSourceState(state, contract, reset);
+  const store = state.watchlistStateByBoard ||= new Map();
+  const result = reconcileWatchlistContract(reset ? null : store.get('2U5L-1'), contract, WATCHLIST_SLOT_GROUPS);
+  store.set('2U5L-1', result.state);
+  return result.contract;
+}
+
+function excludeRetiredWatchlistSlots(state) {
+  if (state.boardId !== '2U5L-1' && !WATCH_SOURCE_SLOTS[state.boardId]) return;
+  const retired = new Set(state.watchlistStateByBoard?.get(state.boardId)?.retired
+    || state.watchSourceStateByBoard?.get(state.boardId)?.retired || []);
+  for (const [bindingId, slots] of state.realtimeSlots) {
+    const keep = slots.filter(slotId => !retired.has(slotId));
+    if (keep.length) state.realtimeSlots.set(bindingId, keep);
+    else {
+      state.realtimeSlots.delete(bindingId);
+      state.realtimeSlots.observationByBinding?.delete(bindingId);
+    }
+  }
+}
+
+function receiveWatchlistMetadata(state, contract) {
+  for (const [field, property] of [
+    ['empty_rows', 'emptyRows'], ['empty_columns', 'emptyColumns'],
+    ['empty_value_slots', 'emptyValueSlots'], ['deferred_value_slots', 'deferredValueSlots'],
+  ]) {
+    if (!Array.isArray(contract[field])) continue;
+    state[property] = contract[field].slice();
+    state[property + 'ByBoard'].set(state.boardId, state[property]);
+  }
+}
+
+
 function seedBoardState(state, contract, envelope) {
+  contract = reconcileWatchlistState(state, contract, true);
   if (!contract || !contract.board_id) return;
   const boardId = String(contract.board_id);
+  if (boardId === '13K0-2') {
+    (state.rankingRailRowsByBoard ||= new Map()).set(boardId, rankingRailRows(contract) || new Map());
+    (state.rankingRailRetiredByBoard ||= new Map()).set(boardId, new Set());
+  }
+  if (boardId === '2QFO-2' && Object.prototype.hasOwnProperty.call(contract, 'flow_query_context')) {
+    (state.flowQueryContextByBoard ||= new Map()).set(boardId, contract.flow_query_context);
+  }
+  if (['2QFO-2','2ROJ-1'].includes(boardId) && Object.prototype.hasOwnProperty.call(contract, 'flow_display_context')) {
+    (state.flowDisplayContextByBoard ||= new Map()).set(boardId, contract.flow_display_context);
+  }
   state.valuesByBoard.set(boardId, slotValuesOf(contract));
   state.unboundByBoard.set(
     boardId, Array.isArray(contract.unbound_slots) ? contract.unbound_slots.slice() : [],
@@ -1115,8 +1378,29 @@ function activateBoardState(state, boardId) {
 // 마운트 계약(어느 노드에 어떤 슬롯이 앉는가)은 정적이라 board-template-registry가
 // 갖고 있다. 봉투는 값(slot_values)과 상태 보드 목록만 나른다.
 function boardMountOptions(host, envelope) {
+  const state = boardStateOf(host);
+  const target = boardHydrateTarget(envelope, host);
+  const identity = ['32S7-0','2TZN-1'].includes(state.boardId) ? boardMount.sectorIdentityFromEnvelope(envelope) : state.boardId === '15N5-2' && state.etfDetailIdentity
+    || state.boardId === '2WZK-0' && state.etfReturnIdentity
+    || boardMount.boardIdentityFromEnvelope(envelope, state.values);
+  const flowBoard = ['2QFO-2','2QM7-2','2ROJ-1','2RWK-1','2S4E-1'].includes(state.boardId);
+  const flowDisplayContext = boardFlowLayout.displayContextFor(state.boardId, state.flowDisplayContextByBoard?.get(state.boardId), target.stk_cd);
   return {
-    identity: boardMount.boardIdentityFromEnvelope(envelope, boardStateOf(host).values),
+    identity: flowBoard ? boardFlowLayout.identityFor(state.boardId, envelope, state.values, identity, flowDisplayContext) : identity,
+    operationRef: String((envelope && (envelope.operation_ref || envelope.operationRef)) || '').trim(),
+    operationArgs: target,
+    flowDisplayContext,
+    sectorChangeOccurrence: state.boardId === '32S7-0'
+      && state.sectorChangeSourceKey === [envelope.operation_ref || envelope.operationRef || '', target.inds_cd || ''].join('|')
+      ? state.sectorChangeOccurrence : '',
+    watchSourceContext: state.watchSourceStateByBoard?.get(state.boardId)?.context || null,
+    watchlistSelection: state.boardId === '2U5L-1' ? watchlistSelectedRow(state) : null,
+    flowQueryContext: state.boardId === '2QFO-2' && state.flowQueryContextByBoard?.has(state.boardId) ? boardFlowLayout.queryContextFor({
+      board_id: state.boardId, flow_query_context: state.flowQueryContextByBoard?.get(state.boardId),
+    }, target.stk_cd, envelope.operation_ref) : undefined,
+    rankingResult: boardStateOf(host).boardId === '4B22-1' ? boardStateOf(host).rankingResult : null,
+    rankingOperationRef: boardStateOf(host).boardId === '4B22-1' ? expandedRankingOperation(boardStateOf(host)) : null,
+    onEtfPeriodChange: (dt) => selectEtfReturnPeriod(host, envelope, dt),
     // 백엔드가 「자료가 한 칸도 없다」고 표시한 줄. 마운트가 그 줄만 감춘다.
     emptyRows: boardStateOf(host).emptyRows || [],
     // 실시간 프레임·주문 응답이 오기 전에는 빈 칸으로 두는 잎.
@@ -1134,16 +1418,44 @@ function boardMountOptions(host, envelope) {
 // 봉투가 실어온 계약으로 보드를 연다. 값 표·상태 링크·미결 슬롯은 여기서만 온다.
 async function openBoardSurface(host, contract, envelope, isCurrent) {
   const state = boardStateOf(host);
+  if (rankingBoardControls?.isFilterBoard(contract.board_id)) {
+    const operation = String(envelope?.operation_ref || '');
+    const parent = operation === 'base:ka00198' ? '13K0-2'
+      : Object.keys(RANKING_BOARD_OPERATIONS).find(id => RANKING_BOARD_OPERATIONS[id] === operation);
+    if (!parent) throw new Error('필터의 조회 원천이 없어 화면을 열 수 없습니다. 순위 조회를 먼저 열어 주세요.');
+    closeParentRankingFilter(state);
+    state.rankingReturnBoard = parent;
+    state.rankingSourceBoard = parent;
+    state.rankingExpandedSourceBoard = parent;
+    state.rankingSourceOperation = operation;
+    state.rankingCriteria = rankingBoardControls.initialCriteria(boardHydrateTarget(envelope), parent);
+    state.hydrationWarnings = [];
+    // Filter slots describe a different volume table. Start the verified parent
+    // empty and request its own contract; never copy filter values or bindings.
+    seedBoardState(state, { board_id: parent }, {});
+    const mounted = await mountBoardState(host, parent, envelope, isCurrent);
+    if ((!isCurrent || isCurrent()) && state.boardId === parent) {
+      await showParentRankingFilter(host, contract.board_id, envelope);
+    }
+    return mounted;
+  }
   state.links = stateLinksOf(contract);
   seedBoardState(state, contract, envelope);
   const initialContract = initialSurfaceContractOf(envelope);
   if (initialContract) seedBoardState(state, initialContract, envelope);
   state.hydrationWarnings = [];
   if (rankingBoardControls && rankingBoardControls.isFamilyBoard(contract.board_id)) {
+    state.rankingReturnBoard = contract.board_id === '4B22-1'
+      ? Object.keys(RANKING_BOARD_OPERATIONS).find(id => RANKING_BOARD_OPERATIONS[id] === envelope.operation_ref) || '13K0-2'
+      : String(contract.board_id || rankingBoardControls.ROOT_BOARD);
     state.rankingCriteria = rankingBoardControls.initialCriteria(
-      boardHydrateTarget(envelope), contract.board_id,
+      boardHydrateTarget(envelope), state.rankingReturnBoard,
     );
-    state.rankingReturnBoard = String(contract.board_id || rankingBoardControls.ROOT_BOARD);
+    state.rankingSourceBoard = state.rankingReturnBoard;
+    state.rankingExpandedSourceBoard = state.rankingSourceBoard;
+    state.rankingSourceOperation = envelope.operation_ref === 'base:ka00198'
+      && state.rankingSourceBoard === '13K0-2' ? envelope.operation_ref
+      : RANKING_BOARD_OPERATIONS[state.rankingSourceBoard];
   }
   const initial = String(contract.initial_state_board || '');
   const hasInitial = initial && initial !== String(contract.board_id)
@@ -1167,6 +1479,8 @@ function realtimeBindingsOf(envelope) {
 function applyBoardRealtimeTick(host, tick) {
   const state = host && host.__athenaBoard;
   if (!state || !state.surface || !state.mountContract || !state.realtimeSlots.size) return 0;
+  // Sector chart/summary/history share queried snapshots until a validated industry live authority exists.
+  if (state.boardId === '32S7-0') return 0;
   const touched = [];
   for (const update of semanticWorkspace.semanticRealtimeUpdates(tick)) {
     const observationId = state.realtimeSlots.observationByBinding
@@ -1219,6 +1533,99 @@ function mountBoardState(host, boardId, envelope, isCurrent = () => true) {
     });
 }
 
+// Ignored feasibility candidate: keep the actual parent surface and query state.
+// Reuse only the authored menu, never its specimen volume table or slot values.
+function openParentRankingMenu(surface, filterBoardId, {registry, mount, popover, controls, onSelection, onClose, unavailableReason, criteria, operation}) {
+  const spec=popover.MENUS[filterBoardId];
+  if(!spec)throw new Error('unsupported ranking filter');
+  const previousMenu=surface.querySelector('.bs-parent-ranking-menu');
+  if(previousMenu?.closeParentRankingMenu)previousMenu.closeParentRankingMenu();else previousMenu?.remove();
+  const holder=surface.ownerDocument.createElement('template');holder.innerHTML=registry.boardHtml(filterBoardId);
+  const menu=holder.content.querySelector('[data-node="'+spec[0]+'"]');
+  if(!menu)throw new Error('authored filter menu missing');
+  const triggerText=({'4A9H-1':'KOSPI','4AGN-1':'등락 전체','4ANS-1':'시가총액 전체','4AUX-1':'유동성 정상'})[filterBoardId];
+  const trigger=mount.findStateControlNode(surface,triggerText);
+  if(!trigger)throw new Error('actual parent trigger missing');
+  const activationOwner=trigger.closest('[role="button"],button,[role="tab"]')||trigger;
+  menu.classList.add('bs-filter-popover','bs-parent-ranking-menu');menu.setAttribute('role','menu');menu.setAttribute('aria-label',triggerText);
+  menu.style.height='auto';menu.style.minHeight='0';menu.tabIndex=-1;
+  const view=surface.ownerDocument.defaultView;let closed=false,pendingFrame=0,observer=null;
+  const position=()=>{if(closed)return;const r=popover.menuPosition(surface.getBoundingClientRect(),trigger.getBoundingClientRect());Object.assign(menu.style,{width:r.width+'px',left:(r.left+surface.scrollLeft)+'px',top:(r.top+surface.scrollTop)+'px'});};
+  for(const row of menu.children){row.classList.add('bs-filter-option');for(const property of ['height','min-height','justify-content','align-items','padding-inline'])row.style.removeProperty(property);for(const child of row.children)for(const property of ['width','font-size','line-height'])child.style.removeProperty(property);}
+  const oldPosition=surface.style.getPropertyValue('position'),oldPriority=surface.style.getPropertyPriority('position');
+  const needsPosition=getComputedStyle(surface).position==='static';
+  if(needsPosition)surface.style.setProperty('position','relative');
+  const schedulePosition=()=>{if(!closed&&!pendingFrame)pendingFrame=view.requestAnimationFrame(()=>{pendingFrame=0;position();});};
+  const close=()=>{if(closed)return;closed=true;observer?.disconnect();view.removeEventListener('resize',schedulePosition);if(pendingFrame)view.cancelAnimationFrame(pendingFrame);menu.remove();if(needsPosition){if(oldPosition)surface.style.setProperty('position',oldPosition,oldPriority);else surface.style.removeProperty('position');}};
+  surface.append(menu);
+  const managementMenu = filterBoardId === '4AUX-1' && !unavailableReason
+    && ['base:ka10032', 'base:ka10030'].includes(operation);
+  if (managementMenu) menu.setAttribute('aria-label', '관리종목 포함 조건');
+  let selectionMarked=false;
+  for(const label of controls.selectionLabels(filterBoardId)){
+    const owner=controls.selectionOwner(menu,label),selection=controls.selectionFor(filterBoardId,label);if(!owner)throw new Error('authored option missing: '+label);
+    if (managementMenu && label === '관리·경고 제외') { owner.hidden = true; continue; }
+    if (managementMenu) {
+      const caption = [...owner.querySelectorAll('*')].find(leaf => !leaf.children.length && leaf.textContent.trim() === label);
+      const displayLabel = label === '전체 포함' ? '관리종목 포함' : '관리종목 제외';
+      if (caption) caption.textContent = displayLabel;
+      owner.setAttribute('aria-label', displayLabel);
+    }
+    if(unavailableReason || selection.unavailable){owner.setAttribute('aria-disabled','true');owner.title=unavailableReason || selection.unavailable;}
+    if(unavailableReason){owner.style.opacity='0.55';owner.style.cursor='default';owner.style.background='transparent';owner.tabIndex=-1;for(const leaf of owner.querySelectorAll('*'))if(!leaf.children.length&&leaf.textContent.trim()==='선택됨')leaf.hidden=true;}
+    else mount.wireStateControlActivation(owner,()=>onSelection(selection),{keyboard:true});
+    const checked=!unavailableReason&&!selection.unavailable&&!selectionMarked&&selection.criteria
+      && Object.entries(selection.criteria).every(([key,value])=>criteria?.[key]===value);
+    owner.setAttribute('role','menuitem');
+    if(checked)owner.setAttribute('aria-current','true');else owner.removeAttribute('aria-current');
+    const markers=[...owner.querySelectorAll('*')].filter(leaf=>!leaf.children.length&&leaf.textContent.trim()==='선택됨');
+    for(const marker of markers)marker.hidden=!checked;
+    owner.style.background=checked?'var(--color-k-panel2)':'transparent';
+    if(checked){selectionMarked=true;if(!markers.length){const marker=surface.ownerDocument.createElement('span');marker.textContent='선택됨';marker.style.cssText='flex-shrink:0;font-size:11px;color:var(--color-k-dim)';owner.append(marker);}}
+  }
+  menu.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();if(onClose)onClose();else close();if(activationOwner.isConnected)activationOwner.focus();}});
+  if(unavailableReason){const note=surface.ownerDocument.createElement('div');note.className='bs-parent-ranking-filter-reason';note.setAttribute('role','status');note.textContent=unavailableReason;Object.assign(note.style,{fontSize:'12px',lineHeight:'1.5',padding:'8px 12px',whiteSpace:'normal'});menu.append(note);}
+  menu.closeParentRankingMenu=close;
+  menu.repositionParentRankingMenu=position;
+  observer=new view.ResizeObserver(schedulePosition);observer.observe(surface);observer.observe(trigger);
+  view.addEventListener('resize',schedulePosition);
+  position();
+  (menu.querySelector('[role="menuitem"]:not([aria-disabled="true"])')||menu).focus();
+  return{menu,close,reposition:position};
+}
+
+function closeParentRankingFilter(state) {
+  const menu = state && state.rankingParentMenu;
+  if (!menu) return;
+  state.rankingParentMenu = null;
+  menu.handle?.close();
+}
+
+async function showParentRankingFilter(host, filterBoardId, envelope) {
+  const state = boardStateOf(host);
+  if (state.rankingParentMenu?.boardId === filterBoardId) {
+    closeParentRankingFilter(state);
+    return null;
+  }
+  closeParentRankingFilter(state);
+  const pending = { boardId: filterBoardId, parentBoard: state.boardId, surface: state.surface };
+  state.rankingParentMenu = pending;
+  await boardTemplateRegistry.loadBoard(filterBoardId);
+  if (state.rankingParentMenu !== pending || state.boardId !== pending.parentBoard
+    || state.surface !== pending.surface) return null;
+  const operation = state.boardId === '4B22-1' ? expandedRankingOperation(state) : state.rankingSourceOperation;
+  pending.handle = openParentRankingMenu(state.surface, filterBoardId, {
+    registry: boardTemplateRegistry, mount: boardMount,
+    popover: window.AthenaLib.BoardPopoverLayout, controls: rankingBoardControls,
+    criteria: state.rankingCriteria, operation,
+    unavailableReason: operation === 'base:ka00198' && ['4A9H-1','4AUX-1'].includes(filterBoardId)
+      ? '실시간 종목 조회 순위는 시장·관리종목 필터를 지원하지 않습니다.' : '',
+    onSelection: selection => selectRankingFilter(host, envelope, selection),
+    onClose: () => closeParentRankingFilter(state),
+  });
+  return pending.handle;
+}
+
 function switchStateBoard(host, boardId, envelope, control = '') {
   const state = boardStateOf(host);
   const transition = rankingBoardControls && rankingBoardControls.isFamilyBoard(state.boardId)
@@ -1228,23 +1635,125 @@ function switchStateBoard(host, boardId, envelope, control = '') {
   const target = String(transition.boardId || '');
   if (!target || target === state.boardId) return null;
   if (!state.links.some((link) => link.board_id === target)) return null;
+  if (rankingBoardControls?.isFilterBoard(target) && !rankingBoardControls.isFilterBoard(state.boardId)) {
+    return showParentRankingFilter(host, target, envelope);
+  }
+  closeParentRankingFilter(state);
+  // This authored expansion belongs to the first actual watchlist row. The
+  // envelope can still describe a group or an earlier stock, so it is not its target.
+  const watchlistExpansion = state.boardId === '2U5L-1' && target === '3D4I-0';
+  const rowCode = watchlistExpansion && state.values.s029;
+  const watchlistSymbol = String(rowCode && typeof rowCode === 'object'
+    ? (!rowCode.missing ? rowCode.value || '' : '') : rowCode || '').trim();
+  const etfFromList = state.boardId === '2VIN-0' && ['15N5-2', '2WZK-0'].includes(target);
+  const etfCode = etfFromList && state.values.s387;
+  const etfValue = etfCode && typeof etfCode === 'object'
+    ? (!etfCode.missing ? etfCode.value : '') : etfCode;
+  const etfSymbol = (typeof etfValue === 'string' ? etfValue.trim() : '').replace(/_(AL|NX)$/, '');
+  const targetRequirement = etfFromList
+    ? (/^\d{6}$/.test(etfSymbol) && etfSymbol !== '000000'
+      ? '' : 'ETF 목록 첫 행의 종목코드가 제공된 뒤 화면을 열 수 있습니다.')
+    : watchlistExpansion
+    && (!/^[0-9A-Z]{6}(?:_(?:AL|NX))?$/.test(watchlistSymbol) || watchlistSymbol === '000000')
+    ? '관심목록 첫 행의 종목코드가 제공된 뒤 펼칠 수 있습니다.'
+    : boardTemplateRegistry.navigationTargetRequirement(target, envelope);
+  if (targetRequirement) {
+    if (state.navigationNoticeNode) state.navigationNoticeNode.remove();
+    const note = errorNote(targetRequirement);
+    note.classList.add('board-navigation-target-note');
+    note.setAttribute('role', 'status');
+    boardLoadAnchor(state, host).insertBefore(note, host);
+    state.navigationNoticeNode = note;
+    return null;
+  }
+  if (state.navigationNoticeNode) {
+    state.navigationNoticeNode.remove();
+    state.navigationNoticeNode = null;
+  }
+  if (etfFromList) {
+    const rawName = state.values.s386;
+    const name = rawName && typeof rawName === 'object'
+      ? (!rawName.missing ? rawName.value : '') : rawName;
+    const identityKey = target === '15N5-2' ? 'etfDetailIdentity' : 'etfReturnIdentity';
+    state[identityKey] = { code: etfSymbol, name: typeof name === 'string' ? name.trim() : '' };
+    // The list may have refreshed since an earlier visit. Its received
+    // first row owns this request, including the identity shown while loading.
+    for (const key of ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
+      'emptyRowsByBoard', 'emptyColumnsByBoard', 'emptyValueSlotsByBoard', 'deferredValueSlotsByBoard']) {
+      if (state[key]) state[key].delete(target);
+    }
+  }
+  if (watchlistExpansion) {
+    state.watchlistExpandedSymbol = watchlistSymbol;
+    // A refreshed group may have a different first row. Never show a cached
+    // expansion for the previous symbol while the current row is loading.
+    for (const key of ['valuesByBoard', 'unboundByBoard', 'hydrationByBoard', 'realtimeByBoard',
+      'emptyRowsByBoard', 'emptyColumnsByBoard', 'emptyValueSlotsByBoard', 'deferredValueSlotsByBoard']) {
+      if (state[key]) state[key].delete(target);
+    }
+  }
   if (transition.criteria) {
     state.rankingCriteria = { ...(state.rankingCriteria || {}), ...transition.criteria };
   }
   if (transition.returnBoard) state.rankingReturnBoard = transition.returnBoard;
+  if (target === '4B22-1') {
+    if (!rankingBoardControls.isFilterBoard(state.boardId)) {
+      state.rankingReturnBoard = state.boardId;
+      state.rankingExpandedSourceBoard = state.boardId;
+    }
+    state.rankingResult = null;
+    state.hydrationByBoard.delete(target);
+  } else if (RANKING_BOARD_OPERATIONS[target] && !rankingBoardControls.isFilterBoard(state.boardId)) {
+    state.rankingSourceBoard = target;
+    state.rankingSourceOperation = RANKING_BOARD_OPERATIONS[target];
+  }
   // 표면을 통째로 갈면 컨테이너가 바뀐다 — 같은 panelId를 다른 컨테이너로 열면
   // AITS adapter가 던지므로(aits-chart-panel openPanel) 먼저 닫는다.
   destroyBoardPrimary(state);
   return runBoardSurfaceLoad(host, envelope, (isCurrent) => (
     mountBoardState(host, target, envelope, isCurrent)
-  ));
+  ), { resetScroll: true });
 }
 
-const RESPONSIVE_STATE_CONTROL_OWNER = '.bs-r-flow, .bs-r-scroll, .bs-r-scroll-table';
-
-function isResponsiveStateControl(node) {
-  return !!(node && typeof node.closest === 'function'
-    && node.closest(RESPONSIVE_STATE_CONTROL_OWNER));
+const WATCHLIST_DETAIL_SLOTS = [["s028","s029","s031","s047"],["s049","s050","s052","s068"],["s070","s071","s073","s089"],["s091","s092","s093","s109"],["s111","s112","s113","s129"],["s131","s132","s133","s149"],["s151","s152","s153","s169"],["s171","s172","s173","s189"]];
+function watchlistSelectedRow(state) {
+  const selected=state.watchlistSelection, current=state.watchlistStateByBoard?.get('2U5L-1');
+  if(!selected)return null;
+  if(!current||selected.group!==current.group){state.watchlistSelection=null;return null;}
+  const index=current.rows.findIndex(row=>row.code===selected.code);
+  if(index<0){state.watchlistSelection=null;return null;}
+  const slots=WATCHLIST_DETAIL_SLOTS[index],raw=state.values[slots[1]];
+  const code=raw&&typeof raw==='object'?(raw.missing?undefined:raw.value):raw;
+  if(code!==selected.code){state.watchlistSelection=null;return null;}
+  return slots;
+}
+function wireWatchlistRowSelection(host, envelope, mounted) {
+  const state=boardStateOf(host),surface=mounted?.surface;
+  if(state.boardId!=='2U5L-1'||!surface)return;
+  const current=state.watchlistStateByBoard?.get('2U5L-1');
+  for(const [index,slots]of WATCHLIST_DETAIL_SLOTS.entries()){
+    const leaf=surface.querySelector('[data-slot-id="'+slots[0]+'"]'),row=leaf?.closest('[data-row]');
+    if(!row)continue;
+    const code=current?.rows[index]?.code,raw=state.values[slots[1]];
+    const actual=raw&&typeof raw==='object'?(raw.missing?undefined:raw.value):raw;
+    const valid=watchlistCode(code)&&code===actual;
+    row.classList.toggle('bs-watch-selected-row',!!valid&&state.watchlistSelection?.group===current.group&&state.watchlistSelection?.code===code);
+    row.__bsWatchSelect=valid?()=>{
+      if(state.boardId!=='2U5L-1')return;
+      state.watchlistSelection={group:current.group,code};
+      const next=boardMount.mountBoard(host,state.boardId,state.values,boardMountOptions(host,envelope));
+      rememberMountedBoard(state,next);wireMountedBoardControls(host,envelope,next);
+    }:null;
+    if(!row.__bsWatchSelectWired){row.addEventListener('click',event=>{
+      if(event.target.closest('button,[role="button"],[data-state-board]'))return;
+      row.__bsWatchSelect?.();
+    });row.__bsWatchSelectWired=true;}
+    if(valid){
+      boardMount.wireStateControlActivation(leaf,()=>row.__bsWatchSelect?.(),{keyboard:true});
+      leaf.setAttribute('aria-label',leaf.textContent.trim()+' 상세 선택');
+      leaf.dataset.bsWatchSelect='true';
+    }
+  }
 }
 
 function wireStateControls(host, envelope, mounted) {
@@ -1252,30 +1761,103 @@ function wireStateControls(host, envelope, mounted) {
   const surface = mounted && mounted.surface;
   if (!surface || !state.links.length) return 0;
   let wired = 0;
+  const direct = boardTemplateRegistry.directStateLinksFor(state.boardId);
+  const fallbackNodes = new Map([...surface.querySelectorAll('[data-state-link]')]
+    .map(node => [node.dataset.stateLink, node]));
+  // A later response can restore the original control. Reuse a fallback only
+  // while its authored control is still unavailable, without accumulating it.
+  for (const node of fallbackNodes.values()) node.remove();
+  const isAvailable = node => {
+    if (!node || !String(node.textContent || '').trim() || node.dataset.missing === 'true') return false;
+    for (let parent = node; parent && parent !== surface; parent = parent.parentElement) {
+      if (parent.hidden || getComputedStyle(parent).display === 'none') return false;
+    }
+    return true;
+  };
+  const navigation = state.links.filter(link => link.navigation && state.boardId !== '2U5L-1');
+  if (navigation.length && !surface.querySelector('.board-state-return')) {
+    const rail = document.createElement('nav');
+    rail.className = 'board-state-return';
+    rail.setAttribute('aria-label', '카드 화면 탐색');
+    for (const link of navigation) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = link.control;
+      button.dataset.stateControl = link.control;
+      rail.appendChild(button);
+    }
+    surface.prepend(rail);
+  }
   for (const link of state.links) {
     const control = String(link.control || '').trim();
     if (!control) continue;
     // 칩 찾기(표식·같은 문구·별칭 문구)는 board-mount가 갖는다 — 단위 테스트가 걸린다.
-    const node = boardMount.findStateControlNode(surface, control, { links: state.links });
-    if (!node) continue;
-    const didWire = boardMount.wireStateControlActivation(
-      node,
-      () => switchStateBoard(host, link.board_id, envelope, control),
-      { keyboard: isResponsiveStateControl(node) },
-    );
-    if (!didWire) continue;
-    // 표시는 CSS가 한다([data-state-board], board-surface.css) — 인라인 원문은 안 건드린다(D1).
-    node.dataset.stateBoard = link.board_id;
-    wired += 1;
+    if (state.boardId === '2U5L-1' && link.navigation) continue;
+    const linkKey = `${link.board_id}|${control}`;
+    let node = boardMount.findStateControlNode(surface, control, { links: state.links });
+    const aliases = boardTemplateRegistry.additionalControlLabels(control)
+      .map(label => boardMount.findStateControlNode(surface, label, { links: state.links }))
+      .filter(isAvailable);
+    if (!isAvailable(node) && aliases.length) node = aliases.shift();
+    if (!isAvailable(node) && state.boardId === '2U5L-1' && link.board_id === '3EWN-0') continue;
+    if (!isAvailable(node) && direct.some(item => item.board_id === link.board_id && item.control === control)) {
+      let rail = surface.querySelector('.board-state-return');
+      if (!rail) {
+        rail = document.createElement('nav');
+        rail.className = 'board-state-return';
+        rail.setAttribute('aria-label', '카드 화면 탐색');
+        surface.prepend(rail);
+      }
+      node = fallbackNodes.get(linkKey) || document.createElement('button');
+      node.type = 'button';
+      node.textContent = control.replace(/\s*\d+건\s*$/, '').replace(/\d+창구/, '창구').replace('삼성전자 행 펼침', '종목 상세');
+      node.dataset.stateLink = linkKey;
+      rail.appendChild(node);
+    }
+    for (const targetNode of new Set([node, ...aliases].filter(isAvailable))) {
+      const didWire = boardMount.wireStateControlActivation(
+        targetNode,
+        () => switchStateBoard(host, link.board_id, envelope, control),
+        { keyboard: true },
+      );
+      if (rankingBoardControls?.isFamilyBoard(state.boardId) && rankingBoardControls.isFilterBoard(link.board_id)) {
+        const caption = [targetNode, ...targetNode.querySelectorAll('*')]
+          .find(leaf => !leaf.children.length && leaf.textContent.trim() === control);
+        if (caption) caption.dataset.stateControl = control;
+      }
+      if (!didWire) continue;
+      const visibleControl = String(targetNode.textContent || '').trim();
+      if (!visibleControl || /^[▸▶›»→▾▼⌄]+$/.test(visibleControl)) {
+        if (!targetNode.getAttribute('aria-label')) targetNode.setAttribute('aria-label', control);
+        if (!targetNode.getAttribute('title')) targetNode.setAttribute('title', control);
+      }
+      // 표시는 CSS가 한다([data-state-board], board-surface.css) — 인라인 원문은 안 건드린다(D1).
+      if (state.boardId === '2U5L-1' && link.board_id === '3D4I-0') {
+        const value = state.values.s028;
+        const name = String(value && typeof value === 'object' ? value.value ?? value.text ?? '' : value ?? '').trim();
+        const label = name ? name + ' 행 펼침' : '첫 번째 관심종목 행 펼침';
+        targetNode.setAttribute('aria-label', label);
+        targetNode.setAttribute('title', label);
+      }
+      targetNode.dataset.stateBoard = link.board_id;
+      wired += 1;
+    }
   }
+  const rail = surface.querySelector('.board-state-return');
+  if (rail && !rail.children.length) rail.remove();
+  delete surface.__bsRelaxWidth;
+  boardMount.relaxOverflowRows(surface);
+  wireWatchlistRowSelection(host, envelope, mounted);
   return wired;
 }
 
 function clearRankingBoardCache(state) {
+  state.rankingResult = null;
   for (const cache of [
     state.valuesByBoard, state.unboundByBoard, state.hydrationByBoard, state.realtimeByBoard,
     state.emptyRowsByBoard, state.emptyColumnsByBoard, state.emptyValueSlotsByBoard,
     state.deferredValueSlotsByBoard,
+    state.rankingRailRowsByBoard, state.rankingRailRetiredByBoard,
   ]) {
     if (!cache || typeof cache.keys !== 'function') continue;
     for (const boardId of cache.keys()) {
@@ -1284,8 +1866,31 @@ function clearRankingBoardCache(state) {
   }
 }
 
+function selectEtfReturnPeriod(host, envelope, value) {
+  const state = boardStateOf(host);
+  const period = String(value);
+  if (state.boardId !== '2WZK-0' || !['0', '1', '2', '3'].includes(period)) return null;
+  if (String(boardHydrateTarget(envelope, host).dt) === period) return null;
+  state.etfReturnPeriod = period;
+  for (const cache of [
+    state.valuesByBoard, state.unboundByBoard, state.hydrationByBoard, state.realtimeByBoard,
+    state.emptyRowsByBoard, state.emptyColumnsByBoard, state.emptyValueSlotsByBoard,
+    state.deferredValueSlotsByBoard,
+  ]) cache.delete('2WZK-0');
+  destroyBoardPrimary(state);
+  return runBoardSurfaceLoad(host, envelope, (isCurrent) => (
+    mountBoardState(host, '2WZK-0', envelope, isCurrent)
+  ));
+}
+
 function selectRankingFilter(host, envelope, selection) {
   const state = boardStateOf(host);
+  const operation = state.boardId === '4B22-1' ? expandedRankingOperation(state) : state.rankingSourceOperation;
+  if (operation === 'base:ka00198' && !selection.boardId
+    && (Object.prototype.hasOwnProperty.call(selection.criteria || {}, 'market')
+      || Object.prototype.hasOwnProperty.call(selection.criteria || {}, 'liquidity'))) {
+    selection = { ...selection, unavailable: '실시간 종목 조회 순위는 시장·관리종목 필터를 지원하지 않습니다.' };
+  }
   if (selection.unavailable) {
     if (state.rankingNoticeNode) state.rankingNoticeNode.remove();
     const note = errorNote(selection.unavailable);
@@ -1300,7 +1905,13 @@ function selectRankingFilter(host, envelope, selection) {
     state.rankingNoticeNode = null;
   }
   state.rankingCriteria = rankingBoardControls.criteriaAfter(state.rankingCriteria, selection);
-  const target = String(selection.boardId || state.rankingReturnBoard || rankingBoardControls.ROOT_BOARD);
+  const target = String(selection.boardId || state.rankingParentMenu?.parentBoard
+    || state.rankingReturnBoard || rankingBoardControls.ROOT_BOARD);
+  closeParentRankingFilter(state);
+  if (selection.boardId && RANKING_BOARD_OPERATIONS[target]) {
+    state.rankingSourceBoard = target;
+    state.rankingSourceOperation = RANKING_BOARD_OPERATIONS[target];
+  }
   clearRankingBoardCache(state);
   destroyBoardPrimary(state);
   return runBoardSurfaceLoad(host, envelope, (isCurrent) => (
@@ -1308,13 +1919,36 @@ function selectRankingFilter(host, envelope, selection) {
   ));
 }
 
-function applyRankingCriteriaLabels(surface, criteria) {
+function applyRankingCriteriaLabels(surface, criteria, context = {}) {
   if (!surface || !criteria) return;
   const labels = {
     KOSPI: criteria.market === '101' ? 'KOSDAQ' : (criteria.market === '000' ? 'KRX 전체' : 'KOSPI'),
     '등락 전체': criteria.direction === 'up' ? '상승만' : (criteria.direction === 'down' ? '하락만' : '등락 전체'),
     '유동성 정상': criteria.liquidity === 'all' ? '전체 포함' : '유동성 정상',
   };
+  if (['13K0-2', '2X5N-0'].includes(context.boardId)) {
+    const operation = context.operation;
+    const target = context.target || {};
+    if (operation === 'base:ka00198') {
+      labels.KOSPI = '시장 필터 미지원';
+      labels['유동성 정상'] = '관리종목 필터 미지원';
+      for (const node of surface.querySelectorAll('[data-slot-id="s003"]')) if (!node.children.length) {
+        node.textContent = '실시간 종목 조회 순위 · 시장·관리종목 필터 미지원';
+      }
+    }
+    if (['base:ka10032','base:ka10030'].includes(operation)) {
+      const venue = {'1':'KRX','2':'NXT','3':'통합'}[String(target.stex_tp)] || '';
+      const market = {'000':'전체','001':'KOSPI','101':'KOSDAQ'}[String(target.mrkt_tp)] || '시장 미지정';
+      const marketLabel = [venue, market].filter(Boolean).join(' ');
+      const exclude = operation === 'base:ka10032' ? target.mang_stk_incls === '0' : target.mang_stk_incls === '1';
+      const include = operation === 'base:ka10032' ? target.mang_stk_incls === '1' : target.mang_stk_incls === '0';
+      const management = exclude ? '관리종목 제외' : include ? '관리종목 포함' : '관리종목 조건 확인 필요';
+      labels['유동성 정상'] = management;
+      for (const node of surface.querySelectorAll('[data-slot-id="s003"]')) if (!node.children.length) {
+        node.textContent = [operation === 'base:ka10032' ? '거래대금 상위' : '당일 거래량 상위', marketLabel, management].join(' · ');
+      }
+    }
+  }
   for (const node of surface.querySelectorAll('[data-state-control]')) {
     const control = String(node.dataset.stateControl || '');
     if (labels[control]) node.textContent = labels[control];
@@ -1325,7 +1959,10 @@ function wireRankingFilterSelections(host, envelope, mounted) {
   const state = boardStateOf(host);
   const surface = mounted && mounted.surface;
   if (!rankingBoardControls || !surface || !rankingBoardControls.isFamilyBoard(state.boardId)) return 0;
-  applyRankingCriteriaLabels(surface, state.rankingCriteria);
+  applyRankingCriteriaLabels(surface, state.rankingCriteria, {
+    boardId: state.boardId, operation: state.rankingSourceOperation,
+    target: boardHydrateTarget(envelope, host),
+  });
   let wired = 0;
   for (const label of rankingBoardControls.selectionLabels(state.boardId)) {
     const selection = rankingBoardControls.selectionFor(state.boardId, label);
@@ -1343,6 +1980,8 @@ function wireRankingFilterSelections(host, envelope, mounted) {
 }
 
 function wireMountedBoardControls(host, envelope, mounted) {
+  const state = boardStateOf(host);
+  if (state.rankingParentMenu && state.rankingParentMenu.surface !== mounted?.surface) closeParentRankingFilter(state);
   wireStateControls(host, envelope, mounted);
   wireRankingFilterSelections(host, envelope, mounted);
   wireCardActions(host, envelope, mounted);
@@ -1356,7 +1995,16 @@ function cardStockFromCard(envelope, surface) {
   return stkCd ? { stkCd, stockName: cardStockName(surface) } : null;
 }
 
+function watchCardActionStock(node, surface, action) {
+  if (!['2U5L-1','2UBO-1','3D4I-0','3EWN-0','2UHM-1','15L8-2','2UN6-1'].includes(surface?.dataset.bsBoardId)) return undefined;
+  if (action.stock === 'row') return boardCardActions.rowStock(node, surface) || surface.__bsWatchActionStock || null;
+  return surface.__bsWatchActionStock || null;
+}
+
+
 function cardActionStock(node, surface, envelope, action) {
+  const watchStock = watchCardActionStock(node, surface, action);
+  if (watchStock !== undefined) return watchStock;
   if (action.stock === 'row') {
     return boardCardActions.rowStock(node, surface) || cardStockFromCard(envelope, surface);
   }
@@ -1421,10 +2069,18 @@ function wireCardActions(host, envelope, mounted) {
   const surface = mounted && mounted.surface;
   if (!surface || !boardCardActions) return 0;
   let wired = 0;
+  const guarded = ["2X5N-0","2XG6-0","2XKO-0","2XP6-0","2XTO-0","2YA8-0","2YEQ-0","2YJ8-0","2YNQ-0"].includes(surface.dataset.bsBoardId);
   for (const { node, action } of boardCardActions.actionNodes(surface)) {
+    const watchGuarded = ['2U5L-1','2UBO-1','3D4I-0','3EWN-0','2UHM-1','15L8-2','2UN6-1'].includes(surface.dataset.bsBoardId);
+    const needsTarget=guarded && ['종목 상세 열기','비교에 추가'].includes(action.control) || watchGuarded && ['open-card','compare-add'].includes(action.kind);
+    if(needsTarget)node.__bsRankingActionContext={surface,envelope,action};
+    const disabled=needsTarget && !cardActionStock(node,surface,envelope,action);
+    if(watchGuarded&&needsTarget)node.parentElement?.classList.toggle('bs-watch-disabled-action',disabled);
+    if(needsTarget){node.setAttribute('aria-disabled',String(disabled));if(disabled)node.title='조회 종목이 있으면 열 수 있습니다';else node.removeAttribute('title');}
+
     const didWire = boardMount.wireStateControlActivation(
       node,
-      () => { void runCardAction(node, surface, envelope, action); },
+      () => { const context=needsTarget?node.__bsRankingActionContext:{surface,envelope,action};if(needsTarget&&!cardActionStock(node,context.surface,context.envelope,context.action))return;void runCardAction(node,context.surface,context.envelope,context.action); },
       { keyboard: true },
     );
     if (!didWire) continue;
@@ -1444,11 +2100,13 @@ const BOARD_ORDERBOOK_RENDERER = 'orderbook-ladder';
 // 열려 있는 보드 primary 패널을 닫는다. 상태 보드 전환과 카드 파괴가 같은 문을 쓴다.
 function destroyBoardPrimary(state) {
   if (!state) return false;
+  closeParentRankingFilter(state);
   if (state.primaryRefreshTimer) clearTimeout(state.primaryRefreshTimer);
   state.primaryRefreshTimer = null;
   state.primaryRefreshing = false;
   state.primaryEnvelope = null;
   state.primaryOrderbookEnvelope = null;
+  state.authoredOrderbookSurface = null;
   // 상태 보드/카드가 바뀐 뒤에는 이전 봉투가 만든 descriptor와 대기 promise도
   // 더 이상 권위가 없다. 남겨두면 다음 보드가 새 primary_envelope 대신 이전
   // stock/sector 패널 신원을 재사용할 수 있다.
@@ -1464,6 +2122,8 @@ function destroyBoardPrimary(state) {
   const released = typeof release === 'function' ? release() : false;
   const panelId = state.primaryPanelId;
   if (!panelId) return released;
+  const active = aitsChartPanels.snapshot().find(entry => entry.panelId === panelId);
+  if (active) state.primaryRemount = { panelId, generation: active.generation };
   state.primaryPanelId = '';
   const destroyed = aitsChartPanels.destroyPanel(panelId);
   if (destroyed) window.athena.send('athena:chart-panel-destroyed', { panelId });
@@ -1672,7 +2332,53 @@ function boardPrimaryAcceptsEnvelope(primary, envelope) {
 // 0D 호가잔량은 통합 카드 리스가 나르지 않는다 — 호가는 카드가 실제로 열려 있을
 // 때만 REG를 쓰므로 여기서 명시로 acquire하고, 보드를 갈아타거나 카드를 닫을 때
 // destroyBoardPrimary가 같은 문으로 놓아준다.
+function mountAuthoredOrderbook(host, envelope, mounted) {
+  const feed = window.AthenaLib.BoardOrderbook;
+  const state = boardStateOf(host);
+  const surface = mounted && mounted.surface;
+  if (!feed || !feed.supports(state.boardId) || !surface) return;
+  // 13BC's primary ladder owns the one 0D lease and also updates its summary.
+  if (state.boardId === '13BC-2') return;
+  if (state.authoredOrderbookSurface === surface && state.primaryRelease) return;
+  const card = host.closest('.card');
+  if (!card) return;
+  const boardId = state.boardId;
+  state.authoredOrderbookSurface = surface;
+  state.primaryRelease = wireOrderbookRealtime(card, surface, envelope, (_surface, _envelope, tick) => {
+    if (state.boardId !== boardId || state.surface !== surface) return;
+    const updates = feed.updatesFor(boardId, tick);
+    const slots = Object.keys(updates);
+    if (!slots.length) return;
+    Object.assign(state.values, updates);
+    state.valuesByBoard.set(boardId, state.values);
+    boardMount.applyRealtimeSlots(surface, state.mountContract, state.values, slots);
+  }, { registerCardDestroyer: false, fallbackKind: 'integrated-board' });
+}
+
 function mountBoardOrderbook(card, state, primary, envelope) {
+  const boardId = state.boardId, surface = state.surface;
+  const symbol = boardId === '13BC-2' ? resolveEnvelopeSymbol(envelope) : '';
+  const current = built => state.boardId === boardId && state.surface === surface
+    && state.primaryOrderbookEnvelope === envelope && resolveEnvelopeSymbol(envelope) === symbol
+    && surface?.isConnected && built.parentElement === primary.mountPoint && surface.contains(built);
+  const syncSummary = (built, tick) => {
+    const feed = window.AthenaLib.BoardOrderbook;
+    if (boardId !== '13BC-2' || !feed || !current(built)) return;
+    const snapshot = built.__athenaOrderbookState;
+    if (!tick && snapshot?.symbol && snapshot.symbol !== symbol) return;
+    const updates = tick ? feed.updatesFor(boardId, tick) : {
+      ...feed.updatesFor(boardId, {
+        sellPrices: [snapshot?.asks[0]?.price], sellQuantities: [snapshot?.asks[0]?.quantity],
+        buyPrices: [snapshot?.bids[0]?.price], buyQuantities: [snapshot?.bids[0]?.quantity],
+      }),
+      ...feed.updatesFor(boardId, built.__athenaPendingOrderbookTick),
+    };
+    const slots = Object.keys(updates);
+    if (!slots.length) return;
+    Object.assign(state.values, updates);
+    state.valuesByBoard.set(boardId, state.values);
+    boardMount.applyRealtimeSlots(surface, state.mountContract, state.values, slots);
+  };
   // 결측 슬롯이 없으면 mountBoardState와 showBoardReady가 같은 표면으로 두 번 온다.
   // 그때만 같은 사다리·0D 리스를 쓴다. 새 hydrate 봉투나 다른 종목이면 이전 값을
   // 보이지 않게 놓고 새 snapshot으로 다시 만든다.
@@ -1680,7 +2386,10 @@ function mountBoardOrderbook(card, state, primary, envelope) {
     (child) => child.classList.contains('card-kit-hoga-live'),
   );
   const existing = ladders.find((child) => !child.hidden);
-  if (existing && state.primaryOrderbookEnvelope === envelope) return existing;
+  if (existing && state.primaryOrderbookEnvelope === envelope) {
+    syncSummary(existing);
+    return existing;
+  }
   const release = state.primaryRelease;
   state.primaryRelease = null;
   state.primaryOrderbookEnvelope = null;
@@ -1701,8 +2410,14 @@ function mountBoardOrderbook(card, state, primary, envelope) {
   state.primaryOrderbookEnvelope = envelope;
   const hoga = window.AthenaLib.CardKindHoga;
   if (hoga.supportsLive0D(built)) {
+    syncSummary(built);
+    const applyTick = boardId === '13BC-2' ? (wrap, source, tick) => {
+      if (!current(built) || !tick || tick.symbol !== symbol) return;
+      hoga.applyLiveTick(wrap, source, tick);
+      syncSummary(built, tick);
+    } : hoga.applyLiveTick;
     state.primaryRelease = wireOrderbookRealtime(
-      card, built, envelope, hoga.applyLiveTick, { registerCardDestroyer: false },
+      card, built, envelope, applyTick, { registerCardDestroyer: false },
     );
   }
   return built;
@@ -1737,7 +2452,43 @@ async function mountBoardPrimary(host, envelope, mounted, retry) {
   }
   // 껍질 단계가 만든 신원을 그대로 쓰되 현재 primary envelope와 출처가 다르면
   // 이전 보드가 남긴 descriptor이므로 폐기한다.
-  let descriptor = state.primaryDescriptor;
+  const attempt = {};
+  state.primaryMount = attempt;
+  let remountEnvelope = null;
+  let remountRequest = null;
+  let remountToken = null;
+  const cancelRemount = () => {
+    if (remountToken) void window.athena.invoke('athena:cancel-chart-remount', { ...remountRequest, token: remountToken }).catch(() => {});
+    remountToken = null;
+  };
+  const retired = state.primaryRemount;
+  if (retired) {
+    const meta = card.__athenaSessionCard;
+    const request = {
+      ...retired, cardId: card.dataset.sessionCardId,
+      correlation: meta && meta.envelope && meta.envelope.correlation,
+    };
+    let reply;
+    try {
+      reply = await window.athena.invoke('athena:remount-chart-panel', request);
+    } catch (_error) {
+      if (state.primaryMount === attempt && host.isConnected && primary.mountPoint.isConnected && state.surface === mounted.surface && state.primaryRemount === retired) {
+        primary.mountPoint.prepend(errorNote('차트를 다시 표시하지 못했습니다.'));
+        settleBoardChartMount(state, 'error');
+      }
+      return null;
+    }
+    remountRequest = request;
+    remountToken = reply && reply.token;
+    if (state.primaryMount !== attempt || !host.isConnected || state.surface !== mounted.surface || !primary.mountPoint.isConnected || state.primaryRemount !== retired) {
+      cancelRemount();
+      return null;
+    }
+    if (!reply || reply.ok !== true || !reply.envelope) throw new Error('차트를 다시 표시하지 못했습니다.');
+    remountEnvelope = reply.envelope;
+    envelope = remountEnvelope;
+  }
+  let descriptor = remountEnvelope ? null : state.primaryDescriptor;
   if (descriptor && String(descriptor.context && descriptor.context.operationRef)
     !== String(envelope.operation_ref || envelope.operationRef || '')) {
     descriptor = null;
@@ -1748,10 +2499,12 @@ async function mountBoardPrimary(host, envelope, mounted, retry) {
       descriptor = boardChartDescriptor(envelope);
     } catch (error) {
       primary.mountPoint.dataset.bsPrimaryError = String((error && error.message) || error);
+      cancelRemount();
       primary.mountPoint.prepend(errorNote('차트를 그리지 못했다'));
       return null;
     }
     if (!descriptor) {
+      cancelRemount();
       boardMount.collapsePrimaryMockup(primary.mountPoint);
       setBoardChartStatus(host, '차트 시세를 불러오지 못했습니다');
       const unavailable = errorNote('시세 차트를 불러오지 못했습니다.');
@@ -1775,23 +2528,32 @@ async function mountBoardPrimary(host, envelope, mounted, retry) {
   primary.mountPoint.dataset.bsPrimaryMounted = BOARD_CHART_RENDERER;
   releaseBoardChartPanel(descriptor.panelId);
   // 이 마운트 시도의 신원 — 늦게 거부된 시도가 그 사이 살아난 패널을 지우지 못하게 한다.
-  const attempt = {};
-  state.primaryMount = attempt;
   state.primaryPanelId = descriptor.panelId;
+  let session = null;
   try {
     // 카드 정리자는 renderBoardSurfaceCard가 이미 걸었다(보드 상태가 패널을 닫는다) —
     // 여기서 덮으면 통합 카드 root의 집계 정리자를 잃는다.
-    const session = await mountAitsChartPanel(card, chartBody, descriptor, { registerCardDestroyer: false });
+    session = await mountAitsChartPanel(card, chartBody, descriptor, { registerCardDestroyer: false });
     // 성공도 실패와 같은 문으로 판정한다 — 그 사이 보드를 갈아탔으면(destroyBoardPrimary)
     // 이 자리는 이미 화면에서 빠진 표면이다. 그대로 'data'로 맺으면 main이 죽은
     // panelId에 재조회 권위와 실시간을 건다(main.js athena:rest-canvas-painted).
-    if (state.primaryMount !== attempt) {
+    if (state.primaryMount !== attempt || state.surface !== mounted.surface || !host.isConnected || !primary.mountPoint.isConnected || state.primaryRemount !== retired) {
+      cancelRemount();
       session.destroy();
       chartBody.remove();
-      delete primary.mountPoint.dataset.bsPrimaryMounted;
-      boardMount.restorePrimaryMockup(collapsed);
-      settleBoardChartMount(state, 'error');
       return null;
+    }
+    if (remountEnvelope) {
+      const paint = await waitForVisiblePaint(card);
+      if (state.primaryMount !== attempt || !host.isConnected || state.surface !== mounted.surface || !primary.mountPoint.isConnected || state.primaryRemount !== retired) { cancelRemount(); session.destroy(); chartBody.remove(); if (state.primaryMount === attempt) { state.primaryMount = null; state.primaryPanelId = ''; delete primary.mountPoint.dataset.bsPrimaryMounted; } return null; }
+      window.athena.send('athena:rest-canvas-painted', {
+        ...remountEnvelope.correlation, operation_ref: remountEnvelope.operation_ref,
+        canvas_type: remountEnvelope.canvas_type, render_state: session.body.candles.length ? 'data' : 'empty',
+        renderer_id: descriptor.rendererId, panel_id: descriptor.panelId, generation: session.generation,
+        verified_visible: paint.verifiedVisible, pending: false,
+      });
+      state.primaryRemount = null;
+      remountToken = null;
     }
     settleBoardChartMount(state, session.body.candles.length ? 'data' : 'empty');
     startBoardChartRefresh(host, state, descriptor);
@@ -1799,12 +2561,11 @@ async function mountBoardPrimary(host, envelope, mounted, retry) {
   } catch (error) {
     // 실패를 감추지 않는다. 정적 Paper 캔들은 계속 접어 둬서 실제 시세처럼 보이지
     // 않게 하고, 오류와 재시도만 드러낸다(원문은 검수용 표식에 남긴다).
+    cancelRemount();
+    if (session) session.destroy();
     chartBody.remove();
+    if (state.primaryMount !== attempt || state.surface !== mounted.surface || !host.isConnected || !primary.mountPoint.isConnected || state.primaryRemount !== retired) return null;
     delete primary.mountPoint.dataset.bsPrimaryMounted;
-    if (state.primaryMount !== attempt) {
-      settleBoardChartMount(state, 'error');
-      return null;
-    }
     state.primaryMount = null;
     state.primaryPanelId = '';
     primary.mountPoint.dataset.bsPrimaryError = String((error && error.message) || error);
@@ -1840,6 +2601,24 @@ function boardHydrationError(reply) {
 
 // 봉투가 못 채운 슬롯을 마운트 뒤에 한 번 더 채운다. 조회 자체가 실패하면 결측값을
 // 완성 화면처럼 보이지 않고 로딩 오류로 돌려 재시도할 수 있게 한다.
+function sectorHydratedPrimaryEnvelope(boardId, envelope, reply) {
+  const incoming = reply && reply.primary_envelope;
+  if (boardId !== '32S7-0' || reply?.surface_contract?.board_id !== boardId || !incoming) return incoming || null;
+  const original = envelope?.data?.chart;
+  const chart = incoming.data?.chart;
+  const code = String(envelope?.operation_args?.inds_cd || '');
+  if (!/^\d{3}$/.test(code) || envelope.operation_ref !== 'base:ka20006'
+    || incoming.operation_ref !== envelope.operation_ref || incoming.operation_args?.inds_cd !== code
+    || String(envelope.data?.symbol || '') !== code || String(incoming.data?.symbol || '') !== code
+    || original?.target !== 'sector' || original.period !== 'day' || original.trId !== 'ka20006'
+    || chart?.target !== original.target || chart.period !== original.period || chart.trId !== original.trId) return incoming;
+  const from = original.initialVisibleFrom;
+  if (chart.initialVisibleFrom || typeof from !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(from)) return incoming;
+  const date = new Date(from + 'T00:00:00Z');
+  if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== from) return incoming;
+  return { ...incoming, data: { ...incoming.data, chart: { ...chart, initialVisibleFrom: from } } };
+}
+
 async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true) {
   const state = boardStateOf(host);
   // 상태 보드마다 slot id 의미가 다를 수 있으므로 현재 마운트 계획의 결측만 요청한다.
@@ -1848,7 +2627,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   const pending = authoredPending !== undefined
     ? authoredPending
     : (mounted && mounted.plan ? (mounted.plan.missing || []) : state.unbound);
-  if (!pending.length) return mounted;
+  if (!pending.length && state.boardId !== '4B22-1') return mounted;
   if (!window.athena || typeof window.athena.invoke !== 'function') {
     throw new Error('카드 데이터 조회 연결을 사용할 수 없습니다.');
   }
@@ -1858,6 +2637,10 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
     reply = await window.athena.invoke('athena:canvas-board-hydrate', {
       boardId,
       slotIds: pending,
+      chartOperationRef: boardId==='32S7-0' ? envelope.operation_ref : undefined,
+      flowOperationRef: boardId === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(envelope.operation_ref) ? envelope.operation_ref : undefined,
+      rankingOperationRef: boardId === '4B22-1' ? expandedRankingOperation(state)
+        : boardId === '13K0-2' ? selectedRankingRailSource(state) : undefined,
       target: boardHydrateTarget(envelope, host),
       account: boardHydrateAccount(envelope),
       correlation: envelope && envelope.correlation,
@@ -1872,24 +2655,73 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   }
   const failures = (Array.isArray(reply.operations) ? reply.operations : [])
     .filter((op) => op && op.status !== 'bound' && RETRYABLE_BOARD_HYDRATE_REASONS.has(op.reason));
-  const requiredRef = String((envelope && envelope.operation_ref) || '');
+  const requiredRef = boardId === '4B22-1' ? expandedRankingOperation(state)
+    : boardId === '13K0-2' ? selectedRankingRailSource(state)
+    : boardId === '15N5-2' && state.etfDetailIdentity ? 'base:ka40002'
+    : boardId === '2WZK-0' && state.etfReturnIdentity ? 'base:ka40001'
+    : String((envelope && envelope.operation_ref) || '');
   if (failures.some((op) => op.operation_ref === requiredRef)) {
     throw new Error('요청한 종목 정보를 불러오지 못했습니다. 다시 시도해 주세요.');
   }
   state.hydrationWarnings.push(...failures);
-  state.primaryEnvelope = reply.primary_envelope || null;
-  const filled = reply && reply.ok && reply.slot_values ? reply.slot_values : null;
+  state.primaryEnvelope = sectorHydratedPrimaryEnvelope(boardId, envelope, reply);
+  if (boardId === '4B22-1') {
+    if (!reply.ranking_result) throw new Error('전체 조회 목록을 받지 못했습니다. 다시 시도해 주세요.');
+    state.rankingResult = reply.ranking_result;
+  }
+  if (boardId === '2U5L-1' || WATCH_SOURCE_SLOTS[boardId]) {
+    const incoming = reply.surface_contract?.board_id === boardId ? reply.surface_contract
+      : {board_id: boardId, slot_values: []};
+    const projected = reconcileWatchlistState(state, incoming);
+    reply = {...reply, surface_contract: projected, slot_values: slotValuesOf(projected)};
+  }
+  const filled = reply && reply.ok && reply.slot_values ? reply.slot_values : {};
   state.hydrationByBoard.set(
     boardId,
     boardMount.nextHydrationSlots(pending, filled, reply.surface_contract),
   );
-  if (!filled || !Object.keys(filled).length) return mounted;
-  state.values = { ...state.values, ...filled };
+  // 값이 하나도 없는 정상 응답도 초기 대기 상태를 끝낸다. 행·열 상태는 보드별로
+  // 갱신하며, 옛 응답이 메타를 생략한 경우에는 기존 상태를 유지한다.
+  const contract = reply.surface_contract;
+  let metadataReceived = false;
+  if (boardId === '32S7-0' && (!contract?.board_id || String(contract.board_id) === boardId)) {
+      const change = Array.isArray(contract?.slot_values) ? contract.slot_values.find(item => item.slot_id === 's005') : null;
+      if (change || pending.includes('s005') || Object.prototype.hasOwnProperty.call(filled, 's005')) {
+        state.sectorChangeOccurrence = typeof change?.occurrence_id === 'string' ? change.occurrence_id : '';
+        state.sectorChangeSourceKey = [envelope.operation_ref || envelope.operationRef || '', boardHydrateTarget(envelope, host).inds_cd || ''].join('|');
+        metadataReceived = true;
+      }
+    }
+  if (contract && (!contract.board_id || String(contract.board_id) === boardId)) {
+    if (boardId === '13K0-2' && rankingRailRows(contract)) metadataReceived = true;
+    if (['2QFO-2','2ROJ-1'].includes(boardId) && Object.prototype.hasOwnProperty.call(contract, 'flow_display_context')) {
+      (state.flowDisplayContextByBoard ||= new Map()).set(boardId, contract.flow_display_context);
+      metadataReceived = true;
+    }
+    if (boardId === '2QFO-2' && Object.prototype.hasOwnProperty.call(contract, 'flow_query_context')) {
+      (state.flowQueryContextByBoard ||= new Map()).set(boardId, contract.flow_query_context);
+      metadataReceived = true;
+    }
+    for (const [field, property] of [
+      ['empty_rows', 'emptyRows'], ['empty_columns', 'emptyColumns'],
+      ['empty_value_slots', 'emptyValueSlots'], ['deferred_value_slots', 'deferredValueSlots'],
+    ]) {
+      if (!Array.isArray(contract[field])) continue;
+      state[property] = contract[field].slice();
+      state[property + 'ByBoard'].set(boardId, state[property]);
+      metadataReceived = true;
+    }
+  }
+  if ((!filled || !Object.keys(filled).length) && !state.rankingResult && !metadataReceived) return mounted;
+  state.values = boardId === '2QFO-2' ? boardFlowLayout.investorSnapshotValues(state.values, filled, contract, boardHydrateTarget(envelope, host).stk_cd, envelope.operation_ref)
+    : boardId === '2U5L-1' || WATCH_SOURCE_SLOTS[boardId] ? slotValuesOf(contract) : boardId === '13K0-2'
+    ? mergeRankingRailValues(state, filled, contract) : { ...state.values, ...filled };
   state.valuesByBoard.set(boardId, state.values);
   state.unbound = state.unbound.filter((slotId) => !(slotId in filled));
   state.unboundByBoard.set(boardId, state.unbound);
   // 하이드레이션이 채운 슬롯도 실시간 프레임을 받아야 한다 — 응답 계약으로 색인을
   // 다시 만들어 덧댄다. 안 하면 이 슬롯들은 첫 값에서 영영 멈춘다.
+  excludeRetiredWatchlistSlots(state);
   const hydratedRealtimeSlots = boardMount.realtimeSlotIndex(
     reply.surface_contract, realtimeBindingsOf(envelope),
   );
@@ -1902,6 +2734,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   for (const [bindingId, observationId] of hydratedRealtimeSlots.observationByBinding) {
     state.realtimeSlots.observationByBinding.set(bindingId, observationId);
   }
+  excludeRetiredRankingRailSlots(state);
   state.realtimeByBoard.set(boardId, state.realtimeSlots);
   if (!isCurrent() || state.boardId !== boardId) return mounted;
   const remounted = boardMount.mountBoard(
@@ -1966,6 +2799,8 @@ async function showBoardReady(state, host, envelope, mounted, retry) {
     state.loadNode = partial;
   }
   if (mounted) await mountBoardPrimary(host, state.primaryEnvelope || envelope, mounted, retry);
+  if (mounted) mountAuthoredOrderbook(host, envelope, mounted);
+  window.AthenaLib.ConditionQueryList?.render(host, state.boardId === '2UN6-1' ? envelope : null);
 }
 
 function showBoardLoadError(state, host, error, retry) {
@@ -1990,14 +2825,27 @@ function showBoardLoadError(state, host, error, retry) {
   if (state.loadCard) state.loadCard.dataset.renderState = 'error';
 }
 
-function runBoardSurfaceLoad(host, envelope, task) {
+function runBoardSurfaceLoad(host, envelope, task, options = {}) {
   const state = boardStateOf(host);
+  let isCurrentLoad = () => false;
   const handlers = {
     onLoading: () => showBoardLoading(state, host),
-    onReady: (mounted) => showBoardReady(state, host, envelope, mounted, () => state.load.run(task, handlers)),
+    onReady: async (mounted) => {
+      const isCurrent = isCurrentLoad;
+      await showBoardReady(state, host, envelope, mounted, () => state.load.run(loadTask, handlers));
+      // 숨겨진 host는 이전 위치를 보존할 수 있다. 새 카드가 표시된 뒤 두 스크롤을 맞춘다.
+      if (options.resetScroll && isCurrent()) {
+        host.scrollTop = 0;
+        if (state.loadBody) state.loadBody.scrollTop = 0;
+      }
+    },
     onError: (error, retry) => showBoardLoadError(state, host, error, retry),
   };
-  return state.load.run(task, handlers);
+  const loadTask = (isCurrent) => {
+    isCurrentLoad = isCurrent;
+    return task(isCurrent);
+  };
+  return state.load.run(loadTask, handlers);
 }
 
 function renderBoardSurfaceCard(envelope) {
@@ -2337,13 +3185,14 @@ function stampIntegratedRealtimeState(root, state) {
 // 추정하지 않고, 확인된 REST/연결/첫 수신 lifecycle만 해당 상태 잎에 덮는다.
 function stampBoardRealtimeStatus(root, status) {
   if (!root || typeof root.querySelectorAll !== 'function') return;
+  if ([...root.querySelectorAll('.board-surface-host')].some(host => host.__athenaBoard?.boardId === '32S7-0')) status = 'snapshot';
   if (typeof root.__athenaRealtimeStatusRelay === 'function') {
     root.__athenaRealtimeStatusRelay(status);
   } else if (typeof relayCardRealtimeFallbackStatus === 'function') {
     relayCardRealtimeFallbackStatus(root, status);
   }
   const normalized = String(status || 'snapshot').toLowerCase();
-  if (['registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error'].includes(normalized)) {
+  if (['snapshot', 'static', 'registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error'].includes(normalized)) {
     root.__athenaBoardRealtimeReceived = false;
   } else if (normalized === 'receiving') {
     root.__athenaBoardRealtimeReceived = true;
@@ -2354,15 +3203,32 @@ function stampBoardRealtimeStatus(root, status) {
     : normalized;
   const label = integratedCardSurface.workflowStateLabel(effective);
   const slotsByBoard = {
-    '137X-2': ['s003', 's004', 's136'],
-    '2R3M-1': ['s003', 's004', 's154', 's258'],
-    '1JPU-0': ['s005', 's262'],
+    '137X-2': { status: 's004', footer: 's136', context: '차트', session: ['s003'] },
+    '2RBO-1': { status: 's004', footer: 's112', context: '기업정보', session: ['s003'] },
+    '2R3M-1': { status: 's004', footer: 's258', context: '현재가·체결', session: ['s003', 's154'] },
+    '1JPU-0': { status: 's005', footer: 's262', context: '호가', session: [] },
   };
   for (const host of root.querySelectorAll('.board-surface-host')) {
     const boardId = String((host.__athenaBoard && host.__athenaBoard.boardId) || '');
-    for (const slotId of slotsByBoard[boardId] || []) {
+    const display = slotsByBoard[boardId];
+    if (!display) continue;
+    for (const slotId of display.session) {
       const node = host.querySelector(`[data-slot-id="${slotId}"]`);
-      if (node) node.textContent = label;
+      if (!node) continue;
+      // REG lifecycle cannot tell us which trading session is open.
+      const chip = node.parentElement && node.parentElement.children.length === 1 ? node.parentElement : node;
+      chip.hidden = true;
+      chip.style.display = 'none';
+    }
+    const badge = host.querySelector(`[data-slot-id="${display.status}"]`);
+    const footer = host.querySelector(`[data-slot-id="${display.footer}"]`);
+    if (badge) {
+      badge.textContent = label;
+      boardMount.setStatusAppearance(badge, effective === 'receiving');
+    }
+    if (footer) {
+      footer.textContent = `${display.context} · ${label}`;
+      boardMount.setStatusAppearance(footer, effective === 'receiving');
     }
   }
 }
@@ -2433,7 +3299,7 @@ function stampRealtimeFallbackStatus(session, state) {
   const card = session && session.card;
   if (!card || !card.isConnected) return;
   let node = card.querySelector('.realtime-fallback-status');
-  if (state.status === 'stopped' || state.status === 'ws-active') {
+  if (isSectorSnapshotCard(card) || state.status === 'stopped' || state.status === 'ws-active') {
     if (node) node.remove();
     return;
   }
@@ -2441,9 +3307,10 @@ function stampRealtimeFallbackStatus(session, state) {
     node = document.createElement('span');
     node.className = 'realtime-fallback-status';
     node.setAttribute('role', 'status');
-    const head = card.querySelector('.card-head') || card;
-    head.appendChild(node);
   }
+  const statusOwner = card.querySelector('.bs-footer') || card.querySelector('.card-head')
+    || card.querySelector('.card-body') || card;
+  if (node.parentElement !== statusOwner) statusOwner.appendChild(node);
   const at = fallbackTimestamp(state.lastSuccessAt || state.asOf || session.lastSuccessAt);
   if (at) session.lastSuccessAt = state.lastSuccessAt || state.asOf || session.lastSuccessAt;
   const suffix = at ? ` · 마지막 갱신 ${at}` : '';
@@ -2524,11 +3391,36 @@ async function applyRealtimeFallbackData(session, payload) {
     const host = session.card.querySelector('.board-surface-host');
     const state = host && host.__athenaBoard;
     if (!state || state.boardId !== String(payload.boardId || '')) return false;
+    if (state.boardId === '32S7-0') return false;
     if (payload.mode !== 'slot-patch') return false;
     const values = slotValuesOf({ slot_values: payload.slotValues });
-    if (!Object.keys(values).length) return false;
+    const watchContract = payload.surfaceContract || payload.surface_contract;
+    const watchMetadata = watchContract?.board_id === state.boardId && (state.boardId === '2U5L-1' && watchContract.watchlist_rows || WATCH_SOURCE_SLOTS[state.boardId] && watchContract.watch_source_context);
+    const flowMetadata = state.boardId === '2QFO-2' && boardFlowLayout.queryContextFor(watchContract, boardHydrateTarget(session.envelope, host).stk_cd, session.envelope.operation_ref);
+    if (state.boardId === '2QFO-2' && ['base:ka10059', 'base:ka10061'].includes(session.envelope.operation_ref) && !flowMetadata) return false;
+    if (!Object.keys(values).length && !watchMetadata && !flowMetadata) return false;
     if (Object.keys(values).some((slotId) => !session.slotIds.includes(slotId))) return false;
-    state.values = { ...state.values, ...values };
+    if (state.boardId === '2U5L-1' || WATCH_SOURCE_SLOTS[state.boardId]) {
+      const incoming = watchContract?.board_id === state.boardId ? {...watchContract,
+        slot_values: (watchContract.slot_values || []).filter(entry => session.slotIds.includes(entry.slot_id))}
+        : {board_id: state.boardId, slot_values: []};
+      const projected = reconcileWatchlistState(state, incoming);
+      state.values = slotValuesOf(projected);
+      receiveWatchlistMetadata(state, projected);
+      excludeRetiredWatchlistSlots(state);
+    } else if (state.boardId === '2QFO-2') {
+      state.values = boardFlowLayout.investorSnapshotValues(state.values, values, watchContract, boardHydrateTarget(session.envelope, host).stk_cd, session.envelope.operation_ref);
+      if (flowMetadata) {
+        (state.flowQueryContextByBoard ||= new Map()).set(state.boardId, watchContract.flow_query_context);
+        for (const [field, property] of [['empty_rows', 'emptyRows'], ['empty_columns', 'emptyColumns'], ['empty_value_slots', 'emptyValueSlots'], ['deferred_value_slots', 'deferredValueSlots']]) {
+          if (!Array.isArray(watchContract[field])) continue;
+          state[property] = watchContract[field].slice();
+          state[property + 'ByBoard'].set(state.boardId, state[property]);
+        }
+      }
+    } else state.values = state.boardId === '13K0-2'
+      ? mergeRankingRailValues(state, values, payload.surfaceContract || payload.surface_contract) : { ...state.values, ...values };
+    excludeRetiredRankingRailSlots(state);
     state.valuesByBoard.set(state.boardId, state.values);
     const mounted = boardMount.mountBoard(host, state.boardId, state.values, boardMountOptions(host, session.envelope));
     rememberMountedBoard(state, mounted);
@@ -2642,8 +3534,12 @@ function unregisterRealtimeFallback(session) {
   return true;
 }
 
+function isSectorSnapshotCard(card) {
+  return card?.querySelector?.('.board-surface-host')?.__athenaBoard?.boardId === '32S7-0';
+}
+
 function fallbackSurfaceKindFor(card, envelope) {
-  if (!card || !envelope || envelope.canvas_type === 'action') return null;
+  if (!card || !envelope || envelope.canvas_type === 'action' || isSectorSnapshotCard(card)) return null;
   const title = String(envelope.card_title || '');
   if (/주문/u.test(title)) return null;
   if (card.querySelector('.board-surface-host')) return 'integrated-board';
@@ -2666,7 +3562,10 @@ function fallbackKindFor(card, envelope) {
 function syncCardRealtimeFallback(card, envelope) {
   if (!card || !card.isConnected || !window.athena || typeof window.athena.invoke !== 'function') return null;
   const kind = fallbackKindFor(card, envelope);
-  if (!kind) return null;
+  if (!kind) {
+    if (isSectorSnapshotCard(card)) unregisterRealtimeFallback(card.__athenaRealtimeFallback);
+    return null;
+  }
   const prior = card.__athenaRealtimeFallback;
   if (prior && prior.active && prior.envelope === envelope && prior.kind === kind) return prior;
   if (prior) unregisterRealtimeFallback(prior);
@@ -2722,6 +3621,14 @@ function syncCardRealtimeFallback(card, envelope) {
     });
   }).then((result) => {
     if (result === null) return;
+    if (isSectorSnapshotCard(card)) {
+      unregisterRealtimeFallback(session);
+      // Registration may finish after the snapshot transition already released it.
+      if (result?.ok === true && result.ownerId === ownerId) {
+        void window.athena.invoke('athena:realtime-fallback-unregister', { ownerId }).catch(() => {});
+      }
+      return;
+    }
     if (!session.active || card.__athenaRealtimeFallback !== session || !result || result.ok !== true
       || result.ownerId !== ownerId || Number(result.accountGeneration) !== session.accountGeneration) return;
     session.registrationRevision = Number(result.registrationRevision);
@@ -2782,6 +3689,9 @@ function syncIntegratedRealtime(root, envelope) {
   if (typeof installCardRealtimeStatusRelay === 'function') installCardRealtimeStatusRelay(root);
   const payload = integratedRealtimePayload(root, envelope);
   const realtime = integratedRealtimeMeta(root);
+  const revision = (realtime.displayRevision || 0) + 1;
+  realtime.displayRevision = revision;
+  clearIntegratedRealtimeError(root);
   const accountGeneration = rendererRealtimeAccountGeneration;
   const failedStatus = ['registering', 'connecting', 'reconnecting', 'disconnected', 'stopped', 'error']
     .includes(String(realtime.status || ''));
@@ -2797,10 +3707,12 @@ function syncIntegratedRealtime(root, envelope) {
   }
   const prior = integratedRealtimeTasks.get(root) || Promise.resolve();
   const task = prior.catch(() => {}).then(async () => {
+    if (revision !== realtime.displayRevision) return { ok: false, status: 'stopped' };
     const boardId = String((surfaceContractOf(envelope) || {}).board_id || '');
     // 2RJ7-1의 국내 금현물 시세는 15초 ka50092 조회가 갱신한다. 통합 gold 정책의
     // 0I는 국제금환산가격이므로 이 보드에 연결하면 pred_pre만 다른 상품 값으로 섞인다.
-    if (boardId === '2RJ7-1') {
+    // The sector chart, header and dated rows remain one queried snapshot.
+    if (boardId === '2RJ7-1' || boardId === '32S7-0') {
       root.__athenaRealtimeFallbackCapable = false;
       if (root.__athenaRealtimeFallback) unregisterRealtimeFallback(root.__athenaRealtimeFallback);
       if (realtime.mounted === true || realtime.mountAttempted === true) {
@@ -2808,13 +3720,14 @@ function syncIntegratedRealtime(root, envelope) {
         realtime.mounted = false;
         realtime.mountAttempted = false;
       }
+      if (revision !== realtime.displayRevision) return { ok: false, status: 'stopped' };
       if (root.isConnected) realtime.status = 'snapshot';
       stampBoardRealtimeStatus(root, realtime.status);
       clearIntegratedRealtimeError(root);
       return { ok: true, status: 'snapshot' };
     }
     const policies = await realtimePolicies();
-    if (accountGeneration !== rendererRealtimeAccountGeneration) return { ok: false, status: 'stopped' };
+    if (accountGeneration !== rendererRealtimeAccountGeneration || revision !== realtime.displayRevision) return { ok: false, status: 'stopped' };
     if (!hasRealtimePolicy(policies, payload)) {
       root.__athenaRealtimeFallbackCapable = false;
       if (root.__athenaRealtimeFallback) unregisterRealtimeFallback(root.__athenaRealtimeFallback);
@@ -2823,6 +3736,7 @@ function syncIntegratedRealtime(root, envelope) {
         realtime.mounted = false;
         realtime.mountAttempted = false;
       }
+      if (revision !== realtime.displayRevision) return { ok: false, status: 'stopped' };
       if (root.isConnected) realtime.status = 'static';
       stampBoardRealtimeStatus(root, realtime.status);
       clearIntegratedRealtimeError(root);
@@ -2846,6 +3760,21 @@ function syncIntegratedRealtime(root, envelope) {
       realtime.mountAttempted = false;
       return state;
     }
+    if (revision !== realtime.displayRevision) return state;
+    // The broad card/mode policy can exist without a binding for this target.
+    // Keep the already received REST snapshot; this is not a failed connection.
+    if (state && state.ok === false && state.error === 'no realtime policy matched this card/mode/target') {
+      await window.athena.invoke('athena:integrated-card-realtime-unmount', { leaseId: payload.leaseId });
+      realtime.mounted = false;
+      realtime.mountAttempted = false;
+      root.__athenaRealtimeFallbackCapable = false;
+      if (root.__athenaRealtimeFallback) unregisterRealtimeFallback(root.__athenaRealtimeFallback);
+      if (revision !== realtime.displayRevision) return state;
+      realtime.status = 'snapshot';
+      stampBoardRealtimeStatus(root, realtime.status);
+      clearIntegratedRealtimeError(root);
+      return { ok: true, status: 'snapshot' };
+    }
     integratedCardSurface.requireRealtimeSuccess(state);
     realtime.status = String(state.status || 'active');
     realtime.mounted = true;
@@ -2859,7 +3788,7 @@ function syncIntegratedRealtime(root, envelope) {
     }
     return state;
   }).catch((error) => {
-    if (accountGeneration !== rendererRealtimeAccountGeneration) return;
+    if (accountGeneration !== rendererRealtimeAccountGeneration || revision !== realtime.displayRevision) return;
     if (root.isConnected) {
       realtime.status = 'error';
       stampBoardRealtimeStatus(root, realtime.status);
@@ -2881,13 +3810,22 @@ function showIntegratedRealtimeError(root, envelope, error) {
   note.className = 'integrated-realtime-error';
   note.setAttribute('role', 'alert');
   const text = document.createElement('span');
-  text.textContent = `실시간 연결 실패 — ${(error && error.message) || '정책을 불러오지 못했습니다.'}`;
+  text.textContent = '실시간 데이터를 연결하지 못했습니다. 조회한 데이터는 계속 표시합니다.';
+  const details = document.createElement('details');
+  const summary = document.createElement('summary');
+  summary.textContent = '오류 상세';
+  const diagnostic = document.createElement('pre');
+  diagnostic.textContent = (error && error.message) || '실시간 정책을 불러오지 못했습니다.';
+  diagnostic.style.whiteSpace = 'pre-wrap';
+  diagnostic.style.overflowWrap = 'anywhere';
+  details.append(summary, diagnostic);
   const retry = document.createElement('button');
   retry.type = 'button';
   retry.textContent = '다시 시도';
   retry.addEventListener('click', () => syncIntegratedRealtime(root, envelope));
   note.appendChild(text);
   note.appendChild(retry);
+  note.appendChild(details);
   const content = root.querySelector('.integrated-card-content');
   if (content) content.prepend(note);
 }
@@ -2917,6 +3855,7 @@ function renderRestStateCard(envelope) {
     ? [cancelled.title, cancelled.message]
     : (labels[envelope.state] || labels.error);
   const { card, body } = makeCard(type, title, envelope.layout, envelope.correlation);
+  card.dataset.restState = envelope.state;
   card.dataset.screenState = envelope.state;
   card.dataset.renderState = envelope.state === 'timeout' ? 'timeout' : 'error';
   if (cancelled) {
@@ -2957,6 +3896,7 @@ function describeAitsChartPanel(data, envelope, source) {
     const panelId = panelIdFor(context);
     const active = aitsChartPanels.snapshot().find((session) => session.panelId === panelId);
     const generation = active ? active.generation + 1 : 1;
+    if(snapshot.body.target==='sector')context.name=boardMount.sectorIdentityFromEnvelope(chartEnvelope).name;
     context.operationRef = chartEnvelope.operation_ref || chartEnvelope.operationRef;
     context.operationArgs = chartEnvelope.operation_args || chartEnvelope.operationArgs;
     // 분·틱 탭을 열 근거는 "이 패널의 reload 계약에 min·tick TR이 있는가" 하나다
@@ -3309,7 +4249,7 @@ function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
   const symbol = resolveEnvelopeSymbol(envelope);
   if (!symbol || typeof applyTick !== 'function') return null;
   card.__athenaRealtimeFallbackCapable = true;
-  card.__athenaRealtimeFallbackKind = 'orderbook';
+  card.__athenaRealtimeFallbackKind = options.fallbackKind || 'orderbook';
   if (typeof installCardRealtimeStatusRelay === 'function') installCardRealtimeStatusRelay(card);
   stampOrderbookRealtimeStatus(card, wrap, 'connecting');
   const session = { card, wrap, symbol, released: false, acceptsTicks: false };
@@ -3391,6 +4331,69 @@ function wireOrderbookRealtime(card, wrap, envelope, applyTick, options = {}) {
   return release;
 }
 
+function fitGeneralTableCard(card, layoutHint) {
+  if (layoutHint === 'half' || layoutHint === 'full') return;
+  card.classList.add('general-table-intrinsic');
+  let pending = 0;
+  let closed = false;
+  let lastWidth = -1;
+  const region = grid.closest('#canvasRegion');
+  const resetWorkspace = () => {
+    if (!region) return;
+    delete region.dataset.generalTableWorkspace;
+    region.style.removeProperty('--general-table-workspace-width');
+    region.style.removeProperty('--general-table-workspace-height');
+  };
+  const fit = () => {
+    pending = 0;
+    if (closed || card.parentElement !== grid || card.classList.contains('is-expanded') || !grid.getClientRects().length) {
+      resetWorkspace();
+      return;
+    }
+    card.classList.remove('general-table-half');
+    const tracks = getComputedStyle(grid).gridTemplateColumns.split(' ').map(Number.parseFloat);
+    const preferred = card.getBoundingClientRect().width;
+    card.classList.toggle('general-table-half', grid.children.length > 1 && tracks.length === 2 && preferred <= Math.min(...tracks));
+    if (region && grid.children.length === 1) {
+      const style = getComputedStyle(grid);
+      const width = Math.ceil(preferred + parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + grid.offsetWidth - grid.clientWidth);
+      region.style.setProperty('--general-table-workspace-width', width + 'px');
+      const height = Math.ceil(card.getBoundingClientRect().height + parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
+      region.style.setProperty('--general-table-workspace-height', height + 'px');
+      region.dataset.generalTableWorkspace = 'true';
+    } else resetWorkspace();
+  };
+  const schedule = () => { if (!closed && !pending) pending = requestAnimationFrame(fit); };
+  const observer = new ResizeObserver(() => {
+    const width = grid.clientWidth;
+    if (width !== lastWidth) { lastWidth = width; schedule(); }
+  });
+  let expanded = card.classList.contains('is-expanded');
+  const expansion = new MutationObserver(() => {
+    const current = card.classList.contains('is-expanded');
+    if (current !== expanded) { expanded = current; schedule(); }
+  });
+  expansion.observe(card, { attributes: true, attributeFilter: ['class'] });
+  const contents = new MutationObserver(schedule);
+  contents.observe(grid, { childList: true });
+  const resizeWorkspace = () => { resetWorkspace(); schedule(); };
+  window.addEventListener('resize', resizeWorkspace);
+  observer.observe(grid);
+  schedule();
+  if (document.fonts) document.fonts.ready.then(schedule);
+  const previous = cardDestroyers.get(card);
+  cardDestroyers.set(card, () => {
+    closed = true;
+    observer.disconnect();
+    expansion.disconnect();
+    contents.disconnect();
+    window.removeEventListener('resize', resizeWorkspace);
+    resetWorkspace();
+    if (pending) cancelAnimationFrame(pending);
+    if (previous) previous();
+  });
+}
+
 function renderMcpTable(envelope) {
   const [title, subtitle] = cardTitleAndSubtitle(envelope, '공통 테이블');
   // 카드 v3(.omc/state/card-v3-plan.md §2.2) 카드종 후킹 — title이 Paper 16종 고정
@@ -3408,37 +4411,47 @@ function renderMcpTable(envelope) {
   }
   if (semanticWorkspace.isTaskCanvasEnvelope(envelope)) return null;
   const { card, body } = makeCard('mcp-table', title, envelope.layout, envelope.correlation, subtitle, cardStkCd(envelope), envelope.screen_id);
+  card.querySelector('.card-fresh')?.remove();
   stampPaperScreen(card, envelope);
   const rawCols = (envelope.data && Array.isArray(envelope.data.columns)) ? envelope.data.columns : [];
   const rows = (envelope.data && Array.isArray(envelope.data.rows)) ? envelope.data.rows : [];
   const header = (envelope.data && Array.isArray(envelope.data.header)) ? envelope.data.header : [];
 
-  if (!rawCols.length || !rows.length) {
-    body.appendChild(errorNote('빈 테이블 — columns 또는 rows가 없다.'));
+  if (!rawCols.length) {
+    body.appendChild(errorNote('조회한 결과가 없습니다. 기간이나 조건을 바꿔 다시 조회해 주세요.'));
     return card;
   }
   if (header.length) body.appendChild(renderCompoundHeaderBand(header));
-  body.appendChild(buildFoldedTable(rawCols, rows));
+  body.appendChild(buildReadableTable(rawCols, rows));
+  if (!rows.length) {
+    const note = emptyState('표시할 데이터 행이 없습니다.');
+    note.classList.add('common-table-empty');
+    note.setAttribute('role', 'status');
+    body.appendChild(note);
+  }
+  fitGeneralTableCard(card, envelope.layout);
   return card;
 }
 
-// table 카드와 compound 카드(P4)가 공유하는 표 빌더 — §5.3.1 컬럼 우선순위 흡수(2층):
-// columns는 이미 백엔드가 §5.3.1 규칙(식별 컬럼 고정 + 실측 alias 빈도 tie-break,
-// backend/scripts/generate_api.py의 column_priority_ranking)으로 정렬해 보낸다고
-// 가정한다 — 여기서는 그 순서 위에서 1560px 캔버스 폭 기준으로 접기만 한다
-// (app/lib/column-fold.js). ka10095(63컬럼) 같은 넓은 표가 스크롤 없이 fold되어
-// 보이는 게 이 단계의 목표다. 반환은 table 엘리먼트 하나 — 카드 뼈대(makeCard)는
-// 호출부가 짓는다.
-function buildFoldedTable(rawCols, rows) {
-  const { visible: cols, hidden } = foldColumns(rawCols);
-
+// 공통 표는 모든 열을 보존하고, 읽을 수 있는 최소 폭 아래에서는 표만 스크롤한다.
+function buildReadableTable(cols, rows) {
+  const scroll = document.createElement('div');
+  scroll.className = 'common-table-scroll';
+  scroll.tabIndex = 0;
+  scroll.setAttribute('role', 'region');
+  scroll.setAttribute('aria-label', '결과 표, 가로 스크롤 가능');
   const table = document.createElement('table');
-  table.className = 'fin-table';
+  table.className = 'fin-table common-table';
+  const numeric = cols.map((col) => rows.some((row) => row && row[col.key] != null)
+    && rows.every((row) => row == null || row[col.key] == null || row[col.key] === ''
+      || /^[+−-]?[\d,]+(?:\.\d+)?%?$/.test(String(row[col.key]).trim())));
   const thead = document.createElement('thead');
   const trh = document.createElement('tr');
-  for (const col of cols) {
+  for (const [index, col] of cols.entries()) {
     const th = document.createElement('th');
     th.textContent = col && col.label != null ? col.label : (col && col.key) || '';
+    th.scope = 'col';
+    if (numeric[index]) th.className = 'is-numeric';
     trh.appendChild(th);
   }
   thead.appendChild(trh);
@@ -3447,20 +4460,22 @@ function buildFoldedTable(rawCols, rows) {
   const tbody = document.createElement('tbody');
   for (const r of rows) {
     const tr = document.createElement('tr');
-    for (const col of cols) {
+    for (const [index, col] of cols.entries()) {
       const td = document.createElement('td');
       const v = r ? r[col.key] : undefined;
       td.textContent = v == null ? '—' : String(v);
+      if (numeric[index]) td.className = 'is-numeric';
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
 
-  table.dataset.totalColumns = String(rawCols.length);
+  table.dataset.totalColumns = String(cols.length);
   table.dataset.visibleColumns = String(cols.length);
-  table.dataset.hiddenColumns = String(hidden.length);
-  return table;
+  table.dataset.hiddenColumns = '0';
+  scroll.appendChild(table);
+  return scroll;
 }
 
 // ---------- 실배선 FactsCard/CompoundCard(P4) — MCP render_canvas의 facts/compound 응답 ----------
@@ -3501,6 +4516,7 @@ function renderFactsFieldGroup(fields) {
     // 시 쌍이 흩어진다).
     const row = document.createElement('div');
     row.className = 'facts-row';
+    if (dd.textContent.length > 60 || dt.textContent.length > 40) row.classList.add('is-long-text');
     row.appendChild(dt);
     row.appendChild(dd);
     dl.appendChild(row);
@@ -3541,7 +4557,7 @@ function renderFactsCard(envelope) {
   stampPaperScreen(card, envelope);
   const fields = (envelope.data && Array.isArray(envelope.data.fields)) ? envelope.data.fields : [];
   if (!fields.length) {
-    body.appendChild(errorNote('빈 facts — fields가 없다.'));
+    body.appendChild(errorNote('표시할 지표가 없습니다. 종목이나 조회 조건을 확인해 주세요.'));
     return card;
   }
   body.appendChild(renderFactsGrid(fields));
@@ -3551,7 +4567,7 @@ function renderFactsCard(envelope) {
 // CompoundCard 일반(C2, spec §3.3) — "이름과 달리 다중 표가 아니다": 스칼라 헤더 밴드
 // 하나 + 표 하나로 고정. 헤더는 facts와 같은 셀 프리미티브를 재사용하되 세로 그리드가
 // 아니라 가로 밴드(스칼라 2~9개, §3.3 실측이라 F2 2단 분할까지는 가지 않는다)로 편다.
-// 표는 buildFoldedTable을 그대로 재사용한다(mcp-table과 드리프트하지 않는다).
+// 표는 buildReadableTable을 그대로 재사용한다(mcp-table과 드리프트하지 않는다).
 function renderCompoundHeaderBand(fields) {
   const band = document.createElement('div');
   band.className = 'compound-header-band';
@@ -3590,11 +4606,11 @@ function renderCompoundCard(envelope) {
   const tableCols = table && Array.isArray(table.columns) ? table.columns : [];
   const tableRows = table && Array.isArray(table.rows) ? table.rows : [];
   if (!header.length || !tableCols.length || !tableRows.length) {
-    body.appendChild(errorNote('빈 compound — header 또는 table이 없다.'));
+    body.appendChild(errorNote('조회한 결과가 없습니다. 기간이나 조건을 바꿔 다시 조회해 주세요.'));
     return card;
   }
   body.appendChild(renderCompoundHeaderBand(header));
-  body.appendChild(buildFoldedTable(tableCols, tableRows));
+  body.appendChild(buildReadableTable(tableCols, tableRows));
   return card;
 }
 
@@ -3810,15 +4826,15 @@ function renderLiveReader(envelope) {
   const data = (envelope.data && typeof envelope.data === 'object') ? envelope.data : {};
   const { card, body } = makeCard('reader', data.title || envelope.caption || '리더 · 공시 원문', envelope.layout, envelope.correlation);
   if (data.error_state === 'not_found') {
-    body.appendChild(errorNote('문서를 찾을 수 없다 — not_found.'));
+    body.appendChild(errorNote('문서를 찾을 수 없습니다. 문서 제목이나 조회 기간을 확인해 주세요.'));
     return card;
   }
   if (data.error_state === 'processing_delayed') {
-    body.appendChild(errorNote('문서 처리가 지연되고 있다 — processing_delayed.'));
+    body.appendChild(errorNote('문서 처리가 지연되고 있습니다. 잠시 후 다시 조회해 주세요.'));
     return card;
   }
   if (!data.body_markdown) {
-    body.appendChild(errorNote('빈 리더 — body_markdown이 없다.'));
+    body.appendChild(errorNote('표시할 문서 내용이 없습니다. 다른 문서를 선택해 주세요.'));
     return card;
   }
   if (Array.isArray(data.highlights) && data.highlights.length) {
@@ -3907,12 +4923,19 @@ async function renderLiveChart(envelope, integratedRoot = null) {
   return card;
 }
 
+function renderTimelineCard(envelope) {
+  const { card, body } = makeCard('timeline', envelope.caption || '가격·사건 타임라인', envelope.layout, envelope.correlation);
+  body.appendChild(window.AthenaLib.TimelineCard.createTimeline(envelope.data));
+  card.dataset.renderState = body.querySelector('.timeline-chart, .timeline-event, .timeline-price-details') ? 'data' : 'empty';
+  return card;
+}
+
 function renderFreeCanvas(envelope) {
   const { card, body } = makeCard('free', envelope.caption || '자유 카드', envelope.layout, envelope.correlation, undefined, cardStkCd(envelope), envelope.screen_id);
   if (envelope.fell_back) {
     const note = document.createElement('div');
     note.className = 'fin-meta';
-    note.textContent = `table 카드로 못 그려 자유 카드로 폴백함 — ${envelope.fallback_reason || '사유 미상'}`;
+    note.textContent = '받은 정보를 항목별로 표시합니다.';
     body.appendChild(note);
   }
   body.appendChild(renderJsonTree(envelope.data));
@@ -4090,6 +5113,9 @@ function makeCard(type, title, layoutHint, correlation, subtitle, stkCd, screenI
   // 폭은 형상이 정하고(w-half/w-full), AI layout 힌트는 등급 승격·강등만 한다.
   // 순서는 도착순(appendChild) — canvas-taxonomy "배치·생애주기 규칙 (2026-08-18)".
   card.className = `card ${type} w-${widthGradeFor(type, layoutHint)}`;
+  if (['stream', 'reader', 'table', 'mcp-table', 'free', 'notice', 'facts', 'compound', 'event', 'action', 'status', 'timeline'].includes(type)) {
+    card.classList.add('common-card');
+  }
   if (isDatasetCard) {
     card.dataset.datasetId = correlation.dataset_id;
     card.dataset.itemId = correlation.item_id;
@@ -5016,7 +6042,18 @@ const backtestCanvas = window.AthenaLib.BacktestCanvas.createBacktestCanvas({
         `캐시가 부족해 탐색하지 않았습니다 — ${res.detail.needed_pages}페이지를 먼저 수집하세요`,
       );
     }
-    throw new Error(backtestError(res, '최적화에 실패했습니다'));
+    let message = backtestError(res, '최적화에 실패했습니다');
+    if (res && res.status === 0) {
+      const cause = res.causeCode || res.code;
+      message = ['UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT', 'UND_ERR_CONNECT_TIMEOUT', 'ETIMEDOUT'].includes(cause)
+        ? '최적화 응답 대기 시간이 초과되었습니다. 실행 완료 여부는 확인할 수 없습니다.'
+        : cause === 'ABORT_ERR' ? '최적화 요청 대기가 중단되었습니다. 실행 완료 여부는 확인할 수 없습니다.'
+          : '최적화 응답을 받지 못했습니다. 실행 완료 여부는 확인할 수 없습니다.';
+    }
+    const error = new Error(message);
+    if (res && res.code) error.code = res.code;
+    if (res && res.causeCode) error.causeCode = res.causeCode;
+    throw error;
   },
   createStrategy: async (body) => {
     const res = await window.athena.invoke('athena:backtest-strategy-create', body);
@@ -5546,6 +6583,9 @@ for (const [surface, ids] of Object.entries(SURFACE_TAB_IDS)) {
     });
   }
 }
+
+const graphFitView = document.getElementById('graphFitView');
+if (graphFitView) graphFitView.addEventListener('click', () => graphMode.fitView());
 
 // --- 헤더 필터 칩 배선 (보드 01/03) ----------------------------------------
 //

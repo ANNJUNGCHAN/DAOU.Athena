@@ -1,0 +1,178 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '../../../..');
+const out = __dirname;
+function replaceOnce(source, before, after) {
+  const normalized = source.replace(/\r\n/g, '\n');
+  before = before.replace(/\r\n/g, '\n');
+  if (normalized.split(before).length !== 2) throw new Error('Nonunique source patch: ' + before.slice(0,70));
+  const start = normalized.indexOf(before), end = start + before.length;
+  function offset(target) {
+    let original=0, logical=0;
+    while(logical < target) { if(source[original]==='\r'&&source[original+1]==='\n')original++; original++; logical++; }
+    return original;
+  }
+  const a=offset(start); let b=offset(end);
+  let ending='';
+  if(source.slice(b,b+2)==='\r\n'){ b+=2; ending='\n'; }
+  else if(source[b]==='\n'){ b++; ending='\n'; }
+  return source.slice(0,a)+after.replace(/\r\n/g,'\n')+ending+source.slice(b);
+}
+
+let main = fs.readFileSync(path.join(__dirname, 'main.account-baseline.js'), 'utf8');
+const originalMain = main;
+main = replaceOnce(main, "const chartReloadAuthority = chartReload.createChartReloadAuthority();", "const chartReloadAuthority = chartReload.createChartReloadAuthority();\nconst { createChartRemounts } = require('./lib/main/chart-remount');\nconst chartRemounts = createChartRemounts({ correlationKey: value => restCorrelationKey(value), panelIdFor: require('./lib/aits-chart-panel').panelIdFor, randomUUID: () => crypto.randomUUID() });");
+main = replaceOnce(main, '    chartReloadAuthority.clear();', '    chartReloadAuthority.clear();\n    chartRemounts.clear();');
+main = replaceOnce(main, '  chartReloadAuthority.unregister(payload.panelId);', '  chartRemounts.retire(payload.panelId);\n  chartReloadAuthority.unregister(payload.panelId);');
+main = replaceOnce(main, '    if (authority) waiter.reloadAuthority = authority;', '    if (authority) { waiter.reloadAuthority = authority; waiter.sourceEnvelope = primary; }');
+main = replaceOnce(main, '  chartReloadAuthority.registerPaint(decision.paint, waiter.reloadAuthority);', `  if (waiter.remountToken && !chartRemounts.valid(waiter.remountToken, decision.paint, chartRemountContext(event, waiter.remountRequest))) {
+    waiter.reject(new Error('차트 재표시 소유권이 변경됐습니다.'));
+    return;
+  }
+  const chartRegistered = chartReloadAuthority.registerPaint(decision.paint, waiter.reloadAuthority);
+  if (waiter.remountToken && !chartRegistered) {
+    waiter.reject(new Error('차트 재표시 계약을 확인할 수 없습니다.'));
+    return;
+  }
+  if (waiter.remountToken) chartRemounts.accept(waiter.remountToken, decision.paint, chartRemountContext(event, waiter.remountRequest));
+  if (chartRegistered && !waiter.remountToken) chartRemounts.remember({
+    key, paint: decision.paint, authority: waiter.reloadAuthority, envelope: waiter.sourceEnvelope,
+    senderId: waiter.senderId, conversationId: waiter.conversationId, accountGeneration: waiter.accountGeneration,
+  });`);
+main = replaceOnce(main, 'async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs = 3000, conversationId = null } = {}) {', 'async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs = 3000, conversationId = null, paintOnly = false } = {}) {');
+main = replaceOnce(main, '      reloadAuthority: {\n        correlation,', `      sourceEnvelope: payload.envelope,
+      senderId: shellWin.webContents.id,
+      conversationId: conversationId || historyConversationId(),
+      accountGeneration: realtimeAccountGeneration,
+      remountToken: payload.remountToken || null,
+      remountRequest: payload.remountRequest || null,
+      reloadAuthority: {
+        correlation,`);
+main = replaceOnce(main, "    shellWin.webContents.send('athena:add-rest-canvas', {", "    if (!paintOnly) shellWin.webContents.send('athena:add-rest-canvas', {");
+const handler = `function chartRemountContext(event, request = {}) {
+  const conversationId = historyConversationId();
+  const bridge = getSessionBridge();
+  if (bridge) bridge.flush(conversationId);
+  const snapshot = bridge && bridge.load(conversationId);
+  const cards = snapshot && Array.isArray(snapshot.canvasCards) ? snapshot.canvasCards : [];
+  const matches = cards.filter(card => card && card.cardId === request.cardId && card.envelope);
+  const card = matches.length === 1 ? matches[0] : null;
+  return { senderId: event.sender.id, conversationId, accountGeneration: realtimeAccountGeneration,
+    accountId: activeRestAccountId(), cardId: card && card.cardId,
+    cardKey: card && restCorrelationKey(card.envelope.correlation) };
+}
+
+ipcMain.handle('athena:remount-chart-panel', (event, request = {}) => {
+  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) {
+    throw new Error('차트 재표시는 셸 창에서만 허용됩니다.');
+  }
+  const lease = chartRemounts.begin(request, chartRemountContext(event, request));
+  void emitRestCanvasAndWaitForPaint({
+    envelope: lease.envelope, operationRef: lease.envelope.operation_ref,
+    operationArgs: lease.envelope.operation_args, canvasType: lease.envelope.canvas_type,
+    accountId: lease.accountId, remountToken: lease.token, remountRequest: request,
+  }, { expand: false, timeoutMs: 30_000, conversationId: lease.conversationId, paintOnly: true })
+    .catch(() => chartRemounts.abort(lease.token));
+  return { ok: true, token: lease.token, envelope: lease.envelope };
+});
+
+ipcMain.handle('athena:cancel-chart-remount', (event, request = {}) => {
+  if (!shellWin || shellWin.isDestroyed() || event.sender !== shellWin.webContents) return false;
+  return chartRemounts.cancel(request.token, chartRemountContext(event, request));
+});
+
+`;
+main = replaceOnce(main, 'async function handleChartPanelReload(event, payload) {', handler + 'async function handleChartPanelReload(event, payload) {');
+let canvas = fs.readFileSync(path.join(__dirname, '../chart-remount-candidate/canvas.baseline.js'), 'utf8');
+const originalCanvas = canvas;
+canvas = replaceOnce(canvas, "  state.primaryPanelId = '';\n  const destroyed = aitsChartPanels.destroyPanel(panelId);", `  const active = aitsChartPanels.snapshot().find(entry => entry.panelId === panelId);
+  if (active) state.primaryRemount = { panelId, generation: active.generation };
+  state.primaryPanelId = '';
+  const destroyed = aitsChartPanels.destroyPanel(panelId);`);
+canvas = replaceOnce(canvas, '  let descriptor = state.primaryDescriptor;', `  const attempt = {};
+  state.primaryMount = attempt;
+  let remountEnvelope = null;
+  let remountRequest = null;
+  let remountToken = null;
+  const cancelRemount = () => {
+    if (remountToken) void window.athena.invoke('athena:cancel-chart-remount', { ...remountRequest, token: remountToken }).catch(() => {});
+    remountToken = null;
+  };
+  const retired = state.primaryRemount;
+  if (retired) {
+    const meta = card.__athenaSessionCard;
+    const request = {
+      ...retired, cardId: card.dataset.sessionCardId,
+      correlation: meta && meta.envelope && meta.envelope.correlation,
+    };
+    let reply;
+    try {
+      reply = await window.athena.invoke('athena:remount-chart-panel', request);
+    } catch (_error) {
+      if (state.primaryMount === attempt && host.isConnected && primary.mountPoint.isConnected && state.surface === mounted.surface && state.primaryRemount === retired) {
+        primary.mountPoint.prepend(errorNote('차트를 다시 표시하지 못했습니다.'));
+        settleBoardChartMount(state, 'error');
+      }
+      return null;
+    }
+    remountRequest = request;
+    remountToken = reply && reply.token;
+    if (state.primaryMount !== attempt || !host.isConnected || state.surface !== mounted.surface || !primary.mountPoint.isConnected || state.primaryRemount !== retired) {
+      cancelRemount();
+      return null;
+    }
+    if (!reply || reply.ok !== true || !reply.envelope) throw new Error('차트를 다시 표시하지 못했습니다.');
+    remountEnvelope = reply.envelope;
+    envelope = remountEnvelope;
+  }
+  let descriptor = remountEnvelope ? null : state.primaryDescriptor;`);
+canvas = replaceOnce(canvas, "    settleBoardChartMount(state, session.body.candles.length ? 'data' : 'empty');\n    startBoardChartRefresh(host, state, descriptor);", `    if (remountEnvelope) {
+      const paint = await waitForVisiblePaint(card);
+      if (state.primaryMount !== attempt || !host.isConnected || state.surface !== mounted.surface || !primary.mountPoint.isConnected || state.primaryRemount !== retired) { cancelRemount(); session.destroy(); chartBody.remove(); if (state.primaryMount === attempt) { state.primaryMount = null; state.primaryPanelId = ''; delete primary.mountPoint.dataset.bsPrimaryMounted; } return null; }
+      window.athena.send('athena:rest-canvas-painted', {
+        ...remountEnvelope.correlation, operation_ref: remountEnvelope.operation_ref,
+        canvas_type: remountEnvelope.canvas_type, render_state: session.body.candles.length ? 'data' : 'empty',
+        renderer_id: descriptor.rendererId, panel_id: descriptor.panelId, generation: session.generation,
+        verified_visible: paint.verifiedVisible, pending: false,
+      });
+      state.primaryRemount = null;
+      remountToken = null;
+    }
+    settleBoardChartMount(state, session.body.candles.length ? 'data' : 'empty');
+    startBoardChartRefresh(host, state, descriptor);`);
+canvas = replaceOnce(canvas, "      primary.mountPoint.prepend(errorNote('차트를 그리지 못했다'));", "      cancelRemount();\n      primary.mountPoint.prepend(errorNote('차트를 그리지 못했다'));");
+canvas = replaceOnce(canvas, '    if (!descriptor) {\n      boardMount.collapsePrimaryMockup(primary.mountPoint);', '    if (!descriptor) {\n      cancelRemount();\n      boardMount.collapsePrimaryMockup(primary.mountPoint);');
+canvas = replaceOnce(canvas, '    if (state.primaryMount !== attempt) {\n      session.destroy();', '    if (state.primaryMount !== attempt) {\n      cancelRemount();\n      session.destroy();');
+canvas = replaceOnce(canvas, '    chartBody.remove();\n    delete primary.mountPoint.dataset.bsPrimaryMounted;\n    if (state.primaryMount !== attempt) {', '    cancelRemount();\n    chartBody.remove();\n    delete primary.mountPoint.dataset.bsPrimaryMounted;\n    if (state.primaryMount !== attempt) {');
+main = replaceOnce(main, '  return chartReloadAuthority.acceptResult(request, result);', `  const accepted = chartReloadAuthority.acceptResult(request, result);
+  chartRemounts.updateReload(request, result, {
+    senderId: event.sender.id, conversationId: historyConversationId(),
+    accountGeneration: realtimeAccountGeneration, accountId: activeRestAccountId(),
+  });
+  return accepted;`);
+canvas = replaceOnce(canvas, '  const attempt = {};\n  state.primaryMount = attempt;\n  state.primaryPanelId = descriptor.panelId;', '  state.primaryPanelId = descriptor.panelId;');
+canvas = replaceOnce(canvas, '      delete primary.mountPoint.dataset.bsPrimaryMounted;\n      boardMount.restorePrimaryMockup(collapsed);\n      settleBoardChartMount(state, \'error\');\n      return null;', '      return null;');
+canvas = replaceOnce(canvas, "  try {\n    // 카드 정리자는 renderBoardSurfaceCard가 이미 걸었다", "  let session = null;\n  try {\n    // 카드 정리자는 renderBoardSurfaceCard가 이미 걸었다");
+canvas = replaceOnce(canvas, "    const session = await mountAitsChartPanel(card, chartBody, descriptor, { registerCardDestroyer: false });", "    session = await mountAitsChartPanel(card, chartBody, descriptor, { registerCardDestroyer: false });");
+canvas = replaceOnce(canvas, "    chartBody.remove();\n    delete primary.mountPoint.dataset.bsPrimaryMounted;\n    if (state.primaryMount !== attempt) {\n      settleBoardChartMount(state, 'error');\n      return null;\n    }", "    chartBody.remove();\n    if (state.primaryMount !== attempt || state.surface !== mounted.surface || !host.isConnected || !primary.mountPoint.isConnected || state.primaryRemount !== retired) return null;\n    delete primary.mountPoint.dataset.bsPrimaryMounted;");
+canvas = replaceOnce(canvas, "    if (state.primaryMount !== attempt) {\n      cancelRemount();\n      session.destroy();", "    if (state.primaryMount !== attempt || state.surface !== mounted.surface || !host.isConnected || !primary.mountPoint.isConnected || state.primaryRemount !== retired) {\n      cancelRemount();\n      session.destroy();");
+canvas = replaceOnce(canvas, "    cancelRemount();\n    chartBody.remove();\n    if (state.primaryMount !== attempt || state.surface !== mounted.surface || !host.isConnected || !primary.mountPoint.isConnected || state.primaryRemount !== retired) return null;", "    cancelRemount();\n    if (session) session.destroy();\n    chartBody.remove();\n    if (state.primaryMount !== attempt || state.surface !== mounted.surface || !host.isConnected || !primary.mountPoint.isConnected || state.primaryRemount !== retired) return null;");
+let preload = fs.readFileSync(path.join(__dirname, '../chart-remount-candidate/preload.baseline.js'), 'utf8');
+const originalPreload = preload;
+const preloadEol = preload.includes('\r\n') ? '\r\n' : '\n';
+preload = replaceOnce(preload, "  'athena:reload-chart-panel',", "  'athena:reload-chart-panel'," + preloadEol + "  'athena:remount-chart-panel'," + preloadEol + "  'athena:cancel-chart-remount',");
+fs.writeFileSync(path.join(out, 'main.candidate.js'), main);
+fs.writeFileSync(path.join(out, 'canvas.candidate.js'), canvas);
+fs.writeFileSync(path.join(out, 'preload.candidate.js'), preload);
+fs.writeFileSync(path.join(out, 'preload.baseline.js'), originalPreload);
+fs.writeFileSync(path.join(out, 'main.baseline.js'), originalMain);
+fs.writeFileSync(path.join(out, 'canvas.baseline.js'), originalCanvas);
+const crypto = require('node:crypto');
+const hash = s => crypto.createHash('sha256').update(s).digest('hex');
+fs.writeFileSync(path.join(out, 'PREPARATION-DRAFT.json'), JSON.stringify({
+  status: 'AUTHOR_DRAFT_NOT_APPROVED_NOT_INSTALLED', original: { main: hash(originalMain), canvas: hash(originalCanvas), preload: hash(originalPreload) },
+  candidate: { main: hash(main), canvas: hash(canvas), preload: hash(preload), helper: hash(fs.readFileSync(path.join(out, 'chart-remount.js'))) },
+  productWrites: 0, rendererRuns: 0, nativeActions: 0,
+}, null, 2) + '\n');
+console.log('Draft prepared; product writes=0; requires source review and actual consumer tests.');

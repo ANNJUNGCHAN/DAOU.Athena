@@ -1,0 +1,15 @@
+{
+  "status": "ASSEMBLY_BYTE_EXACT_EXECUTION_NOT_RUN",
+  "prefixSource": "consumer-check.cjs",
+  "prefixEndAnchor": "const receipt =",
+  "prefixSHA256": "1accb8b060a000d8d4889afa6937f1080954611c098e0e09ba76929b6c319119",
+  "additionalSource": "archive/actual-installed-audit.cjs.txt",
+  "additionalSourceOriginalSHA256": "159cd72b1c038ad7f9ccb4cf8a5c713a0dfb0da6a6c07d323e646c688719479f",
+  "startAnchor": "let additional=0;",
+  "endAnchor": "template-literal-close before replacement",
+  "additionalSHA256": "2b0e8919c035286220e29c018ce70e825456ec16f2777a9787575666bb03ef51",
+  "finalNewlineHex": "0a",
+  "assembly": "prefix + additionalBlock + LF",
+  "assembledSHA256": "8b315de8ae1670c57073add4fc798ccdd2c7d5369728182117f43c4dd9934700",
+  "preservedAssertions": true
+}

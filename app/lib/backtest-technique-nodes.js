@@ -174,34 +174,38 @@ function buildLanes(payload) {
 
 // 카드·머리말·연결선의 좌표를 한 번에 만든다. SVG가 카드 밑을 지나가야 하므로 두 좌표계가
 // 갈라지면 안 된다 — 그래서 한 함수가 둘 다 낸다.
-function layout(lanes) {
+function layout(lanes, heights) {
   const heads = [];
   const boxes = [];
   const links = [];
-  let maxLen = 0;
+  let bottom = CARD_TOP;
   lanes.forEach((lane, li) => {
     const x = LANE_X0 + li * LANE_PITCH;
     heads.push({ kind: lane.kind, x: x, y: LANE_HEAD_Y, w: CARD_W });
-    maxLen = Math.max(maxLen, lane.ids.length);
+    let nextY = CARD_TOP;
+    let previousBottom = CARD_TOP;
     lane.ids.forEach((id, ci) => {
-      const y = CARD_TOP + ci * CARD_PITCH;
-      boxes.push({ lane: lane.kind, id: id, index: ci, x: x, y: y, w: CARD_W, h: CARD_H });
+      const y = nextY;
+      const h = Math.max(CARD_H, Number(heights && heights[lane.kind + ':' + id]) || CARD_H);
+      boxes.push({ lane: lane.kind, id: id, index: ci, x: x, y: y, w: CARD_W, h: h });
       if (ci > 0) {
-        const prev = CARD_TOP + (ci - 1) * CARD_PITCH;
         links.push({
           lane: lane.kind,
           from: lane.ids[ci - 1],
           to: id,
           x1: x + CARD_W / 2,
-          y1: prev + CARD_H,
+          y1: previousBottom,
           x2: x + CARD_W / 2,
           y2: y,
         });
       }
+      previousBottom = y + h;
+      nextY = previousBottom + (CARD_PITCH - CARD_H);
+      bottom = Math.max(bottom, previousBottom);
     });
   });
   const w = Math.max(SURFACE_MIN_W, LANE_X0 * 2 + (lanes.length ? (lanes.length - 1) * LANE_PITCH + CARD_W : 0));
-  const h = Math.max(SURFACE_MIN_H, CARD_TOP + (maxLen ? (maxLen - 1) * CARD_PITCH + CARD_H : 0) + LANE_X0);
+  const h = Math.max(SURFACE_MIN_H, bottom + LANE_X0);
   return { heads: heads, boxes: boxes, links: links, size: { w: w, h: h } };
 }
 
@@ -292,6 +296,25 @@ function createTechniqueNodes(container, options) {
 
   let destroyed = false;
   let refs = { cards: {}, rail: {} };
+  const cardObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(() => {
+    if (destroyed) return;
+    const surface = root.querySelector('.backtest-tnodes-surface');
+    if (!surface) return;
+    const cards = Array.from(surface.querySelectorAll('.backtest-tnodes-card'));
+    const heights = {};
+    cards.forEach(card => { heights[card.dataset.layoutKey] = card.getBoundingClientRect().height; });
+    const plan = layout(buildLanes(state.payload), heights);
+    plan.boxes.forEach(box => {
+      const card = cards.find(item => item.dataset.layoutKey === box.lane + ':' + box.id);
+      if (card) card.style.top = box.y + 'px';
+    });
+    const svg = surface.querySelector('.backtest-tnodes-links');
+    svg.setAttribute('height', String(plan.size.h));
+    svg.setAttribute('viewBox', '0 0 ' + plan.size.w + ' ' + plan.size.h);
+    const links = surface.querySelectorAll('.backtest-tnodes-link');
+    plan.links.forEach((link, index) => links[index].setAttribute('d', flowPath(link.x1, link.y1, link.x2, link.y2)));
+    surface.style.height = plan.size.h + 'px';
+  }) : null;
 
   const root = el('div', 'backtest-tnodes');
   root.setAttribute('tabindex', '-1');
@@ -480,6 +503,8 @@ function createTechniqueNodes(container, options) {
     const surface = el('div', 'backtest-tnodes-surface');
     attr(surface, 'role', 'group');
     attr(surface, 'aria-label', CANVAS_TITLE);
+    surface.style.width = plan.size.w + 'px';
+    surface.style.height = plan.size.h + 'px';
 
     const svg = svgEl('svg', {
       class: 'backtest-tnodes-links',
@@ -549,7 +574,8 @@ function createTechniqueNodes(container, options) {
     attr(card, 'data-flow', box.lane);
     attr(card, 'aria-pressed', state.selectedId === node.id ? 'true' : 'false');
     attr(card, 'aria-label', ghost ? `${ariaLabel(node)} · ${GHOST_LABEL}` : ariaLabel(node));
-    attr(card, 'style', `left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px`);
+    attr(card, 'style', `left:${box.x}px;top:${box.y}px;width:${box.w}px;min-height:${box.h}px`);
+    attr(card, 'data-layout-key', box.lane + ':' + box.id);
     // 클릭 = 이 노드를 참조한다. 초점을 카드로 되가져오지 않는다 — 부르는 쪽이 대화 입력창에
     // @참조를 넣고 포커스를 주는데, 여기서 다시 뺏으면 이어서 타자할 수 없다(실측).
     card.addEventListener('click', () => {
@@ -664,6 +690,7 @@ function createTechniqueNodes(container, options) {
 
   function render() {
     if (destroyed) return;
+    if (cardObserver) cardObserver.disconnect();
     clear(root);
     refs = { cards: {}, rail: {} };
     const lanes = buildLanes(state.payload);
@@ -673,6 +700,7 @@ function createTechniqueNodes(container, options) {
     body.appendChild(renderCanvas(lanes));
     root.appendChild(body);
     root.appendChild(renderStatus());
+    if (cardObserver) root.querySelectorAll('.backtest-tnodes-card').forEach(card => cardObserver.observe(card));
   }
 
   render();
@@ -694,6 +722,7 @@ function createTechniqueNodes(container, options) {
     getSelected() { return state.selectedId; },
     destroy() {
       destroyed = true;
+      if (cardObserver) cardObserver.disconnect();
       clear(root);
       if (typeof container.removeChild === 'function') container.removeChild(root);
     },

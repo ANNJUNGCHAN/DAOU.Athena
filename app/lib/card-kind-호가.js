@@ -252,6 +252,21 @@ function formatNumber(value) {
   return Number.isFinite(value) ? Math.abs(value).toLocaleString('ko-KR') : '—';
 }
 
+function formatPrice(value) {
+  // A zero quote means no offered price; zero quantities remain valid counts.
+  return Number.isFinite(value) && value !== 0 ? formatNumber(value) : '—';
+}
+
+function formatQuoteTime(value) {
+  const text = String(value || '').trim();
+  if (!text) return '수신 대기';
+  if (/^0{6,14}$/.test(text)) return '시각 미제공';
+  if (/^(?:[01]\d|2[0-3])[0-5]\d[0-5]\d$/.test(text)) {
+    return `${text.slice(0, 2)}:${text.slice(2, 4)}:${text.slice(4, 6)}`;
+  }
+  return text;
+}
+
 function formatSigned(value) {
   if (!Number.isFinite(value)) return '—';
   return `${value > 0 ? '+' : ''}${value.toLocaleString('ko-KR')}`;
@@ -284,7 +299,10 @@ function setCountOrLp(node, model, animate) {
   const value = isCount ? model.count : model.auxQuantity;
   const previous = node && node.__athenaNumericValue;
   if (!node) return;
-  node.textContent = Number.isFinite(value) ? `${isCount ? '' : 'LP '}${formatNumber(value)}` : '—';
+  const parts = [];
+  if (isCount) parts.push(`${formatNumber(model.count)}${Number.isFinite(model.auxQuantity) ? '건' : ''}`);
+  if (Number.isFinite(model.auxQuantity)) parts.push(`LP ${formatNumber(model.auxQuantity)}`);
+  node.textContent = parts.length ? parts.join('\n') : '—';
   node.__athenaNumericValue = value;
   if (animate) flash(node, previous, value);
 }
@@ -323,7 +341,7 @@ function updateLevelRow(wrap, side, level, model, maxQuantity, animate) {
   setCountOrLp(row.querySelector('[data-role="count"]'), model, animate);
   setNumber(row.querySelector('[data-role="quantity"]'), model.quantity, formatNumber, animate);
   setNumber(row.querySelector('[data-role="change"]'), model.change, formatSigned, animate);
-  setNumber(row.querySelector('[data-role="price"]'), model.price, formatNumber, animate);
+  setNumber(row.querySelector('[data-role="price"]'), model.price, formatPrice, animate);
   const bar = row.querySelector('[data-role="bar"]');
   const percentage = Number.isFinite(model.quantity) && maxQuantity > 0 ? Math.round((Math.abs(model.quantity) / maxQuantity) * 100) : 0;
   if (bar) {
@@ -339,7 +357,7 @@ function updateOrderbookDom(wrap, state, animate) {
     updateLevelRow(wrap, 'ask', level, state.asks[level - 1], maxQuantity, animate);
     updateLevelRow(wrap, 'bid', level, state.bids[level - 1], maxQuantity, animate);
   }
-  setNumber(wrap.querySelector('[data-role="current-price"]'), state.currentPrice, formatNumber, animate);
+  setNumber(wrap.querySelector('[data-role="current-price"]'), state.currentPrice, formatPrice, animate);
   const expectedExecution = wrap.querySelector('[data-role="expected-execution"]');
   if (expectedExecution) {
     const previous = expectedExecution.__athenaNumericValue;
@@ -347,7 +365,7 @@ function updateOrderbookDom(wrap, state, animate) {
       expectedExecution.textContent = 'REST 스냅샷';
     } else if (Number.isFinite(state.expectedExecutionPrice)) {
       const quantity = Number.isFinite(state.expectedExecutionQuantity) ? ` · ${formatNumber(state.expectedExecutionQuantity)}주` : '';
-      expectedExecution.textContent = `예상체결 ${formatNumber(state.expectedExecutionPrice)}${quantity}`;
+      expectedExecution.textContent = `예상체결 ${formatPrice(state.expectedExecutionPrice)}${quantity}`;
     } else {
       expectedExecution.textContent = '예상체결 수신 대기';
     }
@@ -357,11 +375,16 @@ function updateOrderbookDom(wrap, state, animate) {
   setNumber(wrap.querySelector('[data-role="sell-total"]'), state.sellTotal, formatNumber, animate);
   setNumber(wrap.querySelector('[data-role="buy-total"]'), state.buyTotal, formatNumber, animate);
   const time = wrap.querySelector('[data-role="time"]');
-  if (time) time.textContent = state.time || '수신 대기';
+  if (time) time.textContent = formatQuoteTime(state.time);
   const focus = wrap.querySelector('[data-role="focus"]');
   if (focus) focus.textContent = state.focus;
   const auxHeader = wrap.querySelector('[data-role="aux-header"]');
-  if (auxHeader) auxHeader.textContent = state.focus === 'LP 잔량' ? 'LP 잔량' : '건수';
+  if (auxHeader) {
+    const levels = [...state.asks, ...state.bids];
+    const hasCounts = levels.some(level => Number.isFinite(level.count));
+    const hasLp = levels.some(level => Number.isFinite(level.auxQuantity));
+    auxHeader.textContent = hasLp ? (hasCounts ? '건수 · LP 잔량' : 'LP 잔량') : '건수';
+  }
   const total = (state.sellTotal || 0) + (state.buyTotal || 0);
   const split = total > 0 ? Math.round(((state.sellTotal || 0) / total) * 100) : 50;
   const askShare = wrap.querySelector('[data-role="ask-share"]');
@@ -400,8 +423,13 @@ function visibleColumns(options) {
   return widthTier((options || {}).width) === 'xs' ? ['price', 'qty'] : [...FULL_COLUMNS];
 }
 
+function orderbookTitle(state, shown = state.depth) {
+  if (state.marketMode === 'after-hours-summary') return '시간외 호가 잔량';
+  return `${state.marketMode === 'regular' ? '실시간' : '시간외 단일가'} ${shown}단 호가`;
+}
+
 // 실제 폭에 맞춰 보이는 단수와 열 수를 맞춘다. 열 감추기는 CSS 컨테이너 쿼리가
-// 하고, 여기서는 사다리 행과 접근성 열 수만 손댄다.
+// 하고, 제목·바깥 배지도 같은 표시 단수를 따른다. 전체 수신 모델은 줄이지 않는다.
 function applyResponsiveShape(wrap) {
   const state = wrap.__athenaOrderbookState;
   const rows = wrap.__athenaOrderbookRows;
@@ -416,6 +444,20 @@ function applyResponsiveShape(wrap) {
   }
   const depthChip = wrap.querySelector('.card-kit-hoga-live-depth');
   if (depthChip) depthChip.textContent = `${shown}호가`;
+  const title = orderbookTitle(state, shown);
+  wrap.setAttribute('aria-label', title);
+  const heading = wrap.querySelector('.card-kit-hoga-live-title');
+  if (heading) heading.textContent = title;
+  const subtitle = wrap.querySelector('.card-kit-hoga-live-subtitle');
+  if (subtitle) {
+    const identity = [state.name, state.symbol].filter(Boolean).join(' · ')
+      || (state.marketMode === 'regular' ? '실시간 호가 데이터' : '시간외 호가 데이터');
+    subtitle.textContent = identity + (shown < state.depth ? ` · 전체 ${state.depth}단` : '');
+  }
+  // 정본 바깥 배지는 표시 깊이다. 다른 보드의 5/10단 전환 버튼은 건드리지 않는다.
+  const surface = wrap.closest('[data-node="1JPV-0"]');
+  const badge = surface && surface.querySelector('[data-node="1JQC-0"]');
+  if (badge) badge.textContent = `${shown}단 표시`;
   const table = wrap.querySelector('.card-kit-hoga-live-table');
   if (table) {
     table.setAttribute('aria-colcount', String(visibleColumns({ width }).length));
@@ -432,8 +474,7 @@ function observeWidth(wrap) {
 function buildIntegratedOrderbook(envelope, state) {
   const wrap = dom('section', 'card-kit-hoga-live');
   const isAfterHours = state.marketMode !== 'regular';
-  const isAfterHoursSummary = state.marketMode === 'after-hours-summary';
-  const title = isAfterHoursSummary ? '시간외 호가 잔량' : (isAfterHours ? '시간외 단일가 5단 호가' : '실시간 10단 호가');
+  const title = orderbookTitle(state);
   wrap.setAttribute('aria-label', title);
   wrap.__athenaOrderbookState = state;
   wrap.__athenaOrderbookRows = { ask: [], bid: [] };
@@ -577,6 +618,7 @@ const __exports = {
   supportsLive0D,
   visibleLevels,
   visibleColumns,
+  applyResponsiveShape,
   render호가,
   applyLiveTick,
 };

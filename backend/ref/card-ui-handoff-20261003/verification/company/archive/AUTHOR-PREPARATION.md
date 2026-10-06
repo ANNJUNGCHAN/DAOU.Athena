@@ -1,0 +1,11 @@
+# Company history spacing observation V2
+
+Author candidate, awaiting root source review and separate execution approval. No V2 renderer has run. The CSS is the same single-file aef7d53b68baaacc65b8b0cc405724f116886d367a8434c845a69a7a9c64fba8 patch against original103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5. Original CSS bytes are preserved. Gap/wrap applies only to 2RBO-1 history row and its two leaves below 1279px container width. Values, dates, units, bindings, colors and font size remain unchanged.
+
+V1 ran once and exited1; its owned PID is absent. No result file was published. Fixture/source preparation is observed, but the failing phase/case is unknown. Original V1 entry118e, preflight24 pins, fixture and shutdown receipt are preserved and hash-checked. The historical source equality check before account installation was true; this is not a claim that current product board-mount remains b81. Root has since installed account ec0da.
+
+V2 uses immutable V1 public snapshot23 as browser source. Historical24th unit-generator pin is separately recorded; the generator is not a browser script. Original unit3 guards remain. Synthetic values, two board references, five widths, 30 cases, baseline/candidate CSS and all layout/state assertions are preserved. Reversing 18 bounded changes reconstructs every V1 entry byte.
+
+Finite stage/case/phase ordinals observe bootstrap, source loading, mount and state measurement. Renderer state is a plain object owned by this isolated fixture. Exception output is limited to a class whitelist and numeric public renderer-check.cjs line/column from a string data descriptor, when available. Messages and raw stacks are never saved or printed; accessor descriptors are never invoked. The classifier passes 48 memory checks with getterReads0. This is not a layout pass.
+
+Execution remains one hidden/offscreen BrowserWindow with fresh isolated runtime/cache and nonpersistent partition, file/data/about requests only, and a 90-second stop. Existing profiles, private databases, live app, provider/backend, product writes, screenshots and browser-security overrides are excluded. V2 requires separate source review and execution approval; native maximum/narrow validation follows an independently approved layout change.

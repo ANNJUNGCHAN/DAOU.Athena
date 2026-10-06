@@ -100,7 +100,7 @@ def test_chart_reload_uses_verified_arguments_and_opaque_delivery_correlation():
     assert "plan_token" not in metadata
 
 
-def test_chart_reload_preserves_explicit_dataset_correlation_and_ignores_other_surfaces():
+def test_chart_reload_preserves_explicit_dataset_correlation_and_keeps_other_surfaces_uncorrelated():
     payload = RenderPlanRequest(
         plan_token="fixture-plan", delivery_id="c" * 32,
         dataset_id="existing-dataset", item_id="existing-chart", ordinal=2,
@@ -110,7 +110,10 @@ def test_chart_reload_preserves_explicit_dataset_correlation_and_ignores_other_s
     assert _correlation(payload) == {
         "dataset_id": "existing-dataset", "item_id": "existing-chart", "ordinal": 2,
     }
+    arguments = {"stk_cd": "005930"}
     for kind in ("table", "facts", "compound", "event"):
-        assert _chart_reload_metadata(kind, payload, {"stk_cd": "005930"}) == {}
+        other_metadata = _chart_reload_metadata(kind, payload, arguments)
+        assert other_metadata == {"operation_args": arguments}
+        assert other_metadata["operation_args"] is not arguments
     uncorrelated = RenderPlanRequest(plan_token="fixture-plan")
     assert "correlation" not in _chart_reload_metadata("chart", uncorrelated, {})

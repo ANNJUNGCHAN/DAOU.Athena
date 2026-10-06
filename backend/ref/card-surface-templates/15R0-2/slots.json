@@ -309,12 +309,11 @@
       "table": null,
       "mapping_id": "base:0U",
       "f": "10",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 2,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -338,13 +337,14 @@
       "table": null,
       "mapping_id": "base:0U",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
-        "precision": 2,
-        "tone": "change"
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": "s006",
       "collapse_group": null,
@@ -401,12 +401,11 @@
       "table": null,
       "mapping_id": "base:0U",
       "f": "10",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 2,
+        "kind": "number",
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -430,13 +429,14 @@
       "table": null,
       "mapping_id": "base:0U",
       "f": "11",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
-        "precision": 2,
-        "tone": "change"
+        "precision": 0,
+        "tone": "change",
+        "suffix": "원"
       },
       "paired_with": "s009",
       "collapse_group": null,
@@ -859,10 +859,11 @@
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -887,7 +888,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -981,10 +982,11 @@
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1009,7 +1011,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -1103,10 +1105,11 @@
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1131,7 +1134,7 @@
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -1360,14 +1363,20 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "302",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "stk_nm"
+        }
+      ],
       "kor": "종목명",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 VI 테이블 '종목' 열"
+      "dup_note": "정본 귀속 2UHM-1 VI 테이블 '종목' 열",
+      "row_index": 0
     },
     {
       "slot_id": "s044",
@@ -1383,7 +1392,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "9001",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "stk_cd"
+        }
+      ],
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -1393,7 +1407,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s045",
@@ -1408,13 +1423,19 @@
       "anchor": null,
       "table": null,
       "mapping_id": "base:1h",
-      "f": "9068",
-      "alt_mappings": null,
-      "kor": "VI발동구분",
+      "f": "1225",
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "viaplc_tp"
+        }
+      ],
+      "kor": "VI적용구분",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s046",
@@ -1458,7 +1479,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "1221",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "motn_pric"
+        }
+      ],
       "kor": "VI발동가격",
       "format": {
         "unit": "text",
@@ -1470,7 +1496,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 '발동가' 열"
+      "dup_note": "정본 귀속 2UHM-1 '발동가' 열",
+      "row_index": 0
     },
     {
       "slot_id": "s048",
@@ -1486,7 +1513,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "1238",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "static_dispty_rt"
+        }
+      ],
       "kor": "괴리율 정적",
       "format": {
         "unit": "percent",
@@ -1503,7 +1535,8 @@
           "f": "1489",
           "kor": "VI발동가 등락율"
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s049",
@@ -1526,7 +1559,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 '상태' 열"
+      "dup_note": "정본 귀속 2UHM-1 '상태' 열",
+      "row_index": 0
     },
     {
       "slot_id": "s050",
@@ -1554,7 +1588,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 '발동 시간' 열"
+      "dup_note": "정본 귀속 2UHM-1 '발동 시간' 열",
+      "row_index": 0
     },
     {
       "slot_id": "s051",
@@ -1570,14 +1605,20 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "302",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "stk_nm"
+        }
+      ],
       "kor": "종목명",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 VI 테이블 '종목' 열"
+      "dup_note": "정본 귀속 2UHM-1 VI 테이블 '종목' 열",
+      "row_index": 1
     },
     {
       "slot_id": "s052",
@@ -1593,7 +1634,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "9001",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "stk_cd"
+        }
+      ],
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -1604,7 +1650,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s053",
@@ -1619,14 +1666,20 @@
       "anchor": null,
       "table": null,
       "mapping_id": "base:1h",
-      "f": "9068",
-      "alt_mappings": null,
-      "kor": "VI발동구분",
+      "f": "1225",
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "viaplc_tp"
+        }
+      ],
+      "kor": "VI적용구분",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 1
     },
     {
       "slot_id": "s054",
@@ -1670,7 +1723,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "1221",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "motn_pric"
+        }
+      ],
       "kor": "VI발동가격",
       "format": {
         "unit": "text",
@@ -1682,7 +1740,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 '발동가' 열"
+      "dup_note": "정본 귀속 2UHM-1 '발동가' 열",
+      "row_index": 1
     },
     {
       "slot_id": "s056",
@@ -1698,7 +1757,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "1239",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "dynm_dispty_rt"
+        }
+      ],
       "kor": "괴리율 동적",
       "format": {
         "unit": "percent",
@@ -1715,7 +1779,8 @@
           "f": "1489",
           "kor": "VI발동가 등락율"
         }
-      ]
+      ],
+      "row_index": 1
     },
     {
       "slot_id": "s057",
@@ -1738,7 +1803,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 '상태' 열"
+      "dup_note": "정본 귀속 2UHM-1 '상태' 열",
+      "row_index": 1
     },
     {
       "slot_id": "s058",
@@ -1766,7 +1832,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 '발동 시간' 열"
+      "dup_note": "정본 귀속 2UHM-1 '발동 시간' 열",
+      "row_index": 1
     },
     {
       "slot_id": "s059",
@@ -1782,14 +1849,20 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "302",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "stk_nm"
+        }
+      ],
       "kor": "종목명",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 VI 테이블 '종목' 열"
+      "dup_note": "정본 귀속 2UHM-1 VI 테이블 '종목' 열",
+      "row_index": 2
     },
     {
       "slot_id": "s060",
@@ -1805,7 +1878,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "9001",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "stk_cd"
+        }
+      ],
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -1816,7 +1894,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s061",
@@ -1831,14 +1910,20 @@
       "anchor": null,
       "table": null,
       "mapping_id": "base:1h",
-      "f": "9068",
-      "alt_mappings": null,
-      "kor": "VI발동구분",
+      "f": "1225",
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "viaplc_tp"
+        }
+      ],
+      "kor": "VI적용구분",
       "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s062",
@@ -1882,7 +1967,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "1221",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "motn_pric"
+        }
+      ],
       "kor": "VI발동가격",
       "format": {
         "unit": "text",
@@ -1894,7 +1984,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 '발동가' 열"
+      "dup_note": "정본 귀속 2UHM-1 '발동가' 열",
+      "row_index": 2
     },
     {
       "slot_id": "s064",
@@ -1910,7 +2001,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "1238",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "static_dispty_rt"
+        }
+      ],
       "kor": "괴리율 정적",
       "format": {
         "unit": "percent",
@@ -1928,7 +2024,8 @@
           "kor": "VI발동가 등락율"
         }
       ],
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 2
     },
     {
       "slot_id": "s065",
@@ -1951,7 +2048,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 '상태' 열"
+      "dup_note": "정본 귀속 2UHM-1 '상태' 열",
+      "row_index": 2
     },
     {
       "slot_id": "s066",
@@ -1967,7 +2065,12 @@
       "table": null,
       "mapping_id": "base:1h",
       "f": "1224",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10054",
+          "f": "virelis_time"
+        }
+      ],
       "kor": "VI해제시각",
       "format": {
         "unit": "time",
@@ -1979,7 +2082,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "정본 귀속 2UHM-1 '10:20:44 해제'"
+      "dup_note": "정본 귀속 2UHM-1 '10:20:44 해제'",
+      "row_index": 2
     },
     {
       "slot_id": "s067",

@@ -1,0 +1,51 @@
+{
+  "status": "REQUEST_CHANGES",
+  "candidatePins": {
+    "json": "91a2e592594be1607849dfbc88b838fe70a522c2ec7f18add2c274b9775b0031",
+    "html": "e867d23806cd02df6a8ad7d011e292ec59fb7c77c6faa2cb613c09bcbd7b3d5c"
+  },
+  "checks": {
+    "oldRootKeysPreserved": 28,
+    "rows": 19,
+    "allActualIdsNull": true,
+    "oldHtmlAllBytesPreserved": true,
+    "cutoffs": {
+      "previous": 977,
+      "current": 996
+    },
+    "safeLedgerPhaseTimeWindowMatch": true,
+    "runtimeHashesComparison": "NOT_COMPARED: earlier safe projection omitted underlying hash key mapping; no inferred provenance"
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "status": "REQUEST_CHANGES",
+      "rows": [
+        995,
+        996
+      ],
+      "reason": "These are repeated observations of the same failed request with no resubmit, but call_status remains failed. Use not_run for these view-only rows and retain original failed-request context separately; preserve original ledger."
+    },
+    {
+      "id": "R2",
+      "status": "REQUEST_CHANGES",
+      "rows": [
+        981
+      ],
+      "reason": "981 verifies the lower boundary only. Narrow the shared units/layout scope note to unit fit at 979/982 and lower-boundary fit at 981."
+    },
+    {
+      "id": "R3",
+      "status": "REQUEST_CHANGES",
+      "rows": [
+        985,
+        990
+      ],
+      "reason": "These horizontal endpoint views verify final columns, not final rows. Replace the last-column/row wording with final-column-only scope."
+    }
+  ],
+  "pixelValidation": "NOT_RUN_BROWSER_FILE_PROTOCOL_POLICY_BLOCK",
+  "productWrites": 0,
+  "nativeRun": false,
+  "privateExports": 0
+}

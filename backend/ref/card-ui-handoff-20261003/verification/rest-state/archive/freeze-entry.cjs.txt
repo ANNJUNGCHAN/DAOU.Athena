@@ -1,0 +1,13 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const browserPath=path.join(__dirname,'browser.js');let browser=fs.readFileSync(browserPath,'utf8');
+const anchor=" if(providerInvocations)issues.push('forbidden-provider-invoke');";
+assert(browser.includes(anchor));browser=browser.replace(anchor,` const requiredGlyphAvailable=['header','message',...(button?['action']:[])].every(role=>glyphs.some(glyph=>glyph.role===role));
+ if(!requiredGlyphAvailable)issues.push('required-glyph-unavailable');
+ if(card!==mountedIdentity)issues.push('same-dom-failed');
+ const retainedDataCount=grid.querySelectorAll('.card[data-dataset-id]:not([data-screen-state])').length;
+ if(retainedDataCount!==(currentEntry.normal||currentEntry.retained?1:0))issues.push('retained-data-count-mismatch');
+${anchor}`);
+browser=browser.replace('viewport-unused-token','viewport-unused-token').replace('geometry,glyphs,interaction,minHeight','geometry,glyphs,requiredGlyphAvailable,interaction,minHeight');fs.writeFileSync(browserPath,browser);
+const runPath=path.join(__dirname,'run.cjs');let run=fs.readFileSync(runPath,'utf8');const old='timedOut=true;if(win&&!win.isDestroyed())win.destroy();app.exit(2);';assert(run.includes(old));run=run.replace(old,"timedOut=true;fs.writeFileSync(path.join(out,'run-error.json'),JSON.stringify({pid:process.pid,category:'FixtureTimeout',timedOut:true,rawErrorExcluded:true}));if(win&&!win.isDestroyed())win.destroy();app.exit(2);");fs.writeFileSync(runPath,run);
+const finalizePath=path.join(__dirname,'finalize.cjs');let finalize=fs.readFileSync(finalizePath,'utf8');finalize=finalize.replace("['AUTHOR-PREPARATION.md','EXECUTION-PROPOSAL.json','finalize.cjs']","['AUTHOR-PREPARATION.md','EXECUTION-PROPOSAL.json','finalize.cjs','freeze-entry.cjs']");fs.writeFileSync(finalizePath,finalize);
+require('./prepare.cjs');require('./finalize.cjs');

@@ -1,0 +1,45 @@
+const fs=require('fs'),path=require('path'),crypto=require('crypto'),assert=require('assert/strict'),vm=require('vm');
+const root="C:\\Projects\\DAOU.Athena",author="C:\\Projects\\DAOU.Athena\\.omc\\artifacts\\card-ui-audit\\account-context983-992-candidate";
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const read=n=>fs.readFileSync(path.join(author,n));
+assert.equal(sha(read('AUTHOR-FREEZE.json')),'9a26b72405208c820869a9c9935910e500a3d41f9269e1693b0f9ab0dd9c4b44');
+const frozen=JSON.parse(read('AUTHOR-FREEZE.json'));
+for(const [name,pin] of Object.entries(frozen.files)) assert.equal(sha(read(name)),pin,name);
+const original=fs.readFileSync("C:\\Projects\\DAOU.Athena\\.omc\\artifacts\\card-ui-audit\\account-context983-992-independent\\postinstall\\baseline-board-mount.js",'utf8'),candidate=fs.readFileSync(path.join(root,'app/lib/board-mount.js'),'utf8');
+const patch=JSON.parse(read('patch.json'));
+assert.equal(sha(original),patch.originalSha256);assert.equal(sha(candidate),patch.candidateSha256);
+let inverse=candidate;
+for(const edit of patch.edits.slice().reverse()){assert.equal(inverse.split(edit.after).length,2);inverse=inverse.replace(edit.after,edit.before);}
+assert.equal(inverse,original);
+const run=(name,output)=>{let source=read(name).toString();source=source.replace("const root = path.resolve(__dirname, '../../../..');",`const root = ${JSON.stringify(root)};`);
+source=source.replace("path.join(__dirname, 'app/lib/board-mount.js')",`path.join(${JSON.stringify(root)}, 'app/lib/board-mount.js')`);
+source=source.replaceAll("path.join(__dirname, 'consumer-result.json')",`path.join(${JSON.stringify(__dirname)}, 'consumer-result.json')`).replaceAll("path.join(__dirname, 'contract-owner-result.json')",`path.join(${JSON.stringify(__dirname)}, 'contract-owner-result.json')`);
+if(output) source=source.replace("console.log(JSON.stringify(receipt));",output);
+source=source.replace("const original = fs.readFileSync(path.join(root, 'app/lib/board-mount.js'), 'utf8');","const original = fs.readFileSync(\"C:\\\\Projects\\\\DAOU.Athena\\\\.omc\\\\artifacts\\\\card-ui-audit\\\\account-context983-992-independent\\\\postinstall\\\\baseline-board-mount.js\", 'utf8');");
+vm.runInNewContext(source,{require,console,__dirname,Buffer},{filename:name});};
+run('consumer-check.cjs');run('contract-owner-check.cjs');
+let extra=read('consumer-check.cjs').toString();
+extra=extra.slice(0,extra.indexOf('const receipt ='))+`
+let additional=0;
+for(const board of ['2SCE-1','133H-2']) {
+ const x=account(board,[['수신 대기',true],['—',true]]); fixed.updateAccountDetailSections(x.surface);
+ assert.equal(x.note().hidden,false); assert.equal(x.note().textContent,'미제공 항목은 —로 표시됩니다'); additional+=2;
+ x.section.valueNodes[0].textContent='—'; fixed.updateAccountDetailSections(x.surface);
+ assert.equal(x.note().textContent,'제공된 데이터가 없습니다'); assert.equal(x.section.classList.contains('bs-account-empty-section'),true); additional+=2;
+ x.section.valueNodes[0].textContent='0원';x.section.valueNodes[0].dataset.missing='false'; fixed.updateAccountDetailSections(x.surface);
+ assert.equal(x.note().textContent,'미제공 항목은 —로 표시됩니다');assert.equal(x.section.classList.contains('bs-account-empty-section'),false);additional+=2;
+ x.section.valueNodes[1].textContent='수신 대기';fixed.updateAccountDetailSections(x.surface);assert.equal(x.note().hidden,true);additional++;
+ assert.equal(x.section.children.filter(n=>n.classList.contains('bs-account-empty-note')).length,1);additional++;
+ const y=account(board,[['—',false],['0원',false]]);fixed.updateAccountDetailSections(y.surface);assert.equal(y.note(),null);additional++;
+}
+const y=scroll('133H-2');fixed.applyResponsiveHooks(y.surface);y.owner.clientWidth=560;y.owner.scrollWidth=844;fixed.relaxOverflowRows(y.surface);
+assert.equal(y.hints()[0].style.display,'block');additional++;
+y.owner.scrollWidth=560;fixed.relaxOverflowRows(y.surface);assert.equal(y.hints()[0].style.display,'none');additional++;
+console.log(JSON.stringify({additionalChecks:additional,status:'PASS'}));
+`;
+extra=extra.replace("const root = path.resolve(__dirname, '../../../..');",`const root = ${JSON.stringify(root)};`).replace("path.join(__dirname, 'app/lib/board-mount.js')",`path.join(${JSON.stringify(root)}, 'app/lib/board-mount.js')`);
+extra=extra.replace("const original = fs.readFileSync(path.join(root, 'app/lib/board-mount.js'), 'utf8');","const original = fs.readFileSync(\"C:\\\\Projects\\\\DAOU.Athena\\\\.omc\\\\artifacts\\\\card-ui-audit\\\\account-context983-992-independent\\\\postinstall\\\\baseline-board-mount.js\", 'utf8');");
+vm.runInNewContext(extra,{require,console,__dirname,Buffer},{filename:'independent-extra.cjs'});
+assert.equal(sha(fs.readFileSync(path.join(root,'app/lib/board-mount.js'))),patch.candidateSha256);
+const eol=s=>({crlf:(s.match(/\r\n/g)||[]).length,bareLF:(s.match(/(?<!\r)\n/g)||[]).length});
+fs.writeFileSync(path.join(__dirname,'AUDIT-RESULT.json'),JSON.stringify({status:'PASS',freeze:sha(read('AUTHOR-FREEZE.json')),candidate:sha(candidate),baseline:sha(original),frozenFiles:Object.keys(frozen.files).length,inverseByteExact:true,eol:{baseline:eol(original),candidate:eol(candidate)},authorConsumerChecks:64,additionalConsumerChecks:20,productWrites:0,nativeRun:false,providerRun:false},null,2)+'\n');

@@ -1257,18 +1257,9 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "name",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_nm"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_nm",
+      "alt_mappings": [],
       "kor": "업종명",
       "format": null,
       "paired_with": null,
@@ -1291,22 +1282,9 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "code",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_cd"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_cd"
-        },
-        {
-          "mapping_id": "base:ka10101",
-          "f": "group"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_cd",
+      "alt_mappings": [],
       "kor": "코드",
       "format": {
         "unit": "text",
@@ -1370,26 +1348,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1413,23 +1379,10 @@
       },
       "mapping_id": "base:ka20003",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pred_pre"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -1456,36 +1409,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "flu_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "flu_rt"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pre_smbol"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -1541,22 +1465,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "14"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "14"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1580,24 +1496,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_snapshot",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래량",
       "format": {
         "unit": "shares",
@@ -1627,36 +1526,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "rising",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "252"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상승",
       "format": {
         "unit": "text",
@@ -1718,44 +1588,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "upl",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "251"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "detail:ka20009:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상한",
       "format": {
         "unit": "text",
@@ -1805,7 +1638,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "wght",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "비중",
       "format": {
         "unit": "percent",
@@ -1833,18 +1666,9 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "name",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_nm"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_nm",
+      "alt_mappings": [],
       "kor": "업종명",
       "format": null,
       "paired_with": null,
@@ -1869,18 +1693,9 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "code",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_cd"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_cd"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_cd",
+      "alt_mappings": [],
       "kor": "코드",
       "format": {
         "unit": "text",
@@ -1940,26 +1755,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1985,23 +1788,10 @@
       },
       "mapping_id": "base:ka20003",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pred_pre"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -2030,36 +1820,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "flu_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "flu_rt"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pre_smbol"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -2091,22 +1852,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "14"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "14"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2132,24 +1885,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_snapshot",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래량",
       "format": {
         "unit": "shares",
@@ -2181,36 +1917,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "rising",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "252"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상승",
       "format": {
         "unit": "text",
@@ -2242,44 +1949,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "upl",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "251"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "detail:ka20009:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상한",
       "format": {
         "unit": "text",
@@ -2311,7 +1981,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "wght",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "비중",
       "format": {
         "unit": "percent",
@@ -2341,18 +2011,9 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "name",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_nm"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_nm",
+      "alt_mappings": [],
       "kor": "업종명",
       "format": null,
       "paired_with": null,
@@ -2377,18 +2038,9 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "code",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_cd"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_cd"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_cd",
+      "alt_mappings": [],
       "kor": "코드",
       "format": {
         "unit": "text",
@@ -2448,26 +2100,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2493,23 +2133,10 @@
       },
       "mapping_id": "base:ka20003",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pred_pre"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -2538,36 +2165,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "flu_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "flu_rt"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pre_smbol"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -2599,22 +2197,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "14"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "14"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -2640,24 +2230,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_snapshot",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래량",
       "format": {
         "unit": "shares",
@@ -2689,36 +2262,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "rising",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "252"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상승",
       "format": {
         "unit": "text",
@@ -2750,44 +2294,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "upl",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "251"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "detail:ka20009:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상한",
       "format": {
         "unit": "text",
@@ -2819,7 +2326,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "wght",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "비중",
       "format": {
         "unit": "percent",
@@ -2849,18 +2356,9 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "name",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_nm"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_nm",
+      "alt_mappings": [],
       "kor": "업종명",
       "format": null,
       "paired_with": null,
@@ -2885,18 +2383,9 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "code",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_cd"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_cd"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_cd",
+      "alt_mappings": [],
       "kor": "코드",
       "format": {
         "unit": "text",
@@ -2956,26 +2445,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3001,23 +2478,10 @@
       },
       "mapping_id": "base:ka20003",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pred_pre"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -3046,36 +2510,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "flu_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "flu_rt"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pre_smbol"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -3107,22 +2542,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "14"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "14"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3148,24 +2575,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_snapshot",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래량",
       "format": {
         "unit": "shares",
@@ -3197,36 +2607,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "rising",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "252"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상승",
       "format": {
         "unit": "text",
@@ -3258,44 +2639,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "upl",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "251"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "detail:ka20009:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상한",
       "format": {
         "unit": "text",
@@ -3327,7 +2671,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "wght",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "비중",
       "format": {
         "unit": "percent",
@@ -3357,18 +2701,9 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "name",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_nm"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_nm",
+      "alt_mappings": [],
       "kor": "업종명",
       "format": null,
       "paired_with": null,
@@ -3393,18 +2728,9 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "code",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_cd"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_cd"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_cd",
+      "alt_mappings": [],
       "kor": "코드",
       "format": {
         "unit": "text",
@@ -3464,26 +2790,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3509,23 +2823,10 @@
       },
       "mapping_id": "base:ka20003",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pred_pre"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -3554,36 +2855,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "flu_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "flu_rt"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pre_smbol"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -3615,22 +2887,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "14"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "14"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -3656,24 +2920,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_snapshot",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래량",
       "format": {
         "unit": "shares",
@@ -3705,36 +2952,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "rising",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "252"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상승",
       "format": {
         "unit": "text",
@@ -3766,44 +2984,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "upl",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "251"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "detail:ka20009:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상한",
       "format": {
         "unit": "text",
@@ -3835,7 +3016,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "wght",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "비중",
       "format": {
         "unit": "percent",
@@ -3865,18 +3046,9 @@
         "row": "5",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "name",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_nm"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_nm"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_nm",
+      "alt_mappings": [],
       "kor": "업종명",
       "format": null,
       "paired_with": null,
@@ -3901,18 +3073,9 @@
         "row": "5",
         "col": 0
       },
-      "mapping_id": "base:ka10101",
-      "f": "code",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stk_cd"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "inds_cd"
-        }
-      ],
+      "mapping_id": "base:ka20003",
+      "f": "stk_cd",
+      "alt_mappings": [],
       "kor": "코드",
       "format": {
         "unit": "text",
@@ -3972,26 +3135,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "10"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "cur_prc"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4017,23 +3168,10 @@
       },
       "mapping_id": "base:ka20003",
       "f": "pred_pre",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "11"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pred_pre"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "전일대비",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -4062,36 +3200,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "flu_rt",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "12"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "flu_rt"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "pre_sig"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "25"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "pre_smbol"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "등락률",
       "format": {
         "unit": "percent",
@@ -4123,22 +3232,14 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "14"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "14"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4164,24 +3265,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0J",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "13"
-        },
-        {
-          "mapping_id": "base:ka10051",
-          "f": "trde_qty"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_snapshot",
-          "f": "trde_qty"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "거래량",
       "format": {
         "unit": "shares",
@@ -4213,36 +3297,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "rising",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "252"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상승",
       "format": {
         "unit": "text",
@@ -4274,44 +3329,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "upl",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0U",
-          "f": "251"
-        },
-        {
-          "mapping_id": "detail:ka20001:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "detail:ka20009:market_breadth",
-          "f": "upl"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "stdns"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "fall"
-        },
-        {
-          "mapping_id": "base:ka20003",
-          "f": "lst"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "253"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "255"
-        },
-        {
-          "mapping_id": "base:0U",
-          "f": "254"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "상한",
       "format": {
         "unit": "text",
@@ -4343,7 +3361,7 @@
       },
       "mapping_id": "base:ka20003",
       "f": "wght",
-      "alt_mappings": null,
+      "alt_mappings": [],
       "kor": "비중",
       "format": {
         "unit": "percent",
@@ -4623,10 +3641,11 @@
       "alt_mappings": null,
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4650,15 +3669,11 @@
         {
           "mapping_id": "detail:ka20001:market_snapshot",
           "f": "pred_pre"
-        },
-        {
-          "mapping_id": "detail:ka20001:intraday_history",
-          "f": "pred_pre_sig_n"
         }
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -4842,10 +3857,11 @@
       "alt_mappings": null,
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -4875,7 +3891,7 @@
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5053,10 +4069,11 @@
       "alt_mappings": null,
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5086,7 +4103,7 @@
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5288,10 +4305,11 @@
       ],
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5315,15 +4333,11 @@
         {
           "mapping_id": "detail:ka20009:market_snapshot",
           "f": "pred_pre"
-        },
-        {
-          "mapping_id": "detail:ka20009:daily_history",
-          "f": "pred_pre_sig_n"
         }
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5520,10 +4534,11 @@
       ],
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5553,7 +4568,7 @@
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5732,10 +4747,11 @@
       ],
       "kor": "현재가n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -5765,7 +4781,7 @@
       ],
       "kor": "전일대비n",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": true,
         "precision": 2,
         "tone": "change"
@@ -5978,18 +4994,13 @@
       "table": null,
       "mapping_id": "detail:ka20001:market_snapshot",
       "f": "cur_prc",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:ka20001:market_snapshot",
-          "f": "pred_pre_sig"
-        }
-      ],
+      "alt_mappings": [],
       "kor": "현재가",
       "format": {
-        "unit": "percent",
-        "sign": false,
+        "kind": "number",
         "precision": 2,
-        "tone": "change"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6050,10 +5061,11 @@
       ],
       "kor": "거래대금",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": false,
-        "precision": 1,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6217,38 +5229,15 @@
         {
           "mapping_id": "base:0J",
           "f": "16"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "17"
-        },
-        {
-          "mapping_id": "base:0J",
-          "f": "18"
-        },
-        {
-          "mapping_id": "detail:ka20001:session_range",
-          "f": "high_pric"
-        },
-        {
-          "mapping_id": "detail:ka20001:session_range",
-          "f": "low_pric"
-        },
-        {
-          "mapping_id": "detail:ka20009:session_range",
-          "f": "high_pric"
-        },
-        {
-          "mapping_id": "detail:ka20009:session_range",
-          "f": "low_pric"
         }
       ],
       "kor": "시가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6338,22 +5327,15 @@
         {
           "mapping_id": "detail:ka20009:fifty_two_week_range",
           "f": "52wk_lwst_pric"
-        },
-        {
-          "mapping_id": "detail:ka20001:fifty_two_week_range",
-          "f": "52wk_hgst_pric"
-        },
-        {
-          "mapping_id": "detail:ka20009:fifty_two_week_range",
-          "f": "52wk_hgst_pric"
         }
       ],
       "kor": "52주최저가",
       "format": {
-        "unit": "date",
+        "kind": "number",
         "sign": false,
         "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6386,42 +5368,17 @@
       "anchor": null,
       "table": null,
       "mapping_id": "detail:ka20001:fifty_two_week_range",
-      "f": "52wk_hgst_pric_dt",
+      "f": "52wk_lwst_pric_dt",
       "alt_mappings": [
         {
           "mapping_id": "detail:ka20009:fifty_two_week_range",
-          "f": "52wk_hgst_pric_dt"
-        },
-        {
-          "mapping_id": "detail:ka20001:fifty_two_week_range",
-          "f": "52wk_hgst_pric_pre_rt"
-        },
-        {
-          "mapping_id": "detail:ka20001:fifty_two_week_range",
           "f": "52wk_lwst_pric_dt"
-        },
-        {
-          "mapping_id": "detail:ka20001:fifty_two_week_range",
-          "f": "52wk_lwst_pric_pre_rt"
-        },
-        {
-          "mapping_id": "detail:ka20009:fifty_two_week_range",
-          "f": "52wk_hgst_pric_pre_rt"
-        },
-        {
-          "mapping_id": "detail:ka20009:fifty_two_week_range",
-          "f": "52wk_lwst_pric_dt"
-        },
-        {
-          "mapping_id": "detail:ka20009:fifty_two_week_range",
-          "f": "52wk_lwst_pric_pre_rt"
         }
       ],
       "kor": "52주최고가일",
       "format": {
-        "unit": "percent",
+        "kind": "date",
         "sign": false,
-        "precision": 2,
         "tone": "neutral"
       },
       "paired_with": "s156",

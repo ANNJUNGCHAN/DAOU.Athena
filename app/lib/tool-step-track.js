@@ -28,7 +28,8 @@ function applyToolStep(steps, step) {
   // 규칙). "실패"로 쓰면 사용자가 기능이 없는 줄 안다 — 실제로 그렇게 읽혔다.
   // 숨기지도 않는다: 무슨 일이 있었는지는 말한다.
   const retrying = !!step.retrying;
-  const successLabel = done && rawLabel === '카드 그리는 중' ? '카드 표시 완료' : rawLabel;
+  const successLabel = done && rawLabel === '카드 그리는 중' ? '카드 표시 완료'
+    : (done && typeof rawLabel === 'string' ? rawLabel.replace(/^처리 중(?= · |$)/, '처리 완료') : rawLabel);
   const label = error ? `${rawLabel} 실패` : (retrying ? `${rawLabel} — 서버 연결 대기` : successLabel);
   // 부제(2026-09-07, Paper 보드 10 「한미반도체 · 관계 7 · 이력 3」) — 무엇을 몇 개
   // 받았는지는 결과에만 있어서 라벨로는 못 만든다. 라벨과 같은 규율로 여기서만

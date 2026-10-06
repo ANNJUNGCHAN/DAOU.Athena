@@ -547,17 +547,35 @@ class GrokAcpSession {
       }
     };
     let firstRead = true;
+    let lastTimeoutError = null;
     while (true) {
-      if (!firstRead && this._now() >= deadlineAt) throw this._mcpConnectionError();
+      if (!firstRead && this._now() >= deadlineAt) throw lastTimeoutError || this._mcpConnectionError();
       firstRead = false;
-      const catalog = await readCatalog();
+      let catalog;
+      try {
+        catalog = await readCatalog();
+      } catch (error) {
+        const remainingMs = deadlineAt - this._now();
+        if (error.code === 'MCP_READINESS_PROTOCOL' && error.causeCode === 'RPC_TIMEOUT'
+          && remainingMs > 0 && !proc.dead && !this._stopped) {
+          lastTimeoutError = error;
+          await this._waitForMcpRetry(
+            proc,
+            Math.min(Math.max(1, Number(pollMs) || 1), remainingMs),
+          );
+          if (this._now() >= deadlineAt) throw error;
+          continue;
+        }
+        throw error;
+      }
+      if (lastTimeoutError && this._now() >= deadlineAt) throw lastTimeoutError;
       if (this._mcpCatalogReady(catalog, names)) return;
       const status = this._mcpCatalogStatus(catalog, names);
       if (status === 'needs_auth' || status === 'unavailable') {
         throw this._mcpConnectionError(status, status === 'needs_auth' ? null : 'MCP_UNAVAILABLE');
       }
       if (!this._mcpCatalogInitializing(catalog, names) || this._now() >= deadlineAt) {
-        throw this._mcpConnectionError(status);
+        throw lastTimeoutError || this._mcpConnectionError(status);
       }
       const remainingMs = deadlineAt - this._now();
       await this._waitForMcpRetry(
@@ -859,6 +877,7 @@ class GrokAcpSession {
       finalResult: null,
       stderr: extra.stderr || '',
       diagnostics: extra.diagnostics || null,
+      code: reason && reason.code != null ? reason.code : null,
       causeCode: reason && reason.causeCode != null ? reason.causeCode : null,
       metrics,
       ...metrics,

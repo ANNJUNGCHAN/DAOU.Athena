@@ -12,7 +12,7 @@ const FALLTHROUGH_STATUSES = new Set([
   'missing_arguments',
   'arguments_required',
 ]);
-const RECENT_MONTH_CHART_QUERY_RE = /^(?:[가-힣A-Za-z0-9][가-힣A-Za-z0-9._&()·-]{0,39}\s+)?최근\s*(\d+)\s*개월\s+(?:일봉\s+)?차트(?:와\s*거래량)?(?:를|은|는)?(?:\s*(?:보여\s*줘|보여\s*주세요|보여줘요))?[.!?]?$/u;
+const RECENT_MONTH_CHART_QUERY_RE = /^(?:(?:(?:코스피|코스닥)\s+종합\s+지수|[가-힣A-Za-z0-9][가-힣A-Za-z0-9._&()·-]{0,39})\s+)?최근\s*(\d+)\s*개월\s+(?:일봉\s+)?차트(?:와\s*거래량)?(?:를|은|는)?(?:\s*(?:보여\s*줘|보여\s*주세요|보여줘요))?[.!?]?$/u;
 
 function kstDateParts(date) {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -307,6 +307,7 @@ async function runSelectorFastPath({
         reason: status,
         preflight: {
           status,
+          ...(body.code === 'INVALID_ARGUMENTS' ? { code: body.code } : {}),
           catalog_version: body.catalog_version || null,
           suggested_intent: body.suggested_intent || null,
           candidates: body.candidates.slice(0, 3),
@@ -410,7 +411,7 @@ async function runSelectorFastPath({
     itemId,
     ordinal: 1,
     operationRef: verified.operation_ref,
-    operationArgs: verified.operation_args || {},
+    operationArgs: verified.envelope.operation_args || verified.operation_args || {},
     canvasType: verified.canvas_type,
     envelope: displayEnvelope,
     requestStartedAt: startedAt,

@@ -1444,20 +1444,23 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": false
+      "display_dup": false,
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s045",
@@ -1475,12 +1478,12 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1489,14 +1492,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": false,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s046",
@@ -1754,20 +1751,23 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s055",
@@ -1785,12 +1785,12 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1799,14 +1799,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s056",
@@ -2064,20 +2058,23 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s065",
@@ -2095,12 +2092,12 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2109,14 +2106,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s066",
@@ -2374,20 +2365,23 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s075",
@@ -2405,12 +2399,12 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2419,14 +2413,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s076",
@@ -2684,20 +2672,23 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s085",
@@ -2715,12 +2706,12 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2729,14 +2720,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s086",
@@ -2994,20 +2979,23 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s095",
@@ -3025,12 +3013,12 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3039,14 +3027,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s096",
@@ -3385,20 +3367,23 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s107",
@@ -3416,12 +3401,12 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3430,14 +3415,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s108",
@@ -3695,20 +3674,23 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "cur_prc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "현재가",
       "format": {
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s117",
@@ -3726,12 +3708,12 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka10034",
-      "f": "pred_pre",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "전일대비",
       "format": {
-        "unit": "percent",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3740,14 +3722,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "extra_fields": [
-        {
-          "mapping_id": "base:ka90003",
-          "f": "flu_rt",
-          "kor": "등락율",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "미지원 신용 목록과 종목이 일치하지 않는 외국인 순매수 가격; orphan 표시 차단"
     },
     {
       "slot_id": "s118",

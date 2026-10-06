@@ -87,7 +87,7 @@ test('YAML optimizer keeps its existing payload and coarsening', async () => {
   assert.deepEqual(Array.from(h.request().ascending), ['fast', 'slow']);
 });
 
-test('missing or invalid execution data opens the form with Korean guidance before any optimize request', async () => {
+test('missing or invalid execution data keeps visible optimization guidance before any request', async () => {
   for (const data of [
     { symbols: [], fromDt: '', toDt: '' },
     { symbols: ['005930', '000660'], fromDt: '20260101', toDt: '20260108' },
@@ -99,13 +99,10 @@ test('missing or invalid execution data opens the form with Korean guidance befo
     assert.equal(h.request(), undefined);
     const state = h.states.at(-1);
     assert.equal(state.view, 'design');
-    assert.equal(state.tab, 'design');
-    assert.equal(state.designTab, 'form');
+    assert.equal(state.tab, 'optimize');
     assert.equal(state.optimizeBusy, false);
-    assert.equal(state.optimizeError, '');
-    assert.ok(state.formErrors[0].includes('종목·기간'));
-    assert.ok(state.formErrors.length >= 2);
-    assert.ok(!state.formErrors.some(line => /ValidationError|진입 조건|청산 조건/.test(line)));
+    assert.ok(state.optimizeError.includes('종목·기간'));
+    assert.ok(!/ValidationError|진입 조건|청산 조건/.test(state.optimizeError));
     Object.assign(h.context.spec, { symbols: ['005930'], fromDt: '20260101', toDt: '20260108' });
     await h.context.runOptimize();
     assert.ok(h.request());

@@ -1,0 +1,868 @@
+{
+  "status": "PACKAGED_NOT_EXECUTED_NOT_INSTALLED",
+  "fileCount": 121,
+  "totalBytes": 9974789,
+  "archivedExactCopies": 111,
+  "portableAuthored": 10,
+  "datePriorAll36PngBytes": 8102366,
+  "dateIncludedPngCount": 4,
+  "excluded": [
+    "profiles",
+    "runtime caches",
+    "locks",
+    "DB",
+    "native screenshots",
+    "financial values",
+    "provider logs"
+  ],
+  "scope": [
+    "candidates",
+    "verification/date-axis",
+    "verification/rest-state"
+  ],
+  "checks": {
+    "shaAll": true,
+    "portableRunSyntax": true,
+    "portableLauncherSyntax": true,
+    "rendererExecution": false
+  },
+  "files": [
+    {
+      "path": "candidates/date-axis/candidate/app/lib/chart-card.js",
+      "sha256": "5d8c46389c95950083b34d7626a722f409d815b822cf105059ef198983d46e38",
+      "bytes": 50108,
+      "originalSource": "chart-date-axis-public-v3/candidate/app/lib/chart-card.js",
+      "originalSHA256": "5d8c46389c95950083b34d7626a722f409d815b822cf105059ef198983d46e38"
+    },
+    {
+      "path": "candidates/date-axis/candidate/app/lib/lightweight-charts-axis.mjs",
+      "sha256": "7ae82ad415d76d0e4926ac34b7711931a35ba9f28572639a1a12230569beac48",
+      "bytes": 197767,
+      "originalSource": "chart-date-axis-public-v3/candidate/app/lib/lightweight-charts-axis.mjs",
+      "originalSHA256": "7ae82ad415d76d0e4926ac34b7711931a35ba9f28572639a1a12230569beac48"
+    },
+    {
+      "path": "candidates/date-axis/candidate/app/lib/lightweight-charts-axis.LICENSE.txt",
+      "sha256": "70c9d5382506dd184465425c08a99ad9bd6d9ac1313c252968ba0b585e5ef823",
+      "bytes": 11347,
+      "originalSource": "chart-date-axis-public-v3/candidate/app/lib/lightweight-charts-axis.LICENSE.txt",
+      "originalSHA256": "70c9d5382506dd184465425c08a99ad9bd6d9ac1313c252968ba0b585e5ef823"
+    },
+    {
+      "path": "candidates/date-axis/candidate/app/lib/lightweight-charts-axis.NOTICE.txt",
+      "sha256": "0113d041489a7d311dc241018d213f2b16f7977f6def008def32c77d0afbde30",
+      "bytes": 638,
+      "originalSource": "chart-date-axis-public-v3/candidate/app/lib/lightweight-charts-axis.NOTICE.txt",
+      "originalSHA256": "0113d041489a7d311dc241018d213f2b16f7977f6def008def32c77d0afbde30"
+    },
+    {
+      "path": "candidates/date-axis/baseline/app/lib/chart-card.js",
+      "sha256": "42c7b6df0441260b47f8ccc3056b06893fe22f6631394c1984561a0ea999b084",
+      "bytes": 50163,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-card.js",
+      "originalSHA256": "42c7b6df0441260b47f8ccc3056b06893fe22f6631394c1984561a0ea999b084"
+    },
+    {
+      "path": "candidates/date-axis/baseline/upstream/lightweight-charts.standalone.production.mjs",
+      "sha256": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f",
+      "bytes": 197827,
+      "originalSource": "chart-date-axis-public-v3/snapshot/node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs",
+      "originalSHA256": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f"
+    },
+    {
+      "path": "candidates/rest-state/baseline/app/canvas.js",
+      "sha256": "4d91c637c5411c0d50adb1583261d3caf41e088452cbb98a35026674803e1940",
+      "bytes": 371398,
+      "originalSource": "rest-timeout995-candidate/baseline/app/canvas.js",
+      "originalSHA256": "4d91c637c5411c0d50adb1583261d3caf41e088452cbb98a35026674803e1940"
+    },
+    {
+      "path": "candidates/rest-state/candidate/app/canvas.js",
+      "sha256": "350864a5cd618f850a2d7425e80f92d9e02eb520759cad49769cc9e7451c6be7",
+      "bytes": 371442,
+      "originalSource": "rest-timeout995-candidate/candidate/app/canvas.js",
+      "originalSHA256": "350864a5cd618f850a2d7425e80f92d9e02eb520759cad49769cc9e7451c6be7"
+    },
+    {
+      "path": "candidates/rest-state/baseline/app/canvas.css",
+      "sha256": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f",
+      "bytes": 90879,
+      "originalSource": "rest-timeout995-candidate/baseline/app/canvas.css",
+      "originalSHA256": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f"
+    },
+    {
+      "path": "candidates/rest-state/candidate/app/canvas.css",
+      "sha256": "99a2e40042c38292191d84989bc2cc7472fa442c736a5a97b7d722ff6aebeb99",
+      "bytes": 91591,
+      "originalSource": "rest-timeout995-candidate/candidate/app/canvas.css",
+      "originalSHA256": "99a2e40042c38292191d84989bc2cc7472fa442c736a5a97b7d722ff6aebeb99"
+    },
+    {
+      "path": "candidates/date-axis/evidence/ACTUAL-CONSUMER-RESULT.json",
+      "sha256": "3565de704a127ababc34351103baa9584cfc3631196c5523e45c694ea3337614",
+      "bytes": 1606,
+      "originalSource": "chart-date-axis-public-v3/ACTUAL-CONSUMER-RESULT.json",
+      "originalSHA256": "3565de704a127ababc34351103baa9584cfc3631196c5523e45c694ea3337614"
+    },
+    {
+      "path": "candidates/date-axis/evidence/AUTHOR-PREPARATION.md",
+      "sha256": "f21edd5476b1d8d640b7311832cc857976c62d6b9d1c33f5cea95c4606878f9b",
+      "bytes": 5212,
+      "originalSource": "chart-date-axis-public-v3/AUTHOR-PREPARATION.md",
+      "originalSHA256": "f21edd5476b1d8d640b7311832cc857976c62d6b9d1c33f5cea95c4606878f9b"
+    },
+    {
+      "path": "candidates/date-axis/evidence/CONSUMER-SOURCE.json",
+      "sha256": "a3ba96ae9aa1401ed552b48cbf05d266c92989554daf60a4ee4da8f835c63b5b",
+      "bytes": 1575,
+      "originalSource": "chart-date-axis-public-v3/CONSUMER-SOURCE.json",
+      "originalSHA256": "a3ba96ae9aa1401ed552b48cbf05d266c92989554daf60a4ee4da8f835c63b5b"
+    },
+    {
+      "path": "candidates/date-axis/evidence/PREPARATION-FAILURE.md",
+      "sha256": "2ee17009dd1ed5a0c66dcaedc60a22846ecb5f8c9aeede35cf274d01f8f872d1",
+      "bytes": 343,
+      "originalSource": "chart-date-axis-public-v3/PREPARATION-FAILURE.md",
+      "originalSHA256": "2ee17009dd1ed5a0c66dcaedc60a22846ecb5f8c9aeede35cf274d01f8f872d1"
+    },
+    {
+      "path": "candidates/date-axis/evidence/PREPARED-MANIFEST.json",
+      "sha256": "67f7db0fc973c2ccf1a0ea5cdba577c706cf3985785b00d1e5cff8075228df87",
+      "bytes": 16577,
+      "originalSource": "chart-date-axis-public-v3/PREPARED-MANIFEST.json",
+      "originalSHA256": "67f7db0fc973c2ccf1a0ea5cdba577c706cf3985785b00d1e5cff8075228df87"
+    },
+    {
+      "path": "candidates/date-axis/evidence/SOURCE-RECEIPT.json",
+      "sha256": "8e6b8182a42f9a539da84648ccb25926a1db25fec88b2b5b83aa772613dec42c",
+      "bytes": 3468,
+      "originalSource": "chart-date-axis-public-v3/SOURCE-RECEIPT.json",
+      "originalSHA256": "8e6b8182a42f9a539da84648ccb25926a1db25fec88b2b5b83aa772613dec42c"
+    },
+    {
+      "path": "candidates/rest-state/evidence/AUTHOR-FREEZE.json",
+      "sha256": "7c65ef33f7afac389b8a8eeec0817a174fff454a88bc65b7180b832828b6648d",
+      "bytes": 2530,
+      "originalSource": "rest-timeout995-candidate/AUTHOR-FREEZE.json",
+      "originalSHA256": "7c65ef33f7afac389b8a8eeec0817a174fff454a88bc65b7180b832828b6648d"
+    },
+    {
+      "path": "candidates/rest-state/evidence/AUTHOR-PREPARATION.md",
+      "sha256": "b710131c01311a351f8efb66d7a1d2f91a5649889b6ff3754df6731816fc02f4",
+      "bytes": 3747,
+      "originalSource": "rest-timeout995-candidate/AUTHOR-PREPARATION.md",
+      "originalSHA256": "b710131c01311a351f8efb66d7a1d2f91a5649889b6ff3754df6731816fc02f4"
+    },
+    {
+      "path": "candidates/rest-state/evidence/PREPARATION-FAILURE.md",
+      "sha256": "540352b15fdf2d36d4ebc38d433def8b2caf322659f0f148ab17f6a01e5e5bab",
+      "bytes": 592,
+      "originalSource": "rest-timeout995-candidate/PREPARATION-FAILURE.md",
+      "originalSHA256": "540352b15fdf2d36d4ebc38d433def8b2caf322659f0f148ab17f6a01e5e5bab"
+    },
+    {
+      "path": "candidates/date-axis/review/chart-date-axis-public-v3-independent/ACTUAL-CONSUMER-RESULT.json",
+      "sha256": "3565de704a127ababc34351103baa9584cfc3631196c5523e45c694ea3337614",
+      "bytes": 1606,
+      "originalSource": "chart-date-axis-public-v3-independent/ACTUAL-CONSUMER-RESULT.json",
+      "originalSHA256": "3565de704a127ababc34351103baa9584cfc3631196c5523e45c694ea3337614"
+    },
+    {
+      "path": "candidates/date-axis/review/chart-date-axis-public-v3-independent/AUDIT-RESULT.json",
+      "sha256": "fcf0d6d7043eaccf7837d0cd431837fc4c944163bee108e541ce7a1bd3424e4d",
+      "bytes": 38636,
+      "originalSource": "chart-date-axis-public-v3-independent/AUDIT-RESULT.json",
+      "originalSHA256": "fcf0d6d7043eaccf7837d0cd431837fc4c944163bee108e541ce7a1bd3424e4d"
+    },
+    {
+      "path": "candidates/date-axis/review/chart-date-axis-public-v3-independent/INDEPENDENT-REVIEW.md",
+      "sha256": "eeec1f0340870e95df7b7924649eefc2d8b16253274eab631fd0c407265117db",
+      "bytes": 7412,
+      "originalSource": "chart-date-axis-public-v3-independent/INDEPENDENT-REVIEW.md",
+      "originalSHA256": "eeec1f0340870e95df7b7924649eefc2d8b16253274eab631fd0c407265117db"
+    },
+    {
+      "path": "candidates/date-axis/review/chart-date-axis-public-v2-independent/ACTUAL-AUDIT-RESULT.json",
+      "sha256": "c3b9166ac157d4937ccfdf39b8128721f73c6266d78b80fad44b1c56f3360f63",
+      "bytes": 18533,
+      "originalSource": "chart-date-axis-public-v2-independent/ACTUAL-AUDIT-RESULT.json",
+      "originalSHA256": "c3b9166ac157d4937ccfdf39b8128721f73c6266d78b80fad44b1c56f3360f63"
+    },
+    {
+      "path": "candidates/date-axis/review/chart-date-axis-public-v2-independent/ACTUAL-REVIEW.md",
+      "sha256": "f7487eaea6c3e57f6ceef9d0597544e6857d36077f5bde2727db99e3a413c8b1",
+      "bytes": 3696,
+      "originalSource": "chart-date-axis-public-v2-independent/ACTUAL-REVIEW.md",
+      "originalSHA256": "f7487eaea6c3e57f6ceef9d0597544e6857d36077f5bde2727db99e3a413c8b1"
+    },
+    {
+      "path": "candidates/date-axis/review/chart-date-axis-public-v2-independent/AUDIT-RESULT.json",
+      "sha256": "d9a5fbc2030b46a591aa7dd4af85d3e5ec2d1439e61fa0b858d9248c1cb71bfa",
+      "bytes": 1069,
+      "originalSource": "chart-date-axis-public-v2-independent/AUDIT-RESULT.json",
+      "originalSHA256": "d9a5fbc2030b46a591aa7dd4af85d3e5ec2d1439e61fa0b858d9248c1cb71bfa"
+    },
+    {
+      "path": "candidates/date-axis/review/chart-date-axis-public-v2-independent/INDEPENDENT-REVIEW.md",
+      "sha256": "791e3be5d4dc8eb6d3c894141829b2c2b53772d9fc7ccf66430f2f810817b823",
+      "bytes": 6862,
+      "originalSource": "chart-date-axis-public-v2-independent/INDEPENDENT-REVIEW.md",
+      "originalSHA256": "791e3be5d4dc8eb6d3c894141829b2c2b53772d9fc7ccf66430f2f810817b823"
+    },
+    {
+      "path": "verification/date-axis/prior-v2/baseline/report.json",
+      "sha256": "d20d19ff40fa4d685ff1ab4859c12b1e33161e754b3196f4f8fcc2748b91426d",
+      "bytes": 47600,
+      "originalSource": "chart-date-axis-public-v2/runs/baseline/report.json",
+      "originalSHA256": "d20d19ff40fa4d685ff1ab4859c12b1e33161e754b3196f4f8fcc2748b91426d"
+    },
+    {
+      "path": "verification/date-axis/prior-v2/candidate/report.json",
+      "sha256": "38b100550d223b3a58bea11e6bc109d227f1204fce4f1375b4589aed3d5d2ae8",
+      "bytes": 46904,
+      "originalSource": "chart-date-axis-public-v2/runs/candidate/report.json",
+      "originalSHA256": "38b100550d223b3a58bea11e6bc109d227f1204fce4f1375b4589aed3d5d2ae8"
+    },
+    {
+      "path": "verification/date-axis/prior-v2/baseline/month-narrow-middle.png",
+      "sha256": "ebe074d40cc413d356a029c93fafb000aa82fbccd612d09436be08eb918f04f4",
+      "bytes": 171084,
+      "originalSource": "chart-date-axis-public-v2/runs/baseline/month-narrow-middle.png",
+      "originalSHA256": "ebe074d40cc413d356a029c93fafb000aa82fbccd612d09436be08eb918f04f4"
+    },
+    {
+      "path": "verification/date-axis/prior-v2/baseline/week-max-latest.png",
+      "sha256": "56c96d926dbd48ded1d1f9a08cb014e934b0396ad35805c7d603ea89daee4286",
+      "bytes": 236097,
+      "originalSource": "chart-date-axis-public-v2/runs/baseline/week-max-latest.png",
+      "originalSHA256": "56c96d926dbd48ded1d1f9a08cb014e934b0396ad35805c7d603ea89daee4286"
+    },
+    {
+      "path": "verification/date-axis/prior-v2/candidate/month-narrow-middle.png",
+      "sha256": "e909e78507e1997d428bf426a97f6d4441324ccbeb3737bd6667b94aee9cd6f9",
+      "bytes": 171114,
+      "originalSource": "chart-date-axis-public-v2/runs/candidate/month-narrow-middle.png",
+      "originalSHA256": "e909e78507e1997d428bf426a97f6d4441324ccbeb3737bd6667b94aee9cd6f9"
+    },
+    {
+      "path": "verification/date-axis/prior-v2/candidate/week-max-latest.png",
+      "sha256": "1383eb361b44cd607f43c84f2aa3aff10c48c79a163de22579b9aaa0373f514b",
+      "bytes": 236208,
+      "originalSource": "chart-date-axis-public-v2/runs/candidate/week-max-latest.png",
+      "originalSHA256": "1383eb361b44cd607f43c84f2aa3aff10c48c79a163de22579b9aaa0373f514b"
+    },
+    {
+      "path": "verification/date-axis/archive/ORIGINAL-MANIFEST.json",
+      "sha256": "67f7db0fc973c2ccf1a0ea5cdba577c706cf3985785b00d1e5cff8075228df87",
+      "bytes": 16577,
+      "originalSource": "chart-date-axis-public-v3/PREPARED-MANIFEST.json",
+      "originalSHA256": "67f7db0fc973c2ccf1a0ea5cdba577c706cf3985785b00d1e5cff8075228df87"
+    },
+    {
+      "path": "verification/date-axis/snapshot/styles/tokens.css",
+      "sha256": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2",
+      "bytes": 9179,
+      "originalSource": "chart-date-axis-public-v3/snapshot/styles/tokens.css",
+      "originalSHA256": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2"
+    },
+    {
+      "path": "verification/date-axis/snapshot/styles/ui-kit.css",
+      "sha256": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039",
+      "bytes": 10358,
+      "originalSource": "chart-date-axis-public-v3/snapshot/styles/ui-kit.css",
+      "originalSHA256": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039"
+    },
+    {
+      "path": "verification/date-axis/snapshot/canvas.css",
+      "sha256": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f",
+      "bytes": 90879,
+      "originalSource": "chart-date-axis-public-v3/snapshot/canvas.css",
+      "originalSHA256": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f"
+    },
+    {
+      "path": "verification/date-axis/snapshot/chat.css",
+      "sha256": "14fde712c881f763b71bff5bfe54003fc283aafa285b957e2b2caa4af2c25898",
+      "bytes": 82636,
+      "originalSource": "chart-date-axis-public-v3/snapshot/chat.css",
+      "originalSHA256": "14fde712c881f763b71bff5bfe54003fc283aafa285b957e2b2caa4af2c25898"
+    },
+    {
+      "path": "verification/date-axis/snapshot/styles/card-kinds.css",
+      "sha256": "e9222d06a906db7eaf23d80904460001ccc27878e7d2d4c03e1777aeea137849",
+      "bytes": 12832,
+      "originalSource": "chart-date-axis-public-v3/snapshot/styles/card-kinds.css",
+      "originalSHA256": "e9222d06a906db7eaf23d80904460001ccc27878e7d2d4c03e1777aeea137849"
+    },
+    {
+      "path": "verification/date-axis/snapshot/styles/integrated-cards.css",
+      "sha256": "907cd1f4a10bd1fd3e681fddc355d04679328fe45980fbfd1dc583c361fcb295",
+      "bytes": 14051,
+      "originalSource": "chart-date-axis-public-v3/snapshot/styles/integrated-cards.css",
+      "originalSHA256": "907cd1f4a10bd1fd3e681fddc355d04679328fe45980fbfd1dc583c361fcb295"
+    },
+    {
+      "path": "verification/date-axis/snapshot/styles/board-surface.css",
+      "sha256": "1e5d9c8d8ac212138f3c7302e14f300af2b994de503d58af0e6fcc67bdd7a05d",
+      "bytes": 132209,
+      "originalSource": "chart-date-axis-public-v3/snapshot/styles/board-surface.css",
+      "originalSHA256": "1e5d9c8d8ac212138f3c7302e14f300af2b994de503d58af0e6fcc67bdd7a05d"
+    },
+    {
+      "path": "verification/date-axis/snapshot/styles/card-component-target.css",
+      "sha256": "079c9f61d79842b5a54ee97ad32c59a501d604200d6bd6ed2158550b5a8f17e0",
+      "bytes": 1417,
+      "originalSource": "chart-date-axis-public-v3/snapshot/styles/card-component-target.css",
+      "originalSHA256": "079c9f61d79842b5a54ee97ad32c59a501d604200d6bd6ed2158550b5a8f17e0"
+    },
+    {
+      "path": "verification/date-axis/snapshot/styles/canvas-tabs.css",
+      "sha256": "f2b0f2dd9e4aed631aca57ffea4a154bdf0ab7c918218446eb5ea228d85677c3",
+      "bytes": 3565,
+      "originalSource": "chart-date-axis-public-v3/snapshot/styles/canvas-tabs.css",
+      "originalSHA256": "f2b0f2dd9e4aed631aca57ffea4a154bdf0ab7c918218446eb5ea228d85677c3"
+    },
+    {
+      "path": "verification/date-axis/snapshot/shell.css",
+      "sha256": "baad1c0c2491e8b9f871c9979857162bc42624057f79f89d3b0776f420ef0b2b",
+      "bytes": 234921,
+      "originalSource": "chart-date-axis-public-v3/snapshot/shell.css",
+      "originalSHA256": "baad1c0c2491e8b9f871c9979857162bc42624057f79f89d3b0776f420ef0b2b"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/ui-kit.js",
+      "sha256": "7ca826c3a9e3196370192952b50eebb61a085f18a9805a25807e475595596b4b",
+      "bytes": 7834,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/ui-kit.js",
+      "originalSHA256": "7ca826c3a9e3196370192952b50eebb61a085f18a9805a25807e475595596b4b"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/facts-card.js",
+      "sha256": "4b4ed269f0486ec673737f087288419ec2fb37e2494be2661966080540df2404",
+      "bytes": 4154,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/facts-card.js",
+      "originalSHA256": "4b4ed269f0486ec673737f087288419ec2fb37e2494be2661966080540df2404"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/card-primitives.js",
+      "sha256": "a5f4f514653b872cc2d3c313e77dc48a8ba1af98c722a3ef9455e24bcb6ee2d7",
+      "bytes": 15117,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/card-primitives.js",
+      "originalSHA256": "a5f4f514653b872cc2d3c313e77dc48a8ba1af98c722a3ef9455e24bcb6ee2d7"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/card-kinds.js",
+      "sha256": "1b8c5c75f93c2419c230924613c3465a7f4eeab097d21bf7ebdc84ddc82d2ae7",
+      "bytes": 1486,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/card-kinds.js",
+      "originalSHA256": "1b8c5c75f93c2419c230924613c3465a7f4eeab097d21bf7ebdc84ddc82d2ae7"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-templates.index.generated.js",
+      "sha256": "6900ee747381edcf9f317a9d6b093270f125df77b75776683419d5af3d7701b3",
+      "bytes": 12877,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-templates.index.generated.js",
+      "originalSHA256": "6900ee747381edcf9f317a9d6b093270f125df77b75776683419d5af3d7701b3"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-templates.CC-03.generated.js",
+      "sha256": "325580d73d9e8d50c177f2c1418c1a574255f0c907d736ca9946d244141c6cec",
+      "bytes": 4285187,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-templates.CC-03.generated.js",
+      "originalSHA256": "325580d73d9e8d50c177f2c1418c1a574255f0c907d736ca9946d244141c6cec"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-template-registry.js",
+      "sha256": "33dc3079d4c54726a63b22c27c4813e21238013af254a8ff9d4d2c8da627e020",
+      "bytes": 17572,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-template-registry.js",
+      "originalSHA256": "33dc3079d4c54726a63b22c27c4813e21238013af254a8ff9d4d2c8da627e020"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-format.js",
+      "sha256": "3882ea2db5cd9c0c8d6a8b116b166287f861a3070962a03e30e03c86fd3cc07a",
+      "bytes": 18020,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-format.js",
+      "originalSHA256": "3882ea2db5cd9c0c8d6a8b116b166287f861a3070962a03e30e03c86fd3cc07a"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-display-policy-data.js",
+      "sha256": "283fb40a4b87f57c8d98b83698af4d908989b5b0c2907d7241d6a0cfbad7fd5e",
+      "bytes": 556533,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-display-policy-data.js",
+      "originalSHA256": "283fb40a4b87f57c8d98b83698af4d908989b5b0c2907d7241d6a0cfbad7fd5e"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-display-policy.js",
+      "sha256": "9b6790b4f03ccdb8e2aa2dd8a3d523563875b6201365cca9be88fb3e1a8a9d4d",
+      "bytes": 10450,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-display-policy.js",
+      "originalSHA256": "9b6790b4f03ccdb8e2aa2dd8a3d523563875b6201365cca9be88fb3e1a8a9d4d"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-static-graphics-data.js",
+      "sha256": "a35d1ddaf5779a8c453d387b3409c5ff629b6800fc886754f7bae1d3adb33b23",
+      "bytes": 8031,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-static-graphics-data.js",
+      "originalSHA256": "a35d1ddaf5779a8c453d387b3409c5ff629b6800fc886754f7bae1d3adb33b23"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-etf-period.js",
+      "sha256": "e135b36d5c4f5dc6e6cd0125bc7cd478219f08da64b0c3563cb7c2faabcbaa1a",
+      "bytes": 4222,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-etf-period.js",
+      "originalSHA256": "e135b36d5c4f5dc6e6cd0125bc7cd478219f08da64b0c3563cb7c2faabcbaa1a"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-flow-layout.js",
+      "sha256": "60ed7578afb23655db7b913a4d2a7802ca3cbaf17fa9fdf3f333d35ff3e9d01a",
+      "bytes": 15669,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-flow-layout.js",
+      "originalSHA256": "60ed7578afb23655db7b913a4d2a7802ca3cbaf17fa9fdf3f333d35ff3e9d01a"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-ranking-result.js",
+      "sha256": "3d6f17bf33d9e33a15438abdd95ee26f9188e1cdf397778e641ac2f6c321e8c0",
+      "bytes": 5842,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-ranking-result.js",
+      "originalSHA256": "3d6f17bf33d9e33a15438abdd95ee26f9188e1cdf397778e641ac2f6c321e8c0"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-popover-layout.js",
+      "sha256": "1cf5f59a7b165799cc4fe75a2e872c64085c4e5516e6ba71e80ef3b1ef642a80",
+      "bytes": 3778,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-popover-layout.js",
+      "originalSHA256": "1cf5f59a7b165799cc4fe75a2e872c64085c4e5516e6ba71e80ef3b1ef642a80"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-gold-quote.js",
+      "sha256": "8e5508912cfd3abe93a9b8fa38d5a9d912a0f004f214f59adcd198c245200259",
+      "bytes": 7651,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-gold-quote.js",
+      "originalSHA256": "8e5508912cfd3abe93a9b8fa38d5a9d912a0f004f214f59adcd198c245200259"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/board-mount.js",
+      "sha256": "b81a12d2d57efab1fb65af3cf6332baa3d7c07168bcc1738e5223b5578960b2c",
+      "bytes": 288206,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/board-mount.js",
+      "originalSHA256": "b81a12d2d57efab1fb65af3cf6332baa3d7c07168bcc1738e5223b5578960b2c"
+    },
+    {
+      "path": "verification/date-axis/snapshot/styles/board-surface.candidate.css",
+      "sha256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5",
+      "bytes": 134404,
+      "originalSource": "chart-date-axis-public-v3/snapshot/styles/board-surface.candidate.css",
+      "originalSHA256": "103b59d0d49d535a1e17feda5d0ec7d82ba61070810521a78b3dfbebc6a915d5"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-resample.js",
+      "sha256": "f5dae3c972eba724eff746f6270e65d9b66116aa61a2c70f0a56547da26f5d91",
+      "bytes": 4651,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-resample.js",
+      "originalSHA256": "f5dae3c972eba724eff746f6270e65d9b66116aa61a2c70f0a56547da26f5d91"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-indicators.js",
+      "sha256": "7eb77408819040449737fe6d8d9d51ee8512bd33aae2f02179f039a9718e29a7",
+      "bytes": 22608,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-indicators.js",
+      "originalSHA256": "7eb77408819040449737fe6d8d9d51ee8512bd33aae2f02179f039a9718e29a7"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-indicator-registry.js",
+      "sha256": "d5ffec0a595b209d72ee511cc1e6da870abe54150b4b532d9e57d4b415dcaccb",
+      "bytes": 12551,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-indicator-registry.js",
+      "originalSHA256": "d5ffec0a595b209d72ee511cc1e6da870abe54150b4b532d9e57d4b415dcaccb"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-indicator-panel.js",
+      "sha256": "d17a399dccf20e2d9cc28008070d0e85ebacfca377a2f98dfbd595ccbe1c671a",
+      "bytes": 9348,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-indicator-panel.js",
+      "originalSHA256": "d17a399dccf20e2d9cc28008070d0e85ebacfca377a2f98dfbd595ccbe1c671a"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-toolbar.js",
+      "sha256": "1ee10f193e6ce1b86c3380b9843c80bfc860dc222ad5e59cdea8960ba7d0ef6e",
+      "bytes": 11188,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-toolbar.js",
+      "originalSHA256": "1ee10f193e6ce1b86c3380b9843c80bfc860dc222ad5e59cdea8960ba7d0ef6e"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-indicator-render.js",
+      "sha256": "3e4e210b29440449b27683a640569389a3a612da53182682b1454fdfd24285b0",
+      "bytes": 24132,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-indicator-render.js",
+      "originalSHA256": "3e4e210b29440449b27683a640569389a3a612da53182682b1454fdfd24285b0"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-volume-profile.js",
+      "sha256": "4613e017205001a1285a9a47aee8bc0016dd7ab3ae480bdc89628ea7ca03b0a3",
+      "bytes": 2661,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-volume-profile.js",
+      "originalSHA256": "4613e017205001a1285a9a47aee8bc0016dd7ab3ae480bdc89628ea7ca03b0a3"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-authoring-store.js",
+      "sha256": "30cd6c7e0c28990a6a60011e43d8a41a6b16be20ae42ee8447e2888bb4b733c1",
+      "bytes": 4648,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-authoring-store.js",
+      "originalSHA256": "30cd6c7e0c28990a6a60011e43d8a41a6b16be20ae42ee8447e2888bb4b733c1"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-drawings.js",
+      "sha256": "a8e454d32ff9b5962dd72a181876e52265e6e46a1120708a2e98101d7599e807",
+      "bytes": 9809,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-drawings.js",
+      "originalSHA256": "a8e454d32ff9b5962dd72a181876e52265e6e46a1120708a2e98101d7599e807"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-tick-fold.js",
+      "sha256": "67fb8f5387949cdf3b48f81e1215570733ba1f20fb2989874870eb612e1c5f68",
+      "bytes": 3079,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-tick-fold.js",
+      "originalSHA256": "67fb8f5387949cdf3b48f81e1215570733ba1f20fb2989874870eb612e1c5f68"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/aits-chart-panel.js",
+      "sha256": "0ba66a91b0a326fb8f7af0d2b0aa6392ce3372b616c5e90b8d2e6a912d142163",
+      "bytes": 20923,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/aits-chart-panel.js",
+      "originalSHA256": "0ba66a91b0a326fb8f7af0d2b0aa6392ce3372b616c5e90b8d2e6a912d142163"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-card.js",
+      "sha256": "42c7b6df0441260b47f8ccc3056b06893fe22f6631394c1984561a0ea999b084",
+      "bytes": 50163,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-card.js",
+      "originalSHA256": "42c7b6df0441260b47f8ccc3056b06893fe22f6631394c1984561a0ea999b084"
+    },
+    {
+      "path": "verification/date-axis/snapshot/node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs",
+      "sha256": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f",
+      "bytes": 197827,
+      "originalSource": "chart-date-axis-public-v3/snapshot/node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs",
+      "originalSHA256": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/chart-card.candidate.js",
+      "sha256": "5d8c46389c95950083b34d7626a722f409d815b822cf105059ef198983d46e38",
+      "bytes": 50108,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/chart-card.candidate.js",
+      "originalSHA256": "5d8c46389c95950083b34d7626a722f409d815b822cf105059ef198983d46e38"
+    },
+    {
+      "path": "verification/date-axis/snapshot/lib/lightweight-charts-axis.mjs",
+      "sha256": "7ae82ad415d76d0e4926ac34b7711931a35ba9f28572639a1a12230569beac48",
+      "bytes": 197767,
+      "originalSource": "chart-date-axis-public-v3/snapshot/lib/lightweight-charts-axis.mjs",
+      "originalSHA256": "7ae82ad415d76d0e4926ac34b7711931a35ba9f28572639a1a12230569beac48"
+    },
+    {
+      "path": "verification/date-axis/archive/prepare-v3.cjs.txt",
+      "sha256": "b99c684bfc4dc82108aef101e9f12bb5c55d509ddfed47ee715fe9351d5bd15b",
+      "bytes": 7044,
+      "originalSource": "chart-date-axis-public-v3/prepare-v3.cjs",
+      "originalSHA256": "b99c684bfc4dc82108aef101e9f12bb5c55d509ddfed47ee715fe9351d5bd15b"
+    },
+    {
+      "path": "verification/date-axis/browser.js",
+      "sha256": "528167a5d42f6a2803d8d0a8b66195d547f87eeb2b2fc630b24476daec58f5f8",
+      "bytes": 5138,
+      "originalSource": "chart-date-axis-public-v3/browser.js",
+      "originalSHA256": "528167a5d42f6a2803d8d0a8b66195d547f87eeb2b2fc630b24476daec58f5f8"
+    },
+    {
+      "path": "verification/date-axis/archive/run.cjs.txt",
+      "sha256": "2570c11cc924ea322fd1fcba8343acdf3556acdfbe48a87c32c7f634868e07ee",
+      "bytes": 3558,
+      "originalSource": "chart-date-axis-public-v3/run.cjs",
+      "originalSHA256": "2570c11cc924ea322fd1fcba8343acdf3556acdfbe48a87c32c7f634868e07ee"
+    },
+    {
+      "path": "verification/date-axis/baseline.html",
+      "sha256": "ac95e002ed7035d4414e7eac4967de7ec7a1b640f79b88b70306a9877059ec71",
+      "bytes": 69137,
+      "originalSource": "chart-date-axis-public-v3/baseline.html",
+      "originalSHA256": "ac95e002ed7035d4414e7eac4967de7ec7a1b640f79b88b70306a9877059ec71"
+    },
+    {
+      "path": "verification/date-axis/candidate.html",
+      "sha256": "b6997cb389bf64befa418ac81f827e3f160a3485429eecf3daa52cb8f864ea78",
+      "bytes": 69147,
+      "originalSource": "chart-date-axis-public-v3/candidate.html",
+      "originalSHA256": "b6997cb389bf64befa418ac81f827e3f160a3485429eecf3daa52cb8f864ea78"
+    },
+    {
+      "path": "verification/date-axis/archive/AUTHOR-PREPARATION.md",
+      "sha256": "f21edd5476b1d8d640b7311832cc857976c62d6b9d1c33f5cea95c4606878f9b",
+      "bytes": 5212,
+      "originalSource": "chart-date-axis-public-v3/AUTHOR-PREPARATION.md",
+      "originalSHA256": "f21edd5476b1d8d640b7311832cc857976c62d6b9d1c33f5cea95c4606878f9b"
+    },
+    {
+      "path": "verification/date-axis/archive/EXECUTION-PROPOSAL.md",
+      "sha256": "78202b8431cfb5ef7888c5719a463d5b1ca8bb3c54a212b646b48debc3d86cb2",
+      "bytes": 1079,
+      "originalSource": "chart-date-axis-public-v3/EXECUTION-PROPOSAL.md",
+      "originalSHA256": "78202b8431cfb5ef7888c5719a463d5b1ca8bb3c54a212b646b48debc3d86cb2"
+    },
+    {
+      "path": "verification/date-axis/archive/actual-consumer.cjs.txt",
+      "sha256": "a156b3305b592bb923dbea34b4ecb8595b67682d2ac8a5d586288dec19957238",
+      "bytes": 3448,
+      "originalSource": "chart-date-axis-public-v3/actual-consumer.cjs",
+      "originalSHA256": "a156b3305b592bb923dbea34b4ecb8595b67682d2ac8a5d586288dec19957238"
+    },
+    {
+      "path": "verification/date-axis/archive/ACTUAL-CONSUMER-RESULT.json",
+      "sha256": "3565de704a127ababc34351103baa9584cfc3631196c5523e45c694ea3337614",
+      "bytes": 1606,
+      "originalSource": "chart-date-axis-public-v3/ACTUAL-CONSUMER-RESULT.json",
+      "originalSHA256": "3565de704a127ababc34351103baa9584cfc3631196c5523e45c694ea3337614"
+    },
+    {
+      "path": "verification/date-axis/archive/freeze.cjs.txt",
+      "sha256": "047042ee900f65a52c92792ac691950ff3c151d6820a08d18a3bdd86f21a85b1",
+      "bytes": 9234,
+      "originalSource": "chart-date-axis-public-v3/freeze.cjs",
+      "originalSHA256": "047042ee900f65a52c92792ac691950ff3c151d6820a08d18a3bdd86f21a85b1"
+    },
+    {
+      "path": "verification/date-axis/archive/discover-consumer.cjs.txt",
+      "sha256": "9563bbd40b42f75e5af7c7c17fbeced27dd6527605fde9ec2b919cab1b4f3c41",
+      "bytes": 1358,
+      "originalSource": "chart-date-axis-public-v3/discover-consumer.cjs",
+      "originalSHA256": "9563bbd40b42f75e5af7c7c17fbeced27dd6527605fde9ec2b919cab1b4f3c41"
+    },
+    {
+      "path": "verification/date-axis/archive/CONSUMER-SOURCE.json",
+      "sha256": "a3ba96ae9aa1401ed552b48cbf05d266c92989554daf60a4ee4da8f835c63b5b",
+      "bytes": 1575,
+      "originalSource": "chart-date-axis-public-v3/CONSUMER-SOURCE.json",
+      "originalSHA256": "a3ba96ae9aa1401ed552b48cbf05d266c92989554daf60a4ee4da8f835c63b5b"
+    },
+    {
+      "path": "verification/date-axis/archive/original-consumer.mjs",
+      "sha256": "c3b6de6d0252f93751ea0a0ba026ad2a1a9de1fc18c7bd76d3c8e0738c341a2f",
+      "bytes": 197865,
+      "originalSource": "chart-date-axis-public-v3/original-consumer.mjs",
+      "originalSHA256": "c3b6de6d0252f93751ea0a0ba026ad2a1a9de1fc18c7bd76d3c8e0738c341a2f"
+    },
+    {
+      "path": "verification/date-axis/archive/candidate-consumer.mjs",
+      "sha256": "1e68bfe50c5f20a3aa24c2eedca8cbc930a4de95b98c1a6725d25ac106f5e934",
+      "bytes": 197805,
+      "originalSource": "chart-date-axis-public-v3/candidate-consumer.mjs",
+      "originalSHA256": "1e68bfe50c5f20a3aa24c2eedca8cbc930a4de95b98c1a6725d25ac106f5e934"
+    },
+    {
+      "path": "verification/date-axis/archive/finalize-source-receipt.cjs.txt",
+      "sha256": "eed17f9d20edf6a28bb97b51a41f0770f57f76e96956c94d166edeee9fbd630a",
+      "bytes": 1261,
+      "originalSource": "chart-date-axis-public-v3/finalize-source-receipt.cjs",
+      "originalSHA256": "eed17f9d20edf6a28bb97b51a41f0770f57f76e96956c94d166edeee9fbd630a"
+    },
+    {
+      "path": "verification/date-axis/run.cjs",
+      "sha256": "98edb330d6780c88e35d477f37ba2b1cac0420192a351db7de3adbfaa95bbbf9",
+      "bytes": 3661,
+      "portableAuthored": true
+    },
+    {
+      "path": "verification/date-axis/launch.mjs",
+      "sha256": "6e86cc6d8e79c1ce9fc52a1439db23034d190075e2c703b0ddafe3227e8abb88",
+      "bytes": 1226,
+      "portableAuthored": true
+    },
+    {
+      "path": "verification/date-axis/PORTABLE-MANIFEST.json",
+      "sha256": "0dc730a307c601633e78707965c947ff74f2cb07d517da51abccfb067938b08b",
+      "bytes": 15892,
+      "portableAuthored": true
+    },
+    {
+      "path": "verification/date-axis/README.md",
+      "sha256": "db88e69a3216b05c6ccc25018d1fe81ea2a1801a299c5a1befc49481767a53e8",
+      "bytes": 1752,
+      "portableAuthored": true
+    },
+    {
+      "path": "verification/date-axis/.gitignore",
+      "sha256": "0a794f9d1f7c0a2595b8bac1b596ec35169ff7e6f5933d1311fd71a8e488a274",
+      "bytes": 50,
+      "portableAuthored": true
+    },
+    {
+      "path": "verification/rest-state/archive/ORIGINAL-MANIFEST.json",
+      "sha256": "cf910de759a54cbe2b3db0a2d6778932873cf5d384c7d9f9707486713f708bb5",
+      "bytes": 4181,
+      "originalSource": "rest-timeout995-fixture/PREPARED-MANIFEST.json",
+      "originalSHA256": "cf910de759a54cbe2b3db0a2d6778932873cf5d384c7d9f9707486713f708bb5"
+    },
+    {
+      "path": "verification/rest-state/snapshot/app/styles/tokens.css",
+      "sha256": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2",
+      "bytes": 9179,
+      "originalSource": "rest-timeout995-fixture/snapshot/app/styles/tokens.css",
+      "originalSHA256": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2"
+    },
+    {
+      "path": "verification/rest-state/snapshot/app/styles/ui-kit.css",
+      "sha256": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039",
+      "bytes": 10358,
+      "originalSource": "rest-timeout995-fixture/snapshot/app/styles/ui-kit.css",
+      "originalSHA256": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039"
+    },
+    {
+      "path": "verification/rest-state/snapshot/app/lib/ui-kit.js",
+      "sha256": "7ca826c3a9e3196370192952b50eebb61a085f18a9805a25807e475595596b4b",
+      "bytes": 7834,
+      "originalSource": "rest-timeout995-fixture/snapshot/app/lib/ui-kit.js",
+      "originalSHA256": "7ca826c3a9e3196370192952b50eebb61a085f18a9805a25807e475595596b4b"
+    },
+    {
+      "path": "verification/rest-state/snapshot/app/lib/integrated-card-surface.js",
+      "sha256": "bf04133c156e724d1dc4abd293979c837e43af1aeee6bd79b36c4fa482e62bb5",
+      "bytes": 19471,
+      "originalSource": "rest-timeout995-fixture/snapshot/app/lib/integrated-card-surface.js",
+      "originalSHA256": "bf04133c156e724d1dc4abd293979c837e43af1aeee6bd79b36c4fa482e62bb5"
+    },
+    {
+      "path": "verification/rest-state/snapshot/app/lib/canvas-layout.js",
+      "sha256": "8db24e94ec7cc9b02142d919f93a26dfece02a22993a916183c27817d6004713",
+      "bytes": 3543,
+      "originalSource": "rest-timeout995-fixture/snapshot/app/lib/canvas-layout.js",
+      "originalSHA256": "8db24e94ec7cc9b02142d919f93a26dfece02a22993a916183c27817d6004713"
+    },
+    {
+      "path": "verification/rest-state/snapshot/baseline/consumer.js",
+      "sha256": "3c4e104a743cf10ed9684e79c08a986f8d4c5cdf7fb2028b9f8be895aeabd999",
+      "bytes": 9497,
+      "originalSource": "rest-timeout995-fixture/snapshot/baseline/consumer.js",
+      "originalSHA256": "3c4e104a743cf10ed9684e79c08a986f8d4c5cdf7fb2028b9f8be895aeabd999"
+    },
+    {
+      "path": "verification/rest-state/snapshot/baseline/canvas.css",
+      "sha256": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f",
+      "bytes": 90879,
+      "originalSource": "rest-timeout995-fixture/snapshot/baseline/canvas.css",
+      "originalSHA256": "1c3dc901dca28eb0b9643361eb01fb23c8aa6e8e646621441135fe98bb77b11f"
+    },
+    {
+      "path": "verification/rest-state/baseline.html",
+      "sha256": "c7056d75fb386a05465ecc3b7fe213cbaab95a1b0f4689d403abbc0ce451d49d",
+      "bytes": 715,
+      "originalSource": "rest-timeout995-fixture/baseline.html",
+      "originalSHA256": "c7056d75fb386a05465ecc3b7fe213cbaab95a1b0f4689d403abbc0ce451d49d"
+    },
+    {
+      "path": "verification/rest-state/snapshot/candidate/consumer.js",
+      "sha256": "5a5976734482763e4e05d259a9cda451a86486fd30b6ea5933e5db656bc3424c",
+      "bytes": 9541,
+      "originalSource": "rest-timeout995-fixture/snapshot/candidate/consumer.js",
+      "originalSHA256": "5a5976734482763e4e05d259a9cda451a86486fd30b6ea5933e5db656bc3424c"
+    },
+    {
+      "path": "verification/rest-state/snapshot/candidate/canvas.css",
+      "sha256": "99a2e40042c38292191d84989bc2cc7472fa442c736a5a97b7d722ff6aebeb99",
+      "bytes": 91591,
+      "originalSource": "rest-timeout995-fixture/snapshot/candidate/canvas.css",
+      "originalSHA256": "99a2e40042c38292191d84989bc2cc7472fa442c736a5a97b7d722ff6aebeb99"
+    },
+    {
+      "path": "verification/rest-state/candidate.html",
+      "sha256": "45574458c09f3fa0def24922f5c5a70e6086cc63d4d6c85db0abce4f0cb76396",
+      "bytes": 717,
+      "originalSource": "rest-timeout995-fixture/candidate.html",
+      "originalSHA256": "45574458c09f3fa0def24922f5c5a70e6086cc63d4d6c85db0abce4f0cb76396"
+    },
+    {
+      "path": "verification/rest-state/environment.js",
+      "sha256": "60533c29c4f6bc33928cbc332ca9d54f55c40daab3e6d9cc0c1eacefdae81853",
+      "bytes": 756,
+      "originalSource": "rest-timeout995-fixture/environment.js",
+      "originalSHA256": "60533c29c4f6bc33928cbc332ca9d54f55c40daab3e6d9cc0c1eacefdae81853"
+    },
+    {
+      "path": "verification/rest-state/browser.js",
+      "sha256": "735d652c7a6e1aaf748ce7d175c1c02a7373b2767e7097059dc137fc91baccc8",
+      "bytes": 4555,
+      "originalSource": "rest-timeout995-fixture/browser.js",
+      "originalSHA256": "735d652c7a6e1aaf748ce7d175c1c02a7373b2767e7097059dc137fc91baccc8"
+    },
+    {
+      "path": "verification/rest-state/archive/run.cjs.txt",
+      "sha256": "21938ec72a3a4e3e0ae0d4dd21240d90ac47ae3526cb83ebc63562f2696b03f5",
+      "bytes": 4268,
+      "originalSource": "rest-timeout995-fixture/run.cjs",
+      "originalSHA256": "21938ec72a3a4e3e0ae0d4dd21240d90ac47ae3526cb83ebc63562f2696b03f5"
+    },
+    {
+      "path": "verification/rest-state/archive/prepare.cjs.txt",
+      "sha256": "b734f0815128933c3e1f378fd35719e6c9f8ae13864b6b3214fae7ec973d1191",
+      "bytes": 4222,
+      "originalSource": "rest-timeout995-fixture/prepare.cjs",
+      "originalSHA256": "b734f0815128933c3e1f378fd35719e6c9f8ae13864b6b3214fae7ec973d1191"
+    },
+    {
+      "path": "verification/rest-state/archive/AUTHOR-PREPARATION.md",
+      "sha256": "aa637bb71ad20219a07d596c2cb09ee8766aca23718d3152b96b54e008c4665a",
+      "bytes": 3953,
+      "originalSource": "rest-timeout995-fixture/AUTHOR-PREPARATION.md",
+      "originalSHA256": "aa637bb71ad20219a07d596c2cb09ee8766aca23718d3152b96b54e008c4665a"
+    },
+    {
+      "path": "verification/rest-state/archive/EXECUTION-PROPOSAL.json",
+      "sha256": "1dc092dbdf22a6dfd9450a2f1345db6af77763d328da06c157ae7a06af07fc77",
+      "bytes": 565,
+      "originalSource": "rest-timeout995-fixture/EXECUTION-PROPOSAL.json",
+      "originalSHA256": "1dc092dbdf22a6dfd9450a2f1345db6af77763d328da06c157ae7a06af07fc77"
+    },
+    {
+      "path": "verification/rest-state/archive/finalize.cjs.txt",
+      "sha256": "b5225fce7b5fe3d6bc5fe2cb188b5510f6c265cd41e64303c5fc44495db86cd4",
+      "bytes": 5613,
+      "originalSource": "rest-timeout995-fixture/finalize.cjs",
+      "originalSHA256": "b5225fce7b5fe3d6bc5fe2cb188b5510f6c265cd41e64303c5fc44495db86cd4"
+    },
+    {
+      "path": "verification/rest-state/archive/freeze-entry.cjs.txt",
+      "sha256": "20b0fe40611daced483c02ee8cea1a6b476a2c446a0b9a3b71a563a3bf321b95",
+      "bytes": 1901,
+      "originalSource": "rest-timeout995-fixture/freeze-entry.cjs",
+      "originalSHA256": "20b0fe40611daced483c02ee8cea1a6b476a2c446a0b9a3b71a563a3bf321b95"
+    },
+    {
+      "path": "verification/rest-state/run.cjs",
+      "sha256": "a0f315dc54e956d65ee92b143868a8fcc1a986f657857d199db228dedbef4728",
+      "bytes": 4321,
+      "portableAuthored": true
+    },
+    {
+      "path": "verification/rest-state/launch.mjs",
+      "sha256": "e65a8e8f52af2422fd370fa07037be6cc9bae156c3734d6abf1874ebd0d18706",
+      "bytes": 1227,
+      "portableAuthored": true
+    },
+    {
+      "path": "verification/rest-state/PORTABLE-MANIFEST.json",
+      "sha256": "a8c5d402f55975599a33b2250b4ba995a472cf739b3bd3e5443680e91b5b7e1a",
+      "bytes": 4300,
+      "portableAuthored": true
+    },
+    {
+      "path": "verification/rest-state/README.md",
+      "sha256": "c6b893a5db517f58ab1ba441c13da947ae78e499d2e1a8d2bd837f73346089c0",
+      "bytes": 1753,
+      "portableAuthored": true
+    },
+    {
+      "path": "verification/rest-state/.gitignore",
+      "sha256": "0a794f9d1f7c0a2595b8bac1b596ec35169ff7e6f5933d1311fd71a8e488a274",
+      "bytes": 50,
+      "portableAuthored": true
+    }
+  ]
+}

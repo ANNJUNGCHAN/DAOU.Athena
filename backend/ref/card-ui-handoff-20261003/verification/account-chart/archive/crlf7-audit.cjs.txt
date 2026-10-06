@@ -1,0 +1,14 @@
+const fs=require('fs'),path=require('path'),crypto=require('crypto'),assert=require('assert/strict'),cp=require('child_process');
+const root=path.resolve(__dirname,'../../../..'),dir=path.join(root,'.omc/artifacts/card-ui-audit/account-context-crlf7-candidate'),sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const receipt=JSON.parse(fs.readFileSync(path.join(dir,'AUTHOR-RECEIPT.json'))),before=fs.readFileSync(path.join(root,receipt.source)),after=fs.readFileSync(path.join(dir,'board-mount.js'));
+assert.equal(sha(before),receipt.baseline);assert.equal(sha(after),receipt.candidate);
+const lines=before.toString().split('\n');for(const number of receipt.changedLines){assert.ok(lines[number-1].endsWith('\r'));lines[number-1]=lines[number-1].slice(0,-1);}
+assert.equal(Buffer.compare(Buffer.from(lines.join('\n')),after),0);assert.equal(before.length-after.length,7);assert.equal(before.toString().replaceAll('\r\n','\n'),after.toString().replaceAll('\r\n','\n'));
+const run=args=>{const r=cp.spawnSync(args[0],args.slice(1),{cwd:root,encoding:'utf8'});return {args,status:r.status,stdout:r.stdout,stderr:r.stderr};};
+const syntax=run([process.execPath,'--check',path.join(dir,'board-mount.js')]);assert.equal(syntax.status,0);
+const head=cp.execFileSync('git',['show','HEAD:app/lib/board-mount.js'],{cwd:root});const headFile=path.join(__dirname,'HEAD-board-mount.js');fs.writeFileSync(headFile,head);
+const oldCheck=run(['git','diff','--no-index','--check',headFile,path.join(root,receipt.source)]),newCheck=run(['git','diff','--no-index','--check',headFile,path.join(dir,'board-mount.js')]);
+assert.match(oldCheck.stdout,/trailing whitespace/);assert.equal((oldCheck.stdout.match(/trailing whitespace/g)||[]).length,7);
+assert.equal(newCheck.stdout,'');assert.equal(newCheck.stderr,'');assert.equal(newCheck.status,1);
+assert.equal(sha(fs.readFileSync(path.join(root,receipt.source))),receipt.baseline);
+fs.writeFileSync(path.join(__dirname,'CRLF7-RESULT.json'),JSON.stringify({status:'PASS',baseline:sha(before),candidate:sha(after),receiptSha256:sha(fs.readFileSync(path.join(dir,'AUTHOR-RECEIPT.json'))),exactChangedLines:receipt.changedLines,removedBytes:7,allOtherBytesPreserved:true,semanticTextIdentical:true,syntax,oldDefaultCheck:oldCheck,newDefaultCheck:newCheck,productWrites:0},null,2)+'\n');console.log('CRLF7_EXACT_BYTES_SYNTAX_DEFAULT_WHITESPACE_PASS');

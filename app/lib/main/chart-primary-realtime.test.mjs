@@ -51,6 +51,28 @@ test('security target normalization preserves six-character derivative identitie
   assert.equal(normalizeSecurityTarget('A52M504'), 'A52M504');
 });
 
+test('stock executions never enter sector or gold charts even if the symbol is the same', async () => {
+  const received = [];
+  const adapter = createAitsChartPanelAdapter({
+    renderChart: async (_container, options) => ({
+      setData() {},
+      applyChartTick() { received.push(options.trId); },
+      destroy() {},
+    }),
+  });
+  for (const target of ['stock', 'sector', 'gold']) {
+    await adapter.openPanel({}, {
+      period: 'day', target, trId: { stock: 'ka10081', sector: 'ka20006', gold: 'ka50081' }[target],
+      candles: [{ time: '2026-09-14', open: 100, high: 100, low: 100, close: 100, volume: 1 }],
+    }, { panelId: target, target, stock: '005930' });
+  }
+  assert.equal(await adapter.applyRealtimeTick({ symbol: '005930', at: AT, price: 266000, volume: 3 }), 1);
+  assert.deepEqual(received, ['ka10081']);
+  for (const state of adapter.snapshot().filter(state => state.panelId !== 'stock')) {
+    assert.equal(state.lastCandle.close, 100);
+  }
+});
+
 test('A-prefixed 0D frame reaches only the matching normalized orderbook panel', () => {
   const [tick] = parseQuoteBookFrame({
     trnm: 'REAL',

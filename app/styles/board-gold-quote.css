@@ -1,0 +1,25 @@
+.bs-gold-original { display: none !important; }
+.bs-gold-card [data-node="2QX6-1"] { font-size: 18px !important; line-height: 26px !important; }
+.bs-gold-section { display: flex; flex-direction: column; gap: 20px; min-width: 0; padding: 20px; color: var(--color-text-primary, #24272e); }
+.bs-gold-context { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; line-height: 18px; color: #65707d; }
+.bs-gold-quotes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.bs-gold-quote { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 14px; background: #fafbfc; border-radius: 8px; }
+.bs-gold-label { font-size: 12px; line-height: 18px; color: #65707d; }
+.bs-gold-section .bs-gold-value { width: auto !important; height: auto !important; min-width: 0 !important; max-width: 100%; font-size: 14px !important; line-height: 21px !important; overflow-wrap: anywhere; white-space: normal !important; }
+.bs-gold-quote .bs-gold-value { font-family: 'Cascadia Code', monospace !important; font-size: clamp(18px, 5cqw, 26px) !important; line-height: 34px !important; font-weight: 600 !important; }
+.bs-gold-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px 12px; }
+.bs-gold-metric { display: flex; flex-direction: column; min-width: 0; gap: 6px; }
+.bs-gold-metric .bs-gold-value { font-weight: 600; }
+.bs-gold-title { margin: 0; font-size: 15px; line-height: 22px; font-weight: 700; }
+.bs-gold-hint, .bs-gold-empty { font-size: 12px; line-height: 18px; color: #65707d; }
+.bs-gold-scroll { max-width: 100%; min-width: 0; overflow-x: auto; border: 1px solid #e4e7ec; border-radius: 8px; }
+.bs-gold-scroll:focus-visible { outline: 2px solid #3475cf; outline-offset: 2px; }
+.bs-gold-table { min-width: 820px; }
+.bs-gold-row { display: grid; grid-template-columns: 100px repeat(4, minmax(180px, 1fr)); border-top: 1px solid #e4e7ec; }
+.bs-gold-head { background: #fafbfc; border-top: 0; font-size: 12px; line-height: 18px; color: #65707d; }
+.bs-gold-cell { min-width: 0; padding: 12px; text-align: right; }
+.bs-gold-cell:first-child { text-align: left; }
+.bs-gold-cell .bs-gold-value { font-family: 'Cascadia Code', monospace !important; font-size: 13px !important; line-height: 20px !important; text-align: inherit !important; }
+.bs-gold-context .bs-gold-value { font-size: 12px !important; line-height: 18px !important; color: #65707d !important; }
+.bs-gold-section [hidden] { display: none !important; }
+@container (max-width: 600px) { .bs-gold-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

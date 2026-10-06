@@ -494,7 +494,7 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "업종 지수 등락률 — ka20002의 등락률(flu_rt)은 주도 종목 행 값이라 업종 전체 값이 아니다"
+      "unbound_reason": "업종 지수 등락률 — ka20002 응답에 업종 전체 지수 등락률 필드가 없다. flu_rt는 개별 종목 행의 등락률이다."
     },
     {
       "slot_id": "s008",
@@ -756,7 +756,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -896,7 +897,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -936,7 +938,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": "s021",
       "collapse_group": null,
@@ -1122,7 +1125,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1265,7 +1269,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1306,7 +1311,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": "s032",
       "collapse_group": null,
@@ -1495,7 +1501,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1638,7 +1645,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -1679,7 +1687,8 @@
         "unit": "krw_ko",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": "s043",
       "collapse_group": null,
@@ -1791,25 +1800,20 @@
       "node_path": "1/0/2/0",
       "paper_text": "주도 3종목 표시 · 구성 102종목",
       "region": "primary",
-      "kind": "value",
+      "kind": "label",
       "layer": "직접",
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka20002",
-      "f": "inds_stkpc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
-      "kor": "업종별주가",
-      "format": {
-        "unit": "count",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
-      },
+      "kor": null,
+      "format": null,
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "표 본체 건수 줄 — 응답 배열 컨테이너의 자리"
+      "note": "표 표시 한도 안내. inds_stkpc는 종목 배열이며 종목 수 관찰값이 아니다."
     },
     {
       "slot_id": "s049",

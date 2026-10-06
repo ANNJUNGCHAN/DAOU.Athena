@@ -15,12 +15,8 @@
     1109
   ],
   "operation_refs": [
-    "base:0w",
-    "base:ka10037",
-    "base:ka10052",
     "base:ka10059",
-    "base:ka10061",
-    "base:ka10066"
+    "base:ka10061"
   ],
   "state": {
     "kind": "tab",
@@ -329,149 +325,7 @@
     "비중",
     "5일 누적"
   ],
-  "column_bindings": [
-    {
-      "table_id": "2QH0-2",
-      "columns": [
-        {
-          "col": 1,
-          "data_col": 0,
-          "header": "주체",
-          "slot_ids": [
-            "s034",
-            "s035",
-            "s042",
-            "s049",
-            "s056",
-            "s063",
-            "s070",
-            "s077",
-            "s084",
-            "s091",
-            "s098",
-            "s105",
-            "s106",
-            "s113",
-            "s120",
-            "s121"
-          ]
-        },
-        {
-          "col": 2,
-          "data_col": 1,
-          "header": "매도",
-          "slot_ids": [
-            "s036",
-            "s043",
-            "s050",
-            "s057",
-            "s064",
-            "s071",
-            "s078",
-            "s085",
-            "s092",
-            "s099",
-            "s107",
-            "s114",
-            "s122"
-          ]
-        },
-        {
-          "col": 3,
-          "data_col": 2,
-          "header": "매수",
-          "slot_ids": [
-            "s037",
-            "s044",
-            "s051",
-            "s058",
-            "s065",
-            "s072",
-            "s079",
-            "s086",
-            "s093",
-            "s100",
-            "s108",
-            "s115",
-            "s123"
-          ]
-        },
-        {
-          "col": 4,
-          "data_col": 3,
-          "header": "순매수",
-          "slot_ids": [
-            "s038",
-            "s039",
-            "s045",
-            "s046",
-            "s052",
-            "s053",
-            "s059",
-            "s060",
-            "s066",
-            "s067",
-            "s073",
-            "s074",
-            "s080",
-            "s081",
-            "s087",
-            "s088",
-            "s094",
-            "s095",
-            "s101",
-            "s102",
-            "s109",
-            "s110",
-            "s116",
-            "s117",
-            "s124",
-            "s125"
-          ]
-        },
-        {
-          "col": 5,
-          "data_col": 4,
-          "header": "비중",
-          "slot_ids": [
-            "s040",
-            "s047",
-            "s054",
-            "s061",
-            "s068",
-            "s075",
-            "s082",
-            "s089",
-            "s096",
-            "s103",
-            "s111",
-            "s118",
-            "s126"
-          ]
-        },
-        {
-          "col": 6,
-          "data_col": 5,
-          "header": "5일 누적",
-          "slot_ids": [
-            "s041",
-            "s048",
-            "s055",
-            "s062",
-            "s069",
-            "s076",
-            "s083",
-            "s090",
-            "s097",
-            "s104",
-            "s112",
-            "s119",
-            "s127"
-          ]
-        }
-      ]
-    }
-  ],
+  "column_bindings": [],
   "section_titles_ko": {
     "2QFR-2": "수급 헤더",
     "2QFZ-2": "수급 화면 전환",
@@ -502,7 +356,7 @@
       "node_path": "0/0/0/0",
       "paper_text": "삼성전자 수급",
       "region": "header",
-      "kind": "label",
+      "kind": "value",
       "layer": "직접",
       "font_size_px": 12.0,
       "anchor": null,
@@ -515,7 +369,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "2QM7-2 보드 몫 필드의 재표시"
+      "dup_note": "2QM7-2 보드 몫 필드의 재표시",
+      "static": "blank",
+      "unbound_reason": "현재 카드의 조회 종목 이름이며 응답 필드가 없다"
     },
     {
       "slot_id": "s002",
@@ -536,7 +392,8 @@
       "format": null,
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static_reason": "응답에 지연 여부와 갱신 상태 필드가 없으므로 정적 상태를 관측값처럼 표시하지 않음"
     },
     {
       "slot_id": "s003",
@@ -550,15 +407,9 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10052",
-      "f": "stk_cd",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:0w",
-          "f": "215",
-          "kor": "장운영구분"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": "종목코드",
       "format": {
         "unit": "text",
@@ -569,14 +420,8 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "extra_fields": [
-        {
-          "mapping_id": "base:0w",
-          "f": "215",
-          "kor": "장운영구분",
-          "sep": " · "
-        }
-      ]
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s004",
@@ -765,19 +610,20 @@
       "font_size_px": 34.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10059",
-      "f": "frgnr_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s013",
@@ -840,19 +686,20 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10059",
-      "f": "orgn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s016",
@@ -866,19 +713,20 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10059",
-      "f": "fnnc_invt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s017",
@@ -913,19 +761,20 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10059",
-      "f": "ind_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s019",
@@ -988,8 +837,8 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90007",
-      "f": "dfrt_trde_tdy",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "차익거래당일",
       "format": {
@@ -1002,7 +851,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2ROJ-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s022",
@@ -1016,8 +867,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90007",
-      "f": "ndiffpro_trde_tdy",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "비차익거래당일",
       "format": {
@@ -1029,7 +880,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s023",
@@ -1064,15 +917,9 @@
       "font_size_px": 20.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10037",
-      "f": "trde_prica",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10059",
-          "f": "acc_trde_prica",
-          "kor": "누적거래대금"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": "거래대금",
       "format": {
         "unit": "krw_ko",
@@ -1082,7 +929,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s025",
@@ -1096,15 +945,9 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10059",
-      "f": "acc_trde_qty",
-      "alt_mappings": [
-        {
-          "mapping_id": "base:ka10066",
-          "f": "trde_qty",
-          "kor": "거래량"
-        }
-      ],
+      "mapping_id": null,
+      "f": null,
+      "alt_mappings": null,
       "kor": "누적거래량",
       "format": {
         "unit": "shares",
@@ -1115,7 +958,9 @@
       "paired_with": "s024",
       "collapse_group": null,
       "expanded_board": null,
-      "note": "꼬리 '체결강도 108.4'는 투자자 응답 3종에 대응 필드가 없다"
+      "note": "꼬리 '체결강도 108.4'는 투자자 응답 3종에 대응 필드가 없다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s026",
@@ -1150,21 +995,17 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10059",
+      "f": "dt",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "text",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "date"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "정렬 기준·집계 시각 표기 — 요청 조건의 되비침이라 응답 필드가 아니다"
+      "row_index": 0
     },
     {
       "slot_id": "s028",
@@ -1396,14 +1237,13 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "frgnr_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -1411,7 +1251,9 @@
       "expanded_board": null,
       "variant": "매도",
       "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s037",
@@ -1429,21 +1271,22 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "frgnr_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s038",
@@ -1463,10 +1306,15 @@
       },
       "mapping_id": "base:ka10059",
       "f": "frgnr_invsr",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10061",
+          "f": "frgnr_invsr"
+        }
+      ],
       "kor": "외국인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1475,7 +1323,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s039",
@@ -1493,21 +1342,22 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "frgnr_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s038",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s040",
@@ -1557,20 +1407,21 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "frgnr_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "2S4E-1 보드 몫 필드의 재표시"
+      "dup_note": "2S4E-1 보드 몫 필드의 재표시",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s042",
@@ -1613,21 +1464,22 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "penfnd_etc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매도",
-      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다"
+      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s044",
@@ -1645,21 +1497,22 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "penfnd_etc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s045",
@@ -1681,14 +1534,13 @@
       "f": "penfnd_etc",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka10066",
-          "f": "penfnd_etc",
-          "kor": "연기금등"
+          "mapping_id": "base:ka10061",
+          "f": "penfnd_etc"
         }
       ],
       "kor": "연기금등",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1697,7 +1549,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s046",
@@ -1715,21 +1568,22 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "penfnd_etc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s045",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s047",
@@ -1779,19 +1633,20 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "penfnd_etc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "연기금등",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s049",
@@ -1834,21 +1689,22 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "etc_corp",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매도",
-      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다"
+      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s051",
@@ -1866,21 +1722,22 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "etc_corp",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s052",
@@ -1902,14 +1759,13 @@
       "f": "etc_corp",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka10066",
-          "f": "etc_corp",
-          "kor": "기타법인"
+          "mapping_id": "base:ka10061",
+          "f": "etc_corp"
         }
       ],
       "kor": "기타법인",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -1918,7 +1774,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s053",
@@ -1936,21 +1793,22 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "etc_corp",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s052",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s054",
@@ -2000,19 +1858,20 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "etc_corp",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기타법인",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s056",
@@ -2055,21 +1914,22 @@
         "row": "3",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "bank",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매도",
-      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다"
+      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s058",
@@ -2087,21 +1947,22 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "bank",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s059",
@@ -2123,14 +1984,13 @@
       "f": "bank",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka10066",
-          "f": "bank",
-          "kor": "은행"
+          "mapping_id": "base:ka10061",
+          "f": "bank"
         }
       ],
       "kor": "은행",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2139,7 +1999,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s060",
@@ -2157,21 +2018,22 @@
         "row": "3",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "bank",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s059",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s061",
@@ -2221,19 +2083,20 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "bank",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "은행",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s063",
@@ -2276,21 +2139,22 @@
         "row": "4",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "etc_fnnc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매도",
-      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다"
+      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s065",
@@ -2308,21 +2172,22 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "etc_fnnc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s066",
@@ -2344,14 +2209,13 @@
       "f": "etc_fnnc",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka10066",
-          "f": "etc_fnnc",
-          "kor": "기타금융"
+          "mapping_id": "base:ka10061",
+          "f": "etc_fnnc"
         }
       ],
       "kor": "기타금융",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2360,7 +2224,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s067",
@@ -2378,21 +2243,22 @@
         "row": "4",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "etc_fnnc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s066",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s068",
@@ -2442,19 +2308,20 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "etc_fnnc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기타금융",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s070",
@@ -2497,8 +2364,8 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "natn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "국가",
       "format": {
@@ -2511,7 +2378,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매도",
-      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다"
+      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s072",
@@ -2529,8 +2398,8 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "natn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "국가",
       "format": {
@@ -2543,7 +2412,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s073",
@@ -2565,14 +2436,13 @@
       "f": "natn",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka10066",
-          "f": "natn",
-          "kor": "국가"
+          "mapping_id": "base:ka10061",
+          "f": "natn"
         }
       ],
       "kor": "국가",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2581,7 +2451,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s074",
@@ -2599,8 +2470,8 @@
         "row": "5",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "natn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "국가",
       "format": {
@@ -2613,7 +2484,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s075",
@@ -2663,8 +2536,8 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "natn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "국가",
       "format": {
@@ -2675,7 +2548,9 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s077",
@@ -2718,21 +2593,22 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "natfor",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매도",
-      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다"
+      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s079",
@@ -2750,21 +2626,22 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "natfor",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s080",
@@ -2784,10 +2661,15 @@
       },
       "mapping_id": "base:ka10059",
       "f": "natfor",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10061",
+          "f": "natfor"
+        }
+      ],
       "kor": "내외국인",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -2796,7 +2678,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s081",
@@ -2814,21 +2697,22 @@
         "row": "6",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "natfor",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s080",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s082",
@@ -2878,19 +2762,20 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "natfor",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "내외국인",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s084",
@@ -2933,21 +2818,22 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "insrnc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매도",
-      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다"
+      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s086",
@@ -2965,21 +2851,22 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "insrnc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s087",
@@ -3001,14 +2888,13 @@
       "f": "insrnc",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka10066",
-          "f": "insrnc",
-          "kor": "보험"
+          "mapping_id": "base:ka10061",
+          "f": "insrnc"
         }
       ],
       "kor": "보험",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3017,7 +2903,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s088",
@@ -3035,21 +2922,22 @@
         "row": "7",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "insrnc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s087",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s089",
@@ -3099,19 +2987,20 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "insrnc",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "보험",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s091",
@@ -3154,21 +3043,22 @@
         "row": "8",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "samo_fund",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매도",
-      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다"
+      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s093",
@@ -3186,21 +3076,22 @@
         "row": "8",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "samo_fund",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s094",
@@ -3222,14 +3113,13 @@
       "f": "samo_fund",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka10066",
-          "f": "samo_fund",
-          "kor": "사모펀드"
+          "mapping_id": "base:ka10061",
+          "f": "samo_fund"
         }
       ],
       "kor": "사모펀드",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3238,7 +3128,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s095",
@@ -3256,21 +3147,22 @@
         "row": "8",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "samo_fund",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s094",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s096",
@@ -3320,19 +3212,20 @@
         "row": "8",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "samo_fund",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "사모펀드",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s098",
@@ -3375,21 +3268,22 @@
         "row": "9",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "invtrt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매도",
-      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다"
+      "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s100",
@@ -3407,21 +3301,22 @@
         "row": "9",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "invtrt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s101",
@@ -3443,14 +3338,13 @@
       "f": "invtrt",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka10066",
-          "f": "invtrt",
-          "kor": "투신"
+          "mapping_id": "base:ka10061",
+          "f": "invtrt"
         }
       ],
       "kor": "투신",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3459,7 +3353,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s102",
@@ -3477,21 +3372,22 @@
         "row": "9",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "invtrt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s101",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s103",
@@ -3541,19 +3437,20 @@
         "row": "9",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "invtrt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "투신",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s105",
@@ -3628,14 +3525,13 @@
         "row": "10",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "ind_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -3643,7 +3539,9 @@
       "expanded_board": null,
       "variant": "매도",
       "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s108",
@@ -3661,21 +3559,22 @@
         "row": "10",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "ind_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s109",
@@ -3695,10 +3594,15 @@
       },
       "mapping_id": "base:ka10059",
       "f": "ind_invsr",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10061",
+          "f": "ind_invsr"
+        }
+      ],
       "kor": "개인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3707,7 +3611,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s110",
@@ -3725,21 +3630,22 @@
         "row": "10",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "ind_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s109",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s111",
@@ -3789,20 +3695,21 @@
         "row": "10",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "ind_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "2S4E-1 보드 몫 필드의 재표시"
+      "dup_note": "2S4E-1 보드 몫 필드의 재표시",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s113",
@@ -3845,14 +3752,13 @@
         "row": "11",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "fnnc_invt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -3860,7 +3766,9 @@
       "expanded_board": null,
       "variant": "매도",
       "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s115",
@@ -3878,21 +3786,22 @@
         "row": "11",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "fnnc_invt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s116",
@@ -3914,14 +3823,13 @@
       "f": "fnnc_invt",
       "alt_mappings": [
         {
-          "mapping_id": "base:ka10066",
-          "f": "fnnc_invt",
-          "kor": "금융투자"
+          "mapping_id": "base:ka10061",
+          "f": "fnnc_invt"
         }
       ],
       "kor": "금융투자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -3930,7 +3838,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s117",
@@ -3948,21 +3857,22 @@
         "row": "11",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "fnnc_invt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s116",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s118",
@@ -4012,19 +3922,20 @@
         "row": "11",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "fnnc_invt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금융투자",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s120",
@@ -4099,14 +4010,13 @@
         "row": "12",
         "col": 1
       },
-      "mapping_id": "base:ka10059",
-      "f": "orgn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -4114,7 +4024,9 @@
       "expanded_board": null,
       "variant": "매도",
       "note": "매도·매수·순매수·순매수수량은 같은 주체 필드를 요청 파라미터(trde_tp 매매구분 · amt_qty_tp 금액수량구분)로 바꿔 받은 값이다",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s123",
@@ -4132,21 +4044,22 @@
         "row": "12",
         "col": 2
       },
-      "mapping_id": "base:ka10059",
-      "f": "orgn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "variant": "매수",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s124",
@@ -4166,10 +4079,15 @@
       },
       "mapping_id": "base:ka10059",
       "f": "orgn",
-      "alt_mappings": null,
+      "alt_mappings": [
+        {
+          "mapping_id": "base:ka10061",
+          "f": "orgn"
+        }
+      ],
       "kor": "기관계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "number",
         "sign": true,
         "precision": 0,
         "tone": "change"
@@ -4178,7 +4096,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수",
-      "display_dup": true
+      "display_dup": true,
+      "row_index": 0
     },
     {
       "slot_id": "s125",
@@ -4196,21 +4115,22 @@
         "row": "12",
         "col": 3
       },
-      "mapping_id": "base:ka10059",
-      "f": "orgn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "shares",
+        "kind": "korean",
         "sign": true,
-        "precision": 1,
         "tone": "change"
       },
       "paired_with": "s124",
       "collapse_group": null,
       "expanded_board": null,
       "variant": "순매수수량",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s126",
@@ -4260,20 +4180,21 @@
         "row": "12",
         "col": 5
       },
-      "mapping_id": "base:ka10061",
-      "f": "orgn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": true,
-        "precision": 0,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "dup_note": "2S4E-1 보드 몫 필드의 재표시"
+      "dup_note": "2S4E-1 보드 몫 필드의 재표시",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s128",
@@ -4287,8 +4208,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10059",
-      "f": "stk_invsr_orgn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "종목별투자자기관별",
       "format": {
@@ -4300,7 +4221,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "note": "표 목록 자체 — 상태 줄이 행 수와 집계 상태를 말한다"
+      "note": "표 목록 자체 — 상태 줄이 행 수와 집계 상태를 말한다",
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s129",
@@ -4407,21 +4330,23 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10052",
-      "f": "acc_netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "누적순매수",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2QM7-2 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s134",
@@ -4457,21 +4382,23 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10052",
-      "f": "acc_netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "누적순매수",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2QM7-2 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s136",
@@ -4507,21 +4434,23 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10052",
-      "f": "acc_netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "누적순매수",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2QM7-2 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s138",
@@ -4578,21 +4507,23 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10052",
-      "f": "acc_netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "누적순매수",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2QM7-2 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s141",
@@ -4628,21 +4559,23 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10052",
-      "f": "acc_netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "누적순매수",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2QM7-2 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s143",
@@ -4678,21 +4611,23 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10052",
-      "f": "acc_netprps",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "누적순매수",
       "format": {
-        "unit": "krw_ko",
-        "sign": true,
+        "unit": "shares",
         "precision": 0,
+        "sign": true,
         "tone": "change"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2QM7-2 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s145",
@@ -4769,8 +4704,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10014",
-      "f": "trde_wght",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "매매비중",
       "format": {
@@ -4782,7 +4717,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s149",
@@ -4817,8 +4754,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10068",
-      "f": "rmnd",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고주수",
       "format": {
@@ -4830,7 +4767,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s151",
@@ -4865,8 +4804,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10013",
-      "f": "amt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "금액",
       "format": {
@@ -4878,7 +4817,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s153",
@@ -4913,8 +4854,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10013",
-      "f": "remn_rt",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "잔고율",
       "format": {
@@ -4926,7 +4867,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s155",
@@ -5003,8 +4946,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90007",
-      "f": "dfrt_trde_tdy",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "차익거래당일",
       "format": {
@@ -5017,7 +4960,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2ROJ-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s159",
@@ -5052,8 +4997,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka90007",
-      "f": "ndiffpro_trde_tdy",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "비차익거래당일",
       "format": {
@@ -5065,7 +5010,9 @@
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s161",
@@ -5199,8 +5146,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10066",
-      "f": "frgnr_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "외국인투자자",
       "format": {
@@ -5213,7 +5160,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2S4E-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s167",
@@ -5248,8 +5197,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10066",
-      "f": "orgn",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "기관계",
       "format": {
@@ -5262,7 +5211,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2S4E-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s169",
@@ -5297,8 +5248,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10066",
-      "f": "ind_invsr",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "개인투자자",
       "format": {
@@ -5311,7 +5262,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2S4E-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s171",
@@ -5325,8 +5278,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0w",
-      "f": "20",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
@@ -5339,7 +5292,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2ROJ-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s172",
@@ -5353,8 +5308,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0w",
-      "f": "20",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
@@ -5367,7 +5322,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2ROJ-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s173",
@@ -5381,8 +5338,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0w",
-      "f": "20",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
@@ -5395,7 +5352,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2ROJ-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s174",
@@ -5409,8 +5368,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0w",
-      "f": "20",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
@@ -5423,7 +5382,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2ROJ-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s175",
@@ -5437,8 +5398,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0w",
-      "f": "20",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
@@ -5451,7 +5412,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2ROJ-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s176",
@@ -5465,8 +5428,8 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:0w",
-      "f": "20",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "체결시간",
       "format": {
@@ -5479,7 +5442,9 @@
       "collapse_group": null,
       "expanded_board": null,
       "dup_note": "2ROJ-1 보드 몫 필드의 재표시",
-      "display_dup": true
+      "display_dup": true,
+      "static": "blank",
+      "unbound_reason": "현재 조회가 제공하지 않는 다른 매매구분·기간·거래원 집계를 표시하지 않음"
     },
     {
       "slot_id": "s177",
@@ -5526,8 +5491,8 @@
   ],
   "kiumi": {
     "version": 1,
-    "width_px": 360,
-    "height_px": 420,
+    "width_px": 360.0,
+    "height_px": 420.0,
     "grammar": "facts",
     "title": "수급 — 투자자별",
     "eyebrow": "CC-05 / 2QFO-2",

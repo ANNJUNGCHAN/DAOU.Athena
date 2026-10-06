@@ -15,8 +15,8 @@
     960
   ],
   "operation_refs": [
-    "base:ka10005",
-    "base:ka10006"
+    "base:ka10080",
+    "base:ka10005"
   ],
   "state": {
     "kind": "expand",
@@ -708,9 +708,9 @@
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "krw_ko",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
@@ -718,7 +718,8 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "2R3M-1 헤더 재표시",
-      "note": "분봉 시세 보드의 헤더 현재가 = 마지막 분봉 종가"
+      "note": "분봉 시세 보드의 헤더 현재가 = 마지막 분봉 종가",
+      "row_index": 0
     },
     {
       "slot_id": "s006",
@@ -737,9 +738,10 @@
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": null,
@@ -754,7 +756,8 @@
           "kor": "등락률",
           "sep": " · "
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s007",
@@ -768,21 +771,19 @@
       "font_size_px": 12.0,
       "anchor": null,
       "table": null,
-      "mapping_id": null,
-      "f": null,
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": null,
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
-      "static": true,
-      "unbound_reason": "체결 시각 표기 — 응답에 시각 필드가 없다"
+      "row_index": 0,
+      "display_dup": true,
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다."
     },
     {
       "slot_id": "s008",
@@ -972,7 +973,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -992,7 +994,8 @@
           "kor": "저가",
           "sep": " · "
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s017",
@@ -1060,16 +1063,18 @@
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "2R3M-1 지표 스트립 재표시"
+      "dup_note": "2R3M-1 지표 스트립 재표시",
+      "row_index": 0
     },
     {
       "slot_id": "s020",
@@ -1088,7 +1093,7 @@
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "percent",
+        "unit": "shares",
         "sign": false,
         "precision": 0,
         "tone": "change"
@@ -1098,7 +1103,8 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "2R3M-1 지표 스트립 재표시",
-      "note": "'전일 대비 120.3%'는 이 보드 op(ka10005·ka10006) 응답에 필드가 없다"
+      "note": "'전일 대비 120.3%'는 이 보드 op(ka10005·ka10006) 응답에 필드가 없다",
+      "row_index": 0
     },
     {
       "slot_id": "s021",
@@ -1343,22 +1349,20 @@
       "font_size_px": 15.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "date",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "분봉 표 제목의 조회 일자",
-      "note": "'(화)' 요일은 날짜에서 파생"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "note": "'(화)' 요일은 날짜에서 파생",
+      "row_index": 0
     },
     {
       "slot_id": "s031",
@@ -1400,21 +1404,22 @@
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10006",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "2R3M-1 시세 요약 1분봉 재표시"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 0
     },
     {
       "slot_id": "s033",
@@ -1428,21 +1433,23 @@
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10006",
-      "f": "flu_rt",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "등락률",
       "format": {
-        "unit": "percent",
+        "kind": "number",
+        "precision": 0,
         "sign": true,
-        "precision": 2,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s032",
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "2R3M-1 시세 요약 1분봉 재표시"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 0
     },
     {
       "slot_id": "s034",
@@ -1498,8 +1505,8 @@
       "font_size_px": 11.0,
       "anchor": null,
       "table": null,
-      "mapping_id": "base:ka10005",
-      "f": "stk_ddwkmm",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "주식일주월시분",
       "format": {
@@ -1513,7 +1520,10 @@
       "expanded_board": null,
       "display_dup": true,
       "dup_note": "2R3M-1 시세 요약 목록 재표시",
-      "note": "응답 행수 42건 중 13건 표시"
+      "note": "응답 행수 42건 중 13건 표시",
+      "static": true,
+      "static_reason": "응답 전체 건수 미제공 — 표시 가능한 분봉 행은 최대 13개이며 수신 건수를 추정하지 않는다.",
+      "unbound_reason": "응답 전체 건수 미제공 — 표시 가능한 분봉 행은 최대 13개이며 수신 건수를 추정하지 않는다."
     },
     {
       "slot_id": "s037",
@@ -1706,19 +1716,20 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다.",
+      "display_dup": true,
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다."
     },
     {
       "slot_id": "s045",
@@ -1736,19 +1747,23 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다.",
+      "display_dup": true,
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다."
     },
     {
       "slot_id": "s046",
@@ -1766,19 +1781,23 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다.",
+      "display_dup": true,
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다."
     },
     {
       "slot_id": "s047",
@@ -1796,19 +1815,23 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다.",
+      "display_dup": true,
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다."
     },
     {
       "slot_id": "s048",
@@ -1826,19 +1849,23 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다.",
+      "display_dup": true,
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다."
     },
     {
       "slot_id": "s049",
@@ -1856,14 +1883,15 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s048",
@@ -1876,7 +1904,11 @@
           "kor": "등락률",
           "sep": " · "
         }
-      ]
+      ],
+      "row_index": 0,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다.",
+      "display_dup": true,
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다."
     },
     {
       "slot_id": "s050",
@@ -1894,19 +1926,22 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다.",
+      "display_dup": true,
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다."
     },
     {
       "slot_id": "s051",
@@ -1924,19 +1959,23 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s052",
@@ -1954,21 +1993,20 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 1,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s053",
@@ -1986,21 +2024,23 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 1,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s054",
@@ -2018,21 +2058,23 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 1,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s055",
@@ -2050,21 +2092,23 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 1,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s056",
@@ -2082,21 +2126,23 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 1,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s057",
@@ -2114,14 +2160,15 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s056",
@@ -2136,7 +2183,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 1,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s058",
@@ -2154,21 +2203,22 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 1,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s059",
@@ -2186,21 +2236,25 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "표 행 반복(2행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s060",
@@ -2218,21 +2272,20 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 2,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s061",
@@ -2250,21 +2303,23 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 2,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s062",
@@ -2282,21 +2337,23 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 2,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s063",
@@ -2314,21 +2371,23 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 2,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s064",
@@ -2346,21 +2405,23 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 2,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s065",
@@ -2378,14 +2439,15 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s064",
@@ -2400,7 +2462,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 2,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s066",
@@ -2418,21 +2482,22 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 2,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s067",
@@ -2450,21 +2515,25 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "표 행 반복(3행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s068",
@@ -2482,21 +2551,20 @@
         "row": "3",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(4행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 3,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s069",
@@ -2514,21 +2582,23 @@
         "row": "3",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(4행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 3,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s070",
@@ -2546,21 +2616,23 @@
         "row": "3",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(4행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 3,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s071",
@@ -2578,21 +2650,23 @@
         "row": "3",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(4행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 3,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s072",
@@ -2610,21 +2684,23 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(4행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 3,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s073",
@@ -2642,14 +2718,15 @@
         "row": "3",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s072",
@@ -2664,7 +2741,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(4행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 3,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s074",
@@ -2682,21 +2761,22 @@
         "row": "3",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(4행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 3,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s075",
@@ -2714,21 +2794,25 @@
         "row": "3",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(4행)"
+      "dup_note": "표 행 반복(4행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s076",
@@ -2746,21 +2830,20 @@
         "row": "4",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(5행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 4,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s077",
@@ -2778,21 +2861,23 @@
         "row": "4",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(5행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 4,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s078",
@@ -2810,21 +2895,23 @@
         "row": "4",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(5행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 4,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s079",
@@ -2842,21 +2929,23 @@
         "row": "4",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(5행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 4,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s080",
@@ -2874,21 +2963,23 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(5행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 4,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s081",
@@ -2906,14 +2997,15 @@
         "row": "4",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s080",
@@ -2928,7 +3020,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(5행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 4,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s082",
@@ -2946,21 +3040,22 @@
         "row": "4",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(5행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 4,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s083",
@@ -2978,21 +3073,25 @@
         "row": "4",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(5행)"
+      "dup_note": "표 행 반복(5행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s084",
@@ -3010,21 +3109,20 @@
         "row": "5",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(6행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 5,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s085",
@@ -3042,21 +3140,23 @@
         "row": "5",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(6행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 5,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s086",
@@ -3074,21 +3174,23 @@
         "row": "5",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(6행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 5,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s087",
@@ -3106,21 +3208,23 @@
         "row": "5",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(6행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 5,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s088",
@@ -3138,21 +3242,23 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(6행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 5,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s089",
@@ -3170,14 +3276,15 @@
         "row": "5",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s088",
@@ -3192,7 +3299,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(6행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 5,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s090",
@@ -3210,21 +3319,22 @@
         "row": "5",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(6행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 5,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s091",
@@ -3242,21 +3352,25 @@
         "row": "5",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(6행)"
+      "dup_note": "표 행 반복(6행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s092",
@@ -3274,21 +3388,20 @@
         "row": "6",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(7행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 6,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s093",
@@ -3306,21 +3419,23 @@
         "row": "6",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(7행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 6,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s094",
@@ -3338,21 +3453,23 @@
         "row": "6",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(7행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 6,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s095",
@@ -3370,21 +3487,23 @@
         "row": "6",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(7행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 6,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s096",
@@ -3402,21 +3521,23 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(7행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 6,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s097",
@@ -3434,14 +3555,15 @@
         "row": "6",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s096",
@@ -3456,7 +3578,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(7행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 6,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s098",
@@ -3474,21 +3598,22 @@
         "row": "6",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(7행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 6,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s099",
@@ -3506,21 +3631,25 @@
         "row": "6",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(7행)"
+      "dup_note": "표 행 반복(7행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s100",
@@ -3538,21 +3667,20 @@
         "row": "7",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(8행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 7,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s101",
@@ -3570,21 +3698,23 @@
         "row": "7",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(8행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 7,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s102",
@@ -3602,21 +3732,23 @@
         "row": "7",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(8행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 7,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s103",
@@ -3634,21 +3766,23 @@
         "row": "7",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(8행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 7,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s104",
@@ -3666,21 +3800,23 @@
         "row": "7",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(8행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 7,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s105",
@@ -3698,14 +3834,15 @@
         "row": "7",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s104",
@@ -3720,7 +3857,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(8행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 7,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s106",
@@ -3738,21 +3877,22 @@
         "row": "7",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(8행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 7,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s107",
@@ -3770,21 +3910,25 @@
         "row": "7",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(8행)"
+      "dup_note": "표 행 반복(8행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s108",
@@ -3802,21 +3946,20 @@
         "row": "8",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(9행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 8,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s109",
@@ -3834,21 +3977,23 @@
         "row": "8",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(9행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 8,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s110",
@@ -3866,21 +4011,23 @@
         "row": "8",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(9행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 8,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s111",
@@ -3898,21 +4045,23 @@
         "row": "8",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(9행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 8,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s112",
@@ -3930,21 +4079,23 @@
         "row": "8",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(9행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 8,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s113",
@@ -3962,14 +4113,15 @@
         "row": "8",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s112",
@@ -3984,7 +4136,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(9행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 8,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s114",
@@ -4002,21 +4156,22 @@
         "row": "8",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(9행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 8,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s115",
@@ -4034,21 +4189,25 @@
         "row": "8",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(9행)"
+      "dup_note": "표 행 반복(9행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s116",
@@ -4066,21 +4225,20 @@
         "row": "9",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(10행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 9,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s117",
@@ -4098,21 +4256,23 @@
         "row": "9",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(10행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 9,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s118",
@@ -4130,21 +4290,23 @@
         "row": "9",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(10행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 9,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s119",
@@ -4162,21 +4324,23 @@
         "row": "9",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(10행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 9,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s120",
@@ -4194,21 +4358,23 @@
         "row": "9",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(10행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 9,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s121",
@@ -4226,14 +4392,15 @@
         "row": "9",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s120",
@@ -4248,7 +4415,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(10행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 9,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s122",
@@ -4266,21 +4435,22 @@
         "row": "9",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(10행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 9,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s123",
@@ -4298,21 +4468,25 @@
         "row": "9",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(10행)"
+      "dup_note": "표 행 반복(10행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s124",
@@ -4330,21 +4504,20 @@
         "row": "10",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(11행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 10,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s125",
@@ -4362,21 +4535,23 @@
         "row": "10",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(11행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 10,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s126",
@@ -4394,21 +4569,23 @@
         "row": "10",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(11행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 10,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s127",
@@ -4426,21 +4603,23 @@
         "row": "10",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(11행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 10,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s128",
@@ -4458,21 +4637,23 @@
         "row": "10",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(11행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 10,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s129",
@@ -4490,14 +4671,15 @@
         "row": "10",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s128",
@@ -4512,7 +4694,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(11행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 10,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s130",
@@ -4530,21 +4714,22 @@
         "row": "10",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(11행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 10,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s131",
@@ -4562,21 +4747,25 @@
         "row": "10",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(11행)"
+      "dup_note": "표 행 반복(11행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s132",
@@ -4594,21 +4783,20 @@
         "row": "11",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(12행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 11,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s133",
@@ -4626,21 +4814,23 @@
         "row": "11",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(12행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 11,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s134",
@@ -4658,21 +4848,23 @@
         "row": "11",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(12행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 11,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s135",
@@ -4690,21 +4882,23 @@
         "row": "11",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(12행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 11,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s136",
@@ -4722,21 +4916,23 @@
         "row": "11",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(12행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 11,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s137",
@@ -4754,14 +4950,15 @@
         "row": "11",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s136",
@@ -4776,7 +4973,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(12행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 11,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s138",
@@ -4794,21 +4993,22 @@
         "row": "11",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(12행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 11,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s139",
@@ -4826,21 +5026,25 @@
         "row": "11",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(12행)"
+      "dup_note": "표 행 반복(12행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s140",
@@ -4858,21 +5062,20 @@
         "row": "12",
         "col": 0
       },
-      "mapping_id": "base:ka10005",
-      "f": "date",
+      "mapping_id": "base:ka10080",
+      "f": "cntr_tm",
       "alt_mappings": null,
       "kor": "날짜",
       "format": {
-        "unit": "time",
-        "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "kind": "time"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(13행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 12,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s141",
@@ -4890,21 +5093,23 @@
         "row": "12",
         "col": 1
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(13행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 12,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s142",
@@ -4922,21 +5127,23 @@
         "row": "12",
         "col": 2
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(13행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 12,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s143",
@@ -4954,21 +5161,23 @@
         "row": "12",
         "col": 3
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
+        "absolute": true,
         "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(13행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 12,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s144",
@@ -4986,21 +5195,23 @@
         "row": "12",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "close_pric",
+      "mapping_id": "base:ka10080",
+      "f": "cur_prc",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(13행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 12,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s145",
@@ -5018,14 +5229,15 @@
         "row": "12",
         "col": 4
       },
-      "mapping_id": "base:ka10005",
-      "f": "pre",
+      "mapping_id": "base:ka10080",
+      "f": "pred_pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s144",
@@ -5040,7 +5252,9 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(13행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 12,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s146",
@@ -5058,21 +5272,22 @@
         "row": "12",
         "col": 5
       },
-      "mapping_id": "base:ka10005",
+      "mapping_id": "base:ka10080",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
       "format": {
-        "unit": "shares",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "neutral"
+        "suffix": "주"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(13행)"
+      "dup_note": "같은 조회 배열 필드를 행 인덱스로 표시하며 첫 행은 요약에 재표시한다.",
+      "row_index": 12,
+      "note": "실제 분봉 조회 배열의 동일 행. 일봉 값을 분봉으로 재사용하지 않는다."
     },
     {
       "slot_id": "s147",
@@ -5090,21 +5305,25 @@
         "row": "12",
         "col": 6
       },
-      "mapping_id": "base:ka10005",
-      "f": "trde_prica",
+      "mapping_id": null,
+      "f": null,
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(13행)"
+      "dup_note": "표 행 반복(13행)",
+      "static": true,
+      "static_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다.",
+      "unbound_reason": "분봉 거래대금 미제공 — ka10080 응답에는 거래량만 있다. 종가×거래량으로 추정하지 않는다."
     },
     {
       "slot_id": "s148",
@@ -5346,7 +5565,7 @@
         "row": "0",
         "col": 0
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "date",
       "alt_mappings": null,
       "kor": "날짜",
@@ -5358,7 +5577,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s158",
@@ -5376,7 +5596,7 @@
         "row": "0",
         "col": 1
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
@@ -5384,11 +5604,13 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s159",
@@ -5406,7 +5628,7 @@
         "row": "0",
         "col": 2
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
@@ -5414,11 +5636,13 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s160",
@@ -5436,7 +5660,7 @@
         "row": "0",
         "col": 3
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
@@ -5444,11 +5668,13 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s161",
@@ -5466,19 +5692,20 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "close_pric",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s162",
@@ -5496,14 +5723,15 @@
         "row": "0",
         "col": 4
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s161",
@@ -5516,7 +5744,8 @@
           "kor": "등락률",
           "sep": " · "
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s163",
@@ -5534,7 +5763,7 @@
         "row": "0",
         "col": 5
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
@@ -5546,7 +5775,8 @@
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s164",
@@ -5564,19 +5794,21 @@
         "row": "0",
         "col": 6
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "trde_prica",
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
-      "expanded_board": null
+      "expanded_board": null,
+      "row_index": 0
     },
     {
       "slot_id": "s165",
@@ -5594,7 +5826,7 @@
         "row": "1",
         "col": 0
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "date",
       "alt_mappings": null,
       "kor": "날짜",
@@ -5608,7 +5840,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "표 행 반복(2행)",
+      "row_index": 1
     },
     {
       "slot_id": "s166",
@@ -5626,7 +5859,7 @@
         "row": "1",
         "col": 1
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
@@ -5634,13 +5867,15 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "표 행 반복(2행)",
+      "row_index": 1
     },
     {
       "slot_id": "s167",
@@ -5658,7 +5893,7 @@
         "row": "1",
         "col": 2
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
@@ -5666,13 +5901,15 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "표 행 반복(2행)",
+      "row_index": 1
     },
     {
       "slot_id": "s168",
@@ -5690,7 +5927,7 @@
         "row": "1",
         "col": 3
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
@@ -5698,13 +5935,15 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "표 행 반복(2행)",
+      "row_index": 1
     },
     {
       "slot_id": "s169",
@@ -5722,21 +5961,22 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "close_pric",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "표 행 반복(2행)",
+      "row_index": 1
     },
     {
       "slot_id": "s170",
@@ -5754,14 +5994,15 @@
         "row": "1",
         "col": 4
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s169",
@@ -5776,7 +6017,8 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "표 행 반복(2행)",
+      "row_index": 1
     },
     {
       "slot_id": "s171",
@@ -5794,7 +6036,7 @@
         "row": "1",
         "col": 5
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
@@ -5808,7 +6050,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "표 행 반복(2행)",
+      "row_index": 1
     },
     {
       "slot_id": "s172",
@@ -5826,21 +6069,23 @@
         "row": "1",
         "col": 6
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "trde_prica",
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(2행)"
+      "dup_note": "표 행 반복(2행)",
+      "row_index": 1
     },
     {
       "slot_id": "s173",
@@ -5858,7 +6103,7 @@
         "row": "2",
         "col": 0
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "date",
       "alt_mappings": null,
       "kor": "날짜",
@@ -5872,7 +6117,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "표 행 반복(3행)",
+      "row_index": 2
     },
     {
       "slot_id": "s174",
@@ -5890,7 +6136,7 @@
         "row": "2",
         "col": 1
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "open_pric",
       "alt_mappings": null,
       "kor": "시가",
@@ -5898,13 +6144,15 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "표 행 반복(3행)",
+      "row_index": 2
     },
     {
       "slot_id": "s175",
@@ -5922,7 +6170,7 @@
         "row": "2",
         "col": 2
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "high_pric",
       "alt_mappings": null,
       "kor": "고가",
@@ -5930,13 +6178,15 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "표 행 반복(3행)",
+      "row_index": 2
     },
     {
       "slot_id": "s176",
@@ -5954,7 +6204,7 @@
         "row": "2",
         "col": 3
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "low_pric",
       "alt_mappings": null,
       "kor": "저가",
@@ -5962,13 +6212,15 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "표 행 반복(3행)",
+      "row_index": 2
     },
     {
       "slot_id": "s177",
@@ -5986,21 +6238,22 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "close_pric",
       "alt_mappings": null,
       "kor": "종가",
       "format": {
-        "unit": "text",
-        "sign": false,
+        "kind": "number",
         "precision": 0,
-        "tone": "change"
+        "absolute": true,
+        "tone": "neutral"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "표 행 반복(3행)",
+      "row_index": 2
     },
     {
       "slot_id": "s178",
@@ -6018,14 +6271,15 @@
         "row": "2",
         "col": 4
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "pre",
       "alt_mappings": null,
       "kor": "대비",
       "format": {
-        "unit": "percent",
-        "sign": true,
+        "kind": "number",
         "precision": 0,
+        "sign": true,
+        "suffix": "원",
         "tone": "change"
       },
       "paired_with": "s177",
@@ -6040,7 +6294,8 @@
         }
       ],
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "표 행 반복(3행)",
+      "row_index": 2
     },
     {
       "slot_id": "s179",
@@ -6058,7 +6313,7 @@
         "row": "2",
         "col": 5
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "trde_qty",
       "alt_mappings": null,
       "kor": "거래량",
@@ -6072,7 +6327,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "표 행 반복(3행)",
+      "row_index": 2
     },
     {
       "slot_id": "s180",
@@ -6090,21 +6346,23 @@
         "row": "2",
         "col": 6
       },
-      "mapping_id": "base:ka10006",
+      "mapping_id": "base:ka10005",
       "f": "trde_prica",
       "alt_mappings": null,
       "kor": "거래대금",
       "format": {
-        "unit": "krw_ko",
+        "kind": "korean",
         "sign": false,
-        "precision": 2,
-        "tone": "neutral"
+        "tone": "neutral",
+        "scale": "백만",
+        "suffix": "원"
       },
       "paired_with": null,
       "collapse_group": null,
       "expanded_board": null,
       "display_dup": true,
-      "dup_note": "표 행 반복(3행)"
+      "dup_note": "표 행 반복(3행)",
+      "row_index": 2
     },
     {
       "slot_id": "s181",
@@ -6174,7 +6432,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "표시 구간 표기 — 분봉 표 시각 열에서 계산"
+      "unbound_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다.",
+      "static_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다."
     },
     {
       "slot_id": "s184",
@@ -6223,7 +6482,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "구간 시작·끝 종가 차이 계산값 — 응답 필드가 아니다"
+      "unbound_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다.",
+      "static_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다."
     },
     {
       "slot_id": "s186",
@@ -6272,7 +6532,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "표시 구간 고·저 집계값 — 분봉 표 고가·저가 열에서 계산"
+      "unbound_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다.",
+      "static_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다."
     },
     {
       "slot_id": "s188",
@@ -6321,7 +6582,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "표시 구간 거래량 합계 — 분봉 표 거래량 열의 합"
+      "unbound_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다.",
+      "static_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다."
     },
     {
       "slot_id": "s190",
@@ -6370,7 +6632,8 @@
       "collapse_group": null,
       "expanded_board": null,
       "static": true,
-      "unbound_reason": "표시 구간 거래대금 합계 — 분봉 표 거래대금 열의 합"
+      "unbound_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다.",
+      "static_reason": "미제공 — 표시 분봉 구간의 요약 계산값이 구현되지 않았다. 원본 예시 합계는 표시하지 않는다."
     },
     {
       "slot_id": "s192",
@@ -6784,7 +7047,8 @@
         "unit": "text",
         "sign": false,
         "precision": 0,
-        "tone": "neutral"
+        "tone": "neutral",
+        "absolute": true
       },
       "paired_with": null,
       "collapse_group": null,
@@ -6798,7 +7062,8 @@
           "kor": "저가",
           "sep": " · "
         }
-      ]
+      ],
+      "row_index": 0
     },
     {
       "slot_id": "s210",
@@ -6897,7 +7162,8 @@
           "kor": "거래대금",
           "sep": " · "
         }
-      ]
+      ],
+      "row_index": 0
     }
   ],
   "unbound_fields": [],

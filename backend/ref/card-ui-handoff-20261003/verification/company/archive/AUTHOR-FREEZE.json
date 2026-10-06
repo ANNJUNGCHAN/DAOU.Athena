@@ -1,0 +1,15 @@
+{
+  "status": "AUTHOR_FROZEN_NOT_EXECUTED_AWAITING_ROOT_REVIEW",
+  "files": {
+    "prepare.cjs": "3941341a4baa900b683c813244b0b5e758085e927aba042f739d60b4988e9fce",
+    "renderer-check.cjs": "58ac1a1d926556726a60074d0267085830a02a5887d7a9f7f954a17f827aa51e",
+    "SOURCE-RECEIPT.json": "7cfb686c2114966e3472b08818ad87ba462975c6cd1861a74cabe7dfa5851ac0",
+    "patch.json": "a927c3ad7a2170b318a61ea4cfaac20e8a4cedefeeb3aed0c46656fdaea9322f",
+    "app/styles/board-surface.css": "aef7d53b68baaacc65b8b0cc405724f116886d367a8434c845a69a7a9c64fba8",
+    "classifier-memory-check.cjs": "48b2e98744beb0c8718d51a7f59386184d65fc31c9cedc2bdc66bd7dfd08cb7d",
+    "classifier-result.json": "38ec3f9fe38b49f70f57a7d804df17f429dcfa1f55c3e76944f61532c8117a96",
+    "V1-FAILURE-FREEZE.json": "b56ff218fa428fd877582d3c9f53eb3e9847910ec3febf85dad389fef25cebbc",
+    "AUTHOR-PREPARATION.md": "1096367896fbb5b4298dbe0fd1dc33dfc64b4296219fd39fbb9a492efe6925d6",
+    "freeze.cjs": "2f743500320a9a1c1d53ac7cf811e47e39fbc005517860444370a34b9da34315"
+  }
+}
