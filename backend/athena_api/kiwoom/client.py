@@ -47,6 +47,7 @@ class KiwoomClient:
             raise ValueError("KiwoomClient only supports the mock domain")
         if timeout_seconds <= 0 or max_rate_limit_retries < 0:
             raise ValueError("invalid Kiwoom client limits")
+        self._base_url = base_url.rstrip("/")
         self._auth = auth
         self._rate_limiter = rate_limiter
         self._client = client or httpx.AsyncClient()
@@ -55,6 +56,11 @@ class KiwoomClient:
         self._max_retries = max_rate_limit_retries
         self._sleep = sleep
         self._random_value = random_value
+
+    @property
+    def base_url(self) -> str:
+        """The Kiwoom host every request from this client is posted to."""
+        return self._base_url
 
     @property
     def is_ready(self) -> bool:
@@ -91,7 +97,7 @@ class KiwoomClient:
             await self._rate_limiter.acquire(api_id)
             try:
                 response = await self._client.post(
-                    f"{KIWOOM_MOCK_BASE_URL}{endpoint}",
+                    f"{self._base_url}{endpoint}",
                     headers=self._headers(api_id, options),
                     json=data or {},
                     timeout=self._timeout,

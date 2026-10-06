@@ -47,6 +47,12 @@ _MAX_QTY = 100_000
 BUY_TR_ID = "kt10000"
 SELL_TR_ID = "kt10001"
 
+# 제품 범위(2026-10-06): 주문은 모의투자 계좌에서 사람이 주문 티켓으로 한 건씩 확인할 때만.
+AUTOMATED_ORDERS_IN_SCOPE = False
+AUTOMATED_ORDER_BLOCKED_REASON = (
+    "자동매매는 지원하지 않습니다. 주문은 모의투자 계좌의 주문 티켓에서 직접 확인해 실행합니다."
+)
+
 
 @dataclass(frozen=True, slots=True)
 class OrderPlan:
@@ -138,6 +144,10 @@ async def submit_order(
     주문이 결과를 모른 채 끝났으면(IN_DOUBT) 재전송하지 않는다 — 모르는 주문을 다시 내는
     것이 중복 주문의 가장 흔한 경로다.
     """
+    # 자동매매는 모의투자 계좌를 포함해 어떤 계좌에서도 제공하지 않는다(2026-10-06 범위).
+    # 사람의 주문별 확인이 없는 이 경로는 클라이언트에 닿기 전에 끝난다.
+    if not AUTOMATED_ORDERS_IN_SCOPE:
+        return OrderOutcome(stage="blocked", blocked_reason=AUTOMATED_ORDER_BLOCKED_REASON)
     scope = order_scope_for(plan.tr_id, TR_REGISTRY[plan.tr_id].upstream_path)
     runtime = account_runtimes(app).get(account)
     if runtime is not None and not runtime.permits_order(scope):

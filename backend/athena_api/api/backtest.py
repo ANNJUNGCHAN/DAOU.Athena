@@ -49,7 +49,7 @@ from athena_api.backtest.store import (
     StrategyVersion,
     VersionBundle,
 )
-from athena_api.dependencies import KiwoomClientDep, get_order_kiwoom_client
+from athena_api.dependencies import KiwoomClientDep
 from athena_api.projects.store import venv_packages, venv_python
 
 router = APIRouter(prefix="/api/v1/backtest", tags=["backtest"])
@@ -1239,7 +1239,9 @@ async def evaluate_deployment_route(
         request.app,
         store,
         row,
-        order_client=get_order_kiwoom_client(request),
+        # 자동매매는 계좌 종류와 무관하게 제품 범위 밖이다 — 배포 판정에는 주문 클라이언트를
+        # 넘기지 않는다. 주문은 모의투자 계좌의 주문 티켓에서 사람이 확인해 실행한다.
+        order_client=None,
         params=body,
     )
 

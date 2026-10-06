@@ -79,30 +79,59 @@ function normalizeText(value) {
 }
 
 const MARKET_ORDER_GRAMMAR_RE = /^(.+?)\s+(\d{1,9})\s*주(?:를|을)?\s*시장가(?:로)?\s*(매수|매도)(?:\s*(?:해\s*줘|해주세요|해줘|해\s*주세요|부탁해|부탁해요|주문해줘|주문해주세요))?[.!?]?$/u;
+const LIMIT_ORDER_GRAMMAR_RE = /^(.+?)\s+(\d{1,9})\s*주(?:를|을)?\s*지정가(?:로)?\s*([\d,]{1,15})\s*원?(?:에)?\s*(매수|매도)(?:\s*주문)?(?:\s*초안(?:만)?\s*(?:만들어\s*줘|만들어줘|작성해\s*줘|작성해줘))?[.!?]?$/u;
 
 function matchesMarketOrderGrammar(question) {
   return MARKET_ORDER_GRAMMAR_RE.test(String(question || '').normalize('NFKC').trim());
 }
 
+function resolveOrderEntity(entityText, stockEntityIndex) {
+  const direct = stockEntityIndex.resolveQuery(entityText);
+  const codeMatch = entityText.match(/(?:^|\s)(\d{6})(?:\s|$)/u);
+  if (!codeMatch) return direct;
+  const nameText = entityText.replace(codeMatch[0], ' ').trim();
+  const byCode = stockEntityIndex.resolveQuery(codeMatch[1]);
+  const byName = nameText ? stockEntityIndex.resolveQuery(nameText) : null;
+  if (byCode && byName && byCode.code !== byName.code) return null;
+  const paired = byCode || byName;
+  if (direct && paired && direct.code !== paired.code) return null;
+  return direct || paired;
+}
+
+function hasExactEntityAlias(entityText, entity, stockEntityIndex) {
+  if (typeof stockEntityIndex.aliasesForEntity !== 'function') return true;
+  const aliases = stockEntityIndex.aliasesForEntity(entity).map(normalizeText);
+  const normalizedEntityText = normalizeText(entityText);
+  if (aliases.includes(normalizedEntityText)) return true;
+  const codeMatch = entityText.match(/(?:^|\s)(\d{6})(?:\s|$)/u);
+  if (!codeMatch) return false;
+  const normalizedName = normalizeText(entityText.replace(codeMatch[0], ' '));
+  return aliases.includes(normalizeText(codeMatch[1]))
+    && (!normalizedName || aliases.includes(normalizedName));
+}
+
 function buildMarketOrderDraft(question, stockEntityIndex) {
   if (!stockEntityIndex || typeof stockEntityIndex.resolveQuery !== 'function') return null;
   const text = String(question || '').normalize('NFKC').trim();
-  const match = text.match(MARKET_ORDER_GRAMMAR_RE);
+  const marketMatch = text.match(MARKET_ORDER_GRAMMAR_RE);
+  const limitMatch = marketMatch ? null : text.match(LIMIT_ORDER_GRAMMAR_RE);
+  const match = marketMatch || limitMatch;
   if (!match) return null;
 
   const entityText = match[1].trim();
-  const entity = stockEntityIndex.resolveQuery(entityText);
+  const entity = resolveOrderEntity(entityText, stockEntityIndex);
   if (!entity || !['stock', 'etf'].includes(entity.kind)) return null;
-  if (typeof stockEntityIndex.aliasesForEntity === 'function') {
-    const normalizedEntityText = normalizeText(entityText);
-    const exactAlias = stockEntityIndex.aliasesForEntity(entity)
-      .some((alias) => normalizeText(alias) === normalizedEntityText);
-    if (!exactAlias) return null;
-  }
+  if (!hasExactEntityAlias(entityText, entity, stockEntityIndex)) return null;
 
   const quantity = Number(match[2]);
   if (!Number.isSafeInteger(quantity) || quantity < 1 || quantity > 100000) return null;
-  const side = match[3] === '매수' ? 'buy' : 'sell';
+  const sideText = marketMatch ? match[3] : match[4];
+  const side = sideText === '매수' ? 'buy' : 'sell';
+  const priceText = limitMatch ? limitMatch[3].replace(/,/g, '') : null;
+  const limitPrice = priceText == null ? null : Number(priceText);
+  if (limitMatch && (!Number.isSafeInteger(limitPrice) || limitPrice < 1 || limitPrice > 1_000_000_000)) {
+    return null;
+  }
   return {
     intent: 'order',
     expectedOperationRef: EXPECTED_ORDER_REFS[side],
@@ -110,7 +139,8 @@ function buildMarketOrderDraft(question, stockEntityIndex) {
       dmst_stex_tp: 'KRX',
       stk_cd: entity.code,
       ord_qty: String(quantity),
-      trde_tp: '3',
+      ...(limitMatch ? { ord_uv: String(limitPrice) } : {}),
+      trde_tp: limitMatch ? '0' : '3',
     },
     side,
   };

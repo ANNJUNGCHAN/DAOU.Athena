@@ -80,7 +80,7 @@ test('invalid save response keeps the previously confirmed font and exposes retr
   assert.equal(h.font('작음').disabled, false);
 });
 
-test('account settings retain read-only connection checks without an order API control', async () => {
+test('account settings keep connection checks and restore the mock order API gate column', async () => {
   const calls = [];
   const window = { athena: { async invoke(channel) {
     calls.push(channel);
@@ -95,8 +95,8 @@ test('account settings retain read-only connection checks without an order API c
   await window.AthenaLib.SettingsCards.renderAccounts(grid);
   assert.match(grid.textContent, /QA/);
   assert.match(grid.textContent, /마지막 연결 성공/);
-  assert.doesNotMatch(grid.textContent, /주문 API|현재 ON|현재 OFF/);
-  assert.equal(all(grid).some(node => node.className === 'uk-col-orderapi'), false);
+  assert.match(grid.textContent, /주문 API/);
+  assert.equal(all(grid).some(node => node.className === 'uk-col-orderapi'), true);
   const check = all(grid).find(node => node.nodeName === 'button' && node.textContent === '연결 확인');
   assert.ok(check);
   check.dispatchEvent({ type: 'click' });

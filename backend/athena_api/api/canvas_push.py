@@ -54,6 +54,7 @@ from athena_api.dependencies import (
     KiwoomClientDep,
     SelectorServiceDep,
     get_kiwoom_client,
+    require_mock_order_account,
 )
 from athena_api.errors import KiwoomError, KiwoomNotReadyError
 from athena_api.generated.registry import WEBSOCKET_TR_IDS
@@ -2070,6 +2071,8 @@ async def selector_dispatch(
 ) -> JSONResponse:
     """Resolve exactly once, then finish the selected safe workflow in-process."""
 
+    if payload.intent is DiscoveryIntent.ORDER:
+        require_mock_order_account(request)
     try:
         resolved = selector.resolve(_resolve_request(payload), account=account)
     except _PREFLIGHT_ERRORS as exc:

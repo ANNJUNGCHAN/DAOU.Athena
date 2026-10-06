@@ -85,10 +85,13 @@ const chartReload = require('./lib/main/chart-reload');
 const chartReloadAuthority = chartReload.createChartReloadAuthority();
 const ticketCapacity = require('./lib/main/ticket-capacity');
 const { appIconPath, appTrayIconPath } = require('./lib/main/app-icon');
+const orderTicket = require('./lib/order-ticket');
+const { presentProviderOrderTicket } = require('./lib/main/provider-order-ticket');
 const APP_ICON = appIconPath();
 const TRAY_ICON = appTrayIconPath();
 const goldOrderIntent = require('./lib/main/gold-order-intent');
 const goldQuoteIntent = require('./lib/main/gold-quote-intent');
+const protectedCards = require('./lib/protected-cards');
 const { createRoutineMainCardHandlers } = require('./lib/main/routine-main-card');
 
 function isQueryOnlyRetryDataset(dataset) {
@@ -1641,14 +1644,131 @@ const routineMainCardHandlers = createRoutineMainCardHandlers({
   now: () => performance.now(),
 });
 
-const TRADING_OUT_OF_SCOPE_MESSAGE = 'Athena는 분석과 백테스트를 지원하며, 증권사 주문과 자동매매는 제공하지 않습니다.';
+// 2026-10-06 제품 범위: 주문은 모의투자 계좌에서 사람이 주문 티켓으로 한 건씩 확인할 때만
+// 실행한다. 실계좌 주문과 자동매매는 어느 계좌에서도 열지 않는다.
+const TRADING_OUT_OF_SCOPE_MESSAGE = '실계좌 주문과 자동매매는 지원하지 않습니다. 주문은 모의투자 계좌에서 주문 티켓으로 직접 확인한 뒤에만 실행할 수 있습니다.';
 
 function tradingOutOfScope() {
   return { ok: false, status: 403, code: 'TRADING_OUT_OF_SCOPE', error: TRADING_OUT_OF_SCOPE_MESSAGE };
 }
 
-async function executeOrderRequest() {
-  return tradingOutOfScope();
+const ORDERS_UNAVAILABLE_MESSAGE = '모의투자 계좌 주문을 지금 실행할 수 없습니다. 계좌가 연결되지 않았거나 설정 › 계좌에서 주문 API가 꺼져 있습니다.';
+const ORDER_ACCOUNT_ALIAS_RE = /^[a-z0-9][a-z0-9_-]{0,31}$/;
+
+// 주문 티켓은 그 순간의 활성 계좌(백엔드 별칭)에 묶인다. 연결 전이면 빈 값이다.
+function activeOrderAccountAlias() {
+  const active = accounts.list().accounts.find((a) => a.active);
+  const alias = active && typeof active.backendAlias === 'string' ? active.backendAlias : '';
+  return ORDER_ACCOUNT_ALIAS_RE.test(alias) ? alias : '';
+}
+
+// 계좌 환경 판정은 백엔드 한 곳(is_mock_order_client — 주문 클라이언트가 실제로 보내는
+// 호스트)만 한다. ordersAvailable은 그 계좌로 주문이 실제로 나갈 수 있는지(주문 API·키·
+// 계좌별 주문 허용)다. 계좌가 없거나 응답이 없거나 형식이 다르면 막는다(fail closed).
+async function orderEnvironment({ fetchImpl = fetch, backendAlias = '' } = {}) {
+  if (!ORDER_ACCOUNT_ALIAS_RE.test(String(backendAlias || ''))) {
+    return { mock: false, ordersAvailable: false, accountMissing: true };
+  }
+  try {
+    const res = await fetchImpl(`${BACKEND_HTTP_BASE}/api/v1/llm/order-environment`, {
+      headers: { 'X-Athena-Account': backendAlias },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res || !res.ok) return { mock: false, ordersAvailable: false };
+    const body = await res.json();
+    const mock = Boolean(body && body.mock === true);
+    return { mock, ordersAvailable: mock && body.orders_available === true };
+  } catch {
+    return { mock: false, ordersAvailable: false };
+  }
+}
+
+function orderRefusal(environment) {
+  const env = environment || {};
+  const error = env.accountMissing || env.mock ? ORDERS_UNAVAILABLE_MESSAGE : TRADING_OUT_OF_SCOPE_MESSAGE;
+  return { ok: false, status: 403, code: 'TRADING_OUT_OF_SCOPE', error };
+}
+
+// 상태 0은 "보냈는지 모른다"(IN_DOUBT)로만 쓴다 — 보내기 전에 멈춘 거절은 4xx로 돌려준다.
+async function executeOrderRequest(payload, dependencies) {
+  const { trId, body, idempotencyKey, conversationId, accountAlias } = payload || {};
+  const deps = dependencies || {};
+  const fetchImpl = deps.fetchImpl || fetch;
+  const activeConversationId = deps.activeConversationId || historyConversationId;
+  const currentAccountAlias = deps.activeAccountAlias || activeOrderAccountAlias;
+  const orderKey = deps.orderKey || backendLauncher.orderKey;
+  const publishResult = deps.publishResult || sendLiveCanvasResult;
+  if (!/^kt1000[01]$/.test(String(trId))) {
+    return { ok: false, status: 400, error: '허용되지 않는 주문 TR' };
+  }
+  const executionConversationId = typeof conversationId === 'string' ? conversationId : '';
+  if (!executionConversationId || executionConversationId !== activeConversationId()) {
+    return { ok: false, status: 412, error: '대화가 바뀌어 주문을 실행하지 않았습니다.' };
+  }
+  const executionAccountAlias = typeof accountAlias === 'string' ? accountAlias : '';
+  if (!ORDER_ACCOUNT_ALIAS_RE.test(executionAccountAlias) || executionAccountAlias !== currentAccountAlias()) {
+    return { ok: false, status: 412, error: '활성 계좌가 바뀌어 주문을 실행하지 않았습니다. 주문 티켓을 다시 열어 주세요.' };
+  }
+  const environment = await orderEnvironment({ fetchImpl, backendAlias: executionAccountAlias });
+  if (!environment.ordersAvailable) return orderRefusal(environment);
+  let result;
+  try {
+    const res = await fetchImpl(`${BACKEND_HTTP_BASE}/api/v1/order/${trId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Athena-Confirm': 'true',
+        'X-Athena-Account': executionAccountAlias,
+        'X-Athena-Order-Key': orderKey(),
+        'Idempotency-Key': String(idempotencyKey || ''),
+        Authorization: `Bearer ${process.env.ATHENA_LOCAL_BEARER_TOKEN || ''}`,
+      },
+      body: JSON.stringify(body || {}),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      result = { ok: false, status: res.status, error: data.detail || `HTTP ${res.status}` };
+    } else {
+      const brokerCode = data && data.return_code != null
+        ? String(data.return_code).trim().replace(/[\u0000-\u001f\u007f]/g, '').slice(0, 64)
+        : '';
+      const brokerMessage = data && data.return_msg != null
+        ? String(data.return_msg).trim().replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 300)
+        : '';
+      const brokerRejected = brokerCode !== '' && !/^[+-]?0+$/.test(brokerCode);
+      const orderNo = data && data.ord_no != null ? String(data.ord_no).trim() : '';
+      if (brokerRejected) {
+        const log = deps.log || mdlog;
+        log(`주문 broker 거절 — tr=${trId} code=${brokerCode} message=${brokerMessage || '없음'}`);
+        result = {
+          ok: false,
+          status: 422,
+          upstreamStatus: res.status,
+          code: brokerCode,
+          error: brokerMessage || `주문이 거절되었습니다. (code ${brokerCode})`,
+        };
+      } else if (!orderNo) {
+        result = {
+          ok: false,
+          status: 409,
+          upstreamStatus: res.status,
+          code: 'ORDER_RESULT_UNKNOWN',
+          error: '주문번호가 없어 접수 여부를 확인할 수 없습니다.',
+        };
+      } else {
+        result = { ok: true, status: res.status, data };
+      }
+    }
+  } catch (e) {
+    result = { ok: false, status: 0, error: String((e && e.message) || e) };
+  }
+  publishResult(protectedCards.buildOrderActionCard({
+    trId,
+    body,
+    outcome: orderTicket.interpretExecuteStatus(result.status || 0),
+    response: result,
+  }), { conversationId: executionConversationId });
+  return result;
 }
 
 ipcMain.handle('athena:order-execute', (_e, payload) => executeOrderRequest(payload));
@@ -4736,13 +4856,59 @@ function markProviderFirstVisible(metadata) {
   }
 }
 
+function emitProviderOrderDraft(conversationId, payload) {
+  if (!shellWin || shellWin.isDestroyed()) return;
+  revealShell({ focus: false });
+  shellForConversation(conversationId).send('athena:selector-order-draft', payload);
+}
+
+// 모델이 봉인한 주문 초안은 그 계좌로 모의투자 주문이 실제로 가능할 때만 주문 티켓으로
+// 연다. 확인하는 사이 턴이 끝났거나 대화가 바뀌었으면 티켓을 버린다. 결과 문장은 턴이
+// 끝나기 전에 확정된다(pendingOrderTickets를 저장 직전에 기다린다).
+const pendingOrderTickets = new Map();
+
+async function presentMockOrderTicket(conversationId, confirmation, isCurrent = () => true) {
+  const backendAlias = activeOrderAccountAlias();
+  const environment = await orderEnvironment({ backendAlias });
+  if (!environment.ordersAvailable) return { presented: false, message: orderRefusal(environment).error };
+  if (!isCurrent() || historyConversationId() !== conversationId) {
+    return { presented: false, message: '대화가 바뀌어 주문 티켓을 열지 않았습니다.' };
+  }
+  const presented = presentProviderOrderTicket({
+    confirmation,
+    sendDraft: (payload) => emitProviderOrderDraft(conversationId, { ...payload, backend_account_alias: backendAlias }),
+  });
+  return { presented, message: presented ? confirmation.message : TRADING_OUT_OF_SCOPE_MESSAGE };
+}
+
+function trackPendingOrderTicket(conversationId, promise) {
+  const tracked = promise.catch(() => {}).finally(() => {
+    if (pendingOrderTickets.get(conversationId) === tracked) pendingOrderTickets.delete(conversationId);
+  });
+  pendingOrderTickets.set(conversationId, tracked);
+  return tracked;
+}
+
+async function settlePendingOrderTicket(conversationId) {
+  const pending = pendingOrderTickets.get(conversationId);
+  if (pending) await pending;
+}
+
 function handlePersistentCanvasResult(result) {
   rememberLiveRealtimeFallbackAuthority(result);
   const context = persistentTurnContexts.get(result.clientSubmitId);
   if (!context) return;
   if (result.status === 'needs_confirmation') {
+    // 확인 전에는 범위 안내가 답이다(fail closed). 확인 결과로 티켓 안내나 거절 사유를
+    // 확정하고, 이력 저장과 턴 종료는 이 확인을 기다린다.
     context.terminalAnswerText = TRADING_OUT_OF_SCOPE_MESSAGE;
     persistentTerminalAnswers.set(context.conversationId, TRADING_OUT_OF_SCOPE_MESSAGE);
+    trackPendingOrderTicket(context.conversationId, presentMockOrderTicket(
+      context.conversationId, result, () => persistentTurnContexts.get(result.clientSubmitId) === context,
+    ).then(({ message }) => {
+      context.terminalAnswerText = message;
+      persistentTerminalAnswers.set(context.conversationId, message);
+    }));
     return;
   }
   const metadata = {
@@ -4787,7 +4953,8 @@ function createProviderRuntimeControllerInstance(stateDir) {
     stateDir,
     epochStore: providerEpochStore,
     metrics: providerRuntimeMetrics,
-    commitSuccess: (result) => {
+    commitSuccess: async (result) => {
+      await settlePendingOrderTicket(result.conversationId);
       return historySink.saveChatMessageAwaited(
         { conversationId: result.conversationId, text: persistentHistoryAnswerText(result), role: 'assistant' },
         { onSaveFailed: emitHistorySaveFailed, mdlog },
@@ -5762,13 +5929,20 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
 
   // 닫힌 7개 문법이 놓친 조회는 백엔드 Selector가 한 번에 선택·호출·inline
   // render까지 끝낸다. 애매함/인자 부족/비조회 응답만 기존 Claude 경로로 넘긴다.
-  // 과거 주문 문법은 범위 안내로 끝내고, Selector에는 조회 요청만 보낸다.
+  // 단순 시장가·지정가 주문은 별도 닫힌 문법에서만 intent=order로 보내고, 실행하지 않은
+  // guarded 초안을 채팅 주문확인 UI에 전달한다. 모의투자 계좌가 아니면 범위 안내로 끝낸다.
   const selectorDisplayedCards = [];
-  if (selectorFastPath.buildMarketOrderDraft(routingQuery, queryStockEntityIndex)) {
-    return persistLocalLiveResult(query, {
-      ...tradingOutOfScope(), source: 'product-scope', answerText: TRADING_OUT_OF_SCOPE_MESSAGE,
-      canvasTypes: [], modelCalls: 0, durationMs: Math.max(0, performance.now() - queryStartedAt),
-    }, turnConversationId);
+  const orderDraft = selectorFastPath.buildMarketOrderDraft(routingQuery, queryStockEntityIndex);
+  const orderAccountAlias = orderDraft ? activeOrderAccountAlias() : '';
+  if (orderDraft) {
+    const environment = await orderEnvironment({ backendAlias: orderAccountAlias });
+    if (!environment.ordersAvailable) {
+      const refusal = orderRefusal(environment);
+      return persistLocalLiveResult(query, {
+        ...refusal, source: 'product-scope', answerText: refusal.error,
+        canvasTypes: [], modelCalls: 0, durationMs: Math.max(0, performance.now() - queryStartedAt),
+      }, turnConversationId);
+    }
   }
   const selectorController = new AbortController();
   runtime.activeSelectorFastRun = selectorController;
@@ -5785,13 +5959,28 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         },
         run: (options) => selectorFastPath.runSelectorFastPath(options),
       });
+    if (orderDraft && selectorAccount && !selectorAccount.ok) {
+      return persistLocalLiveResult(query, {
+        ok: false,
+        source: 'selector-fast',
+        error: selectorAccount.error || '조회에 사용할 서버 계좌를 확인할 수 없다',
+        answerText: '주문 내용을 만들기 전에 설정의 계좌 화면에서 조회에 사용할 서버 계좌를 연결해 주세요.',
+        canvasTypes: [],
+        modelCalls: 0,
+        durationMs: Math.max(0, performance.now() - queryStartedAt),
+      }, turnConversationId);
+    }
     const selectorResult = cardRetrievalBlocked
       ? { handled: false, reason: '대화 답변이 필요한 질문 — 모델 경로로 넘긴다' }
       : selectorAccount.ok ? await selectorAccount.run({
       question: routingQuery,
       backendBase: BACKEND_HTTP_BASE,
-      intent: 'auto',
-      deadlineMs: selectorFastPath.DEFAULT_DEADLINE_MS,
+      intent: orderDraft ? orderDraft.intent : 'auto',
+      arguments: orderDraft ? orderDraft.arguments : {},
+      orderDraft,
+      deadlineMs: orderDraft
+        ? selectorFastPath.DEFAULT_GUARDED_ORDER_DEADLINE_MS
+        : selectorFastPath.DEFAULT_DEADLINE_MS,
       signal: selectorController.signal,
       isCurrent: () => runtime.activeSelectorFastRun === selectorController,
       emitCanvas: async (payload) => {
@@ -5810,6 +5999,17 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         });
         return paint;
       },
+      emitOrderDraft: (payload) => {
+        if (runtime.activeSelectorFastRun !== selectorController) {
+          throw new Error('교체된 Selector fast path의 늦은 주문 초안은 표시하지 않는다');
+        }
+        if (!shellWin || shellWin.isDestroyed()) throw new Error('셸 창이 준비되지 않았다');
+        // 주문 초안은 그 대화의 것이다(다중 대화) — 배경 대화의 초안은 그 대화로 돌아올 때까지 미룬다.
+        if (expand && historyConversationId() === turnConversationId) revealShell({ focus: false });
+        shellForConversation(turnConversationId).send('athena:selector-order-draft', {
+          ...payload, backend_account_alias: orderAccountAlias,
+        });
+      },
       persistTurn: ({ question, answerText }) => {
         void question;
         void answerText;
@@ -5818,6 +6018,18 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
     if (selectorResult.handled) {
       mdlog(`Selector 단일 dispatch 적중 — ${selectorResult.durationMs}ms (모델 무호출)`);
       return finishCardProducingResult(selectorResult, selectorDisplayedCards);
+    }
+    if (orderDraft) {
+      mdlog(`주문 초안 Selector 처리 실패 — 모델 폴백 차단: ${selectorResult.reason || 'unknown'}`);
+      return persistLocalLiveResult(query, {
+        ok: false,
+        source: 'selector-fast',
+        error: selectorResult.reason || 'selector_dispatch_failed',
+        answerText: '주문 내용을 안전하게 확인하지 못해 초안을 만들지 않았습니다.',
+        canvasTypes: [],
+        modelCalls: 0,
+        durationMs: Math.max(0, performance.now() - queryStartedAt),
+      }, turnConversationId);
     }
     if (simpleChartRoute.inferenceFallback) {
       mdlog('종목 인덱스 준비 전 Selector 직접 처리 불가 — Claude 폴백 차단');
@@ -5893,6 +6105,18 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       mdlog(`종목 인덱스 준비 전 Selector 오류 — Claude 폴백 차단: ${String((error && error.message) || error)}`);
       return persistLocalLiveResult(query, {
         ...simpleChartRoute.inferenceFallback,
+        durationMs: Math.max(0, performance.now() - queryStartedAt),
+      }, turnConversationId);
+    }
+    if (orderDraft) {
+      mdlog(`주문 초안 Selector 오류 — 모델 폴백 차단: ${String((error && error.message) || error)}`);
+      return persistLocalLiveResult(query, {
+        ok: false,
+        source: 'selector-fast',
+        error: String((error && error.message) || error),
+        answerText: '주문 내용을 안전하게 확인하지 못해 초안을 만들지 않았습니다.',
+        canvasTypes: [],
+        modelCalls: 0,
         durationMs: Math.max(0, performance.now() - queryStartedAt),
       }, turnConversationId);
     }
@@ -6048,6 +6272,7 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
         expectedRendererId,
         rendererSubmittedAt,
       });
+      await settlePendingOrderTicket(turnConversationId);
     } finally {
       persistentTurnContexts.deleteIfSame(clientSubmitId, persistentTurnContext);
       persistentTerminalAnswers.delete(turnConversationId);
@@ -6095,6 +6320,9 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       rememberLiveRealtimeFallbackAuthority(r);
       if (r.status === 'needs_confirmation') {
         terminalAnswerText = TRADING_OUT_OF_SCOPE_MESSAGE;
+        trackPendingOrderTicket(turnConversationId, presentMockOrderTicket(
+          turnConversationId, r, () => runtime.activeLiveQuery === myHandle,
+        ).then(({ message }) => { terminalAnswerText = message; }));
         return;
       }
       const label = r.envelope && (r.envelope.card_title || r.envelope.caption);
@@ -6199,6 +6427,8 @@ async function runLiveQueryInnerBody(query, expand, origin, turnConversationId, 
       if (activeLegacyQueryCompletion === legacyQueryCompletion) activeLegacyQueryCompletion = null;
     }
   }
+  // 주문 티켓 확인은 이 턴의 핸들이 살아 있는 동안 끝낸다(답과 티켓이 어긋나지 않게).
+  await settlePendingOrderTicket(turnConversationId);
   mdlog(`대화 모델 완료 — conversation=${turnConversationId} provider=${liveProviderId} `
     + `preProviderMs=${Math.round(providerStartedAt - queryStartedAt)} `
     + `providerMs=${Math.round(performance.now() - providerStartedAt)} `
@@ -7183,11 +7413,29 @@ async function handleAccountRemove(e, { id } = {}) {
 }
 
 async function handleOrderApiSet(e, { id, enabled } = {}) {
-  if (enabled) return { ...tradingOutOfScope(), orderApi: false };
+  if (enabled) {
+    // 주문 허용은 백엔드가 모의투자로 판정한 계좌에만 켠다. 연결 전이면 판정할 수 없다.
+    const entry = accounts.list().accounts.find((a) => a.id === id);
+    const backendAlias = entry && entry.backendAlias;
+    const environment = await orderEnvironment({ backendAlias });
+    if (!environment.mock) return { ...orderRefusal(environment), orderApi: false };
+  }
   const result = accounts.orderApiSet(id, enabled);
   if (!result.ok) return result;
   const synced = await syncSelectedAccount(id);
   if (synced.ok) return result;
+  if (enabled) {
+    const localRollback = accounts.orderApiSet(id, false);
+    const rollback = await syncSelectedAccount(id);
+    return {
+      ...localRollback,
+      ok: false,
+      orderApi: false,
+      error: rollback.ok
+        ? '주문 허용을 적용하지 못해 OFF로 되돌렸습니다.'
+        : '주문 허용을 OFF로 되돌렸지만 서버 반영을 확인하지 못했습니다. 계좌 연결을 다시 확인해 주세요.',
+    };
+  }
   return { ...result, ok: false, orderApi: false, error: '주문은 앱에서 차단했지만 서버 반영을 확인하지 못했습니다. 계좌 연결을 다시 확인해 주세요.' };
 }
 

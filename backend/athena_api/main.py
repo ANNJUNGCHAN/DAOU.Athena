@@ -1,6 +1,7 @@
 """FastAPI application factory."""
 
 import asyncio
+import os
 from collections import OrderedDict
 from typing import Annotated, Any
 from uuid import UUID
@@ -25,6 +26,8 @@ from athena_api.security import require_local_bearer
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     runtime_settings = settings or get_settings()
+    # The order key is read once into settings; children of this process must not inherit it.
+    os.environ.pop("ATHENA_ORDER_KEY", None)
     # Before anything else can log: this installs the only stdout handler and the
     # credential-redacting filter, so no startup line can predate the redaction.
     configure_logging(runtime_settings)

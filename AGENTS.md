@@ -2,7 +2,7 @@
 
 ## Product scope
 
-Live trading and real-money order execution are outside Athena's development scope, as confirmed by the user on 2026-09-30. Do not treat them as unfinished work, propose them as a next development phase, or include them in completion criteria. Simulated trades in backtests remain in scope.
+Kiwoom mock-account (모의투자) orders that the user confirms one by one on the order ticket are in scope, as decided by the user on 2026-10-06 (replacing the 2026-09-30 exclusion of all order execution). Real-account orders and automated trading (strategy deployment, arming, scheduler or routine orders without a per-order user confirmation) are outside Athena's development scope for every account. Do not treat them as unfinished work, propose them as a next development phase, or include them in completion criteria. Real-account read/query features and simulated trades in backtests remain in scope.
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
