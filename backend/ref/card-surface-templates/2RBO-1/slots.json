@@ -1073,12 +1073,7 @@
       "table": null,
       "mapping_id": "detail:ka10001:identity_and_capital",
       "f": "fav",
-      "alt_mappings": [
-        {
-          "mapping_id": "detail:ka10001:market_scale_and_ownership",
-          "f": "fav_unit"
-        }
-      ],
+      "alt_mappings": null,
       "kor": "액면가",
       "format": {
         "unit": "krw_ko",
@@ -1094,8 +1089,8 @@
           "mapping_id": "detail:ka10001:market_scale_and_ownership",
           "f": "fav_unit",
           "kor": "액면가단위",
-          "same_value": true,
-          "unbound_reason": "액면가 값과 한 텍스트('100원')라 별도 슬롯이 없다"
+          "same_value": false,
+          "unbound_reason": "단위 메타데이터는 액면가 숫자의 대체값이 아니다. 액면가 슬롯에는 fav만 바인딩한다."
         }
       ]
     },
@@ -3149,7 +3144,7 @@
   ],
   "unbound_reason": "거래대비(detail:ka10001:current_trading·trde_pre)는 2R3M-1(현재시세) KPI 슬롯 s020 '거래량 1,420만주 · 전일 대비 120.3%'에 alt_mappings로 바인딩돼 있다. 팩 귀속은 그 보드로 바로잡았고, 원장 행의 board·where(이 보드 '대용가 아래 전일거래량 대비 120.3%')는 옛 판 기준이다 — 이 보드 s074는 이제 '기준가 대비 79.7%'(대용가÷기준가 계산값)라 거래량 대비 자리가 없다.",
   "authoring_notes": {
-    "s034/fav_unit": "액면가단위는 액면가와 한 텍스트('100원')라 독립 슬롯이 없다. s034에 alt_mappings로 도달시켰다.",
+    "s034/fav_unit": "액면가단위는 숫자의 대체값이 아니다. s034는 fav만 바인딩하고 숫자가 없으면 미제공으로 남긴다.",
     "s064/exp_cntr_qty": "예상체결수량은 예상체결가와 한 텍스트('150,900 · 8,420주')라 독립 슬롯이 없다. s064에 alt_mappings로 도달시켰다.",
     "s070/crd_rt": "신용비율 0.86% 한 자리를 detail:ka10001:market_scale_and_ownership·base:ka10086이 나눠 쓴다. 주 mapping은 앞의 것, base:ka10086·crd_rt는 alt_mappings로 도달시켰다.",
     "s071/crd_remn_rt": "신용잔고율 0.52% 한 자리를 base:ka10086·base:ka10005가 나눠 쓴다. 주 mapping은 base:ka10086, base:ka10005·crd_remn_rt는 alt_mappings로 도달시켰다."

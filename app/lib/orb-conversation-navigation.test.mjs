@@ -243,8 +243,10 @@ test('history replay preserves both saved envelopes through a partial report and
   assert.equal(f.context.replay(null, { id: 'public-A' }).replayed, 2);
   assert.deepEqual(f.sends.map(([channel, body]) => [channel, body.sessionCardId]),
     [['athena:add-canvas', 'public-fixture'], ['athena:add-canvas-live', 'public-live']]);
+  const pendingCards = [replayCards[0], { ...replayCards[1], envelope: structuredClone(f.sends[1][1].envelope) }];
+  assert.ok(pendingCards[1].envelope.correlation, 'legacy replay has a main-issued source identity');
   f.report([replayCards[0]]);
-  assert.deepEqual(f.rows.get('public-A').canvasCards, replayCards, 'the first partial report must not delete an unmounted stored envelope');
+  assert.deepEqual(f.rows.get('public-A').canvasCards, pendingCards, 'the first partial report must retain the complete envelope delivered for the unmounted card');
   assert.equal(f.context.replay(null, { id: 'public-A' }).replayed, 2);
   f.report(replayCards);
   assert.equal(f.pending().length, 0);

@@ -2105,6 +2105,7 @@ function destroyBoardPrimary(state) {
   state.primaryRefreshTimer = null;
   state.primaryRefreshing = false;
   state.primaryEnvelope = null;
+  state.primaryPaintEnvelope = null;
   state.primaryOrderbookEnvelope = null;
   state.authoredOrderbookSurface = null;
   // 상태 보드/카드가 바뀐 뒤에는 이전 봉투가 만든 descriptor와 대기 promise도
@@ -2446,7 +2447,7 @@ async function mountBoardPrimary(host, envelope, mounted, retry) {
   // 확정 ack가 영영 안 나가고 main의 pendingMount 한도 뒤 'timeout'으로 샌다.
   // (갈아탄 보드에서는 이미 맺힌 뒤라 settleBoardChartMount가 아무 것도 안 한다.)
   if (!primary || primary.renderer !== BOARD_CHART_RENDERER || !primary.mountPoint || !card
-    || !boardPrimaryAcceptsEnvelope(primary, envelope)) {
+    || (!state.primaryRemount && !boardPrimaryAcceptsEnvelope(primary, envelope))) {
     settleBoardChartMount(state, 'error');
     return null;
   }
@@ -2462,7 +2463,9 @@ async function mountBoardPrimary(host, envelope, mounted, retry) {
     remountToken = null;
   };
   const retired = state.primaryRemount;
+  const hydratedPaintEnvelope = state.primaryPaintEnvelope;
   if (retired) {
+    boardMount.collapsePrimaryMockup(primary.mountPoint);
     const meta = card.__athenaSessionCard;
     const request = {
       ...retired, cardId: card.dataset.sessionCardId,
@@ -2487,6 +2490,14 @@ async function mountBoardPrimary(host, envelope, mounted, retry) {
     if (!reply || reply.ok !== true || !reply.envelope) throw new Error('차트를 다시 표시하지 못했습니다.');
     remountEnvelope = reply.envelope;
     envelope = remountEnvelope;
+    // 일반 기업정보 봉투로 돌아온 탭도 main이 보관한 최신 차트를 재표시한다.
+    // 출처 검증은 반환된 차트에 적용해 다른 보드의 봉을 얹지 않는다.
+    if (!boardPrimaryAcceptsEnvelope(primary, envelope)) {
+      cancelRemount();
+      primary.mountPoint.prepend(errorNote('이 화면에 맞는 차트를 다시 표시하지 못했습니다.'));
+      settleBoardChartMount(state, 'error');
+      return null;
+    }
   }
   let descriptor = remountEnvelope ? null : state.primaryDescriptor;
   if (descriptor && String(descriptor.context && descriptor.context.operationRef)
@@ -2543,16 +2554,18 @@ async function mountBoardPrimary(host, envelope, mounted, retry) {
       chartBody.remove();
       return null;
     }
-    if (remountEnvelope) {
+    const paintEnvelope = remountEnvelope || hydratedPaintEnvelope;
+    if (paintEnvelope) {
       const paint = await waitForVisiblePaint(card);
       if (state.primaryMount !== attempt || !host.isConnected || state.surface !== mounted.surface || !primary.mountPoint.isConnected || state.primaryRemount !== retired) { cancelRemount(); session.destroy(); chartBody.remove(); if (state.primaryMount === attempt) { state.primaryMount = null; state.primaryPanelId = ''; delete primary.mountPoint.dataset.bsPrimaryMounted; } return null; }
       window.athena.send('athena:rest-canvas-painted', {
-        ...remountEnvelope.correlation, operation_ref: remountEnvelope.operation_ref,
-        canvas_type: remountEnvelope.canvas_type, render_state: session.body.candles.length ? 'data' : 'empty',
+        ...paintEnvelope.correlation, operation_ref: paintEnvelope.operation_ref,
+        canvas_type: paintEnvelope.canvas_type, render_state: session.body.candles.length ? 'data' : 'empty',
         renderer_id: descriptor.rendererId, panel_id: descriptor.panelId, generation: session.generation,
         verified_visible: paint.verifiedVisible, pending: false,
       });
       state.primaryRemount = null;
+      state.primaryPaintEnvelope = null;
       remountToken = null;
     }
     settleBoardChartMount(state, session.body.candles.length ? 'data' : 'empty');
@@ -2665,6 +2678,7 @@ async function hydrateBoardSlots(host, envelope, mounted, isCurrent = () => true
   }
   state.hydrationWarnings.push(...failures);
   state.primaryEnvelope = sectorHydratedPrimaryEnvelope(boardId, envelope, reply);
+  state.primaryPaintEnvelope = reply.primary_paint_required === true ? state.primaryEnvelope : null;
   if (boardId === '4B22-1') {
     if (!reply.ranking_result) throw new Error('전체 조회 목록을 받지 못했습니다. 다시 시도해 주세요.');
     state.rankingResult = reply.ranking_result;
@@ -3969,9 +3983,10 @@ function refreshChartSubtitle(card, envelope) {
 
 async function reloadExistingAitsChartPanel(descriptor, envelope, integratedRoot = null) {
   const integratedSession = integratedCardSurface.panelSessionFor(integratedRoot, envelope);
-  // 년·틱 봉투는 operation_ref가 달라 panelSessionFor가 놓친다. 이미 선 보드의
-  // chartPanelId를 써야 같은 렌더러에 봉이 들어가고 generation도 이어진다.
-  const existingPanelId = (integratedSession && integratedSession.panelId)
+  // 재표시 뒤 operation별 기록에는 폐기된 panelId가 남을 수 있다. 살아 있는
+  // 기록만 재사용하고, 이전 패널이 끝났으면 현재 root의 새 패널로 이어 간다.
+  const existingPanelId = (integratedSession && aitsChartPanels.has(integratedSession.panelId)
+      ? integratedSession.panelId : null)
     || (integratedRoot && integratedRoot.dataset && integratedRoot.dataset.chartPanelId)
     || null;
   if (existingPanelId) {
@@ -4001,7 +4016,6 @@ async function reloadExistingAitsChartPanel(descriptor, envelope, integratedRoot
     interval: Number.isFinite(ticScope) && ticScope > 0 ? ticScope : 1,
     realtimeAccountGeneration: rendererRealtimeAccountGeneration,
   });
-  if (integratedSession) integratedSession.generation = descriptor.generation;
   retitleChartCard(card, descriptor.body.period);
   refreshChartSubtitle(card, envelope);
   stampPaperScreen(card, envelope);
@@ -4009,6 +4023,7 @@ async function reloadExistingAitsChartPanel(descriptor, envelope, integratedRoot
   card.dataset.chartPanelId = descriptor.panelId;
   card.dataset.rendererId = descriptor.rendererId;
   card.dataset.chartGeneration = String(descriptor.generation);
+  integratedCardSurface.rememberPanelSession(integratedRoot, envelope, card);
   card.scrollIntoView({ block: 'nearest' });
   return card;
 }

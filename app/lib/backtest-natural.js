@@ -167,7 +167,7 @@ function createPanel({ document, invoke, onClose, isVisible, setTimeoutImpl, cle
     parent.appendChild(node);
     return node;
   };
-  makeButton(head, '팔라스 홈', async () => {
+  makeButton(head, '전략 홈', async () => {
     await monitor.pause();
     if (monitor.state().error) return;
     onClose();

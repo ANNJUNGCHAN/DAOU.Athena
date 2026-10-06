@@ -157,10 +157,15 @@ def _file_view(root: Path, target: Path) -> dict[str, Any]:
 
 @router.get("")
 async def list_projects(request: Request) -> dict[str, Any]:
-    """등록된 프로젝트 목록. `notice`는 레지스트리가 없거나 손상됐을 때의 정직한 고지다."""
+    """현재 파일 수 집계를 스레드에서 실행해 다른 요청을 막지 않는다.
+
+    `notice`는 레지스트리가 없거나 손상됐을 때의 정직한 고지다.
+    """
     snapshot = _store(request).load()
     return {
-        "projects": [_project_view(entry) for entry in snapshot.entries],
+        "projects": await asyncio.to_thread(
+            lambda: [_project_view(entry) for entry in snapshot.entries]
+        ),
         "notice": snapshot.notice,
     }
 
@@ -175,7 +180,7 @@ async def create_project(request: Request, body: dict[str, Any]) -> dict[str, An
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except ProjectExistsError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
-    return {"project": _project_view(entry), "seed": SEED_STRATEGY_FILENAME}
+    return {"project": await asyncio.to_thread(_project_view, entry), "seed": SEED_STRATEGY_FILENAME}
 
 
 @router.post("/open")
@@ -192,7 +197,7 @@ async def open_project(request: Request, body: dict[str, Any]) -> dict[str, Any]
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except ProjectExistsError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
-    return {"project": _project_view(entry)}
+    return {"project": await asyncio.to_thread(_project_view, entry)}
 
 
 @router.post("/{project_id}/relink")
@@ -210,7 +215,7 @@ async def relink_project(request: Request, project_id: str, body: dict[str, Any]
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except ProjectExistsError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
-    return {"project": _project_view(entry)}
+    return {"project": await asyncio.to_thread(_project_view, entry)}
 
 
 @router.delete("/{project_id}")

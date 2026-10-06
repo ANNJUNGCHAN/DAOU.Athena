@@ -11,7 +11,7 @@ async function checkGraphModelAccess(canvasMode, { readPreferences, getBackendUr
   });
   const disabled = () => ({
     ok: false, source: 'local', code: 'GRAPH_MODEL_EXPOSURE_DISABLED',
-    error: '그래프의 모델 전달이 꺼져 있어 질문을 보내지 않았습니다. 그래프 화면은 계속 볼 수 있으며, 일반 대화는 Agora에서 이용할 수 있습니다.',
+    error: '그래프의 모델 전달이 꺼져 있어 질문을 보내지 않았습니다. 그래프 화면은 계속 볼 수 있으며, 일반 대화는 대화 모드에서 이용할 수 있습니다.',
     answerText: null, canvasTypes: [], canvasCaptions: [],
   });
   try {

@@ -70,6 +70,18 @@ test("canvas delivery regression is kept without allowing adjacent private artif
   ]) assert.equal(isKeepPath(path), false, path);
 });
 
+test("query and project regressions are kept by exact path only", () => {
+  for (const path of [
+    "backend/verification/test_company_info_projection.py",
+    "backend/verification/test_laya_llm_tool_timeouts.py",
+    "backend/verification/test_project_list_responsiveness.py",
+  ]) {
+    assert.equal(isKeepPath(path), true, path);
+    assert.equal(isKeepPath(`${path}.bak`), false, path);
+  }
+  assert.equal(isKeepPath("backend/verification/private-query-probe.py"), false);
+});
+
 test("handoff, datasets, paper ledgers, and prompt dumps are outside the keep-set", () => {
   assert.equal(isKeepPath("docs/handoff/README.md"), false);
   assert.equal(isKeepPath("datasets/앱-검증-200.jsonl"), false);

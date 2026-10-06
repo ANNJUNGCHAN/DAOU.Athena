@@ -251,6 +251,7 @@ test('production fallback authority creation, hydrate update and refresh retain 
     Object.assign(f.context,{realtimeFallbackAuthorities:authorities,realtimeAccountGeneration:1,
       restCorrelationKey:c=>c?.key||'',crypto:{randomUUID:()=> 'fixture-uuid'},isQueryOnlyRetryDataset:()=>true,
       activeRestAccountId:()=> 'fixture-account',process:{env:{}},shellWin:{isDestroyed:()=>false,webContents:sender},orbWin:null,
+      historyConversationId:()=> 'fixture-conversation',
       restPaintWaiters:new Map(),ipcMain:{handle:(key,fn)=>handlers.set(key,fn)},
       hydrateCanvasBoardForActiveAccount:async payload=>{requests.push(payload);return {ok:true,board_id:boardId,slot_values:{s148:0},surface_contract:{...contract,board_id:boardId}};},
     });

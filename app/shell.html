@@ -112,26 +112,26 @@
         <span id="sidebarModeTotal"></span>
       </div>
       <div class="sidebar-mode-nav" id="sidebarModeNav">
-        <button class="sidebar-mode-item is-active" id="modeNavSummary" title="아고라 · 대화" type="button" data-view="summary" aria-pressed="true">
+        <button class="sidebar-mode-item is-active" id="modeNavSummary" title="대화" type="button" data-view="summary" aria-pressed="true">
           <svg class="sidebar-mode-item-ic" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3.5C2 2.7 2.7 2 3.5 2h7c.8 0 1.5.7 1.5 1.5v5c0 .8-.7 1.5-1.5 1.5H6L3.5 12v-2H3.5C2.7 10 2 9.3 2 8.5v-5z" fill="none" stroke="currentColor" stroke-width="1.2" /></svg>
-          <span class="sidebar-mode-item-label">아고라</span>
+          <span class="sidebar-mode-item-label">대화</span>
           <!-- 모드별 대화 수 — 라벨 뒤에 둔다(배지처럼 오른쪽 끝에 붙는 게 아니라
                이름에 딸린 숫자다). 0이면 hidden이라 CSS 없이도 깨지지 않는다. -->
           <span class="sidebar-mode-count" id="modeNavSummaryCount" hidden></span>
         </button>
-        <button class="sidebar-mode-item" id="modeNavGraph" title="메티스 · 그래프" type="button" data-view="graph" aria-pressed="false">
+        <button class="sidebar-mode-item" id="modeNavGraph" title="그래프" type="button" data-view="graph" aria-pressed="false">
           <svg class="sidebar-mode-item-ic" viewBox="0 0 14 14" aria-hidden="true">
             <circle cx="3.5" cy="10.5" r="1.8" fill="none" stroke="currentColor" stroke-width="1.2" />
             <circle cx="7" cy="3.5" r="1.8" fill="none" stroke="currentColor" stroke-width="1.2" />
             <circle cx="10.5" cy="10.5" r="1.8" fill="none" stroke="currentColor" stroke-width="1.2" />
             <path d="M4.4 9.1 6.2 5m1.6 0 1.8 4.1M5.3 10.5h3.4" fill="none" stroke="currentColor" stroke-width="1.2" />
           </svg>
-          <span class="sidebar-mode-item-label">메티스</span>
+          <span class="sidebar-mode-item-label">그래프</span>
           <span class="sidebar-mode-count" id="modeNavGraphCount" hidden></span>
         </button>
-        <button class="sidebar-mode-item" id="modeNavAgent" title="아이기스 · 에이전트" type="button" data-view="agent" aria-pressed="false">
+        <button class="sidebar-mode-item" id="modeNavAgent" title="알림" type="button" data-view="agent" aria-pressed="false">
           <svg class="sidebar-mode-item-ic" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5 11.5 3v3.5c0 2.7-2 4.6-4.5 6-2.5-1.4-4.5-3.3-4.5-6V3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" /></svg>
-          <span class="sidebar-mode-item-label">아이기스</span>
+          <span class="sidebar-mode-item-label">알림</span>
           <span class="sidebar-mode-count" id="modeNavAgentCount" hidden></span>
           <span class="sidebar-mode-watch" id="modeNavAgentWatch" hidden></span>
           <!-- 배지 — 미확인 알람 수(2단계). 스코프 밖: 이번 단계는 마크업만
@@ -139,17 +139,17 @@
                확장이 맡는다. -->
           <span class="sidebar-mode-badge" id="modeNavAgentBadge" hidden></span>
         </button>
-        <button class="sidebar-mode-item" id="modeNavPlugin" title="에르가네 · 플러그인" type="button" data-view="plugin" aria-pressed="false">
+        <button class="sidebar-mode-item" id="modeNavPlugin" title="플러그인" type="button" data-view="plugin" aria-pressed="false">
           <svg class="sidebar-mode-item-ic" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3.5h3V3a1.5 1.5 0 0 1 3 0v.5h3v3h.5a1.5 1.5 0 0 1 0 3H11v3H8V12a1.5 1.5 0 0 0-3 0v.5H2v-3h.5a1.5 1.5 0 0 0 0-3H2z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" /></svg>
-          <span class="sidebar-mode-item-label">에르가네</span>
+          <span class="sidebar-mode-item-label">플러그인</span>
           <span class="sidebar-mode-count" id="modeNavPluginCount" hidden></span>
         </button>
         <!-- 5번째 모드 — 백테스트(P1 모드 골격, backtest-mode-plan.md §3.2). 아이콘은
-             전략 보드(팔라스 · 백테스트) — 다른 세 형제와 같은 15×15
+             전략 보드 — 다른 세 형제와 같은 15×15
              viewBox 0 0 14 14, stroke 1.2. -->
-        <button class="sidebar-mode-item" id="modeNavBacktest" title="팔라스 · 백테스트" type="button" data-view="backtest" aria-pressed="false">
+        <button class="sidebar-mode-item" id="modeNavBacktest" title="전략" type="button" data-view="backtest" aria-pressed="false">
           <svg class="sidebar-mode-item-ic" viewBox="0 0 14 14" aria-hidden="true"><rect x="1.5" y="2" width="11" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.2" /><path d="m4.5 12 2.5-2 2.5 2M4 7.5 6 5.5 8 7l2-3M8 4h2v2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          <span class="sidebar-mode-item-label">팔라스</span>
+          <span class="sidebar-mode-item-label">전략</span>
           <span class="sidebar-mode-count" id="modeNavBacktestCount" hidden></span>
         </button>
       </div>

@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const { createCanvasDeliveryRouter } = require('./canvas-delivery-router');
+const { correlationKey } = require('../rest-canvas-paint');
 const source = fs.readFileSync(new URL('../../main.js', import.meta.url), 'utf8');
 function declaration(name) {
   const start = source.indexOf(`function ${name}(`);
@@ -19,13 +20,13 @@ function harness() {
   const painted = [];
   const saved = [];
   const send = Function('rememberLiveRealtimeFallbackAuthority', 'crypto', 'historyConversationId',
-    'persistBackgroundCanvasCard', 'shellWin', 'rememberPendingCanvasCard', `${declaration('sendLiveCanvasResult')}; return sendLiveCanvasResult;`)(
+    'persistBackgroundCanvasCard', 'shellWin', 'rememberPendingCanvasCard', 'restCorrelationKey', `${declaration('sendLiveCanvasResult')}; return sendLiveCanvasResult;`)(
     () => {}, { randomUUID: () => 'card-id' }, () => active,
     (conversationId, result, cardId) => saved.push({ conversationId, result, cardId }),
     { isDestroyed: () => false, webContents: { send: (channel, payload) => {
       if (channel === 'athena:add-canvas-live') painted.push(payload);
     } } },
-    () => {},
+    () => {}, correlationKey,
   );
   const router = createCanvasDeliveryRouter({ deliver: send });
   return { router, painted, saved, select(id) { active = id; } };
@@ -99,10 +100,10 @@ test('returning immediately after a background card flushes its pending save bef
   };
   const start = source.indexOf("ipcMain.handle('athena:session-replay-cards',");
   const code = source.slice(start, source.indexOf('\n});', start) + 4);
-  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', 'pendingCanvasCards', code)(
+  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', 'pendingCanvasCards', 'restCorrelationKey', 'crypto', code)(
     { handle: (_name, handler) => { replay = handler; } }, () => bridge,
     { isDestroyed: () => false, webContents: { send: (channel, payload) => sent.push({ channel, payload }) } },
-    () => {}, () => 'original', new Map(),
+    () => {}, () => 'original', new Map(), correlationKey, { randomUUID: () => 'restored-card' },
   );
   assert.equal(replay(null, { id: 'original' }).replayed, 1);
   assert.equal(sent[0].payload.envelope.canvas_type, 'chart');
@@ -118,7 +119,7 @@ test('late replay requests cannot paint or flush deferred actions after another 
   const deferred = [];
   const start = source.indexOf("ipcMain.handle('athena:session-replay-cards',");
   const code = source.slice(start, source.indexOf('\n});', start) + 4);
-  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', 'pendingCanvasCards', code)(
+  Function('ipcMain', 'getSessionBridge', 'shellWin', 'flushDeferredShellEvents', 'historyConversationId', 'pendingCanvasCards', 'restCorrelationKey', 'crypto', code)(
     { handle: (_name, handler) => { replay = handler; } },
     () => ({ flush() {}, load(id) {
       loads++;
@@ -128,7 +129,7 @@ test('late replay requests cannot paint or flush deferred actions after another 
       ] };
     } }),
     { isDestroyed: () => false, webContents: { send: (channel, payload) => sent.push({ channel, payload }) } },
-    (id) => deferred.push(id), () => active, new Map(),
+    (id) => deferred.push(id), () => active, new Map(), correlationKey, { randomUUID: () => 'restored-card' },
   );
   // Simulate the old renderer's queued A request arriving after main switches to B.
   active = 'B';

@@ -80,7 +80,7 @@ function harness(first = mismatch()) {
     mounted: true, syncChatTechniqueAttr() {}, coverageKey: () => null, coverageAsked: null,
     clear: node => { node.children = []; }, container, el: element,
     errorStateBadge: canvas.errorStateBadge, ERROR_BADGE_DISABLED: '비활성',
-    CRUMB_HOME_LABEL: '⌂ 팔라스 홈', MODE_TABS: canvas.MODE_TABS,
+    CRUMB_HOME_LABEL: '⌂ 전략 홈', MODE_TABS: canvas.MODE_TABS,
     formatNumeric: String, draftValueText: (_key, value) => value === 'day' ? '일봉' : String(value),
     goHome() {}, loadPresets() {}, coverageRatio: () => 0.5, cancelApproval() {},
     setState(patch) { context.state = { ...context.state, ...patch }; if (context.state.view === 'error') context.render(); },

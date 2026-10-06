@@ -88,7 +88,8 @@ const { createClaudeSelectorWorkerPool } = require('./lib/main/claude-selector-w
 const chartReload = require('./lib/main/chart-reload');
 const chartReloadAuthority = chartReload.createChartReloadAuthority();
 const { createChartRemounts } = require('./lib/main/chart-remount');
-const chartRemounts = createChartRemounts({ correlationKey: value => restCorrelationKey(value), panelIdFor: require('./lib/aits-chart-panel').panelIdFor, randomUUID: () => crypto.randomUUID() });
+const { panelIdFor: chartPanelIdFor } = require('./lib/aits-chart-panel');
+const chartRemounts = createChartRemounts({ correlationKey: value => restCorrelationKey(value), panelIdFor: chartPanelIdFor, randomUUID: () => crypto.randomUUID() });
 const ticketCapacity = require('./lib/main/ticket-capacity');
 const { appIconPath, appTrayIconPath } = require('./lib/main/app-icon');
 const orderTicket = require('./lib/order-ticket');
@@ -2152,7 +2153,7 @@ Object.keys(PROJECT_CHANNELS).forEach((channel) => {
   });
 });
 
-// 팔라스 기법의 저장 위치 — 사람이 고른 폴더 그대로다. 등록된 프로젝트 안으로
+// 전략 기법의 저장 위치 — 사람이 고른 폴더 그대로다. 등록된 프로젝트 안으로
 // 가두지 않는다. 고른 곳이 이미 등록된 프로젝트(또는 그 안)면 그 id를 돌려주고,
 // 아니면 절대 경로만 돌려 대화상자가 프로젝트로 연다.
 function techniqueFolderInsideProject(root, directory) {
@@ -3124,6 +3125,16 @@ ipcMain.on('athena:rest-canvas-painted', (event, payload = {}) => {
   });
   const waiter = key && restPaintWaiters.get(key);
   if (!waiter) return;
+  if (waiter.boardHydrateKey && (waiter.conversationId !== historyConversationId()
+    || waiter.accountGeneration !== realtimeAccountGeneration
+    || waiter.reloadAuthority.accountId !== activeRestAccountId()
+    || payload.panel_id !== chartPanelIdFor({ source: 'live', correlation: waiter.reloadAuthority.correlation })
+    || Number(payload.generation) !== 1)) {
+    restPaintWaiters.delete(key);
+    waiter.cleanup();
+    waiter.reject(new Error('차트 표시 소유권이 변경됐습니다.'));
+    return;
+  }
   const decision = decidePaintAck(payload, {
     pendingPaint: waiter.pendingPaint || null,
     now: () => performance.now(),
@@ -3163,7 +3174,7 @@ ipcMain.on('athena:rest-canvas-painted', (event, payload = {}) => {
   }
   if (waiter.remountToken) chartRemounts.accept(waiter.remountToken, decision.paint, chartRemountContext(event, waiter.remountRequest));
   if (chartRegistered && !waiter.remountToken) chartRemounts.remember({
-    key, paint: decision.paint, authority: waiter.reloadAuthority, envelope: waiter.sourceEnvelope,
+    key: waiter.boardHydrateKey || key, paint: decision.paint, authority: waiter.reloadAuthority, envelope: waiter.sourceEnvelope,
     senderId: waiter.senderId, conversationId: waiter.conversationId, accountGeneration: waiter.accountGeneration,
   });
   // 차트가 실제로 그려진 순간에만 실시간을 건다 — 그려지지도 않은 패널로 REG를
@@ -3529,7 +3540,14 @@ ipcMain.handle('athena:canvas-board-hydrate', async (event, payload = {}) => {
   if (process.env.ATHENA_CANVAS_SOURCE === 'fixture') {
     return { ok: false, status: 'unavailable' };
   }
+  const conversationId = historyConversationId();
+  const accountGeneration = realtimeAccountGeneration;
+  const accountId = activeRestAccountId();
   const reply = await hydrateCanvasBoardForActiveAccount(payload);
+  if (conversationId !== historyConversationId() || accountGeneration !== realtimeAccountGeneration
+    || accountId !== activeRestAccountId()) {
+    return { ok: false, status: 'error', error: '조회 화면이 변경되어 보드 조회 결과를 버렸다' };
+  }
   const primary = reply && reply.primary_envelope;
   const correlation = payload.correlation && typeof payload.correlation === 'object'
     ? payload.correlation : {};
@@ -3565,6 +3583,17 @@ ipcMain.handle('athena:canvas-board-hydrate', async (event, payload = {}) => {
       reply, correlation, waiter.reloadAuthority.accountId,
     );
     if (authority) { waiter.reloadAuthority = authority; waiter.sourceEnvelope = primary; }
+  } else if (isShellSender && key && primary && reply.ok === true
+    && boardHydrate.primaryReloadAuthority(reply, correlation, accountId)) {
+    // 탭에서 뒤늦게 열린 차트는 최초 카드의 waiter가 이미 끝났다. 새 paint 신원으로
+    // 표시만 확인하고, 재표시의 카드 소유권은 최초 correlation에 계속 묶는다.
+    const envelope = { ...primary, correlation: { ...correlation, dataset_id: crypto.randomUUID() } };
+    void emitRestCanvasAndWaitForPaint({
+      envelope, operationRef: envelope.operation_ref, operationArgs: envelope.operation_args,
+      canvasType: envelope.canvas_type, accountId, boardHydrateKey: key,
+    }, { expand: false, timeoutMs: 30_000, conversationId, paintOnly: true })
+      .catch(() => {});
+    return { ...reply, primary_envelope: envelope, primary_paint_required: true };
   }
   return reply;
 });
@@ -3707,6 +3736,7 @@ async function emitRestCanvasAndWaitForPaint(payload, { expand = true, timeoutMs
       accountGeneration: realtimeAccountGeneration,
       remountToken: payload.remountToken || null,
       remountRequest: payload.remountRequest || null,
+      boardHydrateKey: payload.boardHydrateKey || null,
       reloadAuthority: {
         correlation,
         operationRef: payload.operationRef,
@@ -4025,9 +4055,16 @@ function mergePendingCanvasCards(conversationId, cards, discardPending = false) 
 }
 
 function sendLiveCanvasResult(result, metadata = null) {
-  rememberLiveRealtimeFallbackAuthority(result);
   const sessionCardId = result && result.envelope
     && (result.status === 'success' || result.status === 'fallback') ? crypto.randomUUID() : null;
+  // 일반 provider 카드도 나중에 차트 탭을 열 수 있다. 저장/전달 전에 main이
+  // 발급한 신원을 붙여 hydration과 재표시가 같은 원본 카드를 가리키게 한다.
+  if (sessionCardId && !restCorrelationKey(result.envelope.correlation)) {
+    result = { ...result, envelope: { ...result.envelope,
+      correlation: { dataset_id: sessionCardId, item_id: 'card', ordinal: 1 },
+    } };
+  }
+  rememberLiveRealtimeFallbackAuthority(result);
   const conversationId = metadata && typeof metadata.conversationId === 'string'
     ? metadata.conversationId : historyConversationId();
   metadata = { ...metadata, conversationId };
@@ -7759,11 +7796,21 @@ ipcMain.handle('athena:session-replay-cards', (_e, payload = {}) => {
   }
   const cards = snapshot && Array.isArray(snapshot.canvasCards) ? snapshot.canvasCards : [];
   let replayed = 0;
-  for (const card of cards) {
-    if (!card || !card.envelope) continue;
+  for (const storedCard of cards) {
+    if (!storedCard || !storedCard.envelope) continue;
+    const pending = pendingCanvasCards.get(storedCard.cardId);
+    const sourceCard = pending && pending.conversationId === id ? pending.card : storedCard;
+    // 이전 버전이 저장한 일반 카드에는 correlation이 없다. 복원도 새 전달과
+    // 같은 main 발급 신원을 사용한다. 더 최신 pending 내용과 이미 발급한 신원은
+    // 재사용하며, 원본 저장 봉투는 직접 수정하지 않는다.
+    const card = sourceCard.channel !== 'fixture' && !restCorrelationKey(sourceCard.envelope.correlation)
+      ? { ...sourceCard, envelope: { ...sourceCard.envelope,
+        correlation: { dataset_id: crypto.randomUUID(), item_id: 'card', ordinal: 1 },
+      } } : sourceCard;
     // Keep stored envelopes until their replay mount is reported or explicitly cleared.
-    if (typeof card.cardId === 'string' && card.cardId && !pendingCanvasCards.has(card.cardId)) {
-      if (pendingCanvasCards.size >= 256) pendingCanvasCards.delete(pendingCanvasCards.keys().next().value);
+    if (typeof card.cardId === 'string' && card.cardId
+      && (!pending || (pending.conversationId === id && card !== sourceCard))) {
+      if (!pending && pendingCanvasCards.size >= 256) pendingCanvasCards.delete(pendingCanvasCards.keys().next().value);
       pendingCanvasCards.set(card.cardId, { conversationId: id, card });
     }
     if (card.channel === 'fixture') {

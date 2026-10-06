@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Header, Request, Response
@@ -38,6 +39,10 @@ OptionalWsClientDep = Annotated[KiwoomWsClient | None, Depends(get_kiwoom_ws_cli
 OptionalDataClientDep = Annotated[KiwoomClient | None, Depends(get_kiwoom_client)]
 
 router = APIRouter(prefix="/api/v1/llm", tags=["LLM selector"])
+
+# Optional semantic work must leave room inside the MCP discovery timeout (15 s).
+# Keep the same budget as the app's selector shortlist/defaults path.
+_SEMANTIC_TIMEOUT_SECONDS = 1.5
 
 _TOOL_SPECS = (
     (
@@ -128,7 +133,12 @@ async def search_operations(
     if getattr(request.app.state, "laya_service", None) is None:
         return response
     try:
-        return await rerank_search(request, payload, selector, response)
+        return await asyncio.wait_for(
+            rerank_search(request, payload, selector, response), timeout=_SEMANTIC_TIMEOUT_SECONDS
+        )
+    except TimeoutError:
+        request.app.state.laya_service.client.counts["query_search_timeout"] += 1
+        return response
     except TurnExpired:
         return response
 
@@ -166,7 +176,13 @@ async def resolve_operation(
     from athena_api.laya.query import refine_arguments
     from athena_api.laya.service import TurnExpired
     try:
-        payload = await refine_arguments(request, payload, selector)
+        payload = await asyncio.wait_for(
+            refine_arguments(request, payload, selector), timeout=_SEMANTIC_TIMEOUT_SECONDS
+        )
+    except TimeoutError:
+        service = getattr(request.app.state, "laya_service", None)
+        if service is not None:
+            service.client.counts["query_resolve_timeout"] += 1
     except TurnExpired:
         pass
     return selector.resolve(payload, account=account)

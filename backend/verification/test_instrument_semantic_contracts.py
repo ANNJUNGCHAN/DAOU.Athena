@@ -1,4 +1,6 @@
 """Public API schema fixtures; no account data or network access."""
+import pytest
+
 from athena_api.card_surface_contract import bind_surface_values, build_board_surface_contract, build_surface_contract
 from athena_api.card_surface_templates import get_registry
 
@@ -61,6 +63,33 @@ def test_company_ohlc_and_price_history_keep_every_labelled_part():
     partial = values_for('2RBO-1', responses)
     assert 's016' not in partial and 's052' not in partial
     assert 's055' in partial
+
+
+@pytest.mark.parametrize('face_value', ['500', '0'])
+@pytest.mark.parametrize('unit_query_first', [False, True])
+def test_company_face_value_is_not_replaced_by_its_unit(face_value, unit_query_first):
+    amount_ref = 'detail:ka10001:identity_and_capital'
+    unit_ref = 'detail:ka10001:market_scale_and_ownership'
+    refs = [unit_ref, amount_ref] if unit_query_first else [amount_ref, unit_ref]
+    source = {'fav': face_value, 'fav_unit': '원'}
+    contract = contract_for('2RBO-1', {ref: source for ref in refs})
+    face = next(item for item in contract['slot_values'] if item['slot_id'] == 's034')
+    assert face['value'] == face_value
+    assert face['occurrence_id'].startswith(amount_ref + '|')
+
+
+@pytest.mark.parametrize('source', [
+    {'fav_unit': '원'},
+    {'fav': '', 'fav_unit': '원'},
+    {'fav': None, 'fav_unit': '원'},
+])
+def test_company_face_value_stays_unavailable_when_only_its_unit_is_received(source):
+    contract = contract_for('2RBO-1', {
+        'detail:ka10001:market_scale_and_ownership': source,
+        'detail:ka10001:identity_and_capital': source,
+    })
+    assert 's034' not in {item['slot_id'] for item in contract['slot_values']}
+    assert 's034' in contract['unbound_slots']
 
 
 def test_chart_period_volume_is_distinct_from_session_total_and_has_no_array_label():

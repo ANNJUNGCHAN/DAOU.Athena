@@ -47,7 +47,7 @@ dev = [
 packages = ["athena_api", "athena_mcp"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["verification"]
 asyncio_mode = "auto"
 markers = [
   # 검증 3층(leaf 9). 층마다 CI에서 따로 돌릴 수 있어야 한다 — 한 덩어리면

@@ -104,6 +104,9 @@ test('chart session label and company secondary metrics retain their meaning', (
   assert.equal(text('137X-2', {s120:'123456', s123:'654321'}, 's123'), '654,321주');
   assert.equal(text('2RBO-1', {s070:'0', s071:'0'}, 's070'), '0.00%');
   assert.equal(text('2RBO-1', {s070:'0', s071:'0'}, 's071'), '신용잔고율 0.00%');
+  assert.equal(text('2RBO-1', {s034:'500'}, 's034'), '500');
+  assert.equal(text('2RBO-1', {s034:'0'}, 's034'), '0');
+  assert.equal(text('2RBO-1', {}, 's034'), '미제공');
   assert.equal(text('2RBO-1', {s042: '7115'}, 's042'), 'EPS 7,115원');
   assert.equal(text('2RBO-1', {s045: '57320'}, 's045'), 'BPS 5만 7,320원');
   const slot = source('2RBO-1').slots.find(s => s.slot_id === 's052');

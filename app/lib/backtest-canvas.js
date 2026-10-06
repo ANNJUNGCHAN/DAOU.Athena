@@ -115,7 +115,7 @@ const WORKSPACE_QUIT_LABEL = '그만두기';
 const WORKSPACE_HOME_LABEL = '기법 목록';
 // 홈으로 가는 문은 하나다(규칙 32-04) — 빵조각의 첫 조각. 헤더의 [기법 목록] 버튼은
 // 이것과 같은 일을 하던 둘째 문이라 없앴다.
-const CRUMB_HOME_LABEL = '⌂ 팔라스 홈';
+const CRUMB_HOME_LABEL = '⌂ 전략 홈';
 const CRUMB_SEP = '›';
 // 보드 19 목록 바닥의 한 줄 — 기법을 열면 화면이 통째로 바뀐다는 사실을 누르기 전에 적는다.
 const LIST_FOOTER_NOTE = '기법을 열면 전용 작업 화면으로 이동합니다. 다른 기법 선택과 새 기법 만들기는 홈에서 시작하세요.';
@@ -1518,7 +1518,7 @@ function createBacktestCanvas(options) {
     if (listFirst() && bodyEl && Number.isFinite(bodyEl.scrollTop)) homeScrollTop = bodyEl.scrollTop;
   }
 
-  // 빵조각 첫 조각 [⌂ 팔라스 홈] — 기법 하나의 화면에서 목록(홈)으로 돌아간다. 초안의
+  // 빵조각 첫 조각 [⌂ 전략 홈] — 기법 하나의 화면에서 목록(홈)으로 돌아간다. 초안의
   // 폴더는 디스크에 그대로 남는다(등록 전이라 목록에는 없다). 지금 기법이 들고 있던 것은
   // 버리지 않고 넣어 둔다(parkCurrent) — 저장 안 한 편집이 있는 탭도 닫지 않고 잠재우기만
   // 한다: 남겨둔 채 활성이면 다음 기법의 [실행]이 그 파일을 돈다.
@@ -3223,7 +3223,7 @@ function createBacktestCanvas(options) {
   function renderMessagePanel(extraClass, sub, badge) {
     const wrap = el('div', `backtest-canvas-empty${extraClass ? ` ${extraClass}` : ''}`);
     if (badge) wrap.appendChild(el('div', 'backtest-error-badge', badge));
-    wrap.appendChild(el('div', 'backtest-canvas-empty-title', '팔라스 · 백테스트'));
+    wrap.appendChild(el('div', 'backtest-canvas-empty-title', '전략'));
     wrap.appendChild(el('div', 'backtest-canvas-empty-sub', sub));
     return wrap;
   }
@@ -3308,7 +3308,7 @@ function createBacktestCanvas(options) {
     if (workspaceActive()) return renderWorkspaceHeader();
     const head = el('div', 'backtest-head');
     const title = el('div', 'backtest-head-title');
-    title.appendChild(el('span', 'backtest-head-name', '팔라스 · 백테스트'));
+    title.appendChild(el('span', 'backtest-head-name', '전략'));
     if (spec) {
       title.appendChild(el('span', 'backtest-head-strategy', spec.name));
       if (activeVersionId) title.appendChild(el('span', 'backtest-head-version', '코드 버전 활성'));

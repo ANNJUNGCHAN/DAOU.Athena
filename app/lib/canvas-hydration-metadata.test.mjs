@@ -84,3 +84,11 @@ test('metadata for another board does not overwrite the current board cache', as
   assert.equal(f.mounts.length, 0);
   assert.deepEqual(f.state.deferredValueSlots, ['pending']);
 });
+
+test('a late primary chart retains its main-issued paint request through hydration', async () => {
+  const primary = { renderer_id: 'aits-chart-v1', correlation: { dataset_id: 'new-chart', item_id: 'chart', ordinal: 1 } };
+  const f = fixture({ ok: true, slot_values: {}, primary_envelope: primary, primary_paint_required: true });
+  await f.run();
+  assert.equal(f.state.primaryEnvelope, primary);
+  assert.equal(f.state.primaryPaintEnvelope, primary);
+});

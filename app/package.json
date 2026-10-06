@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron .",
     "test": "npm run test:unit",
-    "test:unit": "node --test lib/*.test.js lib/*.test.mjs lib/main/*.test.js lib/main/*.test.mjs lib/graph-mode/*.test.js",
+    "test:unit": "node --test lib/*.test.js lib/*.test.mjs lib/main/*.test.js lib/main/*.test.mjs lib/graph-mode/*.test.js lib/graph-mode/*.test.mjs",
     "test:provider-contract:unit": "node --test scripts/check-claude-agent-sdk-contract.test.mjs scripts/check-codex-app-server-contract.test.js scripts/write-provider-contract-decision.test.js scripts/check-provider-process-leaks.test.js",
     "probe:provider-contract": "node scripts/check-claude-agent-sdk-contract.mjs && node scripts/check-codex-app-server-contract.js && node scripts/write-provider-contract-decision.js --expect-decision CLAUDE_ONLY",
     "test:provider-contract": "npm run test:provider-contract:unit && npm run probe:provider-contract",

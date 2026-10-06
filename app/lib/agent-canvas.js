@@ -489,7 +489,7 @@ function createAgentCanvas(deps) {
   // ---------- 헤더 ----------
   const head = el('div', 'agent-head');
   const title = el('div', 'agent-title');
-  title.textContent = '아이기스 · 에이전트';
+  title.textContent = '알림';
   head.appendChild(title);
 
   // 뷰 탭 4종(작업/알람/라이브/제안, 위 머리말 참고) — 항상 보인다.

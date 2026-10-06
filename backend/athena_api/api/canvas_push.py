@@ -154,11 +154,12 @@ _LEGACY_PROJECTION_PUBLIC_LABELS = {
     }
 }
 
-# ka10099 sometimes returns this undocumented extra alongside its reviewed
+# ka10099/ka10100 sometimes return this undocumented extra alongside their reviewed
 # marketCode/marketName fields. Keep it in raw/source data, but do not invent a
-# product label for the generic table projection.
+# product label for the generic table/facts projection.
 _OPERATION_HIDDEN_PROJECTION_FIELDS = {
     "base:ka10099": frozenset({"kind"}),
+    "base:ka10100": frozenset({"kind"}),
 }
 
 _INTEGRATED_CARD_FIELDS = frozenset(
