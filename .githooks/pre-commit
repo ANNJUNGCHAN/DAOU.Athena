@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+CONFIG="$ROOT/scripts/security/gitleaks.toml"
+command -v gitleaks >/dev/null 2>&1 || { echo "pre-commit: gitleaks is required" >&2; exit 1; }
+[[ -f "$CONFIG" ]] || { echo "pre-commit: secret scan configuration is missing" >&2; exit 1; }
+gitleaks git "$ROOT" --pre-commit --staged --redact=100 --no-banner --ignore-gitleaks-allow --max-archive-depth 2 --max-decode-depth 3 --config "$CONFIG"

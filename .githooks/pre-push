@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+command -v powershell >/dev/null 2>&1 || { echo "pre-push: Windows PowerShell is required" >&2; exit 1; }
+# Keep the ref-update stream untouched for Git LFS.
+powershell -NoProfile -NonInteractive -File "$ROOT/scripts/security/eval-security-gates.ps1" -RemoteUrl "$2" </dev/null
+git lfs pre-push "$@"

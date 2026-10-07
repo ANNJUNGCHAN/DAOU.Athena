@@ -1,0 +1,47 @@
+# Local credentials, account state, and browser/agent profiles
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+auth.json
+storage-state.json
+storageState.json
+cookies.json
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.sqlite3-*
+.aws/
+.ssh/
+.codex/
+.agents/
+.omc/
+.omx/
+profiles/
+browser-profile/
+browser-data/
+user-data/
+User Data/
+
+# Installed runtimes and local caches
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.cache/
+.DS_Store
+Thumbs.db
+~$*
+*.tmp
+*.log
+
+# Fresh render output only; source/video/history/render stays versioned.
+/source/video/render/
