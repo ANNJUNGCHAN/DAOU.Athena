@@ -408,6 +408,15 @@ _TEMPORAL_PHRASES: Mapping[TemporalScope, tuple[str, ...]] = {
     ),
 }
 
+_STOCK_CHART_PERIOD_NAMES: Mapping[TemporalScope, str] = {
+    TemporalScope.TICK: "주식틱차트조회요청",
+    TemporalScope.MINUTE: "주식분봉차트조회요청",
+    TemporalScope.DAILY: "주식일봉차트조회요청",
+    TemporalScope.WEEKLY: "주식주봉차트조회요청",
+    TemporalScope.MONTHLY: "주식월봉차트조회요청",
+    TemporalScope.ANNUAL: "주식년봉차트조회요청",
+}
+
 _MEASURE_PHRASES: Mapping[Measure, tuple[str, ...]] = {
     Measure.IDENTITY: (
         "종목명", "종목코드", "업종코드", "identity", "settlement month", "listed shares",
@@ -792,7 +801,8 @@ _SEMANTIC_KOREAN_TOKENS = frozenset(
         "상승",
         "속한",
         "하락",
-    }
+    },
+    _STOCK_CHART_PERIOD_NAMES.values(),
 )
 _KOREAN_GRAMMATICAL_SUFFIXES = frozenset(
     {
@@ -1104,6 +1114,12 @@ def extract_query_frame(
     data_intents = _extract(normalized, _INTENT_PHRASES)
     measures = _extract(normalized, _MEASURE_PHRASES)
     temporal_scopes = _extract(normalized, _TEMPORAL_PHRASES)
+    # Complete catalog titles carry period evidence; arbitrary Korean compounds do not.
+    for scope, name in _STOCK_CHART_PERIOD_NAMES.items():
+        if scope not in temporal_scopes and re.search(
+            rf"(?<!\w){re.escape(name)}(?!\w)", normalized
+        ):
+            temporal_scopes = (*temporal_scopes, scope)
     result_shapes = _extract(normalized, _SHAPE_PHRASES)
     aggregate_portfolio = any(
         _direct_match(normalized, term)
