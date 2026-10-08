@@ -70,3 +70,96 @@ test('missing completion arguments use the started operation, unknown operations
   f.item(item({ id: 'tool-2', arguments: undefined }));
   assert.equal(f.complete().taskOutcome, 'incomplete');
 });
+
+const chartResolveInput = (overrides = {}) => ({
+  question: '삼성전자 주식일봉차트조회요청', intent: 'query', response_mode: 'full',
+  arguments: { stk_cd: '005930', base_dt: '20261007', upd_stkpc_tp: '1' }, ...overrides,
+});
+const ambiguousResolve = (overrides = {}) => item({
+  tool: 'athena_resolve', arguments: chartResolveInput(), status: 'failed',
+  result: { isError: true, _meta: { 'athena/error_origin': 'upstream-failed' }, content: [{
+    type: 'text', text: 'athena_resolve 실패 (HTTP 409): AMBIGUOUS_OPERATION: fixture ambiguity'
+      + ' · {"candidates":["base:ka10079","base:ka10080","base:ka10081"],"reason":"fixture"}'
+      + ' · 검색·스키마 근거로 조회 대상과 조건을 보완하라.',
+  }] }, ...overrides,
+});
+const resolvedChart = (overrides = {}, body = {}) => item({
+  id: 'tool-2', tool: 'athena_resolve',
+  arguments: chartResolveInput({ preferred_ref: 'base:ka10081' }),
+  result: { isError: false, content: [{ type: 'text', text: JSON.stringify({
+    status: 'resolved', kind: 'query', operation_ref: 'base:ka10081',
+    required_arguments_satisfied: true, response_mode: 'full', plan_token: 'fixture-plan', ...body,
+  }) }] }, ...overrides,
+});
+
+test('a named candidate resolving the identical chart request recovers its earlier ambiguity', () => {
+  const f = fixture();
+  f.item(ambiguousResolve());
+  f.item(resolvedChart({ arguments: chartResolveInput({
+    preferred_ref: 'base:ka10081', candidate_refs: ['base:ka10081'],
+  }) }));
+  const result = f.complete();
+  assert.equal(result.taskOutcome, 'completed');
+  assert.deepEqual(result.toolFailures, []);
+  assert.equal(f.events.filter(event => event.type === 'tool_completed')[0].payload.isError, true);
+  assert.doesNotMatch(JSON.stringify(result), /fixture-plan|005930|20261007/);
+});
+
+test('ambiguity recovery cannot cross query, execution, namespace or canonical-result boundaries', () => {
+  const changedInputs = [
+    { question: '삼성전자 주식월봉차트조회요청' }, { intent: 'order' }, { response_mode: 'compact' },
+    { detail_group: 'monthly' }, { continuation: { next_key: 'fixture-next' } },
+    { arguments: { stk_cd: '000660', base_dt: '20261007', upd_stkpc_tp: '1' } },
+    { arguments: { stk_cd: '005930', base_dt: '20260901', upd_stkpc_tp: '1' } },
+    { arguments: { stk_cd: '005930', base_dt: '20261007', upd_stkpc_tp: '1', account: 'fixture-account' } },
+    { preferred_ref: 'base:ka10083' },
+  ];
+  const successors = [
+    ...changedInputs.map(change => resolvedChart({ arguments: chartResolveInput({ preferred_ref: 'base:ka10081', ...change }) })),
+    resolvedChart({ server: 'other' }), resolvedChart({ tool: 'athena_describe' }),
+    resolvedChart({}, { operation_ref: undefined }), resolvedChart({}, { operation_ref: 'base:ka10080' }),
+    resolvedChart({}, { kind: 'order' }), resolvedChart({}, { status: 'failed' }),
+    resolvedChart({}, { required_arguments_satisfied: false }), resolvedChart({}, { plan_token: '' }),
+    resolvedChart({}, { error: 'fixture execution failure' }), resolvedChart({}, { ok: false }),
+    resolvedChart({}, { auto_execute: { executed: false } }),
+    resolvedChart({ result: { content: [{ type: 'text', text: 'not a resolved plan' }] } }),
+  ];
+  for (const successor of successors) {
+    const f = fixture(); f.item(ambiguousResolve()); f.item(successor);
+    assert.equal(f.complete().taskOutcome, 'incomplete', JSON.stringify(successor.arguments));
+  }
+});
+
+test('only a trusted ambiguity with no prior preferred operation is eligible for semantic recovery', () => {
+  const original = ambiguousResolve();
+  const failures = [
+    ambiguousResolve({ status: 'declined' }), ambiguousResolve({ status: 'cancelled' }),
+    ambiguousResolve({ arguments: chartResolveInput({ preferred_ref: 'base:ka10080' }) }),
+    ambiguousResolve({ result: { ...original.result, _meta: {} } }),
+    ambiguousResolve({ result: { ...original.result, content: [{ type: 'text', text: original.result.content[0].text.replace('AMBIGUOUS_OPERATION', 'BACKEND_UNAVAILABLE') }] } }),
+    ambiguousResolve({ result: { ...original.result, content: [{ type: 'text', text: 'athena_resolve 실패 (HTTP 409): AMBIGUOUS_OPERATION: fixture without candidates' }] } }),
+    ambiguousResolve({ result: { ...original.result, content: [{ type: 'text', text: original.result.content[0].text.replace('base:ka10081', 'base:ka10083') }] } }),
+  ];
+  for (const failure of failures) {
+    const f = fixture(); f.item(failure); f.item(resolvedChart());
+    assert.equal(f.complete().taskOutcome, 'incomplete');
+  }
+});
+
+test('recovering ambiguity preserves independent execution failures and pending calls', () => {
+  const f = fixture();
+  f.item(item({ id: 'independent', error: { message: 'fixture failed read' } }));
+  f.item(ambiguousResolve()); f.item(resolvedChart());
+  assert.deepEqual(f.complete().toolFailures, [{ toolName: 'athena_call', kind: 'tool-error' }]);
+  const pending = fixture();
+  pending.item(item({ id: 'pending', status: 'inProgress' }), false);
+  pending.item(ambiguousResolve()); pending.item(resolvedChart());
+  assert.equal(pending.complete().taskOutcome, 'incomplete');
+});
+
+test('the existing exact-argument retry remains valid after a declined call', () => {
+  const f = fixture();
+  f.item(item({ status: 'declined' }));
+  f.item(item({ id: 'approved-retry' }));
+  assert.equal(f.complete().taskOutcome, 'completed');
+});

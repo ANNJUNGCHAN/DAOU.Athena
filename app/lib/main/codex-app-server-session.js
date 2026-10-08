@@ -210,6 +210,58 @@ function toolResultContent(item) {
   return result == null ? '' : JSON.stringify(result);
 }
 
+function selectorRecoverySignature(input) {
+  if (!input || typeof input !== 'object' || Array.isArray(input)
+    || typeof input.question !== 'string' || !input.question.trim()
+    || !['auto', 'query'].includes(input.intent || 'auto')
+    || !input.arguments || typeof input.arguments !== 'object' || Array.isArray(input.arguments)
+    || Object.keys(input.arguments).length === 0) return null;
+  // Only selection hints may change. Keep the question, period, target, account,
+  // projection, continuation and any future execution fields in the identity.
+  const { preferred_ref, candidate_refs, ...request } = input;
+  return JSON.stringify(stableNormalize(request));
+}
+
+function selectorAmbiguityEvidence(item, input, providerToolName, kind, content) {
+  if (providerToolName !== 'mcp__athena__athena_resolve' || kind !== 'tool-error'
+    || input?.preferred_ref != null
+    || item.result?._meta?.['athena/error_origin'] !== 'upstream-failed'
+    || !/^athena_resolve 실패 \(HTTP 409\): AMBIGUOUS_OPERATION:/.test(content)) return null;
+  const signature = selectorRecoverySignature(input);
+  if (!signature) return null;
+  // This is the gateway's typed selector error envelope, not assistant prose.
+  // Its candidate identities are appended as one JSON segment by selector_tools.
+  for (const part of content.split(' · ')) {
+    try {
+      const evidence = JSON.parse(part);
+      if (Array.isArray(evidence?.candidates) && evidence.candidates.length
+        && evidence.candidates.every(ref => typeof ref === 'string'
+          && /^(?:base|detail):[^:]+(?::[^:]+)?$/.test(ref))) {
+        return { signature, candidates: evidence.candidates };
+      }
+    } catch { /* Missing or unparseable provenance keeps the failure unresolved. */ }
+  }
+  return null;
+}
+
+function recoverSelectorAmbiguity(outcomes, input, providerToolName, content) {
+  if (providerToolName !== 'mcp__athena__athena_resolve'
+    || typeof input?.preferred_ref !== 'string') return;
+  const signature = selectorRecoverySignature(input);
+  if (!signature) return;
+  let plan;
+  try { plan = JSON.parse(content); } catch { return; }
+  if (plan?.status !== 'resolved' || plan.kind !== 'query'
+    || plan.operation_ref !== input.preferred_ref || plan.required_arguments_satisfied !== true
+    || typeof plan.plan_token !== 'string' || !plan.plan_token
+    || plan.error || plan.ok === false || plan.auto_execute?.executed === false) return;
+  for (const [key, outcome] of outcomes) {
+    const evidence = outcome.selectorAmbiguity;
+    if (outcome.failed && outcome.kind === 'tool-error' && evidence?.signature === signature
+      && evidence.candidates.includes(plan.operation_ref)) outcomes.delete(key);
+  }
+}
+
 function isProtocolOverload(error) {
   return error instanceof CodexProtocolError
     && error.code === 'CODEX_REQUEST_REJECTED'
@@ -841,12 +893,16 @@ class CodexAppServerSession {
         || ['failed', 'declined', 'cancelled', 'canceled'].includes(status);
       active.toolCalls.set(toolUseId, { input, operationKey, completed });
       if (completed) {
+        const content = toolResultContent(item);
+        const kind = ['declined', 'cancelled', 'canceled'].includes(status) ? 'approval-denied' : 'tool-error';
         active.toolOutcomes.set(operationKey, {
           toolName: canonicalToolName(providerToolName),
-          kind: ['declined', 'cancelled', 'canceled'].includes(status) ? 'approval-denied' : 'tool-error',
+          kind,
           failed: isError,
+          selectorAmbiguity: isError
+            ? selectorAmbiguityEvidence(item, input, providerToolName, kind, content) : null,
         });
-        const content = toolResultContent(item);
+        if (!isError) recoverSelectorAmbiguity(active.toolOutcomes, input, providerToolName, content);
         this._emitActive(active, 'tool_completed', {
           toolUseId,
           canonicalToolName: canonicalToolName(providerToolName),
