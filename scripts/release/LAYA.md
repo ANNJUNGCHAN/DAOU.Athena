@@ -5,6 +5,10 @@ contains the currently adopted Athena v018 checkpoint and force-choice policy,
 the LAYA SDK, CPU-only PyTorch, their pinned dependency wheels and model notices.
 Training data, credentials and user profiles are not part of the bundle.
 
+For future model/state releases and the linked public training records, follow
+[학습 산출물 보존·공개 지침](TRAINING-ARTIFACTS.md). It covers Release packaging,
+Git provenance records, split-file restoration and publication verification.
+
 Obtain `Athena-LAYA-v018-cpu-bundle.zip` from the same GitHub Release as the
 installer, verify its SHA-256 against the release checksums, and extract it to a
 build-input directory outside the source checkout. Read `notices/MODEL-TERMS.txt`

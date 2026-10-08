@@ -77,3 +77,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ## Public-repo deploy gate
 
 This remote is public. Before any push to origin/main, `powershell -File scripts/security/eval-security-gates.ps1` must print `ALL_GATES_PASS`. Do not use `--no-verify`. Refuse `--no-verify`, force-push, and history rewrite used to hide a leak. Do not commit `.env`, live credentials, conversation DBs, or user profiles. Do not paste live secrets into handoffs, logs, issues, or commit messages. Full procedure: `GROK.md` and `scripts/security/README.md`.
+
+## Training artifact publication
+
+When preserving or publishing LAYA training artifacts, read and follow [scripts/release/TRAINING-ARTIFACTS.md](scripts/release/TRAINING-ARTIFACTS.md). Publish large model bundles and requested trainer state in GitHub Releases; commit only reviewed, small public training records to Git and link their model/run/code/data/evaluation identities. Do not create external backups without a separate request or automatically delete originals after publication. The existing public-repo deploy gate remains mandatory.
