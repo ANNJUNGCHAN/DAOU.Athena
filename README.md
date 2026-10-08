@@ -68,7 +68,7 @@ ATHENA는 대화, 차트, 투자 기록, 외부 도구와 전략 검증을 하�
 
 ## Windows에 설치
 
-[ATHENA v0.1.4 설치 파일 다운로드](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.4/Athena-Setup-0.1.4-x64.exe)
+[ATHENA v0.1.5 설치 파일 다운로드](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.5/Athena-Setup-0.1.5-x64.exe)
 
 Windows x64용 설치 프로그램은 Electron 앱과 로컬 Python 백엔드를 포함합니다. 설치 후 ATHENA를 실행하고 사용할 모델 공급자에 로그인하세요. 키움 데이터 조회에는 별도의 API 자격 증명 연결이 필요합니다.
 
@@ -96,9 +96,13 @@ npm --prefix app start
 
 > 이 공개 저장소는 실행·재빌드 범위에 맞춰 구성되어 있습니다. 내부 검증 스크립트와 작업 기록은 공개 배포 대상에 포함되지 않습니다.
 
-### 개발 소스의 LAYA 런타임과 모의 백테스트
+### 기본 앱의 LAYA 런타임과 모의 백테스트
 
-일반 요청은 배포 manifest와 로컬 런타임을 사용하는 현재 LAYA 경로로 통합했습니다. 과거 후보 선택 실험의 `ATHENA_LAYA_ENABLED`·`ATHENA_LAYA_BASE_URL` 설정은 사용하지 않습니다. 새 컴퓨터의 런타임 준비는 [인계 문서](backend/ref/handoff-20261005.md)를 참고하세요. 모델 파일과 인증 정보는 Git에 포함되지 않습니다.
+0.1.5부터 Windows 설치 파일에는 Athena용 LAYA v018 모델과 CPU 실행 환경이 포함됩니다. 앱이 포함된 모델을 자동으로 찾아 실행하므로 별도 Python 설치, 모델 다운로드, 토큰 입력이 필요하지 않습니다. 모델을 읽는 동안에는 기존 대체 경로를 사용합니다. 명시한 `ATHENA_LAYA_*` 런타임 설정은 기본 번들보다 우선합니다. 인증 토큰은 앱 실행마다 메모리에서 생성하며, 로그는 사용자 홈의 `.athena/logs/laya`에 저장합니다.
+
+모델과 빌드용 CPU wheel은 GitHub Release의 `Athena-LAYA-v018-cpu-bundle.zip`으로 배포합니다. Git checkout에는 큰 모델이 들어 있지 않습니다. 소스에서 실행하려면 이 번들의 런타임 파일을 `backend/laya-runtime`에 준비하고 동일한 Python 환경에 고정된 CPU 의존성을 설치해야 합니다. 번들 규격과 검증 명령은 [LAYA 배포 안내](scripts/release/LAYA.md)를 참고하세요. 과거 후보 선택 실험의 `ATHENA_LAYA_ENABLED`·`ATHENA_LAYA_BASE_URL` 설정은 사용하지 않습니다.
+
+포함한 모델은 현재 사용 중인 `v018-block002-cpu-force-choice-20261006`입니다. 이 정책은 confidence threshold가 0이며 `defer`를 제외한 최고 점수 선택을 사용합니다. 이번 배포는 설치·CPU 실행을 검증하며, 이 정책의 정확도를 새로 보증하지 않습니다. LAYA는 요청 판단을 보조하며 기존 권한 검사와 주문 확인 절차를 대체하지 않습니다. 모델·토크나이저의 라이선스와 이용조건은 번들 `notices` 폴더 및 설치 화면에서 확인할 수 있습니다.
 
 자연어 전략 모의 백테스트는 사용자가 별도 화면에서 명시적으로 시작하는 실험 기능으로 보존했습니다. 이 기능은 기존 로컬 LAYA 서버(기본 `http://127.0.0.1:8768`)를 사용하며, 일반 요청의 CPU 배포 런타임과 별개입니다. 소스 병합이 실제 모델의 판단 정확도나 설치 파일 포함 여부를 보증하지 않습니다. [통합 범위와 품질 한계](backend/ref/laya-experiments.md)를 확인하세요.
 
@@ -137,7 +141,7 @@ Windows 설치 파일은 CI가 만들지 않습니다. 로컬에서 같은 버�
 MCP 번들만 검증하려면 `scripts/release/stage-windows-mcp-runtimes.ps1`에 새 `-Destination`과 `-DownloadDirectory`를 지정합니다. 이후 `backend` 폴더에서 `.venv/Scripts/python.exe -m verification.verify_mcp_bundled_runtime <번들 경로>`를 실행하면 시스템 Node·uv 경로 없이 MCP 초기화·도구 조회·호출을 검사합니다. `--python <설치본 python.exe 경로>`로 설치본 Python을 지정할 수 있습니다. 검증은 별도 임시 캐시를 사용하며 등록된 사용자 MCP 서버나 자격 증명을 사용하지 않습니다.
 
 ```powershell
-pwsh -NoProfile -File scripts/build-windows-installer.ps1
+pwsh -NoProfile -File scripts/build-windows-installer.ps1 -LayaBundle C:/build-inputs/Athena-LAYA-v018-cpu-bundle
 gh release upload v0.1.0 .omc/artifacts/windows-installer/0.1.0/dist/Athena-Setup-0.1.0-x64.exe
 ```
 

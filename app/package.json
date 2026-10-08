@@ -1,6 +1,6 @@
 {
   "name": "athena-shell",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "description": "Athena — Codex형 셸 창 Electron 앱 (중앙 캔버스 + 우측 채팅). 프로토타입.",
   "main": "main.js",

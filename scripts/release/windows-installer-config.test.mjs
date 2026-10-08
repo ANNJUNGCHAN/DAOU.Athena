@@ -42,6 +42,7 @@ test("installer uses the repository-owned destination guard from its snapshot", 
   assert.equal(result.status, 0, result.stderr);
   const nsis = JSON.parse(result.stdout);
   assert.equal(nsis.include, resolve(dirname(configPath), "windows-installer.nsh"));
+  assert.equal(nsis.license, resolve("fixture/backend/laya-runtime/notices/MODEL-TERMS.txt"));
   assert.equal(nsis.allowToChangeInstallationDirectory, true);
   assert.equal(nsis.allowElevation, false);
   assert.equal(nsis.perMachine, false);

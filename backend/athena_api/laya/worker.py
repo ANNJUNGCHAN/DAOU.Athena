@@ -12,10 +12,12 @@ import httpx
 
 
 class ManagedWorker:
-    def __init__(self, settings, client, *, spawn=asyncio.create_subprocess_exec, transport=None):
+    def __init__(self, settings, client, *, spawn=asyncio.create_subprocess_exec, transport=None,
+                 log_dir=None):
         self.settings, self.client, self.spawn, self.transport = settings, client, spawn, transport
         self.process, self.monitor, self.log_file = None, None, None
         self.state = "unconfigured"
+        self.log_dir = Path(log_dir) if log_dir is not None else Path.home() / ".athena" / "logs" / "laya"
 
     async def health(self):
         try:
@@ -28,7 +30,9 @@ class ManagedWorker:
             if response.status_code != 200:
                 return "conflicting_runtime"
             payload = response.json()
-            matches = (payload.get("identity", {}).get("deployment_sha256") == self.client.deployment_sha256
+            if not isinstance(payload, dict) or not isinstance(payload.get("identity"), dict):
+                return "conflicting_runtime"
+            matches = (payload["identity"].get("deployment_sha256") == self.client.deployment_sha256
                        and payload.get("device") == self.settings.laya_device)
             return "ready" if matches else "conflicting_runtime"
         except httpx.ConnectError:
@@ -50,9 +54,6 @@ class ManagedWorker:
         if not python.is_file() or not deployment.is_file():
             self.state = "configuration_invalid"
             return
-        logs = deployment.parent / "runtime-logs"
-        logs.mkdir(parents=True, exist_ok=True)
-        self.log_file = (logs / ("laya-" + uuid.uuid4().hex + ".log")).open("xb")
         env = dict(os.environ)
         env["PYTHONPATH"] = str(Path(__file__).resolve().parents[2])
         env["ATHENA_LAYA_RUNTIME_TOKEN"] = self.client.token
@@ -60,12 +61,15 @@ class ManagedWorker:
                 "--deployment", str(deployment), "--device", settings.laya_device,
                 "--port", str(urlsplit(self.client.url).port or 8769)]
         try:
+            self.log_dir.mkdir(parents=True, exist_ok=True)
+            self.log_file = (self.log_dir / ("laya-" + uuid.uuid4().hex + ".log")).open("xb")
             self.process = await self.spawn(*argv, env=env, cwd=str(deployment.parent),
                 stdin=asyncio.subprocess.DEVNULL, stdout=self.log_file, stderr=asyncio.subprocess.STDOUT,
                 creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
         except (OSError, ValueError):
             self.state = "startup_failed"
-            self.log_file.close()
+            if self.log_file:
+                self.log_file.close()
             self.log_file = None
             return
         self.state = "starting"
@@ -76,7 +80,7 @@ class ManagedWorker:
         # their existing fallback until this exact artifact reports ready.
         for _ in range(90):
             if self.process.returncode is not None:
-                self.state = "startup_failed"
+                await self._failed_startup("startup_failed")
                 return
             await asyncio.sleep(1)
             status = await self.health()
@@ -84,15 +88,23 @@ class ManagedWorker:
                 self.state = "ready"
                 return
             if status == "conflicting_runtime":
-                self.state = status
+                await self._failed_startup(status)
                 return
-        self.state = "startup_timeout"
+        await self._failed_startup("startup_timeout")
+
+    async def _failed_startup(self, reason):
+        try:
+            await self.close()
+        except Exception:
+            return  # close() preserves shutdown_failed; never claim the child stopped.
+        self.state = reason
 
     async def close(self):
         try:
             if self.monitor:
-                self.monitor.cancel()
-                await asyncio.gather(self.monitor, return_exceptions=True)
+                if self.monitor is not asyncio.current_task():
+                    self.monitor.cancel()
+                    await asyncio.gather(self.monitor, return_exceptions=True)
                 self.monitor = None
             # Never terminate a reused or unrelated service; only our live handle.
             if self.process is not None and self.process.returncode is None:

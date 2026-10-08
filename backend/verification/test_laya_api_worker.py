@@ -1,4 +1,5 @@
 from collections import Counter
+import asyncio
 import json
 import io
 import os
@@ -6,6 +7,7 @@ from pathlib import Path
 import tempfile
 from types import SimpleNamespace
 import unittest
+from unittest.mock import AsyncMock, patch
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -107,6 +109,14 @@ class ApiTests(unittest.TestCase):
 
 
 class WorkerTests(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.home = Path(temp.name)
+        home = patch('athena_api.laya.worker.Path.home', return_value=self.home)
+        home.start()
+        self.addCleanup(home.stop)
+
     def settings(self, root):
         return SimpleNamespace(laya_python_executable=root / "python.exe",
                                laya_deployment_path=root / "deployment.json", laya_device="cpu")
@@ -159,6 +169,22 @@ class WorkerTests(unittest.IsolatedAsyncioTestCase):
         await worker.start()
         self.assertEqual(worker.state, "conflicting_runtime")
 
+    async def test_malformed_existing_health_is_nonfatal_and_does_not_spawn(self):
+        async def spawn(*args, **kwargs):
+            self.fail("Malformed existing service must not be replaced or duplicated")
+        for payload in ([], None, "ready", {}, {"identity": []}, {"identity": None}):
+            with self.subTest(payload=payload):
+                def http(request):
+                    return httpx.Response(200, content=json.dumps(payload),
+                                          headers={"Content-Type": "application/json"})
+                worker = ManagedWorker(self.settings(Path("unused")),
+                    RuntimeClient("http://127.0.0.1:8769", "secret", "pin"),
+                    spawn=spawn, transport=httpx.MockTransport(http))
+                await worker.start()
+                self.assertEqual(worker.state, "conflicting_runtime")
+                self.assertIsNone(worker.process)
+                await worker.close()
+
     async def test_connect_timeout_is_not_absence_and_read_probe_remains_bounded(self):
         async def spawn(*args, **kwargs):
             self.fail("An ambiguous connection must not spawn a competing worker")
@@ -203,7 +229,10 @@ class WorkerTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(argv[argv.index("--device") + 1], "cpu")
             self.assertNotIn("secret", " ".join(argv))
             self.assertEqual(options["env"]["ATHENA_LAYA_RUNTIME_TOKEN"], "secret")
+            self.assertNotEqual(os.environ.get("ATHENA_LAYA_RUNTIME_TOKEN"), "secret")
             self.assertNotIn("shell", options)
+            self.assertEqual(worker.log_dir, self.home / '.athena/logs/laya')
+            self.assertFalse((root / 'runtime-logs').exists())
             await worker.close()
             self.assertTrue(child.terminated)
             self.assertEqual(worker.state, "stopped")
@@ -233,6 +262,62 @@ class WorkerTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(worker.state, "startup_failed")
             self.assertIsNone(worker.process)
             self.assertIsNone(worker.log_file)
+
+    async def test_unwritable_user_log_path_falls_back_without_spawning(self):
+        async def spawn(*args, **kwargs):
+            self.fail('No child may start without an opened log')
+        def absent(request):
+            raise httpx.ConnectError('absent', request=request)
+        (self.home / 'python.exe').write_bytes(b'not-run')
+        (self.home / 'deployment.json').write_text('{}')
+        blocked = self.home / 'blocked-log-directory'
+        blocked.write_bytes(b'file prevents directory creation')
+        worker = ManagedWorker(self.settings(self.home), RuntimeClient('http://127.0.0.1:8769', 'secret', 'pin'),
+                               spawn=spawn, transport=httpx.MockTransport(absent), log_dir=blocked)
+        await worker.start()
+        self.assertEqual(worker.state, 'startup_failed')
+        self.assertIsNone(worker.process)
+        self.assertIsNone(worker.log_file)
+
+    async def test_readiness_failure_closes_only_owned_child_without_self_cancelling(self):
+        for health, expected in [('absent', 'startup_timeout'), ('conflicting_runtime', 'conflicting_runtime')]:
+            with self.subTest(health=health):
+                class Child:
+                    pid, returncode = 45678, None
+                    def terminate(self):
+                        self.returncode = 0
+                    async def wait(self):
+                        return self.returncode
+                child, calls = Child(), []
+                async def spawn(*args, **kwargs):
+                    calls.append(args)
+                    child.terminate()
+                    return child
+                worker = ManagedWorker(self.settings(self.home), RuntimeClient('http://127.0.0.1:8769', 'secret', 'pin'),
+                                       spawn=spawn)
+                worker.process = child
+                log = worker.log_file = io.StringIO()
+                worker.health = AsyncMock(return_value=health)
+                with patch('athena_api.laya.worker.asyncio.sleep', new=AsyncMock()):
+                    monitor = worker.monitor = asyncio.create_task(worker._await_ready())
+                    await monitor
+                self.assertEqual(worker.state, expected)
+                self.assertEqual(child.returncode, 0)
+                self.assertTrue(log.closed)
+                self.assertIsNone(worker.monitor)
+                if os.name == 'nt':
+                    self.assertEqual(calls, [('taskkill.exe', '/PID', '45678', '/T', '/F')])
+
+    async def test_exited_startup_child_closes_log_without_killing_pid(self):
+        async def spawn(*args, **kwargs):
+            self.fail('Exited child must never be killed by PID')
+        worker = ManagedWorker(self.settings(self.home), RuntimeClient('http://127.0.0.1:8769', 'secret', 'pin'), spawn=spawn)
+        worker.process = SimpleNamespace(pid=45678, returncode=3)
+        log = worker.log_file = io.StringIO()
+        monitor = worker.monitor = asyncio.create_task(worker._await_ready())
+        await monitor
+        self.assertEqual(worker.state, 'startup_failed')
+        self.assertTrue(log.closed)
 
     @unittest.skipUnless(os.name == "nt", "Windows process-tree cleanup contract")
     async def test_tree_stop_failure_never_claims_stopped_and_always_closes_log(self):

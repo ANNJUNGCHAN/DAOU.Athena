@@ -751,10 +751,13 @@ async def _cleanup_lifespan_resources(
 
 
 def build_lifespan(settings: Settings | None = None, *, ws_connect=None):
-    runtime_settings = settings or get_settings()
+    configured_settings = settings or get_settings()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        from athena_api.laya.bundle import resolve_bundle
+
+        runtime_settings, bundle_state = resolve_bundle(configured_settings)
         instrument_identity = InstrumentIdentityIndex(
             db_path=runtime_settings.instrument_db_path
         )
@@ -789,6 +792,9 @@ def build_lifespan(settings: Settings | None = None, *, ws_connect=None):
                 app.state.laya_service.client.deployment_sha256 = ""
         from athena_api.laya.worker import ManagedWorker
         app.state.laya_worker = ManagedWorker(runtime_settings, app.state.laya_service.client)
+        app.state.laya_worker.bundle_state = bundle_state
+        if bundle_state in {"bundle_missing", "bundle_invalid"}:
+            app.state.laya_worker.state = bundle_state
         app.state.settings = runtime_settings
         app.state.local_bearer_token = (
             runtime_settings.local_bearer_token.get_secret_value()

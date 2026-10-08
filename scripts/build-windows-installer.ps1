@@ -3,7 +3,8 @@
 [CmdletBinding()]
 param(
   [string]$Version,
-  [string]$OutputRoot
+  [string]$OutputRoot,
+  [string]$LayaBundle
 )
 
 Set-StrictMode -Version Latest
@@ -68,6 +69,13 @@ function Copy-TrackedFile {
 }
 
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+if ([string]::IsNullOrWhiteSpace($LayaBundle)) {
+  throw '-LayaBundle is required. Supply an explicit portable CPU LAYA package containing bundle.json, deployment, checkpoint, notices and pinned dependency wheels.'
+}
+$LayaBundle = [IO.Path]::GetFullPath($LayaBundle, $RepoRoot)
+if (-not (Test-Path -LiteralPath (Join-Path $LayaBundle 'bundle.json') -PathType Leaf)) {
+  throw "LAYA package manifest is missing: $LayaBundle/bundle.json"
+}
 $SourceCommit = (@(Invoke-NativeCapture git @('-C', $RepoRoot, 'rev-parse', 'HEAD') $RepoRoot) -join '').Trim()
 $AppSource = Join-Path $RepoRoot 'app'
 
@@ -218,6 +226,48 @@ Invoke-Native uv @(
   '--requirement', $RequirementsPath
 ) $StageBackend
 
+$LayaRuntimeDir = Join-Path $StageBackend 'laya-runtime'
+$LayaDependencyDir = Join-Path $DependencyDir 'laya'
+Invoke-Native (Join-Path $RuntimeRoot 'python.exe') @(
+  '-E', '-s',
+  (Join-Path $SnapshotRoot 'scripts/release/laya_bundle.py'),
+  '--source', $LayaBundle,
+  '--destination', $LayaRuntimeDir,
+  '--dependency-directory', $LayaDependencyDir
+) $StageBackend
+Invoke-Native uv @(
+  '--no-config', '--offline', 'pip', 'install',
+  '--no-index', '--no-build', '--require-hashes',
+  '--find-links', (Join-Path $LayaDependencyDir 'wheels'),
+  '--target', (Join-Path $RuntimeRoot 'Lib/site-packages'),
+  '--python', (Join-Path $RuntimeRoot 'python.exe'),
+  '--constraint', $RequirementsPath,
+  '--requirement', (Join-Path $LayaDependencyDir 'requirements.txt')
+) $StageBackend
+Invoke-Native uv @('pip', 'check', '--python', (Join-Path $RuntimeRoot 'python.exe')) $StageBackend
+$layaSmoke = @'
+from pathlib import Path
+import math
+import sys
+import laya
+import torch
+from athena_api.laya.contracts import Deployment
+from athena_api.laya.runtime import SdkPredictor
+packages = (Path(sys.executable).resolve().parent / 'Lib/site-packages').resolve()
+for module in (laya, torch):
+    assert Path(module.__file__).resolve().is_relative_to(packages), 'Inference dependency is outside bundled Python'
+assert torch.version.cuda is None, 'Bundled Torch must use CPU'
+deployment = Deployment(Path('laya-runtime/deployment.json'))
+predictor = SdkPredictor(deployment, 'cpu')
+state, question = deployment.contracts.encode({'task_id': 'general.builtin_tool', 'utterance': 'hello', 'context': {}})
+logits = predictor(state, question)
+assert len(logits) == len(question['crit']) and all(math.isfinite(value) for value in logits)
+print('LAYA CPU inference verified: ' + deployment.identity['model_id'])
+'@
+Invoke-Native (Join-Path $RuntimeRoot 'python.exe') @('-E', '-s', '-c', $layaSmoke) $StageBackend
+$layaBundleManifest = Get-Content -LiteralPath (Join-Path $LayaRuntimeDir 'bundle.json') -Raw | ConvertFrom-Json
+$layaDeploymentManifest = Get-Content -LiteralPath (Join-Path $LayaRuntimeDir 'deployment.json') -Raw | ConvertFrom-Json
+
 Copy-Item -LiteralPath (Join-Path $StageApp 'package-lock.json') -Destination (Join-Path $DependencyDir 'app-package-lock.json')
 Copy-Item -LiteralPath (Join-Path $StageBackend 'uv.lock') -Destination (Join-Path $DependencyDir 'backend-uv.lock')
 
@@ -262,6 +312,12 @@ $buildInfo = [ordered]@{
     electron = '43.5.0'
     python = '3.12.11'
     bundledMcp = $mcpRuntimeManifest
+    laya = [ordered]@{
+      modelId = $layaDeploymentManifest.model_id
+      deploymentSha256 = $layaBundleManifest.deployment_sha256
+      device = 'cpu'
+      dependencies = @($layaBundleManifest.dependencies | Select-Object name, version, sha256)
+    }
     node = (@(Invoke-NativeCapture node @('--version') $RepoRoot) -join '').Trim()
     npm = (@(Invoke-NativeCapture npm @('--version') $RepoRoot) -join '').Trim()
     uv = (@(Invoke-NativeCapture uv @('--version') $RepoRoot) -join '').Trim()
@@ -271,14 +327,15 @@ $buildInfo = [ordered]@{
     appPackageLock = 'dependencies/app-package-lock.json'
     backendUvLock = 'dependencies/backend-uv.lock'
     backendRequirements = 'dependencies/backend-requirements.txt'
+    layaRequirements = 'dependencies/laya/requirements.txt'
   }
   stagedSourceCounts = [ordered]@{ app = $appFiles.Count; backend = $backendFiles.Count }
   artifact = "dist/Athena-Setup-$Version-x64.exe"
 }
 $BuildInfoPath = Join-Path $BuildRoot 'build-info.json'
-$buildInfo | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $BuildInfoPath -Encoding utf8
+$buildInfo | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $BuildInfoPath -Encoding utf8
 
-$sumFiles = @($ArtifactPath, $BuildInfoPath, (Join-Path $DependencyDir 'backend-requirements.txt'))
+$sumFiles = @($ArtifactPath, $BuildInfoPath, (Join-Path $DependencyDir 'backend-requirements.txt'), (Join-Path $LayaDependencyDir 'requirements.txt'))
 $sumLines = foreach ($file in $sumFiles) {
   $relative = [IO.Path]::GetRelativePath($BuildRoot, $file).Replace('\', '/')
   $hash = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()

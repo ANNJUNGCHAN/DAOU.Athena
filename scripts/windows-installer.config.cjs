@@ -58,6 +58,7 @@ module.exports = {
   },
   nsis: {
     include: path.join(__dirname, 'windows-installer.nsh'),
+    license: path.join(backendDir, 'laya-runtime', 'notices', 'MODEL-TERMS.txt'),
     installerIcon: appIcon,
     uninstallerIcon: appIcon,
     oneClick: false,
