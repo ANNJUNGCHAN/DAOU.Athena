@@ -1,0 +1,2466 @@
+{
+  "features": [
+    {
+      "id": "chat-screen",
+      "samples": [
+        {
+          "time": 4.591,
+          "file": "operation-chat-screen-0.15.png",
+          "state": {
+            "time": 4.591,
+            "featureId": "chat-screen",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.6251251942900087,
+              "x": -1289.660455176561,
+              "y": -781.6782864252455
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1288.1437497152879,
+              "y": 817.0035435979637
+            },
+            "cursorTargetId": "prompt",
+            "target": {
+              "id": "prompt",
+              "x": 1230.09619140625,
+              "y": 776.8167724609375,
+              "width": 609.421875,
+              "height": 74.7557373046875
+            },
+            "inputText": "삼성전",
+            "heading": "화면 호출",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 5.1924,
+          "file": "operation-chat-screen-0.46.png",
+          "state": {
+            "time": 5.1924,
+            "featureId": "chat-screen",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -2372.5,
+              "y": -1438
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1314.750244140625,
+              "y": 623.85009765625
+            },
+            "cursorTargetId": "send-message",
+            "target": {
+              "id": "send-message",
+              "x": 1314.750244140625,
+              "y": 623.85009765625,
+              "width": 64.5,
+              "height": 64.5
+            },
+            "inputText": "",
+            "heading": "화면 호출",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 6.0072,
+          "file": "operation-chat-screen-0.88.png",
+          "state": {
+            "time": 6.0072,
+            "featureId": "chat-screen",
+            "phase": "result",
+            "camera": {
+              "scale": 2.15,
+              "x": -953.5,
+              "y": -535
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1850,
+              "y": 1010
+            },
+            "cursorTargetId": "prompt",
+            "target": {
+              "id": "prompt",
+              "x": 2380.0751953125,
+              "y": 1526.85009765625,
+              "width": 806.25,
+              "height": 98.89990234375
+            },
+            "inputText": "",
+            "heading": "화면 호출",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chat-screen-talk",
+      "samples": [
+        {
+          "time": 6.531000000000001,
+          "file": "operation-chat-screen-talk-0.15.png",
+          "state": {
+            "time": 6.531000000000001,
+            "featureId": "chat-screen-talk",
+            "phase": "operate",
+            "camera": {
+              "scale": 1.7510583999999998,
+              "x": -615.895671,
+              "y": -422.79767499999997
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 681.8739132895065,
+              "y": 807.56171010187
+            },
+            "cursorTargetId": "plot-target",
+            "target": {
+              "id": "plot-target",
+              "x": 623.8263549804688,
+              "y": 767.3749389648438,
+              "width": 48.126708984375,
+              "height": 562.6096801757812
+            },
+            "inputText": "",
+            "heading": "화면 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 7.1324000000000005,
+          "file": "operation-chat-screen-talk-0.46.png",
+          "state": {
+            "time": 7.1324000000000005,
+            "featureId": "chat-screen-talk",
+            "phase": "operate",
+            "camera": {
+              "scale": 1.75,
+              "x": -615,
+              "y": -422.5
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1251.5390625,
+              "y": 766.953125
+            },
+            "cursorTargetId": "plot-target",
+            "target": {
+              "id": "plot-target",
+              "x": 1251.5390625,
+              "y": 766.953125,
+              "width": 675.6640625,
+              "height": 562.26953125
+            },
+            "inputText": "",
+            "heading": "화면 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 7.9472,
+          "file": "operation-chat-screen-talk-0.88.png",
+          "state": {
+            "time": 7.9472,
+            "featureId": "chat-screen-talk",
+            "phase": "result",
+            "camera": {
+              "scale": 1.75,
+              "x": -1647.5,
+              "y": -912.5
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 219.0390625,
+              "y": 276.953125
+            },
+            "cursorTargetId": "plot-target",
+            "target": {
+              "id": "plot-target",
+              "x": 219.0390625,
+              "y": 276.953125,
+              "width": 675.6640625,
+              "height": 562.26953125
+            },
+            "inputText": "",
+            "heading": "화면 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chat-order",
+      "samples": [
+        {
+          "time": 8.471,
+          "file": "operation-chat-order-0.15.png",
+          "state": {
+            "time": 8.471,
+            "featureId": "chat-order",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.1489416,
+              "x": -2371.7226538000004,
+              "y": -1507.6747651187502
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1018.2587399496628,
+              "y": 593.34686635187
+            },
+            "cursorTargetId": "prompt",
+            "target": {
+              "id": "prompt",
+              "x": 960.211181640625,
+              "y": 553.1600952148438,
+              "width": 805.85302734375,
+              "height": 98.8511962890625
+            },
+            "inputText": "삼성전자 1",
+            "heading": "대화주문",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 9.0724,
+          "file": "operation-chat-order-0.46.png",
+          "state": {
+            "time": 9.0724,
+            "featureId": "chat-order",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -2727.25,
+              "y": -1521.85
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.000244140625,
+              "y": 540.0001220703125
+            },
+            "cursorTargetId": "send-message",
+            "target": {
+              "id": "send-message",
+              "x": 960.000244140625,
+              "y": 540.0001220703125,
+              "width": 64.5,
+              "height": 64.5
+            },
+            "inputText": "",
+            "heading": "대화주문",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 9.8872,
+          "file": "operation-chat-order-0.88.png",
+          "state": {
+            "time": 9.8872,
+            "featureId": "chat-order",
+            "phase": "result",
+            "camera": {
+              "scale": 2.15,
+              "x": -975,
+              "y": -169.5
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 192.987548828125,
+              "y": 522.3297119140625
+            },
+            "cursorTargetId": "order-review",
+            "target": {
+              "id": "order-review",
+              "x": 192.987548828125,
+              "y": 522.3297119140625,
+              "width": 190.27490234375,
+              "height": 98.9000244140625
+            },
+            "inputText": "",
+            "heading": "대화주문",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chat-material",
+      "samples": [
+        {
+          "time": 10.411,
+          "file": "operation-chat-material-0.15.png",
+          "state": {
+            "time": 10.411,
+            "featureId": "chat-material",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.9006614999999998,
+              "x": -1700.5516380196532,
+              "y": -1301.8355536875001
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 969.3760495199754,
+              "y": 631.4100377385887
+            },
+            "cursorTargetId": "attach",
+            "target": {
+              "id": "attach",
+              "x": 911.3284912109375,
+              "y": 591.2232666015625,
+              "width": 42.55712890625,
+              "height": 52.4462890625
+            },
+            "inputText": "",
+            "heading": "자료 대화",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 11.0124,
+          "file": "operation-chat-material-0.46.png",
+          "state": {
+            "time": 11.0124,
+            "featureId": "chat-material",
+            "phase": "operate",
+            "camera": {
+              "scale": 1.9,
+              "x": -1817.3249999999998,
+              "y": -999
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960,
+              "y": 539.9999389648438
+            },
+            "cursorTargetId": "file-item",
+            "target": {
+              "id": "file-item",
+              "x": 960,
+              "y": 539.9999389648438,
+              "width": 227.0498046875,
+              "height": 64.5999755859375
+            },
+            "inputText": "",
+            "heading": "자료 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 11.827200000000001,
+          "file": "operation-chat-material-0.88.png",
+          "state": {
+            "time": 11.827200000000001,
+            "featureId": "chat-material",
+            "phase": "result",
+            "camera": {
+              "scale": 1.9,
+              "x": -1966,
+              "y": -1027.5
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 644.9710693359375,
+              "y": 864.8999633789062
+            },
+            "cursorTargetId": "attach",
+            "target": {
+              "id": "attach",
+              "x": 644.9710693359375,
+              "y": 864.8999633789062,
+              "width": 42.542236328125,
+              "height": 52.4281005859375
+            },
+            "inputText": "이 자료를 참고해줘",
+            "heading": "자료 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chat-settings",
+      "samples": [
+        {
+          "time": 12.351,
+          "file": "operation-chat-settings-0.15.png",
+          "state": {
+            "time": 12.351,
+            "featureId": "chat-settings",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.9,
+              "x": -1783.957641601562,
+              "y": -1301.634375
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 984.3360104574753,
+              "y": 630.95233510187
+            },
+            "cursorTargetId": "mode",
+            "target": {
+              "id": "mode",
+              "x": 926.2884521484375,
+              "y": 590.7655639648438,
+              "width": 137.0078125,
+              "height": 52.4281005859375
+            },
+            "inputText": "",
+            "heading": "대화 설정",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 12.9524,
+          "file": "operation-chat-settings-0.46.png",
+          "state": {
+            "time": 12.9524,
+            "featureId": "chat-settings",
+            "phase": "operate",
+            "camera": {
+              "scale": 1.9,
+              "x": -1744.65,
+              "y": -1154.8
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960,
+              "y": 539.9999389648438
+            },
+            "cursorTargetId": "mode-plan",
+            "target": {
+              "id": "mode-plan",
+              "x": 960,
+              "y": 539.9999389648438,
+              "width": 81.699951171875,
+              "height": 64.5999755859375
+            },
+            "inputText": "목표를 정하고 계획을 세워줘",
+            "heading": "대화 설정",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 13.7672,
+          "file": "operation-chat-settings-0.88.png",
+          "state": {
+            "time": 13.7672,
+            "featureId": "chat-settings",
+            "phase": "result",
+            "camera": {
+              "scale": 1.4297560749999978,
+              "x": -938.7782704999954,
+              "y": -490.63818562499756
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1272.4622802734375,
+              "y": 797.2927856445312
+            },
+            "cursorTargetId": "effort-high",
+            "target": {
+              "id": "effort-high",
+              "x": 1272.4622802734375,
+              "y": 797.2927856445312,
+              "width": 62.663330078125,
+              "height": 46.3106689453125
+            },
+            "inputText": "목표를 정하고 계획을 세워줘",
+            "heading": "대화 설정",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "graph-memory",
+      "samples": [
+        {
+          "time": 15.9785,
+          "file": "operation-graph-memory-0.15.png",
+          "state": {
+            "time": 15.9785,
+            "featureId": "graph-memory",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.2847637724267458,
+              "x": -1033.3845893707971,
+              "y": -349.11773073834274
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1165.6917233481004,
+              "y": 633.1221043889793
+            },
+            "cursorTargetId": "memory-record",
+            "target": {
+              "id": "memory-record",
+              "x": 1107.6441650390625,
+              "y": 592.9353332519531,
+              "width": 186.35107421875,
+              "height": 62.31109619140625
+            },
+            "inputText": "",
+            "heading": "활동 기억",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 16.3474,
+          "file": "operation-graph-memory-0.46.png",
+          "state": {
+            "time": 16.3474,
+            "featureId": "graph-memory",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.149923145453343,
+              "x": -2620.646609928821,
+              "y": -1034.2812232582103
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 959.999755859375,
+              "y": 539.9999389648438
+            },
+            "cursorTargetId": "memory-record",
+            "target": {
+              "id": "memory-record",
+              "x": 959.999755859375,
+              "y": 539.9999389648438,
+              "width": 316.1396484375,
+              "height": 108.5711669921875
+            },
+            "inputText": "",
+            "heading": "활동 기억",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 16.847199999999997,
+          "file": "operation-graph-memory-0.88.png",
+          "state": {
+            "time": 16.847199999999997,
+            "featureId": "graph-memory",
+            "phase": "result",
+            "camera": {
+              "scale": 2.15,
+              "x": -2308,
+              "y": -793
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1272.7747802734375,
+              "y": 362.5242919921875
+            },
+            "cursorTargetId": "memory-record",
+            "target": {
+              "id": "memory-record",
+              "x": 1272.7747802734375,
+              "y": 362.5242919921875,
+              "width": 316.150634765625,
+              "height": 108.574951171875
+            },
+            "inputText": "",
+            "heading": "활동 기억",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "graph-cluster",
+      "samples": [
+        {
+          "time": 17.28325,
+          "file": "operation-graph-cluster-0.15.png",
+          "state": {
+            "time": 17.28325,
+            "featureId": "graph-cluster",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.5508975812499999,
+              "x": -422.3251369843747,
+              "y": -282.2651880156249
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1084.4788632406785,
+              "y": 470.6317174260887
+            },
+            "cursorTargetId": "node",
+            "target": {
+              "id": "node",
+              "x": 1026.4313049316406,
+              "y": 430.4449462890625,
+              "width": 62.03582763671875,
+              "height": 62.035888671875
+            },
+            "inputText": "",
+            "heading": "클러스터",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 17.8893,
+          "file": "operation-graph-cluster-0.46.png",
+          "state": {
+            "time": 17.8893,
+            "featureId": "graph-cluster",
+            "phase": "operate",
+            "camera": {
+              "scale": 1.55,
+              "x": -419.5,
+              "y": -281.5
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1028.41796875,
+              "y": 430.797607421875
+            },
+            "cursorTargetId": "node",
+            "target": {
+              "id": "node",
+              "x": 1028.41796875,
+              "y": 430.797607421875,
+              "width": 62,
+              "height": 62
+            },
+            "inputText": "",
+            "heading": "클러스터",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 18.7104,
+          "file": "operation-graph-cluster-0.88.png",
+          "state": {
+            "time": 18.7104,
+            "featureId": "graph-cluster",
+            "phase": "result",
+            "camera": {
+              "scale": 1.55,
+              "x": -419.5,
+              "y": -281.5
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1028.41796875,
+              "y": 430.797607421875
+            },
+            "cursorTargetId": "node",
+            "target": {
+              "id": "node",
+              "x": 1028.41796875,
+              "y": 430.797607421875,
+              "width": 62,
+              "height": 62
+            },
+            "inputText": "",
+            "heading": "클러스터",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        }
+      ]
+    },
+    {
+      "id": "graph-talk",
+      "samples": [
+        {
+          "time": 19.13625,
+          "file": "operation-graph-talk-0.15.png",
+          "state": {
+            "time": 19.13625,
+            "featureId": "graph-talk",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.9005253906250001,
+              "x": -817.9689775609971,
+              "y": -345.31984612751
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1015.4364743246628,
+              "y": 568.2474248235495
+            },
+            "cursorTargetId": "node",
+            "target": {
+              "id": "node",
+              "x": 957.388916015625,
+              "y": 528.0606536865234,
+              "width": 76.02099609375,
+              "height": 76.02102661132812
+            },
+            "inputText": "이 노드의",
+            "heading": "지식 대화",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 19.5315,
+          "file": "operation-graph-talk-0.46.png",
+          "state": {
+            "time": 19.5315,
+            "featureId": "graph-talk",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.05,
+              "x": -954.9882812499998,
+              "y": -402.07109374999993
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960,
+              "y": 539.9999389648438
+            },
+            "cursorTargetId": "node",
+            "target": {
+              "id": "node",
+              "x": 960,
+              "y": 539.9999389648438,
+              "width": 82,
+              "height": 82
+            },
+            "inputText": "",
+            "heading": "지식 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 20.067,
+          "file": "operation-graph-talk-0.88.png",
+          "state": {
+            "time": 20.067,
+            "featureId": "graph-talk",
+            "phase": "result",
+            "camera": {
+              "scale": 2.05,
+              "x": -2155.9999999999995,
+              "y": -690
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": -241.01171875,
+              "y": 252.071044921875
+            },
+            "cursorTargetId": "node",
+            "target": {
+              "id": "node",
+              "x": -241.01171875,
+              "y": 252.071044921875,
+              "width": 82,
+              "height": 82
+            },
+            "inputText": "",
+            "heading": "지식 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        }
+      ]
+    },
+    {
+      "id": "graph-recommend",
+      "samples": [
+        {
+          "time": 20.3985,
+          "file": "operation-graph-recommend-0.15.png",
+          "state": {
+            "time": 20.3985,
+            "featureId": "graph-recommend",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.1140785249999996,
+              "x": -2314.2617613894527,
+              "y": -1437.69912758828
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1021.6646237387257,
+              "y": 629.8889806096827
+            },
+            "cursorTargetId": "prompt",
+            "target": {
+              "id": "prompt",
+              "x": 963.6170654296875,
+              "y": 589.7022094726562,
+              "width": 792.779541015625,
+              "height": 97.2476806640625
+            },
+            "inputText": "내 관심사",
+            "heading": "맞춤 추천",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 20.7674,
+          "file": "operation-graph-recommend-0.46.png",
+          "state": {
+            "time": 20.7674,
+            "featureId": "graph-recommend",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -2727.25,
+              "y": -1521.85
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.000244140625,
+              "y": 540.0001220703125
+            },
+            "cursorTargetId": "send-message",
+            "target": {
+              "id": "send-message",
+              "x": 960.000244140625,
+              "y": 540.0001220703125,
+              "width": 64.5,
+              "height": 64.5
+            },
+            "inputText": "",
+            "heading": "맞춤 추천",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 21.2672,
+          "file": "operation-graph-recommend-0.88.png",
+          "state": {
+            "time": 21.2672,
+            "featureId": "graph-recommend",
+            "phase": "result",
+            "camera": {
+              "scale": 2.15,
+              "x": -2308,
+              "y": -922
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 966.24853515625,
+              "y": 787.6868286132812
+            },
+            "cursorTargetId": "recommend",
+            "target": {
+              "id": "recommend",
+              "x": 966.24853515625,
+              "y": 787.6868286132812,
+              "width": 218.89697265625,
+              "height": 59.3265380859375
+            },
+            "inputText": "",
+            "heading": "맞춤 추천",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        }
+      ]
+    },
+    {
+      "id": "graph-edit",
+      "samples": [
+        {
+          "time": 21.5885,
+          "file": "operation-graph-edit-0.15.png",
+          "state": {
+            "time": 21.5885,
+            "featureId": "graph-edit",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.15,
+              "x": -2227.7127154492164,
+              "y": -1361.3916610742162
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1163.9101071371633,
+              "y": 740.6452672307764
+            },
+            "cursorTargetId": "prompt",
+            "target": {
+              "id": "prompt",
+              "x": 1105.862548828125,
+              "y": 700.45849609375,
+              "width": 806.25,
+              "height": 98.89990234375
+            },
+            "inputText": "이 관계",
+            "heading": "기억 수정",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 21.9574,
+          "file": "operation-graph-edit-0.46.png",
+          "state": {
+            "time": 21.9574,
+            "featureId": "graph-edit",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -2727.25,
+              "y": -1521.85
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.000244140625,
+              "y": 540.0001220703125
+            },
+            "cursorTargetId": "send-message",
+            "target": {
+              "id": "send-message",
+              "x": 960.000244140625,
+              "y": 540.0001220703125,
+              "width": 64.5,
+              "height": 64.5
+            },
+            "inputText": "",
+            "heading": "기억 수정",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 22.4572,
+          "file": "operation-graph-edit-0.88.png",
+          "state": {
+            "time": 22.4572,
+            "featureId": "graph-edit",
+            "phase": "result",
+            "camera": {
+              "scale": 1.2447861609375035,
+              "x": -491.275182125007,
+              "y": -219.13682842187814
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1304.4650268554688,
+              "y": 770.7209777832031
+            },
+            "cursorTargetId": "apply",
+            "target": {
+              "id": "apply",
+              "x": 1304.4650268554688,
+              "y": 770.7209777832031,
+              "width": 44.5789794921875,
+              "height": 34.34832763671875
+            },
+            "inputText": "",
+            "heading": "기억 수정",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plugin-invest",
+      "samples": [
+        {
+          "time": 24.38430775,
+          "file": "operation-plugin-invest-0.15.png",
+          "state": {
+            "time": 24.38430775,
+            "featureId": "plugin-invest",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.472837571396101,
+              "x": -609.7132798648329,
+              "y": -54.52765022262822
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1059.8372311606004,
+              "y": 574.4259526555809
+            },
+            "cursorTargetId": "plugin-snippet",
+            "target": {
+              "id": "plugin-snippet",
+              "x": 1001.7896728515625,
+              "y": 534.2391815185547,
+              "width": 568.078125,
+              "height": 300.4588928222656
+            },
+            "inputText": "",
+            "heading": "투자정보 연동",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 24.9718771,
+          "file": "operation-plugin-invest-0.46.png",
+          "state": {
+            "time": 24.9718771,
+            "featureId": "plugin-invest",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.9,
+              "x": -1401.225,
+              "y": -611.875
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960,
+              "y": 539.9999389648438
+            },
+            "cursorTargetId": "plugin-register-proposal",
+            "target": {
+              "id": "plugin-register-proposal",
+              "x": 960,
+              "y": 539.9999389648438,
+              "width": 168.150146484375,
+              "height": 87.4000244140625
+            },
+            "inputText": "",
+            "heading": "투자정보 연동",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 25.7679388,
+          "file": "operation-plugin-invest-0.88.png",
+          "state": {
+            "time": 25.7679388,
+            "featureId": "plugin-invest",
+            "phase": "result",
+            "camera": {
+              "scale": 1.9,
+              "x": -1947,
+              "y": -771
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1294.5780029296875,
+              "y": 739.8859252929688
+            },
+            "cursorTargetId": "registration-approve",
+            "target": {
+              "id": "registration-approve",
+              "x": 1294.5780029296875,
+              "y": 739.8859252929688,
+              "width": 68.043701171875,
+              "height": 52.4281005859375
+            },
+            "inputText": "",
+            "heading": "투자정보 연동",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plugin-service",
+      "samples": [
+        {
+          "time": 26.24092345,
+          "file": "operation-plugin-service-0.15.png",
+          "state": {
+            "time": 26.24092345,
+            "featureId": "plugin-service",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.128274241769322,
+              "x": -700.6020589429668,
+              "y": -228.01806844540684
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 715.2844357504434,
+              "y": 366.85017750909606
+            },
+            "cursorTargetId": "service-discord",
+            "target": {
+              "id": "service-discord",
+              "x": 657.2368774414062,
+              "y": 326.6634063720703,
+              "width": 655.5084228515625,
+              "height": 219.74435424804688
+            },
+            "inputText": "",
+            "heading": "서비스 연동",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 26.74836958,
+          "file": "operation-plugin-service-0.46.png",
+          "state": {
+            "time": 26.74836958,
+            "featureId": "plugin-service",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -411.70000000000005,
+              "y": -22.493749999999977
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.0000915527344,
+              "y": 540
+            },
+            "cursorTargetId": "service-discord",
+            "target": {
+              "id": "service-discord",
+              "x": 960.0000915527344,
+              "y": 540,
+              "width": 662.2000122070312,
+              "height": 226.2874755859375
+            },
+            "inputText": "결과 ",
+            "heading": "서비스 연동",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 27.43587724,
+          "file": "operation-plugin-service-0.88.png",
+          "state": {
+            "time": 27.43587724,
+            "featureId": "plugin-service",
+            "phase": "result",
+            "camera": {
+              "scale": 2.15,
+              "x": -975,
+              "y": -234
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 396.7000732421875,
+              "y": 328.49375915527344
+            },
+            "cursorTargetId": "service-discord",
+            "target": {
+              "id": "service-discord",
+              "x": 396.7000732421875,
+              "y": 328.49375915527344,
+              "width": 662.199951171875,
+              "height": 226.28750610351562
+            },
+            "inputText": "",
+            "heading": "서비스 연동",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plugin-call",
+      "samples": [
+        {
+          "time": 27.942461799999997,
+          "file": "operation-plugin-call-0.15.png",
+          "state": {
+            "time": 27.942461799999997,
+            "featureId": "plugin-call",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.15,
+              "x": -2227.7009643554698,
+              "y": -1331.9907226562505
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 991.2331051840385,
+              "y": 599.2554967229642
+            },
+            "cursorTargetId": "mention-dart",
+            "target": {
+              "id": "mention-dart",
+              "x": 933.185546875,
+              "y": 559.0687255859375,
+              "width": 293.1728515625,
+              "height": 73.10009765625
+            },
+            "inputText": "@",
+            "heading": "도구 호출",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 28.58344632,
+          "file": "operation-plugin-call-0.46.png",
+          "state": {
+            "time": 28.58344632,
+            "featureId": "plugin-call",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -2727.25,
+              "y": -1521.85
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.000244140625,
+              "y": 540.0001220703125
+            },
+            "cursorTargetId": "send-message",
+            "target": {
+              "id": "send-message",
+              "x": 960.000244140625,
+              "y": 540.0001220703125,
+              "width": 64.5,
+              "height": 64.5
+            },
+            "inputText": "최근 공시 찾",
+            "heading": "도구 호출",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 29.45187696,
+          "file": "operation-plugin-call-0.88.png",
+          "state": {
+            "time": 29.45187696,
+            "featureId": "plugin-call",
+            "phase": "result",
+            "camera": {
+              "scale": 1.6041810279512763,
+              "x": -512.2404367412995,
+              "y": -122.93770481791186
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 923.5015258789062,
+              "y": 661.9078674316406
+            },
+            "cursorTargetId": "filing-0",
+            "target": {
+              "id": "filing-0",
+              "x": 923.5015258789062,
+              "y": 661.9078674316406,
+              "width": 1241.635986328125,
+              "height": 97.85504150390625
+            },
+            "inputText": "",
+            "heading": "도구 호출",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        }
+      ]
+    },
+    {
+      "id": "strategy-code",
+      "samples": [
+        {
+          "time": 31.473,
+          "file": "operation-strategy-code-0.15.png",
+          "state": {
+            "time": 31.473,
+            "featureId": "strategy-code",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.5687273833208102,
+              "x": -1425.592668968517,
+              "y": -924.8387701861739
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1064.7666745199758,
+              "y": 619.7575719182764
+            },
+            "cursorTargetId": "prompt",
+            "target": {
+              "id": "prompt",
+              "x": 1006.7191162109375,
+              "y": 579.57080078125,
+              "width": 588.27294921875,
+              "height": 72.161376953125
+            },
+            "inputText": "돌파 전략",
+            "heading": "바이브코딩",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 32.0372,
+          "file": "operation-strategy-code-0.46.png",
+          "state": {
+            "time": 32.0372,
+            "featureId": "strategy-code",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -964.25,
+              "y": -131.94218749999993
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.0001220703125,
+              "y": 540.0000457763672
+            },
+            "cursorTargetId": "code-view",
+            "target": {
+              "id": "code-view",
+              "x": 960.0001220703125,
+              "y": 540.0000457763672,
+              "width": 1767.300048828125,
+              "height": 711.784423828125
+            },
+            "inputText": "",
+            "heading": "바이브코딩",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 32.8016,
+          "file": "operation-strategy-code-0.88.png",
+          "state": {
+            "time": 32.8016,
+            "featureId": "strategy-code",
+            "phase": "result",
+            "camera": {
+              "scale": 2.15,
+              "x": -975,
+              "y": -169.5
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 949.2501220703125,
+              "y": 502.4422302246094
+            },
+            "cursorTargetId": "code-view",
+            "target": {
+              "id": "code-view",
+              "x": 949.2501220703125,
+              "y": 502.4422302246094,
+              "width": 1767.300048828125,
+              "height": 711.784423828125
+            },
+            "inputText": "",
+            "heading": "바이브코딩",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        }
+      ]
+    },
+    {
+      "id": "strategy-node",
+      "samples": [
+        {
+          "time": 33.293000000000006,
+          "file": "operation-strategy-node-0.15.png",
+          "state": {
+            "time": 33.293000000000006,
+            "featureId": "strategy-node",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.0522841999999994,
+              "x": -517.0584002416946,
+              "y": -108.48067613075823
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 949.529552937943,
+              "y": 522.9242741887832
+            },
+            "cursorTargetId": "strategy-node",
+            "target": {
+              "id": "strategy-node",
+              "x": 891.4819946289062,
+              "y": 482.7375030517578,
+              "width": 82.09130859375,
+              "height": 82.09140014648438
+            },
+            "inputText": "",
+            "heading": "노드 대화",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 33.857200000000006,
+          "file": "operation-strategy-node-0.46.png",
+          "state": {
+            "time": 33.857200000000006,
+            "featureId": "strategy-node",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.05,
+              "x": -446.9726562499998,
+              "y": -50.56015624999998
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960,
+              "y": 539.9999542236328
+            },
+            "cursorTargetId": "strategy-node",
+            "target": {
+              "id": "strategy-node",
+              "x": 960,
+              "y": 539.9999542236328,
+              "width": 82,
+              "height": 81.99996948242188
+            },
+            "inputText": "이 노드를 설명해줘",
+            "heading": "노드 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 34.6216,
+          "file": "operation-strategy-node-0.88.png",
+          "state": {
+            "time": 34.6216,
+            "featureId": "strategy-node",
+            "phase": "result",
+            "camera": {
+              "scale": 2.05,
+              "x": -2155.9999999999995,
+              "y": -935.9999999999998
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": -749.02734375,
+              "y": -345.43988037109375
+            },
+            "cursorTargetId": "strategy-node",
+            "target": {
+              "id": "strategy-node",
+              "x": -749.02734375,
+              "y": -345.43988037109375,
+              "width": 82,
+              "height": 82
+            },
+            "inputText": "이 노드를 설명해줘",
+            "heading": "노드 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        }
+      ]
+    },
+    {
+      "id": "strategy-backtest",
+      "samples": [
+        {
+          "time": 35.126650000000005,
+          "file": "operation-strategy-backtest-0.15.png",
+          "state": {
+            "time": 35.126650000000005,
+            "featureId": "strategy-backtest",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.7517293523249995,
+              "x": -66.88736091565751,
+              "y": 146.0390223717468
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 916.5112423910683,
+              "y": 484.01977894952563
+            },
+            "cursorTargetId": "run-record",
+            "target": {
+              "id": "run-record",
+              "x": 858.4636840820312,
+              "y": 443.8330078125,
+              "width": 155.0279541015625,
+              "height": 80.57958984375
+            },
+            "inputText": "",
+            "heading": "백테스트",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 35.71906,
+          "file": "operation-strategy-backtest-0.46.png",
+          "state": {
+            "time": 35.71906,
+            "featureId": "strategy-backtest",
+            "phase": "operate",
+            "camera": {
+              "scale": 1.75,
+              "x": -606.25,
+              "y": -370
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 318.1875,
+              "y": -72.5
+            },
+            "cursorTargetId": "run-record",
+            "target": {
+              "id": "run-record",
+              "x": 318.1875,
+              "y": -72.5,
+              "width": 154.875,
+              "height": 80.5
+            },
+            "inputText": "",
+            "heading": "백테스트",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 36.521679999999996,
+          "file": "operation-strategy-backtest-0.88.png",
+          "state": {
+            "time": 36.521679999999996,
+            "featureId": "strategy-backtest",
+            "phase": "result",
+            "camera": {
+              "scale": 1.75,
+              "x": -606.25,
+              "y": -370
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 490.5625,
+              "y": 23.75
+            },
+            "cursorTargetId": "trades-tab",
+            "target": {
+              "id": "trades-tab",
+              "x": 490.5625,
+              "y": 23.75,
+              "width": 154.875,
+              "height": 80.5
+            },
+            "inputText": "",
+            "heading": "백테스트",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        }
+      ]
+    },
+    {
+      "id": "strategy-diagnosis",
+      "samples": [
+        {
+          "time": 37.010349999999995,
+          "file": "operation-strategy-diagnosis-0.15.png",
+          "state": {
+            "time": 37.010349999999995,
+            "featureId": "strategy-diagnosis",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.129957951099998,
+              "x": -948.1095182557387,
+              "y": -241.6187279799824
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1018.3803219809138,
+              "y": 561.42581532648
+            },
+            "cursorTargetId": "loss-row",
+            "target": {
+              "id": "loss-row",
+              "x": 960.332763671875,
+              "y": 521.2390441894531,
+              "width": 1750.825439453125,
+              "height": 81.00494384765625
+            },
+            "inputText": "이 손실",
+            "heading": "투자 진단",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 37.54634,
+          "file": "operation-strategy-diagnosis-0.46.png",
+          "state": {
+            "time": 37.54634,
+            "featureId": "strategy-diagnosis",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -966.3999999999999,
+              "y": -230.03593749999993
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960,
+              "y": 540.0000305175781
+            },
+            "cursorTargetId": "loss-row",
+            "target": {
+              "id": "loss-row",
+              "x": 960,
+              "y": 540.0000305175781,
+              "width": 1767.300048828125,
+              "height": 81.76715087890625
+            },
+            "inputText": "",
+            "heading": "투자 진단",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 38.27252,
+          "file": "operation-strategy-diagnosis-0.88.png",
+          "state": {
+            "time": 38.27252,
+            "featureId": "strategy-diagnosis",
+            "phase": "result",
+            "camera": {
+              "scale": 2.15,
+              "x": -2308,
+              "y": -1115.5
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": -381.5999755859375,
+              "y": -345.4640197753906
+            },
+            "cursorTargetId": "loss-row",
+            "target": {
+              "id": "loss-row",
+              "x": -381.5999755859375,
+              "y": -345.4640197753906,
+              "width": 1767.300048828125,
+              "height": 81.76715087890625
+            },
+            "inputText": "",
+            "heading": "투자 진단",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        }
+      ]
+    },
+    {
+      "id": "strategy-search",
+      "samples": [
+        {
+          "time": 38.753,
+          "file": "operation-strategy-search-0.15.png",
+          "state": {
+            "time": 38.753,
+            "featureId": "strategy-search",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.15,
+              "x": -419.55773265624237,
+              "y": 104.24310625000511
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 913.4398922934117,
+              "y": 509.9298894231582
+            },
+            "cursorTargetId": "random",
+            "target": {
+              "id": "random",
+              "x": 855.392333984375,
+              "y": 469.7431182861328,
+              "width": 122.550048828125,
+              "height": 98.89999389648438
+            },
+            "inputText": "",
+            "heading": "조건 탐색",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 39.3172,
+          "file": "operation-strategy-search-0.46.png",
+          "state": {
+            "time": 39.3172,
+            "featureId": "strategy-search",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -964.25,
+              "y": -282.375
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.0001220703125,
+              "y": 540.0000305175781
+            },
+            "cursorTargetId": "samples",
+            "target": {
+              "id": "samples",
+              "x": 960.0001220703125,
+              "y": 540.0000305175781,
+              "width": 1767.300048828125,
+              "height": 92.45001220703125
+            },
+            "inputText": "",
+            "heading": "조건 탐색",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        },
+        {
+          "time": 40.081599999999995,
+          "file": "operation-strategy-search-0.88.png",
+          "state": {
+            "time": 40.081599999999995,
+            "featureId": "strategy-search",
+            "phase": "result",
+            "camera": {
+              "scale": 1.4975845875000093,
+              "x": -421.86519375000785,
+              "y": -101.24764650000188
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 918.4729919433594,
+              "y": 471.5784606933594
+            },
+            "cursorTargetId": "samples",
+            "target": {
+              "id": "samples",
+              "x": 918.4729919433594,
+              "y": 471.5784606933594,
+              "width": 1231.0145263671875,
+              "height": 64.3961181640625
+            },
+            "inputText": "",
+            "heading": "조건 탐색",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alert-personal",
+      "samples": [
+        {
+          "time": 42.1006429,
+          "file": "operation-alert-personal-0.15.png",
+          "state": {
+            "time": 42.1006429,
+            "featureId": "alert-personal",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1.6551923596758205,
+              "x": -232.22898185253803,
+              "y": -90.72388975190088
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.4529232992724,
+              "y": 570.0307347600732
+            },
+            "cursorTargetId": "personal-proposal",
+            "target": {
+              "id": "personal-proposal",
+              "x": 902.4053649902344,
+              "y": 529.8439636230469,
+              "width": 667.0425415039062,
+              "height": 170.89862060546875
+            },
+            "inputText": "",
+            "heading": "맞춤 알람",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom+user-recording"
+          }
+        },
+        {
+          "time": 42.72197156,
+          "file": "operation-alert-personal-0.46.png",
+          "state": {
+            "time": 42.72197156,
+            "featureId": "alert-personal",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -513.825,
+              "y": -268.23203125
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.0000915527344,
+              "y": 540.0000457763672
+            },
+            "cursorTargetId": "personal-proposal",
+            "target": {
+              "id": "personal-proposal",
+              "x": 960.0000915527344,
+              "y": 540.0000457763672,
+              "width": 866.4500122070312,
+              "height": 226.28750610351562
+            },
+            "inputText": "",
+            "heading": "맞춤 알람",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom+user-recording"
+          }
+        },
+        {
+          "time": 43.563771679999995,
+          "file": "operation-alert-personal-0.88.png",
+          "state": {
+            "time": 43.563771679999995,
+            "featureId": "alert-personal",
+            "phase": "result",
+            "camera": {
+              "scale": 2.15,
+              "x": -975,
+              "y": -234
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 498.8250732421875,
+              "y": 574.2320556640625
+            },
+            "cursorTargetId": "personal-proposal",
+            "target": {
+              "id": "personal-proposal",
+              "x": 498.8250732421875,
+              "y": 574.2320556640625,
+              "width": 866.449951171875,
+              "height": 226.2874755859375
+            },
+            "inputText": "",
+            "heading": "맞춤 알람",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "homepage-example-dom+user-recording"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alert-automation",
+      "samples": [
+        {
+          "time": 44.10492875,
+          "file": "operation-alert-automation-0.15.png",
+          "state": {
+            "time": 44.10492875,
+            "featureId": "alert-automation",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.15,
+              "x": -2373.40703125,
+              "y": -1508.7484375000001
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1018.2157711996625,
+              "y": 593.2884557073385
+            },
+            "cursorTargetId": "prompt",
+            "target": {
+              "id": "prompt",
+              "x": 960.168212890625,
+              "y": 553.1016845703125,
+              "width": 806.25,
+              "height": 98.89990234375
+            },
+            "inputText": "아침 7",
+            "heading": "대화형 자동화",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 44.7262571,
+          "file": "operation-alert-automation-0.46.png",
+          "state": {
+            "time": 44.7262571,
+            "featureId": "alert-automation",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -2727.25,
+              "y": -1521.85
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.000244140625,
+              "y": 540.0001220703125
+            },
+            "cursorTargetId": "send-message",
+            "target": {
+              "id": "send-message",
+              "x": 960.000244140625,
+              "y": 540.0001220703125,
+              "width": 64.5,
+              "height": 64.5
+            },
+            "inputText": "",
+            "heading": "대화형 자동화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 45.5680568,
+          "file": "operation-alert-automation-0.88.png",
+          "state": {
+            "time": 45.5680568,
+            "featureId": "alert-automation",
+            "phase": "result",
+            "camera": {
+              "scale": 2.15,
+              "x": -975,
+              "y": -234
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1850,
+              "y": 1010
+            },
+            "cursorTargetId": "prompt",
+            "target": {
+              "id": "prompt",
+              "x": 2358.5751953125,
+              "y": 1827.85009765625,
+              "width": 806.25,
+              "height": 98.89990234375
+            },
+            "inputText": "",
+            "heading": "대화형 자동화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alert-watch",
+      "samples": [
+        {
+          "time": 46.12228535,
+          "file": "operation-alert-watch-0.15.png",
+          "state": {
+            "time": 46.12228535,
+            "featureId": "alert-watch",
+            "phase": "prepare",
+            "camera": {
+              "scale": 2.15,
+              "x": -616.0843750000018,
+              "y": -589.0607421874981
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 955.563305379351,
+              "y": 641.9573399846829
+            },
+            "cursorTargetId": "watch-source-news",
+            "target": {
+              "id": "watch-source-news",
+              "x": 897.5157470703125,
+              "y": 601.7705688476562,
+              "width": 864.300048828125,
+              "height": 177.91259765625
+            },
+            "inputText": "",
+            "heading": "통합 감시",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 46.77062834,
+          "file": "operation-alert-watch-0.46.png",
+          "state": {
+            "time": 46.77062834,
+            "featureId": "alert-watch",
+            "phase": "operate",
+            "camera": {
+              "scale": 2.15,
+              "x": -553.5999999999999,
+              "y": -652.98125
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 960.0001220703125,
+              "y": 540
+            },
+            "cursorTargetId": "watch-source-news",
+            "target": {
+              "id": "watch-source-news",
+              "x": 960.0001220703125,
+              "y": 540,
+              "width": 864.300048828125,
+              "height": 182.2125244140625
+            },
+            "inputText": "",
+            "heading": "통합 감시",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 47.64902852,
+          "file": "operation-alert-watch-0.88.png",
+          "state": {
+            "time": 47.64902852,
+            "featureId": "alert-watch",
+            "phase": "result",
+            "camera": {
+              "scale": 1.6144012899745352,
+              "x": -520.9054415001495,
+              "y": -125.01730596003588
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 615.6330871582031,
+              "y": 770.7736206054688
+            },
+            "cursorTargetId": "watch-source-news",
+            "target": {
+              "id": "watch-source-news",
+              "x": 615.6330871582031,
+              "y": 770.7736206054688,
+              "width": 648.9893188476562,
+              "height": 136.8204345703125
+            },
+            "inputText": "",
+            "heading": "통합 감시",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glaux-mini",
+      "samples": [
+        {
+          "time": 49.9412,
+          "file": "operation-glaux-mini-0.15.png",
+          "state": {
+            "time": 49.9412,
+            "featureId": "glaux-mini",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1468.0475583090374,
+              "y": 936.1867711370259
+            },
+            "cursorTargetId": "mini-prompt",
+            "target": {
+              "id": "mini-prompt",
+              "x": 1410,
+              "y": 896,
+              "width": 606,
+              "height": 94
+            },
+            "inputText": "삼성전자 ",
+            "heading": "미니 대화",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 51.05968,
+          "file": "operation-glaux-mini-0.46.png",
+          "state": {
+            "time": 51.05968,
+            "featureId": "glaux-mini",
+            "phase": "operate",
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1410,
+              "y": 896
+            },
+            "cursorTargetId": "mini-prompt",
+            "target": {
+              "id": "mini-prompt",
+              "x": 1410,
+              "y": 896,
+              "width": 606,
+              "height": 94
+            },
+            "inputText": "",
+            "heading": "미니 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        },
+        {
+          "time": 52.57504,
+          "file": "operation-glaux-mini-0.88.png",
+          "state": {
+            "time": 52.57504,
+            "featureId": "glaux-mini",
+            "phase": "result",
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1410,
+              "y": 896
+            },
+            "cursorTargetId": "mini-prompt",
+            "target": {
+              "id": "mini-prompt",
+              "x": 1410,
+              "y": 896,
+              "width": 606,
+              "height": 94
+            },
+            "inputText": "",
+            "heading": "미니 대화",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "app-code-reconstruction+user-recording"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glaux-notice",
+      "samples": [
+        {
+          "time": 53.4568,
+          "file": "operation-glaux-notice-0.15.png",
+          "state": {
+            "time": 53.4568,
+            "featureId": "glaux-notice",
+            "phase": "prepare",
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1291.750683309038,
+              "y": 541.6867711370264
+            },
+            "cursorTargetId": "mini-notice",
+            "target": {
+              "id": "mini-notice",
+              "x": 1233.703125,
+              "y": 501.5,
+              "width": 221.40625,
+              "height": 49
+            },
+            "inputText": "",
+            "heading": "능동 알림",
+            "uiState": {
+              "selected": false,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 54.38432,
+          "file": "operation-glaux-notice-0.46.png",
+          "state": {
+            "time": 54.38432,
+            "featureId": "glaux-notice",
+            "phase": "operate",
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1233.703125,
+              "y": 501.5
+            },
+            "cursorTargetId": "mini-notice",
+            "target": {
+              "id": "mini-notice",
+              "x": 1233.703125,
+              "y": 501.5,
+              "width": 221.40625,
+              "height": 49
+            },
+            "inputText": "1주 주문 준비",
+            "heading": "능동 알림",
+            "uiState": {
+              "selected": true,
+              "resultVisible": false
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        },
+        {
+          "time": 55.64096,
+          "file": "operation-glaux-notice-0.88.png",
+          "state": {
+            "time": 55.64096,
+            "featureId": "glaux-notice",
+            "phase": "result",
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "domMode": "persistent-reconciliation",
+            "cursor": {
+              "x": 1223.8046875,
+              "y": 530.1875
+            },
+            "cursorTargetId": "mini-review",
+            "target": {
+              "id": "mini-review",
+              "x": 1223.8046875,
+              "y": 530.1875,
+              "width": 201.609375,
+              "height": 49
+            },
+            "inputText": "1주 주문 준비",
+            "heading": "능동 알림",
+            "uiState": {
+              "selected": true,
+              "resultVisible": true
+            },
+            "sourceType": "homepage-example-dom"
+          }
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

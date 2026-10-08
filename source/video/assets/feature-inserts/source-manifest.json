@@ -1,0 +1,90 @@
+{
+  "clips": [
+    {
+      "id": "market-rise",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\market-rise.mp4",
+      "bytes": 8200859,
+      "sha256": "479568fa029d6d20f6ba69e446fbc2d703acdcbf5e67164ba73faf354b8ca00c",
+      "duration": 5.041667,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "watermarkFreeUrlUsed": true,
+      "generationId": "ARUTUf8IgyFp5Nv7vwPcL32mqdsoyqlqBW-l5D6XAd-yOEo-aYp1BfHCSJFE1GQcBPSsNtNr",
+      "decodeErrors": 0,
+      "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\market-rise-contact.jpg"
+    },
+    {
+      "id": "seoul-network",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\seoul-network.mp4",
+      "bytes": 20115006,
+      "sha256": "3992fcbba0c7ad1595102bbde6c0d5e7ec1886a2581405b639a189f156664059",
+      "duration": 5.041667,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "watermarkFreeUrlUsed": true,
+      "generationId": "ATpj--tIPydpucj1QmmkpV1Y5aKUS4-Lnz84udbgT5tW_vrtA7na6lmxGdTSssEecLZWRs2P",
+      "decodeErrors": 0,
+      "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\seoul-network-contact.jpg"
+    },
+    {
+      "id": "tools-connect",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\tools-connect.mp4",
+      "bytes": 4449266,
+      "sha256": "03379c7f1380f98cdb50a9550f3a1295df8a59692599337b9014c11a1936f924",
+      "duration": 5.041667,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "watermarkFreeUrlUsed": true,
+      "generationId": "AX_FNIFMoj23DmXSvxa-53wMcloVRbmykg1AboGoYPBqs_kLHD9yDBfbjWYlBsOP3gcMGRco",
+      "decodeErrors": 0,
+      "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\tools-connect-contact.jpg"
+    },
+    {
+      "id": "strategy-paths",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\strategy-paths.mp4",
+      "bytes": 8143174,
+      "sha256": "c59e8d72f3913b25fbf9240d396dae220f9096ef11fd58e281992b0d333d3762",
+      "duration": 5.041667,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "watermarkFreeUrlUsed": true,
+      "generationId": "AdBZCGVw3aq8jfXHD6ax1ooF2B4oqdg91mgpvmp8SNR_3iH1IPWy_AcJOFDOs557eKIWiClS",
+      "decodeErrors": 0,
+      "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\strategy-paths-contact.jpg"
+    },
+    {
+      "id": "signal-alert",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\signal-alert.mp4",
+      "bytes": 5069653,
+      "sha256": "e2cf4a2fc09a065b4bd2b404b4eb6cf9ade0adca3368cf4d4b0d9c4ef39ce533",
+      "duration": 5.041667,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "watermarkFreeUrlUsed": true,
+      "generationId": "AQRC1tQ17Y-nY3k11_nO8wS5BqjidzSAqPhN7IcJOr1uwtwMP2guaUb7kPE2K4dAzDbwQRFh",
+      "decodeErrors": 0,
+      "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\signal-alert-contact.jpg"
+    },
+    {
+      "id": "companion-move",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\companion-move.mp4",
+      "bytes": 4948371,
+      "sha256": "526230dd46556da9216596ce117d83330891dfad2ccbda976c0090df081539c4",
+      "duration": 5.041667,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "watermarkFreeUrlUsed": true,
+      "generationId": "AQM2oLr3MWftw-E_wJLAq9mYzNiKBXD81S1vGj8XXicY8Kk1OT6DbE6IU8n5iProIoe_vWr2",
+      "decodeErrors": 0,
+      "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\companion-move-contact.jpg"
+    }
+  ],
+  "generatedFor": "user-authorized feature-specific cutaway replacement",
+  "sourceAppTouched": false
+}

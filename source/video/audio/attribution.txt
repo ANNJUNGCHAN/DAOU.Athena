@@ -1,0 +1,16 @@
+'Origami' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+Source: https://www.scottbuckley.com.au/library/origami/
+License: https://creativecommons.org/licenses/by/4.0/
+Changes: original 00:00–00:56 excerpt; gain reduced by 3.6 dB; 0.12-second fade-in and 53–56-second fade-out; silence added from 56–60 seconds; converted to 48 kHz stereo WAV for the ATHENA V6 film.
+
+상영·게시 적용
+- 본편 엔드카드 또는 관객에게 제공되는 상영 프로그램에 곡명·작곡가·라이선스·출처·수정 사실을 제공한다. 이 로컬 파일의 보관만으로 공개 크레딧을 대신하지 않는다.
+- YouTube 공개 시 위 크레딧, 출처 링크, 라이선스 링크, 변경 내역을 반드시 영상 설명란에 넣는다. 작곡가의 공식 안내는 영상 안 표기만으로 이를 대체하지 않도록 요구한다.
+- 다른 온라인 게시물은 설명 또는 연결된 크레딧 페이지에 같은 정보를 제공한다.
+- 음원 단독 재판매·음악 스트리밍 서비스 재업로드·오디오 핑거프린트 등록에 사용하지 않는다. 작곡가가 ATHENA를 후원 또는 보증한다는 표현을 하지 않는다.
+
+공식 사용 안내: https://www.scottbuckley.com.au/library/using-this-music/
+CC BY 4.0 법률 문서: https://creativecommons.org/licenses/by/4.0/legalcode
+라이선스 확인일: 2026-10-04 (Asia/Seoul)
+
+이 파일은 V6의 Origami 크레딧이다. 이전 Helios 크레딧을 V6에 재사용하지 않는다.

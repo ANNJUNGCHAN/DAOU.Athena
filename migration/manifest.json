@@ -1,0 +1,866 @@
+{
+  "schema": 1,
+  "createdAt": "2026-10-08T08:21:55.892728+09:00",
+  "sourceRoot": "C:\\Projects\\DAOU.AThenaPT",
+  "destinationRoot": "C:\\Projects\\DAOU.Athena-Presentation",
+  "status": "moved-and-independently-verified",
+  "originalDeletionPerformed": true,
+  "files": [
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\exports\\final-integrated-20261007\\ATHENA-최종발표.pptx",
+      "destination": "ATHENA-최종발표.pptx",
+      "role": "final-presentation",
+      "originalSha256": "7d8d5c14e5b57ecbb42725dce706b720767ab767a01d5eeb5a79da37a419aed8",
+      "destinationSha256": "7d8d5c14e5b57ecbb42725dce706b720767ab767a01d5eeb5a79da37a419aed8",
+      "bytes": 122815330,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\athena-v23-60s.mp4",
+      "destination": "athena-v23-60s.mp4",
+      "role": "final-film",
+      "originalSha256": "08885603ea049831f130d9a340241492f1d14325a0fa164e4515180a2313a66b",
+      "destinationSha256": "08885603ea049831f130d9a340241492f1d14325a0fa164e4515180a2313a66b",
+      "bytes": 29237165,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\audit-stages.cjs",
+      "destination": "source/video/audit-stages.cjs",
+      "role": "video-source",
+      "originalSha256": "829be2475982ffcc196fb9539885af1f4c631eab2be3781c2b166846870cfb1f",
+      "destinationSha256": "daa3a4c5d2869c2a290cc534cbcbb2af6b01bd21edc2854f182334b1d5b3611b",
+      "bytes": 1682,
+      "modifiedForRelocation": true,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\check-determinism.cjs",
+      "destination": "source/video/check-determinism.cjs",
+      "role": "video-source",
+      "originalSha256": "65f5723f5a9772695ae5ed4778754fcc867114ac92c5926cc8cbbeb186191be9",
+      "destinationSha256": "65f5723f5a9772695ae5ed4778754fcc867114ac92c5926cc8cbbeb186191be9",
+      "bytes": 774,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\delivery.json",
+      "destination": "source/video/history/delivery.json",
+      "role": "video-source",
+      "originalSha256": "33c1b42d24966a28a989d0117da70796a428e0f64eea2a9865cbc0af310e0893",
+      "destinationSha256": "33c1b42d24966a28a989d0117da70796a428e0f64eea2a9865cbc0af310e0893",
+      "bytes": 489,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\feature-detail.js",
+      "destination": "source/video/feature-detail.js",
+      "role": "video-source",
+      "originalSha256": "c15707f5c489e23a7b9031e15b6d96edc28a27c99ad40bd8de344fa50d396f15",
+      "destinationSha256": "c15707f5c489e23a7b9031e15b6d96edc28a27c99ad40bd8de344fa50d396f15",
+      "bytes": 15801,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\feature-insert-media-manifest.json",
+      "destination": "source/video/feature-insert-media-manifest.json",
+      "role": "video-source",
+      "originalSha256": "7e8ee884cf322b5674ea8aae210edc0d7e0c68a7c3bbd8c0e66d8e0296f82706",
+      "destinationSha256": "7e8ee884cf322b5674ea8aae210edc0d7e0c68a7c3bbd8c0e66d8e0296f82706",
+      "bytes": 8684,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\feature-insert-plan.json",
+      "destination": "source/video/feature-insert-plan.json",
+      "role": "video-source",
+      "originalSha256": "5e59a57d112eeb15eff309fc923e3ee1e1aa3563121154f104b5631627c63fde",
+      "destinationSha256": "5e59a57d112eeb15eff309fc923e3ee1e1aa3563121154f104b5631627c63fde",
+      "bytes": 9187,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\finalize-delivery.cjs",
+      "destination": "source/video/finalize-delivery.cjs",
+      "role": "video-source",
+      "originalSha256": "683b856b3d823a30c41ce4e6fded74e2a3e330363886b48e6cd066cbfd1bc525",
+      "destinationSha256": "cfd517b4ddc3e20784e83921bb6aa7865b0f2798eb6210894cf566d239c9cda9",
+      "bytes": 1386,
+      "modifiedForRelocation": true,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\finish-render.cjs",
+      "destination": "source/video/finish-render.cjs",
+      "role": "video-source",
+      "originalSha256": "15859cba9294d0413397765d133509fd02398b76da1b66f5a8a6dff3ef0acc22",
+      "destinationSha256": "38dbe0d3496c41f3b67b974fbb2160197722a8405f5d51e51f82b89b6418f842",
+      "bytes": 1802,
+      "modifiedForRelocation": true,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\implementation-manifest.json",
+      "destination": "source/video/implementation-manifest.json",
+      "role": "video-source",
+      "originalSha256": "1a9f5905dc6c636461c1e5eae5c5bd16026dac71f8c862b78005cf361d9b2343",
+      "destinationSha256": "1a9f5905dc6c636461c1e5eae5c5bd16026dac71f8c862b78005cf361d9b2343",
+      "bytes": 1221,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\index.html",
+      "destination": "source/video/index.html",
+      "role": "video-source",
+      "originalSha256": "ba02a36b7d8f257154af0e368c9dbfea2656bb8e0d0bf6618fc0f19b34e0a035",
+      "destinationSha256": "84db49a8f1d5a0b60dc67af4b0fb0bda65ee61769e891afe663e14bc89bcb9ee",
+      "bytes": 3438,
+      "modifiedForRelocation": true,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\interaction-spec.json",
+      "destination": "source/video/interaction-spec.json",
+      "role": "video-source",
+      "originalSha256": "0185da49a2bc9ac9cec2e75e3c348ba71898c6e007fe60fa3943729d33556f0e",
+      "destinationSha256": "0185da49a2bc9ac9cec2e75e3c348ba71898c6e007fe60fa3943729d33556f0e",
+      "bytes": 35995,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\player.css",
+      "destination": "source/video/player.css",
+      "role": "video-source",
+      "originalSha256": "1a38bd802b28bd1f1aecb63af3747c4e9b115f5c8f171c35706f7f5509978fec",
+      "destinationSha256": "2b1d20855765a604a703a4945d213eea8ede12790aec73dd1716c57c01da485c",
+      "bytes": 4197,
+      "modifiedForRelocation": true,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\player.js",
+      "destination": "source/video/player.js",
+      "role": "video-source",
+      "originalSha256": "dc8983e0a4b0a03c326d8441a7e29607cc118c39f9e08cc25195e55f92a031b8",
+      "destinationSha256": "5ce0237822c489c4a0f8489ed7981ca8584aa00ae0e93794665a478e2a1b7c0d",
+      "bytes": 7482,
+      "modifiedForRelocation": true,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\README.md",
+      "destination": "source/video/README.md",
+      "role": "video-source",
+      "originalSha256": "d91c6ff7c83ce48c9f2fc188490742fe5b791799af4e2e96553b12d64e54e0ab",
+      "destinationSha256": "cbf5335c2c15029bfb30d55789561e29a61e54c7313ab764b8af568b4670539c",
+      "bytes": 1370,
+      "modifiedForRelocation": true,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\render-film.cjs",
+      "destination": "source/video/render-film.cjs",
+      "role": "video-source",
+      "originalSha256": "61895b3f1ead1562687c848fe2aeca09d489918472a5bae46ab89e41f1d3b581",
+      "destinationSha256": "d6f858f5ebf9f41fc5b139d079f25e162b5d102c7c199c7ffa33410b9c4753cb",
+      "bytes": 9948,
+      "modifiedForRelocation": true,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source-media-map.json",
+      "destination": "source/video/source-media-map.json",
+      "role": "video-source",
+      "originalSha256": "773d6567faeeef05389c96395970f29e93a5ede80ad1cce5e753dff69086a03a",
+      "destinationSha256": "773d6567faeeef05389c96395970f29e93a5ede80ad1cce5e753dff69086a03a",
+      "bytes": 27412,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage-features.json",
+      "destination": "source/video/stage-features.json",
+      "role": "video-source",
+      "originalSha256": "26fb0c7893c7a7da0fdbc14285e70425c0e2bc056511f70f3d456a9d26be6e7a",
+      "destinationSha256": "26fb0c7893c7a7da0fdbc14285e70425c0e2bc056511f70f3d456a9d26be6e7a",
+      "bytes": 25902,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage-sequence.json",
+      "destination": "source/video/stage-sequence.json",
+      "role": "video-source",
+      "originalSha256": "1828f0cd4841b40cc84e02a7878c1e5a793bbcc1c04abf2056a2e9d84455769f",
+      "destinationSha256": "df1478aaedef783b838c84644ccd3be5d6b7981a09e4abed39dbf0bd56f58f56",
+      "bytes": 50238,
+      "modifiedForRelocation": true,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.css",
+      "destination": "source/video/stage.css",
+      "role": "video-source",
+      "originalSha256": "440a5e42d7649ee3673c0273ce0c35e95480b0543e4a51b48def70a3ff52c656",
+      "destinationSha256": "440a5e42d7649ee3673c0273ce0c35e95480b0543e4a51b48def70a3ff52c656",
+      "bytes": 14284,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.html",
+      "destination": "source/video/stage.html",
+      "role": "video-source",
+      "originalSha256": "b60cd3b4194c66e20138db2b2bca4e0fb3e6087e89cd0cb8dec53599fc571108",
+      "destinationSha256": "b60cd3b4194c66e20138db2b2bca4e0fb3e6087e89cd0cb8dec53599fc571108",
+      "bytes": 838,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+      "destination": "source/video/stage.js",
+      "role": "video-source",
+      "originalSha256": "a1675a0ba2b8462c6de90e519fab849e46a89ed11644734140c66153224320b2",
+      "destinationSha256": "a1675a0ba2b8462c6de90e519fab849e46a89ed11644734140c66153224320b2",
+      "bytes": 24642,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\text-removal.json",
+      "destination": "source/video/text-removal.json",
+      "role": "video-source",
+      "originalSha256": "bcf6b15aaf30613150a54466b3bcdf66874924115d3a1f9b32efc20a3af56cb1",
+      "destinationSha256": "bcf6b15aaf30613150a54466b3bcdf66874924115d3a1f9b32efc20a3af56cb1",
+      "bytes": 706,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verify-output.py",
+      "destination": "source/video/history/verify-output.py",
+      "role": "video-source",
+      "originalSha256": "09ace67da7c1b41c6625bae050b42053b06148436ccd5e554a1f7745739833ed",
+      "destinationSha256": "09ace67da7c1b41c6625bae050b42053b06148436ccd5e554a1f7745739833ed",
+      "bytes": 3645,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\chart-plot.mp4",
+      "destination": "source/video/assets/chart-plot.mp4",
+      "role": "video-component",
+      "originalSha256": "0bce9385a435243cc41c8ef56008453caf74e8400a56774ff31623c3933410ab",
+      "destinationSha256": "0bce9385a435243cc41c8ef56008453caf74e8400a56774ff31623c3933410ab",
+      "bytes": 106702,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\glaux-plot.mp4",
+      "destination": "source/video/assets/glaux-plot.mp4",
+      "role": "video-component",
+      "originalSha256": "d1bcff895e892b914f639aa3672bce7edd59368e5e4e30c98d7f4243e69f7dc1",
+      "destinationSha256": "d1bcff895e892b914f639aa3672bce7edd59368e5e4e30c98d7f4243e69f7dc1",
+      "bytes": 8761,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\chart.mp4",
+      "destination": "source/video/assets/chart.mp4",
+      "role": "video-component",
+      "originalSha256": "0f45d0b7c8819b5fed4ae99abd5f0052dbfc4c3481acd5feafd720212e6e0403",
+      "destinationSha256": "0f45d0b7c8819b5fed4ae99abd5f0052dbfc4c3481acd5feafd720212e6e0403",
+      "bytes": 101985,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\network.mp4",
+      "destination": "source/video/assets/network.mp4",
+      "role": "video-component",
+      "originalSha256": "8f435104dc5a8634f7be58a1edb71c347e3efdd2721625a1165dddd30a7dd712",
+      "destinationSha256": "8f435104dc5a8634f7be58a1edb71c347e3efdd2721625a1165dddd30a7dd712",
+      "bytes": 5739322,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\network-detail.mp4",
+      "destination": "source/video/assets/network-detail.mp4",
+      "role": "video-component",
+      "originalSha256": "64a095b95baf7336c2b1eb1625f896ebed1594c3b588d95c1b4144020f018899",
+      "destinationSha256": "64a095b95baf7336c2b1eb1625f896ebed1594c3b588d95c1b4144020f018899",
+      "bytes": 132167,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\flow.mp4",
+      "destination": "source/video/assets/flow.mp4",
+      "role": "video-component",
+      "originalSha256": "3f303e694b913d5b98bc22dfe43bc9dbfd9836b6687b99f18d2eb544071ddfab",
+      "destinationSha256": "3f303e694b913d5b98bc22dfe43bc9dbfd9836b6687b99f18d2eb544071ddfab",
+      "bytes": 52525,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\node-answer.mp4",
+      "destination": "source/video/assets/node-answer.mp4",
+      "role": "video-component",
+      "originalSha256": "35527f30abe408463d92bd572402db9acf05f432c024f862dc998a09d3b5f15b",
+      "destinationSha256": "35527f30abe408463d92bd572402db9acf05f432c024f862dc998a09d3b5f15b",
+      "bytes": 36596,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\backtest.mp4",
+      "destination": "source/video/assets/backtest.mp4",
+      "role": "video-component",
+      "originalSha256": "77aeaac64039f6a9fb78d1d20d5e1fedb1ef43af43093b5b7f73e209f15b376e",
+      "destinationSha256": "77aeaac64039f6a9fb78d1d20d5e1fedb1ef43af43093b5b7f73e209f15b376e",
+      "bytes": 180069,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\trades.mp4",
+      "destination": "source/video/assets/trades.mp4",
+      "role": "video-component",
+      "originalSha256": "90c7af5eb20b6d1023995ba0a557fd1dea05286a3d7ccf7693655992572a3cd3",
+      "destinationSha256": "90c7af5eb20b6d1023995ba0a557fd1dea05286a3d7ccf7693655992572a3cd3",
+      "bytes": 166838,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\glaux-chart.mp4",
+      "destination": "source/video/assets/glaux-chart.mp4",
+      "role": "video-component",
+      "originalSha256": "5d59a378cdcc28ded460b138f81201735be72503c1d87903e5e54b6edb5a8448",
+      "destinationSha256": "5d59a378cdcc28ded460b138f81201735be72503c1d87903e5e54b6edb5a8448",
+      "bytes": 108128,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\disclosure.mp4",
+      "destination": "source/video/assets/disclosure.mp4",
+      "role": "video-component",
+      "originalSha256": "cfd454d6e51a96a23eb022c2dd3a6ad08e73fe614f2418bb65fdca6abe539e33",
+      "destinationSha256": "cfd454d6e51a96a23eb022c2dd3a6ad08e73fe614f2418bb65fdca6abe539e33",
+      "bytes": 16784,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\eye.mp4",
+      "destination": "source/video/assets/eye.mp4",
+      "role": "video-component",
+      "originalSha256": "4e8b41da758d525b9600fae91d16382ba44db47969f09301029ea12846b2f26f",
+      "destinationSha256": "4e8b41da758d525b9600fae91d16382ba44db47969f09301029ea12846b2f26f",
+      "bytes": 4771871,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\yeouido.mp4",
+      "destination": "source/video/assets/yeouido.mp4",
+      "role": "video-component",
+      "originalSha256": "0c457a0a8b2505b3f2298de45b56f2ca761b28aaf5fec3da7d49fe60f0db24c2",
+      "destinationSha256": "0c457a0a8b2505b3f2298de45b56f2ca761b28aaf5fec3da7d49fe60f0db24c2",
+      "bytes": 9309336,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\glaux.svg",
+      "destination": "source/video/assets/glaux.svg",
+      "role": "video-component",
+      "originalSha256": "5fae1b9421cc2e570a52a3611f8d57043f666da9dc61506c21618f8f7bea6fd1",
+      "destinationSha256": "5fae1b9421cc2e570a52a3611f8d57043f666da9dc61506c21618f8f7bea6fd1",
+      "bytes": 1466,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\candle-74.png",
+      "destination": "source/video/assets/native/candle-74.png",
+      "role": "video-component",
+      "originalSha256": "eb113ff386400f8ac8e01442b9a1f1fd0e2ee4d530955773acbda88ca2af3a11",
+      "destinationSha256": "eb113ff386400f8ac8e01442b9a1f1fd0e2ee4d530955773acbda88ca2af3a11",
+      "bytes": 143999,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\strategy-flow-778.png",
+      "destination": "source/video/assets/native/strategy-flow-778.png",
+      "role": "video-component",
+      "originalSha256": "53a5c5a9b2b09839b1868da564854ff5db17999702f90851be6f77798edf2b59",
+      "destinationSha256": "53a5c5a9b2b09839b1868da564854ff5db17999702f90851be6f77798edf2b59",
+      "bytes": 120517,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\trade-table-724.png",
+      "destination": "source/video/assets/native/trade-table-724.png",
+      "role": "video-component",
+      "originalSha256": "281a2dbe7b29aecc52caa5ae2f67c7f17379a54179f490839a5ffbd15a108df5",
+      "destinationSha256": "281a2dbe7b29aecc52caa5ae2f67c7f17379a54179f490839a5ffbd15a108df5",
+      "bytes": 84642,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\equity-724.png",
+      "destination": "source/video/assets/native/equity-724.png",
+      "role": "video-component",
+      "originalSha256": "b7031665e7db2e27de57f6244fd9df8a6203dee2faa3d538294b7fcf2c6354d4",
+      "destinationSha256": "b7031665e7db2e27de57f6244fd9df8a6203dee2faa3d538294b7fcf2c6354d4",
+      "bytes": 68572,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\trade-table-728-loss.png",
+      "destination": "source/video/assets/native/trade-table-728-loss.png",
+      "role": "video-component",
+      "originalSha256": "240142a5a3de68375ab12da9ab9ead7ee03f1c47c169611798516cdfd2b93f0b",
+      "destinationSha256": "240142a5a3de68375ab12da9ab9ead7ee03f1c47c169611798516cdfd2b93f0b",
+      "bytes": 46435,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\feature-inserts\\market-rise-native.mp4",
+      "destination": "source/video/assets/feature-inserts/market-rise-native.mp4",
+      "role": "video-component",
+      "originalSha256": "1e1db96c8ff8e883bce0b516e49c2ff869476421db7a76263ec93bc0a513fa3f",
+      "destinationSha256": "1e1db96c8ff8e883bce0b516e49c2ff869476421db7a76263ec93bc0a513fa3f",
+      "bytes": 3452918,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\feature-inserts\\seoul-network.mp4",
+      "destination": "source/video/assets/feature-inserts/seoul-network.mp4",
+      "role": "video-component",
+      "originalSha256": "3992fcbba0c7ad1595102bbde6c0d5e7ec1886a2581405b639a189f156664059",
+      "destinationSha256": "3992fcbba0c7ad1595102bbde6c0d5e7ec1886a2581405b639a189f156664059",
+      "bytes": 20115006,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\feature-inserts\\tools-connect.mp4",
+      "destination": "source/video/assets/feature-inserts/tools-connect.mp4",
+      "role": "video-component",
+      "originalSha256": "03379c7f1380f98cdb50a9550f3a1295df8a59692599337b9014c11a1936f924",
+      "destinationSha256": "03379c7f1380f98cdb50a9550f3a1295df8a59692599337b9014c11a1936f924",
+      "bytes": 4449266,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\feature-inserts\\strategy-paths.mp4",
+      "destination": "source/video/assets/feature-inserts/strategy-paths.mp4",
+      "role": "video-component",
+      "originalSha256": "c59e8d72f3913b25fbf9240d396dae220f9096ef11fd58e281992b0d333d3762",
+      "destinationSha256": "c59e8d72f3913b25fbf9240d396dae220f9096ef11fd58e281992b0d333d3762",
+      "bytes": 8143174,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\feature-inserts\\signal-alert.mp4",
+      "destination": "source/video/assets/feature-inserts/signal-alert.mp4",
+      "role": "video-component",
+      "originalSha256": "e2cf4a2fc09a065b4bd2b404b4eb6cf9ade0adca3368cf4d4b0d9c4ef39ce533",
+      "destinationSha256": "e2cf4a2fc09a065b4bd2b404b4eb6cf9ade0adca3368cf4d4b0d9c4ef39ce533",
+      "bytes": 5069653,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\feature-inserts\\companion-move.mp4",
+      "destination": "source/video/assets/feature-inserts/companion-move.mp4",
+      "role": "video-component",
+      "originalSha256": "526230dd46556da9216596ce117d83330891dfad2ccbda976c0090df081539c4",
+      "destinationSha256": "526230dd46556da9216596ce117d83330891dfad2ccbda976c0090df081539c4",
+      "bytes": 4948371,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\feature-inserts\\market-rise.mp4",
+      "destination": "source/video/assets/feature-inserts/market-rise.mp4",
+      "role": "video-component",
+      "originalSha256": "479568fa029d6d20f6ba69e446fbc2d703acdcbf5e67164ba73faf354b8ca00c",
+      "destinationSha256": "479568fa029d6d20f6ba69e446fbc2d703acdcbf5e67164ba73faf354b8ca00c",
+      "bytes": 8200859,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\feature-inserts\\source-manifest.json",
+      "destination": "source/video/assets/feature-inserts/source-manifest.json",
+      "role": "video-component",
+      "originalSha256": "0b6e4c00e124312dc1892705337dc902f859df612e49b78e0d52aaa00469e50f",
+      "destinationSha256": "0b6e4c00e124312dc1892705337dc902f859df612e49b78e0d52aaa00469e50f",
+      "bytes": 4523,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\media-provenance.json",
+      "destination": "source/video/assets/media-provenance.json",
+      "role": "video-component",
+      "originalSha256": "864775143d4f1136650962d682362913d78fa317188ec5c554383693fd1a979a",
+      "destinationSha256": "864775143d4f1136650962d682362913d78fa317188ec5c554383693fd1a979a",
+      "bytes": 2084,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\fonts\\body.ttf",
+      "destination": "source/video/fonts/body.ttf",
+      "role": "video-component",
+      "originalSha256": "1be86fafc7e483a3d6a08d2f14294c250b38e7b694c1ff193a81e77d89c4be4b",
+      "destinationSha256": "1be86fafc7e483a3d6a08d2f14294c250b38e7b694c1ff193a81e77d89c4be4b",
+      "bytes": 8914956,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\fonts\\display.ttf",
+      "destination": "source/video/fonts/display.ttf",
+      "role": "video-component",
+      "originalSha256": "9ba2e1c43292251f73511e8bd0bb267ef183013671012ac5901a787da2dad5cd",
+      "destinationSha256": "9ba2e1c43292251f73511e8bd0bb267ef183013671012ac5901a787da2dad5cd",
+      "bytes": 10792976,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\homepage-source\\cinematic-motion.css",
+      "destination": "source/video/homepage-source/cinematic-motion.css",
+      "role": "video-component",
+      "originalSha256": "fc04df6aed51f93153f35639232aae747ce78b4639d749ba047a0d9df13c88cf",
+      "destinationSha256": "fc04df6aed51f93153f35639232aae747ce78b4639d749ba047a0d9df13c88cf",
+      "bytes": 20301,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\homepage-source\\cinematic-motion.tsx",
+      "destination": "source/video/homepage-source/cinematic-motion.tsx",
+      "role": "video-component",
+      "originalSha256": "c01c8ab999dd41ea11b59c7f9b5ae156f2189aec05d9d42ffc0c41011ac54b7d",
+      "destinationSha256": "c01c8ab999dd41ea11b59c7f9b5ae156f2189aec05d9d42ffc0c41011ac54b7d",
+      "bytes": 21327,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\homepage-source\\cinematic-timeline.ts",
+      "destination": "source/video/homepage-source/cinematic-timeline.ts",
+      "role": "video-component",
+      "originalSha256": "e073957791a3c3c7679fee5d3240c5b8a9101ab48a20f667709dec0930e70a08",
+      "destinationSha256": "e073957791a3c3c7679fee5d3240c5b8a9101ab48a20f667709dec0930e70a08",
+      "bytes": 13148,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source\\styles\\tokens.css",
+      "destination": "source/video/source/styles/tokens.css",
+      "role": "video-component",
+      "originalSha256": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2",
+      "destinationSha256": "c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2",
+      "bytes": 9179,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source\\styles\\ui-kit.css",
+      "destination": "source/video/source/styles/ui-kit.css",
+      "role": "video-component",
+      "originalSha256": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039",
+      "destinationSha256": "981d0dabcbbc44abd33798e920504a58330771a6e2a955dc021b942f74a15039",
+      "bytes": 10358,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\independent-homepage-smoke.cjs",
+      "destination": "source/video/verification/independent-homepage-smoke.cjs",
+      "role": "video-component",
+      "originalSha256": "9850f782ff1c8b26acc3bb49d55c2737c4ea1224052d032dc839f42de8bddfe9",
+      "destinationSha256": "9850f782ff1c8b26acc3bb49d55c2737c4ea1224052d032dc839f42de8bddfe9",
+      "bytes": 4561,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\independent-homepage-review.json",
+      "destination": "source/video/history/verification/independent-homepage-review.json",
+      "role": "historical-verification",
+      "originalSha256": "e2ea2102dcf9e02ed4ca0eef1922d2b0c7452f1e9e55fd132199ca6f2a495edc",
+      "destinationSha256": "e2ea2102dcf9e02ed4ca0eef1922d2b0c7452f1e9e55fd132199ca6f2a495edc",
+      "bytes": 11620,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\independent-homepage-runtime.json",
+      "destination": "source/video/history/verification/independent-homepage-runtime.json",
+      "role": "historical-verification",
+      "originalSha256": "4f93229937a5e6ce2bfed0ba1b336fcdcda478c2e214bac74d0a6a1de67ea780",
+      "destinationSha256": "4f93229937a5e6ce2bfed0ba1b336fcdcda478c2e214bac74d0a6a1de67ea780",
+      "bytes": 389352,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\delivery-contract.json",
+      "destination": "source/video/history/verification/delivery-contract.json",
+      "role": "historical-verification",
+      "originalSha256": "9dcc83d19dec2b1a33a46bde3bd47c95ce1f39ac42c996c69373ecd25e9e731a",
+      "destinationSha256": "9dcc83d19dec2b1a33a46bde3bd47c95ce1f39ac42c996c69373ecd25e9e731a",
+      "bytes": 705,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\determinism.json",
+      "destination": "source/video/history/verification/determinism.json",
+      "role": "historical-verification",
+      "originalSha256": "6c407f19b6c8402bd685176ea1c8279a781f3246d9f1ead84066d08e94cd12be",
+      "destinationSha256": "6c407f19b6c8402bd685176ea1c8279a781f3246d9f1ead84066d08e94cd12be",
+      "bytes": 235,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\operation-audit.json",
+      "destination": "source/video/history/verification/operation-audit.json",
+      "role": "historical-verification",
+      "originalSha256": "477bbf7261e108212c27f9cfd55dd1148af0ecc3f17aa86e2b8d942cfa29e777",
+      "destinationSha256": "477bbf7261e108212c27f9cfd55dd1148af0ecc3f17aa86e2b8d942cfa29e777",
+      "bytes": 73562,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\final-browser-playback.json",
+      "destination": "source/video/history/verification/final-browser-playback.json",
+      "role": "historical-verification",
+      "originalSha256": "e5a3f67730ba697fa0f32b7b5a1a309d7d380ba215eee0f288d35b37ab585183",
+      "destinationSha256": "e5a3f67730ba697fa0f32b7b5a1a309d7d380ba215eee0f288d35b37ab585183",
+      "bytes": 588,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\source-code-692.png",
+      "destination": "source/video/history/verification/source-code-692.png",
+      "role": "historical-verification",
+      "originalSha256": "6765201d4fb0184d9e51725c2468a82187c0bfbd069876a8e762345cf0cdefa7",
+      "destinationSha256": "6765201d4fb0184d9e51725c2468a82187c0bfbd069876a8e762345cf0cdefa7",
+      "bytes": 705109,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\final-mp4-contact.jpg",
+      "destination": "source/video/history/verification/final-mp4-contact.jpg",
+      "role": "historical-verification",
+      "originalSha256": "8f80b4cf1871207f7714d08d1c8b8b154fc3bd784fa7f06ef4f566236b530e98",
+      "destinationSha256": "8f80b4cf1871207f7714d08d1c8b8b154fc3bd784fa7f06ef4f566236b530e98",
+      "bytes": 203442,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\final-highlights.jpg",
+      "destination": "source/video/history/verification/final-highlights.jpg",
+      "role": "historical-verification",
+      "originalSha256": "f06aa4040ccfc4a495cdd1cc7dbe29d66bcff0f44d493fce5bbb6c50314a1016",
+      "destinationSha256": "f06aa4040ccfc4a495cdd1cc7dbe29d66bcff0f44d493fce5bbb6c50314a1016",
+      "bytes": 85839,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\render\\final-manifest.json",
+      "destination": "source/video/history/render/final-manifest.json",
+      "role": "historical-verification",
+      "originalSha256": "2dafbfee09e283ea53a14e12083fe8539fcb0f49439d1e4b8f5e201f6260e81d",
+      "destinationSha256": "2dafbfee09e283ea53a14e12083fe8539fcb0f49439d1e4b8f5e201f6260e81d",
+      "bytes": 7282,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\render\\athena-v23-60s-silent-manifest.json",
+      "destination": "source/video/history/render/athena-v23-60s-silent-manifest.json",
+      "role": "historical-verification",
+      "originalSha256": "9caa52fe43fb5987975ce843a824dbb8fbeb97732651d9e5940e57d4914ef17c",
+      "destinationSha256": "9caa52fe43fb5987975ce843a824dbb8fbeb97732651d9e5940e57d4914ef17c",
+      "bytes": 5190,
+      "modifiedForRelocation": false,
+      "moveCandidate": true
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v6\\audio\\origami-athena-v6-60s.wav",
+      "destination": "source/video/audio/origami-athena-v6-60s.wav",
+      "role": "shared-music-copy",
+      "originalSha256": "bad050c87746e3c90477913266ac9e905b376ddd876e0ee6dadbdd02f4bbae1d",
+      "destinationSha256": "bad050c87746e3c90477913266ac9e905b376ddd876e0ee6dadbdd02f4bbae1d",
+      "bytes": 17280208,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v6\\audio\\attribution.txt",
+      "destination": "source/video/audio/attribution.txt",
+      "role": "shared-music-copy",
+      "originalSha256": "028511be083deb5f4cd43e4f06ae6c9153dfbb80edbbc594bb1bb29b09076ad7",
+      "destinationSha256": "028511be083deb5f4cd43e4f06ae6c9153dfbb80edbbc594bb1bb29b09076ad7",
+      "bytes": 1516,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\composite-market-native.py",
+      "destination": "source/video/verification/feature-inserts/composite-market-native.py",
+      "role": "shared-composition-script-copy",
+      "originalSha256": "15ac72e36c572bd936aa509bceb64ad54b520569a2cee4af27e6dcda3a01f0ac",
+      "destinationSha256": "750d1afc7291c17514bc2af4c542f3b61be8d09a03c5b999ddf0b9a9148666af",
+      "bytes": 7087,
+      "modifiedForRelocation": true,
+      "moveCandidate": false
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\.omc\\tools\\ffmpeg-portable-20261003\\ffmpeg-9.0.2-essentials_build\\bin\\ffmpeg.exe",
+      "destination": "tools/ffmpeg/ffmpeg.exe",
+      "role": "shared-tool-copy",
+      "originalSha256": "3256173f3f8bffd7df12227c68adf68025edb1832273a9530688a7bb1ed8edec",
+      "destinationSha256": "3256173f3f8bffd7df12227c68adf68025edb1832273a9530688a7bb1ed8edec",
+      "bytes": 105423872,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\.omc\\tools\\ffmpeg-portable-20261003\\ffmpeg-9.0.2-essentials_build\\bin\\ffprobe.exe",
+      "destination": "tools/ffmpeg/ffprobe.exe",
+      "role": "shared-tool-copy",
+      "originalSha256": "f0d36ecbbdd3bcfac3efa078c96c7271c2e68b3810595552ac3b7f17e9a65c52",
+      "destinationSha256": "f0d36ecbbdd3bcfac3efa078c96c7271c2e68b3810595552ac3b7f17e9a65c52",
+      "bytes": 105221120,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\.omc\\tools\\ffmpeg-portable-20261003\\ffmpeg-9.0.2-essentials_build\\LICENSE",
+      "destination": "tools/ffmpeg/LICENSE",
+      "role": "shared-tool-license-copy",
+      "originalSha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "destinationSha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "bytes": 35147,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": "C:\\Projects\\DAOU.AThenaPT\\.omc\\tools\\ffmpeg-portable-20261003\\ffmpeg-9.0.2-essentials_build\\README.txt",
+      "destination": "tools/ffmpeg/README.txt",
+      "role": "shared-tool-license-copy",
+      "originalSha256": "0342de6bb39dd421cbec2c00d89ad274b640d75ad3f2cab09ffd647ce2d8f949",
+      "destinationSha256": "0342de6bb39dd421cbec2c00d89ad274b640d75ad3f2cab09ffd647ce2d8f949",
+      "bytes": 41577,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": null,
+      "destination": "source/video/runtime.cjs",
+      "role": "relocation-helper",
+      "originalSha256": null,
+      "destinationSha256": "040cfdc8bd1f8defd8713e51707ef02cabde2ce203c0e5983d0874083a0576b2",
+      "bytes": 649,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": null,
+      "destination": "source/video/preview-server.cjs",
+      "role": "relocation-helper",
+      "originalSha256": null,
+      "destinationSha256": "819e02fa44d711812bc28f447f049c188cf9b2475e3947ded8da0d89e8f4495b",
+      "bytes": 1395,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": null,
+      "destination": "preview.ps1",
+      "role": "relocation-helper",
+      "originalSha256": null,
+      "destinationSha256": "04e185f873492f261fbf64bc41e05d2665ea7d6089efa4e85e34339b5d729af5",
+      "bytes": 528,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": null,
+      "destination": "render.ps1",
+      "role": "relocation-helper",
+      "originalSha256": null,
+      "destinationSha256": "aedee48c7d29952368b7ef7cdbce7672f5524d52364be36093b48a2848e0b680",
+      "bytes": 631,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": null,
+      "destination": "사용안내.txt",
+      "role": "relocation-helper",
+      "originalSha256": null,
+      "destinationSha256": "9c85754ef4edaf07200b611550a9416be2b7ae70a07b203102dd57a67560b0ab",
+      "bytes": 2517,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    },
+    {
+      "source": null,
+      "destination": "migration/verify-package.py",
+      "role": "relocation-helper",
+      "originalSha256": null,
+      "destinationSha256": "307dac9140a2533ef8560712d7a398425f87d78948a864009c1ec63bd1138acb",
+      "bytes": 1975,
+      "modifiedForRelocation": false,
+      "moveCandidate": false
+    }
+  ],
+  "note": "Historical approval and rendering receipts remain byte-identical in source/video/history. Shared source assets and tools remain in the original project. Only moveCandidate files may be removed from the original project after independent verification and original hash recheck.",
+  "finalizedAt": "2026-10-08T08:25:34.2886713+09:00",
+  "completedAt": "2026-10-08T08:29:14.6821875+09:00",
+  "removedSourceFiles": 72,
+  "independentVerification": "migration/independent-verification.json",
+  "moveReceipt": "migration/move-receipt.json"
+}

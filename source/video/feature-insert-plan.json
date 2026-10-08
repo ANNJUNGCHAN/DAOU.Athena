@@ -1,0 +1,52 @@
+{
+  "revision": "feature-cinematic-inserts",
+  "status": "implemented-media-frozen-awaiting-final-render",
+  "duration": 60,
+  "sourceAppPolicy": "read-only",
+  "preserve": [
+    "23 app subfeatures",
+    "all app text and graph labels",
+    "nine large captions and ATHENA typing",
+    "existing music"
+  ],
+  "clips": [
+    {
+      "id": "market-rise",
+      "feature": "대화",
+      "segment": "woman-open",
+      "prompt": "Start over the shoulder of a Korean woman investor at her real desk, her profile softly visible at left. A large monitor shows clean unlabeled financial candlesticks. Camera rapidly pushes toward the monitor, gliding past the dark bezel until chart geometry fills the view. Red and blue candles draw progressively from left to right with a clear overall upward trajectory punctuated by pullbacks, matched with subtle reflections across her eye and fingertips at the mouse. This is a dramatic market-analysis visual, with no celebratory reaction. End extremely close on the moving candle chart, smooth fast parallax, preserve physical realism. A premium financial technology brand film with photoreal live-action and restrained elegant motion design, natural slate blue, warm ivory and amber accents, fine 35mm film texture, physical camera movement, widescreen 16:9. All people fictional Korean investment professionals. Single continuous 5-second shot with the main visual action happening from 0.5 to 4.5 seconds. No text, subtitles, captions, letters, numbers, corporate logos, watermark, outer space, stars, neon cyberpunk or floating app windows. Screen content is a visual metaphor, not a screenshot of an actual application."
+    },
+    {
+      "id": "seoul-network",
+      "feature": "그래프",
+      "segment": "human-graph",
+      "prompt": "Start in a close aerial oblique view beside modern glass office towers in Yeouido financial district, Seoul, their facades filling the frame. Within the first second delicate luminous warm-white lines begin to link the rooftops of nearby buildings, travelling from one point to the next like a relationship graph. Camera makes a dramatic continuous ascending pullback and tilts down, progressively revealing the broad Han River, its bridges and the expansive Seoul cityscape. The network grows from the local cluster to many dispersed districts; individual lit nodes and thin elegant connection arcs remain anchored to real building rooftops throughout the camera move. Finish on a very wide Seoul aerial, connected city below, no space or planetary view. Buildings retain believable scale and geography. This is a cinematic visual metaphor for connected investment knowledge. A premium financial technology brand film with photoreal live-action and restrained elegant motion design, natural slate blue, warm ivory and amber accents, fine 35mm film texture, physical camera movement, widescreen 16:9. All people fictional Korean investment professionals. Single continuous 5-second shot with the main visual action happening from 0.5 to 4.5 seconds. No text, subtitles, captions, letters, numbers, corporate logos, watermark, outer space, stars, neon cyberpunk or floating app windows. Screen content is a visual metaphor, not a screenshot of an actual application."
+    },
+    {
+      "id": "tools-connect",
+      "feature": "플러그인",
+      "segment": "human-plugin",
+      "prompt": "Cinematic close-up over a Korean male researcher's shoulder at a tactile warm-gray desk, one hand deliberately connecting a small silver cable to a compact modular hub. Camera performs a smooth fast lateral slide that widens the view to reveal laptop, data-drive module and compact tablet in a beautiful diagonal arrangement. As the physical connector clicks in, thin warm-white light traces flow along three separate real cables from the devices and converge into the central hub, then run as one clean pulse toward the laptop. The researcher and sleeve remain visible to ground the action in real work. Devices have dark neutral unlettered screens; connection and convergence are the story, no futuristic projections. Keep connector geometry and fingers realistic, one action only. A premium financial technology brand film with photoreal live-action and restrained elegant motion design, natural slate blue, warm ivory and amber accents, fine 35mm film texture, physical camera movement, widescreen 16:9. All people fictional Korean investment professionals. Single continuous 5-second shot with the main visual action happening from 0.5 to 4.5 seconds. No text, subtitles, captions, letters, numbers, corporate logos, watermark, outer space, stars, neon cyberpunk or floating app windows. Screen content is a visual metaphor, not a screenshot of an actual application."
+    },
+    {
+      "id": "strategy-paths",
+      "feature": "전략",
+      "segment": "human-strategy",
+      "prompt": "Cinematic top-down-to-oblique camera arc around a Korean female investment professional working on a large horizontal desk display. Her hand hovers over the screen while three unlabeled analytical paths are drawn across it as restrained amber, blue and ivory curves, each rising and falling differently across the same horizontal direction. The camera moves close to the screen, one finger taps near a crossing, and one path becomes crisp white while the alternate paths gently dim, suggesting comparing strategy scenarios. Show face profile at the far side of the desk for a moment, then focus on physical fingertip and selected curve. Tactile glass reflection, fine pen and notebook out of focus. No profits, no confetti, no text, no decorative sci-fi holograms. A premium financial technology brand film with photoreal live-action and restrained elegant motion design, natural slate blue, warm ivory and amber accents, fine 35mm film texture, physical camera movement, widescreen 16:9. All people fictional Korean investment professionals. Single continuous 5-second shot with the main visual action happening from 0.5 to 4.5 seconds. No text, subtitles, captions, letters, numbers, corporate logos, watermark, outer space, stars, neon cyberpunk or floating app windows. Screen content is a visual metaphor, not a screenshot of an actual application."
+    },
+    {
+      "id": "signal-alert",
+      "feature": "알림",
+      "segment": "human-alert",
+      "prompt": "A grounded cinematic extreme close-up of a smartphone lying next to the hand of a Korean investment professional on a quiet office desk by a window. Initially its display is dark. A single soft amber light dot appears at center of the blank display and expands into two subtle concentric rings, a visual signal with no words or icons. The screen glow reflects naturally on fingertips. Hand reaches in and lifts the phone deliberately as the camera makes a fast smooth rack focus from the pulse to the investor's attentive face in the background. Calm attention, real purposeful action, not posed, strong shallow depth of field. The light rings stay inside the screen. A premium financial technology brand film with photoreal live-action and restrained elegant motion design, natural slate blue, warm ivory and amber accents, fine 35mm film texture, physical camera movement, widescreen 16:9. All people fictional Korean investment professionals. Single continuous 5-second shot with the main visual action happening from 0.5 to 4.5 seconds. No text, subtitles, captions, letters, numbers, corporate logos, watermark, outer space, stars, neon cyberpunk or floating app windows. Screen content is a visual metaphor, not a screenshot of an actual application."
+    },
+    {
+      "id": "companion-move",
+      "feature": "글라우",
+      "segment": "human-glaux",
+      "prompt": "Cinematic moving side profile of a Korean male investment professional at a table in a bright quiet modern lounge overlooking Seoul. The camera tracks smoothly with his hand sliding a thin laptop toward him while he opens it and begins one deliberate touchpad gesture. A compact softly illuminated ivory panel is visible in the corner of the laptop display alongside dark unlabeled chart lines, visualizing a small assistant accompanying work. Rack focus moves from the open laptop corner to his thoughtful eye, then back to his hand. Keep the laptop body, hand and screen physically coherent, natural candid work action, no speaking. The small panel has only a subtle amber dot, no text or logo. A premium financial technology brand film with photoreal live-action and restrained elegant motion design, natural slate blue, warm ivory and amber accents, fine 35mm film texture, physical camera movement, widescreen 16:9. All people fictional Korean investment professionals. Single continuous 5-second shot with the main visual action happening from 0.5 to 4.5 seconds. No text, subtitles, captions, letters, numbers, corporate logos, watermark, outer space, stars, neon cyberpunk or floating app windows. Screen content is a visual metaphor, not a screenshot of an actual application."
+    }
+  ],
+  "taskTraceId": "01a114ce-f6a3-7ea2-8f67-61cae39b059e",
+  "mediaManifest": "feature-insert-media-manifest.json"
+}

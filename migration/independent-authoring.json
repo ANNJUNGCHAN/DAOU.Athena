@@ -1,0 +1,193 @@
+{
+  "status": "PASS",
+  "scope": "Relocated source only: 23 feature result frames, all human segments, deterministic repeat",
+  "features": [
+    {
+      "id": "chat-screen",
+      "time": 6.0072,
+      "sha256": "c4d094af221424dc48fad220c66b5aac350ba5b09844e4208a9d7a541a585d49",
+      "phase": "result"
+    },
+    {
+      "id": "chat-screen-talk",
+      "time": 7.9472,
+      "sha256": "9e93c6ceec47a34ef0253ed47aedd56f0f939893291b026ca1598fe1067bfde9",
+      "phase": "result"
+    },
+    {
+      "id": "chat-order",
+      "time": 9.8872,
+      "sha256": "4a01db637b67c0ee0a65b3f3fafcbaf08bce8cdc435f3ff5cc51106a8c92d1cc",
+      "phase": "result"
+    },
+    {
+      "id": "chat-material",
+      "time": 11.827200000000001,
+      "sha256": "9f58783f56ff4be3fd0904eca9177a2d023bf6e8bd4d70389f398815a55002ea",
+      "phase": "result"
+    },
+    {
+      "id": "chat-settings",
+      "time": 13.7672,
+      "sha256": "4467eac44da37cd7ad7f5dbe6b6d8c80e2e3ca06bae9bb824bb2a690402c2a75",
+      "phase": "result"
+    },
+    {
+      "id": "graph-memory",
+      "time": 16.847199999999997,
+      "sha256": "6adf311ce61593294b9c3390cb97ea054c65311ec12f6b59df9177fc1e3019fe",
+      "phase": "result"
+    },
+    {
+      "id": "graph-cluster",
+      "time": 18.7104,
+      "sha256": "35b0ea82e7b90257c277ee0138c6a22d12aa3871851de26edf6ee02b9ff55827",
+      "phase": "result"
+    },
+    {
+      "id": "graph-talk",
+      "time": 20.067,
+      "sha256": "96ba118dc93c11a97b929cd1fedd398b83a30bf8a4aafec78202608e6c74f0c8",
+      "phase": "result"
+    },
+    {
+      "id": "graph-recommend",
+      "time": 21.2672,
+      "sha256": "9858ce2fe67635e638eb4e19890451c2d797008f140ee59eaf70316ca57a6381",
+      "phase": "result"
+    },
+    {
+      "id": "graph-edit",
+      "time": 22.4572,
+      "sha256": "c984c82bbacb70df0d975a9102fdfdea5a9f31194f0d0e74b3318f04d9afb602",
+      "phase": "result"
+    },
+    {
+      "id": "plugin-invest",
+      "time": 25.7679388,
+      "sha256": "2e9b1278832f80aa8797cede2cd7b3f26d86cd65796e83992debfc1de37674bd",
+      "phase": "result"
+    },
+    {
+      "id": "plugin-service",
+      "time": 27.43587724,
+      "sha256": "44d0c6d2c5259c4737461e89ee5afb94ac9c1a9fb5a71f76547352c44e129bf2",
+      "phase": "result"
+    },
+    {
+      "id": "plugin-call",
+      "time": 29.45187696,
+      "sha256": "e852f460bd1a1a2a6e0833532f4022fb710a92fc08fea994328aaf383b6ea9a3",
+      "phase": "result"
+    },
+    {
+      "id": "strategy-code",
+      "time": 32.8016,
+      "sha256": "cfc3ba39aa8c739c5d25702f2253c1e8a0e8ba368ebd5db356a05aaa0eb6938d",
+      "phase": "result"
+    },
+    {
+      "id": "strategy-node",
+      "time": 34.6216,
+      "sha256": "8626e7e265060d061c1e6a2927b8206ceefa51fcc49f572e0f74cd6f74e37e45",
+      "phase": "result"
+    },
+    {
+      "id": "strategy-backtest",
+      "time": 36.521679999999996,
+      "sha256": "7f08e9d994b0e244446c8c5efd5b29c010907228fdab76685a5aafd3dd515fdb",
+      "phase": "result"
+    },
+    {
+      "id": "strategy-diagnosis",
+      "time": 38.27252,
+      "sha256": "436d444cdc89a7f9029558fa590d2d7c15d74e2034c563b14224f5fa9a84cd01",
+      "phase": "result"
+    },
+    {
+      "id": "strategy-search",
+      "time": 40.081599999999995,
+      "sha256": "27bc958fee8e7b6a35ddab1cca2a38d3345dc9ab01b130b132aa3d9b3b22a0aa",
+      "phase": "result"
+    },
+    {
+      "id": "alert-personal",
+      "time": 43.563771679999995,
+      "sha256": "b9e6f52c5fa0ed36553d38bbe59f19a40b304aeb17167704d8132aec35a5cf65",
+      "phase": "result"
+    },
+    {
+      "id": "alert-automation",
+      "time": 45.5680568,
+      "sha256": "53c11ffbe1a1149821c5b4a9befbf3730560bb64828c81e12efc18a7a48ff612",
+      "phase": "result"
+    },
+    {
+      "id": "alert-watch",
+      "time": 47.64902852,
+      "sha256": "0526b62609d3c9a15226a5f7be59b2fb05a41f8cf66530bfb9748fc518613be6",
+      "phase": "result"
+    },
+    {
+      "id": "glaux-mini",
+      "time": 52.57504,
+      "sha256": "9647ab1f83f5159ce1e252e0c2673a6779c9d58a007f7db181f1eb6917e23e17",
+      "phase": "result"
+    },
+    {
+      "id": "glaux-notice",
+      "time": 55.64096,
+      "sha256": "96245d24d94edcf5bed8ed20b6791a89f4ffc60ccbb5c5bba1a43366c4006bb6",
+      "phase": "result"
+    }
+  ],
+  "human": [
+    {
+      "id": "eye",
+      "time": 0.55,
+      "sha256": "37501b5f4deed3ae5f65794b8b26f5e85d676436b78af99ce64f0b77f9700cf4"
+    },
+    {
+      "id": "city",
+      "time": 1.6,
+      "sha256": "60cfa3d1b62cce74862723c88bca1e4e095ea3b77cdd43e0eaf739367fdfcf1f"
+    },
+    {
+      "id": "woman-open",
+      "time": 2.9000000000000004,
+      "sha256": "b99a96995fe0f4dcf5c48b1de67d6eac02b6f8515f37ff7b7a45180f76d385a0"
+    },
+    {
+      "id": "human-graph",
+      "time": 14.9,
+      "sha256": "ae5a06c30c5180da19273b4f4f2670b0193a62591f206b056abde2fb78f7749e"
+    },
+    {
+      "id": "human-plugin",
+      "time": 23.35,
+      "sha256": "8ddda93a2b04733be5bc81e212a87e8133705c5dfa570a651a76f9eb1e7600b0"
+    },
+    {
+      "id": "human-strategy",
+      "time": 30.45,
+      "sha256": "888c576b29f0cf5476b6e1d2bf51093b484c8c1317f01728ed0eca464c25e818"
+    },
+    {
+      "id": "human-alert",
+      "time": 41.05,
+      "sha256": "0ff867cf74acacf39464846bbb71e2fd0f5578a5a8b01a157ba8d871935747ef"
+    },
+    {
+      "id": "human-glaux",
+      "time": 48.65,
+      "sha256": "09b06f1444d99b0e9f7b1263fa18d23f0b675fb99ff190c3f743ad9431e5699e"
+    }
+  ],
+  "repeat": {
+    "time": 7.1,
+    "first": "494d61ff0fab1044d81860b3ff5f8bb70b1ce272c7412a68fbec168fb7da636c",
+    "repeat": "494d61ff0fab1044d81860b3ff5f8bb70b1ce272c7412a68fbec168fb7da636c",
+    "match": true
+  },
+  "browserErrors": []
+}

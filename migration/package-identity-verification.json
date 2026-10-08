@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "scope": "Package identities, final artifact byte identity, immutable production receipts, unchanged core visual source. Runtime checks are separate.",
+  "filesChecked": 85,
+  "errors": []
+}

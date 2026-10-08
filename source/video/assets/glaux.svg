@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" class="glau-mascot" data-expression="happy" viewBox="0 0 128 128" fill="none" data-layer-name="Glau happy" aria-hidden="true" focusable="false">
+  <title>글라우 · happy</title>
+  <g class="glau-figure">
+    <g class="glau-olive-leaves" fill="#687048">
+      <path d="M97 28 C85 22 86 10 94 3 C102 10 104 20 97 28Z"/>
+      <path d="M99 30 C100 19 109 14 119 16 C118 26 110 32 99 30Z"/>
+    </g>
+    <circle class="glau-body" cx="64" cy="70" r="49" fill="#BF9B81"/>
+    <path class="glau-cream-face" d="M64 48 C53 34 37 35 29 47 C19 63 28 84 44 85 C52 86 59 82 64 79 C69 83 77 86 85 85 C102 84 109 64 100 49 C92 36 77 34 64 48Z" fill="#FFF3E2"/>
+    <g class="glau-gaze"><g class="glau-lid"><path d="M40 65 Q45 54 50 65 M78 65 Q83 54 88 65" fill="none" stroke="#27251F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g></g>
+    <path class="glau-beak" d="M58 70 Q64 67 70 70 Q72 71 69 75 L66 79 Q64 82 62 79 L58 74 Q56 71 58 70Z" fill="#ECAA43"/>
+    <g class="glau-wings" fill="#354D70">
+      <ellipse cx="19" cy="88" rx="9" ry="16" transform="rotate(-18 19 88)"/>
+      <ellipse cx="109" cy="88" rx="9" ry="16" transform="rotate(18 109 88)"/>
+    </g>
+    <g class="glau-feet" fill="#ECAA43">
+      <ellipse cx="46" cy="118" rx="9" ry="5"/>
+      <ellipse cx="82" cy="118" rx="9" ry="5"/>
+    </g>
+    <g class="glau-expression-cues"></g>
+  </g>
+</svg>

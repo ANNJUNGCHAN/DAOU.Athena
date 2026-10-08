@@ -1,0 +1,42 @@
+ATHENA 최종 발표 자료
+
+최종본
+  ATHENA-최종발표.pptx — 43장. 이미지·시연 영상이 PPT 안에 포함되어 있습니다.
+  athena-v23-60s.mp4 — V23, 60초, 1920×1080, 30fps, 음악 포함.
+두 파일은 이전 최종본과 SHA-256이 동일합니다. PPT는 PowerPoint에서 직접 편집하세요.
+
+구성
+  source/video/ — 화면 코드, 장면 순서, 사용 영상·이미지·폰트·음악, 홈페이지 참고 코드.
+  source/video/history/ — 제작 당시 검토·렌더링 기록 원본. 이관 승인과 별개입니다.
+  tools/ffmpeg/ — 렌더링용 FFmpeg·FFprobe와 라이선스.
+  migration/ — 이전 경로·해시·경로 수정 파일 목록 및 이관 검증.
+
+프리뷰
+  이 폴더에서 PowerShell로 .\preview.ps1 실행 후 아래 주소를 여세요.
+  http://127.0.0.1:8230/source/video/index.html
+  완성 영상과 코드 모션을 전환할 수 있습니다. 종료는 Ctrl+C입니다.
+  HTML 더블클릭은 브라우저 로컬 파일 제한 때문에 지원하지 않습니다.
+
+다시 렌더링
+  .\render.ps1
+  현재 작업 폴더와 관계없이 실행하며 루트 athena-v23-60s.mp4를 덮어씁니다.
+  중간 결과와 새 기록은 source/video/render/에 저장합니다.
+  Node.js, Playwright, @napi-rs/canvas, Chrome이 필요합니다.
+  현재 PC의 기존 Codex Node/패키지와 Chrome을 사용할 수 있게 연결했습니다.
+  다른 PC에서는 런타임을 별도 준비하고 ATHENA_NODE, ATHENA_NODE_MODULES,
+  CHROME_PATH로 지정할 수 있습니다. FFmpeg는 이 폴더의 tools/ffmpeg를 사용하며,
+  FFMPEG_PATH, FFPROBE_PATH로 대체할 수 있습니다.
+  선택적인 Python 차트 합성 도구는 numpy, Pillow, opencv-python이 필요합니다.
+
+이관 검증
+  python migration/verify-package.py
+  이관 명세, 최종 파일, 제작 당시 핵심 화면 코드 해시를 확인합니다.
+  history/verify-output.py는 옛 프로젝트 기준의 보존용 검사입니다.
+  source-media-map.json, stage-features.json 등의 옛 절대 경로는 출처 기록입니다.
+  전체 원본 녹화·앱 저장소·이전 버전은 포함하지 않았으며 현재 재생/렌더에는 필요 없습니다.
+  음악·도구처럼 다른 버전도 공유하는 원본은 이전 프로젝트에도 남겨 둡니다.
+
+음악: Origami — Scott Buckley, CC BY 4.0
+  https://www.scottbuckley.com.au/library/origami/
+  https://creativecommons.org/licenses/by/4.0/
+  자세한 출처: source/video/audio/attribution.txt

@@ -1,0 +1,119 @@
+[
+  {
+    "id": "chart",
+    "file": "C:\\Projects\\DAOU.AThenaPT\\시연영상1.mp4",
+    "start": 89.7,
+    "duration": 6.3,
+    "crop": [
+      340,
+      375,
+      865,
+      647
+    ],
+    "sourceType": "user-recording"
+  },
+  {
+    "id": "network",
+    "file": "C:\\Projects\\DAOU.AThenaPT\\시연영상1.mp4",
+    "start": 342,
+    "duration": 15.1,
+    "crop": [
+      306,
+      144,
+      1056,
+      946
+    ],
+    "sourceType": "user-recording"
+  },
+  {
+    "id": "network-detail",
+    "file": "C:\\Projects\\DAOU.AThenaPT\\시연영상1.mp4",
+    "start": 342,
+    "duration": 15.1,
+    "crop": [
+      1378,
+      74,
+      321,
+      358
+    ],
+    "sourceType": "user-recording"
+  },
+  {
+    "id": "flow",
+    "file": "C:\\Projects\\DAOU.AThenaPT\\시연영상1.mp4",
+    "start": 776,
+    "duration": 2,
+    "crop": [
+      493,
+      178,
+      505,
+      625
+    ],
+    "sourceType": "user-recording"
+  },
+  {
+    "id": "node-answer",
+    "file": "C:\\Projects\\DAOU.AThenaPT\\시연영상1.mp4",
+    "start": 776,
+    "duration": 2,
+    "crop": [
+      1720,
+      710,
+      385,
+      335
+    ],
+    "sourceType": "user-recording"
+  },
+  {
+    "id": "backtest",
+    "file": "C:\\Projects\\DAOU.AThenaPT\\시연영상1.mp4",
+    "start": 724,
+    "duration": 0.8,
+    "crop": [
+      307,
+      215,
+      1365,
+      570
+    ],
+    "sourceType": "user-recording"
+  },
+  {
+    "id": "trades",
+    "file": "C:\\Projects\\DAOU.AThenaPT\\시연영상1.mp4",
+    "start": 728,
+    "duration": 0.8,
+    "crop": [
+      307,
+      130,
+      740,
+      955
+    ],
+    "sourceType": "user-recording"
+  },
+  {
+    "id": "glaux-chart",
+    "file": "C:\\Projects\\DAOU.AThenaPT\\시연영상2.mp4",
+    "start": 43,
+    "duration": 2.1,
+    "crop": [
+      2072,
+      724,
+      370,
+      648
+    ],
+    "sourceType": "user-recording"
+  },
+  {
+    "id": "disclosure",
+    "file": "C:\\Projects\\DAOU.AThenaPT\\시연영상1.mp4",
+    "start": 546,
+    "duration": 1,
+    "crop": [
+      303,
+      46,
+      760,
+      140
+    ],
+    "sourceType": "user-recording"
+  }
+]
