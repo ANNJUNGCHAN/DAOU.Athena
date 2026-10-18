@@ -11,7 +11,7 @@
     "start": "wrangler dev --config dist/server/wrangler.json",
     "verify:release": "node lib/verify-publication.mjs",
     "predeploy": "npm run verify:release && npm run build",
-    "deploy": "wrangler deploy --config dist/server/wrangler.json",
+    "deploy": "wrangler deploy",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit --incremental false",
     "test": "node --experimental-strip-types --test lib/*.test.mjs",
