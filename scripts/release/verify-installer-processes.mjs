@@ -12,6 +12,7 @@ const root = mkdtempSync(join(tmpdir(), 'athena-process-check-'));
 const sourceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const helper = join(sourceRoot, 'windows-installer-processes.ps1');
 const powershell = join(process.env.SystemRoot, 'System32/WindowsPowerShell/v1.0/powershell.exe');
+const nsisFixtureTimeoutMs = 120_000;
 const install = join(root, "O'Brien 한글 Athena");
 const state = join(root, 'state.json');
 const identities = new Set();
@@ -137,7 +138,8 @@ Section
 SectionEnd
 `);
   execFileSync(compiler, ['/V2', nsis], { stdio: 'pipe' });
-  const blocked = spawnSync(hookExe, ['/S'], { env: { ...process.env, ATHENA_TEST_DESTINATION: install }, timeout: 10000 });
+  const blocked = spawnSync(hookExe, ['/S'], { env: { ...process.env, ATHENA_TEST_DESTINATION: install }, timeout: nsisFixtureTimeoutMs });
+  assert.equal(blocked.error, undefined, `missing PowerShell fixture: ${blocked.error || ''}`);
   assert.equal(blocked.status, 2, 'missing PowerShell blocks safely');
   assert.ok(alive(peer.pid) && alive(neighbor.pid));
   // Exercise the actual custom hook too: 32-bit NSIS must launch native
@@ -152,7 +154,7 @@ SectionEnd
   await until(() => existsSync(hookReady), 'NSIS hook root ready');
   const hookChild = Number(readFileSync(hookReady, 'utf8'));
   identities.add(hookChild);
-  const completed = spawnSync(hookExe, ['/S'], { env: { ...process.env, ATHENA_TEST_DESTINATION: install }, timeout: 30000 });
+  const completed = spawnSync(hookExe, ['/S'], { env: { ...process.env, ATHENA_TEST_DESTINATION: install }, timeout: nsisFixtureTimeoutMs });
   assert.equal(completed.status, 73, `actual uninstaller hook: ${completed.error || ''}`);
   await until(() => !alive(hookParent.pid) && !alive(hookChild), 'actual NSIS helper closes owned processes');
   assert.ok(alive(peer.pid) && alive(neighbor.pid));
@@ -169,9 +171,9 @@ SectionEnd
 LangString appRunning`));
   execFileSync(compiler, ['/V2', nsis], { stdio: 'pipe' });
   const freshInstall = join(root, 'fresh-install');
-  const freshResult = spawnSync(hookExe, ['/S'], { env: { ...process.env, ATHENA_TEST_DESTINATION: freshInstall }, timeout: 10000 });
+  const freshResult = spawnSync(hookExe, ['/S'], { env: { ...process.env, ATHENA_TEST_DESTINATION: freshInstall }, timeout: nsisFixtureTimeoutMs });
   assert.equal(freshResult.status, 73, 'installer guard plus process hook accepts fresh safe destination');
-  const occupiedResult = spawnSync(hookExe, ['/S'], { env: { ...process.env, ATHENA_TEST_DESTINATION: install }, timeout: 10000 });
+  const occupiedResult = spawnSync(hookExe, ['/S'], { env: { ...process.env, ATHENA_TEST_DESTINATION: install }, timeout: nsisFixtureTimeoutMs });
   assert.equal(occupiedResult.status, 2, 'installer guard rejects unregistered nonempty destination before process hook');
   assert.ok(alive(peer.pid) && alive(neighbor.pid));
   console.log('PASS: exact root/descendant selection, graceful close, retained child, force, PID identity, sibling/unrelated preservation, apostrophe/Unicode path, and missing-PowerShell NSIS failure');

@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "productRelease": {
-    "version": "0.1.5",
-    "tag": "v0.1.5",
-    "sourceCommit": "e31ef0f3c0352ff5d47d38628f8764d8a6fd8598"
+    "version": "0.1.6",
+    "tag": "v0.1.6",
+    "sourceCommit": "4188d70aec2b45cf095e7d71b6e587358559d91a"
   },
   "windowsInstaller": {
-    "file": "Athena-Setup-0.1.5-x64.exe",
-    "url": "https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.5/Athena-Setup-0.1.5-x64.exe",
-    "sha256": "bdfb5f74413c60ee8a5f7e92bc7c3cbb8138b615294d36e210a4eda7b3dfd634",
-    "buildInfoSha256": "1dd873d3b13bffba286b110e49e77dca7fca4fd2bdce873b16acecf670a80436"
+    "file": "Athena-Setup-0.1.6-x64.exe",
+    "url": "https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.6/Athena-Setup-0.1.6-x64.exe",
+    "sha256": "3600fadec5e2b460a6263cc214f68b9714b6fd358c02fe2ba540011d87c9870d",
+    "buildInfoSha256": "0bf0f27817d8fa221d17f5893aabb5569269ed871e143d1abb7e2ce278075d5b"
   },
   "capabilities": {
     "orders": {
@@ -37,7 +37,7 @@
   "presentation": {
     "status": "canonical",
     "path": "ATHENA-최종발표.pptx",
-    "sha256": "9a63df1feb3ab081ee02fc5aad9e20e9217ea79c24f30a1a705a49b79c26de01",
+    "sha256": "d79723ce010d8e63cc2aea286ddb526b02ab14ac940c8b88653dfce003532a46",
     "slides": 39,
     "pdf": {
       "path": "ATHENA-최종발표.pdf",
