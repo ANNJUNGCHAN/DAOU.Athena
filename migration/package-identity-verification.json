@@ -1,6 +1,23 @@
 {
   "status": "PASS",
-  "scope": "Package identities, final artifact byte identity, immutable production receipts, unchanged core visual source. Runtime checks are separate.",
-  "filesChecked": 85,
+  "mode": "current-release",
+  "scope": "Unchanged 2026-10-08 migration files, immutable production receipts, unchanged core visual source, and canonical presentation artifacts declared by release/product-release.json.",
+  "manifestFiles": 85,
+  "filesChecked": 87,
+  "currentReleaseFilesChecked": 4,
+  "supersededHistoricalPaths": [
+    {
+      "path": "ATHENA-최종발표.pptx",
+      "historicalSha256": "7d8d5c14e5b57ecbb42725dce706b720767ab767a01d5eeb5a79da37a419aed8",
+      "currentSha256": "d79723ce010d8e63cc2aea286ddb526b02ab14ac940c8b88653dfce003532a46",
+      "reason": "The stable root path now contains the approved 39-slide canonical release."
+    },
+    {
+      "path": "migration/verify-package.py",
+      "historicalSha256": "307dac9140a2533ef8560712d7a398425f87d78948a864009c1ec63bd1138acb",
+      "currentSha256": "e22195db1271f0884f6c926b87d987e5e211feb401f2f94c7dc16b86bec4d6e4",
+      "reason": "The verifier now separates the historical manifest from the current canonical release."
+    }
+  ],
   "errors": []
 }

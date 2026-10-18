@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "productRelease": {
+    "version": "0.1.6",
+    "tag": "v0.1.6",
+    "sourceCommit": "4188d70aec2b45cf095e7d71b6e587358559d91a"
+  },
+  "windowsInstaller": {
+    "file": "Athena-Setup-0.1.6-x64.exe",
+    "url": "https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.6/Athena-Setup-0.1.6-x64.exe",
+    "sha256": "3600fadec5e2b460a6263cc214f68b9714b6fd358c02fe2ba540011d87c9870d",
+    "buildInfoSha256": "0bf0f27817d8fa221d17f5893aabb5569269ed871e143d1abb7e2ce278075d5b"
+  },
+  "capabilities": {
+    "orders": {
+      "account": "mock",
+      "confirmation": "per-ticket",
+      "realAccount": false,
+      "automatedTrading": false
+    },
+    "laya": {
+      "modelId": "laya-v018-block002-cpu-force-choice-20261006",
+      "policy": "force-non-defer",
+      "thresholds": "zero",
+      "accuracyQualified": false
+    },
+    "graph": {
+      "automaticSources": [
+        "conversation",
+        "trade",
+        "holding"
+      ],
+      "manualEdits": true,
+      "allActivityCapture": false
+    }
+  },
+  "presentation": {
+    "status": "canonical",
+    "path": "ATHENA-최종발표.pptx",
+    "sha256": "d79723ce010d8e63cc2aea286ddb526b02ab14ac940c8b88653dfce003532a46",
+    "slides": 39,
+    "pdf": {
+      "path": "ATHENA-최종발표.pdf",
+      "sha256": "8cbff3244352330520117506af55a1607323e8d61d757c2eb8173d2b49de59a5"
+    },
+    "script": {
+      "path": "ATHENA-최종발표-대본.md",
+      "sha256": "44656ba263360cf2041317a02cc7a2c03e09fa91e71a72bec2737005d15e3d5a"
+    },
+    "guide": {
+      "path": "ATHENA-최종발표-시연가이드.md",
+      "sha256": "46fda53c7b8e992d39535a87895e0349e7212876529248f1e222ed47bf2c9478"
+    }
+  }
+}

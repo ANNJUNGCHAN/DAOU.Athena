@@ -45,3 +45,14 @@ Thumbs.db
 
 # Fresh render output only; source/video/history/render stays versioned.
 /source/video/render/
+
+# Local submission identity package and workstation-only review/build folders.
+/제출/
+/.claude/
+/.playwright-mcp/
+/.codex-static-safety-build/
+/athena-motion-*/
+/claude-motion-*/
+/feature-demos-*/
+/portable-20261008/
+/최종/
