@@ -290,6 +290,27 @@ function hiddenLinkReasonClauses({ crossingEdgeCount, sourceDegree, targetDegree
   return clauses;
 }
 
+function edgeRelationEvidence(detail) {
+  if (!detail) return [];
+  const legacyKinds = Array.isArray(detail.kinds) ? detail.kinds : [];
+  const relations = Array.isArray(detail.relations) && detail.relations.length > 0
+    ? detail.relations
+    : [{
+      source: detail.source, target: detail.target, kind: legacyKinds[0],
+      confidence: detail.confidence, tier: detail.tier,
+      source_id: detail.source_id, observed_at: detail.observed_at,
+    }];
+  return relations.filter(Boolean).map((relation) => ({
+    source: relation.source || detail.source,
+    target: relation.target || detail.target,
+    kind: relation.kind || legacyKinds[0],
+    confidence: relation.confidence,
+    tier: relation.tier,
+    sourceId: relation.source_id,
+    observedAt: relation.observed_at,
+  }));
+}
+
 // 숨은 연관 강조 상한(보드 03 실측 — 핑크 점선은 지도에 **하나**뿐이다).
 //
 // backend의 `surprising_connections`는 군집 경계를 넘는 엣지를 **전부** 낸다.
@@ -724,23 +745,25 @@ function createGraphModeController(deps) {
       else if (detail.target === entityId) otherId = detail.source;
       if (!otherId) continue;
       const other = findNode(otherId);
-      const kinds = Array.isArray(detail.kinds) ? detail.kinds : [];
-      rows.push({
-        otherId,
-        otherName: (other && other.name) || otherId,
-        // 방향을 여기서 실어 둔다(2026-09-03) — 선택 노드가 도착(target)일 수도
-        // 있다. 렌더 시점에 "선택 노드 = 출발"로 지어내면 해시가 뒤집혀 취소가
-        // 조용히 miss가 난다(백엔드 relation_id는 방향을 구분한다).
-        subjectId: detail.source,
-        objectId: detail.target,
-        // 관계 라벨은 첫 kind를 한글로 — RELATION_LABELS는 타임라인 문구와 공유한다.
-        relationLabel: kinds.length > 0 ? (RELATION_LABELS[kinds[0]] || kinds[0]) : '관계',
-        kinds,
-        confidence: detail.confidence,
-        tier: detail.tier,
-        isHidden: hiddenPartners.has(otherId),
-        surpriseScore: hiddenMeta.get(otherId) ? hiddenMeta.get(otherId).surprise_score : undefined,
-      });
+      for (const relation of edgeRelationEvidence(detail)) {
+        const kind = relation.kind;
+        const kinds = kind ? [kind] : [];
+        rows.push({
+          otherId,
+          otherName: (other && other.name) || otherId,
+          // 새 응답은 관계별 방향을 싣는다. 구형 응답에서는 엣지 방향을 폴백한다.
+          subjectId: relation.source,
+          objectId: relation.target,
+          relationLabel: kind ? (RELATION_LABELS[kind] || kind) : '관계',
+          kinds,
+          confidence: relation.confidence,
+          tier: relation.tier,
+          sourceId: relation.sourceId,
+          observedAt: relation.observedAt,
+          isHidden: hiddenPartners.has(otherId),
+          surpriseScore: hiddenMeta.get(otherId) ? hiddenMeta.get(otherId).surprise_score : undefined,
+        });
+      }
     }
 
     // ③ 숨은 연관 — 위 두 경로에 이미 나온 상대는 거기서 isHidden으로 표시되므로,
@@ -802,11 +825,17 @@ function createGraphModeController(deps) {
     const other = findNode(otherId);
     const detail = (lastPayload && Array.isArray(lastPayload.edge_details) ? lastPayload.edge_details : [])
       .find((d) => d && ((d.source === entityId && d.target === otherId) || (d.source === otherId && d.target === entityId)));
+    const relationConfidences = detail && Array.isArray(detail.relations)
+      ? detail.relations.map((relation) => relation && relation.confidence).filter(Boolean)
+      : [];
+    const edgeConfidence = relationConfidences.includes('EXTRACTED')
+      ? 'EXTRACTED'
+      : (detail ? detail.confidence : undefined);
     const clauses = hiddenLinkReasonClauses({
       crossingEdgeCount: countCrossingEdges(top.source_cluster, top.target_cluster),
       sourceDegree: self ? self.degree : undefined,
       targetDegree: other ? other.degree : undefined,
-      confidence: detail ? detail.confidence : undefined,
+      confidence: edgeConfidence,
     });
     const maxScore = connections.reduce((m, c) => Math.max(m, c && Number.isFinite(c.surprise_score) ? c.surprise_score : -Infinity), -Infinity);
     const isTop = Number.isFinite(top.surprise_score) && top.surprise_score === maxScore;
@@ -1163,6 +1192,8 @@ function createGraphModeController(deps) {
         const row = elp('div', 'panel-relation-row');
         if (rel.otherId) row.setAttribute('data-other-id', rel.otherId);
         row.setAttribute('data-relation', rel.kinds[0] || '');
+        if (rel.sourceId) row.setAttribute('data-source-id', rel.sourceId);
+        if (rel.observedAt) row.setAttribute('data-observed-at', rel.observedAt);
         row.appendChild(elp('span', `panel-relation-dot ${rel.isHidden ? 'is-hidden' : panelDotClass(rel)}`));
         const label = elp('span', `panel-relation-label${rel.isHidden ? ' is-hidden' : ''}`);
         label.textContent = rel.isHidden ? '숨은' : rel.relationLabel;
@@ -1607,6 +1638,7 @@ const __exports = {
   topSurprising,
   countRelationEvents,
   hiddenLinkReasonClauses,
+  edgeRelationEvidence,
   relativeScoreText,
 };
 

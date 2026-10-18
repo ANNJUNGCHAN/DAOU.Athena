@@ -52,6 +52,46 @@ class ProjectedGraph:
         return self.graph.number_of_nodes() == 0
 
 
+_TIER_PRIORITY = {"conversational": 0, "manual": 1, "deterministic": 2}
+_CONFIDENCE_PRIORITY = {"AMBIGUOUS": 0, "INFERRED": 1, "EXTRACTED": 2}
+
+
+def _relation_detail(relation: Any) -> dict[str, str]:
+    return {
+        "source": str(relation.source_entity_id),
+        "target": str(relation.target_entity_id),
+        "kind": str(relation.kind),
+        "tier": str(relation.tier),
+        "confidence": str(relation.confidence),
+        "source_id": str(relation.source_id),
+        "observed_at": str(relation.observed_at),
+    }
+
+
+def _relation_sort_key(detail: dict[str, str]) -> tuple[str, ...]:
+    """관계 조회/삽입 순서와 무관한 API 출력 순서."""
+    return (
+        detail["kind"],
+        detail["source"],
+        detail["target"],
+        detail["tier"],
+        detail["confidence"],
+        detail["source_id"],
+        detail["observed_at"],
+    )
+
+
+def _primary_relation_key(detail: dict[str, str]) -> tuple[int, int, str, str, str]:
+    """구형 단일 tier/confidence 소비자를 위한 결정적 대표 근거."""
+    return (
+        _TIER_PRIORITY.get(detail["tier"], -1),
+        _CONFIDENCE_PRIORITY.get(detail["confidence"], -1),
+        detail["observed_at"],
+        detail["kind"],
+        detail["source_id"],
+    )
+
+
 class GraphProjector:
     """리비전이 바뀔 때만 다시 짓는다."""
 
@@ -98,27 +138,30 @@ class GraphProjector:
                 continue
             if built.has_edge(source, target):
                 # 같은 쌍에 종류가 다른 엣지가 여럿일 수 있다(예: owns와 traded).
-                # 무향 투영에서는 하나의 연결이고, 종류는 모아 둔다.
-                built[source][target]["kinds"] = tuple(
-                    sorted({*built[source][target]["kinds"], relation.kind})
-                )
-                built[source][target]["weight"] += 1
-                # 합쳐진 엣지의 관측 시각은 **가장 최근**이다. 이 연결이 언제부터
-                # 있었는가가 아니라 마지막으로 확인된 것이 언제인가를 묻는 값이라,
-                # 화면의 기간 필터("최근 90일")가 이 기준으로 걸러야 "요즘 살아
-                # 있는 연결"이 남는다. 최솟값을 쓰면 오래전에 한 번 생긴 뒤 계속
-                # 갱신되는 연결이 창 밖으로 밀려난다.
-                if relation.observed_at > built[source][target]["observed_at"]:
-                    built[source][target]["observed_at"] = relation.observed_at
+                # 무향 투영에서는 하나의 연결이지만 근거는 관계별로 보존한다. 합친
+                # tier/confidence 하나만 남기면 관계 조회 순서에 따라 다른 kind의
+                # 근거가 붙는다.
+                built[source][target]["relations"].append(_relation_detail(relation))
                 continue
             built.add_edge(
                 source,
                 target,
-                kinds=(relation.kind,),
-                weight=1,
-                tier=relation.tier,
-                confidence=relation.confidence,
-                observed_at=relation.observed_at,
+                relations=[_relation_detail(relation)],
+            )
+
+        for source, target in built.edges:
+            attributes = built[source][target]
+            details = tuple(sorted(attributes["relations"], key=_relation_sort_key))
+            primary = max(details, key=_primary_relation_key)
+            attributes.update(
+                relations=details,
+                kinds=tuple(sorted({detail["kind"] for detail in details})),
+                weight=len(details),
+                # 기존 소비자를 위한 단일 값은 가장 강한 근거를 결정적으로 고른다.
+                # 새 소비자는 `relations`의 관계별 값을 사용한다.
+                tier=primary["tier"],
+                confidence=primary["confidence"],
+                observed_at=max(detail["observed_at"] for detail in details),
             )
 
         self.builds += 1

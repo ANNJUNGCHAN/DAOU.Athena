@@ -1060,12 +1060,25 @@ class ClusterMapNodeOut(BaseModel):
     degree: int
 
 
+class EdgeRelationOut(BaseModel):
+    """합쳐진 무향 엣지를 구성하는 관계 하나와 그 관계의 근거."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    source: str
+    target: str
+    kind: str
+    tier: str
+    confidence: str
+    source_id: str
+    observed_at: str
+
+
 class EdgeDetailOut(BaseModel):
     """엣지 하나의 원본 관계 메타데이터.
 
-    `edges`(좌표 배치용 `[source, target]` 쌍)와 별개의 additive 필드다 — `projection.py`의
-    `project()`가 이미 각 엣지에 싣는 `kinds`/`tier`/`confidence`(101~108행)를 그대로
-    노출할 뿐, 새로 계산하지 않는다.
+    `edges`(좌표 배치용 `[source, target]` 쌍)와 별개의 additive 필드다. `relations`는
+    투영이 보존한 관계별 근거이고, 단일 `tier`/`confidence`는 구형 소비자 호환용이다.
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -1073,6 +1086,7 @@ class EdgeDetailOut(BaseModel):
     source: str
     target: str
     kinds: list[str]
+    relations: list[EdgeRelationOut] = Field(default_factory=list)
     tier: str
     confidence: str
     # 이 연결이 마지막으로 관측된 시각(`projection.py`가 합쳐진 관계들의 최댓값을
@@ -1326,6 +1340,7 @@ async def get_brain_cluster_map(
                 source=pair[0],
                 target=pair[1],
                 kinds=list(graph.get_edge_data(*pair).get("kinds", ())),
+                relations=list(graph.get_edge_data(*pair).get("relations", ())),
                 tier=str(graph.get_edge_data(*pair).get("tier", "")),
                 confidence=str(graph.get_edge_data(*pair).get("confidence", "")),
                 observed_at=str(graph.get_edge_data(*pair).get("observed_at", "")),

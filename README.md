@@ -114,6 +114,8 @@ npm --prefix app start
 버전은 [GitHub Releases](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases)가 기록입니다.
 태그 `vX.Y.Z`를 `main`의 커밋에 달면 CI가 같은 이름의 Release를 만듭니다.
 
+앱·WEB·발표자료의 공개 기준은 [제품 릴리스 기준표](scripts/release/product-release.json)로 함께 관리합니다. 세 저장소의 사본, 설치 파일 원본 커밋·해시, 공식 39장 자료·WEB 미리보기를 [통합 검사 절차](scripts/release/PRODUCT-RELEASE.md)로 대조합니다. 최신 개발 소스와 이미 배포된 설치 파일은 별도로 표시합니다.
+
 ### 버전 규칙
 
 - 트리 안 버전은 `app/package.json`, `app/package-lock.json`, `backend/pyproject.toml`, `backend/uv.lock`이 같습니다.

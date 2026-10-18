@@ -94,24 +94,27 @@ def _parse_ohlcv_number(raw: Any) -> float | None:
     """키움 가격/거래량 문자열 → 수치. 부호 접두(+/-)는 등락 표기이지 값이 아니다
     (canvas_transform._parse_price와 같은 규칙 — 모듈 머리말 참고)."""
     if isinstance(raw, (int, float)) and not isinstance(raw, bool):
-        return float(raw)
-    if not isinstance(raw, str) or not raw.strip():
-        return None
-    text = raw.strip().lstrip("+-")
-    try:
-        return float(text)
-    except ValueError:
-        return None
+        value = float(raw)
+    else:
+        if not isinstance(raw, str) or not raw.strip():
+            return None
+        text = raw.strip().lstrip("+-")
+        try:
+            value = float(text)
+        except ValueError:
+            return None
+    return value if isfinite(value) else None
 
 
 def parse_page(raw: dict[str, Any], contract: ChartContract) -> list[Candle]:
     """원시 TR 응답 dict → 캔들 리스트.
 
     컨테이너 자체가 리스트가 아니면(계약이 안 맞는다는 뜻) 구조 오류로 본다.
-    개별 행이 필수 필드(dt·OHLCV)를 못 채우면 그 행만 건너뛴다 — 화면 변환층
-    (`canvas_transform.py`)과 같은 관용이다. 정렬은 강제하지 않는다 — 키움이
-    최신순으로 주는지 과거순으로 주는지는 페이지마다의 관례일 뿐, 호출자(백필
-    루프)가 dt 값으로 직접 판단한다.
+    백테스트 원본에서 개별 행이 필수 필드(dt·OHLCV)를 못 채우면 페이지 전체를
+    거부한다. 중간 행을 건너뛰면 남은 행의 최소·최대 날짜가 연속 커버리지로
+    저장되어 누락된 봉까지 확보한 것으로 오판하기 때문이다. 정렬은 강제하지
+    않는다 — 키움이 최신순으로 주는지 과거순으로 주는지는 페이지마다의 관례일
+    뿐, 호출자(백필 루프)가 dt 값으로 직접 판단한다.
     """
     items = raw.get(contract.container_alias, [])
     if not isinstance(items, list):
@@ -119,12 +122,12 @@ def parse_page(raw: dict[str, Any], contract: ChartContract) -> list[Candle]:
             f"contract container is not a list: {contract.container_alias} (tr_id={contract.tr_id})"
         )
     candles: list[Candle] = []
-    for item in items:
+    for index, item in enumerate(items):
         if not isinstance(item, dict):
-            continue
+            raise ValueError(f"차트 페이지 응답에 잘못된 봉이 있습니다: row={index}")
         dt = item.get(contract.time_alias)
         if not isinstance(dt, str) or not dt.strip():
-            continue
+            raise ValueError(f"차트 페이지 응답에 잘못된 봉이 있습니다: row={index}")
         values = (
             _parse_ohlcv_number(item.get(contract.open_alias)),
             _parse_ohlcv_number(item.get(contract.high_alias)),
@@ -133,7 +136,7 @@ def parse_page(raw: dict[str, Any], contract: ChartContract) -> list[Candle]:
             _parse_ohlcv_number(item.get(contract.volume_alias)),
         )
         if any(value is None for value in values):
-            continue
+            raise ValueError(f"차트 페이지 응답에 잘못된 봉이 있습니다: row={index}")
         open_, high, low, close, volume = values
         candles.append(
             Candle(dt=dt.strip(), open=open_, high=high, low=low, close=close, volume=int(volume))

@@ -40,6 +40,7 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "backend/verification/test_ws_feed_status.py",
   "backend/verification/test_index_realtime_semantics.py",
   "backend/verification/test_graph_edit_proposal.py",
+  "backend/verification/test_graph_projection_provenance.py",
   "backend/verification/test_propose_optimize_ranges.py",
   "backend/verification/test_scheduler_isolation.py",
   "backend/verification/test_scheduled_catchup_lifetime.py",

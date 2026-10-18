@@ -9,7 +9,7 @@ import pytest
 from fastapi import HTTPException
 
 from athena_api.api import backtest
-from athena_api.backtest.data import contract_for, refresh_candles
+from athena_api.backtest.data import backfill, contract_for, refresh_candles
 from athena_api.backtest.runner import BacktestRunner
 from athena_api.backtest.store import BacktestStore, Candle
 from athena_api.brain.db import SqliteOwner
@@ -69,6 +69,47 @@ async def refresh(store, fetch, **overrides):
 
 async def audits(owner):
     return await owner.run(lambda: [dict(row) for row in owner.require().execute("SELECT * FROM bt_candle_refresh")])
+
+
+@pytest.mark.asyncio
+async def test_backfill_rejects_page_with_malformed_interior_candle_without_claiming_coverage(
+    database,
+):
+    _, store = database
+    before = await store.candle_snapshot(*KEY)
+    page = raw_rows([("20260109", 123), ("20260108", 122), ("20260107", 121)])
+    contract = contract_for("day")
+    del page[contract.container_alias][1][contract.close_alias]
+    fetch, _ = fetcher([(page, "N", None)])
+
+    with pytest.raises(ValueError, match="잘못된 봉"):
+        await backfill(
+            store=store, fetch_page=fetch, stk_cd=KEY[0], period=KEY[1], adjusted=KEY[2],
+            from_dt="20260107", base_dt="20260109", now=lambda: NOW,
+        )
+
+    assert await store.candle_snapshot(*KEY) == before
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("malformed_close", [float("inf"), float("nan"), "inf", "NaN"])
+async def test_backfill_rejects_non_finite_interior_price_without_claiming_coverage(
+    database, malformed_close,
+):
+    _, store = database
+    before = await store.candle_snapshot(*KEY)
+    page = raw_rows([("20260109", 123), ("20260108", 122), ("20260107", 121)])
+    contract = contract_for("day")
+    page[contract.container_alias][1][contract.close_alias] = malformed_close
+    fetch, _ = fetcher([(page, "N", None)])
+
+    with pytest.raises(ValueError, match="잘못된 봉"):
+        await backfill(
+            store=store, fetch_page=fetch, stk_cd=KEY[0], period=KEY[1], adjusted=KEY[2],
+            from_dt="20260107", base_dt="20260109", now=lambda: NOW,
+        )
+
+    assert await store.candle_snapshot(*KEY) == before
 
 
 @pytest.mark.asyncio

@@ -1,9 +1,7 @@
+import unittest
 from collections import Counter
-import json
-from pathlib import Path
 from types import SimpleNamespace
 from typing import Literal
-import unittest
 
 from pydantic import BaseModel, Field
 
@@ -12,7 +10,7 @@ from athena_api.dependencies import build_selector_service
 from athena_api.laya.memory import refine_extraction
 from athena_api.laya.query import refine_arguments, rerank_search
 from athena_api.laya.service import SemanticService
-from athena_api.selector.schemas import ResolveRequest, SearchRequest
+from athena_api.selector.schemas import DiscoveryIntent, ResolveRequest, SearchRequest
 
 
 class Client:
@@ -29,6 +27,35 @@ class Client:
 def request_for(service, headers=None):
     return SimpleNamespace(app=SimpleNamespace(state=SimpleNamespace(laya_service=service, local_bearer_token="test")),
                            headers={"authorization": "Bearer test", **(headers or {})})
+
+
+def public_selector_catalog(selector, *, argument_values=None):
+    """Small synthetic LAYA fixture bound to the current public selector contracts."""
+    query_candidates = [{
+        "candidate_id": document.operation_ref,
+        "operation_ref": document.operation_ref,
+        "name": document.name,
+        "domain": document.domain,
+        "kind": document.kind,
+    } for document in selector.catalog.visible_for(DiscoveryIntent.QUERY)]
+    argument_candidates = []
+    for (operation_ref, field), values in (argument_values or {}).items():
+        document = selector.catalog.find_exact(operation_ref)
+        fields = {info.alias or name: info
+                  for name, info in document.request_model.model_fields.items()}
+        description = fields[field].description
+        argument_candidates.extend({
+            "candidate_id": f"fixture::{operation_ref}::{field}::{value}",
+            "operation_ref": operation_ref,
+            "field": field,
+            "value": value,
+            "field_description": description,
+            "qualified_aliases": [{"operation_ref": operation_ref, "field": field}],
+        } for value in values)
+    return {
+        "query_candidates": query_candidates,
+        "query_argument_candidates": argument_candidates,
+    }
 
 
 class QueryTests(unittest.IsolatedAsyncioTestCase):
@@ -68,17 +95,16 @@ class QueryTests(unittest.IsolatedAsyncioTestCase):
         service.selector_catalog_version = "drift"
         self.assertIs(await rerank_search(request_for(service), query, selector, response), response)
 
-    async def test_actual_trained_websocket_candidates_obey_intent_and_live_kind(self):
+    async def test_public_websocket_candidates_obey_intent_and_live_kind(self):
         selector = build_selector_service()
-        catalog = json.loads((Path(__file__).resolve().parents[2] /
-            "datasets/laya-athena/versions/v008/source-contracts.json").read_text(encoding="utf-8"))
         service = SemanticService(Client(lambda row: "defer"))
-        service.catalog, service.selector_catalog_version = catalog, selector.catalog.version
+        service.catalog = public_selector_catalog(selector)
+        service.selector_catalog_version = selector.catalog.version
         for ref in ("base:ka10171", "base:ka10172"):
             payload = SearchRequest(query=ref, intent="websocket", limit=5)
             response = selector.search(payload)
             self.assertIn(ref, [hit.operation_ref for hit in response.results])
-            # Keep this coverage about eligible trained pairs in a real shortlist;
+            # Keep this coverage about eligible public-selector pairs in a real shortlist;
             # singleton identity lookups are covered by the no-ranking test.
             other_ref = 'base:ka10172' if ref == 'base:ka10171' else 'base:ka10171'
             other = selector.search(SearchRequest(query=other_ref, intent='websocket', limit=5)).results[0]

@@ -1,22 +1,18 @@
 import json
-from pathlib import Path
-from types import SimpleNamespace
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from fastapi import Response
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
+from test_laya_query_memory import Client, public_selector_catalog
 
 from athena_api.api import canvas_push
 from athena_api.dependencies import build_selector_service
 from athena_api.laya.query import refine_dispatch_request
 from athena_api.laya.service import SemanticService
 from athena_api.selector.schemas import SearchRequest
-from test_laya_query_memory import Client
-
-
-CATALOG = Path(__file__).resolve().parents[2] / "datasets/laya-athena/versions/v008/source-contracts.json"
 
 
 def request_for(service, *, authenticated=True):
@@ -28,7 +24,10 @@ def request_for(service, *, authenticated=True):
 class PrimarySelectorTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self.selector = build_selector_service()
-        self.catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+        self.catalog = public_selector_catalog(
+            self.selector,
+            argument_values={("base:ka10030", "mrkt_tp"): ("000", "001", "101")},
+        )
 
     def service(self, predict):
         service = SemanticService(Client(predict))

@@ -8,6 +8,7 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const { createCodexRuntime } = require('./codex-runtime-home');
+const WINDOWS_INTERACTIVE_FIXTURE_TIMEOUT_MS = 30_000;
 
 test('Windows interactive launcher executes a native fixture in a usable terminal', async (t) => {
   if (process.platform !== 'win32') return;
@@ -21,9 +22,16 @@ test('Windows interactive launcher executes a native fixture in a usable termina
   const child = runtime.spawnPrivateHomeInteractiveCommand([fixture], { title: 'Athena terminal verification' });
   const exit = await new Promise((resolve, reject) => { child.once('exit', resolve); child.once('error', reject); });
   assert.equal(exit, 0);
-  const deadline = Date.now() + 5000;
+  // A newly created Windows console can take more than five seconds to become
+  // ready on a busy desktop. The launcher process exiting only confirms that
+  // Start-Process accepted the request, so wait for the native fixture itself.
+  const deadline = Date.now() + WINDOWS_INTERACTIVE_FIXTURE_TIMEOUT_MS;
   while (!fs.existsSync(report) && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 50));
-  assert.equal(fs.existsSync(report), true, 'interactive terminal must execute its command');
+  assert.equal(
+    fs.existsSync(report),
+    true,
+    `interactive terminal must execute its command within ${WINDOWS_INTERACTIVE_FIXTURE_TIMEOUT_MS}ms`,
+  );
   assert.deepEqual(JSON.parse(fs.readFileSync(report, 'utf8')), { stdin: true, stdout: true, stderr: true, home: runtimeHome });
 });
 

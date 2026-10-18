@@ -25,6 +25,7 @@ const policy = [
   line(/^const TRADING_OUT_OF_SCOPE_MESSAGE = .*;\r?$/m),
   line(/^const ORDERS_UNAVAILABLE_MESSAGE = .*;\r?$/m),
   line(/^const ORDER_ACCOUNT_ALIAS_RE = .*;\r?$/m),
+  line(/^const ORDER_RESPONSE_TIMEOUT_MS = .*;\r?$/m),
   declaration('function tradingOutOfScope('),
   declaration('function activeOrderAccountAlias('),
   declaration('async function orderEnvironment('),
@@ -35,7 +36,7 @@ const REAL = { mock: false, available: false };
 const MOCK_OFF = { mock: true, available: false };
 const MOCK_ON = { mock: true, available: true };
 
-function environmentFetch(env, calls = [], { orderThrows = false } = {}) {
+function environmentFetch(env, calls = [], { orderThrows = false, orderResponse = null } = {}) {
   return async (url, options = {}) => {
     calls.push({ url, options });
     if (url.endsWith('/api/v1/llm/order-environment')) {
@@ -45,7 +46,11 @@ function environmentFetch(env, calls = [], { orderThrows = false } = {}) {
       }) };
     }
     if (orderThrows) throw new Error('socket hang up');
-    return { ok: true, status: 200, json: async () => ({ return_code: 0, ord_no: '0000123' }) };
+    return {
+      ok: true,
+      status: 200,
+      json: async () => orderResponse || ({ return_code: 0, ord_no: '0000123' }),
+    };
   };
 }
 
@@ -135,6 +140,81 @@ test('an order request that may have left is reported in doubt, never as a retry
   assert.match(chatSource, /idempotencyKey: ticket\.idempotencyKey,/);
   assert.doesNotMatch(chatSource, /idempotencyKey: orderTicketLib\.newIdempotencyKey\(\)/);
   assert.match(chatSource, /res = \{ ok: false, status: 0, error:/);
+});
+
+test('a stalled order POST aborts once and settles as IN_DOUBT without retrying', async () => {
+  const calls = [];
+  let orderPosts = 0;
+  let observedAbort = false;
+  const published = [];
+  const fetchImpl = async (url, options = {}) => {
+    calls.push({ url, options });
+    if (url.endsWith('/api/v1/llm/order-environment')) {
+      return {
+        ok: true,
+        json: async () => ({ mock: true, orders_available: true }),
+      };
+    }
+    orderPosts += 1;
+    assert.equal(options.method, 'POST');
+    assert.ok(options.signal);
+    return new Promise((resolve, reject) => {
+      options.signal.addEventListener('abort', () => {
+        observedAbort = true;
+        reject(options.signal.reason);
+      }, { once: true });
+    });
+  };
+  const ctx = baseContext({
+    fetch: fetchImpl,
+    process: { env: { ATHENA_LOCAL_BEARER_TOKEN: 'synthetic' } },
+    backendLauncher: { orderKey: () => 'launch-key' },
+    orderTicket,
+    protectedCards: { buildOrderActionCard: (card) => card },
+    mdlog() {},
+  });
+  vm.runInContext(policy + '\n' + declaration('async function executeOrderRequest('), ctx);
+
+  const result = await ctx.executeOrderRequest({
+    trId: 'kt10000',
+    body: { stk_cd: '005930', ord_qty: '1' },
+    idempotencyKey: 'k-timeout',
+    conversationId: 'c1',
+    accountAlias: 'acct-1',
+  }, {
+    activeConversationId: () => 'c1',
+    publishResult: (card) => published.push(card),
+    orderResponseTimeoutMs: 5,
+  });
+
+  assert.equal(calls.length, 2);
+  assert.equal(orderPosts, 1);
+  assert.equal(observedAbort, true);
+  assert.deepEqual(JSON.parse(JSON.stringify(result)), {
+    ok: false,
+    status: 0,
+    code: 'ORDER_RESPONSE_TIMEOUT',
+    error: '주문 응답 제한 시간이 지나 접수 여부를 확인할 수 없습니다.',
+  });
+  assert.equal(published.length, 1);
+  assert.equal(published[0].outcome, 'in_doubt');
+  assert.equal(published[0].response.code, 'ORDER_RESPONSE_TIMEOUT');
+});
+
+test('the order deadline leaves an immediate broker rejection as a terminal failure', async () => {
+  const calls = [];
+  const { run, published } = executor(MOCK_ON, calls, {
+    orderResponse: { return_code: '17', return_msg: '주문 불가' },
+  });
+  const result = await run();
+
+  assert.equal(calls.length, 2);
+  assert.equal(result.ok, false);
+  assert.equal(result.status, 422);
+  assert.equal(result.code, '17');
+  assert.equal(result.error, '주문 불가');
+  assert.equal(published.length, 1);
+  assert.equal(published[0].outcome, 'failed');
 });
 
 test('order permission turns on only for a connected mock account and always turns off', async () => {

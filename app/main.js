@@ -1674,6 +1674,10 @@ function tradingOutOfScope() {
 
 const ORDERS_UNAVAILABLE_MESSAGE = '모의투자 계좌 주문을 지금 실행할 수 없습니다. 계좌가 연결되지 않았거나 설정 › 계좌에서 주문 API가 꺼져 있습니다.';
 const ORDER_ACCOUNT_ALIAS_RE = /^[a-z0-9][a-z0-9_-]{0,31}$/;
+// 백엔드→키움 요청의 통상 10초 제한보다 여유를 두되, Electron→로컬 백엔드가
+// 멈춘 경우 티켓을 영구히 executing으로 남기지 않는다. 시간 초과는 미접수를
+// 증명하지 못하므로 executeOrderRequest에서 IN_DOUBT(상태 0)로만 종료한다.
+const ORDER_RESPONSE_TIMEOUT_MS = 15_000;
 
 // 주문 티켓은 그 순간의 활성 계좌(백엔드 별칭)에 묶인다. 연결 전이면 빈 값이다.
 function activeOrderAccountAlias() {
@@ -1718,6 +1722,10 @@ async function executeOrderRequest(payload, dependencies) {
   const currentAccountAlias = deps.activeAccountAlias || activeOrderAccountAlias;
   const orderKey = deps.orderKey || backendLauncher.orderKey;
   const publishResult = deps.publishResult || sendLiveCanvasResult;
+  const responseTimeoutMs = Number.isFinite(deps.orderResponseTimeoutMs)
+    && deps.orderResponseTimeoutMs > 0
+    ? deps.orderResponseTimeoutMs
+    : ORDER_RESPONSE_TIMEOUT_MS;
   if (!/^kt1000[01]$/.test(String(trId))) {
     return { ok: false, status: 400, error: '허용되지 않는 주문 TR' };
   }
@@ -1732,9 +1740,11 @@ async function executeOrderRequest(payload, dependencies) {
   const environment = await orderEnvironment({ fetchImpl, backendAlias: executionAccountAlias });
   if (!environment.ordersAvailable) return orderRefusal(environment);
   let result;
+  const orderSignal = AbortSignal.timeout(responseTimeoutMs);
   try {
     const res = await fetchImpl(`${BACKEND_HTTP_BASE}/api/v1/order/${trId}`, {
       method: 'POST',
+      signal: orderSignal,
       headers: {
         'Content-Type': 'application/json',
         'X-Athena-Confirm': 'true',
@@ -1780,7 +1790,17 @@ async function executeOrderRequest(payload, dependencies) {
       }
     }
   } catch (e) {
-    result = { ok: false, status: 0, error: String((e && e.message) || e) };
+    const timedOut = orderSignal.aborted
+      && orderSignal.reason
+      && orderSignal.reason.name === 'TimeoutError';
+    result = timedOut
+      ? {
+        ok: false,
+        status: 0,
+        code: 'ORDER_RESPONSE_TIMEOUT',
+        error: '주문 응답 제한 시간이 지나 접수 여부를 확인할 수 없습니다.',
+      }
+      : { ok: false, status: 0, error: String((e && e.message) || e) };
   }
   publishResult(protectedCards.buildOrderActionCard({
     trId,

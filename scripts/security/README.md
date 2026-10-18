@@ -5,7 +5,7 @@ These repos are intended to be **public**. Gates stop live secrets from landing 
 Gates:
 - `gitleaks.toml` — commit-time secret policy.
 - `.githooks/pre-commit` — refuses a staged secret.
-- `.githooks/pre-push` — refuses a push if gitleaks finds a leak, GitHub push protection is off, or prompt markers are missing.
+- `.githooks/pre-push` — refuses a push if gitleaks finds a leak, GitHub push protection cannot be positively verified as enabled, or prompt markers are missing. Missing GitHub CLI, authentication/API errors, and empty responses fail closed; no bypass environment variable is accepted.
 - `.github/workflows/secret-scan.yml` — CI gitleaks after a push, then prompt-marker check.
 - `scripts/security/check-prompt-security.mjs` — fail-closed marker presence check, invoked by eval, pre-push, and CI.
 - `scripts/security/keepset.mjs` / `check-tracked-keepset.mjs` — only run/rebuild + dest-control paths may be tracked.

@@ -20,14 +20,16 @@ fi
 node "$ROOT/scripts/security/check-tracked-keepset.mjs"
 node "$ROOT/scripts/security/check-prompt-security.mjs"
 
-# Public remotes are intended. Refuse only if GitHub push protection is off.
-if command -v gh >/dev/null 2>&1; then
-  SCAN="$(gh api repos/:owner/:repo --jq '.security_and_analysis.secret_scanning_push_protection.status' 2>/dev/null || echo "")"
-  if [[ -n "$SCAN" && "$SCAN" != "enabled" ]]; then
-    echo "pre-push: GitHub secret_scanning_push_protection is '$SCAN', not enabled." >&2
-    echo "Enable it on the public repo before pushing, or set ATHENA_SKIP_PUSH_PROTECTION_CHECK=1." >&2
-    if [[ "${ATHENA_SKIP_PUSH_PROTECTION_CHECK:-}" != "1" ]]; then
-      exit 1
-    fi
-  fi
+# This public repository requires a positively verified protection status.
+if ! command -v gh >/dev/null 2>&1; then
+  echo "pre-push: GitHub CLI is required to verify push protection." >&2
+  exit 1
+fi
+if ! SCAN="$(gh api repos/:owner/:repo --jq '.security_and_analysis.secret_scanning_push_protection.status')"; then
+  echo "pre-push: could not verify GitHub push protection; check authentication and connectivity." >&2
+  exit 1
+fi
+if [[ "$SCAN" != "enabled" ]]; then
+  echo "pre-push: GitHub push protection was not verified as enabled." >&2
+  exit 1
 fi
