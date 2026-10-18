@@ -1,0 +1,71 @@
+{
+  "generatedAt": "2026-10-12T04:45:49.4187491Z",
+  "source": {
+    "video": {
+      "filename": "ATHENA-모션그래픽-60s.mp4",
+      "sha256": "5725000ee3f97d173140176ec8d4f1c1bbc198a21a4ad1e6d3cf940596d91658",
+      "originalBytes": 35885123
+    }
+  },
+  "outputs": {
+    "video": {
+      "youtubeUrl": "https://www.youtube.com/watch?v=VvLjTC2nNxo"
+    },
+    "poster": {
+      "filename": "film-poster.webp",
+      "bytes": 13310,
+      "frameSeconds": 15,
+      "sha256": "21e4a6013ba421f0f6437f924c454fb2b0670d6a009d5e8c68fe848675a556b7"
+    },
+    "productScreens": [
+      {
+        "filename": "agora-workspace.webp",
+        "bytes": 64730,
+        "sha256": "abb0c76edf7894c76a5543ad0fe52c40ffe9a14906dcacf19d14f49d953e1232",
+        "sourceFilename": "00160.jpg",
+        "sourceSha256": "29c1181d9b02527f4a0f67d1878e9f06ba9d482bbe209242bc99f0ae661c890f",
+        "crop": "1640:953:280:70"
+      },
+      {
+        "filename": "metis-graph.webp",
+        "bytes": 89044,
+        "sha256": "e64ecdb59b8a9a2a09943ac7fccd32acd34e96e75b8c430275c5ee82ab3c1bfb",
+        "sourceFilename": "00180.jpg",
+        "sourceSha256": "e6006ea46b29fe584cb5ff0c36f118aab6bc87393ea59773d4a244c84f746ba4",
+        "crop": "1640:953:280:70"
+      },
+      {
+        "filename": "ergane-permissions.webp",
+        "bytes": 35722,
+        "sha256": "0a9f96a60ce4d659e3a3a7e3c05400412c7cd327e7ad155aed50679ebe270d3f",
+        "sourceFilename": "00222.jpg",
+        "sourceSha256": "d17d78a234b02487e5506e6fb6a3d828f2a8b748bb8bc18aa8974efb884493d2",
+        "crop": "1640:953:280:70"
+      },
+      {
+        "filename": "pallas-backtest.webp",
+        "bytes": 53616,
+        "sha256": "1bf347da6b963f4aed8ace26d49c689e50ddcafa42d190de5e5fdd98079e2d53",
+        "sourceFilename": "00290.jpg",
+        "sourceSha256": "978941a2412949da2db1a52d09fce585bea053675608f614d48f4e6fd4c7acd0",
+        "crop": "1640:953:280:70"
+      },
+      {
+        "filename": "aegis-alert.webp",
+        "bytes": 76690,
+        "sha256": "36fff6f1010662ffd9859efd5625ad0044d965f29db11ce34e544a85c476da35",
+        "sourceFilename": "00088.jpg",
+        "sourceSha256": "8e3baa0bb306bc0c531773b3bf397fc1e19cc564c46986c33154f297c8493e3c",
+        "crop": "1640:953:280:70"
+      },
+      {
+        "filename": "glaux-companion.webp",
+        "bytes": 23466,
+        "sha256": "22d488a515a8d3d9c86ac49c015ff85277becb278e21cae93ce9222c5b2a54c9",
+        "sourceFilename": "00167.jpg",
+        "sourceSha256": "06b77347178903e4f4a81a600475421f0e63383a5fa4ccfecbdca8aa76dfaec1",
+        "crop": "1640:972:280:0"
+      }
+    ]
+  }
+}

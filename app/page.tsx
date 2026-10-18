@@ -1,4 +1,4 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Play } from 'lucide-react';
 import { DownloadButton } from '@/components/download-button';
 import { ParticleField } from '@/components/particle-field';
 import { Reveal } from '@/components/reveal';
@@ -8,10 +8,17 @@ import { techArticles } from '@/lib/tech-articles';
 import { AthenaIntro } from '@/components/athena-intro';
 import { FeatureMotion } from '@/components/cinematic-motion';
 import { PresentationLauncher } from '@/components/presentation-mode';
+import { LaunchFilm } from '@/components/launch-film';
+import release from '@/config/product-release.json';
 
 export default function Home() {
+  const hasCanonicalPresentation =
+    String(release.presentation.status) === 'canonical' &&
+    release.presentation.slides === 39 &&
+    /^[0-9a-f]{64}$/.test(release.presentation.sha256 ?? '');
+
   return (
-    <main id="main">
+    <main id="main" className="legacy-home">
       <section className="hero">
         <ParticleField />
         <div className="hero-content">
@@ -31,15 +38,42 @@ export default function Home() {
               rel="noopener noreferrer"
               aria-label="GitHub 바로가기 (새 탭에서 열림)"
             >
-              GitHub 바로가기
-              <ArrowUpRight size={17} aria-hidden="true" />
+              GitHub 바로가기 <ArrowUpRight size={17} aria-hidden="true" />
             </a>
             <a className="button light" href="/tech">
               Explore Tech
             </a>
-            <PresentationLauncher />
+            {hasCanonicalPresentation ? (
+              <a className="button light" href="/presentation">
+                39장 공식 발표자료
+              </a>
+            ) : (
+              <PresentationLauncher />
+            )}
+            <a className="button light" href="#film">
+              <Play size={17} aria-hidden="true" />
+              60초 홍보영상
+            </a>
           </div>
         </div>
+      </section>
+      <section
+        id="film"
+        className="home-promo wrap"
+        aria-labelledby="home-promo-title"
+      >
+        <Reveal>
+          <p className="home-intro-label">ATHENA FILM · 60 SECONDS</p>
+          <h2 id="home-promo-title" className="statement">
+            ATHENA, 60초로 만나보기.
+          </h2>
+          <p className="home-intro-description">
+            대화에서 그래프, 알림과 전략까지.
+            <br />
+            ATHENA의 새로운 이야기를 만나보세요.
+          </p>
+        </Reveal>
+        <LaunchFilm />
       </section>
       <section className="home-features wrap">
         <Reveal>
@@ -48,8 +82,7 @@ export default function Home() {
           </p>
           <h2 className="statement">
             투자의 다음 장을,
-            <br />
-            한 문장으로 열다.
+            <br />한 문장으로 열다.
           </h2>
           <p className="home-intro-description">
             궁금한 것을 묻고, 떠오른 생각을 적어보세요.
@@ -61,14 +94,11 @@ export default function Home() {
           <section key={f.slug} className="home-feature">
             <div className="home-feature-copy">
               <Reveal>
-                <h2>ATHENA {f.name}</h2>
-                <p className="feature-name-meaning">
-                  {f.ko} · {f.meaning}
-                </p>
+                <h2>{f.name}</h2>
                 <p className="feature-short-description">{f.tagline}</p>
                 <p>{f.description}</p>
                 <a className="text-link" href={`/features/${f.slug}`}>
-                  기능 살펴보기 <ArrowUpRight size={17} />
+                  기능 살펴보기 <ArrowUpRight size={17} aria-hidden="true" />
                 </a>
               </Reveal>
             </div>
@@ -78,7 +108,7 @@ export default function Home() {
           </section>
         ))}
       </section>
-      <section className="home-cases wrap">
+      <section id="resources" className="home-cases wrap">
         <Reveal>
           <h2 className="statement">ATHENA를 만드는 기술.</h2>
         </Reveal>
@@ -89,8 +119,10 @@ export default function Home() {
               href={`/tech/${article.slug}`}
               className="case-link"
             >
-              <span>{String(index + 1).padStart(2, '0')} · {article.title}</span>
-              <ArrowUpRight />
+              <span>
+                {String(index + 1).padStart(2, '0')} · {article.title}
+              </span>
+              <ArrowUpRight aria-hidden="true" />
             </a>
           ))}
         </div>

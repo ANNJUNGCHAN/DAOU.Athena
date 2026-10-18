@@ -21,42 +21,42 @@ export type PresentationSlide = {
 const featurePresentationOrder = [
   {
     slug: 'agora',
-    name: '아고라',
+    name: '대화',
     capabilityDuration: 15,
     capabilities: ['화면 호출', '화면 대화', '대화주문'],
     hasCompanions: true,
   },
   {
     slug: 'metis',
-    name: '메티스',
+    name: '그래프',
     capabilityDuration: 15,
     capabilities: ['활동 기억', '지식 대화', '맞춤 추천'],
     hasCompanions: true,
   },
   {
     slug: 'aegis',
-    name: '아이기스',
+    name: '알림',
     capabilityDuration: 20,
     capabilities: ['맞춤 알람', '대화형 자동화', '통합 감시'],
     hasCompanions: false,
   },
   {
     slug: 'ergane',
-    name: '에르가네',
+    name: '플러그인',
     capabilityDuration: 20,
     capabilities: ['투자정보 연동', '서비스 연동', '도구 호출'],
     hasCompanions: false,
   },
   {
     slug: 'pallas',
-    name: '팔라스',
+    name: '전략',
     capabilityDuration: 15,
     capabilities: ['바이브코딩', '노드 대화', '백테스트'],
     hasCompanions: true,
   },
   {
     slug: 'glaux',
-    name: '글로우',
+    name: '알림 오브',
     capabilityDuration: 30,
     capabilities: ['미니 대화', '능동 알림'],
     hasCompanions: false,
@@ -113,7 +113,7 @@ export const presentationSlides: readonly PresentationSlide[] = [
   ...featureSlides,
   {
     id: 'tech-tool-selection-1',
-    label: '기술 · Tool Use 1',
+    label: '기술 · System 1 판단 모델 1',
     duration: 30,
     kind: 'technology',
     techSlug: '01-tool-selection',
@@ -121,7 +121,7 @@ export const presentationSlides: readonly PresentationSlide[] = [
   },
   {
     id: 'tech-tool-selection-2',
-    label: '기술 · Tool Use 2',
+    label: '기술 · System 1 판단 모델 2',
     duration: 30,
     kind: 'technology',
     techSlug: '01-tool-selection',
@@ -129,7 +129,7 @@ export const presentationSlides: readonly PresentationSlide[] = [
   },
   {
     id: 'tech-investment-memory-1',
-    label: '기술 · Agentic Memory 1',
+    label: '기술 · Graph Memory 1',
     duration: 30,
     kind: 'technology',
     techSlug: '02-investment-memory',
@@ -137,7 +137,7 @@ export const presentationSlides: readonly PresentationSlide[] = [
   },
   {
     id: 'tech-investment-memory-2',
-    label: '기술 · Agentic Memory 2',
+    label: '기술 · Graph Memory 2',
     duration: 30,
     kind: 'technology',
     techSlug: '02-investment-memory',
@@ -145,7 +145,7 @@ export const presentationSlides: readonly PresentationSlide[] = [
   },
   {
     id: 'tech-graph-retrieval-1',
-    label: '기술 · RAG 1',
+    label: '기술 · 그래프 검색 1',
     duration: 30,
     kind: 'technology',
     techSlug: '03-graph-retrieval',
@@ -153,7 +153,7 @@ export const presentationSlides: readonly PresentationSlide[] = [
   },
   {
     id: 'tech-graph-retrieval-2',
-    label: '기술 · RAG 2',
+    label: '기술 · 군집과 숨은 연결 2',
     duration: 30,
     kind: 'technology',
     techSlug: '03-graph-retrieval',

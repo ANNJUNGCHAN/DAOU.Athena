@@ -1,0 +1,120 @@
+.canonical-presentation {
+  min-height: 100vh;
+  padding: clamp(24px, 4vw, 56px);
+  color: #171a20;
+  background: #f4f6fa;
+}
+
+.canonical-presentation > header,
+.canonical-presentation > nav,
+.canonical-presentation > footer,
+.canonical-presentation > figure {
+  width: min(100%, 1440px);
+  margin-inline: auto;
+}
+
+.canonical-presentation > header,
+.canonical-presentation > nav,
+.canonical-presentation > footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.canonical-presentation > header p {
+  margin: 0 0 6px;
+  color: #596273;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.canonical-presentation > header h1 {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 38px);
+}
+
+.canonical-presentation > header output {
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(20px, 2.5vw, 32px);
+  font-weight: 700;
+}
+
+.canonical-presentation > figure {
+  margin-block: clamp(20px, 3vw, 36px);
+}
+
+.canonical-presentation > figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #dce1ea;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 18px 60px rgb(24 31 45 / 12%);
+}
+
+.canonical-presentation > figure figcaption {
+  margin-top: 12px;
+  color: #667085;
+  font-size: 14px;
+}
+
+.canonical-presentation > nav button {
+  display: inline-flex;
+  min-width: 104px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 14px;
+  border: 1px solid #ccd3df;
+  border-radius: 8px;
+  color: #171a20;
+  background: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.canonical-presentation > nav button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.canonical-presentation > nav input {
+  width: min(680px, 60vw);
+  accent-color: #2f6fea;
+}
+
+.canonical-presentation > footer {
+  margin-top: 24px;
+  color: #667085;
+  font-size: 13px;
+}
+
+.canonical-presentation > footer a {
+  color: #245ec9;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .canonical-presentation > header,
+  .canonical-presentation > footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .canonical-presentation > nav {
+    gap: 10px;
+  }
+
+  .canonical-presentation > nav button {
+    min-width: auto;
+    padding-inline: 10px;
+  }
+
+  .canonical-presentation > nav input {
+    min-width: 0;
+  }
+}

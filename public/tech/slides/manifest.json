@@ -1,0 +1,15 @@
+{
+  "source": {
+    "provenance": "historical-presentation",
+    "historicalOriginal": "ATHENA-최종발표.pptx",
+    "sha256": "1ab837a23865f4d743c7ac0eac5ff8c0fd98d60c92c52a8061917cc17afda8ce",
+    "slideCount": 55
+  },
+  "slides": [
+    { "page": 48, "filename": "s48.png", "origin": "embedded-slide-image", "width": 1920, "height": 1080, "sha256": "f341d47885951c1ef0557dfe3f73d3d3d4272513b7a5c9c8a80f11ed568b87e4" },
+    { "page": 49, "filename": "s49.png", "origin": "embedded-slide-image", "width": 1920, "height": 1080, "sha256": "da5b96a52b0f43e7ddd2377cca54a21a571a27a1ddb7de2753370288d797b84d" },
+    { "page": 50, "filename": "s50.png", "origin": "historical-deck-render", "width": 1920, "height": 1080, "sha256": "c077f7f24532627b9cde0c218e84606888bd08adfab176b6f43d4f4d4f0bc97f" },
+    { "page": 53, "filename": "s53.png", "origin": "historical-deck-render", "width": 1920, "height": 1080, "sha256": "645df8b8ff8b578b602833ab50f67f494b44f5007583f447dfb99169d6c16416" },
+    { "page": 54, "filename": "s54.png", "origin": "historical-deck-render", "width": 1920, "height": 1080, "sha256": "e6f5ab5fd992d4335666c92f7611c1ecfadc9590834c63933bc6dc0c96543419" }
+  ]
+}

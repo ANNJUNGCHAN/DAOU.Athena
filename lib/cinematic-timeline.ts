@@ -54,16 +54,10 @@ export function pallasState(time: number) {
             ? 'form'
             : time < 24
               ? 'running'
-              : time < 29
-                ? 'result'
-                : 'deploy';
+              : 'result';
   return {
     phase,
     result: phase === 'result',
-    deploy: phase === 'deploy',
-    deployed: time >= 32,
-    armed: time >= 34,
-    order: time >= 35.5,
   };
 }
 
@@ -97,7 +91,7 @@ export const timelines: Record<SceneId, Timeline> = {
       pointer(59, 1030, 700), pointer(63, 1110, 800),
     ],
     beats: [
-      { at: 0, label: '아고라에서 시작하기' },
+      { at: 0, label: '대화에서 시작하기' },
       { at: 3, label: '삼성전자 지금 주가 어때?' },
       { at: 7.5, label: '전송 버튼 클릭' },
       { at: 8, label: '답변 중…' },
@@ -209,7 +203,7 @@ export const timelines: Record<SceneId, Timeline> = {
     ],
   },
   pallas: {
-    duration: 42,
+    duration: 29,
     camera: [
       wide(0),
       key(1, 1380, 865, 2.5),
@@ -227,12 +221,7 @@ export const timelines: Record<SceneId, Timeline> = {
       key(22, 820, 700, 1.6),
       key(25, 750, 470, 1.5),
       wide(28),
-      key(30, 770, 450, 1.5),
-      key(32, 460, 659, 2),
-      key(34, 553, 659, 2),
-      key(36, 750, 740, 1.7),
-      wide(39),
-      wide(42),
+      wide(29),
     ],
     cursor: [
       pointer(0, 820, 650),
@@ -246,11 +235,6 @@ export const timelines: Record<SceneId, Timeline> = {
       pointer(18, 495, 220, true),
       pointer(20, 1070, 702, true),
       pointer(24, 382, 165, true),
-      pointer(29, 604, 165, true),
-      pointer(32, 388, 659, true),
-      pointer(34, 553, 659, true),
-      pointer(36, 860, 752),
-      pointer(40, 1130, 840),
     ],
     beats: [
       { at: 0, label: '대화로 나만의 퀀트 전략 만들기' },
@@ -261,11 +245,7 @@ export const timelines: Record<SceneId, Timeline> = {
       { at: 18, label: '기간과 비용 가정 확인' },
       { at: 20, label: '백테스트 · 체결 시뮬레이션' },
       { at: 24, label: '자산 곡선과 체결 내역 확인' },
-      { at: 29, label: '저장된 버전으로 모의 배포 설정' },
-      { at: 32, label: '주문 한도 확인 · 모의 배포' },
-      { at: 34, label: '자동 주문 활성화 · 모의서버' },
-      { at: 35.5, label: '신호부터 모의 주문 접수까지' },
-      { at: 39, label: '전략 만들기부터 모의매매까지' },
+      { at: 28, label: '가정과 백테스트 결과를 함께 검토' },
     ],
   },
   glaux: {
@@ -308,7 +288,7 @@ export const timelines: Record<SceneId, Timeline> = {
     ],
     beats: [
       { at: 0, label: 'ATHENA 창을 내려두고' },
-      { at: 4, label: '엑셀 작업 중에도 곁에 있는 글로우' },
+      { at: 4, label: '엑셀 작업 중에도 곁에 있는 알림 오브' },
       { at: 6, label: '작은 알림에서 시작되는 대화' },
       { at: 9, label: '알림을 눌러 내용 확인' },
       { at: 12, label: '그 자리에서 차트 물어보기' },

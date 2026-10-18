@@ -74,12 +74,12 @@ export function SiteHeader() {
               <div className="mega-layout">
                 <div className="mega-intro">
                   <h2>
-                    나의 투자에 맞는
+                    여섯 가지 역량으로
                     <br />
-                    ATHENA의 기능.
+                    이어지는 투자 작업.
                   </h2>
                   <NavigationMenuLink
-                    render={<a href="/features" />}
+                    href="/features"
                     className="overview-link"
                     onClick={() => setMenu(null)}
                   >
@@ -93,12 +93,12 @@ export function SiteHeader() {
                     return (
                       <NavigationMenuLink
                         key={f.slug}
-                        render={<a href={`/features/${f.slug}`} />}
+                        href={`/features/${f.slug}`}
                         className="mega-link"
                         onClick={() => setMenu(null)}
                       >
-                        <Icon size={19} />
-                        ATHENA {f.name}
+                        <Icon size={19} aria-hidden="true" />
+                        <span className="mega-link-label">{f.label}</span>
                       </NavigationMenuLink>
                     );
                   })}
@@ -108,7 +108,7 @@ export function SiteHeader() {
           </NavigationMenuItem>
           <NavigationMenuItem value="tech">
             <NavigationMenuTrigger className="nav-trigger">
-              Tech
+              기술
             </NavigationMenuTrigger>
             <NavigationMenuContent className="mega-content">
               <div className="mega-layout">
@@ -119,7 +119,7 @@ export function SiteHeader() {
                     세 가지 AI 기술.
                   </h2>
                   <NavigationMenuLink
-                    render={<a href="/tech" />}
+                    href="/tech"
                     className="overview-link"
                     onClick={() => setMenu(null)}
                   >
@@ -127,11 +127,11 @@ export function SiteHeader() {
                   </NavigationMenuLink>
                 </div>
                 <div className="mega-links">
-                  <span>Tech</span>
+                  <span>기술</span>
                   {techArticles.map((article) => (
                     <NavigationMenuLink
                       key={article.slug}
-                      render={<a href={`/tech/${article.slug}`} />}
+                      href={`/tech/${article.slug}`}
                       className="mega-link"
                       onClick={() => setMenu(null)}
                     >
@@ -144,6 +144,14 @@ export function SiteHeader() {
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              href="/#resources"
+              className="nav-trigger nav-resource-link"
+            >
+              자료
+            </NavigationMenuLink>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
       <Image
@@ -152,7 +160,7 @@ export function SiteHeader() {
         alt="다우키움그룹"
         width={162}
         height={28}
-        style={{ height: "auto" }}
+        style={{ height: 'auto' }}
         unoptimized
       />
     </header>

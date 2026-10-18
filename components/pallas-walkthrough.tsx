@@ -221,11 +221,7 @@ export function PallasWalkthrough({ time }: { time: number }) {
                   ? '손절 기준을 수정하고 다시 검사했어요.'
                   : time < 24
                     ? '기간과 비용 가정을 확인한 뒤 백테스트를 실행합니다.'
-                    : time < 29
-                      ? '결과와 체결 내역을 함께 살펴보세요.'
-                      : time < 35.5
-                        ? '저장된 전략 버전에 주문 한도를 정하고, 직접 활성화합니다.'
-                        : '모의서버의 신호·주문 내역을 확인할 수 있어요.';
+                    : '결과와 체결 내역을 함께 살펴보세요.';
   return (
     <>
       <div className="cm-technique pw-workspace">
@@ -237,15 +233,12 @@ export function PallasWalkthrough({ time }: { time: number }) {
           20일 돌파 전략 <small>{time < 17.5 ? 'v1' : 'v2'} · 삼성전자</small>
         </div>
         <div className="pw-main-tabs">
-          <b className={!s.result && !s.deploy ? 'active' : ''}>기법</b>
+          <b className={!s.result ? 'active' : ''}>기법</b>
           <b className={s.result ? 'active' : ''}>결과</b>
           <b>이력</b>
           <b>최적화</b>
-          <b className={s.deploy ? 'active' : ''}>
-            실매매 적용 <small>모의서버</small>
-          </b>
         </div>
-        {!s.result && !s.deploy && (
+        {!s.result && (
           <div className="cm-technique-tabs">
             <b className={s.phase === 'code' ? 'active' : ''}>코드</b>
             <b className={s.phase === 'graph' ? 'active' : ''}>노드·흐름</b>
@@ -339,78 +332,6 @@ export function PallasWalkthrough({ time }: { time: number }) {
           </div>
         )}
         {s.result && <Result time={time} />}
-        {s.deploy && (
-          <div className="pw-deploy pw-enter">
-            <div className="pw-section-title">
-              전략 배포 · 모의매매 <span>저장된 버전 v2</span>
-            </div>
-            <div className="pw-server">
-              키움 모의서버 <b>설명용 시연</b>
-            </div>
-            <div className="pw-order-modes">
-              <span>기록만</span>
-              <span>승인을 받고 주문</span>
-              <span className="selected">한도 안 자동 주문</span>
-            </div>
-            <div className="pw-fields">
-              {[
-                ['1회 주문 한도', '100,000원'],
-                ['하루 최대 주문', '2건'],
-                ['유효 기간', '7일'],
-                ['최대 낙폭 한도', '5%'],
-              ].map(([k, v]) => (
-                <div key={k}>
-                  <small>{k}</small>
-                  <strong>{v}</strong>
-                </div>
-              ))}
-            </div>
-            <div className="pw-deploy-actions">
-              <div className={s.deployed ? 'done' : ''}>
-                {s.deployed ? '✓ 모의 배포 생성됨' : '모의 배포 만들기'}
-              </div>
-              {s.deployed && (
-                <div className={s.armed ? 'done' : 'arm'}>
-                  {s.armed ? '✓ 자동 주문 활성화' : '한도 확인 후 활성화'}
-                </div>
-              )}
-            </div>
-            <div className="pw-order-log">
-              <header>
-                오늘의 신호·주문{' '}
-                <small>모의서버 · {s.order ? '1 / 2건' : '0 / 2건'}</small>
-              </header>
-              {s.order ? (
-                <>
-                  <div className="pw-log-row">
-                    <time>09:31:02</time>
-                    <span>20일 고점 돌파</span>
-                    <b>신호 확인</b>
-                  </div>
-                  <div className="pw-log-row">
-                    <time>09:31:03</time>
-                    <span>주문 한도 점검</span>
-                    <b>통과</b>
-                  </div>
-                  <div className="pw-log-row">
-                    <time>09:31:04</time>
-                    <span>삼성전자 · 매수 1주</span>
-                    <b>모의 주문 접수</b>
-                  </div>
-                </>
-              ) : (
-                <p>
-                  {s.armed
-                    ? '새 신호를 기다리고 있습니다'
-                    : '배포와 활성화 후 신호를 확인합니다'}
-                </p>
-              )}
-            </div>
-            <div className="pw-footnote">
-              모든 수치와 주문은 화면 설명용입니다 · 실제 주문 전송 없음
-            </div>
-          </div>
-        )}
       </div>
       <div className="cm-chat pw-chat">
         <div className="cm-messages">

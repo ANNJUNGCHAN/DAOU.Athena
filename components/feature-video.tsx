@@ -19,42 +19,9 @@ export function FeatureVideo({
   const feature = features.find((item) => item.slug === slug);
   const youtube = getYoutubeVideo(slug);
   const [open, setOpen] = useState(false);
-  const [previewFailed, setPreviewFailed] = useState(false);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const previewRef = useRef<HTMLVideoElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const stage = stageRef.current;
-    const preview = previewRef.current;
-    if (!stage || !preview || previewFailed) return;
-    let visible = false;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => {
-      if (open || !visible || reduced.matches || document.hidden)
-        preview.pause();
-      else void preview.play().catch(() => undefined);
-    };
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        visible = entry.isIntersecting;
-        sync();
-      },
-      { threshold: 0.15 },
-    );
-    observer.observe(stage);
-    reduced.addEventListener('change', sync);
-    document.addEventListener('visibilitychange', sync);
-    sync();
-    return () => {
-      observer.disconnect();
-      reduced.removeEventListener('change', sync);
-      document.removeEventListener('visibilitychange', sync);
-      preview.pause();
-    };
-  }, [open, previewFailed]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -97,33 +64,14 @@ export function FeatureVideo({
       <figure
         className={`feature-video${presentation ? ' feature-video-presentation' : ''}`}
       >
-        <div ref={stageRef} className="feature-video-stage">
-          {previewFailed ? (
-            <Image
-              src={feature.image}
-              alt=""
-              fill
-              sizes="(max-width: 800px) 92vw, 1500px"
-              unoptimized
-            />
-          ) : (
-            <video
-              ref={previewRef}
-              className="feature-video-preview"
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={feature.image}
-              aria-hidden="true"
-              onError={() => setPreviewFailed(true)}
-            >
-              <source
-                src={`/media/video-previews/${slug}.webm`}
-                type="video/webm"
-              />
-            </video>
-          )}
+        <div className="feature-video-stage">
+          <Image
+            src={feature.image}
+            alt=""
+            fill
+            sizes="(max-width: 800px) 92vw, 1500px"
+            unoptimized
+          />
           <span className="feature-video-shade" aria-hidden="true" />
           <button
             ref={triggerRef}

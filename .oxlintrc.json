@@ -24,6 +24,7 @@
   },
   "ignorePatterns": [
     "public/presentation/**",
+    "archive/presentation-v0.1.2/**",
     ".next/**",
     ".vinext/**",
     "out/**",
@@ -33,6 +34,7 @@
     "next-env.d.ts"
   ],
   "rules": {
+    "nextjs/no-html-link-for-pages": "off",
     "no-array-constructor": "error",
     "no-var": "error",
     "prefer-const": "error",

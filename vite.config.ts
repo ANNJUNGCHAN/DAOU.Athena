@@ -1,8 +1,43 @@
+import { rmSync } from 'node:fs';
+import path from 'node:path';
 import { sites } from '@openai/sites-vite-plugin';
 import tailwindcss from '@tailwindcss/postcss';
 import vinext from 'vinext';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import hostingConfig from './.openai/hosting.json';
+
+// Production masters and review clips are not site assets. Wrangler rejects
+// any file over 25 MiB, so keep them out of dist/client even if they reappear
+// under public/.
+const EXCLUDED_CLIENT_ASSETS = [
+  'feature-motion-review.html',
+  'brand/kiwoom.svg',
+  'media/case-films',
+  'media/feature-motion-evidence',
+  'media/feature-motion-review',
+  'media/glaux-film.mp4',
+  'media/glaux.vtt',
+  'media/research.webm',
+  'media/research.vtt',
+  'media/strategy.webm',
+  'media/strategy.vtt',
+];
+
+function stripExcludedClientAssets(): Plugin {
+  const strip = () => {
+    const root = path.resolve('dist/client');
+    for (const relative of EXCLUDED_CLIENT_ASSETS) {
+      rmSync(path.join(root, relative), { recursive: true, force: true });
+    }
+  };
+
+  return {
+    name: 'strip-excluded-client-assets',
+    apply: 'build',
+    writeBundle: strip,
+    closeBundle: strip,
+  };
+}
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   '00000000-0000-4000-8000-000000000000';
@@ -59,6 +94,7 @@ export default defineConfig(async ({ command }) => {
         viteEnvironment: { name: 'rsc', childEnvironments: ['ssr'] },
         config: localBindingConfig,
       }),
+      stripExcludedClientAssets(),
     ],
   };
 });

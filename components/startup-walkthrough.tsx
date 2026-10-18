@@ -348,7 +348,7 @@ export function StartupWalkthrough() {
                     <div className="sw-agora-actions"><span><Plus />새 대화</span><span><Search />대화 검색</span></div>
                     <small className="sw-agora-mode-caption">이력 · 모드</small>
                     <div className="sw-agora-modes">
-                      {[['아고라', MessageSquare], ['메티스', Network], ['아이기스', Shield], ['에르가네', Puzzle], ['팔라스', Presentation]].map(([name, Icon], i) => {
+                      {[['대화', MessageSquare], ['그래프', Network], ['알림', Shield], ['플러그인', Puzzle], ['전략', Presentation]].map(([name, Icon], i) => {
                         const ModeIcon = Icon as typeof MessageSquare;
                         return <span key={name as string} className={i === 0 ? 'sw-agora-selected' : ''}><ModeIcon />{name as string}</span>;
                       })}

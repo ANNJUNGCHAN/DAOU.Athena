@@ -131,13 +131,13 @@ export function GlauxWalkthrough({ time }: { time: number }) {
         <div className={`gw-panel${s.chat ? ' gw-panel-chat' : ''}`}>
           <header className="gw-panel-head">
             <Owl />
-            <span>글로우 {s.chat ? '대화' : '알림'}</span>
+            <span>알림 오브 {s.chat ? '미니 대화' : '알림'}</span>
             <X size={16} />
           </header>
           <div className="gw-body">
             {!s.chat ? (
               <>
-                <small>아이기스 · 설정한 가격 도달</small>
+                <small>알림 · 설정한 가격 도달</small>
                 <p>삼성전자가 관심 가격에 도달했어요.</p>
                 <div className="gw-alert-facts">
                   <span>알림 시점 가격</span>
@@ -270,7 +270,7 @@ export function GlauxWalkthrough({ time }: { time: number }) {
         </div>
       )}
       <div className="gw-desktop-caption">
-        업무 화면 예시 · 글로우 미니 대화 시연
+        업무 화면 예시 · 알림 오브 미니 대화 시연
       </div>
     </div>
   );
