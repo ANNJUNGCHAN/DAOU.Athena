@@ -1,0 +1,248 @@
+{
+  "status": "pass_for_render",
+  "reviewer": "demo_one_analysis",
+  "reviewed_at_utc": "2026-10-07T15:42:35.359557+00:00",
+  "scope": "Independent V23 homepage-based authoring source, geometry, runtime and sampled visual review. Final encoded MP4 playback/decode remains a separate delivery gate.",
+  "checks": {
+    "homepage_css": "Original cinematic-motion.css copied byte-for-byte and loaded by stage.html; original fixed 1600x1000 canvas, 289/1180 split, 15px base UI and quiet compact surfaces are used.",
+    "homepage_geometry": {
+      ".shell": {
+        "left": "160px",
+        "top": "40px",
+        "width": "1600px",
+        "height": "1000px",
+        "fontSize": "15px"
+      },
+      ".side": {
+        "left": "0px",
+        "top": "0px",
+        "width": "270px",
+        "height": "998px",
+        "fontSize": "15px"
+      },
+      ".operated-canvas": {
+        "left": "289px",
+        "top": "26px",
+        "width": "890px",
+        "height": "962px",
+        "fontSize": "15px"
+      },
+      ".chat-pane": {
+        "left": "1180px",
+        "top": "30px",
+        "width": "420px",
+        "height": "958px",
+        "fontSize": "15px"
+      },
+      ".composer": {
+        "left": "21px",
+        "top": "865px",
+        "width": "375px",
+        "height": "85px",
+        "fontSize": "15px"
+      },
+      ".nav": {
+        "left": "auto",
+        "top": "auto",
+        "width": "235px",
+        "height": "44px",
+        "fontSize": "15px"
+      },
+      ".input": {
+        "left": "auto",
+        "top": "auto",
+        "width": "375px",
+        "height": "46px",
+        "fontSize": "15px"
+      }
+    },
+    "capability_coverage": "23 distinct original capability IDs preserved; contiguous 60-second sequence retained, with six cinematic feature inserts.",
+    "visual_coverage": "Inspected 69 state samples across four contact sheets, corrected graph-edit/plugin-invest/glaux samples, and final automation frame-45.562.png. Reviewed input, selection, result and app text continuity; no remaining blocking clipping of the primary feature demonstration.",
+    "runtime": "161 independent semantic/geometry samples, 23 same-feature shell/prompt DOM identity checks, 46 transitions at 30fps neighbours and at +/-0.00001 second. Browser errors: 0. Source unchanged during these checks.",
+    "camera_continuity": {
+      "maximum_epsilon_translation_px": 0.1176,
+      "finding": "No discontinuous camera jump at inspected result thresholds or within-group feature boundaries; fast intentional pans remain."
+    },
+    "conversation_flow": "Prior question context is retained within each group; send button, pressed state and pending state provide a causal input-to-response flow. DOM reconciliation retains matching shell/input nodes instead of replacing the complete UI each frame.",
+    "source_content": "Native candle plot, graph node/edge labels, node flow, recorded code, actual backtest/trade rows and mini plot retained. Approval, order and memory-change examples remain proposals or mock review states, not claimed live executions.",
+    "text_policy": "App labels/questions/buttons/axes/node names/code/table text remain visible. ATHENA and established main film captions remain. Only external Enter cue, small ending subtitle and in-film music credit stay hidden.",
+    "scope_integrity": "V22 and original app/source recordings were not edited by this reviewer. Reviewer wrote verification artifacts and updated verify-output.py to bind V23 review hashes to the final render."
+  },
+  "features": [
+    {
+      "id": "chat-screen",
+      "label": "화면 호출",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "chat-screen-talk",
+      "label": "화면 대화",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "chat-order",
+      "label": "대화주문",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "chat-material",
+      "label": "자료 대화",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "chat-settings",
+      "label": "대화 설정",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "graph-memory",
+      "label": "활동 기억",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "graph-cluster",
+      "label": "클러스터",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "graph-talk",
+      "label": "지식 대화",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "graph-recommend",
+      "label": "맞춤 추천",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "graph-edit",
+      "label": "기억 수정",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "plugin-invest",
+      "label": "투자정보 연동",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "plugin-service",
+      "label": "서비스 연동",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "plugin-call",
+      "label": "도구 호출",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "strategy-code",
+      "label": "바이브코딩",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "strategy-node",
+      "label": "노드 대화",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "strategy-backtest",
+      "label": "백테스트",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "strategy-diagnosis",
+      "label": "투자 진단",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "strategy-search",
+      "label": "조건 탐색",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "alert-personal",
+      "label": "맞춤 알람",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "alert-automation",
+      "label": "대화형 자동화",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "alert-watch",
+      "label": "통합 감시",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "glaux-mini",
+      "label": "미니 대화",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    },
+    {
+      "id": "glaux-notice",
+      "label": "능동 알림",
+      "status": "pass_sampled_representation",
+      "scope": "Input/selection/result UI representation reviewed; not a backend execution claim."
+    }
+  ],
+  "resolved_findings": [
+    "Initial generic camera aimed at blank composer or clipped primary result: replaced by feature-specific anchors and operation focus.",
+    "User question was hidden until result: now appears during submitted/pending state.",
+    "Question context reset between related capabilities: prior question bubbles now retained.",
+    "End-of-group camera used an incorrect double scale blend: corrected; settings and graph change proposal fit.",
+    "Glaux operation focus translated title/window outside frame: Glaux excluded from this adjustment.",
+    "Automation zoom override was in an unreachable graph branch: moved to rawCamera; final form through Save is visible."
+  ],
+  "blocking_findings": [],
+  "limitations": [
+    "This is a scripted, source-grounded cinematic app reconstruction, not live ATHENA backend execution.",
+    "Homepage motion grammar and dimensions are reused; Glaux retains the film companion composition rather than reproducing the entire website spreadsheet-desktop minimization scene.",
+    "A 60-second film cannot explain all 23 capabilities at equal depth; secondary features are brief visible operations.",
+    "Visual coverage is sampled states plus independent boundary/geometry checks, not visual inspection of every final encoded frame.",
+    "Adjacent off-focus panels may be cropped during deliberate zooms; primary action/result was checked at its reveal or result point."
+  ],
+  "evidence": [
+    "verification/operation-audit.json",
+    "verification/operation-contact-1.png",
+    "verification/operation-contact-2.png",
+    "verification/operation-contact-3.png",
+    "verification/operation-contact-4.png",
+    "verification/independent-homepage-runtime.json",
+    "verification/frame-45.562.png"
+  ],
+  "reviewed_file_sha256": {
+    "stage.js": "a1675a0ba2b8462c6de90e519fab849e46a89ed11644734140c66153224320b2",
+    "stage.css": "440a5e42d7649ee3673c0273ce0c35e95480b0543e4a51b48def70a3ff52c656",
+    "feature-detail.js": "c15707f5c489e23a7b9031e15b6d96edc28a27c99ad40bd8de344fa50d396f15",
+    "stage.html": "b60cd3b4194c66e20138db2b2bca4e0fb3e6087e89cd0cb8dec53599fc571108",
+    "interaction-spec.json": "0185da49a2bc9ac9cec2e75e3c348ba71898c6e007fe60fa3943729d33556f0e",
+    "stage-sequence.json": "1828f0cd4841b40cc84e02a7878c1e5a793bbcc1c04abf2056a2e9d84455769f",
+    "stage-features.json": "26fb0c7893c7a7da0fdbc14285e70425c0e2bc056511f70f3d456a9d26be6e7a",
+    "source-media-map.json": "773d6567faeeef05389c96395970f29e93a5ede80ad1cce5e753dff69086a03a",
+    "homepage-source/cinematic-motion.css": "fc04df6aed51f93153f35639232aae747ce78b4639d749ba047a0d9df13c88cf",
+    "implementation-manifest.json": "1a9f5905dc6c636461c1e5eae5c5bd16026dac71f8c862b78005cf361d9b2343"
+  }
+}

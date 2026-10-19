@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:8768/v23-homepage-motion/",
+  "mode": "encoded MP4",
+  "playbackObserved": {"from": 4.3, "pausedAt": 24.905231},
+  "duration": 60,
+  "resolution": [1920, 1080],
+  "readyState": 4,
+  "mediaError": null,
+  "browserErrors": [],
+  "finalSeek": 7.95,
+  "fileSha256": "08885603ea049831f130d9a340241492f1d14325a0fa164e4515180a2313a66b",
+  "proofFrames": "verification/final-highlights.jpg",
+  "method": "In-app browser playback through visible chapter, pause and seek controls; read-only HTMLVideoElement state; encoded MP4 frame extraction."
+}

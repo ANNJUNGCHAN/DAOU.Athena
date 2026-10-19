@@ -1,0 +1,938 @@
+{
+  "version": 3,
+  "source_read_only": true,
+  "output_root": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion",
+  "purpose": "Only native content regions inside code-built app UI; avoid screenshot headers, surrounding chat, desktop and chopped text.",
+  "source_video": {
+    "file": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+    "size": [
+      2122,
+      1166
+    ],
+    "fps": 30
+  },
+  "assets": [
+    {
+      "id": "candle-74",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\candle-74.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 74,
+      "source_frame_zero_based": 2220,
+      "fps": 30,
+      "crop_xywh_native": [
+        342,
+        390,
+        862,
+        637
+      ],
+      "pixel_size": [
+        862,
+        637
+      ],
+      "sha256": "eb113ff386400f8ac8e01442b9a1f1fd0e2ee4d530955773acbda88ca2af3a11",
+      "content": "삼성전자005930 실제 일봉/이평/거래량/가격·시간축",
+      "insert_in": "차트 카드 내부 plot",
+      "layout": "contain at preserved aspect ratio; white/off-white content surface; do not stretch",
+      "limit": "74초에는 차트영역 내부에 마우스가 없음. 기본 일봉 그대로 사용할 것. 주/월 탭을 선택하면서 같은 그림을 새 주봉/월봉 결과로 제시하지 않음."
+    },
+    {
+      "id": "graph-full-342",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\graph-full-342.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 342,
+      "source_frame_zero_based": 10260,
+      "fps": 30,
+      "crop_xywh_native": [
+        308,
+        146,
+        1052,
+        940
+      ],
+      "pixel_size": [
+        1052,
+        940
+      ],
+      "sha256": "129d6e1ca62568347c704c59bf2c8f95e3795d7431d84662f32db6a46f757c95",
+      "content": "전체 실제 지식 네트워크",
+      "insert_in": "그래프 캔버스의 첫 상태",
+      "layout": "contain at preserved aspect ratio; white/off-white content surface; do not stretch",
+      "limit": "전체 화면으로 최소0.8초 먼저 보여줌. 원본에서 작은 노드 라벨은 이 배율에 그려지지 않아 이 PNG만 확대하면 글자가 새로 생기지 않음."
+    },
+    {
+      "id": "graph-focus-347",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\graph-focus-347.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 347,
+      "source_frame_zero_based": 10410,
+      "fps": 30,
+      "crop_xywh_native": [
+        308,
+        146,
+        1052,
+        940
+      ],
+      "pixel_size": [
+        1052,
+        940
+      ],
+      "sha256": "4d1822c826a4ef40be09feccc68b84c13a48352e1ce617b6771f029bb08fa447",
+      "content": "키다리스튜디오 중심 관계 강조",
+      "insert_in": "그래프 확대 결과",
+      "layout": "contain at preserved aspect ratio; white/off-white content surface; do not stretch",
+      "limit": "강조노드와 별도 상세패널이 일치한 증거로 사용하지 않음. 원본347초 상세패널은 삼성전자가 남아있음."
+    },
+    {
+      "id": "graph-node-356",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\graph-node-356.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 356,
+      "source_frame_zero_based": 10680,
+      "fps": 30,
+      "crop_xywh_native": [
+        308,
+        146,
+        1052,
+        940
+      ],
+      "pixel_size": [
+        1052,
+        940
+      ],
+      "sha256": "35566c5abe73f6c83147ffcf864d93738ce640021ebd74543c7aafe3840a28ea",
+      "content": "미디어·엔터테인먼트 실제 선택",
+      "insert_in": "그래프 선택 상태",
+      "layout": "contain at preserved aspect ratio; white/off-white content surface; do not stretch",
+      "limit": "graph-detail-356과 같은 시점의 일치쌍. 타 종목의 답변을 붙이지 않음.",
+      "selected_node": {
+        "name": "미디어·엔터테인먼트",
+        "center_xy_native_png": [
+          574,
+          341
+        ],
+        "radius_native_png": 40,
+        "normalized_native_png": [
+          0.5456273764258555,
+          0.3627659574468085
+        ],
+        "source_global_xy": [
+          882,
+          487
+        ],
+        "scope": "Use object-fit:contain rendered media rectangle, not parent frame percentages. Original pointer also exists below at approximately(574,465) in this PNG; avoid duplicate custom pointer."
+      }
+    },
+    {
+      "id": "graph-detail-356",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\graph-detail-356.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 356,
+      "source_frame_zero_based": 10680,
+      "fps": 30,
+      "crop_xywh_native": [
+        1378,
+        74,
+        321,
+        358
+      ],
+      "pixel_size": [
+        321,
+        358
+      ],
+      "sha256": "bb42d7285f9ad5ca29f4370c3688954313fa21dd576c5c9d9d5ef7f66eb16b61",
+      "content": "선택노드의 소속 키다리스튜디오/최근 변화",
+      "insert_in": "선택 상세 패널",
+      "layout": "contain at preserved aspect ratio; white/off-white content surface; do not stretch",
+      "limit": "현재 선택노드에는 성향기록이 없다는 문구도 포함. 이를 투자자 성향 분석 완료로 바꾸지 않음."
+    },
+    {
+      "id": "equity-724",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\equity-724.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 724,
+      "source_frame_zero_based": 21720,
+      "fps": 30,
+      "crop_xywh_native": [
+        309,
+        443,
+        1370,
+        286
+      ],
+      "pixel_size": [
+        1370,
+        286
+      ],
+      "sha256": "b7031665e7db2e27de57f6244fd9df8a6203dee2faa3d538294b7fcf2c6354d4",
+      "content": "실제 전략/매수보유 자산곡선과 진입·청산 표시",
+      "insert_in": "백테스트 결과 그래프",
+      "layout": "contain at preserved aspect ratio; white/off-white content surface; do not stretch",
+      "limit": "곡선·축·범례·진입청산마커를 함께 유지. 원본 마우스가 local≈[480,145] 흰 공간에 있음. 새 포인터와 중복을 피할 것. 제거시 그 작은 빈 배경만 덮고 차트 수치/선은 변경하지 않음."
+    },
+    {
+      "id": "strategy-flow-778",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\strategy-flow-778.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 778,
+      "source_frame_zero_based": 23340,
+      "fps": 30,
+      "crop_xywh_native": [
+        500,
+        218,
+        478,
+        526
+      ],
+      "pixel_size": [
+        478,
+        526
+      ],
+      "sha256": "53a5c5a9b2b09839b1868da564854ff5db17999702f90851be6f77798edf2b59",
+      "content": "진입/청산 실제 함수 노드 흐름",
+      "insert_in": "전략 노드 탭 내용",
+      "layout": "contain at preserved aspect ratio; white/off-white content surface; do not stretch",
+      "limit": "동일한 실제 함수텍스트/코드행/연결을 DOM으로 재구성하는 것이 더 선명함. 아래 structuredFlow에 화면전사 제공."
+    },
+    {
+      "id": "trade-table-724",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\trade-table-724.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 724,
+      "source_frame_zero_based": 21720,
+      "fps": 30,
+      "crop_xywh_native": [
+        308,
+        869,
+        650,
+        271
+      ],
+      "pixel_size": [
+        650,
+        271
+      ],
+      "sha256": "281a2dbe7b29aecc52caa5ae2f67c7f17379a54179f490839a5ffbd15a108df5",
+      "content": "실제 첫7건 체결 행과 열 제목",
+      "insert_in": "백테스트 거래내역",
+      "layout": "contain at preserved aspect ratio; white/off-white content surface; do not stretch",
+      "limit": "모의 백테스트 기록. 실제계좌거래내역으로 이름붙이지 않음. 아래 structuredTradeRows로 DOM 재현 가능."
+    },
+    {
+      "id": "dart-570",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\dart-570.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 570,
+      "source_frame_zero_based": 17100,
+      "fps": 30,
+      "crop_xywh_native": [
+        321,
+        64,
+        900,
+        103
+      ],
+      "pixel_size": [
+        900,
+        103
+      ],
+      "sha256": "162a8bd01bf1c23973949f906731bee588c306344ff18318f96bd0b9895bb9ed",
+      "content": "실제 조회된 공시3건",
+      "insert_in": "도구호출 결과 카드",
+      "layout": "contain at preserved aspect ratio; white/off-white content surface; do not stretch",
+      "limit": "오른쪽 기준시각/닫기버튼을 전부 제외해 잘린문구가 없음. 조회목록만 확인한 결과이며 공시본문 영향분석 완료로 주장하지 않음."
+    },
+    {
+      "id": "glaux-plot-45",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\glaux-plot-only-45.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상2.mp4",
+      "source_seconds": 45,
+      "source_frame_zero_based": 1350,
+      "fps": 30,
+      "crop_xywh_native": [
+        2102,
+        908,
+        310,
+        154
+      ],
+      "pixel_size": [
+        310,
+        154
+      ],
+      "sha256": "241d184b23ea698c478f3159ff440be77fda6398b446ffba99c300dde2332ba0",
+      "content": "글라우 실제 삼성전자 미니 선그래프와 양끝 날짜",
+      "insert_in": "코드로 만든 글라우 미니창 결과 카드 내부 plot",
+      "layout": "contain at preserved aspect ratio; do not stretch",
+      "limit": "완전한 선 전영역과 2025-10-15/2026-10-07 날짜가 포함됨. 가격축이나 새 수익률을 추가하지 않음. 전체 미니창/헤더/입력창이 들어간 glaux-chart crop을 중첩하지 않음.",
+      "motion_source_range": [
+        45,
+        48.5
+      ],
+      "verified_by": "demo_two_analysis source sequence + demo_one_analysis extracted PNG visual inspection"
+    },
+    {
+      "id": "trade-table-728-loss",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\trade-table-728-loss.png",
+      "source": "C:/Projects/DAOU.AThenaPT/시연영상1.mp4",
+      "source_seconds": 728,
+      "source_frame_zero_based": 21840,
+      "fps": 30,
+      "crop_xywh_native": [
+        308,
+        302,
+        670,
+        133
+      ],
+      "pixel_size": [
+        670,
+        133
+      ],
+      "sha256": "240142a5a3de68375ab12da9ab9ead7ee03f1c47c169611798516cdfd2b93f0b",
+      "content": "실제 백테스트 거래표의 2025-02-20~2025-04-04 네 행. 2025-03-04 실제 손실 -1,139,408.26원 포함.",
+      "insert_in": "진단용 거래표 본문",
+      "layout": "contain, preserved aspect ratio. Header as DOM separately.",
+      "limit": "원본728초는 스크롤되어 열 제목이 보이지 않음. 헤더가 들어간 native screenshot이라고 주장하지 않음. 기록된 백테스트 손실이지 실제계좌의 손실이 아님.",
+      "selected_row": {
+        "date": "2025-03-04",
+        "local_bounds_xywh": [
+          0,
+          34,
+          670,
+          32
+        ],
+        "local_center_xy": [
+          335,
+          50
+        ],
+        "profit_display": "≈ -1,139,408.26"
+      }
+    }
+  ],
+  "motion_clips": [
+    {
+      "id": "graph-native-zoom",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\graph-native-zoom.mp4",
+      "source_range": [
+        342,
+        347.9
+      ],
+      "duration_seconds": 5.9,
+      "crop_xywh_native": [
+        308,
+        146,
+        1052,
+        940
+      ],
+      "use": "Native inner-canvas full-network→zoom with real labels appearing. Seek/play inside code-built graph shell. Preserve at least0.8sec at full framing before motion.",
+      "classification": "user-recording-content-only"
+    },
+    {
+      "id": "candle-native-cursor",
+      "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\assets\\native\\candle-native-cursor.mp4",
+      "source_range": [
+        89.7,
+        96
+      ],
+      "duration_seconds": 6.3,
+      "crop_xywh_native": [
+        342,
+        390,
+        862,
+        638
+      ],
+      "use": "Native crosshair/selected candle interaction with actual labels. Do not animate a second pointer over native cursor.",
+      "classification": "user-recording-content-only"
+    }
+  ],
+  "structuredFlow": {
+    "source_asset": "strategy-flow-778",
+    "transcription_only": true,
+    "nodes": [
+      {
+        "id": "compute_breakout_level",
+        "column": "entry",
+        "title": "compute_breakout_level",
+        "tag": "지표",
+        "description": "당일을 제외한 직전 lookback일의 최고가를 돌파 기준으로 계산한다.",
+        "signature": "df, p → Series<Number>",
+        "code_lines": "L26–28",
+        "selected_in_source": true
+      },
+      {
+        "id": "should_enter",
+        "column": "entry",
+        "title": "should_enter()",
+        "tag": "진입",
+        "description": "종가가 직전20일 최고가를 넘을 때만 진입 신호를 만든다.",
+        "signature": "df, breakout_level → Series<Bool>",
+        "code_lines": "L31–33"
+      },
+      {
+        "id": "compute_atr",
+        "column": "exit",
+        "title": "compute_atr()",
+        "tag": "지표",
+        "description": "직전 종가를 반영한 ATR 기간의 평균 변동폭을 계산한다.",
+        "signature": "df, p → Series<Number>",
+        "code_lines": "L12–23"
+      },
+      {
+        "id": "compute_breakout_level_reused",
+        "column": "exit",
+        "title": "compute_breakout_level",
+        "tag": "지표 · 재사용",
+        "description": "당일을 제외한 직전 lookback일의 최고가를 돌파 기준으로 계산한다.",
+        "signature": "df, p → Series<Number>",
+        "code_lines": "L26–28"
+      },
+      {
+        "id": "should_exit",
+        "column": "exit",
+        "title": "should_exit()",
+        "tag": "청산",
+        "description": "종가가 직전20일 최고가에서 ATR×배수를 뺀 청산선 아래면 청산한다.",
+        "signature": "df, breakout_level, atr, p → Series<Bool>",
+        "code_lines": "L36–39"
+      }
+    ],
+    "visual_path_edges": [
+      [
+        "compute_breakout_level",
+        "should_enter"
+      ],
+      [
+        "compute_atr",
+        "compute_breakout_level_reused"
+      ],
+      [
+        "compute_breakout_level_reused",
+        "should_exit"
+      ]
+    ],
+    "note": "Edges reproduce displayed visual flow; not a replacement for Python dependency semantics. Click node→reference chip→type request→show already-recorded matching response when present."
+  },
+  "structuredTradeRows": {
+    "source_asset": "trade-table-724",
+    "headers": [
+      "일자",
+      "방향",
+      "체결가 (원)",
+      "손익 (원)",
+      "사유"
+    ],
+    "rows": [
+      [
+        "2021-12-07",
+        "매수",
+        "76,138.05",
+        "—",
+        "신호"
+      ],
+      [
+        "2022-01-06",
+        "매도",
+        "76,661.65",
+        "≈47,628.57",
+        "신호"
+      ],
+      [
+        "2022-07-18",
+        "매수",
+        "60,630.3",
+        "—",
+        "신호"
+      ],
+      [
+        "2022-08-10",
+        "매도",
+        "58,870.55",
+        "≈-312,109.59",
+        "신호"
+      ],
+      [
+        "2022-10-25",
+        "매수",
+        "57,028.65",
+        "—",
+        "신호"
+      ],
+      [
+        "2022-11-29",
+        "매도",
+        "59,870.05",
+        "≈463,630.1",
+        "신호"
+      ],
+      [
+        "2023-01-10",
+        "매수",
+        "60,230.1",
+        "—",
+        "신호"
+      ]
+    ],
+    "note": "명확히 확인한5개열만 재현한 표시 문자열. 수량/비용 정밀값은 추정하지 않음. 모든 열이 필요하면 원본 trade-table-724.png 사용."
+  },
+  "structuredDartRows": {
+    "source_asset": "dart-570",
+    "stock": "삼성전자005930",
+    "period": "2026-09-01~2026-10-07 최근3건",
+    "rows": [
+      [
+        "10.02",
+        "DART",
+        "최대주주등소유주식변동신고서"
+      ],
+      [
+        "10.01",
+        "DART",
+        "임원·주요주주특정증권등소유상황보고서"
+      ],
+      [
+        "10.01",
+        "DART",
+        "임원·주요주주특정증권등소유상황보고서"
+      ]
+    ],
+    "limit": "목록조회 결과만. 본문내용/주가영향 분석은 확인되지 않음."
+  },
+  "interaction_rules": [
+    "One input→one concrete click/select→visible response→result inspection, with cursor targeting actual clickable controls.",
+    "Keep the clicked node/card and its detail/answer semantically matched.",
+    "Use native graph movie for real zoom, not fabricated connections.",
+    "When image has its own native pointer, avoid another simultaneous cursor; prefer clean still or actual pointer movie.",
+    "Preserve data values and axis labels. Do not rescale a screenshot and label it as new timeframe/indicator data.",
+    "Real result graph only for historical simulation. Settings-only reconstruction must not produce invented successful optimization results.",
+    "UI chrome and labels should use current app names: 대화/그래프/알림/플러그인/전략/글라우.",
+    "Examples may animate a pending approval card; no external action/order should execute in the production preview."
+  ],
+  "privacy": "All crops exclude account ID, left conversation history, unrelated right chat and OS windows.",
+  "visual_validation": "Candle/full-graph/equity/flow/table crops plus graph detail/DART separately inspected. Crops are complete content regions. No full-film V22 verification yet. Glaux plot-only 45s extracted PNG independently inspected; full line/dates intact and no window chrome.",
+  "structuredLossTradeRows": {
+    "source_asset": "trade-table-728-loss",
+    "headers": [
+      "일자",
+      "방향",
+      "체결가 (원)",
+      "수량 (주)",
+      "비용 (원)",
+      "손익 (원)",
+      "사유"
+    ],
+    "rows": [
+      [
+        "2025-02-20",
+        "매수",
+        "≈59,129.55",
+        "≈212.163641",
+        "≈1,881.77",
+        "—",
+        "신호"
+      ],
+      [
+        "2025-03-04",
+        "매도",
+        "53,873.05",
+        "≈212.163641",
+        "≈22,288.31",
+        "≈-1,139,408.26",
+        "신호"
+      ],
+      [
+        "2025-03-21",
+        "매수",
+        "60,930.45",
+        "≈187.195454",
+        "≈1,710.89",
+        "—",
+        "신호"
+      ],
+      [
+        "2025-04-04",
+        "매도",
+        "56,171.9",
+        "≈187.195454",
+        "≈20,504.49",
+        "≈-912,994.3",
+        "신호"
+      ]
+    ],
+    "note": "전부 visible native display 전사. Header labels source trade-table-724. Four complete row values source728; no outcome fabrication."
+  },
+  "representation_gaps": {
+    "source_graph_vs_homepage_recommendation": "Real selected Media/Entertainment/Kidari graph is not proof of homepage Hanmi/dividend personalized recommendation. Use separate explicit homepage example panel or stop at request/evidence.",
+    "source_strategy_vs_homepage_node_edit": "Actual sequence uses compute_breakout_level explanatory conversation and ATR2.5 strategy. Do not show homepage should_exit ATR1.5→2 edit immediately producing recorded actual ATR2.5 backtest.",
+    "source_disclosure_vs_homepage_snapshot": "Native570s rows are October filings. Homepage agora-filings is fixed2026-09-10 August IR snapshot. Both acceptable with correct source labeling; not the same response/run."
+  },
+  "filmTimingRevision": {
+    "revision": "feature-inserts-20261007",
+    "groups": {
+      "conversation": [
+        4,
+        14,
+        4.3,
+        14
+      ],
+      "graph": [
+        14.6,
+        22.6,
+        15.8,
+        22.6
+      ],
+      "plugin": [
+        23.2,
+        29.7,
+        24.1,
+        29.7
+      ],
+      "strategy": [
+        30.3,
+        40.3,
+        31.2,
+        40.3
+      ],
+      "alert": [
+        40.9,
+        47.9,
+        41.8,
+        47.9
+      ],
+      "glaux": [
+        48.5,
+        56,
+        49.4,
+        56
+      ]
+    },
+    "features": {
+      "chat-screen": {
+        "old": [
+          4,
+          6
+        ],
+        "range": [
+          4.3,
+          6.24
+        ],
+        "group": "conversation"
+      },
+      "chat-screen-talk": {
+        "old": [
+          6,
+          8
+        ],
+        "range": [
+          6.24,
+          8.18
+        ],
+        "group": "conversation"
+      },
+      "chat-order": {
+        "old": [
+          8,
+          10
+        ],
+        "range": [
+          8.18,
+          10.12
+        ],
+        "group": "conversation"
+      },
+      "chat-material": {
+        "old": [
+          10,
+          12
+        ],
+        "range": [
+          10.12,
+          12.06
+        ],
+        "group": "conversation"
+      },
+      "chat-settings": {
+        "old": [
+          12,
+          14
+        ],
+        "range": [
+          12.06,
+          14
+        ],
+        "group": "conversation"
+      },
+      "graph-memory": {
+        "old": [
+          14.6,
+          16
+        ],
+        "range": [
+          15.8,
+          16.99
+        ],
+        "group": "graph"
+      },
+      "graph-cluster": {
+        "old": [
+          16,
+          18.3
+        ],
+        "range": [
+          16.99,
+          18.945
+        ],
+        "group": "graph"
+      },
+      "graph-talk": {
+        "old": [
+          18.3,
+          19.8
+        ],
+        "range": [
+          18.945,
+          20.22
+        ],
+        "group": "graph"
+      },
+      "graph-recommend": {
+        "old": [
+          19.8,
+          21.2
+        ],
+        "range": [
+          20.22,
+          21.41
+        ],
+        "group": "graph"
+      },
+      "graph-edit": {
+        "old": [
+          21.2,
+          22.6
+        ],
+        "range": [
+          21.41,
+          22.6
+        ],
+        "group": "graph"
+      },
+      "plugin-invest": {
+        "old": [
+          23.2,
+          25.4
+        ],
+        "range": [
+          24.1,
+          25.995385
+        ],
+        "group": "plugin"
+      },
+      "plugin-service": {
+        "old": [
+          25.4,
+          27.3
+        ],
+        "range": [
+          25.995385,
+          27.632308
+        ],
+        "group": "plugin"
+      },
+      "plugin-call": {
+        "old": [
+          27.3,
+          29.7
+        ],
+        "range": [
+          27.632308,
+          29.7
+        ],
+        "group": "plugin"
+      },
+      "strategy-code": {
+        "old": [
+          30.3,
+          32.3
+        ],
+        "range": [
+          31.2,
+          33.02
+        ],
+        "group": "strategy"
+      },
+      "strategy-node": {
+        "old": [
+          32.3,
+          34.3
+        ],
+        "range": [
+          33.02,
+          34.84
+        ],
+        "group": "strategy"
+      },
+      "strategy-backtest": {
+        "old": [
+          34.3,
+          36.4
+        ],
+        "range": [
+          34.84,
+          36.751
+        ],
+        "group": "strategy"
+      },
+      "strategy-diagnosis": {
+        "old": [
+          36.4,
+          38.3
+        ],
+        "range": [
+          36.751,
+          38.48
+        ],
+        "group": "strategy"
+      },
+      "strategy-search": {
+        "old": [
+          38.3,
+          40.3
+        ],
+        "range": [
+          38.48,
+          40.3
+        ],
+        "group": "strategy"
+      },
+      "alert-personal": {
+        "old": [
+          40.9,
+          43.2
+        ],
+        "range": [
+          41.8,
+          43.804286
+        ],
+        "group": "alert"
+      },
+      "alert-automation": {
+        "old": [
+          43.2,
+          45.5
+        ],
+        "range": [
+          43.804286,
+          45.808571
+        ],
+        "group": "alert"
+      },
+      "alert-watch": {
+        "old": [
+          45.5,
+          47.9
+        ],
+        "range": [
+          45.808571,
+          47.9
+        ],
+        "group": "alert"
+      },
+      "glaux-mini": {
+        "old": [
+          48.5,
+          52.6
+        ],
+        "range": [
+          49.4,
+          53.008
+        ],
+        "group": "glaux"
+      },
+      "glaux-notice": {
+        "old": [
+          52.6,
+          56
+        ],
+        "range": [
+          53.008,
+          56
+        ],
+        "group": "glaux"
+      }
+    },
+    "meaning": "Only film times retimed; source seconds/crops/native values unchanged"
+  },
+  "featureInserts": [
+    {
+      "segmentId": "woman-open",
+      "file": "assets/feature-inserts/market-rise-native.mp4",
+      "filmRange": [
+        2.1,
+        3.7
+      ],
+      "sourceRange": [
+        0.4,
+        4.6
+      ],
+      "representation": "Generated live-action plate with original recorded chart corner-pinned into monitor"
+    },
+    {
+      "segmentId": "human-graph",
+      "file": "assets/feature-inserts/seoul-network.mp4",
+      "filmRange": [
+        14,
+        15.8
+      ],
+      "sourceRange": [
+        0.4,
+        4.6
+      ],
+      "representation": "Generated cinematic functional metaphor, not actual app output"
+    },
+    {
+      "segmentId": "human-plugin",
+      "file": "assets/feature-inserts/tools-connect.mp4",
+      "filmRange": [
+        22.6,
+        24.1
+      ],
+      "sourceRange": [
+        0.25,
+        2.5
+      ],
+      "representation": "Generated cinematic functional metaphor, not actual app output"
+    },
+    {
+      "segmentId": "human-strategy",
+      "file": "assets/feature-inserts/strategy-paths.mp4",
+      "filmRange": [
+        29.7,
+        31.2
+      ],
+      "sourceRange": [
+        0.4,
+        4.6
+      ],
+      "representation": "Generated cinematic functional metaphor, not actual app output"
+    },
+    {
+      "segmentId": "human-alert",
+      "file": "assets/feature-inserts/signal-alert.mp4",
+      "filmRange": [
+        40.3,
+        41.8
+      ],
+      "sourceRange": [
+        1.25,
+        3.15
+      ],
+      "representation": "Generated cinematic functional metaphor, not actual app output"
+    },
+    {
+      "segmentId": "human-glaux",
+      "file": "assets/feature-inserts/companion-move.mp4",
+      "filmRange": [
+        47.9,
+        49.4
+      ],
+      "sourceRange": [
+        0.05,
+        1.5
+      ],
+      "representation": "Generated cinematic functional metaphor, not actual app output"
+    }
+  ]
+}

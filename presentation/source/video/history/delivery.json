@@ -1,0 +1,11 @@
+{
+  "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\athena-v23-60s.mp4",
+  "bytes": 29237165,
+  "sha256": "08885603ea049831f130d9a340241492f1d14325a0fa164e4515180a2313a66b",
+  "contentReview": "verification/independent-homepage-review.json",
+  "textRemoval": false,
+  "appTextPreserved": true,
+  "auxiliaryCaptionsRemoved": true,
+  "technicalReview": "render/final-manifest.json",
+  "finalContact": "verification/final-mp4-contact.jpg"
+}

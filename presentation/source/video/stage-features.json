@@ -1,0 +1,693 @@
+{
+  "status": "homepage-motion-review-pending",
+  "expectedFeatureCount": 23,
+  "features": [
+    {
+      "id": "chat-screen",
+      "label": "화면 호출",
+      "category": "대화",
+      "start": 4.3,
+      "end": 6.24,
+      "segmentIds": [
+        "chat-screen"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source-media-map.json",
+          "sourceType": "user-recording-provenance",
+          "description": "원본 프레임·시각·영역 및 콘텐츠별 제한"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "chat-screen-talk",
+      "label": "화면 대화",
+      "category": "대화",
+      "start": 6.24,
+      "end": 8.18,
+      "segmentIds": [
+        "chat-screen-talk"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source-media-map.json",
+          "sourceType": "user-recording-provenance",
+          "description": "원본 프레임·시각·영역 및 콘텐츠별 제한"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "chat-order",
+      "label": "대화주문 · 최종 확인",
+      "category": "대화",
+      "start": 8.18,
+      "end": 10.12,
+      "segmentIds": [
+        "chat-order"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "chat-material",
+      "label": "자료 대화",
+      "category": "대화",
+      "start": 10.12,
+      "end": 12.06,
+      "segmentIds": [
+        "chat-material"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena\\app\\chat.js",
+          "sourceType": "app-source-read-only",
+          "description": "파일·폴더 첨부, 목표·계획 입력, 모델·강도 선택 동작"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "chat-settings",
+      "label": "대화 설정",
+      "category": "대화",
+      "start": 12.06,
+      "end": 14,
+      "segmentIds": [
+        "chat-settings"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena\\app\\chat.js",
+          "sourceType": "app-source-read-only",
+          "description": "파일·폴더 첨부, 목표·계획 입력, 모델·강도 선택 동작"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "graph-memory",
+      "label": "활동 기억",
+      "category": "그래프",
+      "start": 15.8,
+      "end": 16.99,
+      "segmentIds": [
+        "graph-memory"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "homepage-example-dom",
+          "description": "활동·관심·추천은 홈페이지 예시. 녹화된 미디어 노드의 실제 분석 결과가 아님"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "graph-cluster",
+      "label": "클러스터",
+      "category": "그래프",
+      "start": 16.99,
+      "end": 18.945,
+      "segmentIds": [
+        "graph-cluster"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source-media-map.json",
+          "sourceType": "user-recording-provenance",
+          "description": "원본 프레임·시각·영역 및 콘텐츠별 제한"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "graph-talk",
+      "label": "지식 대화 · 출처 확인",
+      "category": "그래프",
+      "start": 18.945,
+      "end": 20.22,
+      "segmentIds": [
+        "graph-talk"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source-media-map.json",
+          "sourceType": "user-recording-provenance",
+          "description": "원본 프레임·시각·영역 및 콘텐츠별 제한"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "graph-recommend",
+      "label": "맞춤 추천",
+      "category": "그래프",
+      "start": 20.22,
+      "end": 21.41,
+      "segmentIds": [
+        "graph-recommend"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "homepage-example-dom",
+          "description": "활동·관심·추천은 홈페이지 예시. 녹화된 미디어 노드의 실제 분석 결과가 아님"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "graph-edit",
+      "label": "기억 수정 · 관계 확인",
+      "category": "그래프",
+      "start": 21.41,
+      "end": 22.6,
+      "segmentIds": [
+        "graph-edit"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena\\app\\lib\\graph-mode\\graph-edit-proposal.js",
+          "sourceType": "app-source-read-only",
+          "description": "관계 삭제 제안 후 사람이 확인하는 단계. 실제 삭제 실행 없음"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "plugin-invest",
+      "label": "투자정보 연동 · 등록 검토",
+      "category": "플러그인",
+      "start": 24.1,
+      "end": 25.995385,
+      "segmentIds": [
+        "plugin-invest"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\feature-detail.js",
+          "sourceType": "homepage-example-dom",
+          "description": "홈페이지와 앱 코드를 참고한 동적 UI 예시"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena\\app\\lib\\plugin-canvas.js",
+          "sourceType": "app-source-read-only",
+          "description": "서버 등록 제안과 권한 검토 UI"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena\\app\\lib\\plugin-catalog.js",
+          "sourceType": "app-source-read-only",
+          "description": "공개 fetch 예시와 한국 주식 시세 도구 목록"
+        }
+      ],
+      "implementation": "feature-detail.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "plugin-service",
+      "label": "서비스 연동",
+      "category": "플러그인",
+      "start": 25.995385,
+      "end": 27.632308,
+      "segmentIds": [
+        "plugin-service"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\feature-detail.js",
+          "sourceType": "homepage-example-dom",
+          "description": "홈페이지와 앱 코드를 참고한 동적 UI 예시"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        }
+      ],
+      "implementation": "feature-detail.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "plugin-call",
+      "label": "도구 호출 · 권한 검토",
+      "category": "플러그인",
+      "start": 27.632308,
+      "end": 29.7,
+      "segmentIds": [
+        "plugin-call"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\feature-detail.js",
+          "sourceType": "homepage-example-dom",
+          "description": "홈페이지와 앱 코드를 참고한 동적 UI 예시"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\agora-filings.ts",
+          "sourceType": "homepage-example-dom",
+          "description": "홈페이지 2026-09-10 공시 예시 데이터. 원본 시연의 다른 날짜 공시 결과로 주장하지 않음"
+        }
+      ],
+      "implementation": "feature-detail.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "strategy-code",
+      "label": "바이브코딩",
+      "category": "전략",
+      "start": 31.2,
+      "end": 33.02,
+      "segmentIds": [
+        "strategy-code"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\verification\\source-code-692.png",
+          "sourceType": "user-recording",
+          "description": "시연영상1 692초의 실제 compute_breakout_level/should_enter 코드 발췌"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "strategy-node",
+      "label": "노드 대화",
+      "category": "전략",
+      "start": 33.02,
+      "end": 34.84,
+      "segmentIds": [
+        "strategy-node"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source-media-map.json",
+          "sourceType": "user-recording-provenance",
+          "description": "원본 프레임·시각·영역 및 콘텐츠별 제한"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "strategy-backtest",
+      "label": "백테스트",
+      "category": "전략",
+      "start": 34.84,
+      "end": 36.751,
+      "segmentIds": [
+        "strategy-backtest"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source-media-map.json",
+          "sourceType": "user-recording-provenance",
+          "description": "원본 프레임·시각·영역 및 콘텐츠별 제한"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "strategy-diagnosis",
+      "label": "투자 진단 · 질문",
+      "category": "전략",
+      "start": 36.751,
+      "end": 38.48,
+      "segmentIds": [
+        "strategy-diagnosis"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source-media-map.json",
+          "sourceType": "user-recording-provenance",
+          "description": "원본 프레임·시각·영역 및 콘텐츠별 제한"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "strategy-search",
+      "label": "조건 탐색 · 설정",
+      "category": "전략",
+      "start": 38.48,
+      "end": 40.3,
+      "segmentIds": [
+        "strategy-search"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena\\app\\lib\\backtest-canvas.js",
+          "sourceType": "app-source-read-only",
+          "description": "그리드·랜덤 및 표본 수 설정 예시. 조건 탐색 완료 결과 없음"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "alert-personal",
+      "label": "맞춤 알람",
+      "category": "알림",
+      "start": 41.8,
+      "end": 43.804286,
+      "segmentIds": [
+        "alert-personal"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\feature-detail.js",
+          "sourceType": "homepage-example-dom",
+          "description": "홈페이지와 앱 코드를 참고한 동적 UI 예시"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        }
+      ],
+      "implementation": "feature-detail.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "alert-automation",
+      "label": "대화형 자동화 · 일정 검토",
+      "category": "알림",
+      "start": 43.804286,
+      "end": 45.808571,
+      "segmentIds": [
+        "alert-automation"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\feature-detail.js",
+          "sourceType": "homepage-example-dom",
+          "description": "홈페이지와 앱 코드를 참고한 동적 UI 예시"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        }
+      ],
+      "implementation": "feature-detail.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "alert-watch",
+      "label": "통합 감시",
+      "category": "알림",
+      "start": 45.808571,
+      "end": 47.9,
+      "segmentIds": [
+        "alert-watch"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\feature-detail.js",
+          "sourceType": "homepage-example-dom",
+          "description": "홈페이지와 앱 코드를 참고한 동적 UI 예시"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        }
+      ],
+      "implementation": "feature-detail.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "glaux-mini",
+      "label": "미니 대화",
+      "category": "글라우",
+      "start": 49.4,
+      "end": 53.008,
+      "segmentIds": [
+        "glaux-mini"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\source-media-map.json",
+          "sourceType": "user-recording-provenance",
+          "description": "원본 프레임·시각·영역 및 콘텐츠별 제한"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    },
+    {
+      "id": "glaux-notice",
+      "label": "능동 알림",
+      "category": "글라우",
+      "start": 53.008,
+      "end": 56,
+      "segmentIds": [
+        "glaux-notice"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v23-homepage-motion\\stage.js",
+          "sourceType": "app-code-reconstruction",
+          "description": "영상용 DOM 상태 전환. 실제 계정 작업을 실행하지 않음"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.Athena-Web\\lib\\product-page-copy.ts",
+          "sourceType": "homepage-source",
+          "description": "공식 홈페이지의 세부 기능 설명"
+        }
+      ],
+      "implementation": "stage.js",
+      "review": "verification/operation-audit.json"
+    }
+  ],
+  "supplemental": [
+    {
+      "id": "order-final-confirmation",
+      "label": "모의 주문 최종 확인",
+      "start": 54.24,
+      "end": 56,
+      "segmentIds": [
+        "glaux-notice"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v21-all-features\\assets\\adapted\\glaux-order-confirm.png",
+          "sourceType": "homepage-demo-capture",
+          "description": "원본 Glaux33초 시연용티켓·모의계좌·직접확인. 주문전송없음",
+          "originalPath": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v21-all-features\\assets\\glaux-order-confirm.png",
+          "labelAdaptation": "현재 기능명으로 PT 복사본 헤더만 정정"
+        }
+      ]
+    },
+    {
+      "id": "plugin-register-review",
+      "label": "도구 등록·권한 검토·관리",
+      "start": 24.1,
+      "end": 29.7,
+      "segmentIds": [
+        "plugin-invest",
+        "plugin-call"
+      ],
+      "evidence": [
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v21-all-features\\assets\\plugin-register-confirm.png",
+          "sourceType": "app-code-reconstruction",
+          "description": "등록 제안 승인카드"
+        },
+        {
+          "path": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v21-all-features\\assets\\plugin-permissions-draft.png",
+          "sourceType": "homepage-demo-capture",
+          "description": "권한초안 검토"
+        }
+      ]
+    }
+  ],
+  "version": 23,
+  "rendering": "code-built operated UI with source content regions",
+  "originalAppReadOnly": true
+}

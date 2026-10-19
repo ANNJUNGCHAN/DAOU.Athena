@@ -1,0 +1,911 @@
+{
+  "version": 22,
+  "status": "feature-inserts-implementation-awaiting-media",
+  "basis": "Keep V21's 60-second timing and 23 named capabilities; replace static PNG panel montage with six continuous operated DOM groups.",
+  "sourcePolicy": {
+    "app": "C:/Projects/DAOU.Athena",
+    "homepage": "C:/Projects/DAOU.Athena-Web",
+    "originalsReadOnly": true,
+    "authoringRoot": "C:/Projects/DAOU.AThenaPT/ATHENA-발표/film-production-20261004/v23-homepage-motion"
+  },
+  "format": {
+    "duration": 60,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30
+  },
+  "principles": [
+    "Keep one persistent shell, composer, canvas and cursor per feature group. Change their state; do not replace the entire screen or wipe at every subfeature boundary.",
+    "Each feature needs at least preparation/selection, operation, and visible UI consequence. The consequence can be a pending human approval or a prepared query; it must not invent a completed backend operation.",
+    "Use actual source video only inside plot/data surfaces. Build buttons, tabs, menus, inputs, selected rows, reference chips and result-card chrome as DOM.",
+    "Camera follows the operation after the pointer arrives; it must not search the screen without an action. Start graph wide, then crop toward the chosen node and evidence.",
+    "Keep exact symbol/data labels in source plots. A Samsung source cannot be renamed Daou.",
+    "Retain human inserts and title segments at their existing times. Film motion belongs to the camera and interaction emphasis; native popovers toggle into place instead of flying in as disconnected cards.",
+    "The states below are planned demonstration states, not evidence of live execution. Record sourceType per UI and video layer."
+  ],
+  "groups": [
+    {
+      "id": "conversation",
+      "range": [
+        4.3,
+        14
+      ],
+      "persistentState": [
+        "conversation id",
+        "opened chart/disclosure card",
+        "composer",
+        "attachment chips",
+        "chosen model/effort"
+      ],
+      "camera": "1.0 wide→1.25 composer→1.15 selected canvas→1.35 field/menu; no hard reset between features"
+    },
+    {
+      "id": "graph",
+      "range": [
+        15.8,
+        22.6
+      ],
+      "persistentState": [
+        "same recorded graph",
+        "selected node/relation",
+        "evidence drawer",
+        "composer reference"
+      ],
+      "camera": "Group-relative summary → whole graph → selected node; preserve original native graph and simultaneous detail panel."
+    },
+    {
+      "id": "plugin",
+      "range": [
+        24.1,
+        29.7
+      ],
+      "persistentState": [
+        "installed tool/server",
+        "permissions draft",
+        "@tool selection",
+        "result card"
+      ],
+      "camera": "installed list→permission controls→composer→result; preserve shell position"
+    },
+    {
+      "id": "strategy",
+      "range": [
+        31.2,
+        40.3
+      ],
+      "persistentState": [
+        "same technique",
+        "code version",
+        "selected function",
+        "existing run and trade",
+        "optimization setup"
+      ],
+      "camera": "composer→generated code→node→actual result plot→selected trade→parameter form"
+    },
+    {
+      "id": "alert",
+      "range": [
+        41.8,
+        47.9
+      ],
+      "persistentState": [
+        "same routine",
+        "rule configuration",
+        "selected sources",
+        "execution evidence"
+      ],
+      "camera": "notification/list→routine editor→source rows→monitor state"
+    },
+    {
+      "id": "glaux",
+      "range": [
+        49.4,
+        56
+      ],
+      "persistentState": [
+        "desktop context",
+        "owl",
+        "mini window",
+        "actual mini-chart",
+        "notification reference",
+        "simulated order review"
+      ],
+      "camera": "desk wide→mini composer/card; maintain native widget aspect; final review stays inside same mini window"
+    }
+  ],
+  "reuse": {
+    "existingDeterministicHomepage": {
+      "entry": "../..//io-motion-stage/assets/edit1-features/index.html",
+      "absoluteEntry": "C:/Projects/DAOU.AThenaPT/ATHENA-발표/io-motion-stage/assets/edit1-features/index.html",
+      "api": "window.ATHENA_FEATURE_FRAME.paint(id,timeSeconds,wide)",
+      "source": "frame.tsx imports featureScenes and uses ReactDOM.flushSync",
+      "verified": "The eight vendor component/CSS/timeline files SHA256-match current original homepage and .omc reference copy; see V21/homepage-motion-audit.json.",
+      "reuseDirectly": [
+        "typedAt(text,t,start,end)",
+        "clamp and smoothstep interpolation",
+        "cursorAt travel/click grammar",
+        "featureScenes state predicates",
+        "Pallas code and node DOM with explicit simulation labeling",
+        "Ergane permission rows and draft result",
+        "Glaux owl/minimize/mini-window shell"
+      ],
+      "adaptInPT": [
+        "Replace old navigation names with current app names",
+        "Use current app composer structure instead of the homepage's older ArrowUp/Claude-default row",
+        "Remove screenshot backgrounds from interactive surfaces",
+        "Replace synthetic Candles and mini-chart with actual source-video plot region",
+        "Extract tables/labels/data from official main images into DOM; images alone cannot provide operation state"
+      ],
+      "doNotReuseAsWholeFrame": [
+        "screens/metis.png old graph",
+        "homepage synthetic Candles function",
+        "homepage video-previews WebMs",
+        "finite CSS entrance animation tied only to wall-clock"
+      ]
+    },
+    "actualAppStyleSources": [
+      {
+        "path": "C:/Projects/DAOU.Athena/app/styles/tokens.css",
+        "use": "Daki, light palette, type/radius tokens, brand #ee137b, ink #14171d, background #eef0f4"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/shell.css",
+        "use": "Persistent three-region shell; original 268px sidebar/fluid canvas/400px chat contract; sidebar-mode-item active state"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/shell.html:383",
+        "use": "textarea input-row; composer-bar buttons: 이 항목 질문, 모델, 강도, owl/options"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/chat.css:879",
+        "use": "input-row: min-height46px, padding12/10/12/14,12px radius, white surface and token border"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/chat.css:892",
+        "use": "model-popover, mp-chip.on and kiumi-menu"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/chat.css:998",
+        "use": "Neutral attachment chips and magenta reference chips; chip meanings must remain distinct"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/chat.css:1187",
+        "use": "composer-bar and composer-text; Enter submits actual text, stop-square only during pending work"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/styles/card-component-target.css",
+        "use": "Selected chart/table subcomponent border and question target"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/styles/canvas-tabs.css",
+        "use": "Native canvas card tabs"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/styles/plugin-canvas.css",
+        "use": "Tool list, permission rows, add sheet and proposal cards"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/lib/graph-mode/graph-edit-proposal.js",
+        "use": "Pure normalizeProposal/proposalTitle/proposalContext/CHOICES; safe to reuse without mutation handler"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/chat.css:2088",
+        "use": "Native graph-edit question-card DOM/CSS and apply/reject/skip buttons"
+      },
+      {
+        "path": "C:/Projects/DAOU.Athena/app/lib/backtest-canvas.js:5675",
+        "use": "Optimization range rows are read-only, grid/random methods, only random sample count editable"
+      }
+    ],
+    "minimumAuthoringStructure": [
+      "index.html: one #film1920x1080, a persistent #camera containing shell and selected mode surface, overlay cursor, title layer and caption layer",
+      "motion.css: copied scoped tokens/native classes plus film-only camera/cursor styles; do not import live Electron boot/init or API hooks",
+      "operated-scenes.js: render(t) computes group/feature state directly from absolute film time; update input.value, textContent, selected classes, hidden flags, clip paths and transforms",
+      "interaction-spec.json: absolute-time action keyframes, source evidence and continuity contract",
+      "plot-media/: local actual plot crops/prepared clips with original label/data; seek via explicit media time or composite separately using ffmpeg",
+      "render-film.cjs: isolated headless DOM frame renderer adapted from V19; no connection to user's browser or live app"
+    ]
+  },
+  "motionGrammar": {
+    "cursor": "Travel to target in180–260ms, settle50–80ms, press70–100ms, expand/fade a small click ring over150ms. Resolve coordinates from target DOM bounds in the final layout.",
+    "typing": "Text appears progressively at explicit timestamps; caret blinks from film clock. Prefer4–10 Korean characters in short1.4–2.4s windows; never rush long prompts. Allow a stable typed phrase, explicit operation and at least0.5s result hold.",
+    "submit": "Current app submits via Enter. Brief Enter key hint is acceptable; do not invent a persistent send arrow absent from native composer.",
+    "selection": "Pointer hover→native row/chip selected→dependent drawer/card content changes. Avoid an arbitrary pink outline appearing without a preceding click.",
+    "loading": "A brief, source-backed pending state can separate request/result. Do not add fake progress percentages, API names, success badges or guaranteed financial outcomes.",
+    "camera": "Smoothstep or cubic-bezier(.2,0,0,1);80–140ms lag behind click. One continuous camera trajectory per group; no card fly-in at every feature boundary.",
+    "statePersistence": "Use stable DOM keys and preserve previous selected item/result while the next operation begins. When a group changes, human shot masks the transition.",
+    "determinism": "No setTimeout state mutation, no Date.now-based animation, no native CSS transition depended on implicitly. Every computed state comes from t. For finite Web Animations, pause and set currentTime=(t-cueStart)*1000, including entries already on screen.",
+    "observableMetrics": "Expose getState(): featureId,phase,inputText,focusedId,selectedId,openPanels,resultId,resultVisible,cursorTargetId,cursorXY,targetRect,camera,sourceType. For every feature require at least3distinct non-title DOM states, a visible selected/control state, and resultVisible>=0.5s. At click time cursor tip must be inside target.getBoundingClientRect() after camera transform; avoid applying camera transform twice to cursor coordinates.",
+    "actualPlot": "Crop only useful plot/data, preserve original aspect. Same surface background/border must surround the plot before and after its reveal. Native-recording cursor should be absent from chosen plot crop or remain consistent with the DOM cursor; do not show two independent cursors."
+  },
+  "features": [
+    {
+      "id": "chat-screen",
+      "label": "화면 호출",
+      "range": [
+        4.3,
+        6.24
+      ],
+      "group": "conversation",
+      "sourceType": "app-code-reconstruction+user-recording",
+      "states": [
+        {
+          "at": 4.3,
+          "phase": "prepare",
+          "ui": "Persistent composer focus; begin typing 삼성전자 차트"
+        },
+        {
+          "at": 4.882,
+          "phase": "operate",
+          "ui": "Enter press; submitted bubble persists; short pending indicator"
+        },
+        {
+          "at": 5.173,
+          "phase": "result",
+          "ui": "Chart card tab appears; actual recorded plot reveals inside DOM card, camera shifts from composer to card"
+        }
+      ],
+      "evidence": "V21 native cut demo1 68–75; homepage Agora firstSent7.5/firstChart10.5 establishes grammar",
+      "carry": "Opened card remains the target for the following screen-conversation operation."
+    },
+    {
+      "id": "chat-screen-talk",
+      "label": "화면 대화",
+      "range": [
+        6.24,
+        8.18
+      ],
+      "group": "conversation",
+      "sourceType": "app-code-reconstruction",
+      "states": [
+        {
+          "at": 6.24,
+          "phase": "prepare",
+          "ui": "Cursor clicks 이 항목 질문 and selected chart or disclosure-table item"
+        },
+        {
+          "at": 6.725,
+          "phase": "operate",
+          "ui": "Target gains native selection border/reference chip; type 이 구간 설명해줘 then Enter"
+        },
+        {
+          "at": 7.4525,
+          "phase": "result",
+          "ui": "Keep selected target; reveal source-backed explanation or its quoted evidence in same chat column"
+        }
+      ],
+      "evidence": "shell.html componentQuestionBtn and card-component-target.css; official agora-02 context/reader",
+      "limit": "Use an explanation present in original source or label the scripted explanation as example. Do not fabricate numeric market analysis."
+    },
+    {
+      "id": "chat-order",
+      "label": "대화주문",
+      "range": [
+        8.18,
+        10.12
+      ],
+      "group": "conversation",
+      "sourceType": "app-code-reconstruction",
+      "states": [
+        {
+          "at": 8.18,
+          "phase": "prepare",
+          "ui": "Same composer types 삼성전자 1주 준비"
+        },
+        {
+          "at": 8.762,
+          "phase": "operate",
+          "ui": "Enter; order ticket opens with native quantity/price controls"
+        },
+        {
+          "at": 9.344,
+          "phase": "result",
+          "ui": "Quantity1 and market/limit selection settle; cursor approaches final review without executing"
+        }
+      ],
+      "evidence": "agora-03 published ticket; native app order-ticket classes; homepage Glaux28–33 final-review grammar",
+      "limit": "Final confirmation only; no order accepted/completed state."
+    },
+    {
+      "id": "chat-material",
+      "label": "자료 대화",
+      "range": [
+        10.12,
+        12.06
+      ],
+      "group": "conversation",
+      "sourceType": "app-code-reconstruction",
+      "states": [
+        {
+          "at": 10.12,
+          "phase": "prepare",
+          "ui": "Click composer owl; options menu appears in place with file/folder constraints visible"
+        },
+        {
+          "at": 10.6535,
+          "phase": "operate",
+          "ui": "Click file-attachment row; menu closes; neutral 리서치.txt chip attaches"
+        },
+        {
+          "at": 11.2355,
+          "phase": "result",
+          "ui": "Type 이 자료도 살펴봐줘; attachment chip remains alongside the existing conversation context"
+        }
+      ],
+      "evidence": "chat.js3401–3417 and attachChips renderer; V21 composer-provenance",
+      "limit": "UTF-8 file≤64KiB, folder immediate100-items listing only. Example attachment, no real file access or upload."
+    },
+    {
+      "id": "chat-settings",
+      "label": "대화 설정",
+      "range": [
+        12.06,
+        14
+      ],
+      "group": "conversation",
+      "sourceType": "app-code-reconstruction",
+      "states": [
+        {
+          "at": 12.06,
+          "phase": "prepare",
+          "ui": "Options menu shows 목표/계획모드; click 계획모드 and insert source prompt preset"
+        },
+        {
+          "at": 12.6905,
+          "phase": "operate",
+          "ui": "Click 모델; native popover shows exact model/effort chips"
+        },
+        {
+          "at": 13.1755,
+          "phase": "result",
+          "ui": "Click sonnet and high; .on chips and composer footer update in place"
+        }
+      ],
+      "evidence": "chat.js2910–2925,3050,3403–3414",
+      "limit": "Goal/plan are prompt presets, not invented persistent mode switches; selected model is a demonstration state."
+    },
+    {
+      "id": "graph-memory",
+      "label": "활동 기억",
+      "range": [
+        15.8,
+        16.99
+      ],
+      "group": "graph",
+      "sourceType": "app-code-reconstruction",
+      "states": [
+        {
+          "at": 15.8,
+          "phase": "prepare",
+          "ui": "Graph mode opens with 요약 tab, source activity/interest rows"
+        },
+        {
+          "at": 16.0975,
+          "phase": "operate",
+          "ui": "Pointer selects a source activity row"
+        },
+        {
+          "at": 16.48,
+          "phase": "result",
+          "ui": "Expand its dated context/evidence; preserve selection as graph tab becomes next target"
+        }
+      ],
+      "evidence": "Homepage metis-01 summary and current graph-mode/summary-table.js",
+      "limit": "Reveal existing source-backed rows; do not invent newly recorded user history."
+    },
+    {
+      "id": "graph-cluster",
+      "label": "클러스터",
+      "range": [
+        16.99,
+        18.945
+      ],
+      "group": "graph",
+      "sourceType": "app-code-reconstruction+user-recording",
+      "states": [
+        {
+          "at": 16.99,
+          "phase": "prepare",
+          "ui": "Click 그래프; complete actual network fills central canvas and holds0.5s"
+        },
+        {
+          "at": 17.5425,
+          "phase": "operate",
+          "ui": "Move cursor to a real visible cluster/node; click once"
+        },
+        {
+          "at": 17.8825,
+          "phase": "result",
+          "ui": "Camera crops inward to selected region; surrounding connected nodes remain, evidence drawer starts opening"
+        }
+      ],
+      "evidence": "demo1 342–347.4 native graph crop306,144,1056,946",
+      "limit": "Use actual network; no generic replacement nodes. Wide→crop is camera movement, not node rearrangement."
+    },
+    {
+      "id": "graph-talk",
+      "label": "지식 대화",
+      "range": [
+        18.945,
+        20.22
+      ],
+      "group": "graph",
+      "sourceType": "app-code-reconstruction+user-recording",
+      "states": [
+        {
+          "at": 18.945,
+          "phase": "prepare",
+          "ui": "Selected actual node remains; cursor clicks source/evidence entry"
+        },
+        {
+          "at": 19.2,
+          "phase": "operate",
+          "ui": "Reference chip enters composer; type 왜 연결됐지? and Enter"
+        },
+        {
+          "at": 19.6675,
+          "phase": "result",
+          "ui": "Evidence drawer displays recorded source/context; graph selection remains visible"
+        }
+      ],
+      "evidence": "demo1 355.5–357 node/evidence; current question-target/reference classes",
+      "limit": "Do not invent a causal answer absent from source; existing evidence reveal is sufficient."
+    },
+    {
+      "id": "graph-recommend",
+      "label": "맞춤 추천",
+      "range": [
+        20.22,
+        21.41
+      ],
+      "group": "graph",
+      "sourceType": "homepage-example-dom",
+      "states": [
+        {
+          "at": 20.22,
+          "phase": "prepare",
+          "ui": "Type 다음 자료 추천 and submit within persistent graph composer"
+        },
+        {
+          "at": 20.5175,
+          "phase": "operate",
+          "ui": "A source recommendation row becomes active; related cluster/hidden-link row highlights"
+        },
+        {
+          "at": 20.9425,
+          "phase": "result",
+          "ui": "Show recommendation and supporting context from metis-03 as DOM text/rows"
+        }
+      ],
+      "evidence": "Official metis-03 image and product-page-copy.ts95",
+      "limit": "Scripted homepage example, not a freshly executed personalized recommendation."
+    },
+    {
+      "id": "graph-edit",
+      "label": "기억 수정",
+      "range": [
+        21.41,
+        22.6
+      ],
+      "group": "graph",
+      "sourceType": "app-code-reconstruction",
+      "states": [
+        {
+          "at": 21.41,
+          "phase": "prepare",
+          "ui": "Same selected relation; type 관심 아냐. 이 관계 지워줘"
+        },
+        {
+          "at": 21.75,
+          "phase": "operate",
+          "ui": "Enter; actual GraphEditProposal title/context built from pure functions"
+        },
+        {
+          "at": 22.09,
+          "phase": "result",
+          "ui": "Delete proposal docks above composer with 적용/아니다/건너뛰기; cursor approaches 적용 and holds"
+        }
+      ],
+      "evidence": "graph-mode/graph-edit-proposal.js and chat.js2357; V21 memory-delete-provenance",
+      "limit": "No deletion or disappeared edge unless clearly shown as local illustrative state; recommended end is human review with graph unchanged."
+    },
+    {
+      "id": "plugin-invest",
+      "label": "투자정보 연동",
+      "range": [
+        24.1,
+        25.995385
+      ],
+      "group": "plugin",
+      "sourceType": "app-code-reconstruction",
+      "states": [
+        {
+          "at": 24.1,
+          "phase": "prepare",
+          "ui": "Installed MCP list; cursor opens an existing tool's 권한"
+        },
+        {
+          "at": 24.530769,
+          "phase": "operate",
+          "ui": "Native permission rows appear; click the first and second function toggles in place"
+        },
+        {
+          "at": 25.263077,
+          "phase": "result",
+          "ui": "Click 선택저장; draft/approval-review card docks while selected rows persist"
+        }
+      ],
+      "evidence": "Ergane source5–20; app/plugin-canvas.js permission body and proposalCard",
+      "limit": "Ends at draft, not final authorization. Registration sequence may substitute this beat, but cannot also claim all registration/approval/permission steps fit legibly in2.2s."
+    },
+    {
+      "id": "plugin-service",
+      "label": "서비스 연동",
+      "range": [
+        25.995385,
+        27.632308
+      ],
+      "group": "plugin",
+      "sourceType": "homepage-example-dom",
+      "states": [
+        {
+          "at": 25.995385,
+          "phase": "prepare",
+          "ui": "Same tool context, choose connected Discord destination"
+        },
+        {
+          "at": 26.426154,
+          "phase": "operate",
+          "ui": "Type 분석 결과 보내줘 with @discord reference; Enter"
+        },
+        {
+          "at": 26.856923,
+          "phase": "result",
+          "ui": "A message preview from official ergane-02 becomes visible in a small mobile/desktop destination pane; original app stays in view"
+        }
+      ],
+      "evidence": "Official ergane-02 messenger example",
+      "limit": "Scripted service-use example; no actual outbound message is sent and no login/authorization success fabricated."
+    },
+    {
+      "id": "plugin-call",
+      "label": "도구 호출",
+      "range": [
+        27.632308,
+        29.7
+      ],
+      "group": "plugin",
+      "sourceType": "homepage-example-dom",
+      "states": [
+        {
+          "at": 27.632308,
+          "phase": "prepare",
+          "ui": "Type @; native mention menu appears, cursor selects 공시 tool"
+        },
+        {
+          "at": 28.106154,
+          "phase": "operate",
+          "ui": "Tool chip persists; type 최근 공시 찾아줘 and Enter"
+        },
+        {
+          "at": 28.666154,
+          "phase": "result",
+          "ui": "Source disclosure table rows reveal; click one row to open its reader inside the same canvas"
+        }
+      ],
+      "evidence": "C:/Projects/DAOU.Athena-Web/lib/agora-filings.ts 고정 2026-09-10 확인 자료 3건",
+      "limit": "Use official existing disclosure text; do not create new financial facts."
+    },
+    {
+      "id": "strategy-code",
+      "label": "바이브코딩",
+      "range": [
+        31.2,
+        33.02
+      ],
+      "group": "strategy",
+      "sourceType": "app-code-reconstruction+user-recording",
+      "states": [
+        {
+          "at": 31.2,
+          "phase": "prepare",
+          "ui": "Technique workspace composer types 돌파 전략 만들어줘"
+        },
+        {
+          "at": 31.655,
+          "phase": "operate",
+          "ui": "Enter; source follow-up chip chosen; code pane begins line-by-line reveal"
+        },
+        {
+          "at": 32.2465,
+          "phase": "result",
+          "ui": "Generated source code and check badges settle; same named technique remains for following node step"
+        }
+      ],
+      "evidence": "시연영상1 692초 원문 코드 compute_breakout_level/should_enter; verification/source-code-692.png",
+      "limit": "Illustrative source strategy, no claim of live code generation or profitable strategy."
+    },
+    {
+      "id": "strategy-node",
+      "label": "노드 대화",
+      "range": [
+        33.02,
+        34.84
+      ],
+      "group": "strategy",
+      "sourceType": "app-code-reconstruction+user-recording",
+      "states": [
+        {
+          "at": 33.02,
+          "phase": "prepare",
+          "ui": "기록된 compute_breakout_level 노드 선택"
+        },
+        {
+          "at": 33.475,
+          "phase": "operate",
+          "ui": "@compute_breakout_level 참조와 노드 설명 질문"
+        },
+        {
+          "at": 34.112,
+          "phase": "result",
+          "ui": "동일 시점 실제 녹화의 설명 패널 표시"
+        }
+      ],
+      "evidence": "시연영상1 776–778초 compute_breakout_level 선택·참조 질문·실제 설명",
+      "limit": "ATR 값 변경이나 새 전략 버전 생성은 보여주지 않음."
+    },
+    {
+      "id": "strategy-backtest",
+      "label": "백테스트",
+      "range": [
+        34.84,
+        36.751
+      ],
+      "group": "strategy",
+      "sourceType": "app-code-reconstruction+user-recording",
+      "states": [
+        {
+          "at": 34.84,
+          "phase": "prepare",
+          "ui": "Click 결과; existing completed source run is selected in run list"
+        },
+        {
+          "at": 35.204,
+          "phase": "operate",
+          "ui": "Pointer opens result tabs/curve; actual source plot appears inside native DOM frame"
+        },
+        {
+          "at": 35.841,
+          "phase": "result",
+          "ui": "Metrics and trade rows for that same source run settle; select a trade as next target"
+        }
+      ],
+      "evidence": "demo1 724–724.8 recorded result and parent-confirmed plot crops",
+      "limit": "Opening an existing completed result avoids false claim that a newly edited illustrative strategy generated a mismatched recorded result; label existing record/example context if switching strategy data."
+    },
+    {
+      "id": "strategy-diagnosis",
+      "label": "투자 진단",
+      "range": [
+        36.751,
+        38.48
+      ],
+      "group": "strategy",
+      "sourceType": "app-code-reconstruction+user-recording",
+      "states": [
+        {
+          "at": 36.751,
+          "phase": "prepare",
+          "ui": "Recorded trade rows stay; cursor selects the source loss trade"
+        },
+        {
+          "at": 37.206,
+          "phase": "operate",
+          "ui": "Native reference chip includes selected trade; type 이 손실 이유는? and Enter"
+        },
+        {
+          "at": 37.752,
+          "phase": "result",
+          "ui": "Submitted question and selected trade/fee/condition context remain while pending indicator appears"
+        }
+      ],
+      "evidence": "Native trades at demo1 728s and actual request/reference UI; V21 strategy-assets-provenance",
+      "limit": "No generated diagnostic answer is evidenced; show request/pending rather than fabricated cause."
+    },
+    {
+      "id": "strategy-search",
+      "label": "조건 탐색",
+      "range": [
+        38.48,
+        40.3
+      ],
+      "group": "strategy",
+      "sourceType": "app-code-reconstruction",
+      "states": [
+        {
+          "at": 38.48,
+          "phase": "prepare",
+          "ui": "Click 최적화; source parameter ranges display as read-only rows"
+        },
+        {
+          "at": 38.935,
+          "phase": "operate",
+          "ui": "Switch 그리드→랜덤; editable random sample field appears"
+        },
+        {
+          "at": 39.4355,
+          "phase": "result",
+          "ui": "Select sample count100, type200; cursor moves to run control; valid input and exact control states settle"
+        }
+      ],
+      "evidence": "backtest-canvas.js5675–5719 and source parameter values demo1 724",
+      "limit": "Do not edit range text as though it were form fields. No fabricated optimization results or completion percentages."
+    },
+    {
+      "id": "alert-personal",
+      "label": "맞춤 알람",
+      "range": [
+        41.8,
+        43.804286
+      ],
+      "group": "alert",
+      "sourceType": "homepage-example-dom+user-recording",
+      "states": [
+        {
+          "at": 41.8,
+          "phase": "prepare",
+          "ui": "Alert mode list shows source existing alert and relevant interest/context"
+        },
+        {
+          "at": 42.279286,
+          "phase": "operate",
+          "ui": "Native scheduled alert arrives; cursor clicks its item"
+        },
+        {
+          "at": 42.758571,
+          "phase": "result",
+          "ui": "Detail drawer exposes schedule/reason/source, retaining list selection"
+        }
+      ],
+      "evidence": "Official aegis-01 relevance card; native demo2 toast167.133–173.133",
+      "limit": "Native toast is scheduled, not a price-condition trigger. Keep source provenance clear if homepage personalized example and actual toast share sequence."
+    },
+    {
+      "id": "alert-automation",
+      "label": "대화형 자동화",
+      "range": [
+        43.804286,
+        45.808571
+      ],
+      "group": "alert",
+      "sourceType": "homepage-example-dom",
+      "states": [
+        {
+          "at": 43.804286,
+          "phase": "prepare",
+          "ui": "Same routine composer types 매일 장 마감 후 정리"
+        },
+        {
+          "at": 44.283571,
+          "phase": "operate",
+          "ui": "Enter; schedule/condition form fields fill with original example values"
+        },
+        {
+          "at": 44.893571,
+          "phase": "result",
+          "ui": "Routine draft and source setting summary are visible; user reviews start/save control"
+        }
+      ],
+      "evidence": "Official aegis-02 and native routine field design",
+      "limit": "A draft is a valid result state. Do not claim routine activated without an evidenced approval transition."
+    },
+    {
+      "id": "alert-watch",
+      "label": "통합 감시",
+      "range": [
+        45.808571,
+        47.9
+      ],
+      "group": "alert",
+      "sourceType": "homepage-example-dom",
+      "states": [
+        {
+          "at": 45.808571,
+          "phase": "prepare",
+          "ui": "Same routine opens source selector with Kiwoom and configured MCP rows"
+        },
+        {
+          "at": 46.244286,
+          "phase": "operate",
+          "ui": "Select price/disclosure/news source rows; corresponding condition/source chips update"
+        },
+        {
+          "at": 46.854286,
+          "phase": "result",
+          "ui": "Combined source set remains in routine summary; existing source monitor rows are revealed"
+        }
+      ],
+      "evidence": "Official aegis-03 and product-page-copy integrated monitoring claim",
+      "limit": "Selected source configuration, not proof of newly running multi-source execution. Avoid inventing live metrics."
+    },
+    {
+      "id": "glaux-mini",
+      "label": "미니 대화",
+      "range": [
+        49.4,
+        53.008
+      ],
+      "group": "glaux",
+      "sourceType": "app-code-reconstruction+user-recording",
+      "states": [
+        {
+          "at": 49.4,
+          "phase": "prepare",
+          "ui": "Desktop context, owl clicked, mini window opens at native aspect"
+        },
+        {
+          "at": 49.928,
+          "phase": "operate",
+          "ui": "Mini composer progressively types 삼성전자 차트 보여줘; Enter and pending state"
+        },
+        {
+          "at": 50.94,
+          "phase": "result",
+          "ui": "Actual demo2 mini line chart reveals inside card; cursor points to chart and window remains open"
+        }
+      ],
+      "evidence": "시연영상2 45–48.5초 plot-only crop [2102,908,310,154]; 입력/전송 및 미니창은 코드로 재현",
+      "limit": "Build mini-window chrome as DOM while inserting actual line plot only. Preserve original numbers/symbol."
+    },
+    {
+      "id": "glaux-notice",
+      "label": "능동 알림",
+      "range": [
+        53.008,
+        56
+      ],
+      "group": "glaux",
+      "sourceType": "homepage-example-dom",
+      "states": [
+        {
+          "at": 53.008,
+          "phase": "prepare",
+          "ui": "Mini window remains; owl badge and source notification appear beside it"
+        },
+        {
+          "at": 53.536,
+          "phase": "operate",
+          "ui": "Click notification; its reference continues into mini conversation"
+        },
+        {
+          "at": 54.24,
+          "phase": "result",
+          "ui": "Type1주 주문 준비; simulated ticket appears, cursor advances to 최종확인 at55.1 and holds through56"
+        }
+      ],
+      "evidence": "Homepage Glaux6–12 and28–33; explicit final-review ticket DOM",
+      "limit": "Keep 모의계좌 and 주문전송없음. No accepted/completed order state, no claim a native scheduled toast was a stock-price event."
+    }
+  ],
+  "renderPipeline": {
+    "recommendedBase": "C:/Projects/DAOU.AThenaPT/ATHENA-발표/film-production-20261004/v19-app-usage-motion/render-film.cjs",
+    "reason": "Already captures deterministic DOM with isolated local HTTP server/Playwright, validates30fps/framecount, pipes JPEG frames into FFmpeg, records hashes and checks decode errors.",
+    "contract": "Expose async window.athenaFilm.render(t) or window.render(t); await assets/fonts once. render(t) must also seek required local video frame before screenshot.",
+    "seekMedia": "Use paused local clip, mapfilm time to source time, await seeked and decoded frame readiness. Supply range-supporting static server for video seeking, or use prepared image sequences/FFmpeg composition for deterministic plot layers. Do not rely on autoplay/wall-clock playback.",
+    "groups": "Render six continuous group clips using start/duration from groups, including DOM camera/cursor/text. Reuse V21 human/title clips and concatenate in existing timing. Within each group do not apply V21 per-feature wipe transitions.",
+    "existingCommands": [
+      "node render-film.cjs --stills --times=4.2,5.2,6.6,7.4 --entry=index.html",
+      "node render-film.cjs --probe --start=4 --duration=10 --name=conversation --entry=index.html"
+    ],
+    "finish": "Reuse V21 FFmpeg concat/music gain/fade and final60s metadata/decode verification. Update output path/version; never run old extend-renderer.cjs because it clears timeline segments.",
+    "doNotUse": "V21 panelFilter is static-image panel sliding; it cannot itself implement text/selection/result DOM state. Do not loop three stills as substitute for operated motion."
+  },
+  "verificationPlan": [
+    "For each of23 features capture at least three cue-state frames, inspect visible operation→consequence and preserve native crop aspect.",
+    "Seek backward and forward to the same t and compare identical screenshot hashes for deterministic state; ensure no stale DOM or animation-clock dependence.",
+    "Check group boundaries for shell position continuity and single cursor; no per-feature wipe or whole-panel reset inside group.",
+    "Confirm actual plot pixels have not been synthetically replaced, stretched or renamed. Real recording plots and reconstructed controls must align spatially.",
+    "Keep native text/control labels and financial/simulation disclaimers; no backend success for draft/pending states.",
+    "Review final60s motion playback, not only contact sheets; contact sheets cannot reveal awkward timing or jump cuts."
+  ]
+}

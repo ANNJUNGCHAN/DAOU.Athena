@@ -1,0 +1,227 @@
+{
+  "revision": "feature-inserts-20261007",
+  "status": "frozen-for-render",
+  "taskTraceId": "01a114ce-f6a3-7ea2-8f67-61cae39b059e",
+  "creditsConsumed": 360,
+  "clips": [
+    {
+      "id": "market-rise",
+      "feature": "대화",
+      "segmentId": "woman-open",
+      "file": "assets/feature-inserts/market-rise-native.mp4",
+      "movieRange": [
+        2.1,
+        3.7
+      ],
+      "sourceRange": [
+        0.4,
+        4.6
+      ],
+      "playbackRate": 2.625,
+      "sha256": "1e1db96c8ff8e883bce0b516e49c2ff869476421db7a76263ec93bc0a513fa3f",
+      "bytes": 3452918,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "duration": 5.041667,
+      "originalGeneration": {
+        "id": "market-rise",
+        "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\market-rise.mp4",
+        "bytes": 8200859,
+        "sha256": "479568fa029d6d20f6ba69e446fbc2d703acdcbf5e67164ba73faf354b8ca00c",
+        "duration": 5.041667,
+        "width": 1920,
+        "height": 1080,
+        "fps": "24/1",
+        "watermarkFreeUrlUsed": true,
+        "generationId": "ARUTUf8IgyFp5Nv7vwPcL32mqdsoyqlqBW-l5D6XAd-yOEo-aYp1BfHCSJFE1GQcBPSsNtNr",
+        "decodeErrors": 0,
+        "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\market-rise-contact.jpg"
+      },
+      "screenComposite": "assets/chart-plot.mp4"
+    },
+    {
+      "id": "seoul-network",
+      "feature": "그래프",
+      "segmentId": "human-graph",
+      "file": "assets/feature-inserts/seoul-network.mp4",
+      "movieRange": [
+        14,
+        15.8
+      ],
+      "sourceRange": [
+        0.4,
+        4.6
+      ],
+      "playbackRate": 2.3333,
+      "sha256": "3992fcbba0c7ad1595102bbde6c0d5e7ec1886a2581405b639a189f156664059",
+      "bytes": 20115006,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "duration": 5.041667,
+      "originalGeneration": {
+        "id": "seoul-network",
+        "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\seoul-network.mp4",
+        "bytes": 20115006,
+        "sha256": "3992fcbba0c7ad1595102bbde6c0d5e7ec1886a2581405b639a189f156664059",
+        "duration": 5.041667,
+        "width": 1920,
+        "height": 1080,
+        "fps": "24/1",
+        "watermarkFreeUrlUsed": true,
+        "generationId": "ATpj--tIPydpucj1QmmkpV1Y5aKUS4-Lnz84udbgT5tW_vrtA7na6lmxGdTSssEecLZWRs2P",
+        "decodeErrors": 0,
+        "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\seoul-network-contact.jpg"
+      },
+      "screenComposite": null
+    },
+    {
+      "id": "tools-connect",
+      "feature": "플러그인",
+      "segmentId": "human-plugin",
+      "file": "assets/feature-inserts/tools-connect.mp4",
+      "movieRange": [
+        22.6,
+        24.1
+      ],
+      "sourceRange": [
+        0.25,
+        2.5
+      ],
+      "playbackRate": 1.5,
+      "sha256": "03379c7f1380f98cdb50a9550f3a1295df8a59692599337b9014c11a1936f924",
+      "bytes": 4449266,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "duration": 5.041667,
+      "originalGeneration": {
+        "id": "tools-connect",
+        "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\tools-connect.mp4",
+        "bytes": 4449266,
+        "sha256": "03379c7f1380f98cdb50a9550f3a1295df8a59692599337b9014c11a1936f924",
+        "duration": 5.041667,
+        "width": 1920,
+        "height": 1080,
+        "fps": "24/1",
+        "watermarkFreeUrlUsed": true,
+        "generationId": "AX_FNIFMoj23DmXSvxa-53wMcloVRbmykg1AboGoYPBqs_kLHD9yDBfbjWYlBsOP3gcMGRco",
+        "decodeErrors": 0,
+        "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\tools-connect-contact.jpg"
+      },
+      "screenComposite": null
+    },
+    {
+      "id": "strategy-paths",
+      "feature": "전략",
+      "segmentId": "human-strategy",
+      "file": "assets/feature-inserts/strategy-paths.mp4",
+      "movieRange": [
+        29.7,
+        31.2
+      ],
+      "sourceRange": [
+        0.4,
+        4.6
+      ],
+      "playbackRate": 2.8,
+      "sha256": "c59e8d72f3913b25fbf9240d396dae220f9096ef11fd58e281992b0d333d3762",
+      "bytes": 8143174,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "duration": 5.041667,
+      "originalGeneration": {
+        "id": "strategy-paths",
+        "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\strategy-paths.mp4",
+        "bytes": 8143174,
+        "sha256": "c59e8d72f3913b25fbf9240d396dae220f9096ef11fd58e281992b0d333d3762",
+        "duration": 5.041667,
+        "width": 1920,
+        "height": 1080,
+        "fps": "24/1",
+        "watermarkFreeUrlUsed": true,
+        "generationId": "AdBZCGVw3aq8jfXHD6ax1ooF2B4oqdg91mgpvmp8SNR_3iH1IPWy_AcJOFDOs557eKIWiClS",
+        "decodeErrors": 0,
+        "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\strategy-paths-contact.jpg"
+      },
+      "screenComposite": null
+    },
+    {
+      "id": "signal-alert",
+      "feature": "알림",
+      "segmentId": "human-alert",
+      "file": "assets/feature-inserts/signal-alert.mp4",
+      "movieRange": [
+        40.3,
+        41.8
+      ],
+      "sourceRange": [
+        1.25,
+        3.15
+      ],
+      "playbackRate": 1.2667,
+      "sha256": "e2cf4a2fc09a065b4bd2b404b4eb6cf9ade0adca3368cf4d4b0d9c4ef39ce533",
+      "bytes": 5069653,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "duration": 5.041667,
+      "originalGeneration": {
+        "id": "signal-alert",
+        "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\signal-alert.mp4",
+        "bytes": 5069653,
+        "sha256": "e2cf4a2fc09a065b4bd2b404b4eb6cf9ade0adca3368cf4d4b0d9c4ef39ce533",
+        "duration": 5.041667,
+        "width": 1920,
+        "height": 1080,
+        "fps": "24/1",
+        "watermarkFreeUrlUsed": true,
+        "generationId": "AQRC1tQ17Y-nY3k11_nO8wS5BqjidzSAqPhN7IcJOr1uwtwMP2guaUb7kPE2K4dAzDbwQRFh",
+        "decodeErrors": 0,
+        "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\signal-alert-contact.jpg"
+      },
+      "screenComposite": null
+    },
+    {
+      "id": "companion-move",
+      "feature": "글라우",
+      "segmentId": "human-glaux",
+      "file": "assets/feature-inserts/companion-move.mp4",
+      "movieRange": [
+        47.9,
+        49.4
+      ],
+      "sourceRange": [
+        0.05,
+        1.5
+      ],
+      "playbackRate": 0.9667,
+      "sha256": "526230dd46556da9216596ce117d83330891dfad2ccbda976c0090df081539c4",
+      "bytes": 4948371,
+      "width": 1920,
+      "height": 1080,
+      "fps": "24/1",
+      "duration": 5.041667,
+      "originalGeneration": {
+        "id": "companion-move",
+        "file": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\assets\\feature-inserts\\companion-move.mp4",
+        "bytes": 4948371,
+        "sha256": "526230dd46556da9216596ce117d83330891dfad2ccbda976c0090df081539c4",
+        "duration": 5.041667,
+        "width": 1920,
+        "height": 1080,
+        "fps": "24/1",
+        "watermarkFreeUrlUsed": true,
+        "generationId": "AQM2oLr3MWftw-E_wJLAq9mYzNiKBXD81S1vGj8XXicY8Kk1OT6DbE6IU8n5iProIoe_vWr2",
+        "decodeErrors": 0,
+        "contact": "C:\\Projects\\DAOU.AThenaPT\\ATHENA-발표\\film-production-20261004\\v22-operated-motion\\verification\\feature-inserts\\companion-move-contact.jpg"
+      },
+      "screenComposite": null
+    }
+  ],
+  "sourcePolicy": "Original app and recordings read-only. Generated source files retained. Only copied production assets composited.",
+  "audioPolicy": "Generated clip audio unused; original 60-second music retained.",
+  "visualSelection": "Tool connection ends before extraneous light beam; alert ends before phone flips; companion ends before generated app becomes prominent. Chart screen replaced with native plot."
+}

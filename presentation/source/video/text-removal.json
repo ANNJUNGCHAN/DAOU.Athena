@@ -1,0 +1,20 @@
+{
+  "revision": "auxiliary-captions-only",
+  "status": "verified-app-text-preserved",
+  "scope": "preserve app text; remove external auxiliary captions only",
+  "preserveAppText": true,
+  "preserved": [
+    "all app questions, menus, buttons, chart values, graph node names, code, table text",
+    "ATHENA and nine large narrative captions"
+  ],
+  "removed": [
+    "external Enter cue",
+    "small ending subtitle",
+    "in-film music credit"
+  ],
+  "nativeMedia": "original V22 assets, no textless paths",
+  "rejectedRender": "revisions/textless-not-adopted",
+  "backup": "revisions/before-text-removal",
+  "duration": 60,
+  "review": "verification/app-text-restoration-review.json"
+}

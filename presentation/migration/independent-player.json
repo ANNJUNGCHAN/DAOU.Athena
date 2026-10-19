@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "initial": {
+    "mode": "video",
+    "features": 23,
+    "duration": 60,
+    "readyState": 4,
+    "width": 1920,
+    "height": 1080
+  },
+  "seekSeconds": 20,
+  "motion": {
+    "mode": "motion",
+    "time": 48
+  },
+  "returnedMode": "video",
+  "browserErrors": [],
+  "localResourceCount": 36,
+  "localLinksChecked": [
+    "http://127.0.0.1:28423/athena-v23-60s.mp4",
+    "http://127.0.0.1:28423/source/video/interaction-spec.json",
+    "http://127.0.0.1:28423/source/video/stage-features.json",
+    "http://127.0.0.1:28423/%EC%82%AC%EC%9A%A9%EC%95%88%EB%82%B4.txt"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "version": 23,
+  "status": "representative-review-pending",
+  "homepageReuse": [
+    "homepage-source/cinematic-motion.css loaded unmodified",
+    "1600x1000 geometry; canvas289,26,890,962; chat1180,30,420,958",
+    "cm-chat/cm-messages/cm-app-overlay applied"
+  ],
+  "adaptation": "Current labels, native recorded plots and 23 evidence-backed interactions retained. Homepage React screenshot wrapper is not used; DOM is a native-content adaptation.",
+  "persistentDOM": "Reconcile matching elements/IDs without whole ui.innerHTML replacement; video slot contents replaced only when media changes. Group conversation bubbles are deterministically accumulated; native video identity is preserved.",
+  "limitations": [
+    "Current adapter retains feature-based content stages; representative camera and all state verification still required before full render."
+  ],
+  "camera": "Group wide entry/pullback, feature-specific active target and result anchors, endpoint matrix interpolation, focus influence smoothly decays before result transition",
+  "motionProbe": "render/homepage-conversation-probe.mp4",
+  "determinism": "verification/determinism.json",
+  "review": "verification/independent-homepage-review.json"
+}
