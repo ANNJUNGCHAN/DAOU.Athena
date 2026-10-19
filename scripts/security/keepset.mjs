@@ -109,13 +109,82 @@ const NON_RUNTIME_APP_FILES = new Set([
   "app/lib/probe-model-prefs.js",
 ]);
 
+export const PUBLIC_SUBTREE_ROOTS = Object.freeze(["web/", "presentation/"]);
+
+const FORBIDDEN_PUBLIC_SUBTREE_DIRECTORIES = new Set([
+  ".agents",
+  ".aws",
+  ".cache",
+  ".claude",
+  ".codex",
+  ".next",
+  ".omc",
+  ".omx",
+  ".playwright-mcp",
+  ".private",
+  ".ssh",
+  ".venv",
+  ".vinext",
+  ".wrangler",
+  "artifacts",
+  "browser-data",
+  "browser-profile",
+  "cache",
+  "coverage",
+  "dist",
+  "node_modules",
+  "out",
+  "outputs",
+  "profiles",
+  "private",
+  "user data",
+  "user-data",
+  "venv",
+  "work",
+  "__pycache__",
+]);
+
+const FORBIDDEN_PUBLIC_SUBTREE_FILES = new Set([
+  "athena-secrets.json",
+  "auth.json",
+  "cookies.json",
+  "credentials.json",
+  "generator-secrets.json",
+  "secrets.json",
+  "storage-state.json",
+  "storagestate.json",
+]);
+
 export function normalizeGitPath(path) {
   return String(path || "").replace(/\\/g, "/").replace(/^\.\//, "");
+}
+
+export function isForbiddenPublicSubtreePath(path) {
+  const p = normalizeGitPath(path);
+  if (!PUBLIC_SUBTREE_ROOTS.some((root) => p.startsWith(root))) return false;
+
+  const parts = p.split("/").slice(1);
+  const lowerParts = parts.map((part) => part.toLowerCase());
+  if (lowerParts.some((part) => FORBIDDEN_PUBLIC_SUBTREE_DIRECTORIES.has(part))) {
+    return true;
+  }
+
+  const name = lowerParts.at(-1) || "";
+  if (/^\.env(?:\.|$)/.test(name) && !/^\.env(?:\.[^/]*)?\.example$/.test(name)) {
+    return true;
+  }
+  if (FORBIDDEN_PUBLIC_SUBTREE_FILES.has(name)) return true;
+  if (/\.(?:pem|key|p12|pfx|db|sqlite|sqlite3)(?:-[^/]*)?$/.test(name)) return true;
+  if (/^presentation\/source\/video\/render\//i.test(p)) return true;
+  return false;
 }
 
 export function isKeepPath(path) {
   const p = normalizeGitPath(path);
   if (!p) return false;
+  if (PUBLIC_SUBTREE_ROOTS.some((root) => p.startsWith(root))) {
+    return !isForbiddenPublicSubtreePath(p);
+  }
   if (DEST_FILES.has(p)) return true;
   if (p.startsWith(".githooks/")) return true;
   if (p.startsWith("scripts/security/")) return true;

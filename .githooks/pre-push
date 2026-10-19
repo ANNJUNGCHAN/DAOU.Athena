@@ -3,6 +3,7 @@ set -euo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 CONFIG="$ROOT/scripts/security/gitleaks.toml"
 
+run_security_gates() {
 if ! command -v gitleaks >/dev/null 2>&1; then
   echo "pre-push: gitleaks is required" >&2
   exit 1
@@ -33,3 +34,7 @@ if [[ "$SCAN" != "enabled" ]]; then
   echo "pre-push: GitHub push protection was not verified as enabled." >&2
   exit 1
 fi
+}
+
+run_security_gates </dev/null
+git lfs pre-push "$@"

@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   DEST_CONTROL_FILES,
+  PUBLIC_SUBTREE_ROOTS,
   RUNTIME_ROOT_FILES,
   forbiddenTrackedPaths,
+  isForbiddenPublicSubtreePath,
   isKeepPath,
 } from "./keepset.mjs";
 
@@ -27,6 +29,48 @@ test("dest-control files stay in the keep-set", () => {
   assert.equal(isKeepPath("scripts/release/version.mjs"), true);
   assert.equal(isKeepPath("scripts/release/check-version.mjs"), true);
   assert.equal(isKeepPath("scripts/release/set-version.mjs"), true);
+});
+
+test("public web and presentation subtrees stay in the keep-set", () => {
+  assert.deepEqual(PUBLIC_SUBTREE_ROOTS, ["web/", "presentation/"]);
+  for (const path of [
+    "web/.gitattributes",
+    "web/app/page.tsx",
+    "web/public/media/launch/film-poster.webp",
+    "presentation/.gitattributes",
+    "presentation/ATHENA-최종발표.pptx",
+    "presentation/source/video/assets/chart.mp4",
+    "presentation/tools/ffmpeg/ffmpeg.exe",
+  ]) {
+    assert.equal(isKeepPath(path), true, path);
+    assert.equal(isForbiddenPublicSubtreePath(path), false, path);
+  }
+});
+
+test("public subtrees reject nested secrets, profiles, databases, and generated runtime output", () => {
+  for (const path of [
+    "web/.env",
+    "web/app/.env.local",
+    "web/config/athena-secrets.json",
+    "web/.openai/generator-secrets.json",
+    "web/browser-profile/Default/Cookies",
+    "web/private/session.json",
+    "web/.private/session.json",
+    "web/cache/account.json",
+    "web/node_modules/pkg/index.js",
+    "presentation/source/video/.env.production",
+    "presentation/source/video/credentials.json",
+    "presentation/profiles/Default/History",
+    "presentation/private/account.db.json",
+    "presentation/cache/render.tmp",
+    "presentation/source/video/cache.sqlite3",
+    "presentation/source/video/render/final.mp4",
+  ]) {
+    assert.equal(isForbiddenPublicSubtreePath(path), true, path);
+    assert.equal(isKeepPath(path), false, path);
+  }
+  assert.equal(isKeepPath("web/.env.example"), true);
+  assert.equal(isKeepPath("presentation/config/.env.production.example"), true);
 });
 
 test("app lib/data/styles runtime sources stay; tests and probes do not", () => {

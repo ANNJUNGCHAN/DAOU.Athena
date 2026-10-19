@@ -65,13 +65,37 @@ class ProductReleaseTests(unittest.TestCase):
                 "displayOrder": [slide["file"] for slide in slides], "slides": slides}
         (root / "manifest.json").write_text(json.dumps(data), encoding="utf-8")
 
-    def check(self):
+    def check(self, *, online=False):
         def git(_root, *_args):
             if _args[0] == "status":
                 return ""
             return self.manifest["productRelease"]["sourceCommit"] if _args[-1].endswith("^{commit}") else "b" * 40
         with patch.object(release, "git", side_effect=git):
-            return release.check_workspace(self.root, self.web, self.deck)
+            return release.check_workspace(self.root, self.web, self.deck, online=online)
+
+    def test_default_cli_roots_are_inside_monorepo(self):
+        args = release.parse_args(["--root", str(self.root)])
+        self.assertEqual(args.web_root, self.root / "web")
+        self.assertEqual(args.presentation_root, self.root / "presentation")
+
+    def test_explicit_cli_roots_remain_supported(self):
+        args = release.parse_args([
+            "--root", str(self.root),
+            "--web-root", str(self.web),
+            "--presentation-root", str(self.deck),
+        ])
+        self.assertEqual(args.web_root, self.web)
+        self.assertEqual(args.presentation_root, self.deck)
+
+    def test_online_check_validates_one_canonical_repository(self):
+        remote_head = "c" * 40
+        with patch.object(release, "check_remote_main", return_value=remote_head) as check_remote, \
+                patch.object(release, "check_published", return_value={"tag": "v0.1.6"}):
+            result = self.check(online=True)
+        check_remote.assert_called_once_with(self.root)
+        self.assertEqual(result["repository"]["remoteMain"], remote_head)
+        self.assertTrue(result["repository"]["containsRemoteMain"])
+        self.assertNotIn("repositories", result)
 
     def test_coherent_workspace_preserves_unreleased_source_distinction(self):
         self.assertEqual(self.check()["appSource"]["state"], "unreleased-source")

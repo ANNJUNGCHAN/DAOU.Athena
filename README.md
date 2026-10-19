@@ -76,11 +76,25 @@ Windows x64용 설치 프로그램은 Electron 앱과 로컬 Python 백엔드를
 
 ## 개발 환경에서 실행
 
-현재 공개 저장소는 Windows 앱 실행과 재빌드에 필요한 소스를 제공합니다. 실행에는 **Node.js와 npm**, **Python 3.11 이상**, **uv**가 필요합니다.
+현재 공개 저장소는 Windows 앱, Python 백엔드, 브라우저 확장, 로컬 런타임, Website와 발표자료를 한 Git 이력에서 관리합니다.
+
+| 경로 | 내용 |
+| --- | --- |
+| `app/` | Electron 데스크톱 앱 |
+| `backend/` | Python 백엔드와 LAYA 런타임 명세 |
+| `extension/` | Chrome 확장 |
+| `local-runtime/` | 로컬 실행 환경과 패키징 자원 |
+| `web/` | 공식 Website |
+| `presentation/` | 공식 발표자료·영상·렌더링 도구 |
+| `scripts/` | 공통 검증·빌드·릴리스 도구 |
+
+별도의 workspace 도구나 새 패키지 관리 계층은 두지 않습니다. 각 구성요소는 기존 잠금 파일과 명령을 그대로 사용합니다. 실행에는 **Node.js와 npm**, **Python 3.11 이상**, **uv**가 필요합니다. 발표자료의 PPTX·MP4·WAV·TTF·EXE는 Git LFS로 관리하므로 clone 전에 Git LFS를 설치해야 합니다.
 
 ```powershell
 git clone https://github.com/ANNJUNGCHAN/DAOU.Athena.git
 Set-Location DAOU.Athena
+git lfs install
+git lfs pull
 
 npm ci --prefix app
 node app/node_modules/electron/install.js
@@ -93,6 +107,19 @@ npm --prefix app start
 ```
 
 `npm --prefix app start`는 Electron 앱과 `backend/.venv/Scripts/python.exe`의 로컬 백엔드를 함께 시작합니다. 키움 시세·차트·계좌 자료 조회와 백테스트용 시세 수집에는 발급받은 API 자격 증명 연결이 필요합니다. 주문은 모의투자 계좌에서만, 백엔드의 주문 API 설정과 설정 › 계좌의 주문 API 허용을 거친 뒤 주문 티켓에서 사용자가 직접 확인해 실행합니다. 실계좌 주문과 자동매매는 제공하지 않습니다.
+
+Website는 저장소 루트에서 다음처럼 실행하고 검사합니다.
+
+```powershell
+npm ci --prefix web
+npm --prefix web run dev
+npm --prefix web run lint
+npm --prefix web run typecheck
+npm --prefix web test
+npm --prefix web run build
+```
+
+공식 발표자료는 `presentation/ATHENA-최종발표.pptx`에 있으며 PDF·대본·시연 가이드와 영상 제작 원본도 `presentation/` 아래에 함께 보존합니다. 제품 기준표와 Website 미리보기까지 대조하는 명령은 [통합 검사 절차](scripts/release/PRODUCT-RELEASE.md)를 따릅니다.
 
 > 이 공개 저장소는 실행·재빌드 범위에 맞춰 구성되어 있습니다. 내부 검증 스크립트와 원본 작업 기록은 기본 배포 대상에 포함하지 않으며, 공개 검토한 학습 요약과 출처 기록만 선별해 보관합니다.
 
@@ -114,7 +141,7 @@ npm --prefix app start
 버전은 [GitHub Releases](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases)가 기록입니다.
 태그 `vX.Y.Z`를 `main`의 커밋에 달면 CI가 같은 이름의 Release를 만듭니다.
 
-앱·WEB·발표자료의 공개 기준은 [제품 릴리스 기준표](scripts/release/product-release.json)로 함께 관리합니다. 세 저장소의 사본, 설치 파일 원본 커밋·해시, 공식 39장 자료·WEB 미리보기를 [통합 검사 절차](scripts/release/PRODUCT-RELEASE.md)로 대조합니다. 최신 개발 소스와 이미 배포된 설치 파일은 별도로 표시합니다.
+앱·WEB·발표자료의 공개 기준은 [제품 릴리스 기준표](scripts/release/product-release.json)로 함께 관리합니다. 통합 저장소 안의 두 사본, 설치 파일 원본 커밋·해시, 공식 39장 자료·WEB 미리보기를 [통합 검사 절차](scripts/release/PRODUCT-RELEASE.md)로 대조합니다. 최신 개발 소스와 이미 배포된 설치 파일은 별도로 표시합니다.
 
 ### 버전 규칙
 

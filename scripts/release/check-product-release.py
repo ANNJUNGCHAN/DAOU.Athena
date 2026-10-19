@@ -1,4 +1,4 @@
-"""Validate one product release across the app, Website and presentation checkouts.
+"""Validate one product release across the app, Website and presentation tree.
 
 The manifest is a release index written after artifacts exist. Receipts live
 outside those artifacts, so no artifact has to contain its own future hash.
@@ -170,30 +170,32 @@ def check_workspace(root, web_root, presentation_root, *, online=False):
               "scope": "local-workspace-coherence",
               "productManifestSha256": hashlib.sha256(raw).hexdigest(),
               "appSource": {"head": current_head, "workingTreeDirty": dirty, "state": source_state},
-              "repositories": {
-                  name: {"head": git(path, "rev-parse", "HEAD"),
-                         "workingTreeDirty": bool(git(path, "status", "--porcelain", "--untracked-files=normal"))}
-                  for name, path in (("app", root), ("web", web_root), ("presentation", presentation_root))
-              },
+              "repository": {"head": current_head, "workingTreeDirty": dirty},
               "presentation": {"slides": presentation["slides"], "sha256": presentation["sha256"]},
               "websitePreview": {"slides": len(slides), "sourceSha256": preview["source"]["sha256"]}}
     if online:
-        for name, path in (("app", root), ("web", web_root), ("presentation", presentation_root)):
-            result["repositories"][name]["remoteMain"] = check_remote_main(path)
-            result["repositories"][name]["containsRemoteMain"] = True
+        result["repository"]["remoteMain"] = check_remote_main(root)
+        result["repository"]["containsRemoteMain"] = True
         result["publishedApp"] = check_published(manifest, sha256(deployment_path))
     return result
 
 
-def main():
+def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     root = Path(__file__).resolve().parents[2]
     parser.add_argument("--root", type=Path, default=root)
-    parser.add_argument("--web-root", type=Path, default=root.parent / "DAOU.Athena-Web")
-    parser.add_argument("--presentation-root", type=Path, default=root.parent / "DAOU.Athena-Presentation")
+    parser.add_argument("--web-root", type=Path)
+    parser.add_argument("--presentation-root", type=Path)
     parser.add_argument("--online", action="store_true", help="verify stable GitHub assets and original build-info")
     parser.add_argument("--receipt", type=Path)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    args.web_root = args.web_root or args.root / "web"
+    args.presentation_root = args.presentation_root or args.root / "presentation"
+    return args
+
+
+def main():
+    args = parse_args()
     try:
         result = check_workspace(args.root, args.web_root, args.presentation_root, online=args.online)
     except (ValueError, KeyError, OSError, subprocess.CalledProcessError, zipfile.BadZipFile) as error:

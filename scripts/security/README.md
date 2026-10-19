@@ -5,10 +5,10 @@ These repos are intended to be **public**. Gates stop live secrets from landing 
 Gates:
 - `gitleaks.toml` — commit-time secret policy.
 - `.githooks/pre-commit` — refuses a staged secret.
-- `.githooks/pre-push` — refuses a push if gitleaks finds a leak, GitHub push protection cannot be positively verified as enabled, or prompt markers are missing. Missing GitHub CLI, authentication/API errors, and empty responses fail closed; no bypass environment variable is accepted.
-- `.github/workflows/secret-scan.yml` — CI gitleaks after a push, then prompt-marker check.
+- `.githooks/pre-push` — refuses a push if gitleaks finds a leak, GitHub push protection cannot be positively verified as enabled, prompt markers are missing, or the tracked keep-set fails. After all gates pass, it preserves Git's ref stream for `git lfs pre-push` so presentation assets upload normally. Missing GitHub CLI, authentication/API errors, and empty responses fail closed; no bypass environment variable is accepted.
+- `.github/workflows/secret-scan.yml` — CI gitleaks after a push, then prompt-marker and tracked keep-set checks.
 - `scripts/security/check-prompt-security.mjs` — fail-closed marker presence check, invoked by eval, pre-push, and CI.
-- `scripts/security/keepset.mjs` / `check-tracked-keepset.mjs` — only run/rebuild + dest-control paths may be tracked.
+- `scripts/security/keepset.mjs` / `check-tracked-keepset.mjs` — only the desktop run/rebuild paths, dest-control paths, and reviewed `web/` and `presentation/` subtrees may be tracked. Nested environment files, credentials, profiles, databases, installed runtimes, caches, and generated render output remain forbidden.
 
 Policy (instructed, not a sandbox):
 - `GROK.md` / `AGENTS.md` / `CLAUDE.md` — coding-agent deploy procedure (no `--no-verify`, no live secrets in git).
