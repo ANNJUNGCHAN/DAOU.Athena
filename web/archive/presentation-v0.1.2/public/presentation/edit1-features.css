@@ -1,0 +1,33 @@
+/* Fixed 1920×1080 stage scales through the existing deck controller. */
+.e1-features{position:absolute;inset:0;overflow:hidden;color:#242938!important;background:#f7f8fc!important;font-family:Daki,'Noto Sans KR',sans-serif}
+.e1-features .e1-feature-heading{position:absolute;left:100px;right:100px;top:54px}
+.e1-features .e1-feature-heading h1{font-family:'Daki Title',Daki,'Noto Sans KR',sans-serif;font-size:62px;font-weight:400;line-height:1.2;letter-spacing:-2px;margin:0;color:#151820;word-break:keep-all}
+.e1-features .e1-feature-heading p{font-size:25px;line-height:1.45;letter-spacing:-.6px;margin:25px 0 0;color:#707988;word-break:keep-all}
+.et-panel-label{position:absolute;top:227px;display:flex;align-items:baseline;justify-content:space-between;gap:16px;font-size:24px;color:#343c50}
+.et-panel-label small{font-size:18px;color:#7b8392}
+.et-demo-label{left:100px;width:1000px}.et-tech-label{left:1130px;width:690px}
+.e1-features .e1-feature-window{position:absolute;left:100px;top:277px;width:1000px;height:625px;border-radius:24px;overflow:hidden;background:#eef1f6;box-shadow:0 14px 40px #252d420c;border:1px solid #dde2eb;box-sizing:border-box}
+.e1-feature-window iframe{width:100%;height:100%;border:0;display:block;pointer-events:none}
+.e1-feature-progress{position:absolute;left:0;bottom:0;width:100%;height:4px;transform-origin:left;background:#637dae;transform:scaleX(0)}
+.et-technology{position:absolute;left:1130px;top:277px;width:690px;height:625px;box-sizing:border-box;background:#fff;border:1px solid #dde2eb;border-radius:24px;padding:23px 26px;overflow:hidden}
+.et-technology h2{font-size:32px;font-weight:500;letter-spacing:-1px;margin:0 0 9px;color:#263c64;line-height:1.3}
+.et-input{color:#7b8392;font-size:19px;line-height:1.4}
+.et-diagram{position:absolute;left:25px;top:98px;width:640px;height:446px;overflow:visible}
+.et-diagram text{text-anchor:middle;dominant-baseline:auto;font-family:Daki,'Noto Sans KR',sans-serif}
+.et-node rect{fill:#f5f7fb;stroke:#dce2ed;stroke-width:1.5;transition:fill .35s,stroke .35s}
+.et-node-title{fill:#5e6b81;font-size:24px}.et-node-sub{fill:#8a93a2;font-size:18px}
+.et-node.is-reached rect{fill:#edf2fb;stroke:#9aafd0}.et-node.is-reached .et-node-title{fill:#314d77}.et-node.is-reached .et-node-sub{fill:#61799c}
+.et-node.is-current rect{fill:#e7effd;stroke:#547ab9;stroke-width:2.3}.et-node.is-current .et-node-title{fill:#254d8d}
+.et-node.et-human.is-reached rect{fill:#f1f5ef;stroke:#91aa87}.et-node.et-human.is-reached .et-node-title{fill:#45643e}
+.et-edge{fill:none;stroke:#d5dce8;stroke-width:2.5;stroke-dasharray:6 5;transition:stroke .35s}
+.et-edge.is-reached{stroke:#6c88b5;stroke-dasharray:none}.et-edge.is-current{stroke:#406db0;stroke-dasharray:7 5;animation:et-flow 1.4s linear infinite}
+.e1-features[data-motion="hold"] .et-edge{animation:none;stroke-dasharray:none}
+.et-diagram marker path{fill:#879aba}.et-candle>path{stroke:#9ba9c0;stroke-width:3}.et-candle.is-reached>path{stroke:#5276ac}
+.et-step{position:absolute;left:26px;right:26px;bottom:18px;min-height:52px;display:flex;align-items:center;gap:16px;border-top:1px solid #e7eaf0;padding-top:11px}
+.et-step-index{font-family:Daki,monospace;color:#6581ac;font-size:17px;white-space:nowrap}.et-step p{font-size:23px;line-height:1.35;letter-spacing:-.5px;margin:0;color:#364d72;word-break:keep-all}
+.et-takeaway{position:absolute;left:100px;right:100px;top:929px;display:flex;align-items:center;gap:23px;border-left:4px solid #839ac0;padding-left:19px;min-height:38px}
+.et-takeaway>span{font-size:18px;white-space:nowrap;color:#6f819d}.et-takeaway p{font-size:29px;line-height:1.3;margin:0;letter-spacing:-.6px;color:#343e52}
+.e1-features .e1-feature-foot{position:absolute;left:100px;right:100px;top:993px;display:flex;align-items:baseline;justify-content:space-between;gap:24px;font-size:15px;line-height:1.4;color:#8b929f}
+.e1-features .e1-feature-beat{font-size:21px;color:#647189;white-space:nowrap}
+@keyframes et-flow{to{stroke-dashoffset:-24}}
+@media(prefers-reduced-motion:reduce){.e1-features *,.e1-features *::before,.e1-features *::after{animation:none!important;transition:none!important}}

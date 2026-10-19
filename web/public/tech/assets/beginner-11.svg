@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" role="img" aria-labelledby="title desc">
+  <title id="title">군집 계산과 선택적인 AI 이름</title>
+  <desc id="desc">군집 계산과 최고 차수 노드의 기계적 라벨이 기본 경로입니다. 선택적 AI 라벨이 실패해도 기계적 라벨은 유지됩니다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#576AF9"/></marker></defs>
+  <rect width="1200" height="400" fill="#fff"/>
+  <text x="50" y="65" font-family="Daki,DakiL,sans-serif" font-size="24" fill="#14171D">군집 계산과 선택적인 AI 이름</text>
+  <g class="step" style="animation-delay:0s" font-family="Daki,DakiL,sans-serif" text-anchor="middle"><rect x="55" y="130" width="230" height="140" rx="8" fill="#FAFAFC" stroke="#263044" stroke-width="1.5"/><text x="170" y="183" font-size="20" fill="#14171D">군집 계산</text><text x="170" y="220" font-size="17" fill="#626B76">Greedy Modularity</text></g>
+  <g class="step" style="animation-delay:0.3s" font-family="Daki,DakiL,sans-serif" text-anchor="middle"><rect x="335" y="130" width="230" height="140" rx="8" fill="#FAFAFC" stroke="#263044" stroke-width="1.5"/><text x="450" y="183" font-size="20" fill="#14171D">기계적 라벨</text><text x="450" y="220" font-size="17" fill="#626B76">최고 차수 노드 1개</text></g>
+  <g class="step" style="animation-delay:0.6s" font-family="Daki,DakiL,sans-serif" text-anchor="middle"><rect x="615" y="130" width="230" height="140" rx="8" fill="#EEF0FF" stroke="#576AF9" stroke-width="1.5"/><text x="730" y="183" font-size="20" fill="#14171D">선택적 AI 라벨</text><text x="730" y="220" font-size="17" fill="#626B76">상위 노드 이름 · 종류</text></g>
+  <g class="step" style="animation-delay:0.8999999999999999s" font-family="Daki,DakiL,sans-serif" text-anchor="middle"><rect x="895" y="130" width="230" height="140" rx="8" fill="#FAFAFC" stroke="#263044" stroke-width="1.5"/><text x="1010" y="183" font-size="20" fill="#14171D">추정 이름 별도 표시</text><text x="1010" y="220" font-size="17" fill="#626B76">실패하면 기계적 라벨</text></g>
+  <path d="M285 200H355" fill="none" stroke="#576AF9" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M565 200H635" fill="none" stroke="#576AF9" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <path d="M450 130V100H1010V130" fill="none" stroke="#263044" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="735" y="92" text-anchor="middle" font-family="Daki,DakiL,sans-serif" font-size="15" fill="#626B76">기본 경로 · AI 없이도 반환</text>
+  <path d="M845 200H915" fill="none" stroke="#576AF9" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="50" y="335" font-family="Daki,DakiL,sans-serif" font-size="17" fill="#626B76">AI 라벨은 선택 사항입니다. 라벨 캐시는 구성원 집합과 프롬프트 지문을 구분합니다.</text>
+  <style>.step{animation:emphasis 5s ease-in-out infinite}@keyframes emphasis{0%,100%{opacity:1}50%{opacity:.72}}@media(prefers-reduced-motion:reduce){.step{animation:none}}</style>
+</svg>

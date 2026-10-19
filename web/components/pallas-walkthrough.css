@@ -1,0 +1,382 @@
+.pw-workspace {
+  color: #262c38;
+}
+.cm-film-pallas .cm-film-label {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #fffffff5;
+}
+.pw-breadcrumb {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 12px;
+  color: #667085;
+  margin-bottom: 20px;
+}
+.pw-breadcrumb b {
+  margin-left: auto;
+  font-weight: 400;
+  color: #8a6078;
+}
+.pw-main-tabs {
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid #e9eaf0;
+  margin-top: 20px;
+  height: 44px;
+  align-items: center;
+}
+.pw-main-tabs b {
+  font-size: 15px;
+  font-weight: 400;
+  color: #727b8b;
+  height: 100%;
+  padding: 8px 0;
+}
+.pw-main-tabs b.active {
+  color: #242a36;
+  border-bottom: 2px solid #c45796;
+}
+.pw-main-tabs small {
+  font-size: 10px;
+  color: #926b83;
+}
+.pw-create {
+  padding: 140px 50px;
+  text-align: center;
+}
+.pw-create > span {
+  font-size: 14px;
+  color: #8d667e;
+}
+.pw-create h3 {
+  font-size: 30px;
+  margin: 16px 0;
+}
+.pw-choice {
+  margin-top: 40px;
+  border: 1px solid #e6e8ee;
+  border-radius: 14px;
+  padding: 24px;
+  text-align: left;
+}
+.pw-choice > div {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+.pw-choice b,
+.pw-chat-choice {
+  padding: 12px;
+  border-radius: 8px;
+  background: #f6f5f9;
+  font-size: 14px;
+}
+.pw-code {
+  margin-top: 25px;
+  border: 1px solid #e3e6ed;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.pw-code header {
+  padding: 16px 22px;
+  background: #f5f6f9;
+  font:
+    14px Consolas,
+    monospace;
+}
+.pw-code small {
+  float: right;
+  color: #657083;
+}
+.pw-code pre {
+  min-height: 440px;
+  padding: 24px;
+  font:
+    17px/2.2 Consolas,
+    monospace;
+  color: #48456e;
+  white-space: pre-wrap;
+}
+.pw-checks {
+  display: flex;
+  gap: 18px;
+  padding: 20px;
+  border-top: 1px solid #eceef4;
+}
+.pw-checks span {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  color: #497461;
+  font-size: 13px;
+}
+.pw-graph {
+  display: flex;
+  gap: 18px;
+  height: 680px;
+  padding-top: 24px;
+}
+.pw-node-rail {
+  width: 195px;
+  flex-shrink: 0;
+  border-right: 1px solid #edf0f5;
+  padding-right: 14px;
+  font-size: 12px;
+}
+.pw-node-rail strong {
+  font-size: 13px;
+}
+.pw-node-rail > div {
+  padding: 15px 6px;
+  font-family: Consolas, monospace;
+  border-radius: 7px;
+}
+.pw-node-rail small {
+  display: block;
+  color: #7b8291;
+  font-size: 10px;
+}
+.pw-lanes {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 195px;
+}
+.pw-lane-title {
+  font-size: 14px;
+  white-space: nowrap;
+}
+.pw-lane-title small {
+  display: block;
+  font-size: 10px;
+  color: #7a8390;
+}
+.pw-edges {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 620px;
+}
+.pw-node {
+  position: absolute;
+  width: 270px;
+  min-height: 104px;
+  padding: 12px;
+  border: 1px solid #dce1eb;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px #40486707;
+}
+.pw-node header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+.pw-node header strong {
+  font:
+    13px Consolas,
+    monospace;
+}
+.pw-node header span {
+  font-size: 10px;
+  background: #f2f3f8;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.cm-app-overlay .pw-node p {
+  font-size: 11px !important;
+  margin: 9px 0 !important;
+}
+.pw-node footer {
+  display: flex;
+  justify-content: space-between;
+  color: #778193;
+  font-size: 9px;
+}
+.pw-node code {
+  font-size: 10px;
+}
+.pw-node em {
+  display: block;
+  font-style: normal;
+  font-size: 10px;
+  color: #845176;
+  margin-top: 7px;
+}
+.pw-node.ghost {
+  border-style: dashed;
+  background: #fafbfc;
+}
+.pw-node.selected,
+.pw-node-rail .selected,
+.pw-choice .selected {
+  border-color: #c59aae;
+  background: #fdf7fa;
+}
+.pw-graph-note {
+  position: absolute;
+  bottom: 0;
+  font-size: 12px;
+  color: #767f8e;
+}
+.pw-section-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 21px;
+  margin: 26px 0;
+}
+.pw-section-title > span {
+  font-size: 12px;
+  color: #7d6878;
+  align-self: center;
+}
+.pw-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.pw-fields > div {
+  padding: 17px 20px;
+  border: 1px solid #e5e8ef;
+  border-radius: 9px;
+  background: #fcfcfd;
+}
+.pw-fields small {
+  display: block;
+  color: #747e8e;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.pw-fields strong {
+  font-size: 17px;
+  font-weight: 400;
+}
+.pw-run-button {
+  margin: 30px 0 20px auto;
+  width: 170px;
+  border-radius: 22px;
+  background: #343342;
+  color: white;
+  padding: 11px;
+  text-align: center;
+}
+.pw-running {
+  position: relative;
+  padding-top: 12px;
+  border-top: 4px solid #eceef4;
+}
+.pw-running > span {
+  position: absolute;
+  height: 4px;
+  background: #9a73a6;
+  left: 0;
+  top: -4px;
+}
+.pw-running strong {
+  float: right;
+  font-size: 25px;
+}
+.pw-footnote {
+  margin-top: 24px;
+  font-size: 11px;
+  color: #747f8f;
+}
+.pw-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.pw-metrics > div {
+  border: 1px solid #e7eaf0;
+  border-radius: 10px;
+  padding: 15px;
+}
+.pw-metrics small {
+  display: block;
+  font-size: 12px;
+  color: #707b8e;
+}
+.pw-metrics strong {
+  display: block;
+  font-size: 27px;
+  font-weight: 400;
+  margin-top: 8px;
+}
+.pw-chart {
+  padding: 20px;
+  border: 1px solid #e5e8ef;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+.pw-chart header,
+.pw-trades header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+}
+.pw-chart small,
+.pw-trades small {
+  font-size: 11px;
+  color: #798295;
+}
+.pw-chart svg {
+  width: 100%;
+  height: 260px;
+  margin-top: 10px;
+}
+.pw-chart footer {
+  font-size: 10px;
+  color: #8590a1;
+}
+.pw-chart footer span {
+  float: right;
+}
+.pw-trades {
+  margin-top: 25px;
+}
+.pw-trades > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #edf0f5;
+  font-size: 13px;
+}
+.pw-trades b {
+  font-weight: 400;
+}
+.pw-reference {
+  position: absolute;
+  bottom: 139px;
+  left: 20px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #916380;
+  background: #f8f0f5;
+  border-radius: 8px;
+}
+.pw-enter {
+  animation: pw-enter 0.35s ease both;
+}
+@keyframes pw-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.cm-paused .pw-enter {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pw-enter,
+  .pw-log-row {
+    animation: none;
+  }
+}

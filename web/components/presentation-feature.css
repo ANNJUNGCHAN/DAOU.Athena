@@ -1,0 +1,168 @@
+.pm-video-slide,
+.pm-capability-slide,
+.pm-companions-slide {
+  display: flex;
+  width: min(1500px, calc(100% - 96px));
+  height: 100%;
+  margin: auto;
+  padding-block: clamp(20px, 3vh, 38px);
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pm-video-slide > header {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(420px, 1.1fr);
+  align-items: end;
+  gap: clamp(30px, 5vw, 80px);
+  margin-bottom: clamp(18px, 2.5vh, 28px);
+}
+
+.pm-video-slide header h2,
+.pm-capability-slide header h2,
+.pm-companions-slide header h2 {
+  margin: 0;
+  font-family: 'Daki Title', var(--font-sans);
+  font-size: clamp(34px, 3.5vw, 58px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+}
+
+.pm-video-slide header > p,
+.pm-capability-slide header > p,
+.pm-companions-slide header > p {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: clamp(14px, 1.05vw, 17px);
+  line-height: 1.65;
+}
+
+.pm-capability-slide > header {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.62fr) minmax(360px, 1fr);
+  align-items: end;
+  gap: clamp(12px, 2vw, 34px) clamp(32px, 5vw, 90px);
+  margin-bottom: clamp(20px, 3vh, 34px);
+}
+
+.pm-capability-slide > header .pm-eyebrow {
+  grid-column: 1 / -1;
+}
+
+.pm-capability-slide > figure {
+  overflow: hidden;
+  min-height: 0;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: clamp(22px, 2.4vw, 38px);
+  background: var(--muted);
+  box-shadow: 0 22px 60px rgba(24, 33, 54, 0.1);
+}
+
+.pm-capability-slide > figure img {
+  display: block;
+  width: 100%;
+  height: min(58vh, 680px);
+  object-fit: contain;
+}
+
+.pm-companions-slide > header {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(400px, 1fr);
+  align-items: end;
+  gap: 12px clamp(40px, 6vw, 100px);
+  margin-bottom: clamp(28px, 5vh, 58px);
+}
+
+.pm-companions-slide > header .pm-eyebrow {
+  grid-column: 1 / -1;
+}
+
+.pm-companions-slide > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(22px, 3vw, 44px);
+}
+
+.pm-companions-slide section {
+  min-height: clamp(220px, 28vh, 330px);
+  padding: clamp(28px, 3.5vw, 52px);
+  border: 1px solid var(--border);
+  border-radius: clamp(22px, 2.4vw, 36px);
+  background: var(--background);
+  box-shadow: 0 18px 50px rgba(24, 33, 54, 0.08);
+}
+
+.pm-companions-slide section svg {
+  margin-bottom: clamp(28px, 4vh, 46px);
+  color: var(--ring);
+}
+
+.pm-companions-slide section h3 {
+  margin: 0;
+  font-family: 'Daki Title', var(--font-sans);
+  font-size: clamp(25px, 2.3vw, 38px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+
+.pm-companions-slide section p {
+  max-width: 50ch;
+  margin: 14px 0 0;
+  color: var(--muted-foreground);
+  font-size: clamp(14px, 1vw, 17px);
+  line-height: 1.7;
+}
+
+@media (max-width: 1000px) {
+  .pm-stage:has(.pm-video-slide, .pm-capability-slide, .pm-companions-slide) {
+    overflow-y: auto;
+  }
+
+  .pm-video-slide,
+  .pm-capability-slide,
+  .pm-companions-slide {
+    width: calc(100% - 32px);
+    min-height: 100%;
+    height: auto;
+    justify-content: flex-start;
+  }
+
+  .pm-capability-slide > figure img {
+    height: auto;
+    aspect-ratio: 3 / 2;
+  }
+}
+
+@media (max-width: 700px) {
+  .pm-video-slide > header,
+  .pm-capability-slide > header,
+  .pm-companions-slide > header {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .pm-video-slide header h2,
+  .pm-capability-slide header h2,
+  .pm-companions-slide header h2 {
+    font-size: 30px;
+  }
+
+  .pm-capability-slide > header .pm-eyebrow,
+  .pm-companions-slide > header .pm-eyebrow {
+    grid-column: auto;
+  }
+
+  .pm-capability-slide > figure {
+    border-radius: 17px;
+  }
+
+  .pm-companions-slide > div {
+    grid-template-columns: 1fr;
+  }
+
+  .pm-companions-slide section {
+    min-height: 0;
+  }
+}

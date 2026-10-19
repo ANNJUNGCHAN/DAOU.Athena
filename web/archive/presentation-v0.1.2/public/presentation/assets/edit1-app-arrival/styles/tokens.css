@@ -1,0 +1,202 @@
+/* palette.md 계승. 색을 새로 만들지 않는다. */
+/* 설치 머신에 Daki가 있으면 local()/Windows Fonts 경로를 쓰고, 없으면 즉시
+ * 시스템 한글로 넘긴다. src가 404인데 font-display 기본(block)이면 한글이
+ * 수 초 동안 안 그려진다(실측: 모드 라벨 font-weight 300). */
+@font-face {
+  font-family: 'Daki';
+  src: local('Daki Light'), local('Daki L'), local('Daki'), url('../fonts/daki-light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Daki';
+  src: local('Daki Medium'), local('Daki M'), local('Daki'), url('../fonts/daki-medium.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+/* Daki Bold unavailable in this workspace; original font-strong fallback applies. */
+@font-face {
+  font-family: 'Daki Title';
+  src: local('Daki Title'), local('Daki Medium Title'), local('DakiMTitle'), url('../fonts/daki-title.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* Daki가 없는 머신의 한글 폴백은 Noto Sans KR인데, 그 폰트의 글리프 상자가
+ * ascent 118.75% + descent 31.25% = 150%em이라 Paper가 지정한 줄 높이 125%
+ * (16px 본문의 line-height 20px)를 넘는다. fit-content 보드는 슬랙이 0이라
+ * 마지막 행의 상자가 2px 삐져나온다(15R0-2 · 15RX-2, 4폭 전부). 컨테이너를
+ * 늘리는 대신 폴백 폰트가 Paper의 줄 높이를 지키게 metric을 죈다 — 100:25는
+ * Noto의 ascent:descent 비(3.8:1)를 거의 그대로 두므로 기준선이 1px만 오른다.
+ * 자폭(advance)은 override 대상이 아니라 f860bb0이 지킨 가로 metric은 불변이다.
+ * Daki가 설치된 머신에서는 이 별칭이 스택 앞의 Daki에 밀려 아무 것도 안 바뀐다. */
+@font-face {
+  font-family: 'Noto Sans KR Athena';
+  src: local('Noto Sans KR');
+  ascent-override: 100%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+
+  /* 표면 — 백색 유리 */
+  --color-k-bg: #eef0f4;
+  --color-k-panel: #ffffff;
+  --color-k-panel2: #fafbfc;
+  --color-k-panel3: #f4f5f8;
+  --color-k-line: rgb(16 19 26 / 14%);
+  --color-k-line-soft: rgb(16 19 26 / 8%);
+
+  /* 텍스트 — 유리 위 잉크 */
+  --color-k-text: #14171d;
+  --color-k-dim: #5b6270;
+  --color-k-faint: #8b93a1;
+
+  /* 텍스트 밝기 알파 변형 — 4단 계약은 유지하고 기준색만 잉크로 뒤집는다.
+     새 알파가 필요하면 단계를 늘리지 말고 가장 가까운 단계를 쓴다. */
+  --color-k-bright: rgb(16 19 26 / 92%);
+  --color-k-soft: rgb(16 19 26 / 62%);
+  --color-k-hint: rgb(16 19 26 / 45%);
+  --color-k-ghost: rgb(16 19 26 / 30%);
+
+  /* 가격 의미색 — 흰 유리 위 대비를 위해 채도를 낮추고 명도를 내린다(의미는 불변) */
+  --color-up: #d92b2b;
+  --color-down: #1f6fd4;
+  --color-flat: #6b7480;
+
+  /* 브랜드 — 인터랙션 지점 하나에만 */
+  --color-brand: #ee137b;
+  --color-navy: #9b9fe6;
+
+  /* 상태색 — bad는 up과 충돌하므로 오류에 warn(주황)을 쓴다 */
+  --color-ok: #5fce3f;
+  --color-warn: #ff9838;
+  --color-info: #4d9fff;
+
+  /* 유리 사다리 — 2026-08-19 결정(질의응답): "광량 3단 고정·같은 단계 값 동일"
+     규범을 현실의 값 사다리로 개정하고 여기를 SSOT로 삼는다(soul.md §7 완화책 2 개정).
+     순서 계약: window < card < canvas < window-max. verify.js 검증16이 이 값과
+     실제 표면 렌더 값의 일치·순서를 단언한다 — 값을 바꾸려면 여기만 바꾼다.
+     카드가 캔버스 창보다 얇은 이유: 카드는 blur(14px)라는 별도 축을 함께 갖는다.
+
+     2026-08-22 팔레트 반전과 함께 재조정(사용자 지시 "애플 Liquid Glass 형태 그대로").
+     경로: 창 재질(acrylic)을 끄고 투명창으로 갔으므로 이 값이 곧 화면에 보이는 막의
+     전부다. 0.06~0.20까지 내려봤더니 "너무 투명"이었고, 0.55에서는 어두운 바탕화면
+     위에서 중간 회색이 돼 잉크 글씨가 뭉갰다. 애플 레퍼런스가 어떤 배경에서도 읽히는
+     이유는 강한 블러로 뒤를 지우기 때문인데 우리는 창 뒤를 블러할 수 없다(Chromium은
+     페이지 안쪽만 흐린다). 블러로 못 지우면 막의 밝기로 지운다 — 거의 흰 패널로 올려
+     가독을 바탕화면과 무관하게 만든다. 2026-09-08부터 가장 불투명한 값으로 고정한다. */
+  --glass-window: 0.96;      /* 대화 창 기본(뒤=데스크톱) */
+  --glass-card: 0.97;        /* 카드 — backdrop-filter blur(14px)와 짝 */
+  --glass-canvas: 0.98;      /* 캔버스 창 표면 */
+  --glass-window-max: 0.99;  /* 대화 창 확장(뒤=캔버스) */
+
+  --ease: cubic-bezier(.2, 0, 0, 1);
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --tracking-num: -1px;
+
+  --font-body: 'Daki', 'Noto Sans KR Athena', 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', -apple-system, 'Segoe UI', sans-serif;
+  --font-strong: 'Daki B', 'Noto Sans KR Athena', 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Daki Title', 'Noto Sans KR Athena', 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* 글자 크기 스케일 — 2026-08-19 결정(질의응답): 0.5px 단위 임의값 12종 난립을
+     유한 단계로 접는다. 규칙: 금융 판단에 직접 쓰이는 텍스트는 --text-sm(12px) 이상,
+     --text-xs 이하는 순수 장식·보조 힌트에만. 새 값이 필요하면 단계를 늘리지 말고
+     가장 가까운 단계를 쓴다(soul.md §7 "타이포는 극도로 절제"). */
+  --text-2xs: 10px;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 15px;
+  --text-xl: 20px;
+  --text-display: 28px;
+  --text-hero: 72px;
+
+  /* 줄높이·라운드 스케일 — Paper 파일 토큰 실값(2026-08-27 get_tokens 실측).
+     chat.css(.turn-fail-card)·orb.css가 이미 var()로 참조 중이었으나 정의가
+     없어 라운드가 0으로 떨어지고 있었다(B8 감사 발견). */
+  --leading-tight: 16px;
+  --leading-normal: 20px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
+  --radius-full: 999px;
+  /* 카드 표면 껍데기 라운드 — Paper 라운드 사다리에는 없는 값이다(사다리 최대는
+     2xl 16px). 카드 표면 보드 96장의 루트 실측이 28px 62장 · 16px 27장 · 24px 3장 ·
+     미지정 4장으로 갈려 카드마다 껍데기가 달랐고, 2026-09-07 사용자 확정으로
+     다수값 28px을 정본으로 세운다(board-surface.css가 유일한 사용처).
+     Paper 원본도 이 값으로 맞춘다 — 그때 사다리에 정식으로 올린다. */
+  --radius-card: 28px;
+}
+
+/* 글자 크기 5단계 (2026-08-19 사용자 지시 "글자가 너무 큼") — 설정 › 화면 › 글자
+ * 크기. 값의 SSOT는 lib/main/prefs.js(fontSize: xs/sm/md/lg/xl)이고 렌더러가
+ * <html data-font-size="...">로 적용한다. md는 :root 기본값 그대로라 셀렉터가 없다.
+ * "금융 판단 텍스트는 12px 이상" 하한은 기본 스케일(md)의 규칙이다 — xs/sm은
+ * 사용자가 명시적으로 고른 축소이므로 하한 위반이 아니라 선호 적용이다(질의응답). */
+:root[data-font-size='xs'] {
+  --text-2xs: 8px;
+  --text-xs: 9px;
+  --text-sm: 10px;
+  --text-base: 11px;
+  --text-md: 12px;
+  --text-lg: 13px;
+  --text-xl: 17px;
+  --text-display: 23px;
+  --text-hero: 58px;
+}
+:root[data-font-size='sm'] {
+  --text-2xs: 9px;
+  --text-xs: 10px;
+  --text-sm: 11px;
+  --text-base: 12px;
+  --text-md: 13px;
+  --text-lg: 14px;
+  --text-xl: 18px;
+  --text-display: 26px;
+  --text-hero: 65px;
+}
+:root[data-font-size='lg'] {
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 17px;
+  --text-xl: 22px;
+  --text-display: 31px;
+  --text-hero: 79px;
+}
+:root[data-font-size='xl'] {
+  --text-2xs: 12px;
+  --text-xs: 13px;
+  --text-sm: 15px;
+  --text-base: 16px;
+  --text-md: 17px;
+  --text-lg: 19px;
+  --text-xl: 25px;
+  --text-display: 35px;
+  --text-hero: 90px;
+}
+
+* { box-sizing: border-box; }
+/* [hidden]의 UA 기본값(display:none)은 author 스타일시트의 어떤 display 규칙에도
+   밀린다(둘 다 author origin이면 specificity/later-wins 규칙을 따르는데, 요소별
+   display:flex 규칙이 흔히 더 구체적이거나 나중에 온다) — 실측으로 발견(#app,
+   #lockHint가 hidden 상태에서도 그려짐). 전역으로 우선순위를 강제한다. */
+[hidden] { display: none !important; }
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+body {
+  font-family: var(--font-body);
+  color: var(--color-k-text);
+  font-variant-numeric: tabular-nums;
+}

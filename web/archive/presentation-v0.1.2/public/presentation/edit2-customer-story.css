@@ -1,0 +1,26 @@
+/* Fixed stage inherits the deck's viewport scaling; no internal scroll. */
+.e4-stage{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;background:#050911!important;color:#edf4ff;font-family:Daki,'Noto Sans KR',sans-serif}
+.e4-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.e4-heading{position:absolute;left:100px;right:100px;top:55px;z-index:2}
+.e4-heading h1{font:400 60px/1.2 'Daki Title',Daki,'Noto Sans KR',sans-serif;letter-spacing:-2px;margin:0}
+.e4-heading p{font:400 25px/1.5 Daki,'Noto Sans KR',sans-serif;color:#91a1b9;margin:24px 0 0}
+.e4-customer{position:absolute;left:350px;right:350px;top:330px;text-align:center}
+.e4-customer p{font-size:33px;color:#9bacc5;margin:0 0 34px}
+.e4-customer h1{font:400 115px/1.25 'Daki Title',Daki,'Noto Sans KR',sans-serif;letter-spacing:-5px;margin:0 0 40px}
+.e4-customer div{font-size:29px;color:#bdc9da}.e4-customer small{display:block;margin-top:24px;font-size:23px;color:#8191a9}
+.e4-cards .e4-heading,.e4-burden .e4-heading{background:linear-gradient(#050911 30%,#05091100);padding-bottom:50px}
+.e4-problem,.e4-dissolve .e4-heading{position:absolute;top:445px;left:390px;right:390px;text-align:center;padding:0;text-shadow:0 4px 30px #050911}
+.e4-problem{background:radial-gradient(ellipse,#050911 35%,#05091100 72%)}
+.e4-problem span,.e4-dissolve .e4-heading h1{display:block;font:400 64px/1.2 'Daki Title',Daki,'Noto Sans KR',sans-serif;letter-spacing:-2px;color:#edf4ff;margin:0}
+.e4-problem strong,.e4-dissolve .e4-heading p{display:block;font:400 31px/1.5 Daki,'Noto Sans KR',sans-serif;letter-spacing:normal;color:#b8c9df;margin:24px 0 0}
+.e4-arrival{background:#fff!important}
+.e4-brand{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#141b29}
+.e4-brand h1{position:relative;font:300 180px/1.15 Daki,Arial,sans-serif;letter-spacing:-.04em;margin:0 0 38px;white-space:nowrap}
+.e4-brand-measure{visibility:hidden}
+.e4-brand-typed{position:absolute;inset:0;white-space:pre;color:#0e20b2}
+.e4-brand-typed::after{content:'';display:inline-block;width:3px;height:.86em;margin-left:.025em;background:#ee137b;vertical-align:-.025em;visibility:hidden}
+.e4-brand-typed.is-typing::after,.e4-brand-typed.is-complete::after{visibility:visible}
+.e4-brand-typed.is-complete::after{animation:e4-caret 1s step-end infinite}
+@keyframes e4-caret{50%{opacity:0}}
+.e4-brand p{font-size:27px;letter-spacing:-.5px;color:#718096;margin:0;opacity:0}
+@media(prefers-reduced-motion:reduce){.e4-stage *{animation:none!important;transition:none!important}}

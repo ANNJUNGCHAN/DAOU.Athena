@@ -1,0 +1,30 @@
+/* Curated evidence rails and one connected diagram; 1920 × 1080 stage. */
+.e2-brokers{position:absolute;inset:0;background:#f5f6f8;color:#11131a;font-family:'Noto Sans KR',sans-serif;overflow:hidden}
+.e2-head{position:absolute;left:100px;right:100px;top:54px;z-index:10;pointer-events:none}
+.e2-head h1{font:400 62px/1.2 'Daki Title',Daki,'Noto Sans KR',sans-serif;letter-spacing:-2px;margin:0}
+.e2-head p{font:400 25px/1.45 Daki,'Noto Sans KR',sans-serif;letter-spacing:-.6px;color:#6d788b;margin:25px 0 0}
+.e2-source{position:absolute;left:100px;right:100px;bottom:24px;color:#778398;font:16px/1.45 'Noto Sans KR';z-index:10}
+.e2-broker-lanes{position:absolute;left:100px;right:100px;top:245px;bottom:88px;display:grid;grid-template-columns:1fr 1fr;gap:70px}
+.e2-broker-lane{min-width:0}.e2-broker-lane+.e2-broker-lane{position:relative}.e2-broker-lane+.e2-broker-lane:before{content:'';position:absolute;left:-35px;top:0;bottom:0;width:1px;background:#d9dfe8}
+.e2-brand-rail{height:104px;display:flex;align-items:flex-start;justify-content:space-between;gap:28px;padding:12px 0 24px}
+.e2-brand-rail img{position:static;display:block;object-fit:contain;object-position:left center;max-width:270px;height:53px;width:auto;flex:none}.e2-brand-rail .e2-kis-mark{height:42px;margin-top:6px;image-rendering:auto}.e2-brand-rail span{font:18px/1.5 'Noto Sans KR';color:#71809a;align-self:center;white-space:nowrap}
+.e2-document-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px 24px;grid-template-rows:300px 302px}
+.e2-document{margin:0;min-width:0;display:flex;flex-direction:column;overflow:visible;background:#fff;border:1px solid #dde3eb;border-radius:15px;box-shadow:0 10px 28px #283d5c09}
+.e2-document figcaption{height:59px;flex:none;display:flex;align-items:center;gap:13px;padding:0 21px;color:#202b3b}.e2-document figcaption span{font:13px Consolas;color:#a1aabc}.e2-document figcaption b{font-size:22px;font-weight:500;white-space:nowrap}
+.e2-document-image{flex:1;min-height:0;margin:0 14px 15px;display:flex;align-items:center;justify-content:center;background:#f9fafc;overflow:visible;border-radius:4px}
+.e2-document-image img{display:block;width:100%;height:100%;max-width:100%;object-fit:contain;object-position:center;position:static;transform:none;filter:none;border-radius:0}
+.e2-document-2,.e2-document-5{grid-column:1 / -1}.e2-document-2 .e2-document-image,.e2-document-5 .e2-document-image{margin-left:28px;margin-right:28px}.e2-document-2 .e2-document-image img{object-position:center}.e2-document-5 .e2-document-image img{object-position:left center}
+.e2-cs{background:#02030a!important;color:#edf2fb;font-family:'Noto Sans KR',sans-serif;overflow:hidden}.e2-cs .e2-head p{color:#9ca9bf}.e2-cs .e2-source{font-size:15px;color:#8290aa;bottom:19px}
+.e2-diagram,.e2-system{position:absolute;inset:0;width:1920px;height:1080px;overflow:visible}.e2-system text{font-family:'Noto Sans KR',sans-serif;fill:#dfe8f8;font-weight:400}
+.e2-flow-line{fill:none;stroke:#5c729e;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#e2-arrow)}
+.e2-flow-line.e2-failure{stroke:#be568e;stroke-width:2;stroke-dasharray:5 8}.e2-flow-line.e2-test-route{stroke:#384661;stroke-width:1.4;stroke-dasharray:3 8;marker-end:none}
+.e2-request-circle{fill:#101a34;stroke:#334978;stroke-width:1.5}.e2-symbol{fill:none;stroke:#a2baff;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.e2-service-box{fill:#10204a;stroke:#34519a;stroke-width:1.5}.e2-auth-box{fill:#101624;stroke:#39465f;stroke-width:1.3}.e2-decision-shape{fill:#221327;stroke:#a83d77;stroke-width:1.6}
+.e2-system .e2-kicker{font:12px Consolas,monospace;letter-spacing:1.1px;fill:#889cca}.e2-system .e2-node-title{font-size:31px;letter-spacing:-1px;fill:#f1f5fd}.e2-system .e2-node-sub{font-size:21px;fill:#b5c4df}.e2-system .e2-node-small{font-size:20px;fill:#b6c5e2}
+.e2-table{fill:#0d1421;stroke:#486286;stroke-width:1.2}.e2-table-line{fill:none;stroke:#2c3d58;stroke-width:1}.e2-system .e2-entity-title{font:500 22px 'Noto Sans KR';fill:#cedcf1}.e2-system .e2-field-key{font:19px Consolas,monospace;fill:#a7b9d5}.e2-system .e2-field-meta{font:15px Consolas,monospace;fill:#668bb9}.e2-system .e2-relationship-label{font:18px Consolas;fill:#b7ccec}
+.e2-system .e2-route-label{font-size:17px;fill:#8aa8d6}.e2-system .e2-route-label.e2-pink{fill:#bf7fa4}.e2-system .e2-domain-label{font-size:20px;fill:#8495b2;letter-spacing:-.4px}
+.e2-retry-box{fill:#271322;stroke:#80405f;stroke-width:1}.e2-system .e2-retry-text{font-size:18px;fill:#d99fbd}
+.e2-test-baseline{stroke:#31415d;stroke-width:1.4;fill:none}.e2-tests circle{fill:#7a9cd5;stroke:#121f37;stroke-width:8;paint-order:stroke}.e2-tests text{font-size:19px;fill:#a7b6d0}.e2-tests .e2-test-label{font:16px Consolas;letter-spacing:2px;fill:#6c86ac}
+.e2-pulse{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:#e62579;box-shadow:0 0 15px #e6257966;opacity:0;pointer-events:none}
+.e2-dust-dot{position:absolute;border-radius:50%;background:#b8cffa;box-shadow:0 0 5px #759ee988;z-index:3;pointer-events:none;opacity:0}
+.e2-cs .cc-field{opacity:0}

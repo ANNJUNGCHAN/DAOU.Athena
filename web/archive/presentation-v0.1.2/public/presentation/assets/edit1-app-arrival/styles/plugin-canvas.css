@@ -1,0 +1,1087 @@
+/* Paper 47/48 — 중앙 플러그인 캔버스. 외곽 셸/사이드바/채팅은 상위 셸 소유다. */
+.plugin-canvas,
+.plugin-canvas * {
+  box-sizing: border-box;
+}
+
+.plugin-canvas {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  overflow: auto;
+  color: #10131aeb;
+  font-family: var(--font-body, "Daki", system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+.plugin-canvas-panel {
+  min-height: 100%;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #ffffffeb;
+  background-image: linear-gradient(135deg, #ffffff0f 0%, #ffffff00 46%, #ffffff0a 100%);
+  border-radius: 12px;
+  box-shadow: #fffdf894 0 1px 0 inset, #10131a14 0 -1px 0 inset, #fff0d60d 0 0 70px inset;
+}
+
+.plugin-canvas-panel.plugin-canvas-manage {
+  gap: 14px;
+}
+
+.plugin-canvas-header {
+  min-height: 33px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.plugin-canvas-header.is-manage {
+  gap: 8px;
+}
+
+.plugin-canvas-title,
+.plugin-canvas-section-title,
+.plugin-canvas-description,
+.plugin-canvas-marketplace-note {
+  margin: 0;
+}
+
+.plugin-canvas-title {
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.plugin-canvas-spacer {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.plugin-canvas-search {
+  width: 260px;
+  min-width: 0;
+  flex: 0 1 260px;
+  padding: 8px 14px;
+  border: 1px solid #10131a14;
+  border-radius: 10px;
+  outline: 0;
+  background: #fff;
+  color: #10131aeb;
+  font: 400 12px/16px var(--font-body, "Daki", system-ui, sans-serif);
+}
+
+.plugin-canvas-search::placeholder {
+  color: #5b6270;
+  opacity: 1;
+}
+
+.plugin-canvas-search:focus-visible {
+  border-color: var(--color-down, #1f6fd4);
+  box-shadow: 0 0 0 2px #1f6fd426;
+}
+
+.plugin-canvas-action {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font: 400 12px/16px var(--font-body, "Daki", system-ui, sans-serif);
+}
+
+.plugin-canvas-action.is-manage {
+  padding: 4px 12px;
+  background: #e31272;
+  color: #fff;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  line-height: 14px;
+}
+
+/* 서버 추가는 이 화면의 주 동작이지만 "관리"와 색을 다투지 않게 외곽선으로 둔다. */
+.plugin-canvas-action.is-add {
+  margin-right: 6px;
+  padding: 4px 12px;
+  border: 1px solid #d5d8de;
+  background: #fff;
+  color: #10131a;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  line-height: 14px;
+}
+
+.plugin-canvas-snippet-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d5d8de;
+  border-radius: 8px;
+  background: #fbfbfc;
+  color: #10131a;
+  font: 400 12px/17px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  resize: vertical;
+}
+
+/* 재시작 안내 — 경고가 아니라 사실 고지라 톤을 낮춘다.
+   초안 발산 알림도 같은 사실 고지라 색을 공유한다(치수는 아래에서 덮는다). */
+.plugin-canvas-restart-notice,
+.plugin-canvas-draft-divergence {
+  margin: 4px 0 12px;
+  padding: 9px 12px;
+  border: 1px solid #f0d8a8;
+  border-radius: 8px;
+  background: #fdf6e7;
+  color: #7a5a12;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.plugin-canvas-sheet-error {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fdecf3;
+  color: #a3084b;
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.plugin-canvas-action.is-primary {
+  padding: 5px 14px;
+  background: #e31272;
+  color: #fff;
+}
+
+.plugin-canvas-action.is-secondary {
+  padding: 5px 14px;
+  background: #10131a0a;
+  color: #10131ab3;
+}
+
+.plugin-canvas-action:hover,
+.plugin-canvas-action:focus-visible {
+  filter: brightness(0.96);
+}
+
+.plugin-canvas-action:focus-visible,
+.plugin-canvas-toggle:focus-visible {
+  outline: 2px solid var(--color-down, #1f6fd4);
+  outline-offset: 2px;
+}
+
+.plugin-canvas-description {
+  color: #5b6270;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.plugin-canvas-section-title {
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.plugin-canvas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.plugin-canvas-card {
+  min-width: 0;
+  min-height: 59px;
+  padding: 13px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #10131a12;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.plugin-canvas-icon {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: #10131a0a;
+}
+
+.plugin-canvas-icon svg {
+  flex: 0 0 auto;
+}
+
+.plugin-canvas-card-copy {
+  min-width: 0;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.plugin-canvas-card-name,
+.plugin-canvas-manage-name {
+  overflow: hidden;
+  color: #10131aeb;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plugin-canvas-card-description,
+.plugin-canvas-manage-source {
+  overflow: hidden;
+  color: #5b6270;
+  font-size: 11px;
+  line-height: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 연결·승인 상태 한 줄. 설명보다 한 단계 더 옅게 둬서 서버 이름 → 실행 커맨드
+   → 상태 순서로 읽히게 한다. */
+.plugin-canvas-card-source {
+  overflow: hidden;
+  margin-top: 2px;
+  color: #7b8290;
+  font-size: 10px;
+  line-height: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plugin-canvas-empty {
+  grid-column: 1 / -1;
+  padding: 20px 14px;
+  border: 1px dashed #10131a1f;
+  border-radius: 12px;
+  color: #5b6270;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+}
+
+.plugin-canvas-count {
+  flex: 0 0 auto;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #10131a0a;
+  color: #10131a9e;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.plugin-canvas-count.is-primary {
+  background: var(--color-brand, #ee137b);
+  color: #fff;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+}
+
+.plugin-canvas-manage-list {
+  overflow: hidden;
+  border: 1px solid #10131a12;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.plugin-canvas-manage-row {
+  min-height: 43px;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #10131a0a;
+}
+
+.plugin-canvas-manage-row:last-child {
+  border-bottom: 0;
+}
+
+.plugin-canvas-toggle {
+  width: 34px;
+  height: 20px;
+  flex: 0 0 34px;
+  position: relative;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.plugin-canvas-toggle.is-on {
+  background: var(--color-brand, #ee137b);
+}
+
+.plugin-canvas-toggle.is-off {
+  background: #10131a26;
+}
+
+.plugin-canvas-toggle-knob {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 120ms ease;
+}
+
+.plugin-canvas-toggle.is-on .plugin-canvas-toggle-knob {
+  transform: translateX(14px);
+}
+
+.plugin-canvas-marketplace-note {
+  color: #5b6270;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.plugin-canvas-sheet-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  background: #10131a38;
+  backdrop-filter: blur(8px);
+}
+
+.plugin-canvas-sheet {
+  width: min(620px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #10131a1a;
+  border-radius: 14px;
+  background: #fffffff5;
+  box-shadow: #fffdf894 0 1px 0 inset, #fffdf826 1px 0 0 inset, #10131a1f 0 -1px 0 inset, #10131a42 0 24px 64px;
+}
+
+.plugin-canvas-sheet-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #10131a14;
+}
+
+.plugin-canvas-sheet-title,
+.plugin-canvas-sheet-section-title {
+  margin: 0;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-weight: 400;
+}
+
+.plugin-canvas-sheet-title {
+  flex: 0 0 auto;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.plugin-canvas-sheet-subtitle {
+  min-width: 0;
+  flex: 1 1 0;
+  color: #5b6270;
+  font-size: 11px;
+  line-height: 14px;
+  text-align: right;
+}
+
+.plugin-canvas-sheet-body {
+  min-height: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+}
+
+.plugin-canvas-sheet-info {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border: 1px solid #10131a24;
+  border-radius: 8px;
+  background: var(--color-k-panel2, #fafbfc);
+}
+
+.plugin-canvas-sheet-plugin-name {
+  color: #10131aeb;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 17px;
+}
+
+.plugin-canvas-sheet-source,
+.plugin-canvas-sheet-plugin-description,
+.plugin-canvas-sheet-feature-description {
+  color: #5b6270;
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.plugin-canvas-sheet-section-title {
+  padding-top: 4px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.plugin-canvas-sheet-features {
+  overflow: hidden;
+  border: 1px solid #10131a14;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.plugin-canvas-sheet-feature {
+  min-height: 44px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #10131a0a;
+}
+
+.plugin-canvas-sheet-feature:last-child {
+  border-bottom: 0;
+}
+
+.plugin-canvas-sheet-feature-copy {
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.plugin-canvas-sheet-feature-name {
+  color: #10131aeb;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.plugin-canvas-sheet-requested,
+.plugin-canvas-sheet-count {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #10131a0f;
+  color: #5b6270;
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.plugin-canvas-sheet-count {
+  align-self: flex-start;
+}
+
+.plugin-canvas-panel.plugin-canvas-permissions-view {
+  gap: 14px;
+}
+
+.plugin-canvas-permissions-header {
+  flex-wrap: wrap;
+}
+
+.plugin-canvas-permission-features {
+  border-radius: 12px;
+}
+
+.plugin-canvas-permission-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.plugin-canvas-permission-title {
+  display: grid;
+  gap: 4px;
+}
+
+.plugin-canvas-permission-features .plugin-canvas-sheet-feature {
+  min-height: 58px;
+  padding: 12px 14px;
+}
+
+.plugin-canvas-permission-footer {
+  margin-top: auto;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-top: 1px solid #10131a14;
+}
+
+.plugin-canvas-permission-footer .plugin-canvas-sheet-count,
+.plugin-canvas-permission-footer .plugin-canvas-sheet-actions {
+  align-self: auto;
+  padding-top: 0;
+}
+
+.plugin-canvas-sheet-warning {
+  padding: 10px 12px;
+  border: 1px solid #ff983852;
+  border-radius: 8px;
+  background: #ff98381f;
+  color: #5b6270;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.plugin-canvas-sheet-actions {
+  padding-top: 4px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.plugin-canvas-action.is-sheet-cancel {
+  padding: 7px 14px;
+  border: 1px solid #10131a1f;
+  border-radius: 7px;
+  background: #10131a0d;
+  color: #10131aeb;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.plugin-canvas-action.is-sheet-confirm {
+  padding: 10px 20px;
+  border-radius: 9px;
+  background: #e31272;
+  color: #fff;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+/* --- 관리 행: 실패 사유는 그 행 아래에 붙는다 (토글 되돌림과 한 쌍) --- */
+.plugin-canvas-manage-row {
+  flex-wrap: wrap;
+}
+
+.plugin-canvas-manage-error {
+  flex: 0 0 100%;
+  margin-top: 6px;
+  padding: 6px 9px;
+  border-radius: 7px;
+  background: #fdecf3;
+  color: #a3084b;
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.plugin-canvas-action.is-danger {
+  padding: 5px 12px;
+  border: 1px solid #a3084b29;
+  background: #fdecf3;
+  color: #a3084b;
+}
+
+.plugin-canvas-action.is-sheet-danger {
+  padding: 10px 20px;
+  border-radius: 9px;
+  background: #a3084b;
+  color: #fff;
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+/* 연결 상태 배지 — 설치됨/기능/허용과 달리 관측값이라 중립 회색을 쓴다. */
+.plugin-canvas-count.is-health {
+  max-width: 100%;
+  overflow: hidden;
+  background: #10131a0f;
+  color: #5b6270;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- probe 실패 배너 (기능 허용 화면) --- */
+.plugin-canvas-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #a3084b29;
+  border-radius: 10px;
+  background: #fdecf3;
+}
+
+.plugin-canvas-error-text {
+  min-width: 0;
+  flex: 1 1 auto;
+  color: #a3084b;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.plugin-canvas-action.is-retry {
+  flex: 0 0 auto;
+  padding: 5px 12px;
+  border: 1px solid #a3084b29;
+  background: #fff;
+  color: #a3084b;
+}
+
+.plugin-canvas-permission-hint {
+  min-width: 0;
+  flex: 0 1 auto;
+  color: #5b6270;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.plugin-canvas-boundary-note {
+  margin: 0;
+  color: #5b6270;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+/* --- 설치 승인 시트 (Paper 플러그인 02) --- */
+.plugin-canvas-sheet-boundary,
+.plugin-canvas-sheet-command,
+.plugin-canvas-sheet-location {
+  padding: 8px 12px;
+  border: 1px solid #10131a12;
+  border-radius: 8px;
+  background: #10131a05;
+  color: #5b6270;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.plugin-canvas-sheet-command {
+  font-family: var(--font-mono, "Geist Mono", ui-monospace, monospace);
+  overflow-wrap: anywhere;
+}
+
+.plugin-canvas-sheet-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 760px) {
+  .plugin-canvas-panel {
+    padding: 18px;
+  }
+
+  .plugin-canvas-header {
+    flex-wrap: wrap;
+  }
+
+  .plugin-canvas-search {
+    order: 3;
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .plugin-canvas-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plugin-canvas-header.is-manage .plugin-canvas-spacer {
+    display: none;
+  }
+
+  .plugin-canvas-permissions-header .plugin-canvas-spacer {
+    display: none;
+  }
+
+  .plugin-canvas-permission-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .plugin-canvas-permission-hint {
+    order: 3;
+  }
+
+  .plugin-canvas-manage-source {
+    display: none;
+  }
+
+  .plugin-canvas-sheet-overlay {
+    padding: 14px;
+  }
+
+  .plugin-canvas-sheet-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .plugin-canvas-sheet-subtitle {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plugin-canvas-toggle,
+  .plugin-canvas-toggle-knob {
+    transition: none;
+  }
+}
+
+/* --- 승인 카드 · 3상태 (Paper 플러그인 05 2NW8-2 · 06 2NXS-2) ---------------
+   캔버스 위에 뜨는 모달이 아니라 패널 위에 얹히는 목록이다. 폭 560px은
+   Paper 05의 카드 실값이고, 좁은 창에서는 캔버스 폭까지만 줄어든다. */
+.plugin-canvas-proposals {
+  padding: 22px 26px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Paper 09 경계 문구 — 카드가 아니라 구역의 사실 고지라 카드 톤보다 흐리다. */
+.plugin-canvas-proposal-boundary {
+  width: 560px;
+  max-width: 100%;
+  margin: 0;
+  color: var(--color-k-hint);
+  font-size: var(--text-sm);
+  line-height: 17px;
+}
+
+.plugin-canvas-proposal {
+  width: 560px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-k-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-k-panel);
+}
+
+/* 머리는 출처 알약 → 제목 순으로 읽힌다. 상태 문구(.agent-mode)는 알약 옆
+   같은 줄에 붙고, 제목은 100% 기저폭이라 늘 다음 줄이다. */
+.plugin-canvas-proposal-head {
+  padding: 16px 20px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  border-bottom: 1px solid var(--color-k-line-soft);
+}
+
+.plugin-canvas-proposal-source {
+  flex: 0 0 auto;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-k-line-soft);
+  color: var(--color-down);
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: var(--text-sm);
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+.plugin-canvas-proposal-title {
+  flex: 1 1 100%;
+  min-width: 0;
+  margin: 0;
+  color: var(--color-k-text);
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.plugin-canvas-proposal-line,
+.plugin-canvas-proposal-reason,
+.plugin-canvas-proposal-note,
+.plugin-canvas-proposal-actions {
+  margin: 12px 20px 0;
+}
+
+.plugin-canvas-proposal-head + .plugin-canvas-proposal-line,
+.plugin-canvas-proposal-head + .plugin-canvas-proposal-reason,
+.plugin-canvas-proposal-head + .plugin-canvas-proposal-note,
+.plugin-canvas-proposal-head + .plugin-canvas-proposal-actions {
+  margin-top: 16px;
+}
+
+.plugin-canvas-proposal-line {
+  color: var(--color-k-text);
+  font-size: var(--text-sm);
+  line-height: 17px;
+}
+
+.plugin-canvas-proposal-reason {
+  color: var(--color-k-dim);
+  font-size: var(--text-sm);
+  line-height: 17px;
+}
+
+/* 경계 고지는 근거보다 한 단계 더 옅다 — 제목 → 내용 → 근거 → 고지 순으로
+   읽히게 둔다. */
+.plugin-canvas-proposal-note {
+  color: var(--color-k-hint);
+  font-size: var(--text-sm);
+  line-height: 17px;
+}
+
+.plugin-canvas-proposal-actions {
+  margin-bottom: 20px;
+  padding-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* 클릭 영역 하한 32px은 여기 한 곳에서 준다(US-006). */
+.plugin-canvas-action.plugin-canvas-proposal-action {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  font-size: var(--text-sm);
+  line-height: 16px;
+}
+
+.plugin-canvas-proposal-action.is-proposal-approve {
+  padding-inline: 18px;
+  background: var(--color-brand);
+  color: var(--color-k-panel);
+}
+
+.plugin-canvas-proposal-action.is-proposal-reject {
+  border: 1px solid var(--color-k-line);
+  background: var(--color-k-line-soft);
+  color: var(--color-k-bright);
+}
+
+.plugin-canvas-proposal-action.is-proposal-again {
+  border: 1px solid var(--color-k-line);
+  background: var(--color-k-panel);
+  color: var(--color-k-soft);
+}
+
+.plugin-canvas-proposal-action:focus-visible {
+  outline: 2px solid var(--color-down);
+  outline-offset: 2px;
+}
+
+/* 누를 수 없는 버튼은 색을 지운다 — 눌러도 되는 것처럼 보이지 않게 한다.
+   hover의 밝기 변화도 함께 끊는다. */
+.plugin-canvas-proposal-action[disabled] {
+  border-color: var(--color-k-line-soft);
+  background: var(--color-k-line-soft);
+  color: var(--color-k-ghost);
+  cursor: default;
+}
+
+.plugin-canvas-proposal-action[disabled]:hover,
+.plugin-canvas-proposal-action[disabled]:focus-visible {
+  filter: none;
+}
+
+/* 만료 — 승인만 막히고 카드는 아직 살아 있다(다시 제안받기가 남는다). */
+.plugin-canvas-proposal[data-proposal-state="stale"] .plugin-canvas-proposal-title {
+  color: var(--color-k-soft);
+}
+
+.plugin-canvas-proposal[data-proposal-state="stale"] .plugin-canvas-proposal-source {
+  color: var(--color-k-hint);
+}
+
+/* 처리됨 — 카드 전체가 기록으로 가라앉는다(Paper 06 상태 6). */
+.plugin-canvas-proposal[data-proposal-state="done"] {
+  background: var(--color-k-panel2);
+}
+
+.plugin-canvas-proposal[data-proposal-state="done"] .plugin-canvas-proposal-title,
+.plugin-canvas-proposal[data-proposal-state="done"] .plugin-canvas-proposal-source {
+  color: var(--color-k-hint);
+}
+
+/* --- 권한 초안 · 발산 알림 (Paper 플러그인 01 FT6-0 · 09 3ZNO-0) ------------ */
+.plugin-canvas-draft-note {
+  margin: 0;
+  color: var(--color-k-hint);
+  font-size: var(--text-sm);
+  line-height: 14px;
+}
+
+/* 발산은 경고가 아니라 사실 고지다 — 재시작 안내와 같은 톤을 쓴다(색은 위
+   .plugin-canvas-restart-notice 규칙과 공유한다). */
+.plugin-canvas-draft-divergence {
+  margin: 0;
+  padding: 11px 13px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  font-size: var(--text-sm);
+  line-height: 17px;
+}
+
+.plugin-canvas-draft-divergence-text {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.plugin-canvas-action.is-draft-keep,
+.plugin-canvas-action.is-draft-reset {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 7px 12px;
+  border: 1px solid var(--color-k-line);
+  border-radius: var(--radius-md);
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+  line-height: 16px;
+}
+
+.plugin-canvas-action.is-draft-keep {
+  background: var(--color-k-panel);
+  color: var(--color-k-bright);
+}
+
+.plugin-canvas-action.is-draft-reset {
+  background: var(--color-k-line-soft);
+  color: var(--color-k-soft);
+}
+
+/* --- 관리 행 힌트 — 버튼이 즉시 실행하지 않는다는 사실을 그 자리에서 말한다 --- */
+.plugin-canvas-manage-hint {
+  flex: 0 0 auto;
+  color: var(--color-k-hint);
+  font-size: var(--text-xs);
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+/* --- 감사 로그 (Paper 플러그인 02 15J-0) -----------------------------------
+   4열 폭 90/180/360/120은 보드 실값이다. 도구 열만 늘고 줄어든다. */
+.plugin-canvas-audit {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plugin-canvas-audit-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.plugin-canvas-audit-head,
+.plugin-canvas-audit-row {
+  padding: 0 12px;
+  display: grid;
+  grid-template-columns: 90px 180px minmax(0, 360px) 120px;
+  align-items: center;
+  border-bottom: 1px solid var(--color-k-line-soft);
+}
+
+.plugin-canvas-audit-head {
+  min-height: 30px;
+}
+
+.plugin-canvas-audit-head > * {
+  color: var(--color-k-hint);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  line-height: 14px;
+}
+
+.plugin-canvas-audit-row {
+  min-height: 40px;
+}
+
+.plugin-canvas-audit-row:last-child {
+  border-bottom: 0;
+}
+
+.plugin-canvas-audit-time {
+  color: var(--color-k-dim);
+  font-family: var(--font-mono, "Geist Mono", ui-monospace, monospace);
+  font-size: var(--text-sm);
+  line-height: 16px;
+}
+
+.plugin-canvas-audit-plugin,
+.plugin-canvas-audit-feature {
+  overflow: hidden;
+  min-width: 0;
+  padding-right: 12px;
+  color: var(--color-k-text);
+  font-size: var(--text-base);
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plugin-canvas-audit-plugin {
+  font-family: var(--font-strong, "Daki B", system-ui, sans-serif);
+}
+
+/* 결과는 알약이다 — 셀 폭을 채우지 않고 왼쪽에 붙는다. */
+.plugin-canvas-audit-result {
+  justify-self: start;
+  min-height: 20px;
+  padding: 3px 8px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-full);
+  color: var(--color-k-text);
+  font-size: var(--text-xs);
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+.plugin-canvas-audit-result.is-success {
+  background: color-mix(in oklab, var(--color-ok) 14%, transparent);
+}
+
+.plugin-canvas-audit-result.is-failure {
+  background: color-mix(in oklab, var(--color-warn) 16%, transparent);
+}
+
+@media (max-width: 760px) {
+  .plugin-canvas-proposals {
+    padding: 18px 18px 0;
+  }
+
+  /* 좁은 창에서는 시각·별칭만 한 줄에 두고 도구·결과를 다음 줄로 흘린다. */
+  .plugin-canvas-audit-head,
+  .plugin-canvas-audit-row {
+    grid-template-columns: 90px minmax(0, 1fr);
+    gap: 2px 8px;
+    padding-block: 8px;
+  }
+
+  .plugin-canvas-audit-head > *:nth-child(3),
+  .plugin-canvas-audit-head > *:nth-child(4) {
+    display: none;
+  }
+
+  .plugin-canvas-audit-feature {
+    grid-column: 2;
+    white-space: normal;
+  }
+
+  .plugin-canvas-audit-result {
+    grid-column: 2;
+  }
+}

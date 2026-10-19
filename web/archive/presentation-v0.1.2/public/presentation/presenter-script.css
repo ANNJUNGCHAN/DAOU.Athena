@@ -1,0 +1,41 @@
+/* A separate reading dock: the slide always fits above the notes and controls. */
+:root { --notes-dock-height: clamp(190px, 30dvh, 320px); --notes-controls-height: 66px; }
+#presenter-notes[hidden] { display: none !important; }
+#presenter-notes:not([hidden]) {
+  position: fixed; inset: auto 0 0; z-index: 25;
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%; height: var(--notes-dock-height); max-height: none;
+  padding: 15px clamp(16px, 3vw, 56px) 11px; overflow: hidden;
+  border-radius: 0; border-top: 1px solid #dce1e9;
+  background: #fff; color: #202733; box-shadow: 0 -8px 32px #00000014;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+body.notes-open #viewport { height: calc(100dvh - var(--notes-dock-height) - var(--notes-controls-height)); }
+body.notes-open .deck-stage { transform: translate(-50%, -50%) scale(var(--notes-scale, .5)); }
+body.notes-open #controls { bottom: calc(var(--notes-dock-height) + 8px); }
+#notes-toggle[aria-expanded="true"] { background: #0e20b2; color: #fff; }
+.manuscript-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 10px; border-bottom: 1px solid #edf0f4; }
+.manuscript-heading { min-width: 0; display: grid; gap: 3px; }
+#manuscript-cue { font-size: clamp(13px, 1.1vw, 17px); line-height: 1.4; color: #0e20b2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#manuscript-source { font-size: 11px; line-height: 1.5; color: #727c8d; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.manuscript-actions { display: flex; flex: 0 0 auto; gap: 6px; }
+.manuscript-actions button { border: 1px solid #dfe4ec; border-radius: 7px; background: #f5f7fa; color: #354055; padding: 7px 10px; font-size: 12px; line-height: 1.4; }
+.manuscript-actions button:hover { background: #e9edf5; }
+#manuscript-scroll { overflow-y: auto; overscroll-behavior: contain; padding: 11px 8px 8px 0; scrollbar-gutter: stable; }
+#manuscript-scroll:focus-visible { outline: 2px solid #0e20b2; outline-offset: 2px; }
+#manuscript-text { max-width: 1500px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; word-break: keep-all; font-size: clamp(16px, 1.4vw, 24px); line-height: 1.7; user-select: text; }
+#manuscript-status { margin: 0; padding-top: 4px; font-size: 11px; line-height: 1.4; color: #7b8492; }
+#presenter-notes[data-load-state="error"] #manuscript-text { color: #9b2638; }
+@media (max-width: 650px) {
+  :root { --notes-dock-height: clamp(220px, 36dvh, 300px); }
+  .manuscript-header { gap: 8px; }
+  .manuscript-actions button { padding: 6px; font-size: 11px; }
+  #manuscript-source { max-width: 46vw; }
+}
+@media (max-height: 500px) {
+  :root { --notes-dock-height: 42dvh; }
+  #presenter-notes:not([hidden]) { padding-top: 8px; padding-bottom: 6px; }
+  .manuscript-header { padding-bottom: 5px; }
+  #manuscript-source { display: none; }
+  #manuscript-scroll { padding-top: 5px; }
+}

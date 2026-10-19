@@ -1,0 +1,27 @@
+/* S08/Boris typography and coordinates, shared by every active cue except S02. */
+.e1-unified-scene>.e1-original-header{visibility:hidden!important;pointer-events:none!important}
+.e1-unified-scene>.e1-unified-header{position:absolute!important;left:100px!important;right:100px!important;top:54px!important;bottom:auto!important;width:auto!important;height:auto!important;display:block!important;margin:0!important;padding:0!important;transform:none!important;opacity:1!important;visibility:visible!important;background:none!important;border:0!important;z-index:5000;pointer-events:none;color:#151820;text-align:left!important}
+.e1-unified-scene>.e1-unified-header h1{position:static!important;width:auto!important;font-family:'Daki Title',Daki,'Noto Sans KR',sans-serif!important;font-size:62px!important;line-height:1.2!important;font-weight:400!important;letter-spacing:-2px!important;margin:0!important;padding:0!important;color:inherit!important;text-align:left!important;white-space:normal!important;word-break:keep-all;overflow-wrap:break-word}
+.e1-unified-scene>.e1-unified-header p{position:static!important;width:auto!important;font-family:Daki,'Noto Sans KR',sans-serif!important;font-size:25px!important;line-height:1.45!important;font-weight:400!important;letter-spacing:-.6px!important;margin:25px 0 0!important;padding:0!important;color:#707988!important;text-align:left!important;white-space:normal!important;word-break:keep-all;overflow-wrap:break-word}
+.e1-unified-scene>.e1-unified-dark{color:#edf2fb}.e1-unified-scene>.e1-unified-dark p{color:#a9b4c6!important}
+/* S10 travels from the dark star field into light; difference preserves contrast. */
+[data-unified-cue="s10"]>.e1-unified-header{mix-blend-mode:difference;color:#fff}
+[data-unified-cue="s10"]>.e1-unified-header p{color:#d9dfe9!important}
+/* Adjust content boxes, never the complete stage or stars' projection coordinates. */
+.e1-unified-scene .e1-code-pair{top:245px}
+.e1-unified-scene .edit1-media-grid{top:245px}
+.e1-unified-scene .e1-halves,.e1-unified-scene .e1-bunt-grid{top:245px}
+.e1-unified-scene .e1-feature-window{top:245px;height:718px}
+.e1-unified-scene.e1-interview .rev-main{top:245px!important}
+.e1-unified-scene .cc-quote{top:245px;bottom:55px;padding:35px 170px}
+.e1-unified-scene .cc-quote-text{font-size:52px;line-height:1.45}.e1-unified-scene .cc-quote-text[lang="en"]{font-size:49px}
+.e1-unified-scene .cc-cite{margin-top:35px;font-size:22px}
+.e1-unified-scene .cc-mark{top:310px;font-size:130px}
+.e1-unified-scene .cc-home-copy h1{top:505px;font-size:73px}
+.e1-unified-scene .cc-home-sub{top:720px}
+/* The old corridor destination is shifted below the shared header; a later
+ * arrival override may provide its own content container in the same safe area. */
+.e1-unified-scene .cw-world{top:640px}
+.e1-unified-scene .cw-space{perspective-origin:960px 640px}
+.e1-unified-scene .cw-destination{height:735px}
+.e1-unified-scene .cw-chat-plane{height:735px}

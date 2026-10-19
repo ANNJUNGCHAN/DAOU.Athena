@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>ATHENA — 15분 최종 발표본</title>
+    <link rel="stylesheet" href="presentation.css">
+    <link rel="stylesheet" href="intro-scenes.css">
+    <link rel="stylesheet" href="actions.css">
+    <link rel="stylesheet" href="spatial.css">
+    <link rel="stylesheet" href="revision.css">
+    <link rel="stylesheet" href="business.css">
+    <link rel="stylesheet" href="continuity-cosmos.css">
+    <link rel="stylesheet" href="continuity-workflows.css">
+    <link rel="stylesheet" href="continuity-product.css">
+    <link rel="stylesheet" href="continuity-business.css">
+    <link rel="stylesheet" href="review-toss.css">
+    <link rel="stylesheet" href="edit1-opening.css">
+    <link rel="stylesheet" href="edit1-opening-design.css">
+    <link rel="stylesheet" href="edit1-media.css">
+    <link rel="stylesheet" href="edit1-workflows.css">
+    <link rel="stylesheet" href="edit1-bunt.css">
+    <link rel="stylesheet" href="edit1-features.css">
+    <link rel="stylesheet" href="edit1-app-arrival.css">
+    <link rel="stylesheet" href="edit1-unified-headers.css">
+    <link rel="stylesheet" href="edit2-customer-story.css">
+    <link rel="stylesheet" href="presenter-script.css">
+    <link rel="stylesheet" href="final-presentation.css">
+    <script src="script-data.js" defer></script>
+    <script src="core-scenes.js" defer></script>
+    <script src="intro-scenes.js" defer></script>
+    <script src="actions.js" defer></script>
+    <script src="spatial.js" defer></script>
+    <script src="revision-data.js" defer></script>
+    <script src="revision-scenes.js" defer></script>
+    <script src="business-script-data.js" defer></script>
+    <script src="business-scenes.js" defer></script>
+    <script src="continuity-cosmos.js" defer></script>
+    <script src="continuity-workflows.js" defer></script>
+    <script src="continuity-product.js" defer></script>
+    <script src="continuity-business.js" defer></script>
+    <script src="review-overrides.js" defer></script>
+    <script src="review-toss.js" defer></script>
+    <script src="edit1-opening.js" defer></script>
+    <script src="edit1-opening-design.js" defer></script>
+    <script src="edit1-media.js" defer></script>
+    <script src="edit1-workflows.js" defer></script>
+    <script src="edit1-bunt.js" defer></script>
+    <script src="edit1-features.js" defer></script>
+    <script src="edit1-app-arrival.js" defer></script>
+    <script src="review-script-data.js" defer></script>
+    <script src="edit1-order.js" defer></script>
+    <script src="edit2-customer-story.js" defer></script>
+    <script src="edit1-unified-headers.js" defer></script>
+    <script src="final-content.js" defer></script>
+    <script src="final-presentation.js" defer></script>
+    <script src="review-presentation.js" defer></script>
+  </head>
+  <body>
+    <main id="viewport" aria-label="ATHENA 15분 프레젠테이션">
+      <div id="stage" class="deck-stage"><div id="scene" class="scene-content"></div></div>
+    </main>
+    <nav id="controls" aria-label="발표 제어">
+      <button id="previous" class="direction-button" title="이전 장면 · ←" aria-label="이전 장면"><span aria-hidden="true">←</span><span>이전</span></button>
+      <button id="replay" title="다시 재생 · R" aria-label="현재 장면 다시 재생">↺</button>
+      <button id="overview-toggle" title="목차 · M" aria-label="발표 목차 열기">목차</button>
+      <select id="cue-picker" aria-label="장면 선택"></select>
+      <span class="progress-group">
+        <span class="progress-copy"><span id="position" aria-live="polite"></span><span id="status"></span></span>
+        <progress id="slide-progress" value="1" max="1" aria-label="전체 발표 진행률"></progress>
+      </span>
+      <span class="final-clock" aria-label="발표 타이머">
+        <span id="total-clock">00:00 / 15:00</span>
+        <span id="cue-clock">00:00 / 00:00</span>
+      </span>
+      <button id="timer-toggle" title="발표 시작 또는 일시정지 · T">발표 시작</button>
+      <button id="autoplay-toggle" title="배정 시간에 맞춰 자동 넘김 · A" aria-pressed="false">자동 넘김 끔</button>
+      <button id="next" class="direction-button" title="다음 장면 · Space" aria-label="다음 장면"><span>다음</span><span aria-hidden="true">→</span></button>
+      <button id="notes-toggle" title="대본 · P" aria-controls="presenter-notes" aria-expanded="false">대본</button>
+      <button id="help-toggle" title="도움말 · ?">?</button>
+    </nav>
+    <aside id="presenter-notes" aria-label="현재 슬라이드 발표 대본" hidden>
+      <div hidden><div id="cue-label"></div><p id="script-text"></p><p id="cue-note"></p></div>
+      <header class="manuscript-header">
+        <div class="manuscript-heading"><strong id="manuscript-cue">현재 슬라이드 대본</strong><span id="manuscript-allocation"></span></div>
+        <div class="manuscript-actions"><button id="manuscript-close" type="button" aria-label="대본 닫기">닫기</button></div>
+      </header>
+      <div id="manuscript-scroll" tabindex="0" role="region" aria-label="발표 대본 본문"><p id="manuscript-text"></p></div>
+    </aside>
+    <dialog id="overview" aria-labelledby="overview-title"><div class="dialog-heading"><div><p class="dialog-eyebrow">ATHENA PRESENTATION</p><h2 id="overview-title">목차</h2></div><button id="overview-close" class="dialog-close" aria-label="목차 닫기">닫기</button></div><div id="overview-list" class="overview-list" aria-label="발표 장면 목록"></div></dialog>
+    <dialog id="help"><h2>발표 제어</h2><p>클릭 / Space / → : 다음 장면 재생<br>← : 이전 장면 · R : 다시 재생<br>Home : 처음 · End : 마지막<br>M : 목차 · P : 대본 · F : 전체화면<br>T : 타이머 시작·일시정지 · A : 자동 넘김<br>? : 도움말 · Esc : 열린 패널 닫기</p><p>타이머는 발표 시작을 누른 뒤에만 흐릅니다. 자동 넘김은 선택 사항이며, 직접 이동하면 새 장면의 배정 시간부터 다시 계산합니다.</p><button id="help-close">닫기</button></dialog>
+    <p id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+  </body>
+</html>

@@ -1,0 +1,395 @@
+.presentation-tech-slide {
+  display: flex;
+  width: min(1560px, calc(100% - 72px));
+  height: 100%;
+  margin: auto;
+  padding-block: clamp(16px, 2.4vh, 28px);
+}
+
+.presentation-tech-main {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.68fr) minmax(600px, 1.32fr);
+  align-items: center;
+  gap: clamp(28px, 3.7vw, 60px);
+  width: 100%;
+  min-height: 0;
+}
+
+.presentation-tech-copy,
+.presentation-tech-visual {
+  min-width: 0;
+}
+
+.presentation-tech-heading h2 {
+  max-width: 600px;
+  margin: 0;
+  font-size: clamp(38px, 4.1vw, 68px);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 1.08;
+  word-break: keep-all;
+}
+
+.presentation-tech-lead {
+  max-width: 600px;
+  margin: clamp(14px, 2vh, 22px) 0 0;
+  color: var(--pm-muted);
+  font-size: clamp(15px, 1.15vw, 19px);
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.presentation-tech-distinction {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+  max-width: 600px;
+  margin-top: clamp(16px, 2.2vh, 24px);
+  padding-top: clamp(13px, 1.7vh, 18px);
+  border-top: 1px solid var(--pm-line);
+}
+
+.presentation-tech-distinction > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 27px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: var(--ring);
+  background: color-mix(in srgb, var(--ring) 8%, white);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.presentation-tech-distinction p {
+  margin: 2px 0 0;
+  color: var(--pm-ink);
+  font-size: clamp(13px, 0.95vw, 15px);
+  line-height: 1.55;
+  word-break: keep-all;
+}
+
+.presentation-tech-explanation {
+  max-width: 600px;
+  margin: clamp(12px, 1.6vh, 18px) 0 0;
+  color: var(--pm-muted);
+  font-size: clamp(11px, 0.78vw, 13px);
+  line-height: 1.55;
+  word-break: keep-all;
+}
+
+.presentation-tech-figures {
+  display: grid;
+  gap: 10px;
+  min-height: 0;
+}
+
+.presentation-tech-figures-2 {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.presentation-tech-figures figure {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--pm-line);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 18px 45px rgba(24, 33, 54, 0.07);
+}
+
+.presentation-tech-figures figure > span {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 12px;
+  padding: 5px 8px;
+  border: 1px solid rgba(14, 32, 178, 0.1);
+  border-radius: 999px;
+  color: var(--ring);
+  background: rgba(255, 255, 255, 0.94);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+}
+
+.presentation-tech-figure-trigger {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.presentation-tech-figure-trigger > svg {
+  position: absolute;
+  right: 11px;
+  bottom: 10px;
+  padding: 6px;
+  width: 27px;
+  height: 27px;
+  border: 1px solid rgba(20, 23, 29, 0.08);
+  border-radius: 50%;
+  color: var(--pm-ink);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 4px 14px rgba(20, 23, 29, 0.08);
+}
+
+.presentation-tech-figure-trigger:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+.presentation-tech-figure-trigger picture {
+  display: block;
+  min-height: 0;
+}
+
+.presentation-tech-figures-1 .presentation-tech-figure-trigger picture {
+  height: clamp(390px, 60vh, 530px);
+}
+
+.presentation-tech-figures-2 .presentation-tech-figure-trigger picture {
+  height: clamp(190px, 28vh, 246px);
+}
+
+.presentation-tech-figure-trigger img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.presentation-tech-figures
+  .is-paper-figure
+  .presentation-tech-figure-trigger
+  picture {
+  padding: 12px 16px;
+}
+
+.presentation-tech-figures figcaption {
+  padding: 7px 12px 9px;
+  border-top: 1px solid var(--pm-line);
+  color: var(--pm-muted);
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+.presentation-tech-figures figcaption a {
+  margin-left: 7px;
+  color: var(--ring);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.presentation-tech-figure-dialog {
+  width: min(1240px, calc(100vw - 64px));
+  height: min(820px, calc(100vh - 64px));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 16px;
+  color: var(--pm-ink);
+  background: #fff;
+  box-shadow: 0 30px 100px rgba(10, 14, 28, 0.28);
+}
+
+.presentation-tech-figure-dialog::backdrop {
+  background: rgba(20, 23, 29, 0.74);
+  backdrop-filter: blur(8px);
+}
+
+.presentation-tech-figure-dialog > div {
+  display: grid;
+  grid-template-rows: 52px minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+}
+
+.presentation-tech-figure-dialog header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px 0 22px;
+  border-bottom: 1px solid var(--pm-line);
+}
+
+.presentation-tech-figure-dialog header p,
+.presentation-tech-figure-dialog footer p {
+  margin: 0;
+}
+
+.presentation-tech-figure-dialog header p {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.presentation-tech-figure-dialog header button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--pm-ink);
+  background: transparent;
+  cursor: pointer;
+}
+
+.presentation-tech-figure-dialog header button:hover,
+.presentation-tech-figure-dialog header button:focus-visible {
+  background: var(--muted);
+}
+
+.presentation-tech-figure-dialog > div > picture {
+  display: block;
+  min-height: 0;
+  padding: clamp(18px, 3vw, 42px);
+}
+
+.presentation-tech-figure-dialog > div > picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.presentation-tech-figure-dialog footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 13px 22px;
+  border-top: 1px solid var(--pm-line);
+  color: var(--pm-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.presentation-tech-figure-dialog footer > div {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+}
+
+.presentation-tech-figure-dialog footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--ring);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.presentation-tech-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.presentation-tech-meta > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.presentation-tech-meta span {
+  display: inline-flex;
+  padding: 5px 9px;
+  border: 1px solid var(--pm-line);
+  border-radius: 999px;
+  color: var(--ring);
+  font-size: 10px;
+}
+
+.presentation-tech-meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  color: var(--pm-muted);
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.presentation-tech-meta a:hover {
+  color: var(--pm-ink);
+}
+
+@media (max-width: 900px) {
+  .presentation-tech-slide {
+    display: block;
+    width: min(680px, calc(100% - 32px));
+    overflow-y: auto;
+    padding-block: 24px 44px;
+  }
+
+  .presentation-tech-main {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .presentation-tech-heading h2 {
+    font-size: clamp(34px, 7vw, 52px);
+  }
+
+  .presentation-tech-visual {
+    order: -1;
+  }
+
+  .presentation-tech-figures-1 .presentation-tech-figure-trigger picture,
+  .presentation-tech-figures-2 .presentation-tech-figure-trigger picture {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 600px) {
+  .presentation-tech-distinction {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .presentation-tech-distinction > span {
+    width: max-content;
+  }
+
+  .presentation-tech-meta {
+    align-items: flex-start;
+  }
+
+  .presentation-tech-figure-dialog {
+    width: calc(100vw - 24px);
+    height: calc(100vh - 24px);
+  }
+
+  .presentation-tech-figure-dialog footer {
+    display: block;
+  }
+
+  .presentation-tech-figure-dialog footer > div {
+    margin-top: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .presentation-tech-figure-trigger img,
+  .presentation-tech-figure-dialog img {
+    animation: none;
+  }
+}

@@ -1,0 +1,509 @@
+/* 보드 표면 반응형 — 컨테이너 쿼리 5단 (캔버스 탭·반응형 카드 계획 §2).
+ *
+ * 기준은 창이 아니라 보드 컨테이너 폭이다. 창을 2분할·4분할·최소로 줄여도
+ * 같은 규칙이 돈다.
+ *
+ *   XL  ≥ 1280   Paper 1:1 (되돌리기 base만, 시각 변화 0)
+ *   L   960–1279 레일 360px · 우선순위 7 이상 열 접기(표 6열)
+ *   M   720–959  레일이 primary 아래로 · 6 이상 접기(표 5열) · KPI 3칸 · 스트립 가로 스크롤
+ *   S   480–719  5 이상 접기(표 4열) · KPI 2칸
+ *   XS  < 480    4 이상 접기(표 3열) · KPI 1칸
+ *
+ * 단계는 겹쳐 쌓인다 — max-width 규칙이라 XS에서는 L·M·S 규칙이 함께 살아 있고,
+ * 그래서 "4 이상 접기"가 4·5·6·7·8을 다 접는다(밀도 예산 상한이 8열이다).
+ *
+ * 인라인 원문과 싸우지 않는 방법 — `!important` 0건:
+ *
+ * 1) 추출 원문은 영역 노드마다 인라인 `width`/`flex-*`를 갖는다(27장 전수 실측).
+ *    board-mount의 `applyResponsiveHooks`가 마운트 시점에 **그 다섯 속성만**
+ *    같은 요소의 `--bs-width`/`--bs-flex-*`로 옮긴다. 아래 base 규칙이 그 값을
+ *    그대로 되돌리므로 XL 계산값은 Paper와 같고, L 이하 컨테이너 규칙은
+ *    인라인과 겨루지 않고 이긴다(같은 특이도, 뒤에 오는 선언).
+ * 2) `display`·색·패딩·글꼴·테두리는 건드리지 않는다 — Paper의 레이아웃 모델
+ *    (flex)을 grid로 바꾸지 않고, 좁아질 때는 `flex-wrap`으로만 접는다.
+ * 3) 열 접기·병기 활성에 쓰는 `.bs-col`·`.bs-paired`는 추출기가 새로 넣는
+ *    요소라 인라인 스타일이 아예 없다.
+ *
+ * 값·문구는 어느 단계에서도 바뀌지 않는다 — 접힌 열은 삭제가 아니라 병기 줄로
+ * 내려간다(계획 §2, 헌장 문법 A·B). */
+
+/* hoist 토큰은 상속되면 안 된다 — 커스텀 속성 기본값은 상속이라, 보드 루트가
+ * 자기 Paper 폭(--bs-width: 1360px)을 실으면 그 아래 모든 영역 노드가 `var(--bs-width,
+ * auto)`에서 fallback 대신 **보드 폭**을 물려받는다. 실측(실보드 6장, 컨테이너
+ * 1171~1186px): bs-kpi·bs-workspace·bs-strip·bs-kpi-cell이 전부 1360px로 서서
+ * overflow_x가 89~5,659px 났다 — 인라인 원문에는 그 노드에 width가 없는데도.
+ * 등록 속성으로 상속을 끊으면 자기 인라인 원문을 갖고 있던 노드만 되돌아가고,
+ * 나머지는 계약대로 auto/flex 기본값으로 흐른다. */
+@property --bs-width { syntax: "*"; inherits: false; }
+@property --bs-height { syntax: "*"; inherits: false; }
+@property --bs-flex-basis { syntax: "*"; inherits: false; }
+@property --bs-flex-grow { syntax: "*"; inherits: false; }
+@property --bs-flex-shrink { syntax: "*"; inherits: false; }
+
+.board-surface {
+  container-type: inline-size;
+  container-name: board;
+  /* 보드 고유 폭(Paper 원문)을 되돌리되, 뷰포트가 좁으면 뷰포트를 따른다.
+   * min-width:0 이 없으면 flex 항목 기본 min-content(2SKU-1 Paper 1360px)가
+   * max-width:100%를 이기고 컨테이너가 M(720–959)에 못 들어간다. */
+  width: var(--bs-width, 1440px);
+  max-width: min(100%, 1440px);
+  min-width: 0;
+  margin: 0 auto;
+}
+
+/* 카드 높이는 카드가 정한다 — 보드가 아니다(계획 §1 "카드 크기 = 뷰포트 크기,
+ * 따라서 모든 카드 크기가 동일하다").
+ *
+ * Paper 보드의 루트 높이는 보드마다 다르다(생성물 96장 실측: 766·824·846·880·
+ * 896·900·930·934·936·960·1000·1018·1029·1034·1039·1040px 16종 + fit-content 8장
+ * + 미지정 4장). 그 값이 `--bs-height`로 걷혀 되돌리기 규칙(아래 `[data-bs-hoisted]`)
+ * 을 타고 **표면 루트**에까지 들어오면, 같은 크기의 카드 상자 안에서 눈에 보이는
+ * 유리 패널만 보드마다 달라진다 — 실측(컨테이너 1360px · 카드 상자 1138px):
+ * 계좌 952 · 주문 880 · 종목 1040 · 호가 880 · 수급 934 · 탐색 900 · 순위 1040px.
+ * 사용자가 "순위 카드가 미묘하게 다르다"고 본 자리가 이것이다.
+ *
+ * 그래서 루트에서만 그 값을 무르고(안쪽 영역·표 행·KPI 칸은 그대로 — 되돌리기
+ * 계약과 좁은 단계의 최소 높이 바닥은 안쪽 값으로 돈다) 카드 자리를 채우게 한다.
+ * `height: auto` + `min-height: 100%`이지 `height: 100%`가 아니다: 원문 루트 다수가
+ * 인라인 `overflow: clip`을 실어, 자리보다 긴 본문을 고정 높이에 가두면 넘친
+ * 부분이 잘려 사라진다(§8 정보 정직성). 길면 표면이 자라고 자리가 스크롤한다.
+ *
+ * 특이도(0,2,0)로 아래 base·@container의 `[data-bs-hoisted]`(0,1,0)를 이긴다 —
+ * 순서에 기대지 않으므로 단계 규칙을 어느 자리에 더해도 이 계약은 안 흔들린다. */
+.board-surface[data-bs-hoisted] {
+  height: auto;
+  min-height: 100%;
+}
+
+/* 카드 껍데기도 카드가 정한다 — 보드마다 다른 원문 껍데기(생성물 96장 루트 실측:
+ * 라운드 28px 62장 · 16px 27장 · 24px 3장 · 미지정 4장, 배경 panel 92장 ·
+ * 페이지 배경 4장)를 board-mount의 normalizeCardShell이 `--bs-shell-*`로 걷어내고
+ * 여기서 한 벌만 입힌다. 라운드 정본은 28px(2026-09-07 사용자 확정 — 다수값).
+ * 그림자는 원문 값 그대로다(#10131A1A 0 18px 48px). 새 색은 만들지 않는다:
+ * 배경·선은 tokens.css의 유리 사다리 토큰이고 그림자만 값으로 쓴다(canvas.css
+ * `.card`의 접지 그림자와 같은 문법). */
+.board-surface[data-bs-card-shell="true"] {
+  background-color: var(--color-k-panel);
+  border: 1px solid var(--color-k-line-soft);
+  border-radius: var(--radius-card);
+  box-shadow: 0 18px 48px rgb(16 19 26 / 10%);
+}
+
+/* Paper 아트보드 프레임이 루트로 잡힌 보드(실측 4장) — 폭·프레임 패딩을 카드
+ * 계약으로 되세운다. 1360px은 나머지 92장 루트의 실측 폭이고, 이 4장의 자식도
+ * 이미 그 폭으로 서 있다(프레임 패딩 40px을 더해 아트보드 1440px이 된 것이다).
+ * 폭만 세우면 그 패딩만큼 자식이 넘치므로 둘은 한 짝으로 간다. */
+.board-surface[data-bs-card-frame="true"] {
+  width: 1360px;
+  max-width: min(100%, 1360px);
+  padding: 0;
+}
+
+/* ---------- XL base — 인라인에서 걷어낸 값을 그대로 되돌린다 ---------- */
+
+/* 영역 밖 고정 상자(표 열·KPI 칸·헤더 블록)도 걷어낸다 — board-mount의
+ * hoistRigidBox가 실제로 옮긴 노드에만 이 표시를 남긴다. 되돌리기 값이 곧
+ * Paper 원문이라 XL 계산값은 1:1이다. 영역 규칙보다 **먼저** 와야 한다:
+ * 같은 특이도(0,1,0)라 뒤에 오는 쪽이 이기고, 영역·단계 규칙이 이겨야 한다. */
+[data-bs-hoisted] {
+  width: var(--bs-width, auto);
+  height: var(--bs-height, auto);
+  flex-basis: var(--bs-flex-basis, auto);
+  flex-grow: var(--bs-flex-grow, 0);
+  flex-shrink: var(--bs-flex-shrink, 1);
+}
+
+/* left+고정폭 absolute 상자도 같은 규약이다 — markInsetAbsoluteBox가 인라인 `left`를
+ * `--bs-inset-x`로 옮기고 여기서 되돌린다. XL 계산값은 Paper 원문 그대로다. */
+[data-bs-inset-x="true"] { left: var(--bs-inset-x); }
+
+/* bottom+고정높이 absolute 상자 — 흐름 안 내용이 그 자리를 쓰면 클릭이 이웃으로
+ * 간다(실측 2RJ7-1 「호가 열기」 hit → 「예상 체결 시간」). markInsetAbsoluteBox가
+ * 부모 padding-bottom을 상자 높이+bottom만큼 늘린다. z-index로 덮지 않는다. */
+[data-bs-reserve-bottom="true"] { padding-bottom: var(--bs-reserve-bottom); }
+
+.bs-workspace,
+.bs-primary,
+.bs-rail,
+.bs-kpi,
+.bs-kpi-cell,
+.bs-table,
+.bs-strip {
+  width: var(--bs-width, auto);
+  flex-basis: var(--bs-flex-basis, auto);
+  flex-grow: var(--bs-flex-grow, 0);
+  flex-shrink: var(--bs-flex-shrink, 1);
+}
+
+.bs-workspace { flex-wrap: nowrap; }
+.bs-kpi { flex-wrap: nowrap; }
+.bs-strip { flex-wrap: nowrap; overflow-x: visible; }
+.bs-primary { min-width: 0; }
+.bs-rail { min-width: 0; }
+
+/* scroll owner는 추출기가 role/이름/tabindex를 책임진다. outline은 박스 크기를
+ * 바꾸지 않으므로 XL Paper geometry를 유지하면서 키보드 위치를 드러낸다. */
+.bs-r-scroll:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: -2px;
+}
+
+/* canvas가 responsive group 안의 plain Paper leaf에만 role=button을 보강한다. */
+:is(.bs-r-flow, .bs-r-scroll, .bs-r-scroll-table) [data-state-board][role="button"]:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: 2px;
+}
+
+/* canvas는 Paper CTA의 문구 잎에 키보드 semantics를 붙인다. 바깥 CTA 상자는 이미
+ * 44px이지만 role=button의 실제 hit target은 잎의 16px line box이므로 같은 최소
+ * 면적을 잎에도 준다. 고정 폭은 두지 않아 Paper 문구와 버튼 배치는 그대로 둔다. */
+[data-card-action][role="button"] {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- 줄바꿈 정책 — 글자 단위 분절은 어느 단계에서도 없다 ----------
+ *
+ * 앞선 판단은 `overflow-wrap: anywhere`(Paper 원문)를 분절의 원인으로 보고 손대지
+ * 않기로 했지만, 그건 원인의 절반이었다. 한글은 CSS 기본값(`word-break: normal`)에서
+ * **음절 사이가 이미 줄바꿈 기회**다 — 실측 2QM7-2(삼성전자 수급)에는 `anywhere`가
+ * 0건인데도 "모건스탠리"가 "모건스탠 / 리"로 쪼개진다. 그래서 정책 선언은
+ * `word-break: keep-all`이고, 추출 원문 97장에 그 선언은 0건이다.
+ *
+ * `anywhere`는 여기에 숫자·라틴까지 얹는 두 번째 원인이다("149,50 / 0", 실측
+ * 2R3M-1 컨테이너 1171px). 인라인 선언은 이 규칙보다 세므로 board-mount의
+ * stripCharacterWrap이 마운트 시점에 걷어낸다 — 다섯 레이아웃 속성과 달리
+ * 되돌리지 않는다: 한 글자씩 눕는 것은 Paper가 그린 문면이 아니라 폭이 부족할 때의
+ * 브라우저 기본 동작이다.
+ *
+ * 이제 남는 부족분은 줄바꿈이 아니라 가로 넘침으로 나온다(실측 컨테이너 537px에서
+ * 4~90px · 377px에서 25~250px). 그건 이 파일 아래의 수단으로 받는다: 열 접기 →
+ * 가로 스크롤. 값·문구를 쪼개서 폭을 맞추는 길은 닫는다(사용자 확정 2026-09-07). */
+.board-surface {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+/* 값 자리(숫자·통화·%·코드·시각)는 어절 경계조차 없으므로 nowrap이 유일한 규약이다.
+ * 소유자(`.bs-r-flow`/`.bs-r-scroll`) 아래로 한정하던 L 단계 규칙을 base로 넓힌다 —
+ * 반응형 기계가 아예 안 붙은 보드 25장(97장 실측)은 그 한정 때문에 값 nowrap을
+ * 하나도 못 받았고, 2QM7-2·15L8-2가 거기 있다. XL에서는 Paper 폭이 이미 한 줄을
+ * 담으므로 계산값이 안 바뀐다. */
+:is(.bs-r-atomic, [data-bs-value-atomic="true"], [data-paired-source]) {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+/* 추출기가 넣은 접기 래퍼 — XL에서는 박스 트리에서 사라진다(픽셀 동일). */
+.bs-col { display: contents; }
+
+/* 병기 줄 — 열이 접힐 때만 켜진다. 인라인 스타일이 없는 요소라 !important가 필요 없다. */
+.bs-paired { display: none; font-variant-numeric: tabular-nums; }
+
+.bs-r-paired-table .bs-paired {
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: baseline;
+  column-gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+.bs-r-paired-table .bs-paired-label {
+  color: var(--color-k-dim);
+  white-space: normal;
+  /* 좁은 칸에서도 줄바꿈은 어절 경계에서만 한다. `anywhere`는 `5일 누적`을
+   * `5일 누`/`적`으로 쪼갠다(2QFO-2 960 실측) — 이 웨이브가 없애려는 분절이다. */
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+.bs-r-paired-table [data-paired-source] {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+.bs-r-paired-table [data-bs-value-atomic="true"] {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+.bs-r-scroll-table:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: -2px;
+}
+.bs-scroll-table-semantics {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  min-width: max-content;
+}
+.bs-scroll-table-cell-semantics {
+  display: flex;
+  flex-shrink: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* KPI 칸 — XL·L에서는 인라인 원문 폭(추출 실측 138px)을 되돌린다. M 이하에서만
+ * 흐름 폭으로 바뀐다. flex-basis에서 빼는 24px은 칸 사이 gap 몫이다(원문 12px):
+ * 넉넉히 빼도 한 줄에 한 칸 더 들어가지는 않으므로 3칸/2칸이 정확히 지켜진다. */
+
+/* ---------- L: 960–1279 — 표는 7열째부터 접는다 ---------- */
+@container board (max-width: 1279px) {
+  /* 걷어낸 고정 상자는 Paper 값을 출발점으로 삼되, 좁아지면 같이 움직인다.
+   *
+   * 폭: 원문의 `flex-shrink: 0`을 여기서만 놓아준다. 실보드 원문에
+   *     `white-space: nowrap`은 0건이라(6장 실측) 줄어든 칸의 글자는 잘리지 않고
+   *     줄바꿈으로 내려간다 — 값이 사라지지 않는다.
+   * 높이: 고정 높이가 최소 높이가 된다. 줄바꿈으로 내용이 늘면 상자도 같이
+   *     자라야 한다 — 안 그러면 넘친 줄이 아래 영역 위에 겹쳐 찍힌다(실측
+   *     2SKU-1 컨테이너 621px: KPI 줄 116px 상자 안에 2줄 232px). 줄어드는 일은
+   *     없다: Paper 높이가 그대로 바닥이다.
+   *
+   * XL에서는 base가 다섯 값을 그대로 되돌리므로 Paper 픽셀은 그대로다. */
+  [data-bs-hoisted] {
+    flex-shrink: 1;
+    max-width: 100%;
+    /* flex item의 기본 min-width:auto는 안쪽 숫자/열의 min-content 폭을 지켜
+     * max-width보다 크게 버틴다. 2R3M-1·2QFO-2 XS 표면 넘침의 직접 원인이다. */
+    min-width: 0;
+    height: auto;
+    min-height: var(--bs-height, auto);
+  }
+
+  /* 위에서 놓아준 flex-shrink는 **가로 축** 몫이다. 부모가 세로로 쌓으면 같은
+   * 선언이 높이를 줄여 「Paper 높이가 바닥」이라는 위 계약을 세로로만 뒤집는다 —
+   * 실측 1WOB-1 목록 본문(높이 520px 고정) 안의 행 20개가 내용 48px에서 36px로
+   * 눌려 13px씩 뚫렸다. 세로로 쌓인 상자는 원문 flex-shrink를 그대로 지킨다.
+   * 폭은 `--bs-width`와 위 `max-width: 100%`가 맡으므로 가로 계약은 안 바뀐다. */
+  [data-bs-hoisted][data-bs-col-item="true"] { flex-shrink: var(--bs-flex-shrink, 1); }
+
+  /* left+고정폭 absolute 상자는 부모가 좁아져도 자기 left에 서 있어 그대로 가로
+   * 넘침이 된다(실측 137X-2 Chart Tooltip Label left 748px: 2분할 303 · 4분할 387 ·
+   * 최소 547px). left를 오른쪽 끝에 걸리는 값으로 죄면 상자는 Paper 폭을 유지한 채
+   * 안으로 들어온다 — 폭은 base가 되돌린 `--bs-width`와 위 `max-width: 100%`가 맡는다.
+   * 넉넉한 폭에서는 min()이 Paper의 left를 그대로 고르므로 XL 이하도 자리가 안 바뀐다. */
+  [data-bs-inset-x="true"] { left: min(var(--bs-inset-x), max(0px, 100% - var(--bs-width, 0px))); }
+
+  /* KPI 줄에는 남는 폭을 통째로 받는 탄력 칸이 있다(Paper 원문 `flex-basis: 0%`).
+   * 보드가 Paper 폭(1360px)보다 좁아지면 그 칸 하나가 부족분을 다 뒤집어써서
+   * 글자가 한 자씩 세로로 눕는다 — 실측 2SKU-1 "현금 비중 28.0%" 칸이 컨테이너
+   * 1169px에서 265px → 74px. 한국어는 `overflow-wrap: anywhere`(Paper 원문)로
+   * 한 글자까지 쪼개져서 자동 최소 크기가 칸을 못 지킨다. 바닥을 주면 부족분을
+   * 줄 전체가 나눠 진다(다른 칸은 이미 shrink가 풀려 있다).
+   *
+   * 바닥은 그 칸의 Paper 문면이 **한 줄로 서는 폭**이다. 상수 160px은 24px 값
+   * 한 줄을 못 담아(실측 3ODO-0·3OIM-0 "4,820,000원" 127px + 좌우 패딩 48px = 175px)
+   * 값이 두 줄로 접히고, 그만큼 칸이 Paper 78px을 넘겨 자란다. `fit-content`는
+   * max-content를 쓰되 남은 폭에서 잘리므로 좁은 단계에서 칸이 줄을 밀어내지 않는다. */
+  .bs-kpi-cell[data-bs-kpi-elastic="true"] { min-width: fit-content; }
+
+  /* 줄바꿈 정책(base)이 켜지면 값·문구가 안 쪼개지므로 칸의 min-content가 「가장 긴
+   * 한 줄」이다. 위 `[data-bs-hoisted] { min-width: 0 }`이 그 바닥을 놓아 버려서
+   * 칸이 0까지 줄고 안쪽 문면이 옆 칸 위로 흘러 겹친다 — 원문이 `flex-shrink: 0`인
+   * 히어로 칸은 탄력 칸 바닥의 대상이 아니다(실측 2QM7-2 「모건스탠리 +842억원」).
+   * `fit-content`는 남은 폭에서 잘리므로 좁은 단계에서 줄을 밀어내지 않고, 글자를
+   * 이고 있는 칸만 받으므로 빈 spacer는 그대로 0이다(시세 스트립 6~8칸 계약). */
+  .bs-kpi-cell[data-bs-kpi-content="true"] { min-width: fit-content; }
+
+  /* 의미 단위가 먼저 다음 줄로 이동하고, 단위 안의 글자는 쪼개지지 않는다.
+   * 값 표시는 responsive owner 밖에서도 쓰이므로 반드시 owner 아래로 한정한다. */
+  .bs-r-flow { flex-wrap: wrap; }
+  .bs-r-flow > * { flex-shrink: 0; }
+  :is(.bs-r-flow, .bs-r-scroll) :is(.bs-r-atomic, [data-bs-value-atomic="true"]) {
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+  /* 병기 줄은 접힌 열을 대신하는 **아랫줄**이다. 추출기가 그 사본을 행의 둘째 칸에
+   * 넣는데, 그 칸이 가로 칸이면 사본이 옆으로 늘어서서 칸을 밀어낸다(실측 2TZN-1
+   * 업종 행 둘째 칸 58px 안에 병기 4줄 — 최소 폭에서 표면 66px 넘침). 칸을 접게 하고
+   * 사본에 한 줄을 통째로 주면 원래 내용은 첫 줄에 남고 병기만 아래로 내려간다. */
+  [data-bs-paired-host="true"] { flex-wrap: wrap; min-width: 0; }
+  [data-bs-paired-host="true"] > .bs-paired { flex-basis: 100%; }
+  /* L에서 레일이 옆에 붙으면 primary 툴바 폭이 Paper 943px을 못 지킨다(실측 2Z49-0
+   * 카드 1035 · primary 673 · 툴바 616). space-between 가로 줄의 마지막 잎
+   * (목록 상태 3T2T-0, nowrap 166px)이 레일 위 「키움증권」으로 넘어가 클릭을 훔친다.
+   * M까지 미루면 그 겹침이 L에서 남는다. 접히면 잎은 아랫줄로 가고 글자는 안 사라진다. */
+  [data-bs-wrap-row="true"] { min-width: 0; flex-wrap: wrap; }
+  .bs-r-scroll-table { min-width: 0; max-width: 100%; overflow-x: auto; }
+  .bs-r-scroll-table > .bs-scroll-table-semantics { width: max-content; min-width: 100%; }
+  .bs-r-scroll-table .bs-scroll-table-semantics [data-bs-hoisted] {
+    width: var(--bs-width, auto);
+    height: var(--bs-height, auto);
+    flex-basis: var(--bs-flex-basis, auto);
+    flex-grow: var(--bs-flex-grow, 0);
+    flex-shrink: var(--bs-flex-shrink, 1);
+    max-width: none;
+  }
+
+  /* Paper 원문은 primary에 고정 폭과 `flex-shrink: 0`을 함께 싣는다(실보드 6장
+   * 전수 실측 — 900·820·880·880·824·420px). 레일만 360px로 줄이면 primary가
+   * 그대로 서 있어 합이 컨테이너를 넘는다(실측 overflow_x 89~148px). L부터는
+   * primary가 남은 폭을 받는 쪽이다 — 레일이 고정, primary가 유동. */
+  .bs-primary { width: auto; flex-basis: 0%; flex-grow: 1; flex-shrink: 1; }
+  /* 레일은 360px가 목표 폭이지 상한이 아니다 — 안쪽 블록이 더 줄 수 없으면
+   * (실측 2R3M-1 레일 min-content 384px) 360px에 가두는 순간 그만큼이 그대로
+   * 가로 넘침이 된다. 최소치를 내용에 맡기면 남는 폭은 primary가 가져간다. */
+  .bs-rail {
+    width: 360px; flex-basis: 360px; flex-grow: 0; flex-shrink: 0; min-width: min-content;
+  }
+  .bs-col[data-col-priority="7"],
+  .bs-col[data-col-priority="8"] { display: none; }
+  .bs-paired[data-paired-col~="7"],
+  .bs-paired[data-paired-col~="8"] { display: block; }
+  .bs-r-paired-table .bs-paired[data-paired-col~="7"] { display: grid; }
+}
+
+/* ---------- M: 720–959 — 6열째부터 접고 KPI는 3칸 흐름 ---------- */
+@container board (max-width: 959px) {
+  .bs-workspace { flex-wrap: wrap; }
+  .bs-primary { width: 100%; flex-basis: 100%; flex-grow: 1; order: 1; }
+  /* 한 행 안의 중첩 primary도 위 100% 규칙을 받는다. 부모가 nowrap이면 뒤 섹션이
+   * 0px까지 눌려 끝 정렬 문구가 카드 왼쪽으로 샌다(3GRO-0 2분할). 형제와 나란히
+   * 놓인 중첩 primary 구조만 아래 줄로 쌓아 각 섹션의 Paper 의미와 전 항목을 보존한다. */
+  [data-bs-primary-row="true"] { flex-wrap: wrap; }
+  /* 레일이 primary 아래로 내려가 한 줄을 통째로 쓰므로 L의 min-content 바닥은
+   * 여기서 놓는다 — 안 놓으면 레일이 Paper 폭(실측 480·538px)으로 되살아나
+   * 좁은 창에서 오히려 더 넘친다. */
+  .bs-rail { width: 100%; flex-basis: 100%; flex-grow: 1; order: 2; min-width: 0; }
+  /* 헤더도 한 줄을 고집하지 않는다 — 제목 묶음과 스트립이 양끝으로 벌어져 있어
+   * 좁아지면 둘의 min-content 합이 그대로 가로 넘침이 된다(실측 135M-2 49px). */
+  .bs-header { flex-wrap: wrap; }
+  /* 머리·스트립이 접혀도 그 안의 가로 묶음이 한 줄을 고집하면 그만큼이 그대로 가로
+   * 넘침이다 — flex item 기본 `min-width: auto`가 자식들의 min-content를 지킨다
+   * (실측 2XTO-0 `2XXN-0` 기능 네비 421px ↔ 컨테이너 378px에서 표면 37px, 최소
+   * 프리셋 3회 재현). wrap-row 접기 자체는 L에서 이미 켠다(2Z49-0). */
+  /* 칸이 전부 탄력(`flex-basis: 0%`)인 줄은 폭이 부족해도 줄바꿈이 발동하지 않는다 —
+   * 각 칸이 0을 기준으로 남는 폭을 나눠 가지기 때문이다. 그 칸에는 자기 문면이 한
+   * 줄로 서는 바닥을 준다(실측 2SKU-1 「예수금 KPI 4칸」: 칸 91px 안에 내용 144px,
+   * 사슬로 표면 9px). `fit-content`는 남은 폭에서 잘리므로 넉넉한 단계에서 줄을
+   * 밀어내지 않고, 글자를 이고 있는 칸만 받으므로 빈 spacer는 그대로 0이다. */
+  /* 표시는 board-mount가 소유자의 **직계 자식**에만 남기므로 부모 한정이 필요 없다.
+   * 접기 소유자(`.bs-r-flow`)에도 같은 바닥이 필요하다 — flow는 `flex-wrap`만 주고,
+   * 칸이 탄력이면 그 wrap이 발동하지 않는다(실측 2T63-1 「Order Progress」 5장). */
+  [data-bs-elastic-cell="true"] { min-width: fit-content; }
+  .bs-kpi { flex-wrap: wrap; }
+  .bs-kpi-cell { width: auto; flex-basis: calc(33.3333% - 24px); flex-grow: 1; }
+  .bs-strip { overflow-x: auto; }
+  .bs-r-scroll { min-width: 0; max-width: 100%; overflow-x: auto; }
+  .bs-r-scroll > * { flex-shrink: 0; min-width: max-content; }
+  /* 스트립은 좁아지면 가로로 스크롤한다(바로 위). 칩까지 같이 줄어들면 스크롤할
+   * 것이 없어지고 글자만 한 자씩 세로로 눕는다 — 한국어 원문이 `overflow-wrap:
+   * anywhere`라 자동 최소 크기가 한 글자다(실측 컨테이너 377px에서 칩 7개 전부). */
+  .bs-strip > * { flex-shrink: 0; }
+  /* 스트립이 세로로 쌓은 양끝 줄은 헤더와 같은 축으로 M부터 접는다(위 `.bs-header`).
+   * XS까지 미루면 S 구간에서 칩 묶음이 자기 스크롤 경계에서 잘리고 그 **바로 옆에**
+   * 형제 문구가 간격 없이 붙어 겹쳐 읽힌다 — 실측 캡처 board-2XTO-0-640x540:
+   * 칩이 「예상차」로 잘린 자리 위에 「● 실시간 갱신」이 얹힌다.
+   * 바로 위 `flex-shrink: 0`은 스트립을 가로로 스크롤시키려고 칩을 안 줄이는 규약인데,
+   * 접을 줄에는 그 예외가 필요하다: 줄이 스트립 폭까지 줄어야 접기가 발동한다.
+   * 칩 묶음은 자기 자신이 `.bs-r-scroll` 소유자라 스크롤을 스스로 맡는다.
+   * primary가 이고 있는 줄은 그대로 XS에서 접는다 — 137X-2 Chart Toolbar가 S에서는
+   * 다 들어간다는 실측이 있어 그 판단을 뒤집지 않는다. */
+  .bs-strip > [data-bs-split-row="true"] {
+    flex-shrink: 1;
+    min-width: 0;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .bs-strip [data-bs-split-row="true"] { flex-wrap: wrap; }
+  .bs-strip [data-bs-split-row="true"] > * { min-width: 0; }
+  .bs-col[data-col-priority="6"] { display: none; }
+  .bs-paired[data-paired-col~="6"] { display: block; }
+  .bs-r-paired-table .bs-paired[data-paired-col~="6"] { display: grid; }
+}
+
+/* ---------- S: 480–719 — 5열째부터 접고 KPI는 2칸 흐름 ---------- */
+@container board (max-width: 719px) {
+  .bs-kpi-cell { flex-basis: calc(50% - 24px); }
+  .bs-col[data-col-priority="5"] { display: none; }
+  .bs-paired[data-paired-col~="5"] { display: block; }
+  .bs-r-paired-table .bs-paired[data-paired-col~="5"] { display: grid; }
+}
+
+/* ---------- XS: < 480 — 4열째부터 접고 KPI는 1칸 세로 ---------- */
+@container board (max-width: 479px) {
+  /* primary가 이고 있는 양끝 줄은 여기서 접는다 — .bs-header가 M에서 접히는 것과
+   * 같은 판단이고, 접는 폭만 한 단계 늦다(실측: 137X-2 Chart Toolbar가 S(535·619px)
+   * 에서는 다 들어가고 XS(375px)에서만 149px을 낸다). 값·문구는 그대로 남고
+   * 묶음이 아랫줄로 내려갈 뿐이다. */
+  [data-bs-split-row="true"] { flex-wrap: wrap; }
+  /* 줄이 접혀도 묶음 하나가 컨테이너보다 넓으면 그만큼이 그대로 넘침이다 — 인라인
+   * 폭이 없는 묶음은 걷어내기 표시가 없어 flex 기본 min-width:auto가 min-content를
+   * 지킨다(실측 137X-2 주기 칩 묶음 352px ↔ 줄 318px). 바닥을 놓고 묶음 안에서도
+   * 접게 하면 칩은 아랫줄로 내려가고 글자는 하나도 안 사라진다. */
+  [data-bs-split-row="true"] > * { min-width: 0; flex-wrap: wrap; }
+  .bs-kpi-cell { flex-basis: 100%; }
+  .bs-col[data-col-priority="4"] { display: none; }
+  .bs-paired[data-paired-col~="4"] { display: block; }
+  .bs-r-paired-table .bs-paired[data-paired-col~="4"] { display: grid; }
+}
+
+/* 상태 보드 조작(스트립 칩·탭). canvas.js가 계약의 control 문구와 맞는 노드에
+ * data-state-board를 찍는다 — 여기서는 그게 누를 수 있는 것임을 보이기만 한다.
+ * 인라인 원문(색·폰트)은 건드리지 않는다. */
+[data-state-board] { cursor: pointer; }
+
+/* 카드 액션(호가 열기·종목 상세 열기) — 상태 보드 칩과 같은 규약이다: canvas.js가
+ * Paper 문구와 맞는 잎에 data-card-action을 찍고, 여기서는 누를 수 있음만 보인다. */
+[data-card-action] { cursor: pointer; }
+
+[data-card-action][role="button"]:focus-visible {
+  outline: 2px solid var(--color-k-text);
+  outline-offset: 2px;
+}
+
+/* 카드 안에서 보드가 앉는 자리. 보드 본문이 길면 카드 안에서 세로 스크롤한다
+ * (계획 §1 "카드 크기 = 뷰포트 크기").
+ *
+ * 높이 100%는 그 계약의 세로 절반이다 — 자리가 내용 높이를 그대로 쓰면(auto)
+ * 아래 `min-height: 100%`가 기댈 확정 높이가 없어 표면이 Paper 보드 높이에
+ * 그대로 주저앉는다(실측: 카드 상자 1138px 안에서 자리·표면이 833~1040px). */
+.board-surface-host {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+}
+
+/* ---------- 카드 = 보드 그 자체 ----------
+ *
+ * 보드 표면 카드에는 통합 카드 크롬을 아예 만들지 않는다: 카드 머리(제목·기준
+ * 시각·×)는 탭 스트립이, 헤더·스트립·푸터는 Paper 보드가 이미 갖고 있다
+ * (canvas.js renderBoardSurfaceCard · integrated-card-surface ensureScaffold).
+ * 남은 카드 껍데기도 유리·테두리·여백을 보드에 내준다 — 안 그러면 보드의 둥근
+ * 패널 위에 카드 유리가 한 겹 더 얹혀 테두리가 두 줄로 보이고, 좌우 여백
+ * 32px만큼 보드가 쓸 폭이 줄어 같은 창에서 열이 더 일찍 접힌다. */
+.card[data-board-surface="true"] {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  min-width: 0;
+}
+
+.card[data-board-surface="true"] .integrated-card-content { gap: 0; }
+
+/* 카드 자리에서 보드까지 확정 높이를 잇는다 — `min-height: 100%`(표면)와
+ * `height: 100%`(자리)는 부모 높이가 확정일 때만 의미가 있고, 통합 카드 뼈대는
+ * 그 사이에 두 겹(panels · panel)을 더 끼운다:
+ *
+ *   .card(100%) → .card-body.integrated-card-content(flex: 1) → .integrated-card-panels
+ *   → .integrated-card-panel → .board-surface-host → .board-surface
+ *
+ * 두 겹이 auto로 서면 사슬이 거기서 끊겨 표면이 다시 Paper 보드 높이로 주저앉는다
+ * (실측: 이 두 줄 없이는 833~1042px로 흩어졌다). 보드 표면 카드에만 한정한다 —
+ * 모자이크 통합 카드는 패널 여러 장을 세로로 쌓는 뼈대가 그대로 맞다. */
+.card[data-board-surface="true"] .integrated-card-panels { flex: 1 1 auto; min-height: 0; }
+.card[data-board-surface="true"] .integrated-card-panel { height: 100%; min-height: 0; }

@@ -1,0 +1,42 @@
+/* Scope: five approved opening compositions from edit-1.pptx. */
+.e1-opening{position:absolute;inset:0;overflow:hidden;background:#f8f9fb;color:#151820;font-family:'Noto Sans KR',sans-serif}
+.e1-opening-head{position:absolute!important;left:100px!important;right:100px!important;top:54px!important;z-index:2200;pointer-events:none}
+.e1-opening-head h1{font-family:'Daki Title',Daki,'Noto Sans KR',sans-serif!important;font-size:62px!important;line-height:1.2!important;font-weight:400!important;letter-spacing:-2px!important;margin:0!important}
+.e1-opening-head p{font-family:Daki,'Noto Sans KR',sans-serif!important;font-size:25px!important;line-height:1.45!important;font-weight:400!important;letter-spacing:-.6px!important;margin:25px 0 0!important;color:#707988;white-space:normal!important}
+.e1-opening-source{position:absolute;left:100px;right:100px;bottom:28px;font:16px/1.5 'Noto Sans KR';color:#8790a0}
+.e1-claude{background:#f6f3ee}
+.e1-question-echo{position:absolute;left:50%;top:43%;height:500px;transform:translate(-50%,-50%)}
+.e1-question-echo img{height:100%;width:auto}
+.e1-claude-lockup{position:absolute;inset:0;display:flex;gap:50px;align-items:center;justify-content:center;opacity:0}
+.e1-claude-mark{width:180px;height:180px;object-fit:contain}
+.e1-claude-lockup strong{font:500 130px/1.1 'Noto Sans KR';letter-spacing:-6px;color:#151820}
+.e1-code{background:#080b12;color:#edf2fb}
+.e1-code .e1-opening-head p{color:#a9b4c6;font-size:24px!important}
+.e1-code-pair{position:absolute;top:255px;left:100px;right:100px;bottom:100px;display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.e1-code-window{position:relative;min-width:0;border:1px solid #394354;border-radius:22px;overflow:hidden;background:#131820;box-shadow:0 25px 70px #0005;opacity:1}
+.e1-code-bar{height:68px;padding:0 25px;display:flex;align-items:center;gap:10px;background:#232b36;border-bottom:1px solid #394354}
+.e1-code-bar i{height:12px;width:12px;border-radius:50%;background:#ff6058}.e1-code-bar i:nth-child(2){background:#ffbd2d}.e1-code-bar i:nth-child(3){background:#28c840}
+.e1-code-bar b{margin-left:20px;font:500 23px 'Noto Sans KR';color:#e4e9f2}.e1-code-bar span{margin-left:auto;font:16px Consolas;color:#95a4ba}
+.e1-asm-columns{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:30px 26px}
+.e1-code-window pre{margin:0;white-space:pre;font-family:Consolas,'Courier New',monospace;font-size:18px;line-height:1.7;color:#c6d8ec;tab-size:4}
+.e1-code-window .e1-c-code{padding:38px 38px;font-size:25px;line-height:1.65;color:#d0e3d8}
+.e1-code-window footer{position:absolute;bottom:0;left:0;right:0;height:54px;display:flex;align-items:center;gap:18px;padding:0 28px;border-top:1px solid #293442;background:#0f141c;font:15px Consolas;color:#7589a5}.e1-code-window footer b{color:#9bdfb7;font-size:21px}
+.e1-brokers .e1-opening-head h1{font-size:59px!important}.e1-brokers .e1-opening-head p{font-size:25px!important}
+.e1-broker-collage{position:absolute;inset:210px 60px 70px}
+.e1-broker-card{position:absolute;margin:0;background:white;border:1px solid #dce2eb;border-radius:14px;overflow:hidden;box-shadow:0 16px 40px #314b7220}
+.e1-broker-card figcaption{min-height:50px;padding:13px 18px;background:#fff;display:flex;flex-direction:column;gap:4px}.e1-broker-card b{font-size:23px;font-weight:500}.e1-broker-card span{font-size:16px;color:#778398}
+.e1-broker-card>img{width:100%;height:calc(100% - 57px);object-fit:cover;object-position:top}
+.e1-kis-dev{left:0;top:35px;width:430px;height:260px}.e1-kis-git{left:450px;top:100px;width:475px;height:300px}.e1-kis-mcp{left:28px;top:462px;width:750px;height:280px}
+.e1-toss-api{left:965px;top:10px;width:395px;height:395px}.e1-toss-auth{right:0;top:0;width:395px;height:515px}.e1-toss-ws{left:840px;top:480px;width:660px;height:264px}
+.e1-kis-logo{position:absolute;left:190px;top:352px;width:260px;height:auto}.e1-toss-logo{position:absolute;right:42px;top:595px;width:270px;height:auto}
+.e1-interview .rev-main{top:240px!important}.e1-interview .rev-interview{grid-template-columns:1.08fr 1fr!important;gap:55px!important;align-items:center!important}
+.e1-interview .rev-interview-frame{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important;overflow:hidden!important;height:auto!important;aspect-ratio:16/9}
+.e1-interview .rev-speech-frame .rev-wts-video,.e1-interview .rev-speech-frame .rev-wts-still{width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;transform:scale(1.11);transform-origin:center;background:transparent!important}
+.e1-interview blockquote{font-size:45px!important;line-height:1.3!important;letter-spacing:-1.8px!important;margin:0!important}.e1-interview blockquote p{font:25px/1.6 'Noto Sans KR'!important;letter-spacing:-.5px!important}.e1-interview cite{font:19px/1.5 'Noto Sans KR'!important;color:#687486!important}
+.e1-cs .e1-opening-head{color:#f3f6fc;background:linear-gradient(#02030a 0 82%,#02030a00);padding-bottom:32px}.e1-cs .e1-opening-head p{color:#aebbd2}.e1-cs .e1-curriculum-source{position:fixed;left:100px;bottom:20px;color:#7e8fa9;font:13px/1.4 'Noto Sans KR'}
+.e1-cs .cc-tile-content{padding:15px 20px!important;color:#233650!important;background:linear-gradient(135deg,#f4f8ff,#dce8fb)!important}
+.e1-cs .e1-course-id{font:11px/1.2 Consolas;color:#5e789b;letter-spacing:1.4px}
+.e1-cs .cc-tile-content h2{font:500 25px/1.2 'Noto Sans KR'!important;letter-spacing:-1px!important;margin:6px 0 4px!important;color:#233650!important}
+.e1-cs .e1-course-en{font:11px/1.3 'Noto Sans KR';color:#5e7595;white-space:nowrap}
+.e1-cs .cc-tile-content pre{font:12px/1.65 Consolas,monospace!important;color:#354e70!important;margin:13px 0 0!important;white-space:pre!important;letter-spacing:0!important}
+@media(prefers-reduced-motion:reduce){.e1-claude-lockup{opacity:1}.e1-question-echo{opacity:0}}

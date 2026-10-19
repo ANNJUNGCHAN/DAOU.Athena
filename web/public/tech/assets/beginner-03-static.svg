@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" role="img" aria-labelledby="title desc">
+  <title id="title">한 번만 쓰는 실행 계획</title>
+  <desc id="desc">서명 계획의 일회용 nonce를 검증하고 소비한 뒤 봉인 인자를 검사합니다. 조회와 주문 경로를 분리하고 조건이 맞지 않으면 거절합니다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#576AF9"/></marker></defs>
+  <rect width="1200" height="400" fill="#fff"/>
+  <text x="50" y="65" font-family="Daki,DakiL,sans-serif" font-size="24" fill="#14171D">한 번만 쓰는 실행 계획</text>
+  <g class="step" style="animation-delay:0s" font-family="Daki,DakiL,sans-serif" text-anchor="middle"><rect x="55" y="130" width="230" height="140" rx="8" fill="#FAFAFC" stroke="#263044" stroke-width="1.5"/><text x="170" y="183" font-size="20" fill="#14171D">서명 계획</text><text x="170" y="220" font-size="17" fill="#626B76">resolve</text></g>
+  <g class="step" style="animation-delay:0.3s" font-family="Daki,DakiL,sans-serif" text-anchor="middle"><rect x="335" y="130" width="230" height="140" rx="8" fill="#FAFAFC" stroke="#263044" stroke-width="1.5"/><text x="450" y="183" font-size="20" fill="#14171D">nonce 소비</text><text x="450" y="220" font-size="17" fill="#626B76">일회용 검증</text></g>
+  <g class="step" style="animation-delay:0.6s" font-family="Daki,DakiL,sans-serif" text-anchor="middle"><rect x="615" y="130" width="230" height="140" rx="8" fill="#EEF0FF" stroke="#576AF9" stroke-width="1.5"/><text x="730" y="183" font-size="20" fill="#14171D">봉인 인자 검사</text><text x="730" y="220" font-size="17" fill="#626B76">스키마 · 범위</text></g>
+  <g class="step" style="animation-delay:0.8999999999999999s" font-family="Daki,DakiL,sans-serif" text-anchor="middle"><rect x="895" y="130" width="230" height="140" rx="8" fill="#FAFAFC" stroke="#263044" stroke-width="1.5"/><text x="1010" y="183" font-size="20" fill="#14171D">호출 또는 거절</text><text x="1010" y="220" font-size="17" fill="#626B76">조회 / 주문 분리</text></g>
+  <path d="M285 200H355" fill="none" stroke="#576AF9" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M565 200H635" fill="none" stroke="#576AF9" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M845 200H915" fill="none" stroke="#576AF9" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="50" y="335" font-family="Daki,DakiL,sans-serif" font-size="17" fill="#626B76">nonce를 소비한 계획은 재사용할 수 없습니다. 모의투자 주문에는 건별 사용자 확인이 필요합니다.</text>
+
+</svg>

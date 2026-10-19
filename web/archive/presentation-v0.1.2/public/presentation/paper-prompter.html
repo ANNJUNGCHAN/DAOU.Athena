@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>ATHENA 발표 프롬프터</title>
+    <link rel="stylesheet" href="paper-prompter.css">
+    <script src="paper-final-content.js" defer></script>
+    <script src="paper-prompter.js" defer></script>
+  </head>
+  <body>
+    <header class="prompter-header">
+      <div>
+        <p class="eyebrow">ATHENA PRESENTER</p>
+        <h1>발표 프롬프터</h1>
+      </div>
+      <div class="connection" id="connection" data-state="waiting" role="status" aria-live="polite">
+        <span aria-hidden="true"></span><strong>발표 창 연결 대기</strong>
+      </div>
+    </header>
+
+    <main>
+      <section class="control-rail" aria-label="발표 제어">
+        <label class="slide-picker-label" for="slidePicker">슬라이드</label>
+        <select id="slidePicker" aria-label="슬라이드 바로 이동" disabled></select>
+        <div class="timer" aria-label="발표 경과 시간">
+          <span>경과 시간</span><strong id="elapsed">00:00</strong>
+        </div>
+        <button id="timerToggle" type="button">타이머 시작</button>
+        <button id="timerReset" type="button">초기화</button>
+        <div class="font-controls" aria-label="대본 글자 크기">
+          <span>글자</span>
+          <button id="fontDown" type="button" aria-label="대본 글자 작게">−</button>
+          <output id="fontSize" aria-live="polite">34</output>
+          <button id="fontUp" type="button" aria-label="대본 글자 크게">＋</button>
+        </div>
+      </section>
+
+      <section class="script-card" aria-labelledby="currentTitle">
+        <div class="script-meta">
+          <span id="position">— / —</span>
+          <span id="sourceNumber"></span>
+        </div>
+        <h2 id="currentTitle">발표 창을 연결하고 있습니다</h2>
+        <div id="script" class="script" tabindex="0">
+          <p>발표 창에서 <strong>발표 시작</strong>을 눌러 프롬프터를 열어 주세요.</p>
+        </div>
+      </section>
+
+      <aside class="next-card" aria-labelledby="nextTitle">
+        <p>다음 슬라이드</p>
+        <h3 id="nextTitle">연결 대기</h3>
+        <p id="nextPreview">발표 창 연결 후 다음 장면이 표시됩니다.</p>
+      </aside>
+    </main>
+
+    <nav class="transport" aria-label="슬라이드 이동">
+      <button id="previous" type="button" disabled><span aria-hidden="true">←</span> 이전</button>
+      <button id="replay" type="button" aria-label="현재 슬라이드 다시 재생" disabled>↺ 다시 재생</button>
+      <button id="next" class="primary" type="button" disabled>다음 <span aria-hidden="true">→</span></button>
+    </nav>
+
+    <aside id="reconnectHelp" class="reconnect-help" hidden>
+      <strong>발표 창과 연결되지 않았습니다.</strong>
+      <p>발표 창을 새로 열거나 새로고침한 뒤 잠시 기다려 주세요. 연결 전에는 이동 명령을 실행하지 않습니다.</p>
+      <a id="openDeck" href="paper-final.html?slide=1" target="athena-paper-deck">발표 창 열기</a>
+    </aside>
+    <p id="announcement" class="sr-only" aria-live="assertive" aria-atomic="true"></p>
+  </body>
+</html>
