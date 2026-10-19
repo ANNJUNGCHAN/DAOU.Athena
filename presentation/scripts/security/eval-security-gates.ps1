@@ -1,5 +1,22 @@
 param([string]$RemoteUrl = '')
 
+$scriptPath = [System.IO.Path]::GetFullPath($MyInvocation.MyCommand.Path)
+$repositoryRoot = & git -C $PSScriptRoot rev-parse --show-toplevel 2>$null
+$gitExitCode = $LASTEXITCODE
+$repositoryRoot = $repositoryRoot | Select-Object -First 1
+if ($gitExitCode -eq 0 -and $repositoryRoot) {
+    $rootMarker = Join-Path $repositoryRoot 'scripts\security\keepset.mjs'
+    $rootGate = Join-Path $repositoryRoot 'scripts\security\eval-security-gates.ps1'
+    if ((Test-Path -LiteralPath $rootMarker -PathType Leaf) -and
+        (Test-Path -LiteralPath $rootGate -PathType Leaf)) {
+        $rootGatePath = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $rootGate).Path)
+        if (-not [System.StringComparer]::OrdinalIgnoreCase.Equals($scriptPath, $rootGatePath)) {
+            & powershell -NoProfile -NonInteractive -File $rootGatePath
+            exit $LASTEXITCODE
+        }
+    }
+}
+
 # Read-only checks. This script must not consume pre-push's standard input.
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest

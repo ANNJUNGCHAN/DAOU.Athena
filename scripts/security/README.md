@@ -9,6 +9,8 @@ Gates:
 - `.github/workflows/secret-scan.yml` — CI gitleaks after a push, then prompt-marker and tracked keep-set checks.
 - `scripts/security/check-prompt-security.mjs` — fail-closed marker presence check, invoked by eval, pre-push, and CI.
 - `scripts/security/keepset.mjs` / `check-tracked-keepset.mjs` — only the desktop run/rebuild paths, dest-control paths, and reviewed `web/` and `presentation/` subtrees may be tracked. Nested environment files, credentials, profiles, databases, installed runtimes, caches, and generated render output remain forbidden.
+- `scripts/security/check-public-artifacts.mjs` — materializes only reviewed tracked files under `web/` and `presentation/` into a bounded temporary directory, rejects forbidden paths and unresolved LFS pointers, scans actual contents and archives with strict gitleaks decoding, and runs `git lfs fsck`.
+- CI must check out LFS objects (`lfs: true`) before running the public-artifact gate; pointer-only checkout fails closed.
 
 Policy (instructed, not a sandbox):
 - `GROK.md` / `AGENTS.md` / `CLAUDE.md` — coding-agent deploy procedure (no `--no-verify`, no live secrets in git).

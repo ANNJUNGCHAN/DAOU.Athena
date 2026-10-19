@@ -48,7 +48,6 @@ next-env.d.ts
 /hooks/
 /.githooks/
 /.github/
-/.gitattributes
 /AGENTS.md
 /CLAUDE.md
 /ATHENA-WEBSITE-PLAN.md

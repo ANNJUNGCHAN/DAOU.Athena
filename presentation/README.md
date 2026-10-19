@@ -1,6 +1,6 @@
-# DAOU.Athena-Presentation
+# ATHENA Presentation
 
-ATHENA의 최종 발표 PPT, 60초 소개 영상, 영상 제작 소스와 재생·렌더링 도구를 보관하는 저장소입니다.
+통합 ATHENA 저장소의 `presentation/`에 최종 발표 PPT, 60초 소개 영상, 영상 제작 소스와 재생·렌더링 도구를 보관합니다.
 
 | 경로 | 내용 |
 | --- | --- |
@@ -23,25 +23,25 @@ PPTX, MP4, WAV, TTF, EXE 파일은 Git LFS로 보관합니다. [Git LFS](https:/
 
 ```powershell
 git lfs install
-git clone https://github.com/ANNJUNGCHAN/DAOU.Athena-Presentation.git
-cd DAOU.Athena-Presentation
+git clone https://github.com/ANNJUNGCHAN/DAOU.Athena.git
+Set-Location DAOU.Athena
 git lfs pull
 ```
 
 ## 미리보기와 렌더링
 
-Node.js가 설치된 환경에서 다음 명령을 실행하고 [로컬 미리보기](http://127.0.0.1:8230/source/video/index.html)를 여세요.
+Node.js가 설치된 환경에서 저장소 루트의 다음 명령을 실행하고 [로컬 미리보기](http://127.0.0.1:8230/source/video/index.html)를 여세요.
 
 ```powershell
-.\preview.ps1
+.\presentation\preview.ps1
 ```
 
 완성 영상과 코드 모션을 전환할 수 있으며, 서버는 `Ctrl+C`로 종료합니다. HTML 파일을 더블클릭하는 방식은 브라우저의 로컬 파일 제한으로 지원하지 않습니다.
 
-영상을 다시 만들려면 다음 명령을 실행하세요. **루트의 `athena-v23-60s.mp4`를 덮어씁니다.** 새 중간 결과는 `source/video/render/`에 저장됩니다.
+영상을 다시 만들려면 다음 명령을 실행하세요. **`presentation/athena-v23-60s.mp4`를 덮어씁니다.** 새 중간 결과는 `source/video/render/`에 저장됩니다.
 
 ```powershell
-.\render.ps1
+.\presentation\render.ps1
 ```
 
 렌더링에는 Node.js, Playwright, `@napi-rs/canvas`, Chrome이 필요합니다. 다른 PC에서는 `ATHENA_NODE`, `ATHENA_NODE_MODULES`, `CHROME_PATH`로 설치 경로를 지정할 수 있습니다. FFmpeg·FFprobe는 패키지에 포함되어 있으며 `FFMPEG_PATH`, `FFPROBE_PATH`로 대체할 수 있습니다. 선택적인 차트 합성 도구는 Python의 `numpy`, `Pillow`, `opencv-python`을 사용합니다. 자세한 내용은 [사용안내.txt](./사용안내.txt)를 참고하세요.
@@ -51,12 +51,12 @@ Node.js가 설치된 환경에서 다음 명령을 실행하고 [로컬 미리�
 Python 3.9 이상에서 실행합니다.
 
 ```powershell
-python migration/verify-package.py
+python presentation/migration/verify-package.py
 ```
 
 기본 검사는 2026-10-08 이관 명세에서 변경되지 않은 83개 파일과 제작 당시 핵심 화면 코드를 검사합니다. 이관 명세 자체는 당시 43장 발표본과 당시 검증기의 원본 해시를 보존하며 수정하지 않습니다. 안정 경로 `ATHENA-최종발표.pptx`와 공식 PDF·대본·시연 가이드는 현재 릴리스 명세 `release/product-release.json`의 경로와 SHA-256으로 검증합니다. PPTX 내부 장표 수도 명세의 39장 계약과 일치해야 합니다. 검증기는 루트 밖을 가리키는 릴리스 경로를 거부합니다.
 
-과거 85개 파일의 바이트 동일성을 엄격히 재검증하려면 2026-10-08 역사 릴리스 커밋에서 다음 명령을 실행하세요. 현재 체크아웃에서 `--historical`을 실행하면 안정 경로가 새 공식본을 가리키므로 의도대로 실패합니다.
+과거 85개 파일의 바이트 동일성을 엄격히 재검증하려면 2026-10-08 역사 릴리스 커밋의 원본 Presentation 저장소 루트에서 다음 명령을 실행하세요. 현재 통합 체크아웃에서 `--historical`을 실행하면 안정 경로가 새 공식본을 가리키므로 의도대로 실패합니다.
 
 ```powershell
 python migration/verify-package.py --historical
@@ -66,10 +66,9 @@ python migration/verify-package.py --historical
 
 ## 공개 저장소 보안 검사
 
-Git LFS, [Gitleaks 8.30.1 이상](https://github.com/gitleaks/gitleaks), [GitHub CLI](https://cli.github.com/), Windows PowerShell을 준비하고 GitHub CLI에 인증한 뒤 저장소별 훅을 설정합니다.
+Git LFS, [Gitleaks 8.30.1 이상](https://github.com/gitleaks/gitleaks), [GitHub CLI](https://cli.github.com/), Windows PowerShell을 준비하고 GitHub CLI에 인증합니다. 저장소 루트에서 정본 보안 게이트를 실행합니다.
 
 ```powershell
-git config core.hooksPath .githooks
 powershell -NoProfile -File scripts/security/eval-security-gates.ps1
 ```
 
@@ -83,7 +82,7 @@ powershell -NoProfile -File scripts/security/eval-security-gates.ps1
 
 FFmpeg와 폰트 등 외부 자산의 기존 라이선스·출처 고지를 유지합니다. 이 저장소는 모든 파일에 일괄 적용되는 소프트웨어 라이선스를 별도로 부여하지 않습니다.
 
-## 관련 저장소
+## 통합 저장소 구성
 
-- [DAOU.Athena](https://github.com/ANNJUNGCHAN/DAOU.Athena) — ATHENA 앱
-- [DAOU.Athena-Web](https://github.com/ANNJUNGCHAN/DAOU.Athena-Web) — ATHENA 웹
+- [DAOU.Athena](https://github.com/ANNJUNGCHAN/DAOU.Athena) — 통합 공개 저장소
+- [`../web`](../web) — ATHENA Website

@@ -21,16 +21,21 @@ Gate 'ci-workflow' (Test-Path (Join-Path $root '.github\workflows\secret-scan.ym
 
 $checker = Join-Path $root 'scripts\security\check-prompt-security.mjs'
 $keepset = Join-Path $root 'scripts\security\check-tracked-keepset.mjs'
+$publicArtifacts = Join-Path $root 'scripts\security\check-public-artifacts.mjs'
 Gate 'prompt-checker-file' (Test-Path $checker) 'file'
 Gate 'keepset-checker-file' (Test-Path $keepset) 'file'
+Gate 'public-artifact-checker-file' (Test-Path $publicArtifacts) 'file'
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
   Gate 'prompt-markers' $false 'node missing'
   Gate 'tracked-keepset' $false 'node missing'
+  Gate 'public-artifacts' $false 'node missing'
 } else {
   & node $checker | Out-Host
   Gate 'prompt-markers' ($LASTEXITCODE -eq 0) "rc=$LASTEXITCODE"
   & node $keepset | Out-Host
   Gate 'tracked-keepset' ($LASTEXITCODE -eq 0) "rc=$LASTEXITCODE"
+  & node $publicArtifacts | Out-Host
+  Gate 'public-artifacts' ($LASTEXITCODE -eq 0) "rc=$LASTEXITCODE"
 }
 
 $cfg = Join-Path $root 'scripts\security\gitleaks.toml'

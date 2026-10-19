@@ -20,6 +20,7 @@ if ! command -v node >/dev/null 2>&1; then
 fi
 node "$ROOT/scripts/security/check-tracked-keepset.mjs"
 node "$ROOT/scripts/security/check-prompt-security.mjs"
+node "$ROOT/scripts/security/check-public-artifacts.mjs" </dev/null
 
 # This public repository requires a positively verified protection status.
 if ! command -v gh >/dev/null 2>&1; then
