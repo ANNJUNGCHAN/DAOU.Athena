@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ATHENA WTS</title>
+    <link rel="stylesheet" href="panel.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">ATHENA · LOCAL WTS CHAT</p>
+        <h1>WTS 대화형 화면 제어</h1>
+        <p class="intro">로컬의 결정형 명령 해석기가 지원 범위 안에서 화면을 확인하고 한 단계씩 실행합니다.</p>
+      </header>
+
+      <section class="status-grid" aria-label="상태">
+        <article>
+          <span>WTS 탭</span>
+          <strong id="tab-status">확인 전</strong>
+        </article>
+        <article>
+          <span>로컬 연결</span>
+          <strong id="connection-status">연결 안 됨</strong>
+        </article>
+        <article>
+          <span>캡처 / 관찰</span>
+          <strong id="observation-count">—</strong>
+        </article>
+      </section>
+
+      <section id="financial-section" class="financial" aria-label="로컬 금융 조회">
+        <div class="section-heading">
+          <div>
+            <h2>로컬 금융 조회</h2>
+            <p class="local-engine">키움 REST 조회 전용 · 주문/웹소켓/원격 AI 없음</p>
+          </div>
+          <button id="financial-refresh" class="secondary" type="button" disabled>상태 확인</button>
+        </div>
+        <p id="financial-readiness" role="status" aria-live="polite">로컬 실행기에 연결해 주세요.</p>
+        <label for="financial-profile">조회 프로필</label>
+        <select id="financial-profile" disabled></select>
+
+        <details id="financial-credentials">
+          <summary>조회 프로필 등록/변경</summary>
+          <form id="financial-credentials-form" class="financial-credentials-form" hidden>
+            <input id="financial-profile-id" type="hidden" value="">
+            <label for="financial-profile-label">프로필 이름</label>
+            <input id="financial-profile-label" type="text" minlength="1" maxlength="64" autocomplete="off" required>
+            <label for="financial-environment">환경</label>
+            <select id="financial-environment">
+              <option value="mock">모의 조회</option>
+              <option value="real">실전 조회</option>
+            </select>
+            <label for="financial-app-key">App Key</label>
+            <input id="financial-app-key" type="password" minlength="1" maxlength="256" autocomplete="new-password" required>
+            <label for="financial-secret-key">Secret Key</label>
+            <input id="financial-secret-key" type="password" minlength="1" maxlength="256" autocomplete="new-password" required>
+            <div class="button-row">
+              <button id="financial-credential-save" class="primary" type="submit">Windows에 안전하게 저장</button>
+              <button id="financial-credential-delete" class="discard" type="button" disabled>선택 프로필 삭제</button>
+            </div>
+            <p class="field-help">키는 이 입력에서 로컬 실행기로 한 번 전달된 뒤 즉시 지워집니다. 확장 저장소와 대화 기록에는 저장하지 않습니다.</p>
+          </form>
+        </details>
+
+        <div id="financial-query-form" class="financial-query-form-host">
+          <p class="field-help">대화에서 조회 기능을 찾고 ‘기능 상세 보기’를 누르면 검증된 입력 양식이 여기에 표시됩니다.</p>
+        </div>
+        <div class="button-row">
+          <button id="financial-query-stop" class="secondary" type="button" disabled>조회 중지</button>
+        </div>
+        <p id="financial-query-status" role="status" aria-live="polite">조회 기능 상세를 선택해 주세요.</p>
+        <div id="financial-card" class="financial-card-host"></div>
+      </section>
+
+      <section class="actions" aria-label="로컬 실행기">
+        <div class="button-row">
+          <button id="connect" class="primary">로컬 실행기 연결</button>
+          <button id="disconnect" class="secondary" disabled>연결 해제</button>
+        </div>
+        <button id="collect" class="collect" disabled>현재 화면 조사</button>
+        <button id="discard" class="discard" disabled>실패한 캡처 폐기</button>
+        <p id="message" role="status" aria-live="polite">로컬 실행기에 연결해 주세요.</p>
+      </section>
+
+      <section id="provider-section" class="provider" aria-label="ChatGPT 연결">
+        <div class="section-heading">
+          <div>
+            <h2>Continue with ChatGPT</h2>
+            <p class="local-engine">OpenAI ChatGPT 연결 · 모델을 직접 선택한 뒤 사용</p>
+          </div>
+          <strong id="provider-status">연결 안 됨</strong>
+        </div>
+        <p id="provider-operation" role="status" aria-live="polite">로컬 실행기에 연결해 주세요.</p>
+        <div class="button-row">
+          <button id="provider-connect" class="primary" type="button" disabled>Continue with ChatGPT</button>
+          <button id="provider-disconnect" class="secondary" type="button" disabled>ChatGPT 연결 해제</button>
+          <button id="provider-reset" class="discard" type="button" disabled>계정 연결 정보 초기화</button>
+        </div>
+        <div class="provider-model-row">
+          <label for="provider-model">모델</label>
+          <select id="provider-model" disabled><option value="">모델 목록을 불러와 주세요</option></select>
+          <button id="provider-models" class="secondary" type="button" disabled>모델 목록 불러오기</button>
+        </div>
+        <button id="provider-refresh" class="secondary" type="button" disabled>ChatGPT 상태 확인</button>
+        <button id="provider-cancel" class="secondary" type="button" disabled>ChatGPT 작업 취소</button>
+        <p class="field-help">연결 후 이 패널에서 제출한 문장과 고정된 WTS 명령 목록만 OpenAI로 전송됩니다. WTS 화면, HTML, 입력값, 계좌·금융 데이터, 로컬 파일과 키움 인증 정보는 보내지 않습니다. 토큰과 모델 상태는 로컬 실행기 프로세스 메모리에만 유지되며, 프로세스가 종료되면 다시 연결해야 합니다.</p>
+        <a id="provider-usage-link" href="https://chatgpt.com/settings/usage" target="_blank" rel="noopener noreferrer">OpenAI 사용량 관리 열기</a>
+        <article id="provider-proposal" class="provider-proposal" hidden>
+          <h3>WTS 실행 제안</h3>
+          <p id="provider-assistant-text"></p>
+          <code id="provider-command-text"></code>
+          <div class="button-row">
+            <button id="provider-execute" class="primary" type="button">실행</button>
+            <button id="provider-reject" class="secondary" type="button">거절</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="control" aria-label="ATHENA 로컬 대화">
+        <div class="section-heading">
+          <div>
+            <h2>ATHENA 로컬 대화</h2>
+            <p class="local-engine">로컬 결정형 명령 우선 · 지원되지 않는 문장은 선택한 ChatGPT 모델로 계속</p>
+          </div>
+          <output id="task-progress" class="task-progress" aria-live="polite" aria-atomic="true">0 / 0 · 작업 없음</output>
+        </div>
+        <ol id="chat-log" class="chat-log" role="log" aria-label="현재 세션 대화" aria-live="polite" aria-relevant="additions text"></ol>
+        <div id="task-card" class="task-card" hidden>
+          <div class="task-meta">
+            <span id="task-status">작업 없음</span>
+            <code id="task-id"></code>
+          </div>
+          <ol id="task-steps" class="task-steps" aria-label="명령 실행 단계"></ol>
+        </div>
+        <label for="chat-input">요청</label>
+        <textarea id="chat-input" rows="3" maxlength="512" placeholder="예: 차트 열고 주봉으로 또는 시장 메뉴 열어줘: 순위 > 전일대비 등락률 순위" aria-describedby="chat-help"></textarea>
+        <div class="example-chips" aria-label="명령 예시">
+          <button type="button" class="chip" data-command="차트 열어줘">차트 열어줘</button>
+          <button type="button" class="chip" data-command="일봉으로">일봉으로</button>
+          <button type="button" class="chip" data-command="차트 열고 주봉으로">차트 열고 주봉으로</button>
+          <button type="button" class="chip" data-command="월봉으로">월봉으로</button>
+          <button type="button" class="chip" data-command="년봉으로">년봉으로</button>
+          <button type="button" class="chip" data-command="시장 메뉴 열어줘: 순위 > 전일대비 등락률 순위">순위 메뉴 열기</button>
+          <button type="button" class="chip" data-command="조회 기능 찾아줘: 현재가">조회 기능 찾아줘: 현재가</button>
+        </div>
+        <p id="chat-help" class="field-help">지원되는 차트·시장·조회 명령은 로컬에서 먼저 처리합니다. 지원되지 않는 문장은 ChatGPT가 연결되고 모델이 선택된 경우에만 전송되며, WTS 실행 제안은 별도 실행 확인 전에는 실행되지 않습니다.</p>
+        <div class="button-row control-row">
+          <button id="chat-send" class="primary" disabled>보내기</button>
+          <button id="chat-stop" class="secondary" aria-describedby="stop-help" disabled>중지</button>
+        </div>
+        <p id="stop-help" class="stop-help">중지는 다음 단계를 막습니다. 이미 클릭을 시작한 단계는 결과 확인과 영수증 저장을 마친 뒤 멈춥니다.</p>
+        <button id="task-refresh" class="status-refresh" hidden>작업 상태 새로고침</button>
+        <button id="retry-receipt" class="collect" disabled>동일한 결과 영수증 저장 재시도</button>
+        <button id="archive-receipt" class="discard" disabled>미확인 결과 보관</button>
+        <p id="control-message" role="status" aria-live="polite">현재 화면 조사 후 지원되는 WTS 화면 작업을 사용할 수 있습니다. 메타데이터 검색은 소스 구성 후 별도로 사용할 수 있습니다.</p>
+        <p id="source-message" class="source-message" role="status" aria-live="polite">로컬 실행기에 연결해 주세요.</p>
+        <button id="source-refresh" class="secondary" type="button" hidden>활동 상태 다시 확인</button>
+      </section>
+
+      <section class="notice">
+        <h2>현재 단계</h2>
+        <p>지원 문장 전체를 로컬에서 결정형으로 검사합니다. 메타데이터 카드는 실제 금융 데이터를 조회하지 않으며, 모르는 내용이 섞이면 실행하지 않습니다. 패널을 닫으면 메타데이터 대화는 사라지고 자동으로 재실행하지 않습니다.</p>
+      </section>
+
+      <section class="privacy">
+        <h2>개인정보 보호</h2>
+        <ul>
+          <li>지원 범위 안의 명령·작업·영수증 메타데이터만 사용자 PC에 제한적으로 저장합니다. 메타데이터 대화와 카드는 열린 패널 세션에만 보관합니다.</li>
+          <li>ChatGPT를 명시적으로 연결한 경우 제출한 대화 문장과 고정된 WTS 명령 목록만 OpenAI로 보냅니다.</li>
+          <li>WTS 캡처, 쿠키, HTML, 입력값, 계좌번호, 금융 조회 결과, 로컬 파일과 키움 인증 정보는 OpenAI로 보내지 않습니다.</li>
+          <li>인증·보안 프레임과 표 데이터는 조사에서 제외합니다.</li>
+          <li>화면 관찰은 ‘현재 화면 조사’를 누르거나 지원되는 WTS 화면 명령을 제출했을 때만 수행합니다. 메타데이터 검색은 WTS 화면을 관찰하지 않습니다.</li>
+          <li>저장 실패 캡처는 동일한 내용으로 재시도하거나 직접 폐기할 수 있습니다.</li>
+          <li>클릭은 자동 재시도하지 않으며, 결과 영수증만 동일하게 다시 저장합니다.</li>
+          <li>미확인 결과 보관은 실행 증거가 아니며 LAYA 학습 자료나 로컬 실행기 영수증으로 사용하지 않습니다.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="vendor/facts-card.js"></script>
+    <script src="vendor/board-format.js"></script>
+    <script src="vendor/ui-kit.js"></script>
+    <script src="vendor/chart-resample.js"></script>
+    <script src="vendor/chart-indicator-registry.js"></script>
+    <script src="vendor/chart-indicators.js"></script>
+    <script src="vendor/chart-indicator-render.js"></script>
+    <script src="vendor/chart-volume-profile.js"></script>
+    <script src="vendor/chart-authoring-store.js"></script>
+    <script src="vendor/chart-drawings.js"></script>
+    <script src="vendor/chart-toolbar.js"></script>
+    <script src="vendor/chart-indicator-panel.js"></script>
+    <script src="vendor/chart-card.js"></script>
+    <script src="vendor/chart-tick-fold.js"></script>
+    <script src="vendor/aits-chart-panel.js"></script>
+    <script type="module" src="panel.mjs"></script>
+  </body>
+</html>

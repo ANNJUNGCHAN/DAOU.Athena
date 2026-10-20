@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "wts-market-menu-navigation-live-ui-20261019",
+  "observedDate": "2026-10-19",
+  "origin": "https://wts.kiwoom.com",
+  "method": "live-Chrome-existing-user-tab-sitemap-navigation-and-P1-active-state-readback",
+  "scope": "market-analysis sitemap menu navigation only",
+  "procedure": [
+    "open sitemap",
+    "wait until sitemap modal is visible",
+    "scope the exact button to its sitemap group and click once",
+    "confirm the sitemap modal is hidden",
+    "read P1 li.depth.active group and child, or the P1 topActive label"
+  ],
+  "counts": {
+    "checkCount": 25,
+    "verifiedCount": 25,
+    "failedCount": 0,
+    "groupAndChildAssertionCount": 24,
+    "topActiveAssertionCount": 1,
+    "modalClosedConfirmationCount": 25,
+    "sitemapGroupCount": 6
+  },
+  "checks": [
+    {
+      "id": "market-menu-001",
+      "sitemapGroup": "시세분석",
+      "buttonLabel": "급등락",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "시세분석", "child": "급등락" },
+      "observed": { "group": "시세분석", "child": "급등락" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-002",
+      "sitemapGroup": "시세분석",
+      "buttonLabel": "VI발동종목",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "시세분석", "child": "VI발동종목" },
+      "observed": { "group": "시세분석", "child": "VI발동종목" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-003",
+      "sitemapGroup": "시세분석",
+      "buttonLabel": "거래량급증",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "시세분석", "child": "거래량급증" },
+      "observed": { "group": "시세분석", "child": "거래량급증" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-004",
+      "sitemapGroup": "시세분석",
+      "buttonLabel": "관리종목",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "시세분석", "child": "관리종목" },
+      "observed": { "group": "시세분석", "child": "관리종목" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-005",
+      "sitemapGroup": "시세분석",
+      "buttonLabel": "상하한가",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "시세분석", "child": "상하한가" },
+      "observed": { "group": "시세분석", "child": "상하한가" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-006",
+      "sitemapGroup": "시세분석",
+      "buttonLabel": "신규상장",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "시세분석", "child": "신규상장" },
+      "observed": { "group": "시세분석", "child": "신규상장" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-007",
+      "sitemapGroup": "시세분석",
+      "buttonLabel": "신고신저가",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "시세분석", "child": "신고신저가" },
+      "observed": { "group": "시세분석", "child": "신고신저가" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-008",
+      "sitemapGroup": "시세분석",
+      "buttonLabel": "증거금률별",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "시세분석", "child": "증거금률별" },
+      "observed": { "group": "시세분석", "child": "증거금률별" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-009",
+      "sitemapGroup": "시세분석",
+      "buttonLabel": "거래량갱신",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "시세분석", "child": "거래량갱신" },
+      "observed": { "group": "시세분석", "child": "거래량갱신" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-010",
+      "sitemapGroup": "순위",
+      "buttonLabel": "전일대비 등락률 순위",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "순위분석", "child": "전일대비등락률상위" },
+      "observed": { "group": "순위분석", "child": "전일대비등락률상위" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-011",
+      "sitemapGroup": "순위",
+      "buttonLabel": "당일 거래상위",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "순위분석", "child": "당일거래상위(거래량/회전율/거래대금)" },
+      "observed": { "group": "순위분석", "child": "당일거래상위(거래량/회전율/거래대금)" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-012",
+      "sitemapGroup": "테마/업종",
+      "buttonLabel": "인포스탁섹터그룹",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "테마/업종", "child": "인포스탁섹터그룹" },
+      "observed": { "group": "테마/업종", "child": "인포스탁섹터그룹" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-013",
+      "sitemapGroup": "테마/업종",
+      "buttonLabel": "인포스탁섹터구성종목",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "테마/업종", "child": "인포스탁섹터구성종목" },
+      "observed": { "group": "테마/업종", "child": "인포스탁섹터구성종목" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-014",
+      "sitemapGroup": "테마/업종",
+      "buttonLabel": "전업종지수",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "테마/업종", "child": "전업종지수" },
+      "observed": { "group": "테마/업종", "child": "전업종지수" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-015",
+      "sitemapGroup": "테마/업종",
+      "buttonLabel": "업종현재가",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "테마/업종", "child": "업종현재가" },
+      "observed": { "group": "테마/업종", "child": "업종현재가" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-016",
+      "sitemapGroup": "외국인/거래원",
+      "buttonLabel": "외국인 기간별매매 상위",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "외국인/거래원", "child": "외국인기간별매매상위" },
+      "observed": { "group": "외국인/거래원", "child": "외국인기간별매매상위" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-017",
+      "sitemapGroup": "외국인/거래원",
+      "buttonLabel": "외국인 연속순매매 상위",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "외국인/거래원", "child": "외국인연속순매매상위" },
+      "observed": { "group": "외국인/거래원", "child": "외국인연속순매매상위" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-018",
+      "sitemapGroup": "외국인/거래원",
+      "buttonLabel": "종목별 증권사 순위",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "외국인/거래원", "child": "종목별증권사순위" },
+      "observed": { "group": "외국인/거래원", "child": "종목별증권사순위" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-019",
+      "sitemapGroup": "외국인/거래원",
+      "buttonLabel": "거래원 순간 거래량",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "외국인/거래원", "child": "거래원순간거래량" },
+      "observed": { "group": "외국인/거래원", "child": "거래원순간거래량" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-020",
+      "sitemapGroup": "투자자별/프로그램",
+      "buttonLabel": "투자자별매매동향",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "투자자별/프로그램", "child": "투자자별매매동향" },
+      "observed": { "group": "투자자별/프로그램", "child": "투자자별매매동향" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-021",
+      "sitemapGroup": "투자자별/프로그램",
+      "buttonLabel": "투자자별매매일별",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "투자자별/프로그램", "child": "투자자별매매일별" },
+      "observed": { "group": "투자자별/프로그램", "child": "투자자별매매일별" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-022",
+      "sitemapGroup": "투자자별/프로그램",
+      "buttonLabel": "종목별투자자",
+      "selectionScope": "sitemap-dl-group",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "투자자별/프로그램", "child": "종목별투자자" },
+      "observed": { "group": "투자자별/프로그램", "child": "종목별투자자" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-023",
+      "sitemapGroup": "투자자별/프로그램",
+      "buttonLabel": "프로그램매매",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "투자자별/프로그램", "child": "프로그램매매" },
+      "observed": { "group": "투자자별/프로그램", "child": "프로그램매매" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-024",
+      "sitemapGroup": "투자자별/프로그램",
+      "buttonLabel": "프로그램종목별매매",
+      "assertionType": "p1-group-and-child-active",
+      "expected": { "group": "투자자별/프로그램", "child": "프로그램종목별매매" },
+      "observed": { "group": "투자자별/프로그램", "child": "프로그램종목별매매" },
+      "modalClosed": true,
+      "status": "verified"
+    },
+    {
+      "id": "market-menu-025",
+      "sitemapGroup": "빅데이터",
+      "buttonLabel": "실시간종목조회순위",
+      "assertionType": "p1-top-active",
+      "expected": { "topActive": "빅데이터" },
+      "observed": { "topActive": "빅데이터" },
+      "modalClosed": true,
+      "status": "verified"
+    }
+  ],
+  "finalRestoration": {
+    "p1Group": "순위분석",
+    "p1Child": "전일대비등락률상위",
+    "viewport": { "width": 498, "height": 677 },
+    "temporaryViewportOverrideReset": true
+  },
+  "privacy": {
+    "accountValuesStored": false,
+    "rowValuesStored": false,
+    "inputValuesStored": false,
+    "headersStored": false,
+    "rawHtmlStored": false
+  },
+  "limitations": [
+    "This is direct live Chrome UI navigation evidence, not ATHENA extension action support.",
+    "Active navigation state does not prove market-data correctness or completeness.",
+    "These checks are not approved LAYA gold episodes or training labels.",
+    "This evidence does not complete W0, W1, W2, A0, or full WTS coverage.",
+    "No account, order, row, header, input, or raw HTML value was collected.",
+    "The site-map group scope was required for duplicate labels such as 종목별투자자."
+  ]
+}

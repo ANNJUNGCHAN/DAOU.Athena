@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "wts-sitemap-live-ui-20261019",
+  "observedDate": "2026-10-19",
+  "origin": "https://wts.kiwoom.com",
+  "method": "live-Chrome-UI-sitemap-modal-read-only-DOM-observation",
+  "scope": "sitemap modal group labels and following button labels only",
+  "modal": {
+    "heading": "키움증권 웹트레이딩(WTS) 전체 메뉴",
+    "initialViewport": {
+      "width": 498,
+      "height": 677
+    },
+    "initialRect": {
+      "x": 630,
+      "y": 90,
+      "width": 622,
+      "height": 492
+    },
+    "temporaryViewportOverride": {
+      "width": 1800,
+      "height": 1200,
+      "purpose": "close-control-access"
+    },
+    "restoredToInitialViewport": true,
+    "visibleAfterClose": false
+  },
+  "wtsApplicationVersion": {
+    "value": null,
+    "status": "not-exposed-in-observed-ui"
+  },
+  "counts": {
+    "groupCount": 17,
+    "buttonCountExcludingClose": 50,
+    "namedButtonCount": 48,
+    "blankButtonCount": 2,
+    "distinctNamedButtonLabelCount": 44,
+    "zeroButtonGroupCount": 4
+  },
+  "observations": {
+    "allObservedMenuButtonsDisabledPropertyFalse": true,
+    "disabledPropertyIsActionPermissionEvidence": false,
+    "menuButtonsClicked": false,
+    "groupLabelsClicked": false,
+    "closeButtonExcludedFromCounts": true,
+    "rawHtmlStored": false,
+    "accountValuesStored": false,
+    "tableRowsStored": false,
+    "orderActionExecuted": false
+  },
+  "groups": [
+    {
+      "order": 1,
+      "label": "호가",
+      "buttonLabels": [
+        "5호가",
+        "10호가"
+      ]
+    },
+    {
+      "order": 2,
+      "label": "주문",
+      "buttonLabels": [
+        "매수",
+        "매도",
+        "정정/취소"
+      ]
+    },
+    {
+      "order": 3,
+      "label": "신용주문",
+      "buttonLabels": [
+        "매수",
+        "매도",
+        "정정/취소",
+        "잔고 및 체결내역"
+      ]
+    },
+    {
+      "order": 4,
+      "label": "주문내역",
+      "buttonLabels": []
+    },
+    {
+      "order": 5,
+      "label": "관심종목",
+      "buttonLabels": []
+    },
+    {
+      "order": 6,
+      "label": "현금잔고",
+      "buttonLabels": []
+    },
+    {
+      "order": 7,
+      "label": "순위",
+      "buttonLabels": [
+        "전일대비 등락률 순위",
+        "당일 거래상위"
+      ]
+    },
+    {
+      "order": 8,
+      "label": "시세분석",
+      "buttonLabels": [
+        "급등락",
+        "VI발동종목",
+        "거래량급증",
+        "관리종목",
+        "상하한가",
+        "신규상장",
+        "신고신저가",
+        "증거금률별",
+        "거래량갱신"
+      ]
+    },
+    {
+      "order": 9,
+      "label": "테마/업종",
+      "buttonLabels": [
+        "인포스탁섹터그룹",
+        "인포스탁섹터구성종목",
+        "전업종지수",
+        "업종현재가"
+      ]
+    },
+    {
+      "order": 10,
+      "label": "외국인/거래원",
+      "buttonLabels": [
+        "외국인 기간별매매 상위",
+        "외국인 연속순매매 상위",
+        "종목별 증권사 순위",
+        "거래원 순간 거래량"
+      ]
+    },
+    {
+      "order": 11,
+      "label": "투자자별/프로그램",
+      "buttonLabels": [
+        "투자자별매매동향",
+        "투자자별매매일별",
+        "종목별투자자",
+        "프로그램매매",
+        "프로그램종목별매매"
+      ]
+    },
+    {
+      "order": 12,
+      "label": "빅데이터",
+      "buttonLabels": [
+        "실시간종목조회순위"
+      ]
+    },
+    {
+      "order": 13,
+      "label": "종목시세",
+      "buttonLabels": [
+        "일별주가",
+        "체결추이",
+        "거래원",
+        "종목별투자자"
+      ]
+    },
+    {
+      "order": 14,
+      "label": "차트",
+      "buttonLabels": []
+    },
+    {
+      "order": 15,
+      "label": "뉴스",
+      "buttonLabels": [
+        ""
+      ]
+    },
+    {
+      "order": 16,
+      "label": "잔고",
+      "buttonLabels": [
+        "잔고/평가손익",
+        "예수금",
+        "수익율현황",
+        "권리정보",
+        "신용한도조회"
+      ]
+    },
+    {
+      "order": 17,
+      "label": "체결/거래",
+      "buttonLabels": [
+        "실시간미체결",
+        "체결내역",
+        "거래내역",
+        "당일매매정리",
+        "주문가능",
+        ""
+      ]
+    }
+  ],
+  "limitations": [
+    "This is a live UI discovery denominator snapshot, not an action catalog or execution-support claim.",
+    "The WTS application version was not exposed in the observed UI, so this snapshot is dated rather than version-keyed.",
+    "Duplicate and blank labels prevent global label-only action selection.",
+    "A group label with no following button may be independently clickable, but group-label interactivity was not tested or inferred.",
+    "Header controls that open new windows and context-menu actions are outside this modal grouping and must be inventoried separately.",
+    "Account and order entries were discovered by label only; account data was not read and no order action was executed.",
+    "disabled=false was observed as a DOM property and is not evidence of authorization, entitlement, safety, or successful navigation.",
+    "The modal was closed after observation and the temporary viewport override was reset.",
+    "This snapshot does not complete W0, W1, W2, LAYA training, or ATHENA extension support."
+  ]
+}

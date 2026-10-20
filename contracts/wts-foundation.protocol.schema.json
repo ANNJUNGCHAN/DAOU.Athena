@@ -1,0 +1,7445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athena.local/contracts/wts-foundation.protocol.schema.json",
+  "title": "ATHENA WTS Foundation Protocol",
+  "$defs": {
+    "requestId": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "providerUuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "providerModelSlug": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "providerDisplayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "timestamp": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 35,
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,9})?(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^/[^?#]*$"
+    },
+    "boundedText": {
+      "type": "string",
+      "maxLength": 512
+    },
+    "nonEmptyBoundedText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "path",
+        "tabId",
+        "windowId",
+        "frameId",
+        "documentId"
+      ],
+      "properties": {
+        "origin": {
+          "const": "https://wts.kiwoom.com"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "tabId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "windowId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "documentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "controlSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "path",
+        "tabId",
+        "windowId",
+        "frameId",
+        "documentId"
+      ],
+      "properties": {
+        "origin": {
+          "const": "https://wts.kiwoom.com"
+        },
+        "path": {
+          "const": "/"
+        },
+        "tabId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "windowId": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "frameId": {
+          "const": 0
+        },
+        "documentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "tag",
+        "role",
+        "name",
+        "type",
+        "disabled",
+        "visible"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/nonEmptyBoundedText"
+        },
+        "tag": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9-]*$"
+        },
+        "role": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "name": {
+          "$ref": "#/$defs/boundedText"
+        },
+        "type": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "visible": {
+          "type": "boolean"
+        }
+      }
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "path"
+      ],
+      "properties": {
+        "origin": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^https?://[^/?#]+(?::[0-9]{1,5})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "path": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/path"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "capturedAt",
+        "source",
+        "title",
+        "headings",
+        "controls",
+        "frames",
+        "canvasCount",
+        "truncated"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "capturedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "title": {
+          "$ref": "#/$defs/boundedText"
+        },
+        "headings": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/boundedText"
+          }
+        },
+        "controls": {
+          "type": "array",
+          "maxItems": 2000,
+          "items": {
+            "$ref": "#/$defs/control"
+          }
+        },
+        "frames": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/frame"
+          }
+        },
+        "canvasCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "capturedAt",
+        "observations"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "capturedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "observations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/observation"
+          }
+        }
+      }
+    },
+    "controlState": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/chartControlState"
+        },
+        {
+          "$ref": "#/$defs/marketNavigationState"
+        }
+      ]
+    },
+    "controlObservation": {
+      "$ref": "#/$defs/currentControlObservation"
+    },
+    "emptyArgs": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "periodArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "period"
+      ],
+      "properties": {
+        "period": {
+          "enum": [
+            "day",
+            "week",
+            "month",
+            "year"
+          ]
+        }
+      }
+    },
+    "openProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "catalogVersion",
+        "observation",
+        "actionId",
+        "args",
+        "expiresAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-main-control-3"
+        },
+        "observation": {
+          "$ref": "#/$defs/currentControlObservation"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.open"
+        },
+        "args": {
+          "$ref": "#/$defs/emptyArgs"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "periodProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "catalogVersion",
+        "observation",
+        "actionId",
+        "args",
+        "expiresAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-main-control-3"
+        },
+        "observation": {
+          "$ref": "#/$defs/currentControlObservation"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.period.set"
+        },
+        "args": {
+          "$ref": "#/$defs/periodArgs"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "controlProposal": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/legacyControlProposal"
+        },
+        {
+          "$ref": "#/$defs/previousControlProposal"
+        },
+        {
+          "$ref": "#/$defs/currentControlProposal"
+        }
+      ]
+    },
+    "openReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "proposalId",
+        "catalogVersion",
+        "actionId",
+        "args",
+        "before",
+        "after",
+        "status",
+        "reason",
+        "completedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "proposalId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-main-control-3"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.open"
+        },
+        "args": {
+          "$ref": "#/$defs/emptyArgs"
+        },
+        "before": {
+          "$ref": "#/$defs/currentControlObservation"
+        },
+        "after": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/currentControlObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "blocked",
+            "unverified",
+            "cancelled"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "POSTCONDITION_MET",
+            "PRECONDITION_CHANGED",
+            "DOCUMENT_CHANGED",
+            "POSTCONDITION_TIMEOUT",
+            "EXECUTION_ERROR",
+            "CANCELLED"
+          ]
+        },
+        "completedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "periodReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "proposalId",
+        "catalogVersion",
+        "actionId",
+        "args",
+        "before",
+        "after",
+        "status",
+        "reason",
+        "completedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "proposalId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-main-control-3"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.period.set"
+        },
+        "args": {
+          "$ref": "#/$defs/periodArgs"
+        },
+        "before": {
+          "$ref": "#/$defs/currentControlObservation"
+        },
+        "after": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/currentControlObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "blocked",
+            "unverified",
+            "cancelled"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "POSTCONDITION_MET",
+            "PRECONDITION_CHANGED",
+            "DOCUMENT_CHANGED",
+            "POSTCONDITION_TIMEOUT",
+            "EXECUTION_ERROR",
+            "CANCELLED"
+          ]
+        },
+        "completedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "controlReceipt": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/legacyControlReceipt"
+        },
+        {
+          "$ref": "#/$defs/previousControlReceipt"
+        },
+        {
+          "$ref": "#/$defs/currentControlReceipt"
+        }
+      ]
+    },
+    "taskCompiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "generative",
+        "bundleHash"
+      ],
+      "properties": {
+        "kind": {
+          "const": "deterministic"
+        },
+        "id": {
+          "const": "deterministic-korean-wts-v3"
+        },
+        "version": {
+          "const": "3"
+        },
+        "generative": {
+          "const": false
+        },
+        "bundleHash": {
+          "type": "null"
+        }
+      }
+    },
+    "taskStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "index",
+        "actionId",
+        "args",
+        "status",
+        "proposalId",
+        "receiptId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 11
+        },
+        "actionId": {
+          "enum": [
+            "wts.main.p3.chart.open",
+            "wts.main.p3.chart.period.set"
+          ]
+        },
+        "args": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/emptyArgs"
+            },
+            {
+              "$ref": "#/$defs/periodArgs"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "satisfied",
+            "awaiting_receipt",
+            "verified",
+            "blocked",
+            "cancelled",
+            "unverified"
+          ]
+        },
+        "proposalId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "receiptId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "controlTask": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/legacyControlTask"
+        },
+        {
+          "$ref": "#/$defs/previousControlTask"
+        },
+        {
+          "$ref": "#/$defs/currentControlTask"
+        }
+      ]
+    },
+    "catalogIdentity": {
+      "type": "string",
+      "minLength": 71,
+      "maxLength": 71,
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "operationRefInput": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^(?:base:[a-z0-9]+|detail:[a-z0-9]+:[a-z0-9_]+)$"
+    },
+    "sourceQuery": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 500,
+      "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+    },
+    "sourceUtcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 20,
+      "maxLength": 35,
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,9})?Z$"
+    },
+    "sourceListItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operationRef",
+        "kind",
+        "domain",
+        "name",
+        "groupTitle"
+      ],
+      "properties": {
+        "operationRef": {
+          "$ref": "#/$defs/operationRefInput"
+        },
+        "kind": {
+          "const": "query"
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "groupTitle": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "sourceField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alias",
+        "description",
+        "required"
+      ],
+      "properties": {
+        "alias": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "sourceArgumentJsonSchema": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "const": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "anyOf",
+            "default"
+          ],
+          "properties": {
+            "anyOf": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "prefixItems": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "type"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "string"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "type"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "null"
+                    }
+                  }
+                }
+              ],
+              "items": false
+            },
+            "default": {
+              "type": "null"
+            }
+          }
+        }
+      ]
+    },
+    "sourceArgumentField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alias",
+        "description",
+        "required",
+        "jsonSchema"
+      ],
+      "properties": {
+        "alias": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "jsonSchema": {
+          "$ref": "#/$defs/sourceArgumentJsonSchema"
+        }
+      }
+    },
+    "capabilityListCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "kind",
+        "canvasId",
+        "title",
+        "catalogVersion",
+        "fetchedAt",
+        "notice",
+        "query",
+        "items"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "capability-list"
+        },
+        "canvasId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "catalogVersion": {
+          "$ref": "#/$defs/catalogIdentity"
+        },
+        "fetchedAt": {
+          "$ref": "#/$defs/sourceUtcTimestamp"
+        },
+        "notice": {
+          "const": "기능 메타데이터이며 실제 금융 데이터는 조회하지 않았습니다."
+        },
+        "query": {
+          "$ref": "#/$defs/sourceQuery"
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "$ref": "#/$defs/sourceListItem"
+          }
+        }
+      }
+    },
+    "capabilityDetailCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "kind",
+        "canvasId",
+        "title",
+        "catalogVersion",
+        "fetchedAt",
+        "notice",
+        "operationRef",
+        "domain",
+        "name",
+        "executionPolicy",
+        "requiredArguments",
+        "optionalArguments",
+        "responseFields",
+        "execution"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "capability-detail"
+        },
+        "canvasId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "catalogVersion": {
+          "$ref": "#/$defs/catalogIdentity"
+        },
+        "fetchedAt": {
+          "$ref": "#/$defs/sourceUtcTimestamp"
+        },
+        "notice": {
+          "const": "기능 메타데이터이며 실제 금융 데이터는 조회하지 않았습니다."
+        },
+        "operationRef": {
+          "$ref": "#/$defs/operationRefInput"
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "executionPolicy": {
+          "enum": [
+            "selector_query",
+            "selector_detail",
+            "selector_detail_required"
+          ]
+        },
+        "requiredArguments": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/sourceArgumentField"
+          }
+        },
+        "optionalArguments": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/sourceArgumentField"
+          }
+        },
+        "responseFields": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/sourceField"
+          }
+        },
+        "execution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "available",
+            "reason"
+          ],
+          "properties": {
+            "available": {
+              "const": false
+            },
+            "reason": {
+              "const": "FINANCIAL_QUERY_NOT_CONNECTED"
+            }
+          }
+        }
+      }
+    },
+    "sourceCard": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/capabilityListCard"
+        },
+        {
+          "$ref": "#/$defs/capabilityDetailCard"
+        }
+      ]
+    },
+    "backendStatusResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "configured",
+            "state",
+            "profile",
+            "apiVersion",
+            "catalogVersion",
+            "ownedChild"
+          ],
+          "properties": {
+            "configured": {
+              "const": false
+            },
+            "state": {
+              "const": "unconfigured"
+            },
+            "profile": {
+              "const": "wts-readonly-v1"
+            },
+            "apiVersion": {
+              "type": "null"
+            },
+            "catalogVersion": {
+              "type": "null"
+            },
+            "ownedChild": {
+              "const": false
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "configured",
+            "state",
+            "profile",
+            "apiVersion",
+            "catalogVersion",
+            "ownedChild"
+          ],
+          "properties": {
+            "configured": {
+              "const": true
+            },
+            "state": {
+              "enum": [
+                "stopped",
+                "starting",
+                "ready",
+                "stopping",
+                "failed"
+              ]
+            },
+            "profile": {
+              "const": "wts-readonly-v1"
+            },
+            "apiVersion": {
+              "oneOf": [
+                {
+                  "const": "selector-readonly-v1"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "catalogVersion": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/catalogIdentity"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "ownedChild": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "backendEnsureResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "configured",
+        "state",
+        "profile",
+        "apiVersion",
+        "catalogVersion",
+        "ownedChild"
+      ],
+      "properties": {
+        "configured": {
+          "const": true
+        },
+        "state": {
+          "const": "ready"
+        },
+        "profile": {
+          "const": "wts-readonly-v1"
+        },
+        "apiVersion": {
+          "const": "selector-readonly-v1"
+        },
+        "catalogVersion": {
+          "$ref": "#/$defs/catalogIdentity"
+        },
+        "ownedChild": {
+          "const": true
+        }
+      }
+    },
+    "sourceManifestResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "apiVersion",
+        "catalogVersion",
+        "operationCount"
+      ],
+      "properties": {
+        "profile": {
+          "const": "wts-readonly-v1"
+        },
+        "apiVersion": {
+          "const": "selector-readonly-v1"
+        },
+        "catalogVersion": {
+          "$ref": "#/$defs/catalogIdentity"
+        },
+        "operationCount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      }
+    },
+    "helloRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "runtime.hello"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "recordRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "inventory.record"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "capture"
+          ],
+          "properties": {
+            "capture": {
+              "$ref": "#/$defs/capture"
+            }
+          }
+        }
+      }
+    },
+    "summaryRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "inventory.summary"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "planRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.plan"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "command",
+            "observation"
+          ],
+          "properties": {
+            "command": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "observation": {
+              "$ref": "#/$defs/controlObservation"
+            }
+          }
+        }
+      }
+    },
+    "receiptRecordRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.receipt.record"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "receipt"
+          ],
+          "properties": {
+            "receipt": {
+              "$ref": "#/$defs/controlReceipt"
+            }
+          }
+        }
+      }
+    },
+    "taskStartRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.start"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "submissionId",
+            "text"
+          ],
+          "properties": {
+            "submissionId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          }
+        }
+      }
+    },
+    "taskGetRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.get"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "taskId"
+          ],
+          "properties": {
+            "taskId": {
+              "$ref": "#/$defs/uuid"
+            }
+          }
+        }
+      }
+    },
+    "taskNextRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.next"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "taskId",
+            "expectedRevision",
+            "observation"
+          ],
+          "properties": {
+            "taskId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "expectedRevision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "observation": {
+              "$ref": "#/$defs/controlObservation"
+            }
+          }
+        }
+      }
+    },
+    "taskCommitRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.step.commit"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "taskId",
+            "stepId",
+            "expectedRevision",
+            "receipt"
+          ],
+          "properties": {
+            "taskId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "stepId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "expectedRevision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "receipt": {
+              "$ref": "#/$defs/controlReceipt"
+            }
+          }
+        }
+      }
+    },
+    "taskCancelRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.cancel"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "taskId",
+            "expectedRevision",
+            "cancellationId"
+          ],
+          "properties": {
+            "taskId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "expectedRevision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "cancellationId": {
+              "$ref": "#/$defs/uuid"
+            }
+          }
+        }
+      }
+    },
+    "backendStatusRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "backend.status"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "backendEnsureRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "backend.ensure"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "sourceManifestRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.manifest"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "sourceSearchRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.search"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "query",
+            "limit",
+            "expectedCatalogVersion"
+          ],
+          "properties": {
+            "query": {
+              "$ref": "#/$defs/sourceQuery"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "expectedCatalogVersion": {
+              "$ref": "#/$defs/catalogIdentity"
+            }
+          }
+        }
+      }
+    },
+    "sourceDescribeRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.describe"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "operationRef",
+            "expectedCatalogVersion"
+          ],
+          "properties": {
+            "operationRef": {
+              "$ref": "#/$defs/operationRefInput"
+            },
+            "expectedCatalogVersion": {
+              "$ref": "#/$defs/catalogIdentity"
+            }
+          }
+        }
+      }
+    },
+    "conversationRouteRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "conversation.route"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "submissionId",
+            "text"
+          ],
+          "properties": {
+            "submissionId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+            }
+          }
+        }
+      }
+    },
+    "request": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/helloRequest"
+        },
+        {
+          "$ref": "#/$defs/recordRequest"
+        },
+        {
+          "$ref": "#/$defs/summaryRequest"
+        },
+        {
+          "$ref": "#/$defs/planRequest"
+        },
+        {
+          "$ref": "#/$defs/receiptRecordRequest"
+        },
+        {
+          "$ref": "#/$defs/taskStartRequest"
+        },
+        {
+          "$ref": "#/$defs/taskGetRequest"
+        },
+        {
+          "$ref": "#/$defs/taskNextRequest"
+        },
+        {
+          "$ref": "#/$defs/taskCommitRequest"
+        },
+        {
+          "$ref": "#/$defs/taskCancelRequest"
+        },
+        {
+          "$ref": "#/$defs/backendStatusRequest"
+        },
+        {
+          "$ref": "#/$defs/backendEnsureRequest"
+        },
+        {
+          "$ref": "#/$defs/sourceManifestRequest"
+        },
+        {
+          "$ref": "#/$defs/sourceSearchRequest"
+        },
+        {
+          "$ref": "#/$defs/sourceDescribeRequest"
+        },
+        {
+          "$ref": "#/$defs/conversationRouteRequest"
+        },
+        {
+          "$ref": "#/$defs/financialCredentialsStatusRequest"
+        },
+        {
+          "$ref": "#/$defs/financialCredentialsConfigureRequest"
+        },
+        {
+          "$ref": "#/$defs/financialCredentialsDeleteRequest"
+        },
+        {
+          "$ref": "#/$defs/financialQueryStartRequest"
+        },
+        {
+          "$ref": "#/$defs/financialQueryStatusRequest"
+        },
+        {
+          "$ref": "#/$defs/financialQueryPageRequest"
+        },
+        {
+          "$ref": "#/$defs/financialQueryContinueRequest"
+        },
+        {
+          "$ref": "#/$defs/financialQueryCancelRequest"
+        },
+        {
+          "$ref": "#/$defs/providerStatusRequest"
+        },
+        {
+          "$ref": "#/$defs/providerConnectStartRequest"
+        },
+        {
+          "$ref": "#/$defs/providerModelsStartRequest"
+        },
+        {
+          "$ref": "#/$defs/providerModelSelectRequest"
+        },
+        {
+          "$ref": "#/$defs/providerPlanStartRequest"
+        },
+        {
+          "$ref": "#/$defs/providerOperationGetRequest"
+        },
+        {
+          "$ref": "#/$defs/providerOperationCancelRequest"
+        },
+        {
+          "$ref": "#/$defs/providerDisconnectStartRequest"
+        },
+        {
+          "$ref": "#/$defs/providerAccountResetStartRequest"
+        }
+      ]
+    },
+    "helloResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtimeVersion",
+        "capabilities",
+        "control",
+        "storage",
+        "lifecycle",
+        "source",
+        "conversation",
+        "financial",
+        "provider"
+      ],
+      "properties": {
+        "runtimeVersion": {
+          "const": "0.8.0"
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "observationStorage",
+            "screenControl",
+            "laya",
+            "localPlanner"
+          ],
+          "properties": {
+            "observationStorage": {
+              "const": true
+            },
+            "screenControl": {
+              "const": true
+            },
+            "laya": {
+              "const": false
+            },
+            "localPlanner": {
+              "const": false
+            }
+          }
+        },
+        "control": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "catalogVersion",
+            "actions",
+            "commandMode",
+            "taskMode",
+            "maxTaskSteps",
+            "planner",
+            "market"
+          ],
+          "properties": {
+            "catalogVersion": {
+              "const": "wts-main-control-3"
+            },
+            "actions": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "wts.main.p3.chart.open",
+                  "wts.main.p3.chart.period.set",
+                  "wts.main.sitemap.open",
+                  "wts.main.p1.market.navigate"
+                ]
+              }
+            },
+            "commandMode": {
+              "const": "bounded-korean-v3"
+            },
+            "taskMode": {
+              "const": "bounded-compound-v1"
+            },
+            "maxTaskSteps": {
+              "const": 12
+            },
+            "planner": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "id",
+                "generative",
+                "localModelReady",
+                "version",
+                "bundleHash"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "deterministic"
+                },
+                "id": {
+                  "const": "deterministic-korean-wts-v3"
+                },
+                "generative": {
+                  "const": false
+                },
+                "localModelReady": {
+                  "const": false
+                },
+                "version": {
+                  "const": "3"
+                },
+                "bundleHash": {
+                  "type": "null"
+                }
+              }
+            },
+            "market": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "targetCount"
+              ],
+              "properties": {
+                "id": {
+                  "const": "market-menu-navigation-20261019"
+                },
+                "targetCount": {
+                  "const": 25
+                }
+              }
+            }
+          }
+        },
+        "storage": {
+          "const": "user-local"
+        },
+        "lifecycle": {
+          "const": "native-port"
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "configured",
+            "profile",
+            "apiVersion",
+            "metadataOnly",
+            "financialQuery",
+            "externalAi"
+          ],
+          "properties": {
+            "configured": {
+              "type": "boolean"
+            },
+            "profile": {
+              "const": "wts-readonly-v1"
+            },
+            "apiVersion": {
+              "const": "selector-readonly-v1"
+            },
+            "metadataOnly": {
+              "const": true
+            },
+            "financialQuery": {
+              "const": false
+            },
+            "externalAi": {
+              "const": false
+            }
+          }
+        },
+        "conversation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "routerId",
+            "generative",
+            "routes"
+          ],
+          "properties": {
+            "routerId": {
+              "const": "deterministic-wts-conversation-v1"
+            },
+            "generative": {
+              "const": false
+            },
+            "routes": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "wts-control",
+                  "source-search"
+                ]
+              }
+            }
+          }
+        },
+        "financial": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "configured",
+            "profile",
+            "apiVersion",
+            "cardVersion",
+            "methods",
+            "renderKinds",
+            "queryOnly",
+            "credentialSetup",
+            "order",
+            "websocket",
+            "externalAi"
+          ],
+          "properties": {
+            "configured": {
+              "type": "boolean"
+            },
+            "profile": {
+              "const": "wts-financial-read-v1"
+            },
+            "apiVersion": {
+              "const": "selector-financial-read-v1"
+            },
+            "cardVersion": {
+              "const": "wts-financial-card-1"
+            },
+            "methods": {
+              "type": "array",
+              "minItems": 8,
+              "maxItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "source.credentials.status",
+                  "source.credentials.configure",
+                  "source.credentials.delete",
+                  "source.query.start",
+                  "source.query.status",
+                  "source.query.page",
+                  "source.query.continue",
+                  "source.query.cancel"
+                ]
+              }
+            },
+            "renderKinds": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "facts",
+                  "table",
+                  "compound",
+                  "chart"
+                ]
+              }
+            },
+            "queryOnly": {
+              "const": true
+            },
+            "credentialSetup": {
+              "const": true
+            },
+            "order": {
+              "const": false
+            },
+            "websocket": {
+              "const": false
+            },
+            "externalAi": {
+              "const": false
+            }
+          }
+        },
+        "provider": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "apiVersion",
+            "methods",
+            "asyncJobs",
+            "auth",
+            "tokenStorage",
+            "planner",
+            "modelCatalog",
+            "tools",
+            "order",
+            "dataSent"
+          ],
+          "properties": {
+            "id": {
+              "const": "openai-chatgpt-siwc-v1"
+            },
+            "apiVersion": {
+              "const": "openai-provider-native-v1"
+            },
+            "methods": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 9,
+              "maxItems": 9
+            },
+            "asyncJobs": {
+              "const": true
+            },
+            "auth": {
+              "const": "explicit-browser-consent"
+            },
+            "tokenStorage": {
+              "const": "native-memory-only"
+            },
+            "planner": {
+              "const": "proposal-only"
+            },
+            "modelCatalog": {
+              "const": true
+            },
+            "tools": {
+              "const": false
+            },
+            "order": {
+              "const": false
+            },
+            "dataSent": {
+              "const": "user-text-and-fixed-control-catalog"
+            }
+          }
+        }
+      }
+    },
+    "recordResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "captureId",
+        "observationCount",
+        "stored"
+      ],
+      "properties": {
+        "captureId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "observationCount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "stored": {
+          "const": true
+        }
+      }
+    },
+    "summaryResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "captureCount",
+        "observationCount",
+        "lastObservedAt",
+        "coverage",
+        "controlEnabled",
+        "layaReady"
+      ],
+      "properties": {
+        "captureCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "observationCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lastObservedAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "coverage": {
+          "const": "partial"
+        },
+        "controlEnabled": {
+          "const": true
+        },
+        "layaReady": {
+          "const": false
+        }
+      }
+    },
+    "proposedPlanResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "message",
+        "proposal"
+      ],
+      "properties": {
+        "status": {
+          "const": "proposed"
+        },
+        "message": {
+          "$ref": "#/$defs/nonEmptyBoundedText"
+        },
+        "proposal": {
+          "$ref": "#/$defs/currentControlProposal"
+        }
+      }
+    },
+    "terminalPlanResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "message",
+        "proposal"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "unsupported",
+            "blocked",
+            "satisfied"
+          ]
+        },
+        "message": {
+          "$ref": "#/$defs/nonEmptyBoundedText"
+        },
+        "proposal": {
+          "type": "null"
+        }
+      }
+    },
+    "planResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/proposedPlanResult"
+        },
+        {
+          "$ref": "#/$defs/terminalPlanResult"
+        }
+      ]
+    },
+    "receiptRecordResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receiptId",
+        "stored"
+      ],
+      "properties": {
+        "receiptId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "stored": {
+          "const": true
+        }
+      }
+    },
+    "taskResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task"
+      ],
+      "properties": {
+        "task": {
+          "$ref": "#/$defs/controlTask"
+        }
+      }
+    },
+    "taskOutcome": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "message",
+            "proposal"
+          ],
+          "properties": {
+            "status": {
+              "const": "proposed"
+            },
+            "message": {
+              "$ref": "#/$defs/nonEmptyBoundedText"
+            },
+            "proposal": {
+              "$ref": "#/$defs/currentControlProposal"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "message",
+            "proposal"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "ready",
+                "completed",
+                "blocked",
+                "cancelled",
+                "unsupported",
+                "unverified"
+              ]
+            },
+            "message": {
+              "$ref": "#/$defs/nonEmptyBoundedText"
+            },
+            "proposal": {
+              "type": "null"
+            }
+          }
+        }
+      ]
+    },
+    "taskNextResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task",
+        "outcome"
+      ],
+      "properties": {
+        "task": {
+          "$ref": "#/$defs/controlTask"
+        },
+        "outcome": {
+          "$ref": "#/$defs/taskOutcome"
+        }
+      }
+    },
+    "taskCommitResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task",
+        "receiptId",
+        "stored"
+      ],
+      "properties": {
+        "task": {
+          "$ref": "#/$defs/controlTask"
+        },
+        "receiptId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "stored": {
+          "const": true
+        }
+      }
+    },
+    "conversationControlRouteResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "submissionId",
+        "kind",
+        "text"
+      ],
+      "properties": {
+        "submissionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "kind": {
+          "const": "wts-control"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+        }
+      }
+    },
+    "conversationSourceRouteResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "submissionId",
+        "kind",
+        "query"
+      ],
+      "properties": {
+        "submissionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "kind": {
+          "const": "source-search"
+        },
+        "query": {
+          "$ref": "#/$defs/sourceQuery"
+        }
+      }
+    },
+    "conversationUnsupportedRouteResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "submissionId",
+        "kind",
+        "message"
+      ],
+      "properties": {
+        "submissionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "kind": {
+          "const": "unsupported"
+        },
+        "message": {
+          "const": "지금은 차트 명령, “시장 메뉴 열어줘: 그룹 > 메뉴”, “조회 기능 찾아줘: 검색어”만 지원합니다."
+        }
+      }
+    },
+    "conversationRouteResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/conversationControlRouteResult"
+        },
+        {
+          "$ref": "#/$defs/conversationSourceRouteResult"
+        },
+        {
+          "$ref": "#/$defs/conversationUnsupportedRouteResult"
+        }
+      ]
+    },
+    "helloSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "runtime.hello"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/helloResult"
+        }
+      }
+    },
+    "recordSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "inventory.record"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/recordResult"
+        }
+      }
+    },
+    "summarySuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "inventory.summary"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/summaryResult"
+        }
+      }
+    },
+    "planSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.plan"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/planResult"
+        }
+      }
+    },
+    "receiptRecordSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.receipt.record"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/receiptRecordResult"
+        }
+      }
+    },
+    "taskStartSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.start"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/currentTaskResult"
+        }
+      }
+    },
+    "taskGetSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.get"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/taskResult"
+        }
+      }
+    },
+    "taskNextSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.next"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/taskNextResult"
+        }
+      }
+    },
+    "taskCommitSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.step.commit"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/taskCommitResult"
+        }
+      }
+    },
+    "taskCancelSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "control.task.cancel"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/taskResult"
+        }
+      }
+    },
+    "backendStatusSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "backend.status"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/backendStatusResult"
+        }
+      }
+    },
+    "backendEnsureSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "backend.ensure"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/backendEnsureResult"
+        }
+      }
+    },
+    "sourceManifestSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.manifest"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/sourceManifestResult"
+        }
+      }
+    },
+    "sourceSearchSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.search"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/capabilityListCard"
+        }
+      }
+    },
+    "sourceDescribeSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.describe"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/capabilityDetailCard"
+        }
+      }
+    },
+    "conversationRouteSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "conversation.route"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/conversationRouteResult"
+        }
+      }
+    },
+    "errorResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "error"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "enum": [
+            "runtime.hello",
+            "inventory.record",
+            "inventory.summary",
+            "control.plan",
+            "control.receipt.record",
+            "control.task.start",
+            "control.task.get",
+            "control.task.next",
+            "control.task.step.commit",
+            "control.task.cancel",
+            "backend.status",
+            "backend.ensure",
+            "source.manifest",
+            "source.search",
+            "source.describe",
+            "conversation.route",
+            "source.credentials.status",
+            "source.credentials.configure",
+            "source.credentials.delete",
+            "source.query.start",
+            "source.query.status",
+            "source.query.page",
+            "source.query.continue",
+            "source.query.cancel",
+            "provider.status",
+            "provider.connect.start",
+            "provider.models.start",
+            "provider.model.select",
+            "provider.plan.start",
+            "provider.operation.get",
+            "provider.operation.cancel",
+            "provider.disconnect.start",
+            "provider.account.reset.start"
+          ]
+        },
+        "ok": {
+          "const": false
+        },
+        "error": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Z][A-Z0-9_]*$"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/helloSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/recordSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/summarySuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/planSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/receiptRecordSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/taskStartSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/taskGetSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/taskNextSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/taskCommitSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/taskCancelSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/backendStatusSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/backendEnsureSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/sourceManifestSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/sourceSearchSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/sourceDescribeSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/conversationRouteSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/financialCredentialsStatusSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/financialCredentialsConfigureSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/financialCredentialsDeleteSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/financialQueryStartSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/financialQueryStatusSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/financialQueryPageSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/financialQueryContinueSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/financialQueryCancelSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/providerAccountResetStartSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/providerDisconnectStartSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/providerOperationCancelSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/providerOperationGetSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/providerPlanStartSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/providerModelSelectSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/providerModelsStartSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/providerConnectStartSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/providerStatusSuccessResponse"
+        },
+        {
+          "$ref": "#/$defs/errorResponse"
+        }
+      ]
+    },
+    "legacyControlState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "screenId",
+        "activeTab",
+        "period",
+        "blocked",
+        "chartOpenEnabled",
+        "periodEnabled",
+        "instrumentToken",
+        "contextToken"
+      ],
+      "properties": {
+        "screenId": {
+          "enum": [
+            "main-chart",
+            "main-other",
+            "unknown"
+          ]
+        },
+        "activeTab": {
+          "enum": [
+            "quote",
+            "chart",
+            "news",
+            "balance",
+            "trades",
+            "unknown"
+          ]
+        },
+        "period": {
+          "enum": [
+            "day",
+            "week",
+            "other",
+            "none"
+          ]
+        },
+        "blocked": {
+          "type": "boolean"
+        },
+        "chartOpenEnabled": {
+          "type": "boolean"
+        },
+        "periodEnabled": {
+          "type": "boolean"
+        },
+        "instrumentToken": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "contextToken": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "legacyControlObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "capturedAt",
+        "source",
+        "state"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "capturedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "source": {
+          "$ref": "#/$defs/controlSource"
+        },
+        "state": {
+          "$ref": "#/$defs/legacyControlState"
+        }
+      }
+    },
+    "legacyPeriodArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "period"
+      ],
+      "properties": {
+        "period": {
+          "enum": [
+            "day",
+            "week"
+          ]
+        }
+      }
+    },
+    "legacyOpenProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "catalogVersion",
+        "observation",
+        "actionId",
+        "args",
+        "expiresAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-1"
+        },
+        "observation": {
+          "$ref": "#/$defs/legacyControlObservation"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.open"
+        },
+        "args": {
+          "$ref": "#/$defs/emptyArgs"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "legacyPeriodProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "catalogVersion",
+        "observation",
+        "actionId",
+        "args",
+        "expiresAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-1"
+        },
+        "observation": {
+          "$ref": "#/$defs/legacyControlObservation"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.period.set"
+        },
+        "args": {
+          "$ref": "#/$defs/legacyPeriodArgs"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "legacyControlProposal": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/legacyOpenProposal"
+        },
+        {
+          "$ref": "#/$defs/legacyPeriodProposal"
+        }
+      ]
+    },
+    "legacyOpenReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "proposalId",
+        "catalogVersion",
+        "actionId",
+        "args",
+        "before",
+        "after",
+        "status",
+        "reason",
+        "completedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "proposalId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-1"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.open"
+        },
+        "args": {
+          "$ref": "#/$defs/emptyArgs"
+        },
+        "before": {
+          "$ref": "#/$defs/legacyControlObservation"
+        },
+        "after": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/legacyControlObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "blocked",
+            "unverified",
+            "cancelled"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "POSTCONDITION_MET",
+            "PRECONDITION_CHANGED",
+            "DOCUMENT_CHANGED",
+            "POSTCONDITION_TIMEOUT",
+            "EXECUTION_ERROR",
+            "CANCELLED"
+          ]
+        },
+        "completedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "legacyPeriodReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "proposalId",
+        "catalogVersion",
+        "actionId",
+        "args",
+        "before",
+        "after",
+        "status",
+        "reason",
+        "completedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "proposalId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-1"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.period.set"
+        },
+        "args": {
+          "$ref": "#/$defs/legacyPeriodArgs"
+        },
+        "before": {
+          "$ref": "#/$defs/legacyControlObservation"
+        },
+        "after": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/legacyControlObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "blocked",
+            "unverified",
+            "cancelled"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "POSTCONDITION_MET",
+            "PRECONDITION_CHANGED",
+            "DOCUMENT_CHANGED",
+            "POSTCONDITION_TIMEOUT",
+            "EXECUTION_ERROR",
+            "CANCELLED"
+          ]
+        },
+        "completedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "legacyControlReceipt": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/legacyOpenReceipt"
+        },
+        {
+          "$ref": "#/$defs/legacyPeriodReceipt"
+        }
+      ]
+    },
+    "legacyTaskCompiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "generative",
+        "bundleHash"
+      ],
+      "properties": {
+        "kind": {
+          "const": "deterministic"
+        },
+        "id": {
+          "const": "deterministic-korean-chart-v1"
+        },
+        "version": {
+          "const": "1"
+        },
+        "generative": {
+          "const": false
+        },
+        "bundleHash": {
+          "type": "null"
+        }
+      }
+    },
+    "legacyTaskStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "index",
+        "actionId",
+        "args",
+        "status",
+        "proposalId",
+        "receiptId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 11
+        },
+        "actionId": {
+          "enum": [
+            "wts.main.p3.chart.open",
+            "wts.main.p3.chart.period.set"
+          ]
+        },
+        "args": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/emptyArgs"
+            },
+            {
+              "$ref": "#/$defs/legacyPeriodArgs"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "satisfied",
+            "awaiting_receipt",
+            "verified",
+            "blocked",
+            "cancelled",
+            "unverified"
+          ]
+        },
+        "proposalId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "receiptId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "legacyControlTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "submissionId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "catalogVersion",
+        "compiler",
+        "status",
+        "input",
+        "cursor",
+        "steps",
+        "activeProposal",
+        "cancelRequested",
+        "message"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "submissionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "createdAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-1"
+        },
+        "compiler": {
+          "$ref": "#/$defs/legacyTaskCompiler"
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "awaiting_receipt",
+            "blocked",
+            "cancel_requested",
+            "completed",
+            "cancelled",
+            "unsupported",
+            "unverified"
+          ]
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          }
+        },
+        "cursor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "steps": {
+          "type": "array",
+          "maxItems": 12,
+          "items": {
+            "$ref": "#/$defs/legacyTaskStep"
+          }
+        },
+        "activeProposal": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/legacyControlProposal"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cancelRequested": {
+          "type": "boolean"
+        },
+        "message": {
+          "$ref": "#/$defs/nonEmptyBoundedText"
+        }
+      }
+    },
+    "currentControlProposal": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/openProposal"
+        },
+        {
+          "$ref": "#/$defs/periodProposal"
+        },
+        {
+          "$ref": "#/$defs/sitemapOpenProposal"
+        },
+        {
+          "$ref": "#/$defs/marketNavigateProposal"
+        }
+      ]
+    },
+    "currentControlReceipt": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/openReceipt"
+        },
+        {
+          "$ref": "#/$defs/periodReceipt"
+        },
+        {
+          "$ref": "#/$defs/sitemapOpenReceipt"
+        },
+        {
+          "$ref": "#/$defs/marketNavigateReceipt"
+        }
+      ]
+    },
+    "currentControlTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "submissionId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "catalogVersion",
+        "compiler",
+        "status",
+        "input",
+        "cursor",
+        "steps",
+        "activeProposal",
+        "cancelRequested",
+        "message"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "submissionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "createdAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "catalogVersion": {
+          "const": "wts-main-control-3"
+        },
+        "compiler": {
+          "$ref": "#/$defs/taskCompiler"
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "awaiting_receipt",
+            "blocked",
+            "cancel_requested",
+            "completed",
+            "cancelled",
+            "unsupported",
+            "unverified"
+          ]
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          }
+        },
+        "cursor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "steps": {
+          "type": "array",
+          "maxItems": 12,
+          "items": {
+            "$ref": "#/$defs/currentTaskStep"
+          }
+        },
+        "activeProposal": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/currentControlProposal"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cancelRequested": {
+          "type": "boolean"
+        },
+        "message": {
+          "$ref": "#/$defs/nonEmptyBoundedText"
+        }
+      }
+    },
+    "currentTaskResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task"
+      ],
+      "properties": {
+        "task": {
+          "$ref": "#/$defs/currentControlTask"
+        }
+      }
+    },
+    "previousControlState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "screenId",
+        "activeTab",
+        "period",
+        "blocked",
+        "chartOpenEnabled",
+        "periodEnabled",
+        "instrumentToken",
+        "contextToken"
+      ],
+      "properties": {
+        "screenId": {
+          "enum": [
+            "main-chart",
+            "main-other",
+            "unknown"
+          ]
+        },
+        "activeTab": {
+          "enum": [
+            "quote",
+            "chart",
+            "news",
+            "balance",
+            "trades",
+            "unknown"
+          ]
+        },
+        "period": {
+          "enum": [
+            "day",
+            "week",
+            "month",
+            "year",
+            "other",
+            "none"
+          ]
+        },
+        "blocked": {
+          "type": "boolean"
+        },
+        "chartOpenEnabled": {
+          "type": "boolean"
+        },
+        "periodEnabled": {
+          "type": "boolean"
+        },
+        "instrumentToken": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "contextToken": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "previousControlObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "capturedAt",
+        "source",
+        "state"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "capturedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "source": {
+          "$ref": "#/$defs/controlSource"
+        },
+        "state": {
+          "$ref": "#/$defs/previousControlState"
+        }
+      }
+    },
+    "previousEmptyArgs": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "previousPeriodArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "period"
+      ],
+      "properties": {
+        "period": {
+          "enum": [
+            "day",
+            "week",
+            "month",
+            "year"
+          ]
+        }
+      }
+    },
+    "previousOpenProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "catalogVersion",
+        "observation",
+        "actionId",
+        "args",
+        "expiresAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-2"
+        },
+        "observation": {
+          "$ref": "#/$defs/previousControlObservation"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.open"
+        },
+        "args": {
+          "$ref": "#/$defs/previousEmptyArgs"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "previousPeriodProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "catalogVersion",
+        "observation",
+        "actionId",
+        "args",
+        "expiresAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-2"
+        },
+        "observation": {
+          "$ref": "#/$defs/previousControlObservation"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.period.set"
+        },
+        "args": {
+          "$ref": "#/$defs/previousPeriodArgs"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "previousControlProposal": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/previousOpenProposal"
+        },
+        {
+          "$ref": "#/$defs/previousPeriodProposal"
+        }
+      ]
+    },
+    "previousOpenReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "proposalId",
+        "catalogVersion",
+        "actionId",
+        "args",
+        "before",
+        "after",
+        "status",
+        "reason",
+        "completedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "proposalId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-2"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.open"
+        },
+        "args": {
+          "$ref": "#/$defs/previousEmptyArgs"
+        },
+        "before": {
+          "$ref": "#/$defs/previousControlObservation"
+        },
+        "after": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/previousControlObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "blocked",
+            "unverified",
+            "cancelled"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "POSTCONDITION_MET",
+            "PRECONDITION_CHANGED",
+            "DOCUMENT_CHANGED",
+            "POSTCONDITION_TIMEOUT",
+            "EXECUTION_ERROR",
+            "CANCELLED"
+          ]
+        },
+        "completedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "previousPeriodReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "proposalId",
+        "catalogVersion",
+        "actionId",
+        "args",
+        "before",
+        "after",
+        "status",
+        "reason",
+        "completedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "proposalId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-2"
+        },
+        "actionId": {
+          "const": "wts.main.p3.chart.period.set"
+        },
+        "args": {
+          "$ref": "#/$defs/previousPeriodArgs"
+        },
+        "before": {
+          "$ref": "#/$defs/previousControlObservation"
+        },
+        "after": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/previousControlObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "blocked",
+            "unverified",
+            "cancelled"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "POSTCONDITION_MET",
+            "PRECONDITION_CHANGED",
+            "DOCUMENT_CHANGED",
+            "POSTCONDITION_TIMEOUT",
+            "EXECUTION_ERROR",
+            "CANCELLED"
+          ]
+        },
+        "completedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "previousControlReceipt": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/previousOpenReceipt"
+        },
+        {
+          "$ref": "#/$defs/previousPeriodReceipt"
+        }
+      ]
+    },
+    "previousTaskCompiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "generative",
+        "bundleHash"
+      ],
+      "properties": {
+        "kind": {
+          "const": "deterministic"
+        },
+        "id": {
+          "const": "deterministic-korean-chart-v2"
+        },
+        "version": {
+          "const": "2"
+        },
+        "generative": {
+          "const": false
+        },
+        "bundleHash": {
+          "type": "null"
+        }
+      }
+    },
+    "previousTaskStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "index",
+        "actionId",
+        "args",
+        "status",
+        "proposalId",
+        "receiptId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 11
+        },
+        "actionId": {
+          "enum": [
+            "wts.main.p3.chart.open",
+            "wts.main.p3.chart.period.set"
+          ]
+        },
+        "args": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/previousEmptyArgs"
+            },
+            {
+              "$ref": "#/$defs/previousPeriodArgs"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "satisfied",
+            "awaiting_receipt",
+            "verified",
+            "blocked",
+            "cancelled",
+            "unverified"
+          ]
+        },
+        "proposalId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "receiptId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "previousControlTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "submissionId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "catalogVersion",
+        "compiler",
+        "status",
+        "input",
+        "cursor",
+        "steps",
+        "activeProposal",
+        "cancelRequested",
+        "message"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "submissionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "createdAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "catalogVersion": {
+          "const": "wts-chart-pilot-2"
+        },
+        "compiler": {
+          "$ref": "#/$defs/previousTaskCompiler"
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "awaiting_receipt",
+            "blocked",
+            "cancel_requested",
+            "completed",
+            "cancelled",
+            "unsupported",
+            "unverified"
+          ]
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          }
+        },
+        "cursor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "steps": {
+          "type": "array",
+          "maxItems": 12,
+          "items": {
+            "$ref": "#/$defs/previousTaskStep"
+          }
+        },
+        "activeProposal": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/previousControlProposal"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cancelRequested": {
+          "type": "boolean"
+        },
+        "message": {
+          "$ref": "#/$defs/nonEmptyBoundedText"
+        }
+      }
+    },
+    "chartControlState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "screenId",
+        "activeTab",
+        "period",
+        "blocked",
+        "chartOpenEnabled",
+        "periodEnabled",
+        "instrumentToken",
+        "contextToken"
+      ],
+      "properties": {
+        "screenId": {
+          "enum": [
+            "main-chart",
+            "main-other",
+            "unknown"
+          ]
+        },
+        "activeTab": {
+          "enum": [
+            "quote",
+            "chart",
+            "news",
+            "balance",
+            "trades",
+            "unknown"
+          ]
+        },
+        "period": {
+          "enum": [
+            "day",
+            "week",
+            "month",
+            "year",
+            "other",
+            "none"
+          ]
+        },
+        "blocked": {
+          "type": "boolean"
+        },
+        "chartOpenEnabled": {
+          "type": "boolean"
+        },
+        "periodEnabled": {
+          "type": "boolean"
+        },
+        "instrumentToken": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "contextToken": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "marketNavigationState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stateKind",
+        "screenId",
+        "targetId",
+        "blocked",
+        "sitemapVisible",
+        "sitemapOpenEnabled",
+        "targetAvailable",
+        "activeTargetId",
+        "instrumentToken",
+        "contextToken"
+      ],
+      "properties": {
+        "stateKind": {
+          "const": "market-navigation"
+        },
+        "screenId": {
+          "enum": [
+            "main-market-navigation",
+            "unknown"
+          ]
+        },
+        "targetId": {
+          "enum": [
+            "market-menu-001",
+            "market-menu-002",
+            "market-menu-003",
+            "market-menu-004",
+            "market-menu-005",
+            "market-menu-006",
+            "market-menu-007",
+            "market-menu-008",
+            "market-menu-009",
+            "market-menu-010",
+            "market-menu-011",
+            "market-menu-012",
+            "market-menu-013",
+            "market-menu-014",
+            "market-menu-015",
+            "market-menu-016",
+            "market-menu-017",
+            "market-menu-018",
+            "market-menu-019",
+            "market-menu-020",
+            "market-menu-021",
+            "market-menu-022",
+            "market-menu-023",
+            "market-menu-024",
+            "market-menu-025"
+          ]
+        },
+        "blocked": {
+          "type": "boolean"
+        },
+        "sitemapVisible": {
+          "type": "boolean"
+        },
+        "sitemapOpenEnabled": {
+          "type": "boolean"
+        },
+        "targetAvailable": {
+          "type": "boolean"
+        },
+        "activeTargetId": {
+          "oneOf": [
+            {
+              "enum": [
+                "market-menu-001",
+                "market-menu-002",
+                "market-menu-003",
+                "market-menu-004",
+                "market-menu-005",
+                "market-menu-006",
+                "market-menu-007",
+                "market-menu-008",
+                "market-menu-009",
+                "market-menu-010",
+                "market-menu-011",
+                "market-menu-012",
+                "market-menu-013",
+                "market-menu-014",
+                "market-menu-015",
+                "market-menu-016",
+                "market-menu-017",
+                "market-menu-018",
+                "market-menu-019",
+                "market-menu-020",
+                "market-menu-021",
+                "market-menu-022",
+                "market-menu-023",
+                "market-menu-024",
+                "market-menu-025"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "instrumentToken": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "contextToken": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "marketArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "targetId"
+      ],
+      "properties": {
+        "targetId": {
+          "enum": [
+            "market-menu-001",
+            "market-menu-002",
+            "market-menu-003",
+            "market-menu-004",
+            "market-menu-005",
+            "market-menu-006",
+            "market-menu-007",
+            "market-menu-008",
+            "market-menu-009",
+            "market-menu-010",
+            "market-menu-011",
+            "market-menu-012",
+            "market-menu-013",
+            "market-menu-014",
+            "market-menu-015",
+            "market-menu-016",
+            "market-menu-017",
+            "market-menu-018",
+            "market-menu-019",
+            "market-menu-020",
+            "market-menu-021",
+            "market-menu-022",
+            "market-menu-023",
+            "market-menu-024",
+            "market-menu-025"
+          ]
+        }
+      }
+    },
+    "currentControlObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "capturedAt",
+        "source",
+        "state"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "capturedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "source": {
+          "$ref": "#/$defs/controlSource"
+        },
+        "state": {
+          "$ref": "#/$defs/controlState"
+        }
+      }
+    },
+    "sitemapOpenProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "catalogVersion",
+        "observation",
+        "actionId",
+        "args",
+        "expiresAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-main-control-3"
+        },
+        "observation": {
+          "$ref": "#/$defs/currentControlObservation"
+        },
+        "actionId": {
+          "const": "wts.main.sitemap.open"
+        },
+        "args": {
+          "$ref": "#/$defs/marketArgs"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "marketNavigateProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "catalogVersion",
+        "observation",
+        "actionId",
+        "args",
+        "expiresAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-main-control-3"
+        },
+        "observation": {
+          "$ref": "#/$defs/currentControlObservation"
+        },
+        "actionId": {
+          "const": "wts.main.p1.market.navigate"
+        },
+        "args": {
+          "$ref": "#/$defs/marketArgs"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "sitemapOpenReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "proposalId",
+        "catalogVersion",
+        "actionId",
+        "args",
+        "before",
+        "after",
+        "status",
+        "reason",
+        "completedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "proposalId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-main-control-3"
+        },
+        "actionId": {
+          "const": "wts.main.sitemap.open"
+        },
+        "args": {
+          "$ref": "#/$defs/marketArgs"
+        },
+        "before": {
+          "$ref": "#/$defs/currentControlObservation"
+        },
+        "after": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/currentControlObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "unverified",
+            "blocked",
+            "cancelled"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "POSTCONDITION_MET",
+            "POSTCONDITION_TIMEOUT",
+            "PRECONDITION_CHANGED",
+            "DOCUMENT_CHANGED",
+            "EXECUTION_ERROR",
+            "CANCELLED"
+          ]
+        },
+        "completedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "marketNavigateReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "proposalId",
+        "catalogVersion",
+        "actionId",
+        "args",
+        "before",
+        "after",
+        "status",
+        "reason",
+        "completedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "proposalId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "catalogVersion": {
+          "const": "wts-main-control-3"
+        },
+        "actionId": {
+          "const": "wts.main.p1.market.navigate"
+        },
+        "args": {
+          "$ref": "#/$defs/marketArgs"
+        },
+        "before": {
+          "$ref": "#/$defs/currentControlObservation"
+        },
+        "after": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/currentControlObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "unverified",
+            "blocked",
+            "cancelled"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "POSTCONDITION_MET",
+            "POSTCONDITION_TIMEOUT",
+            "PRECONDITION_CHANGED",
+            "DOCUMENT_CHANGED",
+            "EXECUTION_ERROR",
+            "CANCELLED"
+          ]
+        },
+        "completedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "currentTaskStep": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "index",
+            "actionId",
+            "args",
+            "status",
+            "proposalId",
+            "receiptId"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 11
+            },
+            "actionId": {
+              "const": "wts.main.p3.chart.open"
+            },
+            "args": {
+              "$ref": "#/$defs/emptyArgs"
+            },
+            "status": {
+              "enum": [
+                "pending",
+                "satisfied",
+                "awaiting_receipt",
+                "verified",
+                "blocked",
+                "cancelled",
+                "unverified"
+              ]
+            },
+            "proposalId": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "receiptId": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "index",
+            "actionId",
+            "args",
+            "status",
+            "proposalId",
+            "receiptId"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 11
+            },
+            "actionId": {
+              "const": "wts.main.p3.chart.period.set"
+            },
+            "args": {
+              "$ref": "#/$defs/periodArgs"
+            },
+            "status": {
+              "enum": [
+                "pending",
+                "satisfied",
+                "awaiting_receipt",
+                "verified",
+                "blocked",
+                "cancelled",
+                "unverified"
+              ]
+            },
+            "proposalId": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "receiptId": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "index",
+            "actionId",
+            "args",
+            "status",
+            "proposalId",
+            "receiptId"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 11
+            },
+            "actionId": {
+              "const": "wts.main.sitemap.open"
+            },
+            "args": {
+              "$ref": "#/$defs/marketArgs"
+            },
+            "status": {
+              "enum": [
+                "pending",
+                "satisfied",
+                "awaiting_receipt",
+                "verified",
+                "blocked",
+                "cancelled",
+                "unverified"
+              ]
+            },
+            "proposalId": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "receiptId": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "index",
+            "actionId",
+            "args",
+            "status",
+            "proposalId",
+            "receiptId"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 11
+            },
+            "actionId": {
+              "const": "wts.main.p1.market.navigate"
+            },
+            "args": {
+              "$ref": "#/$defs/marketArgs"
+            },
+            "status": {
+              "enum": [
+                "pending",
+                "satisfied",
+                "awaiting_receipt",
+                "verified",
+                "blocked",
+                "cancelled",
+                "unverified"
+              ]
+            },
+            "proposalId": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "receiptId": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "financialUuid": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 32,
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,9})?Z$"
+    },
+    "opaqueToken": {
+      "type": "string",
+      "minLength": 43,
+      "maxLength": 43,
+      "pattern": "^[A-Za-z0-9_-]{43}$"
+    },
+    "financialEnvironment": {
+      "enum": [
+        "mock",
+        "real"
+      ]
+    },
+    "financialRenderKind": {
+      "enum": [
+        "facts",
+        "table",
+        "compound",
+        "chart"
+      ]
+    },
+    "financialScalar": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 8192
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "financialArguments": {
+      "type": "object",
+      "maxProperties": 64,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/financialScalar"
+      }
+    },
+    "keyCharacterCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "appKey",
+        "secretKey"
+      ],
+      "properties": {
+        "appKey": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "secretKey": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        }
+      }
+    },
+    "credentialProfileSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profileId",
+        "label",
+        "environment",
+        "revision",
+        "state",
+        "reasonCode",
+        "tokenExpiresAt",
+        "keyCharacterCounts"
+      ],
+      "properties": {
+        "profileId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "environment": {
+          "$ref": "#/$defs/financialEnvironment"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "state": {
+          "enum": [
+            "locked",
+            "refreshing",
+            "ready",
+            "error",
+            "deleting"
+          ]
+        },
+        "reasonCode": {
+          "oneOf": [
+            {
+              "enum": [
+                "LOCK_CONFLICT",
+                "TOKEN_REFRESHING",
+                "TOKEN_REJECTED",
+                "NETWORK_UNAVAILABLE",
+                "VAULT_UNAVAILABLE",
+                "DELETING"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tokenExpiresAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "keyCharacterCounts": {
+          "$ref": "#/$defs/keyCharacterCounts"
+        }
+      }
+    },
+    "financialSafeErrorCode": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Z][A-Z0-9_]{0,63}$"
+    },
+    "credentialMutation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mutationId",
+        "kind",
+        "profileId",
+        "state",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "queueDeadlineAt",
+        "runDeadlineAt",
+        "terminalAt",
+        "errorCode"
+      ],
+      "properties": {
+        "mutationId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "kind": {
+          "enum": [
+            "configure",
+            "delete"
+          ]
+        },
+        "profileId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "state": {
+          "enum": [
+            "queued",
+            "running",
+            "succeeded",
+            "failed"
+          ]
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "createdAt": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "queueDeadlineAt": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "runDeadlineAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "terminalAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "errorCode": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/financialSafeErrorCode"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "sourceAsOf": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "value",
+        "kind"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "kind": {
+          "enum": [
+            "date",
+            "datetime",
+            "time",
+            "provider-text"
+          ]
+        }
+      }
+    },
+    "financialProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "environment",
+        "profileId",
+        "trId",
+        "endpoint",
+        "catalogVersion",
+        "fetchedAt",
+        "sourceAsOf",
+        "sourceStatusCode",
+        "argumentsSha256"
+      ],
+      "properties": {
+        "provider": {
+          "const": "kiwoom-rest"
+        },
+        "environment": {
+          "$ref": "#/$defs/financialEnvironment"
+        },
+        "profileId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "trId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 16,
+          "pattern": "^[A-Za-z0-9]+$"
+        },
+        "endpoint": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^/api/[A-Za-z0-9/_-]+$"
+        },
+        "catalogVersion": {
+          "$ref": "#/$defs/catalogIdentity"
+        },
+        "fetchedAt": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "sourceAsOf": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sourceAsOf"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceStatusCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "argumentsSha256": {
+          "type": "string",
+          "minLength": 71,
+          "maxLength": 71,
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "pageDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pageIndex",
+        "pageCount",
+        "itemStart",
+        "itemEndExclusive",
+        "itemCount",
+        "totalItems",
+        "initial",
+        "previousPageToken",
+        "nextPageToken",
+        "expiresAt"
+      ],
+      "properties": {
+        "pageIndex": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pageCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "itemStart": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "itemEndExclusive": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "itemCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "totalItems": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "initial": {
+          "type": "boolean"
+        },
+        "previousPageToken": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/opaqueToken"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nextPageToken": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/opaqueToken"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/utcTimestamp"
+        }
+      }
+    },
+    "continuationDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "available",
+        "continuationToken",
+        "expiresAt"
+      ],
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "continuationToken": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/opaqueToken"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expiresAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "factField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "label",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "value": {
+          "$ref": "#/$defs/financialScalar"
+        }
+      }
+    },
+    "tableColumn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "label"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "financialRow": {
+      "type": "object",
+      "maxProperties": 256,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/financialScalar"
+      }
+    },
+    "factsData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "fields"
+      ],
+      "properties": {
+        "kind": {
+          "const": "facts"
+        },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/factField"
+          }
+        }
+      }
+    },
+    "tableData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "columns",
+        "rows"
+      ],
+      "properties": {
+        "kind": {
+          "const": "table"
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/tableColumn"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 512,
+          "items": {
+            "$ref": "#/$defs/financialRow"
+          }
+        }
+      }
+    },
+    "compoundData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "header",
+        "columns",
+        "rows"
+      ],
+      "properties": {
+        "kind": {
+          "const": "compound"
+        },
+        "header": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/factField"
+          }
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/tableColumn"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 512,
+          "items": {
+            "$ref": "#/$defs/financialRow"
+          }
+        }
+      }
+    },
+    "chartCandle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "properties": {
+        "time": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 32
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "open": {
+          "type": "number"
+        },
+        "high": {
+          "type": "number"
+        },
+        "low": {
+          "type": "number"
+        },
+        "close": {
+          "type": "number"
+        },
+        "volume": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "chartBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "period",
+        "target",
+        "trId",
+        "candles"
+      ],
+      "properties": {
+        "period": {
+          "enum": [
+            "tick",
+            "min",
+            "day",
+            "week",
+            "month",
+            "year"
+          ]
+        },
+        "target": {
+          "enum": [
+            "stock",
+            "sector",
+            "gold"
+          ]
+        },
+        "trId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 16
+        },
+        "candles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1024,
+          "items": {
+            "$ref": "#/$defs/chartCandle"
+          }
+        }
+      }
+    },
+    "chartData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "symbol",
+        "chart"
+      ],
+      "properties": {
+        "kind": {
+          "const": "chart"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "chart": {
+          "$ref": "#/$defs/chartBody"
+        }
+      }
+    },
+    "financialData": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/factsData"
+        },
+        {
+          "$ref": "#/$defs/tableData"
+        },
+        {
+          "$ref": "#/$defs/compoundData"
+        },
+        {
+          "$ref": "#/$defs/chartData"
+        }
+      ]
+    },
+    "financialCardPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cardVersion",
+        "jobId",
+        "submissionId",
+        "operationRef",
+        "renderKind",
+        "rendererId",
+        "title",
+        "provenance",
+        "page",
+        "continuation",
+        "data"
+      ],
+      "properties": {
+        "cardVersion": {
+          "const": "wts-financial-card-1"
+        },
+        "jobId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "submissionId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "operationRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "renderKind": {
+          "$ref": "#/$defs/financialRenderKind"
+        },
+        "rendererId": {
+          "enum": [
+            "facts-card-v1",
+            "table-card-v1",
+            "compound-card-v1",
+            "aits-chart-v1"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "provenance": {
+          "$ref": "#/$defs/financialProvenance"
+        },
+        "page": {
+          "$ref": "#/$defs/pageDescriptor"
+        },
+        "continuation": {
+          "$ref": "#/$defs/continuationDescriptor"
+        },
+        "data": {
+          "$ref": "#/$defs/financialData"
+        }
+      }
+    },
+    "queryJobSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId",
+        "submissionId",
+        "parentJobId",
+        "profileId",
+        "operationRef",
+        "state",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "queueDeadlineAt",
+        "runDeadlineAt",
+        "terminalAt",
+        "errorCode",
+        "card"
+      ],
+      "properties": {
+        "jobId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "submissionId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "parentJobId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/financialUuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "profileId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "operationRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "state": {
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "failed",
+            "cancelling",
+            "cancelled"
+          ]
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "createdAt": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "queueDeadlineAt": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "runDeadlineAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "terminalAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "errorCode": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/financialSafeErrorCode"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "card": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/financialCardPage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "financialCredentialsStatusParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mutationId"
+      ],
+      "properties": {
+        "mutationId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/financialUuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "financialCredentialsStatusResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "apiVersion",
+        "catalogVersion",
+        "profiles",
+        "mutation"
+      ],
+      "properties": {
+        "profile": {
+          "const": "wts-financial-read-v1"
+        },
+        "apiVersion": {
+          "const": "selector-financial-read-v1"
+        },
+        "catalogVersion": {
+          "$ref": "#/$defs/catalogIdentity"
+        },
+        "profiles": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/credentialProfileSummary"
+          }
+        },
+        "mutation": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/credentialMutation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "financialCredentialsStatusRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.credentials.status"
+        },
+        "params": {
+          "$ref": "#/$defs/financialCredentialsStatusParams"
+        }
+      }
+    },
+    "financialCredentialsStatusSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.credentials.status"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/financialCredentialsStatusResult"
+        }
+      }
+    },
+    "financialCredentialsConfigureParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mutationId",
+        "profileId",
+        "expectedRevision",
+        "label",
+        "environment",
+        "appKey",
+        "secretKey"
+      ],
+      "properties": {
+        "mutationId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "profileId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "expectedRevision": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "environment": {
+          "$ref": "#/$defs/financialEnvironment"
+        },
+        "appKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "secretKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "financialCredentialsConfigureResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mutation"
+      ],
+      "properties": {
+        "mutation": {
+          "$ref": "#/$defs/credentialMutation"
+        }
+      }
+    },
+    "financialCredentialsConfigureRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.credentials.configure"
+        },
+        "params": {
+          "$ref": "#/$defs/financialCredentialsConfigureParams"
+        }
+      }
+    },
+    "financialCredentialsConfigureSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.credentials.configure"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/financialCredentialsConfigureResult"
+        }
+      }
+    },
+    "financialCredentialsDeleteParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mutationId",
+        "profileId",
+        "expectedRevision"
+      ],
+      "properties": {
+        "mutationId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "profileId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "expectedRevision": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "financialCredentialsDeleteResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mutation"
+      ],
+      "properties": {
+        "mutation": {
+          "$ref": "#/$defs/credentialMutation"
+        }
+      }
+    },
+    "financialCredentialsDeleteRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.credentials.delete"
+        },
+        "params": {
+          "$ref": "#/$defs/financialCredentialsDeleteParams"
+        }
+      }
+    },
+    "financialCredentialsDeleteSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.credentials.delete"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/financialCredentialsDeleteResult"
+        }
+      }
+    },
+    "financialQueryStartParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "submissionId",
+        "profileId",
+        "operationRef",
+        "arguments"
+      ],
+      "properties": {
+        "submissionId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "profileId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "operationRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "arguments": {
+          "$ref": "#/$defs/financialArguments"
+        }
+      }
+    },
+    "financialQueryStartResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "job"
+      ],
+      "properties": {
+        "job": {
+          "$ref": "#/$defs/queryJobSnapshot"
+        }
+      }
+    },
+    "financialQueryStartRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.start"
+        },
+        "params": {
+          "$ref": "#/$defs/financialQueryStartParams"
+        }
+      }
+    },
+    "financialQueryStartSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.start"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/financialQueryStartResult"
+        }
+      }
+    },
+    "financialQueryStatusParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId"
+      ],
+      "properties": {
+        "jobId": {
+          "$ref": "#/$defs/financialUuid"
+        }
+      }
+    },
+    "financialQueryStatusResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "job"
+      ],
+      "properties": {
+        "job": {
+          "$ref": "#/$defs/queryJobSnapshot"
+        }
+      }
+    },
+    "financialQueryStatusRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.status"
+        },
+        "params": {
+          "$ref": "#/$defs/financialQueryStatusParams"
+        }
+      }
+    },
+    "financialQueryStatusSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.status"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/financialQueryStatusResult"
+        }
+      }
+    },
+    "financialQueryPageParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId",
+        "pageToken"
+      ],
+      "properties": {
+        "jobId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "pageToken": {
+          "$ref": "#/$defs/opaqueToken"
+        }
+      }
+    },
+    "financialQueryPageResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId",
+        "jobRevision",
+        "card"
+      ],
+      "properties": {
+        "jobId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "jobRevision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "card": {
+          "$ref": "#/$defs/financialCardPage"
+        }
+      }
+    },
+    "financialQueryPageRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.page"
+        },
+        "params": {
+          "$ref": "#/$defs/financialQueryPageParams"
+        }
+      }
+    },
+    "financialQueryPageSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.page"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/financialQueryPageResult"
+        }
+      }
+    },
+    "financialQueryContinueParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "submissionId",
+        "parentJobId",
+        "continuationToken"
+      ],
+      "properties": {
+        "submissionId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "parentJobId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "continuationToken": {
+          "$ref": "#/$defs/opaqueToken"
+        }
+      }
+    },
+    "financialQueryContinueResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "job"
+      ],
+      "properties": {
+        "job": {
+          "$ref": "#/$defs/queryJobSnapshot"
+        }
+      }
+    },
+    "financialQueryContinueRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.continue"
+        },
+        "params": {
+          "$ref": "#/$defs/financialQueryContinueParams"
+        }
+      }
+    },
+    "financialQueryContinueSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.continue"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/financialQueryContinueResult"
+        }
+      }
+    },
+    "financialQueryCancelParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId",
+        "cancellationId"
+      ],
+      "properties": {
+        "jobId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "cancellationId": {
+          "$ref": "#/$defs/financialUuid"
+        }
+      }
+    },
+    "financialQueryCancelResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "job",
+        "cancellationId",
+        "accepted"
+      ],
+      "properties": {
+        "job": {
+          "$ref": "#/$defs/queryJobSnapshot"
+        },
+        "cancellationId": {
+          "$ref": "#/$defs/financialUuid"
+        },
+        "accepted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "financialQueryCancelRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.cancel"
+        },
+        "params": {
+          "$ref": "#/$defs/financialQueryCancelParams"
+        }
+      }
+    },
+    "financialQueryCancelSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "source.query.cancel"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/financialQueryCancelResult"
+        }
+      }
+    },
+    "providerStatusRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.status"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "providerConnectStartRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.connect.start"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "providerModelsStartRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.models.start"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "providerModelSelectRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.model.select"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "slug"
+          ],
+          "properties": {
+            "slug": {
+              "$ref": "#/$defs/providerModelSlug"
+            }
+          }
+        }
+      }
+    },
+    "providerPlanStartRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.plan.start"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "submissionId",
+            "text"
+          ],
+          "properties": {
+            "submissionId": {
+              "$ref": "#/$defs/providerUuid"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+            }
+          }
+        }
+      }
+    },
+    "providerOperationGetRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.operation.get"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "operationId",
+            "consume"
+          ],
+          "properties": {
+            "operationId": {
+              "$ref": "#/$defs/providerUuid"
+            },
+            "consume": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "providerOperationCancelRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.operation.cancel"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "operationId",
+            "expectedRevision",
+            "cancellationId"
+          ],
+          "properties": {
+            "operationId": {
+              "$ref": "#/$defs/providerUuid"
+            },
+            "expectedRevision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "cancellationId": {
+              "$ref": "#/$defs/providerUuid"
+            }
+          }
+        }
+      }
+    },
+    "providerDisconnectStartRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.disconnect.start"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "providerAccountResetStartRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.account.reset.start"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "providerOperationSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operationId",
+        "kind",
+        "state",
+        "revision",
+        "cancellable",
+        "result",
+        "error"
+      ],
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/providerUuid"
+        },
+        "kind": {
+          "enum": [
+            "connect",
+            "models",
+            "plan",
+            "disconnect",
+            "account-reset"
+          ]
+        },
+        "state": {
+          "enum": [
+            "running",
+            "cancelling",
+            "succeeded",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "cancellable": {
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "connection"
+              ],
+              "properties": {
+                "connection": {
+                  "const": "connected"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "models"
+              ],
+              "properties": {
+                "models": {
+                  "type": "array",
+                  "maxItems": 100,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "slug",
+                      "displayName"
+                    ],
+                    "properties": {
+                      "slug": {
+                        "$ref": "#/$defs/providerModelSlug"
+                      },
+                      "displayName": {
+                        "$ref": "#/$defs/providerDisplayName"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "submissionId",
+                "catalogVersion",
+                "assistantText",
+                "proposal"
+              ],
+              "properties": {
+                "submissionId": {
+                  "$ref": "#/$defs/providerUuid"
+                },
+                "catalogVersion": {
+                  "const": "wts-main-control-3"
+                },
+                "assistantText": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 8192
+                },
+                "proposal": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "text"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "wts-control"
+                        },
+                        "text": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1024
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "connection",
+                "revocation"
+              ],
+              "properties": {
+                "connection": {
+                  "const": "signed-out"
+                },
+                "revocation": {
+                  "enum": [
+                    "revoked",
+                    "unconfirmed"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "connection",
+                "registration"
+              ],
+              "properties": {
+                "connection": {
+                  "const": "signed-out"
+                },
+                "registration": {
+                  "enum": [
+                    "reset",
+                    "already-empty"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "code",
+                "message"
+              ],
+              "properties": {
+                "code": {
+                  "enum": [
+                    "PROVIDER_CONNECT_FAILED",
+                    "PROVIDER_CONNECT_EXCHANGE_FAILED",
+                    "PROVIDER_CONNECT_EXCHANGE_TIMEOUT",
+                    "PROVIDER_CONNECT_TOKEN_REJECTED",
+                    "PROVIDER_CONNECT_TOKEN_RESPONSE_INVALID",
+                    "PROVIDER_CONNECT_IDENTITY_INVALID",
+                    "PROVIDER_CONNECT_ACCOUNT_MISMATCH",
+                    "PROVIDER_CONNECT_REGISTRATION_FAILED",
+                    "PROVIDER_CONNECT_SESSION_FAILED",
+                    "PROVIDER_CONNECT_TIMEOUT",
+                    "PROVIDER_CONNECT_CANCELLED",
+                    "PROVIDER_MODELS_FAILED",
+                    "PROVIDER_MODELS_AUTH_REQUIRED",
+                    "PROVIDER_MODELS_ACCESS_DENIED",
+                    "PROVIDER_MODELS_RATE_LIMITED",
+                    "PROVIDER_MODELS_SERVICE_UNAVAILABLE",
+                    "PROVIDER_MODELS_HTTP_FAILED",
+                    "PROVIDER_MODELS_TIMEOUT",
+                    "PROVIDER_MODELS_NETWORK_FAILED",
+                    "PROVIDER_MODELS_SESSION_UNAVAILABLE",
+                    "PROVIDER_MODELS_RESPONSE_TOO_LARGE",
+                    "PROVIDER_MODELS_RESPONSE_FORMAT_INVALID",
+                    "PROVIDER_MODELS_RESPONSE_READ_FAILED",
+                    "PROVIDER_MODELS_RESPONSE_SCHEMA_INVALID",
+                    "PROVIDER_MODELS_MODEL_METADATA_INVALID",
+                    "PROVIDER_MODELS_REDIRECT_REJECTED",
+                    "PROVIDER_MODELS_COUNT_EXCEEDED",
+                    "PROVIDER_MODELS_CANCELLED",
+                    "PROVIDER_PLAN_FAILED",
+                    "PROVIDER_PLAN_CANCELLED",
+                    "PROVIDER_PLAN_INPUT_SENSITIVE",
+                    "PROVIDER_DISCONNECT_FAILED",
+                    "PROVIDER_ACCOUNT_RESET_FAILED"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "providerStatusResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "connection",
+        "accountResetAvailable",
+        "catalog",
+        "selectedModel",
+        "operation"
+      ],
+      "properties": {
+        "provider": {
+          "const": "openai-chatgpt-siwc-v1"
+        },
+        "connection": {
+          "enum": [
+            "signed-out",
+            "connecting",
+            "connected",
+            "disconnecting",
+            "resetting"
+          ]
+        },
+        "accountResetAvailable": {
+          "type": "boolean"
+        },
+        "catalog": {
+          "enum": [
+            "unavailable",
+            "not-loaded",
+            "loading",
+            "ready"
+          ]
+        },
+        "selectedModel": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "slug",
+                "displayName",
+                "compatibility"
+              ],
+              "properties": {
+                "slug": {
+                  "$ref": "#/$defs/providerModelSlug"
+                },
+                "displayName": {
+                  "$ref": "#/$defs/providerDisplayName"
+                },
+                "compatibility": {
+                  "enum": [
+                    "untested",
+                    "completed"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "operation": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operationId",
+                "kind",
+                "state",
+                "revision",
+                "cancellable"
+              ],
+              "properties": {
+                "operationId": {
+                  "$ref": "#/$defs/providerUuid"
+                },
+                "kind": {
+                  "enum": [
+                    "connect",
+                    "models",
+                    "plan",
+                    "disconnect",
+                    "account-reset"
+                  ]
+                },
+                "state": {
+                  "enum": [
+                    "running",
+                    "cancelling",
+                    "succeeded",
+                    "failed",
+                    "cancelled"
+                  ]
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "cancellable": {
+                  "type": "boolean"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "providerStatusSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.status"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/providerStatusResult"
+        }
+      }
+    },
+    "providerModelSelectSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.model.select"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/providerStatusResult"
+        }
+      }
+    },
+    "providerConnectStartSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.connect.start"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/providerOperationSnapshot"
+        }
+      }
+    },
+    "providerModelsStartSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.models.start"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/providerOperationSnapshot"
+        }
+      }
+    },
+    "providerPlanStartSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.plan.start"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/providerOperationSnapshot"
+        }
+      }
+    },
+    "providerOperationGetSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.operation.get"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/providerOperationSnapshot"
+        }
+      }
+    },
+    "providerOperationCancelSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.operation.cancel"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/providerOperationSnapshot"
+        }
+      }
+    },
+    "providerDisconnectStartSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.disconnect.start"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/providerOperationSnapshot"
+        }
+      }
+    },
+    "providerAccountResetStartSuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "requestId",
+        "method",
+        "ok",
+        "result"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": 8
+        },
+        "requestId": {
+          "$ref": "#/$defs/requestId"
+        },
+        "method": {
+          "const": "provider.account.reset.start"
+        },
+        "ok": {
+          "const": true
+        },
+        "result": {
+          "$ref": "#/$defs/providerOperationSnapshot"
+        }
+      }
+    }
+  }
+}
