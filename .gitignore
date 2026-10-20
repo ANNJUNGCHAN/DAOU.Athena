@@ -57,6 +57,9 @@ datasets/eval-runs/
 !/GROK.md
 !/AGENTS.md
 !/CLAUDE.md
+!/contracts/
+!/extension/
+!/local-runtime/
 !/scripts/
 /scripts/*
 !/scripts/security/
@@ -183,6 +186,27 @@ work/
 **/*.test.js
 **/test/
 **/tests/
+
+# Exact headless WTS metadata and financial regression tests; unrelated local tests remain ignored.
+!/backend/tests/
+/backend/tests/*
+!/backend/tests/test_launcher.py
+!/backend/tests/test_readonly_app.py
+!/backend/tests/test_financial_vault.py
+!/backend/tests/test_financial_read_client.py
+!/backend/tests/test_financial_read_app.py
+!/backend/tests/test_financial_query_runtime.py
+!/backend/tests/test_financial_cards.py
+
+# Reproducible WTS foundation contract and integration tests.
+!/contracts/tests/
+!/contracts/tests/*.test.mjs
+!/extension/test/
+!/extension/test/*.test.mjs
+!/local-runtime/test/
+!/local-runtime/test/*.test.mjs
+!/local-runtime/test/registry-write.test.ps1
+/extension/dist/
 
 # Paper extraction sources stay local; generated app phrases and runtime templates stay tracked.
 /backend/ref/paper-ledger/

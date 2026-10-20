@@ -81,7 +81,9 @@ def _largest_dict_array(node: Any) -> list[dict[str, Any]] | None:
     return best
 
 
-def build_chart_bars(payload: Any) -> tuple[list[dict[str, Any]], dict[str, Any]] | str:
+def build_chart_bars(
+    payload: Any, *, limit: int | None = BARS_MAX, strict: bool = False
+) -> tuple[list[dict[str, Any]], dict[str, Any]] | str:
     """키움 차트 응답 → bars(시간 오름차순, 최신 BARS_MAX개). 실패 시 사유 문자열."""
     rows = _largest_dict_array(payload)
     if not rows:
@@ -111,12 +113,14 @@ def build_chart_bars(payload: Any) -> tuple[list[dict[str, Any]], dict[str, Any]
             bar[out_key] = value
         if ok:
             bars.append(bar)
+        elif strict:
+            return "차트 행에 유효하지 않은 시간 또는 OHLC 값이 있다"
     if not bars:
         return "행은 있으나 유효한 봉을 하나도 만들지 못했다"
 
     bars.sort(key=lambda bar: bar["time"])  # 키움은 최신이 앞 — 카드는 오름차순
     total = len(bars)
-    kept = bars[-BARS_MAX:]
+    kept = bars if limit is None else bars[-limit:]
     meta = {
         "rows_total": total,
         "rows_kept": len(kept),
@@ -128,12 +132,14 @@ def build_chart_bars(payload: Any) -> tuple[list[dict[str, Any]], dict[str, Any]
     return kept, meta
 
 
-def build_table(payload: Any) -> tuple[dict[str, Any], dict[str, Any]] | str:
+def build_table(
+    payload: Any, *, limit: int | None = TABLE_ROWS_MAX
+) -> tuple[dict[str, Any], dict[str, Any]] | str:
     """임의 응답 → 공통 테이블(rows 상한, columns는 첫 행 키). 실패 시 사유."""
     rows = _largest_dict_array(payload)
     if not rows:
         return "응답에서 행 배열을 찾지 못했다"
-    kept = rows[:TABLE_ROWS_MAX]
+    kept = rows if limit is None else rows[:limit]
     columns = [{"key": key, "label": key} for key in kept[0].keys()]
     data = {"columns": columns, "rows": kept}
     meta = {
@@ -235,7 +241,9 @@ def _scalar_items(payload: Any) -> list[tuple[str, Any]] | None:
     ]
 
 
-def build_facts(payload: Any) -> tuple[dict[str, Any], dict[str, Any]] | str:
+def build_facts(
+    payload: Any, *, limit: int | None = FACTS_FIELDS_MAX
+) -> tuple[dict[str, Any], dict[str, Any]] | str:
     """키움 스칼라 응답 → facts 봉투(key/value grid). 실패 시 사유 문자열.
 
     FactsCard(spec §3.1)는 컨테이너가 없다 — 리스트/딕셔너리 값은 스칼라가
@@ -248,7 +256,7 @@ def build_facts(payload: Any) -> tuple[dict[str, Any], dict[str, Any]] | str:
     if not items:
         return "응답에서 스칼라 필드를 찾지 못했다"
 
-    kept = items[:FACTS_FIELDS_MAX]
+    kept = items if limit is None else items[:limit]
     fields = [{"key": key, "label": key, "value": value} for key, value in kept]
     data = {"fields": fields}
     preview, preview_truncated = _summary_preview(items)
@@ -262,7 +270,12 @@ def build_facts(payload: Any) -> tuple[dict[str, Any], dict[str, Any]] | str:
     return data, meta
 
 
-def build_compound_generic(payload: Any) -> tuple[dict[str, Any], dict[str, Any]] | str:
+def build_compound_generic(
+    payload: Any,
+    *,
+    facts_limit: int | None = FACTS_FIELDS_MAX,
+    rows_limit: int | None = TABLE_ROWS_MAX,
+) -> tuple[dict[str, Any], dict[str, Any]] | str:
     """키움 compound 응답(스칼라 헤더 + 리스트 1개) → compound 봉투. 실패 시 사유.
 
     CompoundCard(spec §3.3)는 "이름과 달리 다중 표가 아니다" — facts 헤더 하나 +
@@ -279,10 +292,10 @@ def build_compound_generic(payload: Any) -> tuple[dict[str, Any], dict[str, Any]
     if not rows:
         return "응답에서 표로 쓸 행 배열을 찾지 못했다"
 
-    header_kept = header_items[:FACTS_FIELDS_MAX]
+    header_kept = header_items if facts_limit is None else header_items[:facts_limit]
     header = [{"key": key, "label": key, "value": value} for key, value in header_kept]
 
-    table_rows = rows[:TABLE_ROWS_MAX]
+    table_rows = rows if rows_limit is None else rows[:rows_limit]
     columns = [{"key": key, "label": key} for key in table_rows[0].keys()]
     table = {"columns": columns, "rows": table_rows}
 
@@ -527,7 +540,11 @@ def resolve_screen_render_contract(
 
 
 def build_aits_chart_body(
-    operation_ref: str, tr_data: Any
+    operation_ref: str,
+    tr_data: Any,
+    *,
+    limit: int | None = None,
+    strict: bool = False,
 ) -> tuple[dict[str, Any], dict[str, Any]] | str:
     """Build the AITS ChartCardBody only from generated JSONPath metadata."""
     resolved = resolve_screen_render_contract(operation_ref)
@@ -555,11 +572,15 @@ def build_aits_chart_body(
     for row in rows:
         time_value = _aits_time(row.get(time_alias), timezone_name)
         if time_value is None:
+            if strict:
+                return "차트 행의 시간 값이 유효하지 않다"
             continue
         candle: dict[str, Any] = {"time": time_value}
         for key in ("open", "high", "low", "close"):
             value = _aits_number(row.get(aliases[key]))
             if value is None:
+                if strict:
+                    return f"차트 행의 {key} 값이 유효하지 않다"
                 break
             index = sector_chart_index(operation_ref, aliases[key], row.get(aliases[key]))
             candle[key] = float(index) if index is not None else value
@@ -569,6 +590,8 @@ def build_aits_chart_body(
                 volume = _aits_number(row.get(volume_alias))
                 if volume is not None:
                     candle["volume"] = volume
+                elif strict and row.get(volume_alias) is not None:
+                    return "차트 행의 volume 값이 유효하지 않다"
             candles.append(candle)
     if not candles:
         return "시간축과 OHLC 계약으로 유효한 봉을 만들지 못했다"
@@ -577,7 +600,8 @@ def build_aits_chart_body(
         return "차트 행 상한이 유효하지 않다"
     candles.sort(key=lambda candle: candle["time"])
     total = len(candles)
-    kept = candles[-max_rows:]
+    effective_limit = max_rows if limit is None else limit
+    kept = candles[-effective_limit:]
     return {
         "period": chart["period"],
         "target": chart["target"],

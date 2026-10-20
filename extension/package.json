@@ -1,0 +1,15 @@
+{
+  "name": "athena-wts-extension",
+  "version": "0.8.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "verify:chart-browser": "node scripts/verify-financial-chart-browser.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

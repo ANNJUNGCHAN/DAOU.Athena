@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "ATHENA for Kiwoom WTS",
+  "version": "0.8.0",
+  "minimum_chrome_version": "116",
+  "description": "키움 WTS 화면을 제어하고 로컬 PC에서 조회 전용 금융 카드를 표시합니다.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxKUxrlhdhDV386f8j7z2VdAx+YmYi84yGCPt/xqnFtbOzdz2ih5NpCpHz+ARNYejz+nxaMTC3i31craZ/ZnDYB3YTg1XEcd+R+wPhJ+lgiqD7ZBxyE2n//f2F30eUxAqz9q3Nt245kNcVwnsCHrW9bgt/QoDLtUiNkg4kriRsTEHgBT+twRR7k5OqL0JhjXO4++H8PGOsMQM+LRKXw/59AieUWx0gfHwje3sGsQQ/9RISz9MgcSGbcRuW3SyiZDsOIoJRDfhOv4hv3xlmdUEoDYhhZuNhPK/115r8CVIZW43WVofpEZW45x0KpQCPLuDz07j6BphNpyB44MgK1RN/wIDAQAB",
+  "permissions": [
+    "nativeMessaging",
+    "scripting",
+    "sidePanel",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://wts.kiwoom.com/*"
+  ],
+  "background": {
+    "service_worker": "service-worker.mjs",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "ATHENA WTS"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/index.html"
+  }
+}

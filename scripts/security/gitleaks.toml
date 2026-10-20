@@ -2,6 +2,17 @@ title = "Athena repository secret policy"
 minVersion = "8.30.1"
 
 [[allowlists]]
+description = "ATHENA WTS extension: exact public SPKI identity key in source and generated manifests, not a credential"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "secret"
+paths = [
+  '''(?:^|/)extension/src/manifest\.json$''',
+  '''(?:^|/)extension/dist/manifest\.json$''',
+]
+regexes = ['''^MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxKUxrlhdhDV386f8j7z2VdAx\+YmYi84yGCPt/xqnFtbOzdz2ih5NpCpHz\+ARNYejz\+nxaMTC3i31craZ/ZnDYB3YTg1XEcd\+R\+wPhJ\+lgiqD7ZBxyE2n//f2F30eUxAqz9q3Nt245kNcVwnsCHrW9bgt/QoDLtUiNkg4kriRsTEHgBT\+twRR7k5OqL0JhjXO4\+\+H8PGOsMQM\+LRKXw/59AieUWx0gfHwje3sGsQQ/9RISz9MgcSGbcRuW3SyiZDsOIoJRDfhOv4hv3xlmdUEoDYhhZuNhPK/115r8CVIZW43WVofpEZW45x0KpQCPLuDz07j6BphNpyB44MgK1RN/wIDAQAB$''']
+
+[[allowlists]]
 description = "Card UI handoff: verified public app/styles/tokens.css SHA256, exact metadata paths only"
 targetRules = ["generic-api-key"]
 condition = "AND"
@@ -17,6 +28,25 @@ paths = [
   '''(?:^|/)backend/ref/card-ui-handoff-20261003/verification/rest-state/archive/ORIGINAL-MANIFEST\.json$''',
 ]
 regexes = ['''^c808e8950986a0585ac8795757d2147c64537756b48639f5f6ec56431aa676f2$''']
+
+[[allowlists]]
+description = "WTS collector regression: synthetic 12345678901234567890 long-number fixture; scanner captures its first eight digits"
+targetRules = ["athena-account-number"]
+condition = "AND"
+regexTarget = "secret"
+paths = ['''(?:^|/)extension/test/collector\.test\.mjs$''']
+regexes = ['''^12345678$''']
+
+[[allowlists]]
+description = "WTS service worker: chrome.storage key name wtsFinancialJournalV1, not a credential"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "secret"
+paths = [
+  '''(?:^|/)extension/src/service-worker\.mjs$''',
+  '''(?:^|/)extension/dist/service-worker\.mjs$''',
+]
+regexes = ['''^wtsFinancialJournalV1$''']
 
 [extend]
 useDefault = true
