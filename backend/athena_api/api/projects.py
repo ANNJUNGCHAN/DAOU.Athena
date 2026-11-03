@@ -25,14 +25,15 @@ import shutil
 import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from athena_api.backtest.runner import BacktestRunner
 from athena_api.config import get_settings
+from athena_api.security import require_local_bearer
 from athena_api.projects.store import (
     BASE_ENV_PACKAGES,
     MAX_FILE_BYTES,
@@ -58,6 +59,22 @@ router = APIRouter(prefix="/api/v1/projects", tags=["projects"])
 
 MAX_TERMINAL_OUTPUT_BYTES = 512 * 1024
 MAX_TERMINAL_ARGS = 128
+
+# 터미널 자식에 넘길 env 화이트리스트. 이 밖은 버린다 — 백엔드 env의 ATHENA_*(키움 키·
+# 로컬 베어러)와 공급자 키가 모델이 고른 명령으로 새어 나가지 않게. pip·uv·git이 돌 만큼의
+# OS 변수와 사내망 프록시·인증서 변수만 남긴다.
+_TERMINAL_ENV_ALLOWLIST = frozenset({
+    "PATH", "PATHEXT", "SYSTEMROOT", "SYSTEMDRIVE", "WINDIR", "COMSPEC", "OS",
+    "TEMP", "TMP", "TMPDIR", "HOME", "USERPROFILE", "HOMEDRIVE", "HOMEPATH",
+    "APPDATA", "LOCALAPPDATA", "PROGRAMDATA", "PROGRAMFILES", "PROGRAMFILES(X86)",
+    "PROGRAMW6432", "COMMONPROGRAMFILES", "COMMONPROGRAMFILES(X86)", "PUBLIC",
+    "USERNAME", "USER", "COMPUTERNAME", "NUMBER_OF_PROCESSORS", "PROCESSOR_ARCHITECTURE",
+    "LANG", "LC_ALL", "TERM",
+    "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY",
+    "SSL_CERT_FILE", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE", "GIT_SSL_CAINFO",
+})
+# 패키지 설치 도구 설정(인덱스·캐시·인증서)은 접두사째 넘긴다.
+_TERMINAL_ENV_PREFIXES = ("UV_", "PIP_")
 MAX_TERMINAL_ARG_BYTES = 16 * 1024
 DEFAULT_TERMINAL_TIMEOUT_MS = 30_000
 MAX_TERMINAL_TIMEOUT_MS = 120_000
@@ -518,13 +535,17 @@ def _read_terminal_capture(handle: Any) -> tuple[str, bool]:
 
 @router.post("/{project_id}/terminal")
 async def run_project_terminal(
-    request: Request, project_id: str, body: dict[str, Any]
+    request: Request,
+    project_id: str,
+    body: dict[str, Any],
+    authorization: Annotated[str, Header(alias="Authorization")] = "",
 ) -> dict[str, Any]:
     """`shell=False`로 argv 하나를 프로젝트 안 cwd에서 실행한다.
 
     cwd 검사는 시작 위치를 프로젝트 안으로 고정한다. 다만 실행된 프로그램 자체가
     절대경로로 다른 파일을 읽는 것까지 OS 샌드박스처럼 막지는 않는다.
     """
+    require_local_bearer(request, authorization)
     project_root = _root(_entry(request, project_id))
     cwd_input = body.get("cwd", ".")
     if not isinstance(cwd_input, str):
@@ -537,7 +558,11 @@ async def run_project_terminal(
     argv = _terminal_argv(body)
     timeout_ms = _terminal_timeout(body)
 
-    environment = os.environ.copy()
+    environment = {
+        name: value for name, value in os.environ.items()
+        if name.upper() in _TERMINAL_ENV_ALLOWLIST
+        or name.upper().startswith(_TERMINAL_ENV_PREFIXES)
+    }
     python = venv_python(project_root)
     if python is not None:
         scripts = str(python.parent)
