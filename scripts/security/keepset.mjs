@@ -37,6 +37,7 @@ export const DEST_CONTROL_FILES = Object.freeze([
   "GROK.md",
   "AGENTS.md",
   "CLAUDE.md",
+  "backend/.env.example",
   "backend/verification/test_ws_feed_status.py",
   "backend/verification/test_index_realtime_semantics.py",
   "backend/verification/test_graph_edit_proposal.py",

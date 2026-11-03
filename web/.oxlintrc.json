@@ -24,7 +24,6 @@
   },
   "ignorePatterns": [
     "public/presentation/**",
-    "archive/presentation-v0.1.2/**",
     ".next/**",
     ".vinext/**",
     "out/**",
