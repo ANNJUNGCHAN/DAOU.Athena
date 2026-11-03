@@ -2352,14 +2352,14 @@ ipcMain.handle('athena:project-reveal', async (_e, { id } = {}) => {
   const error = await shell.openPath(project.path);
   return error ? { ok: false, error } : { ok: true, path: project.path };
 });
-// 제거는 폴더 삭제다(37번 보드) — 휴지통을 거치지 않는 영구 삭제라 이름을 그대로 다시
+// 제거는 폴더 삭제다(37번 보드) — 실수 한 번에 파일 전부를 잃지 않게 휴지통으로 보낸다. 이름을 그대로 다시
 // 쳐야 한다. 이름이 다르면 아무것도 지우지 않는다. 폴더가 없어도 레코드는 지운다.
-ipcMain.handle('athena:project-remove', async (_e, { id, confirmName } = {}) => {
+async function handleProjectRemove(_e, { id, confirmName } = {}) {
   const project = conversations.projectById(id);
   if (!project) return { ok: false, reason: 'unknown_project' };
   if (typeof confirmName !== 'string' || confirmName.trim() !== project.label) return { ok: false, reason: 'name_mismatch' };
-  if (project.path) {
-    try { await fs.promises.rm(project.path, { recursive: true, force: true }); }
+  if (project.path && fs.existsSync(project.path)) {
+    try { await shell.trashItem(project.path); }
     catch (e) { return { ok: false, reason: 'rm_failed', error: String((e && e.message) || e) }; }
   }
   if (typeof backtestBridge.unregisterProject === 'function') {
@@ -2373,7 +2373,8 @@ ipcMain.handle('athena:project-remove', async (_e, { id, confirmName } = {}) => 
     if (bridge && bridge.store) for (const conversationId of removed.removed.conversationIds) bridge.store.deleteSession(conversationId);
   }
   return removed;
-});
+}
+ipcMain.handle('athena:project-remove', handleProjectRemove);
 
 // ---------- OS 스냅 이벤트 정착 (2026-08-18 승급 — qa-win-arrow.json 실측 근거) ----------
 // resizable:true 승급으로 Windows가 Win+←/→(스냅)·Win+↑(최대화)·Win+↓(최소화)를
