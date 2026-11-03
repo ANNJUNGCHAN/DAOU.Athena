@@ -68,7 +68,7 @@ ATHENA는 대화, 차트, 투자 기록, 외부 도구와 전략 검증을 하�
 
 ## Windows에 설치
 
-[ATHENA v0.1.5 설치 파일 다운로드](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.5/Athena-Setup-0.1.5-x64.exe)
+[ATHENA v0.1.6 설치 파일 다운로드](https://github.com/ANNJUNGCHAN/DAOU.Athena/releases/download/v0.1.6/Athena-Setup-0.1.6-x64.exe)
 
 Windows x64용 설치 프로그램은 Electron 앱과 로컬 Python 백엔드를 포함합니다. 설치 후 ATHENA를 실행하고 사용할 모델 공급자에 로그인하세요. 키움 데이터 조회에는 별도의 API 자격 증명 연결이 필요합니다.
 
@@ -76,14 +76,12 @@ Windows x64용 설치 프로그램은 Electron 앱과 로컬 Python 백엔드를
 
 ## 개발 환경에서 실행
 
-현재 공개 저장소는 Windows 앱, Python 백엔드, 브라우저 확장, 로컬 런타임, Website와 발표자료를 한 Git 이력에서 관리합니다.
+현재 공개 저장소는 Windows 앱, Python 백엔드, Website와 발표자료를 한 Git 이력에서 관리합니다.
 
 | 경로 | 내용 |
 | --- | --- |
 | `app/` | Electron 데스크톱 앱 |
 | `backend/` | Python 백엔드와 LAYA 런타임 명세 |
-| `extension/` | Chrome 확장 |
-| `local-runtime/` | 로컬 실행 환경과 패키징 자원 |
 | `web/` | 공식 Website |
 | `presentation/` | 공식 발표자료·영상·렌더링 도구 |
 | `scripts/` | 공통 검증·빌드·릴리스 도구 |

@@ -66,7 +66,7 @@ python migration/verify-package.py --historical
 
 ## 공개 저장소 보안 검사
 
-Git LFS, [Gitleaks 8.30.1 이상](https://github.com/gitleaks/gitleaks), [GitHub CLI](https://cli.github.com/), Windows PowerShell을 준비하고 GitHub CLI에 인증합니다. 저장소 루트에서 정본 보안 게이트를 실행합니다.
+Git LFS, [Gitleaks 8.30.1 이상](https://github.com/gitleaks/gitleaks), [GitHub CLI](https://cli.github.com/), Windows PowerShell을 준비하고 GitHub CLI에 인증합니다. 모노레포(`DAOU.Athena`) 루트에서 정본 보안 게이트를 실행합니다. 발표자료 전용 게이트·훅 사본은 두지 않습니다.
 
 ```powershell
 powershell -NoProfile -File scripts/security/eval-security-gates.ps1
